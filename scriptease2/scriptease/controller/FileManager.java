@@ -187,36 +187,27 @@ public final class FileManager {
 	 * Saves the given model. Checks the map of open files to see if the model
 	 * has already been saved somewhere. If so, it saves the given model there.
 	 * If not, it calls <code>saveAs</code> to prompt the user for a new
-	 * location.
+	 * location. We also generate the code.
 	 * 
 	 * @param model
 	 *            The model to be saved.
 	 * @see #saveAs(StoryModel)
 	 */
 	public void save(SEModel model) {
-		final File location = this.openFiles.getKey(model);
-		final String saveMessage;
-
-		saveMessage = "Saving story " + model.getTitle() + " to " + location;
-
-		System.out.println(saveMessage);
-		StatusManager.getInstance().setStatus(saveMessage + " ...");
-
-		if (location == null) {
-			FileManager.this.saveAs(model);
-			return;
-		}
+		FileManager.this.saveWithoutCode(model);
 
 		model.process(new ModelAdapter() {
-			@Override
-			public void processLibraryModel(final LibraryModel library) {
-				FileManager.this.writeLibraryModelFile(library, location);
-			}
 
 			@Override
-			public void processStoryModel(StoryModel storyModel) {
-				FileManager.this.writeStoryModelFile(storyModel, location,
-						true, true);
+			public void processStoryModel(final StoryModel storyModel) {
+
+				WindowFactory.showProgressBar("Writing Code...",
+						new Runnable() {
+							@Override
+							public void run() {
+								FileManager.this.writeCode(storyModel, true);
+							}
+						});
 			}
 		});
 	}
@@ -303,7 +294,7 @@ public final class FileManager {
 	public void saveAsPackage(final SEModel model) {
 		model.process(new ModelAdapter() {
 			@Override
-			public void processStoryModel(StoryModel storyModel) {
+			public void processStoryModel(final StoryModel storyModel) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
 				File location = windowManager.showFileChooser(
@@ -313,6 +304,10 @@ public final class FileManager {
 				if (location == null) {
 					return;
 				}
+
+				if (location.exists()
+						&& !windowManager.showConfirmOverwrite(location))
+					return;
 
 				System.out.println("Saving story package with story " + model
 						+ " to " + location);
@@ -324,20 +319,64 @@ public final class FileManager {
 				FileManager.this.writeStoryModelFile(storyModel,
 						tempStoryLocation, false, false);
 
+				WindowFactory.showProgressBar("Writing Code...",
+						new Runnable() {
+							@Override
+							public void run() {
+								FileManager.this.writeCode(storyModel, true);
+							}
+						});
+
 				if (!FileOp.getExtension(location).equalsIgnoreCase(
 						FileManager.FILE_EXTENSION_PACKAGE)) {
 					location = FileOp.addExtension(location,
 							FileManager.FILE_EXTENSION_PACKAGE);
 				}
 
-				if (location.exists()
-						&& !windowManager.showConfirmOverwrite(location))
-					return;
 
 				FileManager.this.writeStoryPackage(storyModel, location,
 						tempStoryLocation);
 
 				FileManager.this.deleteTempFile(tempStoryLocation);
+			}
+		});
+	}
+
+	/**
+	 * Saves the given model without writing any code. Checks the map of open
+	 * files to see if the model has already been saved somewhere. If so, it
+	 * saves the given model there. If not, it calls <code>saveAs</code> to
+	 * prompt the user for a new location.
+	 * 
+	 * @param model
+	 *            The model to be saved.
+	 * @see #save(SEModel)
+	 * @see #saveAs(StoryModel)
+	 */
+	public void saveWithoutCode(SEModel model) {
+		final File location = this.openFiles.getKey(model);
+		final String saveMessage;
+
+		saveMessage = "Saving story " + model.getTitle() + " to " + location;
+
+		System.out.println(saveMessage);
+		StatusManager.getInstance().setStatus(saveMessage + " ...");
+
+		if (location == null) {
+			FileManager.this.saveAs(model);
+			return;
+		}
+
+		model.process(new ModelAdapter() {
+			@Override
+			public void processLibraryModel(final LibraryModel library) {
+				FileManager.this.writeLibraryModelFile(library, location);
+			}
+
+			@Override
+			public void processStoryModel(StoryModel storyModel) {
+				FileManager.this.writeStoryModelFile(storyModel, location,
+						true, true);
 			}
 		});
 	}
@@ -431,13 +470,6 @@ public final class FileManager {
 		this.openFiles.removeValue(model);
 		this.openFiles.put(location, model);
 
-		WindowFactory.showProgressBar("Writing Code...", new Runnable() {
-			@Override
-			public void run() {
-				FileManager.this.writeCode(model, true);
-			}
-		});
-
 		if (updateRecentFiles) {
 			// update the recent files list in the preferences file.
 			this.updateRecentFiles(location, true);
@@ -470,8 +502,15 @@ public final class FileManager {
 				});
 	}
 
-	private void writeCode(StoryModel model, boolean compile) {
-		// generate the code
+	/**
+	 * Generates the code
+	 * 
+	 * @param model
+	 *            The model to generate the code for
+	 * @param compile
+	 *            Whether we want to compile the code
+	 */
+	private void writeCode(final StoryModel model, boolean compile) {
 		final GameModule module = model.getModule();
 		final Translator translator = model.getTranslator();
 		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
@@ -514,8 +553,7 @@ public final class FileManager {
 							+ "Story Save Successful!");
 		} catch (IOException e) {
 			// Nothing better to do at the moment except let ScriptEase
-			// explode.
-			// Eventually, this should undo the save. IE have a backup
+			// explode. Eventually, this should undo the save. IE have a backup
 			// file that we would ordinarily replace, but since we've failed
 			// we just delete the file we're currently writing and leave the
 			// original intact. - remiller
@@ -837,7 +875,7 @@ public final class FileManager {
 
 		modelLocation = this.openFiles.getKey(model);
 		this.openFiles.removeKey(modelLocation);
-		
+
 		return true;
 	}
 
@@ -855,12 +893,6 @@ public final class FileManager {
 		// we need to be able to back out fully.
 		for (SEModel model : SEModelManager.getInstance().getModels()) {
 			if (!this.hasUnsavedChanges(model))
-				return false;
-		}
-
-		// actually perform... The Closing. Cue dramatic music!
-		for (SEModel model : SEModelManager.getInstance().getModels()) {
-			if (!this.close(model))
 				return false;
 		}
 

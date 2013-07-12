@@ -36,7 +36,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
-import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.controller.observer.SEModelEvent;
@@ -132,11 +131,8 @@ class SEModelTabbedPane extends JTabbedPane {
 	 * @param model
 	 */
 	private void removeTabForModel(SEModel model) {
-		if (FileManager.getInstance().hasUnsavedChanges(model)) {
-			SEModelTabbedPane.this
-					.remove(this.modelToComponent.getValue(model));
-			this.modelToComponent.removeKey(model);
-		}
+		SEModelTabbedPane.this.remove(this.modelToComponent.getValue(model));
+		this.modelToComponent.removeKey(model);
 	}
 
 	/**
