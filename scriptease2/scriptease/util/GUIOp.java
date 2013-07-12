@@ -13,6 +13,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -160,9 +161,10 @@ public class GUIOp {
 		fader.execute();
 	}
 
-	public static void paintArrow(Graphics g, List<Point> points) {
+	public static void paintArrow(Graphics g, List<Point> points,
+			int curveFactor) {
 		// Create a new graphics context
-		Graphics2D g2 = (Graphics2D) g.create();
+		final Graphics2D g2 = (Graphics2D) g.create();
 		// Antialiasing
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -218,7 +220,12 @@ public class GUIOp {
 				xPoints[2] = (int) (baseX - th * vecLeft[0]);
 				yPoints[2] = (int) (baseY - th * vecLeft[1]);
 
-				g2.drawLine((int) x1, (int) y1, (int) baseX, (int) baseY);
+				if (curveFactor > 0)
+					g2.draw(new QuadCurve2D.Float(start.x, start.y,
+							(end.x + start.x) / 2, start.y + curveFactor * 50,
+							end.x - arrowWidth, end.y));
+				else
+					g2.drawLine((int) x1, (int) y1, (int) baseX, (int) baseY);
 
 				// Last point in list. Draw the arrowhead.
 				if (index == (points.size() - 2))
