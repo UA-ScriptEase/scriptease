@@ -248,7 +248,17 @@ class ResourceTree extends JPanel {
 		}
 	}
 
-	// TODO This will need to be removed. See other TODO items.
+	/**
+	 * 
+	 * @deprecated TODO This needs to be removed. Right now, we can't check from
+	 *             a type to see if its resources should be editable. Once we
+	 *             change types from strings to GameTypes (ticket #52135385),
+	 *             the GameType itself almost needs to have an "editable"
+	 *             property, meaning we can add new resources of that type. This
+	 *             will mean changes to the way EditableResources are generated
+	 *             as well, but will be more safe in the future.
+	 * @return
+	 */
 	private String getDialogueType() {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
@@ -302,6 +312,8 @@ class ResourceTree extends JPanel {
 	 * 
 	 */
 	private class ResourceContainer extends JPanel {
+		// This map is, sadly, necessary to prevent memory leaks.
+		private final Map<Resource, ResourceObserver> resourcesToObservers;
 		private final Map<Resource, JPanel> resourcesToPanels;
 		private final String type;
 		private final JPanel container;
@@ -319,6 +331,7 @@ class ResourceTree extends JPanel {
 			this.type = type;
 			this.container = new JPanel();
 			this.resourcesToPanels = new HashMap<Resource, JPanel>();
+			this.resourcesToObservers = new HashMap<Resource, ResourceObserver>();
 
 			final JLabel categoryLabel;
 			final ExpansionButton button;
@@ -366,16 +379,6 @@ class ResourceTree extends JPanel {
 			categoryPanel.add(categoryLabel);
 			categoryPanel.add(ComponentFactory.buildSpacer(15, 15));
 
-			/*
-			 * TODO "Add buttons" are dependant on if the type is a dialouge
-			 * type. In the future, we may want to change this somehow. Since we
-			 * don't necessarily have any resources in the category, we don't
-			 * know if they will be EditableResources.
-			 * 
-			 * Likely, once we change types from strings to GameTypes (ticket
-			 * #52135385), the GameType itself almost needs to have an "addable"
-			 * property, meaning we can add new resources of that type.
-			 */
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
 			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
@@ -416,11 +419,12 @@ class ResourceTree extends JPanel {
 
 			this.setVisible(true);
 
-			final String dialogueType = story.getModule().getDialogueType();
+			final String dialogueType = ResourceTree.this.getDialogueType();
 
 			final List<Resource> resources;
 
-			// TODO See above note on dialogue types.
+			// TODO See above note on dialogue types. This entire section is
+			// awkward since it relies on dialogues.
 			if (StringOp.exists(dialogueType) && type.equals(dialogueType))
 				resources = new ArrayList<Resource>(story.getDialogueRoots());
 			else {
@@ -435,8 +439,9 @@ class ResourceTree extends JPanel {
 
 			Collections.sort(resources, constantSorter);
 
-			// Go through the collection of resources and add those that do not
-			// exist to the map.
+			// Go through the collection of resources and create panels for
+			// those that do not already have any in the panel map.
+			// Add them to the panel based on their position.
 			int previousIndex = -1;
 			for (Resource resource : resources) {
 				final JPanel panel = this.resourcesToPanels.get(resource);
@@ -453,87 +458,27 @@ class ResourceTree extends JPanel {
 
 			final Collection<Entry<Resource, JPanel>> entrySet;
 
+			// Needs to be a new set to avoid concurrent modifications.
 			entrySet = new HashSet<Entry<Resource, JPanel>>(
 					this.resourcesToPanels.entrySet());
 
-			// Go through the map and change visibility of resources. Remove any
-			// that no longer exist in the model.
 			for (Entry<Resource, JPanel> entry : entrySet) {
 				final Resource resource = entry.getKey();
 				final JPanel panel = entry.getValue();
 
+				// Check if the resource still exists
 				if (resources.contains(resource)) {
+					// Make visibility match search text
 					panel.setVisible(ResourceTree.this
 							.matchesSearchText(resource));
 				} else {
+					// Remove any that no longer exist in the model
 					this.container.remove(panel);
 					this.resourcesToPanels.remove(resource);
 				}
 			}
 
 			this.revalidate();
-		}
-
-		/**
-		 * An observer that updates the category based on changes to an
-		 * {@link EditableResource}.
-		 * 
-		 * @param nameLabel
-		 * @return
-		 */
-		private ResourceObserver resourceObserver(final JLabel nameLabel) {
-			return new ResourceObserver() {
-				private JPanel refreshPanel(EditableResource resource) {
-					JPanel panel = null;
-					Resource toRemove = null;
-
-					if (resourcesToPanels.containsKey(resource)) {
-						toRemove = resource;
-						panel = resourcesToPanels.get(resource);
-					} else
-						for (Resource key : resourcesToPanels.keySet()) {
-							if (key.getDescendants().contains(resource)) {
-								panel = resourcesToPanels.get(key);
-								toRemove = key;
-								break;
-							}
-						}
-
-					if (panel != null) {
-						container.remove(panel);
-						resourcesToPanels.remove(toRemove);
-						updateResourcePanels();
-					}
-
-					return panel;
-				}
-
-				@Override
-				public void childAdded(EditableResource resource, Resource child) {
-					final JPanel panel = this.refreshPanel(resource);
-
-					if (panel != null && child instanceof EditableResource)
-						((EditableResource) child).addObserver(resource, this);
-
-				}
-
-				@Override
-				public void childRemoved(EditableResource resource,
-						Resource child) {
-					this.refreshPanel(resource);
-				}
-
-				@Override
-				public void nameChanged(EditableResource resource, String name) {
-					// If the root changed, we refresh the panel so it gets
-					// rearranged alphabetically.
-					if (resourcesToPanels.containsKey(resource)) {
-						refreshPanel(resource);
-					}
-
-					nameLabel.setText(name);
-				}
-			};
 		}
 
 		/**
@@ -589,10 +534,6 @@ class ResourceTree extends JPanel {
 
 			gameObjectBindingWidget.add(nameLabel);
 
-			if (resource instanceof EditableResource)
-				((EditableResource) resource).addObserver(this
-						.resourceObserver(nameLabel));
-
 			panel.add(Box.createHorizontalStrut(STRUT_SIZE));
 
 			if (resource.getChildren().size() > 0) {
@@ -636,41 +577,63 @@ class ResourceTree extends JPanel {
 
 			resourcePanel.add(gameObjectBindingWidget);
 
-			if (resource instanceof EditableResource
-					&& ((EditableResource) resource).isRoot()) {
+			if (resource instanceof EditableResource) {
+				// We add an observer if it's editable
+				final EditableResource editable = (EditableResource) resource;
 
-				final JButton editButton = ComponentFactory.buildEditButton();
-				final JButton removeButton = ComponentFactory
-						.buildRemoveButton();
+				// This prevents a memory leak where we would constantly add
+				// observers to the resource.
+				if (this.resourcesToObservers.containsKey(resource)) {
+					editable.removeObserver(this.resourcesToObservers
+							.get(resource));
+				}
 
-				editButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						ResourceTree.this.notifyEditButtonClicked(resource);
-					}
-				});
+				final ResourceObserver observer;
 
-				removeButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						ResourceTree.this.notifyRemoveButtonClicked(resource);
+				observer = this.resourceObserver(nameLabel);
 
-						final Container parent;
+				editable.addObserver(resource, observer);
+				this.resourcesToObservers.put(resource, observer);
 
-						parent = panel.getParent();
+				if (editable.isRoot()) {
+					// We add an edit and remove button to roots of editable
+					// resources. Their behaviour is handled by listeners.
+					final JButton editButton;
+					final JButton removeButton;
 
-						if (parent != null) {
-							parent.remove(panel);
+					editButton = ComponentFactory.buildEditButton();
+					removeButton = ComponentFactory.buildRemoveButton();
 
-							if (parent instanceof JComponent) {
-								((JComponent) parent).revalidate();
+					editButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							ResourceTree.this.notifyEditButtonClicked(resource);
+						}
+					});
+
+					removeButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							ResourceTree.this
+									.notifyRemoveButtonClicked(resource);
+
+							final Container parent;
+
+							parent = panel.getParent();
+
+							if (parent != null) {
+								parent.remove(panel);
+
+								if (parent instanceof JComponent) {
+									((JComponent) parent).revalidate();
+								}
 							}
 						}
-					}
-				});
+					});
 
-				resourcePanel.add(editButton);
-				resourcePanel.add(removeButton);
+					resourcePanel.add(editButton);
+					resourcePanel.add(removeButton);
+				}
 			}
 
 			panel.add(resourcePanel);
@@ -705,9 +668,77 @@ class ResourceTree extends JPanel {
 
 			childPanel.setVisible(false);
 
-			this.resourcesToPanels.put(resource, panel);
-
 			return panel;
+		}
+
+		/**
+		 * An observer that updates the category based on changes to an
+		 * {@link EditableResource}.
+		 * 
+		 * @param nameLabel
+		 * @return
+		 */
+		private ResourceObserver resourceObserver(final JLabel nameLabel) {
+			return new ResourceObserver() {
+
+				/**
+				 * Finds the resource, removes it from the panel list, and
+				 * updates the panels.
+				 * 
+				 * @param resource
+				 */
+				private void refreshCategoryPanel(EditableResource resource) {
+					if (resourcesToPanels.containsKey(resource)) {
+						this.remove(resource);
+					} else
+						// If it's not at the top level, it may be a child.
+						// e.g. Dialogue line in a dialogue
+						for (Resource key : resourcesToPanels.keySet()) {
+							if (key.getDescendants().contains(resource)) {
+								this.remove(key);
+								break;
+							}
+						}
+				}
+
+				/**
+				 * Removes a resource from the panels and updates the panels.
+				 * 
+				 * @param resource
+				 */
+				private void remove(Resource resource) {
+					final JPanel panel = resourcesToPanels.get(resource);
+
+					if (panel != null) {
+						container.remove(panel);
+						resourcesToPanels.remove(resource);
+
+						updateResourcePanels();
+					}
+				}
+
+				@Override
+				public void childAdded(EditableResource resource, Resource child) {
+					this.refreshCategoryPanel(resource);
+				}
+
+				@Override
+				public void childRemoved(EditableResource resource,
+						Resource child) {
+					this.refreshCategoryPanel(resource);
+				}
+
+				@Override
+				public void nameChanged(EditableResource resource, String name) {
+					// If the root changed, we refresh the panel so it gets
+					// rearranged alphabetically.
+					if (resourcesToPanels.containsKey(resource)) {
+						refreshCategoryPanel(resource);
+					}
+
+					nameLabel.setText(name);
+				}
+			};
 		}
 	}
 }

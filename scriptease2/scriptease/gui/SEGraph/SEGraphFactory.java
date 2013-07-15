@@ -2,6 +2,8 @@ package scriptease.gui.SEGraph;
 
 import java.awt.Color;
 
+import javax.swing.BorderFactory;
+
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.models.DialogueLineGraphModel;
@@ -46,8 +48,10 @@ public class SEGraphFactory {
 				SelectionMode.SELECT_PATH_FROM_START, true);
 
 		graph.setNodeRenderer(new DescribeItNodeRenderer(graph));
-		graph.setBackground(GUIOp.scaleWhite(ScriptEaseUI.COLOUR_KNOWN_OBJECT,
-				3.5));
+		graph.setBorder(BorderFactory.createLineBorder(Color.black));
+		graph.setBackground(Color.WHITE);
+		/*graph.setBackground(GUIOp.scaleWhite(ScriptEaseUI.COLOUR_KNOWN_OBJECT,
+				3.5));*/
 
 		return graph;
 	}
