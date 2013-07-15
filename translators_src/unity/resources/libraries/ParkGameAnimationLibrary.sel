@@ -162,7 +162,7 @@
               </Types>
               <Binding flavour="constant">
                 <Type>EnableDisable</Type>
-                <Value>false</Value>
+                <Value>true</Value>
               </Binding>
             </KnowIt>
           </Parameters>
