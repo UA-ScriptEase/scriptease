@@ -3,13 +3,13 @@ package scriptease.gui.SEGraph.renderers;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -30,6 +30,7 @@ import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
@@ -79,7 +80,8 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 		component.add(dialogueField);
 	}
 
-	private void renderChildNode(JComponent component, final DialogueLine node) {
+	private void renderChildNode(final JComponent component,
+			final DialogueLine node) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 		if (!(model instanceof StoryModel))
@@ -98,19 +100,17 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 		final JCheckBox enabledBox;
 
 		final GroupLayout layout;
+		
+		final Speaker speaker;
+		final String speakerText;
 
-		dialogueArea = new JTextArea(node.getName()) {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-
-				g.setColor(Color.LIGHT_GRAY);
-				g.drawString(node.getSpeaker().name(), this.getWidth() / 2,
-						this.getHeight() / 2);
-			}
-		};
+		final JLabel speakerLabel = new JLabel();
+		
+		dialogueArea = new JTextArea(node.getName());
 		dialogueScrollPane = new JScrollPane(dialogueArea);
+
 		story = (StoryModel) model;
+		speaker = node.getSpeaker();
 		module = story.getModule();
 
 		audioPanel = this.createSlot(module.getAudioType(), node.getAudio(),
@@ -148,11 +148,24 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 		dialogueArea.setLineWrap(true);
 		dialogueArea.setWrapStyleWord(true);
 		dialogueArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		dialogueScrollPane.setPreferredSize(new Dimension(200, 75));
+		dialogueScrollPane.setPreferredSize(new Dimension(230, 75));
 
 		layout.setAutoCreateContainerGaps(true);
 		layout.setAutoCreateGaps(true);
 
+		if (speaker == Speaker.FIRST)
+			speakerText = "Speaker 1";
+		else if (speaker == Speaker.SECOND)
+			speakerText = "Speaker 2";
+		else
+			throw new IllegalStateException("Node " + node
+					+ "'s speaker, " + speaker + " is illegal.");
+
+		speakerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+		speakerLabel.setForeground(Color.GRAY);
+		speakerLabel.setText(speakerText);
+
+		
 		dialogueArea.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
@@ -180,6 +193,7 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 
 		layout.setHorizontalGroup(layout
 				.createParallelGroup()
+				.addComponent(speakerLabel)
 				.addComponent(dialogueScrollPane)
 				.addGroup(
 						layout.createSequentialGroup().addComponent(enabledBox)
@@ -189,6 +203,7 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 		// vertical perspective
 		layout.setVerticalGroup(layout
 				.createSequentialGroup()
+				.addComponent(speakerLabel)
 				.addComponent(dialogueScrollPane)
 				.addGroup(
 						layout.createParallelGroup().addComponent(enabledBox)

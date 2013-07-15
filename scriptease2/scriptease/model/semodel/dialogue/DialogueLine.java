@@ -86,23 +86,23 @@ public final class DialogueLine extends EditableResource {
 
 		// Set up the speakers
 		for (Resource child : children) {
-			this.setupSpeakers(child);
+			if (child instanceof DialogueLine)
+				this.setChildSpeaker((DialogueLine) child);
 		}
 	}
 
-	private void setupSpeakers(Resource child) {
-		if (child instanceof DialogueLine
-				&& ((DialogueLine) child).getSpeaker() == null) {
-			final DialogueLine childLine = (DialogueLine) child;
+	private void setChildSpeaker(DialogueLine child) {
+		if (this.speaker == Speaker.FIRST)
+			child.speaker = Speaker.SECOND;
+		else if (this.speaker == Speaker.SECOND)
+			child.speaker = Speaker.FIRST;
+		else
+			throw new IllegalStateException("Dialogue Line " + this
+					+ " has illegal speaker: " + this.speaker);
 
-			if (this.speaker == Speaker.FIRST)
-				childLine.speaker = Speaker.SECOND;
-			else if (this.speaker == Speaker.SECOND)
-				childLine.speaker = Speaker.FIRST;
-			else
-				throw new IllegalStateException(
-						"Tried to add a dialogue line to a line with no speaker.");
-
+		for (Resource childChild : child.getChildren()) {
+			if (childChild instanceof DialogueLine)
+				child.setChildSpeaker((DialogueLine) childChild);
 		}
 	}
 
@@ -206,10 +206,15 @@ public final class DialogueLine extends EditableResource {
 
 	@Override
 	public boolean addChild(Resource child) {
-		this.setupSpeakers(child);
+		if (!(child instanceof DialogueLine))
+			return false;
 
-		return child instanceof DialogueLine
-				&& this.speaker != ((DialogueLine) child).speaker
+		final DialogueLine childLine = (DialogueLine) child;
+
+		if (childLine.speaker == null)
+			this.setChildSpeaker(childLine);
+
+		return ((DialogueLine) child).speaker != this.speaker
 				&& super.addChild(child);
 	}
 
