@@ -66,7 +66,7 @@ public abstract class EditableResource extends Resource {
 	public boolean addChild(Resource child) {
 		final boolean added;
 
-		if (added = this.children.add(child)) {
+		if (added = !this.children.contains(child) && this.children.add(child)) {
 			this.notifyChildAdded(child);
 		}
 

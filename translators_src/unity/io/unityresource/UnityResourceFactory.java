@@ -265,31 +265,36 @@ public class UnityResourceFactory {
 
 		final List<UnityResource> unityObjects = new ArrayList<UnityResource>();
 
-		// Go through each event.
-		while (eventIterator.hasNext()) {
-			final Event event = eventIterator.next();
-			if (event.is(Event.ID.DocumentStart)) {
-				final UnityResource object;
+		try {
+			// Go through each event.
+			while (eventIterator.hasNext()) {
+				final Event event = eventIterator.next();
+				if (event.is(Event.ID.DocumentStart)) {
+					final UnityResource object;
 
-				object = this.buildResource(eventIterator);
+					object = this.buildResource(eventIterator);
 
-				if (object != null)
-					unityObjects.add(object);
-			} else if (event.is(Event.ID.StreamStart)) {
-				// Just continue for stream starts.
-				continue;
-			} else if (event.is(Event.ID.StreamEnd)) {
-				if (eventIterator.hasNext()) {
-					throw new IllegalStateException(
-							"Stream End event encountered before all events "
-									+ "were dealt with. Next event is "
-									+ eventIterator.next());
+					if (object != null)
+						unityObjects.add(object);
+				} else if (event.is(Event.ID.StreamStart)) {
+					// Just continue for stream starts.
+					continue;
+				} else if (event.is(Event.ID.StreamEnd)) {
+					if (eventIterator.hasNext()) {
+						throw new IllegalStateException(
+								"Stream End event encountered before all events "
+										+ "were dealt with. Next event is "
+										+ eventIterator.next());
+					}
+					break;
+				} else {
+					throw new IllegalArgumentException("Event [" + event
+							+ "] is not the start of a document or stream.");
 				}
-				break;
-			} else {
-				throw new IllegalArgumentException("Event [" + event
-						+ "] is not the start of a document or stream.");
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("err5055");
 		}
 
 		return unityObjects;
