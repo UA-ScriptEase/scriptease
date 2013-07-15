@@ -88,8 +88,10 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		for (String parsedKey : parsedKeys) {
 			int localCount = 0;
 			for (String data : searchableData) {
-				if (data.toLowerCase().contains(parsedKey.toLowerCase()))
-					localCount++;
+				if (data != null && parsedKey != null) {
+					if (data.toLowerCase().contains(parsedKey.toLowerCase()))
+						localCount++;
+				}
 			}
 			if (localCount == 0)
 				return 0;
