@@ -131,7 +131,7 @@ public class SEGraph<E> extends JComponent {
 
 		this.selectedNodes.add(model.getStartNode());
 
-		this.setUI(this.new SEGraphUI());
+		this.setUI(this.new SEGraphArrowUI());
 		// Setting opacity to false speeds up rendering.
 		this.setOpaque(false);
 
@@ -748,23 +748,8 @@ public class SEGraph<E> extends JComponent {
 	 * @author kschenk
 	 */
 	private class SEGraphLayoutManager implements LayoutManager {
-		private static final int HORIZONTAL_INDENT = 20;
-		private static final int VERTICAL_INDENT = 15;
-
-		@Override
-		public void addLayoutComponent(String name, Component comp) {
-			// No extra registration of components is needed.
-		}
-
-		@Override
-		public void removeLayoutComponent(Component comp) {
-			// No extra de-registration of components is needed.
-		}
-
-		@Override
-		public Dimension preferredLayoutSize(Container parent) {
-			return minimumLayoutSize(parent);
-		}
+		private static final int HORIZONTAL_GAP = 50;
+		private static final int VERTICAL_GAP = 15;
 
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
@@ -774,7 +759,6 @@ public class SEGraph<E> extends JComponent {
 			final Collection<Integer> levels;
 
 			insets = parent.getInsets();
-			// TODO Getting the depth map here makes the graph slow.
 			nodeMap = SEGraph.this.model.getDepthMap();
 			levels = nodeMap.values();
 
@@ -795,25 +779,26 @@ public class SEGraph<E> extends JComponent {
 				}
 
 				// Get the width of the widest JComponent in the level.
-				xSize += this.getMaxWidth(currentNodes) + HORIZONTAL_INDENT;
+				xSize += this.getMaxWidth(currentNodes) + HORIZONTAL_GAP;
 
-				int yNodeSize = VERTICAL_INDENT;
+				int yNodeSize = VERTICAL_GAP;
 				for (E node : currentNodes) {
 					JComponent component = SEGraph.this
 							.createComponentForNode(node);
-					yNodeSize += VERTICAL_INDENT
+					yNodeSize += VERTICAL_GAP
 							+ component.getPreferredSize().height;
 				}
 				ySize = Math.max(ySize, yNodeSize);
 			}
 			return new Dimension(xSize, ySize);
-
 		}
 
 		@Override
 		public void layoutContainer(Container parent) {
 			// Remove the current contents of the panel.
 			SEGraph.this.removeAll();
+
+			final List<E> previousNodes = new ArrayList<E>();
 
 			final Map<E, Integer> nodeMap;
 			final int numberOfLevels;
@@ -823,8 +808,7 @@ public class SEGraph<E> extends JComponent {
 			numberOfLevels = Collections.max(nodeMap.values());
 			graphHeight = SEGraph.this.getPreferredSize().getHeight();
 
-			int xLocation = HORIZONTAL_INDENT;
-			List<E> previousNodes = null;
+			int xLocation = HORIZONTAL_GAP;
 			// For each level in the graph,
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
 				final List<E> currentNodes;
@@ -854,9 +838,15 @@ public class SEGraph<E> extends JComponent {
 					// JComponent preferred width
 					componentSize = component.getPreferredSize();
 					nodeWidth = componentSize.width;
+
+					// TODO Change variable name (obvs) and determine what
+					// happens
+					final double heightddd = pixelsPerNode;
+					// componentSize.height + 20;
+
 					// The y Location for the node.
-					yNodeLocation = (int) (pixelsPerNode * (currentNode + 1)
-							- 0.5 * pixelsPerNode - 0.5 * componentSize.height);
+					yNodeLocation = (int) (heightddd * (currentNode + 1) - 0.5
+							* heightddd - 0.5 * componentSize.height);
 
 					if (component.getMouseListeners().length <= 1) {
 						component.addMouseListener(SEGraph.this.mouseAdapter);
@@ -868,21 +858,17 @@ public class SEGraph<E> extends JComponent {
 					SEGraph.this.add(component);
 					SEGraph.this.nodesToComponents.put(node, component);
 
-					// Center smaller nodes according to the biggest
-					int xOffset = 0;
-					if (nodeWidth != maxWidth) {
-						xOffset = (maxWidth - nodeWidth) / 2;
-					}
-
 					// Set the size and location of the component
-					component.setLocation(xOffset + xLocation, yNodeLocation);
+					component.setLocation(xLocation, yNodeLocation);
 					component.setSize(new Dimension(nodeWidth,
 							componentSize.height));
 				}
 
 				// Update the x location for the next level.
-				xLocation = xLocation + maxWidth + HORIZONTAL_INDENT;
-				previousNodes = currentNodes;
+				xLocation = xLocation + maxWidth + HORIZONTAL_GAP;
+
+				previousNodes.clear();
+				previousNodes.addAll(currentNodes);
 			}
 		}
 
@@ -960,6 +946,21 @@ public class SEGraph<E> extends JComponent {
 			// Return the maximum width.
 			return maxWidth;
 		}
+
+		@Override
+		public void addLayoutComponent(String name, Component comp) {
+			// No extra registration of components is needed.
+		}
+
+		@Override
+		public void removeLayoutComponent(Component comp) {
+			// No extra de-registration of components is needed.
+		}
+
+		@Override
+		public Dimension preferredLayoutSize(Container parent) {
+			return minimumLayoutSize(parent);
+		}
 	}
 
 	/**
@@ -969,45 +970,55 @@ public class SEGraph<E> extends JComponent {
 	 * @author kschenk
 	 * 
 	 */
-	public class SEGraphUI extends ComponentUI {
-
+	private class SEGraphArrowUI extends ComponentUI {
 		@Override
 		public void paint(Graphics g, JComponent c) {
+			final float ARROW_WIDTH = 3.0f;
+			final int SPACER_FACTOR = 5;
+
+			final Collection<E> selected;
+			final Map<E, Integer> nodeMap;
+			final int numberOfLevels;
+
+			final Graphics2D g2;
+			final BasicStroke lineStroke;
+
+			selected = SEGraph.this.getSelectedNodes();
+			nodeMap = SEGraph.this.model.getDepthMap();
+			numberOfLevels = Collections.max(nodeMap.values());
+
+			g2 = (Graphics2D) g.create();
+			lineStroke = new BasicStroke(ARROW_WIDTH);
+
+			// Paint the graph's background.
 			g.setColor(SEGraph.this.getBackground());
 			g.fillRect(0, 0, SEGraph.this.getWidth(), SEGraph.this.getHeight());
 
-			final Graphics2D g2 = (Graphics2D) g.create();
-
+			// Dragging behaviour for arrows, if we're currently dragging
 			if (SEGraph.this.draggedFromNode != null
 					&& SEGraph.this.mousePosition != null) {
 				final Mode mode = SEGraph.this.getToolBarMode();
 
+				final Point start;
+				final Point end;
+				final Color lineColor;
+
+				start = GUIOp.getMidRight(SEGraph.this
+						.createComponentForNode(SEGraph.this.draggedFromNode));
+				end = SEGraph.this.mousePosition;
+
 				if (mode == Mode.INSERT || mode == Mode.CONNECT)
-					g2.setColor(GUIOp.scaleColour(
-							ScriptEaseUI.COLOUR_INSERT_NODE, 0.8));
+					lineColor = ScriptEaseUI.COLOUR_INSERT_NODE;
 				else if (mode == Mode.DISCONNECT)
-					g2.setColor(ScriptEaseUI.COLOUR_DELETE_NODE);
+					lineColor = ScriptEaseUI.COLOUR_DELETE_NODE;
+				else
+					lineColor = Color.GRAY;
 
-				g2.setStroke(new BasicStroke(1.5f));
+				g2.setColor(lineColor);
+				g2.setStroke(lineStroke);
 
-				final List<Point> points;
-
-				points = new ArrayList<Point>();
-
-				points.add(GUIOp.getMidRight(SEGraph.this
-						.createComponentForNode(SEGraph.this.draggedFromNode)));
-
-				points.add(SEGraph.this.mousePosition);
-				GUIOp.paintArrow(g2, points);
-
+				GUIOp.paintArrow(g2, start, end, 0);
 			}
-
-			// Get the nodes level map
-			// TODO This is slow
-			final Map<E, Integer> nodeMap = SEGraph.this.model.getDepthMap();
-
-			// Get the number of levels in the graph.
-			int numberOfLevels = Collections.max(nodeMap.values());
 
 			// For each level in the graph
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
@@ -1021,38 +1032,93 @@ public class SEGraph<E> extends JComponent {
 				// for each node in the level
 				for (E parent : currentNodes) {
 					// Get the children of the node.
-					Collection<E> children = SEGraph.this.model
-							.getChildren(parent);
+					final Collection<E> children;
+					final JComponent parentComponent;
+
+					final int parentY;
+					final int childrenOffset;
+
+					final boolean parentSelected;
+					final Point arrowStart;
+
+					children = SEGraph.this.model.getChildren(parent);
+					parentComponent = SEGraph.this
+							.createComponentForNode(parent);
+
+					parentY = parentComponent.getY();
+					childrenOffset = (children.size() - 1) * SPACER_FACTOR;
+
+					parentSelected = selected.contains(parent);
+					arrowStart = GUIOp.getMidRight(parentComponent);
 
 					// For each child,
+					int previousLevelOffset = -1;
 					for (E child : children) {
+						final Integer childLevel = nodeMap.get(child);
+						if (childLevel == null)
+							// We are painting a blank graph. Return.
+							return;
 
-						// Set the line stroke
-						BasicStroke stroke = new BasicStroke(1.5f);
-						g2.setStroke(stroke);
+						final JComponent childComponent;
+						final Color lineColor;
 
-						// Set color of line based on selection
-						Color lineColour;
-						lineColour = Color.GRAY;
-						g2.setColor(lineColour);
+						final Point arrowEnd;
 
-						final List<Point> points;
-						final Point start;
-						final Point end;
-						points = new ArrayList<Point>();
-						start = GUIOp.getMidRight(SEGraph.this
-								.createComponentForNode(parent));
-						end = GUIOp.getMidLeft(SEGraph.this
-								.createComponentForNode(child));
+						final int childY;
+						final int levelOffset;
+						final int curveFactor;
 
-						points.add(start);
+						final boolean childSelected;
 
-						// Add points between
+						childComponent = SEGraph.this
+								.createComponentForNode(child);
 
-						points.add(end);
+						arrowEnd = GUIOp.getMidLeft(childComponent);
+
+						childY = childComponent.getY();
+						levelOffset = (childLevel - currentLevel)
+								* SPACER_FACTOR;
+						curveFactor = childLevel - currentLevel - 1;
+
+						childSelected = selected.contains(child);
+
+						if (parentSelected && childSelected) {
+							lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;
+						} else if (parentSelected) {
+							lineColor = ScriptEaseUI.COLOUR_CHILD_NODE.darker();
+						} else if (childSelected) {
+							lineColor = ScriptEaseUI.COLOUR_PARENT_NODE
+									.darker();
+						} else
+							lineColor = Color.LIGHT_GRAY;
+
+						// Move the arrows up if there are more children and
+						// the previous level's offset is different.
+						if (previousLevelOffset != levelOffset) {
+							arrowStart.y -= childrenOffset;
+							arrowEnd.y -= childrenOffset;
+						}
+
+						// Don't let the arrows start higher than their node.
+						if (arrowStart.y < parentY)
+							arrowStart.y = parentY;
+						if (arrowEnd.y < childY)
+							arrowEnd.y = childY;
+
+						if (childrenOffset > 0) {
+							if (previousLevelOffset != levelOffset) {
+								arrowStart.y += levelOffset;
+								arrowEnd.y += levelOffset;
+
+							}
+						}
+						previousLevelOffset = levelOffset;
+
+						g2.setStroke(lineStroke);
+						g2.setColor(lineColor);
 
 						// Draw an arrow pointing towards the child.
-						GUIOp.paintArrow(g2, points);
+						GUIOp.paintArrow(g2, arrowStart, arrowEnd, curveFactor);
 					}
 				}
 			}

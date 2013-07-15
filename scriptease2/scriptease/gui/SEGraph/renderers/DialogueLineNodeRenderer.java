@@ -51,27 +51,31 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 	protected void configureInternalComponents(JComponent component,
 			final DialogueLine node) {
 		if (node == this.graph.getStartNode()) {
-			final JTextField dialogueField;
-			final Runnable commitText;
-
-			dialogueField = new JTextField(node.getName());
-			commitText = new Runnable() {
-				@Override
-				public void run() {
-					node.setName(dialogueField.getText());
-
-					graph.revalidate();
-					graph.repaint();
-				}
-			};
-
-			WidgetDecorator.decorateJTextFieldForFocusEvents(dialogueField,
-					commitText, true, Color.WHITE);
-
-			component.add(dialogueField);
+			this.renderStartNode(component, node);
 		} else {
 			this.renderChildNode(component, node);
 		}
+	}
+
+	private void renderStartNode(JComponent component, final DialogueLine node) {
+		final JTextField dialogueField;
+		final Runnable commitText;
+
+		dialogueField = new JTextField(node.getName());
+		commitText = new Runnable() {
+			@Override
+			public void run() {
+				node.setName(dialogueField.getText());
+
+				graph.revalidate();
+				graph.repaint();
+			}
+		};
+
+		WidgetDecorator.decorateJTextFieldForFocusEvents(dialogueField,
+				commitText, true, Color.WHITE);
+
+		component.add(dialogueField);
 	}
 
 	private void renderChildNode(JComponent component, final DialogueLine node) {
