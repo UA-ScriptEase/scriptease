@@ -1,6 +1,20 @@
 <LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team">
   <Types>
     <Type>
+      <Name>AngryHappy</Name>
+      <Keyword>AngryHappy</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>2&lt;Happy&gt;|1&lt;Angry&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
+      <Name>Foot</Name>
+      <Keyword>Foot</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>2&lt;Right Foot&gt;|1&lt;Left Foot&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
       <Name>Emotion</Name>
       <Keyword>Emotion</Keyword>
       <CodeSymbol>int</CodeSymbol>
@@ -109,7 +123,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play sit animation for &lt;Character&gt;</Name>
+      <Name>&lt;Play&gt; sit animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -118,7 +132,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play sit animation for &lt;Character&gt;</Name>
+          <Name>&lt;Play&gt; sit animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>2</Id>
@@ -132,6 +146,18 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
+            <KnowIt>
+              <Name>Play</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>EnableDisable</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>EnableDisable</Type>
+                <Value>false</Value>
+              </Binding>
+            </KnowIt>
           </Parameters>
           <Code>
             <Line>
@@ -139,14 +165,18 @@
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).doSit = true;</Literal>
+              <Literal>).doSit = </Literal>
+              <Scope data="ARGUMENT" ref="Play">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play wave animation for &lt;Character&gt;</Name>
+      <Name>&lt;Play&gt; wave animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -155,7 +185,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play wave animation for &lt;Character&gt;</Name>
+          <Name>&lt;Play&gt; wave animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>3</Id>
@@ -169,6 +199,18 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
+            <KnowIt>
+              <Name>Play</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>EnableDisable</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>EnableDisable</Type>
+                <Value>true</Value>
+              </Binding>
+            </KnowIt>
           </Parameters>
           <Code>
             <Line>
@@ -176,7 +218,11 @@
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).doWave = true;</Literal>
+              <Literal>).doWave = </Literal>
+              <Scope data="ARGUMENT" ref="Play">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -257,7 +303,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play pick up animation for &lt;Character&gt;</Name>
+      <Name>Play pick up animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -266,7 +312,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play pick up animation for &lt;Character&gt;</Name>
+          <Name>Play pick up animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>6</Id>
@@ -280,8 +326,27 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
           </Parameters>
           <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).itemHeld = </Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform;</Literal>
+            </Line>
             <Line>
               <Literal>SEAnimationController.GetAnimationController(</Literal>
               <Scope data="ARGUMENT" ref="Character">
@@ -444,6 +509,9 @@
           <Code>
             <Line>
               <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController( </Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
               <Literal>);</Literal>
             </Line>
             <Line>
@@ -468,21 +536,21 @@
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.sadWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.sadWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.angryWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.angryWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.afraidWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.afraidWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
@@ -501,28 +569,28 @@
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.happyWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.happyWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.sadWeight = 1;</Literal>
+                  <Literal>seAnimationController.sadWeight = 0.5;</Literal>
                 </Line>
               </Indent>
             </Indent>
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.angryWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.angryWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.afraidWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.afraidWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
@@ -541,21 +609,61 @@
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.happyWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.happyWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.sadWeight = 0.5;</Literal>
+                  <Literal>seAnimationController.sadWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
             <Indent>
               <Indent>
                 <Line>
-                  <Literal>seAnimationController.angryWeight = 1;</Literal>
+                  <Literal>seAnimationController.angryWeight = 0.5;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.afraidWeight = 0;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>break;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Line>
+                <Literal>case 4:</Literal>
+              </Line>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.happyWeight = 0;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.sadWeight = 0;</Literal>
+                </Line>
+              </Indent>
+            </Indent>
+            <Indent>
+              <Indent>
+                <Line>
+                  <Literal>seAnimationController.angryWeight = 0;</Literal>
                 </Line>
               </Indent>
             </Indent>
@@ -575,36 +683,8 @@
             </Indent>
             <Indent>
               <Line>
-                <Literal>case 4:</Literal>
+                <Literal>default:</Literal>
               </Line>
-            </Indent>
-            <Indent>
-              <Indent>
-                <Line>
-                  <Literal>seAnimationController.happyWeight = 0.5;</Literal>
-                </Line>
-              </Indent>
-            </Indent>
-            <Indent>
-              <Indent>
-                <Line>
-                  <Literal>seAnimationController.sadWeight = 0.5;</Literal>
-                </Line>
-              </Indent>
-            </Indent>
-            <Indent>
-              <Indent>
-                <Line>
-                  <Literal>seAnimationController.angryWeight = 0.5;</Literal>
-                </Line>
-              </Indent>
-            </Indent>
-            <Indent>
-              <Indent>
-                <Line>
-                  <Literal>seAnimationController.afraidWeight = 1;</Literal>
-                </Line>
-              </Indent>
             </Indent>
             <Indent>
               <Indent>
@@ -615,6 +695,125 @@
             </Indent>
             <Line>
               <Literal>}</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Perform &lt;AngryHappy&gt; kick animation for &lt;Character&gt; with &lt;LeftRight&gt; foot</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Perform &lt;AngryHappy&gt; kick animation for &lt;Character&gt; with &lt;LeftRight&gt; foot</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>12</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>AngryHappy</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>AngryHappy</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>AngryHappy</Type>
+                <Value>2</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>LeftRight</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>Foot</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>Foot</Type>
+                <Value>2</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>if (</Literal>
+              <Scope data="ARGUMENT" ref="AngryHappy">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> == 1)</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>SEAnimationController.GetAnimationController(</Literal>
+                <Scope data="ARGUMENT" ref="Character">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>).angryKick = true;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>SEAnimationController.GetAnimationController(</Literal>
+                <Scope data="ARGUMENT" ref="Character">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>).angryKick = false;</Literal>
+              </Line>
+            </Indent>
+            <Line/>
+            <Line>
+              <Literal>if (</Literal>
+              <Scope data="ARGUMENT" ref="LeftRight">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> == 1)</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>SEAnimationController.GetAnimationController(</Literal>
+                <Scope data="ARGUMENT" ref="Character">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>).leftFoot = true;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>SEAnimationController.GetAnimationController(</Literal>
+                <Scope data="ARGUMENT" ref="Character">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>).leftFoot = false;</Literal>
+              </Line>
+            </Indent>
+            <Line/>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doKick = true;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
