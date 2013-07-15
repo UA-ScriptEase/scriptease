@@ -366,7 +366,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play shake head animation for &lt;Character&gt;</Name>
+      <Name>&lt;Enable&gt; shake head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -375,7 +375,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play shake head animation for &lt;Character&gt;</Name>
+          <Name>&lt;Enable&gt; shake head animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>7</Id>
@@ -389,15 +389,48 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
+            <KnowIt>
+              <Name>Enable</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>EnableDisable</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>EnableDisable</Type>
+                <Value>true</Value>
+              </Binding>
+            </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEAnimationController.GetAnimationController(</Literal>
-              <Scope data="ARGUMENT" ref="Character">
+              <Literal>if (</Literal>
+              <Scope data="ARGUMENT" ref="Enable">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).doShake = true;</Literal>
+              <Literal>)</Literal>
             </Line>
+            <Indent>
+              <Line>
+                <Literal>SEAnimationController.GetAnimationController(</Literal>
+                <Scope data="ARGUMENT" ref="Character">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>).doShake = true;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>SEAnimationController.GetAnimationController(</Literal>
+                <Scope data="ARGUMENT" ref="Character">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>).doShake = false;</Literal>
+              </Line>
+            </Indent>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -961,7 +994,51 @@
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).playDrink = true;</Literal>
+              <Literal>).wasDrinking = true;</Literal>
+            </Line>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).doHold = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Drop the item that &lt;Character&gt; is currently holding</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Drop the item that &lt;Character&gt; is currently holding</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>15</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).itemHeld = null;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
