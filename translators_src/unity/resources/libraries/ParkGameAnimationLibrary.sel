@@ -1,6 +1,13 @@
 <LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team">
   <Types>
     <Type>
+      <Name>RightLeft</Name>
+      <Keyword>RightLeft</Keyword>
+      <CodeSymbol>int</CodeSymbol>
+      <Enum>2&lt;Left&gt;|1&lt;Right&gt;</Enum>
+      <GUI>JCOMBOBOX</GUI>
+    </Type>
+    <Type>
       <Name>AngryHappy</Name>
       <Keyword>AngryHappy</Keyword>
       <CodeSymbol>int</CodeSymbol>
@@ -814,6 +821,147 @@
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>).doKick = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>While &lt;Character&gt; is sitting, play talk animation to the character on your &lt;LeftRight&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>While &lt;Character&gt; is sitting, play talk animation to the character on your &lt;LeftRight&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>13</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>LeftRight</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>RightLeft</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>RightLeft</Type>
+                <Value>2</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>if (</Literal>
+              <Scope data="ARGUMENT" ref="LeftRight">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal> == 1) {</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.playTalkLeft = false;</Literal>
+              </Line>
+            </Indent>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.playTalkRight = true;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>} else {</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.playTalkLeft = true;</Literal>
+              </Line>
+            </Indent>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.playTalkRight = false;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>}</Literal>
+            </Line>
+            <Line>
+              <Literal>seAnimationController.doSit = true;</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play drink animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>NOW</Label>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play drink animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>14</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Object</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).itemHeld = </Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform;</Literal>
+            </Line>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).playDrink = true;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
