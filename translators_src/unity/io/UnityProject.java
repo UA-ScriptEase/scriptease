@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.swing.Icon;
+import javax.swing.UIManager;
+
 import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -411,6 +414,7 @@ public final class UnityProject extends GameModule {
 		final String title = "Internal Error";
 		final String messageBrief = "ScriptEase has encountered an internal error.";
 		final String message = "It may be possible to continue past this error.<br>Would you like to help make ScriptEase better by reporting the problem?";
+		final Icon icon = UIManager.getIcon("OptionPane.errorIcon");
 
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
@@ -431,7 +435,7 @@ public final class UnityProject extends GameModule {
 					name = splitForwardSlash[1];
 				else
 					WindowFactory.getInstance().showExceptionDialog(title,
-							messageBrief, message);
+							messageBrief, message, icon);
 			}
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);

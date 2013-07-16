@@ -83,8 +83,9 @@ public class DialogBuilder {
 	 * @return exception dialog
 	 */
 	public ExceptionDialog createExceptionDialog(Frame parent, String title,
-			String messageBrief, String message) {
-		return new ExceptionDialog(parent, title, messageBrief, message);
+			String messageBrief, String message, Icon dialogIcon) {
+		return new ExceptionDialog(parent, title, messageBrief, message,
+				dialogIcon);
 	}
 
 	/**
