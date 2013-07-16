@@ -102,13 +102,13 @@ public class StoryModelConverter implements Converter {
 			WindowFactory
 					.getInstance()
 					.showProblemDialog(
-							"Incompatible ScriptEase version (2." + SE_VERSION
+							"Incompatible ScriptEase version (" + SE_VERSION
 									+ ")",
 							"The story file being loaded is incompatible "
 									+ "with the current ScriptEase version. \n\n"
-									+ "Your story file was created in ScriptEase 2."
+									+ "Your story file was created in ScriptEase "
 									+ version
-									+ ".\nThe current ScriptEase version you are using is 2."
+									+ ".\nThe current ScriptEase version you are using is "
 									+ SE_VERSION
 									+ ".\nYou will need to use an earlier compatible "
 									+ "ScriptEase version.");

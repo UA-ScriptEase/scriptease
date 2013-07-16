@@ -173,24 +173,26 @@ public final class UnityProject extends GameModule {
 
 	@Override
 	public Resource getInstanceForObjectIdentifier(String id) {
-		for (UnityFile scene : this.scenes) {
-			if (scene.getTemplateID().equals(id))
-				return scene;
-
-			for (UnityResource object : scene.getResources())
-				if (object.getTemplateID().equals(id))
-					return object;
-		}
-
-		for (UnityFile prefab : this.prefabs) {
-			if (prefab.getTemplateID().equals(id))
-				return prefab;
-
-			for (UnityResource object : prefab.getResources())
-				if (object.getTemplateID().equals(id))
-					return object;
-		}
-		return null;
+		//TODO - debug, remove later.
+		throw new NullPointerException("Teststst"); 
+//		for (UnityFile scene : this.scenes) {
+//			if (scene.getTemplateID().equals(id))
+//				return scene;
+//
+//			for (UnityResource object : scene.getResources())
+//				if (object.getTemplateID().equals(id))
+//					return object;
+//		}
+//
+//		for (UnityFile prefab : this.prefabs) {
+//			if (prefab.getTemplateID().equals(id))
+//				return prefab;
+//
+//			for (UnityResource object : prefab.getResources())
+//				if (object.getTemplateID().equals(id))
+//					return object;
+//		}
+//		//return null;
 	}
 
 	@Override
