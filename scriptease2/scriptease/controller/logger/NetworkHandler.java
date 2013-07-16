@@ -21,6 +21,7 @@ import scriptease.gui.WindowFactory;
  * server and then sends each log as needed using the publish method.
  * 
  * @author mfchurch
+ * @author jyuen
  * 
  */
 public class NetworkHandler extends Handler {
@@ -36,7 +37,7 @@ public class NetworkHandler extends Handler {
 	 * Gets the sole instance of NetworkHandler as per the Singleton design
 	 * pattern.
 	 * 
-	 * @return The sole instance of ScriptEase.
+	 * @return The sole instance of NetworkHandler.
 	 */
 	public static NetworkHandler getInstance() {
 		return NetworkHandler.instance;
@@ -44,9 +45,8 @@ public class NetworkHandler extends Handler {
 
 	@Override
 	public void close() throws SecurityException {
-		if (this.client != null) {
+		if (this.client != null)
 			this.client.getConnectionManager().shutdown();
-		}
 	}
 
 	/**
@@ -101,14 +101,14 @@ public class NetworkHandler extends Handler {
 		final String report;
 
 		this.connect();
-		report = this.generateReport(comment);
+		report = this.generateReport(comment, "");
 
 		this.sendToServer(report);
 	}
 
 	/**
 	 * Connects to the server, creates a log and sends it to Httpclient.
-	 * serverlog.cgi is used serverside to handle reporting.
+	 * serverlog.cgi is used server side to handle reporting.
 	 * 
 	 * @param servable
 	 */
@@ -138,7 +138,7 @@ public class NetworkHandler extends Handler {
 	 *            user comments
 	 * @return String representing the report
 	 */
-	public String generateReport(String comment) {
+	public String generateReport(String comment, String log) {
 		String report;
 
 		report = "=== ScriptEase2\n\n";
@@ -147,18 +147,12 @@ public class NetworkHandler extends Handler {
 		report += " (" + ScriptEase.getInstance().getCommitHash() + ")\n";
 		report += ("\n=== Comment:\n\n");
 		report += comment + "\n";
-		if (this.buffered != null) {
-			final String formattedText;
-			final Formatter formatter;
-
-			formatter = new ScriptEaseFormatter();
-			formattedText = formatter.format(this.buffered).trim();
-
-			if (!formattedText.isEmpty()) {
-				report += ("\n=== Log:\n\n");
-				report += formattedText + "\n";
-			}
-		} 
+		report += ("\n=== Log:\n\n");
+		
+		if (log.equals(""))
+			report += this.retrieveDefaultLog();
+		else
+			report += log + "\n";
 		
 		report += ("\n=== System:\n\n");
 		String sys = System.getProperties().toString();
@@ -168,6 +162,24 @@ public class NetworkHandler extends Handler {
 		}
 		report += ("\n");
 		return report;
+	}
+
+	private String retrieveDefaultLog() {
+		String log = "";
+
+		if (buffered != null) {
+			final String formattedText;
+			final Formatter formatter;
+
+			formatter = new ScriptEaseFormatter();
+			formattedText = formatter.format(this.buffered).trim();
+
+			if (!formattedText.isEmpty()) {
+				log += formattedText + "\n";
+			}
+		}
+		
+		return log;
 	}
 
 	/**
