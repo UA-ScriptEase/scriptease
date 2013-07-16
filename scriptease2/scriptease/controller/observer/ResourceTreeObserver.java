@@ -11,6 +11,11 @@ import scriptease.translator.io.model.Resource;
 public interface ResourceTreeObserver {
 
 	/**
+	 * Called when the resource tree is filled with resources.
+	 */
+	public void resourceTreeFilled();
+
+	/**
 	 * Called when a resource is selected in a resource tree.
 	 * 
 	 * @param resource
