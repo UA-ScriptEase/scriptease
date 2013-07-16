@@ -50,7 +50,7 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 		<property file="${buildNumberLocation}" />
 		<property name="version" value="${build.number}" />
 	
-		<replaceregexp file="translator.ini" match="VERSION=(.*)" replace="VERSION=${version}" byline="true"/>
+		<replaceregexp file="translator.ini" match="VERSION=(.*)" replace="VERSION=2.${version}" byline="true"/>
 	</target>
 	
 	<target name="compile" depends="clean, ensureSeJar, writeVersion" description="Compiles the translator's Java code.">
