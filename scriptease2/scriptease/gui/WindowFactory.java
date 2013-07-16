@@ -301,13 +301,14 @@ public final class WindowFactory {
 	 * Shows the Exception Dialog if it is not already showing. The Error Dialog
 	 * is modal and will sit on top of any other window when shown.
 	 */
-	public void showExceptionDialog() {
+	public void showExceptionDialog(String title, String messageBrief,
+			String message) {
 		// safety check to avoid infinite dialog spawns
 		if (WindowFactory.exceptionShowing)
 			return;
 
 		JDialog dialog = DialogBuilder.getInstance().createExceptionDialog(
-				this.mainFrame);
+				this.mainFrame, title, messageBrief, message);
 		WindowFactory.exceptionShowing = true;
 
 		dialog.setLocationRelativeTo(dialog.getParent());

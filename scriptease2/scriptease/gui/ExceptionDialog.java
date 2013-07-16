@@ -31,17 +31,17 @@ import scriptease.ScriptEase;
 import scriptease.controller.logger.NetworkHandler;
 
 /**
- * The reason that this is an inner class and not a separate one is simply
- * because I don't want other classes to have access to it. Extract it if it
- * really bothers you.<br>
+ * Dialog for exceptions that occurred running ScriptEase. We will allow the
+ * user to send a report to the ScriptEase team with a log detailing the
+ * exception if they wish.
  * 
  * @author remiller
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class ExceptionDialog extends JDialog {
 	private final JButton reportButton = new JButton("Report");
 	private final JButton ignoreButton = new JButton("Ignore");
-	// details text is set dynamically
 	private final JButton detailsButton = new JButton();
 	private final JButton exitButton = new JButton("Exit ScriptEase");
 	private JComponent separatorOrTrace;
@@ -49,11 +49,11 @@ public class ExceptionDialog extends JDialog {
 	private JTextArea commentText;
 	private JLabel commentLabel;
 
-	private static final String INTERNAL_ERROR_TITLE = "Internal Error";
-	private static final String EXCEPTION_MESSAGE = "<html><b>ScriptEase has encountered an internal error.</b><br>It may be possible to continue past this error.<br>Would you like to help make ScriptEase better by reporting this problem?</html>";
 	private static final String COMMENT_MESSAGE = "Briefly explain what you were doing.";
 	private static final String SHOW_DETAILS = "<html><font color=#0000ee><u>Details...</u></font>";
 	private static final String HIDE_DETAILS = "<html><font color=#0000ee><u>Hide</u></font>";
+
+	private final String message;
 
 	/**
 	 * Builds a JDialog that gives the user the ability to either:
@@ -67,8 +67,12 @@ public class ExceptionDialog extends JDialog {
 	 * ScriptEase.java
 	 * </ol>
 	 */
-	public ExceptionDialog(Frame parent) {
-		super(parent, ExceptionDialog.INTERNAL_ERROR_TITLE, true);
+	public ExceptionDialog(Frame parent, String title, String messageBrief,
+			String message) {
+		super(parent, title, true);
+
+		this.message = "<html><b>" + messageBrief + "</b><br><br>" + message
+				+ "</html>";
 
 		this.buildGUI();
 		this.setupButtonListeners();
@@ -92,8 +96,7 @@ public class ExceptionDialog extends JDialog {
 				BoxLayout.LINE_AXIS);
 		buttons.setLayout(buttonsLayout);
 
-		final JLabel messageLabel = new JLabel(
-				ExceptionDialog.EXCEPTION_MESSAGE);
+		final JLabel messageLabel = new JLabel(this.message);
 		this.commentLabel = new JLabel();
 
 		buttons.add(this.reportButton);

@@ -82,9 +82,9 @@ public class DialogBuilder {
 	 *            frame
 	 * @return exception dialog
 	 */
-	public ExceptionDialog createExceptionDialog(Frame parent) {
-		ExceptionDialog exceptionDialog = new ExceptionDialog(parent);
-		return exceptionDialog;
+	public ExceptionDialog createExceptionDialog(Frame parent, String title,
+			String messageBrief, String message) {
+		return new ExceptionDialog(parent, title, messageBrief, message);
 	}
 
 	/**
@@ -282,11 +282,12 @@ public class DialogBuilder {
 				} else {
 					final StoryModel model;
 					final String compatibleVersion;
-					
+
 					compatibleVersion = ScriptEase.getInstance().getVersion();
-					
-					model = new StoryModel(module, title, author, compatibleVersion,
-							selectedTranslator, new ArrayList<LibraryModel>());
+
+					model = new StoryModel(module, title, author,
+							compatibleVersion, selectedTranslator,
+							new ArrayList<LibraryModel>());
 
 					SEModelManager.getInstance().addAndActivate(model);
 				}
