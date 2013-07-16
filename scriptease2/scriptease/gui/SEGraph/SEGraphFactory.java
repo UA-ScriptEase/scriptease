@@ -12,12 +12,10 @@ import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
-import scriptease.util.GUIOp;
 
 /**
  * A factory for different graphs. This only creates the GUI for the graphs,

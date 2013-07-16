@@ -56,6 +56,10 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 	 *            The Throwable object to be handled.
 	 */
 	private void handle(final Throwable thrown) {
+		final String title = "Internal Error";
+		final String messageBrief = "ScriptEase has encountered an internal error.";
+		final String message = "It may be possible to continue past this error.<br>Would you like to help make ScriptEase better by reporting the problem?";
+
 		Toolkit.getDefaultToolkit().beep();
 
 		if (thrown instanceof java.lang.Error) {
@@ -71,8 +75,8 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 				System.exit(-1);
 			}
 		} else if (thrown instanceof java.lang.Exception) {
-			thrown.printStackTrace(System.err);
-			WindowFactory.getInstance().showExceptionDialog();
+			WindowFactory.getInstance().showExceptionDialog(title,
+					messageBrief, message);
 		} else {
 			// This should never ever happen. If it does, take a good look at
 			// the Throwable thrown and why it is not an Exception or Error

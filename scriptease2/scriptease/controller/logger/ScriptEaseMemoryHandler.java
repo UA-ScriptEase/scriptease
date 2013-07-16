@@ -33,7 +33,8 @@ public class ScriptEaseMemoryHandler extends Handler {
 		this.target = target;
 		this.maxSize = size;
 
-		// this is a vector instead of ArrayList to be able to handle multi-threading.
+		// this is a vector instead of ArrayList to be able to handle
+		// multi-threading.
 		this.buffer = new Vector<String>();
 
 		this.formatter = new ScriptEaseFormatter();

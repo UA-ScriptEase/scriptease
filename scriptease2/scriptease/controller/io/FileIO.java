@@ -398,12 +398,15 @@ public class FileIO {
 	}
 
 	private Object readData(File location, IoMode mode) {
+		final String title = "Problems reading Story File";
+		final String messageBrief = "ScriptEase has encountered problems parsing the story file.";
+		final String message = "Sorry, ScriptEase is unable to open your story file. <br>Would you like to help make ScriptEase better by reporting the problem?";
+
 		final IoMode prevMode = this.mode;
 		this.mode = mode;
 
 		InputStream fileIn = null;
 		Object dataModel = null;
-		boolean retry;
 
 		try {
 			System.out.println("Creating input stream for file: " + location);
@@ -417,13 +420,9 @@ public class FileIO {
 					+ location.getAbsolutePath());
 			e.printStackTrace();
 
-			retry = WindowFactory.getInstance().showRetryProblemDialog(
-					"Reading",
-					"ScriptEase was unable to read from "
-							+ location.getAbsolutePath());
+			WindowFactory.getInstance().showExceptionDialog(title,
+					messageBrief, message);
 
-			if (retry)
-				this.readData(location, mode);
 		} catch (XStreamException e) {
 			System.err
 					.println("An error occured while loading "
@@ -431,16 +430,9 @@ public class FileIO {
 							+ ". It might be XStream complaining about a malformatted file, or some other error occured incidentally while loading.");
 			e.printStackTrace();
 
-			retry = WindowFactory
-					.getInstance()
-					.showRetryProblemDialog(
-							"Reading",
-							"I can't understand the file "
-									+ location.getAbsolutePath()
-									+ ".\n\nIt might be a malformatted file or from a previous version of ScriptEase.");
+			WindowFactory.getInstance().showExceptionDialog(title,
+					messageBrief, message);
 
-			if (retry)
-				this.readData(location, mode);
 		} finally {
 			try {
 				if (fileIn != null)

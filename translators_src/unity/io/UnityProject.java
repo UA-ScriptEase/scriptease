@@ -173,26 +173,24 @@ public final class UnityProject extends GameModule {
 
 	@Override
 	public Resource getInstanceForObjectIdentifier(String id) {
-		//TODO - debug, remove later.
-		throw new NullPointerException("Teststst"); 
-//		for (UnityFile scene : this.scenes) {
-//			if (scene.getTemplateID().equals(id))
-//				return scene;
-//
-//			for (UnityResource object : scene.getResources())
-//				if (object.getTemplateID().equals(id))
-//					return object;
-//		}
-//
-//		for (UnityFile prefab : this.prefabs) {
-//			if (prefab.getTemplateID().equals(id))
-//				return prefab;
-//
-//			for (UnityResource object : prefab.getResources())
-//				if (object.getTemplateID().equals(id))
-//					return object;
-//		}
-//		//return null;
+		for (UnityFile scene : this.scenes) {
+			if (scene.getTemplateID().equals(id))
+				return scene;
+
+			for (UnityResource object : scene.getResources())
+				if (object.getTemplateID().equals(id))
+					return object;
+		}
+
+		for (UnityFile prefab : this.prefabs) {
+			if (prefab.getTemplateID().equals(id))
+				return prefab;
+
+			for (UnityResource object : prefab.getResources())
+				if (object.getTemplateID().equals(id))
+					return object;
+		}
+		return null;
 	}
 
 	@Override
@@ -410,6 +408,10 @@ public final class UnityProject extends GameModule {
 	 */
 	private final Collection<Resource> buildSimpleUnityResources(
 			final Collection<File> files, final UnityType type) {
+		final String title = "Internal Error";
+		final String messageBrief = "ScriptEase has encountered an internal error.";
+		final String message = "It may be possible to continue past this error.<br>Would you like to help make ScriptEase better by reporting the problem?";
+
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
 		for (File file : files) {
@@ -428,7 +430,8 @@ public final class UnityProject extends GameModule {
 				if (splitForwardSlash.length == 2)
 					name = splitForwardSlash[1];
 				else
-					WindowFactory.getInstance().showExceptionDialog();
+					WindowFactory.getInstance().showExceptionDialog(title,
+							messageBrief, message);
 			}
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);
