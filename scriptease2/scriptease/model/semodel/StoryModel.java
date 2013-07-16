@@ -117,7 +117,7 @@ public final class StoryModel extends SEModel {
 	 * @return The newly added root
 	 */
 	public DialogueLine createAndAddDialogueRoot() {
-		final DialogueLine newRoot = new DialogueLine(this, Speaker.FIRST);
+		final DialogueLine newRoot = new DialogueLine(this, Speaker.PC);
 
 		this.dialogueRoots.add(newRoot);
 
