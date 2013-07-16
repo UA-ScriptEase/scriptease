@@ -25,7 +25,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 
 import scriptease.ScriptEase;
 import scriptease.controller.logger.NetworkHandler;
@@ -48,6 +47,7 @@ public class ExceptionDialog extends JDialog {
 	private JComponent commentBox;
 	private JTextArea commentText;
 	private JLabel commentLabel;
+	private Icon dialogIcon;
 
 	private static final String COMMENT_MESSAGE = "Briefly explain what you were doing.";
 	private static final String SHOW_DETAILS = "<html><font color=#0000ee><u>Details...</u></font>";
@@ -68,11 +68,12 @@ public class ExceptionDialog extends JDialog {
 	 * </ol>
 	 */
 	public ExceptionDialog(Frame parent, String title, String messageBrief,
-			String message) {
+			String message, Icon dialogIcon) {
 		super(parent, title, true);
 
 		this.message = "<html><b>" + messageBrief + "</b><br><br>" + message
 				+ "</html>";
+		this.dialogIcon = dialogIcon;
 
 		this.buildGUI();
 		this.setupButtonListeners();
@@ -110,9 +111,8 @@ public class ExceptionDialog extends JDialog {
 		// Very weird. - remiller
 		messageLabel.setFont(messageLabel.getFont().deriveFont(Font.PLAIN));
 
-		Icon warningIcon = UIManager.getIcon("OptionPane.errorIcon");
 		// wrap in a JLabel to make it a Component
-		JLabel iconLabel = new JLabel(warningIcon);
+		JLabel iconLabel = new JLabel(this.dialogIcon);
 
 		// the details button is very special. I didn't want it to appear as
 		// a normal button since it's a lot less important for users -
@@ -196,7 +196,7 @@ public class ExceptionDialog extends JDialog {
 			}
 		});
 
-		// ignore just destroys the popup
+		// ignore just destroys the pop-up
 		this.ignoreButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -221,10 +221,10 @@ public class ExceptionDialog extends JDialog {
 	 * think of a better way that doesn't involve unnecessary objects --remiller
 	 */
 	private void showOrHideDetails() {
-		String trace = NetworkHandler.getInstance().generateReport("");
-		LayoutManager layout = this.getContentPane().getLayout();
+		final String trace = NetworkHandler.getInstance().generateReport("");
+		final LayoutManager layout = this.getContentPane().getLayout();
 
-		JComponent oldComp = ExceptionDialog.this.separatorOrTrace;
+		final JComponent oldComp = ExceptionDialog.this.separatorOrTrace;
 		this.setResizable(!this.isResizable());
 
 		// are we expanding or hiding the trace?
@@ -262,7 +262,7 @@ public class ExceptionDialog extends JDialog {
 	 * Expands a comment box and the option to send a bug report
 	 */
 	private void showCommentBox() {
-		JComponent cmtBox = ExceptionDialog.this.commentBox;
+		final JComponent cmtBox = ExceptionDialog.this.commentBox;
 		// does the commentBox already exist?
 
 		this.setResizable(true);

@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -302,13 +303,13 @@ public final class WindowFactory {
 	 * is modal and will sit on top of any other window when shown.
 	 */
 	public void showExceptionDialog(String title, String messageBrief,
-			String message) {
+			String message, Icon dialogIcon) {
 		// safety check to avoid infinite dialog spawns
 		if (WindowFactory.exceptionShowing)
 			return;
 
 		JDialog dialog = DialogBuilder.getInstance().createExceptionDialog(
-				this.mainFrame, title, messageBrief, message);
+				this.mainFrame, title, messageBrief, message, dialogIcon);
 		WindowFactory.exceptionShowing = true;
 
 		dialog.setLocationRelativeTo(dialog.getParent());

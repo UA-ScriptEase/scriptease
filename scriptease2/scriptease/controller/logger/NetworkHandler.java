@@ -158,7 +158,8 @@ public class NetworkHandler extends Handler {
 				report += ("\n=== Log:\n\n");
 				report += formattedText + "\n";
 			}
-		}
+		} 
+		
 		report += ("\n=== System:\n\n");
 		String sys = System.getProperties().toString();
 		String[] properties = sys.split(",");

@@ -3,7 +3,9 @@ package scriptease.controller.exceptionhandler;
 import java.awt.Toolkit;
 import java.lang.Thread.UncaughtExceptionHandler;
 
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import scriptease.gui.WindowFactory;
 
@@ -59,6 +61,7 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 		final String title = "Internal Error";
 		final String messageBrief = "ScriptEase has encountered an internal error.";
 		final String message = "It may be possible to continue past this error.<br>Would you like to help make ScriptEase better by reporting the problem?";
+		final Icon icon = UIManager.getIcon("OptionPane.errorIcon");
 
 		Toolkit.getDefaultToolkit().beep();
 
@@ -76,7 +79,7 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 			}
 		} else if (thrown instanceof java.lang.Exception) {
 			WindowFactory.getInstance().showExceptionDialog(title,
-					messageBrief, message);
+					messageBrief, message, icon);
 		} else {
 			// This should never ever happen. If it does, take a good look at
 			// the Throwable thrown and why it is not an Exception or Error

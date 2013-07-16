@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.swing.Icon;
+import javax.swing.UIManager;
+
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
 import scriptease.controller.io.converter.fragment.FormatDefinitionFragmentConverter;
@@ -401,6 +404,7 @@ public class FileIO {
 		final String title = "Problems reading Story File";
 		final String messageBrief = "ScriptEase has encountered problems parsing the story file.";
 		final String message = "Sorry, ScriptEase is unable to open your story file. <br>Would you like to help make ScriptEase better by reporting the problem?";
+		final Icon icon = UIManager.getIcon("OptionPane.warningIcon");
 
 		final IoMode prevMode = this.mode;
 		this.mode = mode;
@@ -421,7 +425,7 @@ public class FileIO {
 			e.printStackTrace();
 
 			WindowFactory.getInstance().showExceptionDialog(title,
-					messageBrief, message);
+					messageBrief, message, icon);
 
 		} catch (XStreamException e) {
 			System.err
@@ -431,7 +435,7 @@ public class FileIO {
 			e.printStackTrace();
 
 			WindowFactory.getInstance().showExceptionDialog(title,
-					messageBrief, message);
+					messageBrief, message, icon);
 
 		} finally {
 			try {
