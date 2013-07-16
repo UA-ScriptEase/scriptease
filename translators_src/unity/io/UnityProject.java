@@ -435,7 +435,7 @@ public final class UnityProject extends GameModule {
 					name = splitForwardSlash[1];
 				else
 					WindowFactory.getInstance().showExceptionDialog(title,
-							messageBrief, message, icon);
+							messageBrief, message, icon, null);
 			}
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);

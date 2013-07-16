@@ -79,7 +79,7 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 			}
 		} else if (thrown instanceof java.lang.Exception) {
 			WindowFactory.getInstance().showExceptionDialog(title,
-					messageBrief, message, icon);
+					messageBrief, message, icon, null);
 		} else {
 			// This should never ever happen. If it does, take a good look at
 			// the Throwable thrown and why it is not an Exception or Error

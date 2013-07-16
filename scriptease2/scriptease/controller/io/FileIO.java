@@ -425,7 +425,7 @@ public class FileIO {
 			e.printStackTrace();
 
 			WindowFactory.getInstance().showExceptionDialog(title,
-					messageBrief, message, icon);
+					messageBrief, message, icon, e);
 
 		} catch (XStreamException e) {
 			System.err
@@ -435,7 +435,7 @@ public class FileIO {
 			e.printStackTrace();
 
 			WindowFactory.getInstance().showExceptionDialog(title,
-					messageBrief, message, icon);
+					messageBrief, message, icon, e);
 
 		} finally {
 			try {

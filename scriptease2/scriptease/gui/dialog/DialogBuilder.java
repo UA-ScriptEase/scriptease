@@ -76,16 +76,26 @@ public class DialogBuilder {
 	}
 
 	/**
-	 * Creates an Exception Dialog with the given parent frame
+	 * Creates a exception dialog with the given parent frame
 	 * 
 	 * @param parent
-	 *            frame
-	 * @return exception dialog
+	 *            The parent frame
+	 * @param title
+	 *            The title of the dialog
+	 * @param messageBrief
+	 *            The bolded part of the message
+	 * @param message
+	 *            The message description
+	 * @param dialogIcon
+	 *            The icon to display along side the message
+	 * @param e
+	 *            The exception being thrown
+	 * @return
 	 */
 	public ExceptionDialog createExceptionDialog(Frame parent, String title,
-			String messageBrief, String message, Icon dialogIcon) {
+			String messageBrief, String message, Icon dialogIcon, Exception e) {
 		return new ExceptionDialog(parent, title, messageBrief, message,
-				dialogIcon);
+				dialogIcon, e);
 	}
 
 	/**

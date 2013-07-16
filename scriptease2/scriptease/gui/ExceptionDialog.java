@@ -54,6 +54,8 @@ public class ExceptionDialog extends JDialog {
 	private static final String HIDE_DETAILS = "<html><font color=#0000ee><u>Hide</u></font>";
 
 	private final String message;
+	private String exceptionMessage = "";
+	private StackTraceElement[] exceptionStackTrace = null;
 
 	/**
 	 * Builds a JDialog that gives the user the ability to either:
@@ -68,13 +70,18 @@ public class ExceptionDialog extends JDialog {
 	 * </ol>
 	 */
 	public ExceptionDialog(Frame parent, String title, String messageBrief,
-			String message, Icon dialogIcon) {
+			String message, Icon dialogIcon, Exception e) {
 		super(parent, title, true);
 
 		this.message = "<html><b>" + messageBrief + "</b><br><br>" + message
 				+ "</html>";
 		this.dialogIcon = dialogIcon;
 
+		if (e != null) {
+			this.exceptionMessage = e.getMessage();
+			this.exceptionStackTrace = e.getStackTrace();
+		}
+		
 		this.buildGUI();
 		this.setupButtonListeners();
 	}
@@ -221,10 +228,19 @@ public class ExceptionDialog extends JDialog {
 	 * think of a better way that doesn't involve unnecessary objects --remiller
 	 */
 	private void showOrHideDetails() {
-		final String trace = NetworkHandler.getInstance().generateReport("");
 		final LayoutManager layout = this.getContentPane().getLayout();
-
 		final JComponent oldComp = ExceptionDialog.this.separatorOrTrace;
+
+		String trace;
+		if (this.exceptionStackTrace == null) {
+			trace = NetworkHandler.getInstance().generateReport("", "");
+		} else {
+			trace = this.exceptionMessage + "\n";
+			for (StackTraceElement element : this.exceptionStackTrace)
+				trace += element + "\n";
+			trace = NetworkHandler.getInstance().generateReport("", trace);
+		}
+
 		this.setResizable(!this.isResizable());
 
 		// are we expanding or hiding the trace?
