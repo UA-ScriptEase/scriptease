@@ -23,10 +23,14 @@ import scriptease.translator.io.model.Resource;
  */
 public final class DialogueLine extends EditableResource {
 	public static enum Speaker {
-		FIRST, SECOND
+		PC, NPC
 	}
 
+	private static int uniqueNumberCount = 0;
+
 	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
+
+	private final int uniqueID;
 
 	private Speaker speaker;
 	private final StoryModel story;
@@ -84,6 +88,8 @@ public final class DialogueLine extends EditableResource {
 		this.audio = audio;
 		this.story = story;
 
+		this.uniqueID = uniqueNumberCount++;
+
 		// Set up the speakers
 		for (Resource child : children) {
 			if (child instanceof DialogueLine)
@@ -91,11 +97,15 @@ public final class DialogueLine extends EditableResource {
 		}
 	}
 
+	public int getUniqueID() {
+		return this.uniqueID;
+	}
+
 	private void setChildSpeaker(DialogueLine child) {
-		if (this.speaker == Speaker.FIRST)
-			child.speaker = Speaker.SECOND;
-		else if (this.speaker == Speaker.SECOND)
-			child.speaker = Speaker.FIRST;
+		if (this.speaker == Speaker.PC)
+			child.speaker = Speaker.NPC;
+		else if (this.speaker == Speaker.NPC)
+			child.speaker = Speaker.PC;
 		else
 			throw new IllegalStateException("Dialogue Line " + this
 					+ " has illegal speaker: " + this.speaker);
