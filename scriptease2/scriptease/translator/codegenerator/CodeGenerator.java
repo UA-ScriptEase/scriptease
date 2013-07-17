@@ -12,8 +12,11 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.FileContext;
@@ -21,6 +24,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
 
 /**
@@ -282,9 +286,15 @@ public class CodeGenerator {
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
 			final Collection<StoryComponent> storyPoints;
+			final Collection<StoryComponent> automatics;
 			final Collection<Set<CodeBlock>> scriptBuckets;
 
 			storyPoints = new ArrayList<StoryComponent>(root.getDescendants());
+			automatics = model.generateAutomatics();
+
+			// Temporarily add automatics.
+			root.addStoryChildren(automatics);
+
 			// aggregate the scripts based on the storyPoints
 			scriptBuckets = module.aggregateScripts(storyPoints);
 
@@ -297,6 +307,8 @@ public class CodeGenerator {
 							model));
 			}
 
+			// Remove the automatics from the story again.
+			root.removeStoryChildren(automatics);
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
 		}
