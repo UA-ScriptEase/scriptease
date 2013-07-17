@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
@@ -22,7 +22,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * 
  */
 @SuppressWarnings("serial")
-public class NewEffectAction extends ActiveTranslatorSensitiveAction {
+public class NewEffectAction extends ActiveModelSensitiveAction {
 	private static final String NEW_EFFECT_NAME = "Effect";
 
 	private static final NewEffectAction instance = new NewEffectAction();
