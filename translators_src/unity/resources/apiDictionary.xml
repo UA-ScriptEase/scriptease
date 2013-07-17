@@ -12932,12 +12932,8 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>YesNo</Type>
+                <Type>question</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>YesNo</Type>
-                <Value>false</Value>
-              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Key</Name>
