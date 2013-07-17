@@ -244,27 +244,6 @@ public class Translator {
 	}
 
 	/**
-	 * Gets a collection of the files found in the activeTranslators include
-	 * directory. This can be empty if the translator does not specify an
-	 * includes directory, or the the translator's includes directory is empty.
-	 * Any file name that starts with .svn is ignored.
-	 */
-	public Collection<File> getIncludes() {
-		final File includeDir = this
-				.getPathProperty(DescriptionKeys.INCLUDES_PATH);
-		final FileFilter filter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				// Don't include .svn files (double checking)
-				return !file.getName().startsWith(".svn");
-			}
-		};
-
-		return includeDir != null ? Arrays.asList(includeDir.listFiles(filter))
-				: new ArrayList<File>();
-	}
-
-	/**
 	 * Finds and returns the optional libraries.
 	 * 
 	 * @return
@@ -424,7 +403,6 @@ public class Translator {
 	 *         <code>propertyName</code> is not a property supported by the
 	 *         translator.
 	 * @see #getProperty(String)
-	 * @see #getIncludes()
 	 */
 	public File getPathProperty(String propertyName) {
 		final String path = this.getProperty(propertyName);
@@ -455,7 +433,6 @@ public class Translator {
 	 *         <code>propertyName</code> is not a property supported by the
 	 *         translator.
 	 * @see #getProperty(String)
-	 * @see #getIncludes()
 	 */
 	public File getPathProperty(DescriptionKeys propertyKey) {
 		return this.getPathProperty(propertyKey.toString());

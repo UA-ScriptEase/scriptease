@@ -89,6 +89,8 @@ public final class ErfFile extends GameModule {
 	 */
 	private final List<NWNResource> uncompiledScripts;
 
+	private final Collection<File> includeFiles;
+
 	/**
 	 * Location of the ErfFile.
 	 */
@@ -116,6 +118,7 @@ public final class ErfFile extends GameModule {
 	public ErfFile() {
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
+		this.includeFiles = new ArrayList<File>();
 	}
 
 	/**
@@ -492,6 +495,8 @@ public final class ErfFile extends GameModule {
 
 	@Override
 	public void addIncludeFiles(Collection<File> includeList) {
+		this.includeFiles.clear();
+
 		for (File include : includeList) {
 			if (include.getName().startsWith("."))
 				continue;
@@ -505,8 +510,12 @@ public final class ErfFile extends GameModule {
 				continue;
 			}
 
-			String scriptResRef = FileOp.removeExtension(include).getName();
+			final String scriptResRef;
+
+			scriptResRef = FileOp.removeExtension(include).getName();
+
 			this.addScript(scriptResRef, code);
+			this.includeFiles.add(include);
 		}
 	}
 
@@ -790,9 +799,7 @@ public final class ErfFile extends GameModule {
 			out.close();
 		}
 
-		Collection<File> includeList = ErfFile.getTranslator().getIncludes();
-
-		for (File include : includeList) {
+		for (File include : this.includeFiles) {
 			try {
 				String fileName = include.getName();
 				FileOp.copyFile(new File(include.getParent(), fileName),
