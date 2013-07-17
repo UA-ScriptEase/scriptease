@@ -322,7 +322,6 @@ public class TranslatorManager {
 		final String message = translator + " actived.";
 
 		StatusManager.getInstance().setTemp(message);
-		System.out.println(message);
 
 		if (translator != null) {
 			// We have this here so we don't run into issues later if the
