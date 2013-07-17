@@ -175,7 +175,7 @@ public final class SEModelManager {
 
 		if (model != null && this.models.contains(model)) {
 			StatusManager.getInstance().setStatus(model + " activated");
-			WindowFactory.showProgressBar("Activating " + model.getTitle()
+			WindowFactory.showProgressBar("Loading " + model.getTitle()
 					+ "...", new Runnable() {
 
 				@Override

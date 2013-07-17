@@ -63,8 +63,9 @@ public class StoryModelConverter implements Converter {
 	}
 
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
+	public Object unmarshal(final HierarchicalStreamReader reader,
+			final UnmarshallingContext context) {
+		final String READ_STORY = "Reading Story...";
 		final String SE_VERSION = ScriptEase.getInstance().getVersion();
 
 		final StoryModel model;
@@ -81,7 +82,6 @@ public class StoryModelConverter implements Converter {
 
 		final Translator translator;
 		final GameModule module;
-		final StoryPoint newRoot;
 
 		title = XMLNode.TITLE.readString(reader);
 		author = XMLNode.AUTHOR.readString(reader);
@@ -156,17 +156,17 @@ public class StoryModelConverter implements Converter {
 		model = new StoryModel(module, title, author, version, translator,
 				optionalLibraries);
 
+		// Story points rely on the current story being set, so we need to load
+		// them after assigning the story to the static variable.
 		currentStory = model;
 
-		// Story points rely on the current story being set, so we need to load
-		// them later.
-		newRoot = XMLNode.START_STORY_POINT.readObject(reader, context,
-				StoryPoint.class);
-
-		if (newRoot == null)
-			throw new IllegalStateException("Model root could not be loaded.");
-
-		model.setRoot(newRoot);
+		WindowFactory.showProgressBar(READ_STORY, new Runnable() {
+			@Override
+			public void run() {
+				model.setRoot(XMLNode.START_STORY_POINT.readObject(reader,
+						context, StoryPoint.class));
+			}
+		});
 
 		lines = XMLNode.DIALOGUES.readCollection(reader, context,
 				DialogueLine.class);
