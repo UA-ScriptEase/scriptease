@@ -504,22 +504,26 @@ public final class FileManager {
 	 *            Whether we want to compile the code
 	 */
 	private void writeCode(final StoryModel model, boolean compile) {
-		final GameModule module = model.getModule();
-		final Translator translator = model.getTranslator();
-		final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-		final Collection<ScriptInfo> scriptInfos = CodeGenerator.getInstance()
-				.generateCode(model, problems);
+		final GameModule module;
+		final Translator translator;
+		final Collection<StoryProblem> problems;
+		final Collection<ScriptInfo> scriptInfos;
+		final File compiler;
+
+		module = model.getModule();
+		translator = model.getTranslator();
+		problems = new ArrayList<StoryProblem>();
+		scriptInfos = CodeGenerator.getInstance().generateCode(model, problems);
+		compiler = translator.getCompiler();
 
 		module.addScripts(scriptInfos);
-		module.addIncludeFiles(translator.getIncludes());
+		module.addIncludeFiles(model.getIncludes());
 
-		this.saveScriptInOutput(scriptInfos, translator);
+		this.saveScriptInOutput(scriptInfos, model);
 
 		// now save that code to the module
-		compile &= problems.isEmpty() && translator.getCompiler() != null
-				&& translator.getCompiler().exists();
-
-		final File compiler = translator.getCompiler();
+		compile &= problems.isEmpty();
+		compile &= compiler != null && compiler.exists();
 
 		if (compiler == null
 				|| (!compiler.exists() && !compiler.getName().equalsIgnoreCase(
@@ -576,12 +580,14 @@ public final class FileManager {
 	 * @param translator
 	 */
 	private void saveScriptInOutput(Collection<ScriptInfo> scriptInfos,
-			Translator translator) {
-		String outputDir = ScriptEase.getInstance().getPreference(
+			StoryModel model) {
+		final String outputDir;
+
+		final String storyName = model.getTitle();
+
+		outputDir = ScriptEase.getInstance().getPreference(
 				ScriptEase.OUTPUT_DIRECTORY_KEY)
 				+ "/";
-		String storyName = SEModelManager.getInstance().getActiveModel()
-				.getTitle();
 
 		new File(outputDir + storyName).mkdirs();
 		File outputFile = new File(outputDir + storyName + "/" + storyName
@@ -599,7 +605,7 @@ public final class FileManager {
 			seWriter.close();
 
 			// Copy necessary include files
-			for (File include : translator.getIncludes()) {
+			for (File include : model.getIncludes()) {
 				File includeFile = new File(outputDir + storyName + "/"
 						+ include.getName());
 				FileOp.copyFile(include, includeFile);
