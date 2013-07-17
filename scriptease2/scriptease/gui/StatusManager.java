@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.Timer;
 
 import scriptease.controller.observer.StatusObserver;
+import scriptease.util.StringOp;
 
 /**
  * All {@link StatusObserver}s need to be registered with the StatusManager in
@@ -51,7 +52,9 @@ public class StatusManager {
 	 */
 	public void set(final String text) {
 		this.text = text;
-		System.out.println(text);
+
+		if (StringOp.exists(text))
+			System.out.println(text);
 
 		this.notifyObservers();
 	}
