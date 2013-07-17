@@ -3,9 +3,7 @@ package scriptease.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import javax.swing.Timer;
 
@@ -23,12 +21,12 @@ import scriptease.controller.observer.StatusObserver;
  * 
  */
 public class StatusManager {
-	private final List<StatusObserver> observers;
-	private final Queue<String> messages;
-	private final Timer textQueue;
-	private final Timer textClear;
-
+	private static final double DEFAULT_DELAY = 3.5;
 	private final static StatusManager instance = new StatusManager();
+
+	private final List<StatusObserver> observers;
+
+	private String text;
 
 	/**
 	 * Gets the sole instance of the StatusManager.
@@ -41,30 +39,60 @@ public class StatusManager {
 
 	private StatusManager() {
 		this.observers = new ArrayList<StatusObserver>();
-		this.messages = new LinkedList<String>();
+		this.text = "";
+	}
 
-		final int queueTimerDelay = 1000;
-		final int clearTimerDelay = 3500;
+	/**
+	 * Sets the Status Label to the given message. It will be cleared when the
+	 * manager is either {@link #clear()}ed or set to something else.
+	 * 
+	 * @param text
+	 *            The message to display.
+	 */
+	public void set(final String text) {
+		this.text = text;
+		System.out.println(text);
 
-		this.textQueue = new Timer(queueTimerDelay, new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!messages.isEmpty()) {
-					notifyObservers(messages.poll());
-					textQueue.restart();
-					textClear.restart();
-				}
-			};
-		});
+		this.notifyObservers();
+	}
 
-		this.textClear = new Timer(clearTimerDelay, new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				StatusManager.this.notifyObservers("");
-				StatusManager.this.messages.clear();
-			};
-		});
+	/**
+	 * Sets the status temporarily to the passed in text. It will be cleared
+	 * after the {@link #DEFAULT_DELAY} of 3.5 seconds passes.
+	 * 
+	 * @param text
+	 */
+	public void setTemp(final String text) {
+		this.setTemp(text, DEFAULT_DELAY);
+	}
 
-		this.textQueue.setRepeats(false);
-		this.textClear.setRepeats(false);
+	/**
+	 * Sets the status temporarily to the passed in text for the passed in
+	 * seconds. It will be cleared after "delay" seconds.
+	 * 
+	 * @param text
+	 * @param delay
+	 */
+	public void setTemp(String text, double delay) {
+		this.set(text);
+		this.createClearTimer(text, delay).start();
+	}
+
+	/**
+	 * Clears the status regardless of the passed in text.
+	 */
+	public void clear() {
+		this.set("");
+	}
+
+	/**
+	 * Clears the status if the text matches the passed in text.
+	 * 
+	 * @param text
+	 */
+	public void clear(final String text) {
+		if (this.text.equals(text))
+			this.clear();
 	}
 
 	/**
@@ -93,22 +121,36 @@ public class StatusManager {
 	 * 
 	 * @param newText
 	 */
-	private void notifyObservers(String newText) {
+	private void notifyObservers() {
 		for (StatusObserver observer : this.observers) {
-			observer.statusChanged(newText);
+			observer.statusChanged(this.text);
 		}
 	}
 
 	/**
-	 * Sets the Status Label to the given message
+	 * Creates a timer that will clear the text if it matches the passed in text
+	 * value after the passed in number of seconds pass.
 	 * 
 	 * @param text
-	 *            The message to display.
+	 * @param delay
+	 * @return
 	 */
-	public void setStatus(final String text) {
-		this.messages.add(text);
-		this.notifyObservers(text);
-		this.textQueue.restart();
-		this.textClear.restart();
+	private Timer createClearTimer(final String text, double delay) {
+		final int delayInMilliseconds = (int) delay * 1000;
+
+		final Timer timer;
+
+		timer = new Timer(delayInMilliseconds, new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StatusManager.this.clear(text);
+			}
+		});
+
+		timer.setRepeats(false);
+
+		return timer;
 	}
+
 }

@@ -23,7 +23,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.io.FileIO;
-import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -805,8 +804,6 @@ public class Translator {
 		final String LOADING_MODULE = "Loading Module...";
 		final GameModule module = this.createGameModuleInstance();
 		final GameModuleLoader loader = new GameModuleLoader();
-
-		StatusManager.getInstance().setStatus(LOADING_MODULE);
 
 		if (!location.exists()) {
 			// We need to do this separately, because otherwise "open" creates a

@@ -319,9 +319,9 @@ public class TranslatorManager {
 			return;
 		this.activeTranslator = translator;
 
-		final String message = translator + " actived";
+		final String message = translator + " actived.";
 
-		StatusManager.getInstance().setStatus(message);
+		StatusManager.getInstance().setTemp(message);
 		System.out.println(message);
 
 		if (translator != null) {
