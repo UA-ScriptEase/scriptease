@@ -24,7 +24,6 @@ import scriptease.controller.BindingAdapter;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.StoryAdapter;
-import scriptease.gui.StatusManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -845,13 +844,11 @@ public final class ErfFile extends GameModule {
 			byteCodeFile = FileOp.replaceExtension(resrefsToFiles.get(resRef),
 					"ncs").getAbsoluteFile();
 
-			if (!byteCodeFile.exists()) {
+			if (!byteCodeFile.exists())
 				// compiler error
 				throw new GameCompilerException(
 						"Compiler failed to create NCS file " + byteCodeFile
 								+ ".");
-			} else
-				StatusManager.getInstance().setStatus("Compilation Succeeded!");
 
 			byteCode = FileOp.readFileAsBytes(byteCodeFile);
 

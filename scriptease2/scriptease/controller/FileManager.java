@@ -333,7 +333,6 @@ public final class FileManager {
 							FileManager.FILE_EXTENSION_PACKAGE);
 				}
 
-
 				FileManager.this.writeStoryPackage(storyModel, location,
 						tempStoryLocation);
 
@@ -355,12 +354,6 @@ public final class FileManager {
 	 */
 	public void saveWithoutCode(SEModel model) {
 		final File location = this.openFiles.getKey(model);
-		final String saveMessage;
-
-		saveMessage = "Saving story " + model.getTitle() + " to " + location;
-
-		System.out.println(saveMessage);
-		StatusManager.getInstance().setStatus(saveMessage + " ...");
 
 		if (location == null) {
 			FileManager.this.saveAs(model);
@@ -544,25 +537,23 @@ public final class FileManager {
 
 		try {
 			if (compile)
-				StatusManager.getInstance().setStatus(
-						"Saving Story with Compiling...");
+				StatusManager.getInstance()
+						.set("Saving and Compiling Story...");
 
 			module.save(compile);
-			StatusManager.getInstance().setStatus(
-					(compile ? "Compilation and " : "")
-							+ "Story Save Successful!");
+			StatusManager.getInstance().setTemp("Story Saved Successfully.");
 		} catch (IOException e) {
 			// Nothing better to do at the moment except let ScriptEase
 			// explode. Eventually, this should undo the save. IE have a backup
 			// file that we would ordinarily replace, but since we've failed
 			// we just delete the file we're currently writing and leave the
 			// original intact. - remiller
-			StatusManager.getInstance().setStatus("Story Save Failed!");
+			StatusManager.getInstance().setTemp("Story Save Failed!");
 			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
 					Thread.currentThread(), new IOError(e));
 		} catch (GameCompilerException e) {
 			if (compile) {
-				StatusManager.getInstance().setStatus("Compilation Failed.");
+				StatusManager.getInstance().setTemp("Compilation Failed!");
 				if (WindowFactory
 						.getInstance()
 						.showRetryProblemDialog(
