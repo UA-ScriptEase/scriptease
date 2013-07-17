@@ -158,6 +158,8 @@ class ResourceTree extends JPanel {
 			parent.validate();
 		else
 			this.revalidate();
+
+		this.notifyResourceTreeFilled();
 	}
 
 	/**
@@ -195,6 +197,18 @@ class ResourceTree extends JPanel {
 	 */
 	protected void addObserver(Object object, ResourceTreeObserver observer) {
 		this.observerManager.addObserver(object, observer);
+	}
+
+	/**
+	 * Notifies all {@link ResourceTreeObserver}s that the tree was filled.
+	 * 
+	 * @param resource
+	 */
+	private void notifyResourceTreeFilled() {
+		for (ResourceTreeObserver observer : this.observerManager
+				.getObservers()) {
+			observer.resourceTreeFilled();
+		}
 	}
 
 	/**

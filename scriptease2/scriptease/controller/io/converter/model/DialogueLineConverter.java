@@ -98,7 +98,7 @@ public class DialogueLineConverter implements Converter {
 		audio = currentModule.getInstanceForObjectIdentifier(audioTemplateID);
 
 		line = new DialogueLine(StoryModelConverter.currentStory,
-				Speaker.FIRST, name, enabled, image, audio, children);
+				Speaker.PC, name, enabled, image, audio, children);
 
 		return line;
 	}

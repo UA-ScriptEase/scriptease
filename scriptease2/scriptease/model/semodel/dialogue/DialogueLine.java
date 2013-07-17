@@ -23,10 +23,14 @@ import scriptease.translator.io.model.Resource;
  */
 public final class DialogueLine extends EditableResource {
 	public static enum Speaker {
-		FIRST, SECOND
+		PC, NPC
 	}
 
+	private static int uniqueNumberCount = 0;
+
 	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
+
+	private final int uniqueID;
 
 	private Speaker speaker;
 	private final StoryModel story;
@@ -84,25 +88,31 @@ public final class DialogueLine extends EditableResource {
 		this.audio = audio;
 		this.story = story;
 
+		this.uniqueID = uniqueNumberCount++;
+
 		// Set up the speakers
 		for (Resource child : children) {
-			this.setupSpeakers(child);
+			if (child instanceof DialogueLine)
+				this.setChildSpeaker((DialogueLine) child);
 		}
 	}
 
-	private void setupSpeakers(Resource child) {
-		if (child instanceof DialogueLine) {
-			final DialogueLine childLine = (DialogueLine) child;
+	public int getUniqueID() {
+		return this.uniqueID;
+	}
 
-		
-				if (this.speaker == Speaker.FIRST)
-					childLine.speaker = Speaker.SECOND;
-				else if (this.speaker == Speaker.SECOND)
-					childLine.speaker = Speaker.FIRST;
-				else
-					throw new IllegalStateException(
-							"Tried to add a dialogue line to a line with no speaker.");
-			
+	private void setChildSpeaker(DialogueLine child) {
+		if (this.speaker == Speaker.PC)
+			child.speaker = Speaker.NPC;
+		else if (this.speaker == Speaker.NPC)
+			child.speaker = Speaker.PC;
+		else
+			throw new IllegalStateException("Dialogue Line " + this
+					+ " has illegal speaker: " + this.speaker);
+
+		for (Resource childChild : child.getChildren()) {
+			if (childChild instanceof DialogueLine)
+				child.setChildSpeaker((DialogueLine) childChild);
 		}
 	}
 
@@ -177,6 +187,10 @@ public final class DialogueLine extends EditableResource {
 		return this.enabled;
 	}
 
+	public Speaker getSpeaker() {
+		return this.speaker;
+	}
+
 	/**
 	 * Returns the audio that will be played in game by the dialogue line.
 	 * 
@@ -202,10 +216,15 @@ public final class DialogueLine extends EditableResource {
 
 	@Override
 	public boolean addChild(Resource child) {
-		this.setupSpeakers(child);
+		if (!(child instanceof DialogueLine))
+			return false;
 
-		return child instanceof DialogueLine
-				&& this.speaker != ((DialogueLine) child).speaker
+		final DialogueLine childLine = (DialogueLine) child;
+
+		if (childLine.speaker == null)
+			this.setChildSpeaker(childLine);
+
+		return ((DialogueLine) child).speaker != this.speaker
 				&& super.addChild(child);
 	}
 

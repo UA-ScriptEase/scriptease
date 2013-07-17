@@ -47,11 +47,13 @@ import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.logger.NetworkHandler;
 import scriptease.controller.modelverifier.problem.StoryProblem;
+import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
+import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.StoryComponent;
@@ -59,7 +61,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -1146,13 +1147,17 @@ public final class WindowFactory {
 					// We need to re-validate the menu bar.
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					bar.revalidate();
-
-					if (activated && activeModel instanceof StoryModel) {
-						SwingUtilities.invokeLater(yetAnotherSwingHack);
-					}
 				}
 			}
 		};
+
+		ResourcePanel.getInstance().addObserver(middleSplit,
+				new ResourceTreeAdapter() {
+					@Override
+					public void resourceTreeFilled() {
+						SwingUtilities.invokeLater(yetAnotherSwingHack);
+					}
+				});
 
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);

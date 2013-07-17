@@ -72,7 +72,14 @@ public class SEGraphToolBar extends JToolBar {
 		 * @return
 		 */
 		public Cursor getCursor() {
-			return GUIOp.createCursor(this.iconName());
+			final Cursor cursor;
+
+			if (this == SELECT) {
+				cursor = null;
+			} else
+				cursor = GUIOp.createCursor(this.iconName());
+			
+			return cursor;
 		}
 
 		/**
@@ -90,7 +97,7 @@ public class SEGraphToolBar extends JToolBar {
 		 * @return An {@link ImageIcon} for the loaded image, or null if image
 		 *         cannot be loaded.
 		 */
-		public ImageIcon getIcon() {
+		private ImageIcon getIcon() {
 			try {
 				final BufferedImage buttonImage;
 

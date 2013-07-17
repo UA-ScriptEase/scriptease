@@ -36,7 +36,7 @@ public class StatusManager {
 	 * @return
 	 */
 	public static StatusManager getInstance() {
-		return instance;
+		return StatusManager.instance;
 	}
 
 	private StatusManager() {
@@ -58,13 +58,13 @@ public class StatusManager {
 
 		this.textClear = new Timer(clearTimerDelay, new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				notifyObservers("");
-				messages.clear();
+				StatusManager.this.notifyObservers("");
+				StatusManager.this.messages.clear();
 			};
 		});
 
-		textQueue.setRepeats(false);
-		textClear.setRepeats(false);
+		this.textQueue.setRepeats(false);
+		this.textClear.setRepeats(false);
 	}
 
 	/**
@@ -107,8 +107,8 @@ public class StatusManager {
 	 */
 	public void setStatus(final String text) {
 		this.messages.add(text);
-		notifyObservers(text);
-		textQueue.restart();
-		textClear.restart();
+		this.notifyObservers(text);
+		this.textQueue.restart();
+		this.textClear.restart();
 	}
 }
