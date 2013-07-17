@@ -551,6 +551,12 @@
       <CodeSymbol>Vector3</CodeSymbol>
       <WidgetName>P</WidgetName>
     </Type>
+	<Type>
+	  <Name>Velocity</Name>
+	  <Keyword>Velocity</Keyword>
+	  <CodeSymbol>Vector3</CodeSymbol>
+	  <WidgetName>V</WidgetName>
+	</Type>
     <Type>
       <Name>PreloadedData</Name>
       <Keyword>PreloadedData</Keyword>
@@ -1140,6 +1146,42 @@
             </ScriptIt>
           </Binding>
         </KnowIt>
+	    <KnowIt>
+          <Name>Velocity</Name>
+		  <Visible>true</Visible>
+		  <Labels/>
+		  <Types>
+		    <Type>Velocity</Type>
+		  </Types>
+		  <Binding flavour="function">
+		    <ScriptIt>
+			  <Name>Velocity</Name>
+			  <Visible>true</Visible>
+			  <Labels/>
+			  <Children/>
+			  <CodeBlocks>
+			    <CodeBlockSource>
+				  <Name>Velocity</Name>
+				  <Visible>true</Visible>
+				  <Labels/>
+				  <Id>261</Id>
+				  <Types>
+				    <Type>Velocity</Type>
+				  </Types>
+				  <Code>
+				    <Line>
+					  <Literal>return</Literal>
+					  <Scope data="slotparameter" ref="collision">
+					    <Fragment data="name"/>
+					  </Scope>
+					  <Literal>.relativeVelocity;</Literal>
+					</Line>
+				  </Code>
+				</CodeBlockSource>
+			  </CodeBlocks>
+		    </ScriptIt>
+          </Binding>
+        </KnowIt>
       </Implicits>
     </Slot>
     <Slot format="UnityCause">
@@ -1550,6 +1592,42 @@
                 </CodeBlockSource>
               </CodeBlocks>
             </ScriptIt>
+          </Binding>
+        </KnowIt>
+        <KnowIt>
+          <Name>Velocity</Name>
+		  <Visible>true</Visible>
+		  <Labels/>
+		  <Types>
+		    <Type>Velocity</Type>
+		  </Types>
+		  <Binding flavour="function">
+		    <ScriptIt>
+			  <Name>Velocity</Name>
+			  <Visible>true</Visible>
+			  <Labels/>
+			  <Children/>
+			  <CodeBlocks>
+			    <CodeBlockSource>
+				  <Name>Velocity</Name>
+				  <Visible>true</Visible>
+				  <Labels/>
+				  <Id>260</Id>
+				  <Types>
+				    <Type>Velocity</Type>
+				  </Types>
+				  <Code>
+				    <Line>
+					  <Literal>return</Literal>
+					  <Scope data="slotparameter" ref="collision">
+					    <Fragment data="name"/>
+					  </Scope>
+					  <Literal>.relativeVelocity;</Literal>
+					</Line>
+				  </Code>
+				</CodeBlockSource>
+			  </CodeBlocks>
+		    </ScriptIt>
           </Binding>
         </KnowIt>
       </Implicits>
@@ -1980,6 +2058,42 @@
                 </CodeBlockSource>
               </CodeBlocks>
             </ScriptIt>
+          </Binding>
+        </KnowIt>
+		<KnowIt>
+          <Name>Velocity</Name>
+		  <Visible>true</Visible>
+		  <Labels/>
+		  <Types>
+		    <Type>Velocity</Type>
+		  </Types>
+		  <Binding flavour="function">
+		    <ScriptIt>
+			  <Name>Velocity</Name>
+			  <Visible>true</Visible>
+			  <Labels/>
+			  <Children/>
+			  <CodeBlocks>
+			    <CodeBlockSource>
+				  <Name>Velocity</Name>
+				  <Visible>true</Visible>
+				  <Labels/>
+				  <Id>262</Id>
+				  <Types>
+				    <Type>Velocity</Type>
+				  </Types>
+				  <Code>
+				    <Line>
+					  <Literal>return</Literal>
+					  <Scope data="slotparameter" ref="collision">
+					    <Fragment data="name"/>
+					  </Scope>
+					  <Literal>.relativeVelocity;</Literal>
+					</Line>
+				  </Code>
+				</CodeBlockSource>
+			  </CodeBlocks>
+		    </ScriptIt>
           </Binding>
         </KnowIt>
       </Implicits>
@@ -2701,7 +2815,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+      <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2726,7 +2840,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+          <Name>When &lt;subject&gt; collides with &lt;Colliding Object&gt; with &lt;Velocity&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2752,7 +2866,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; stops colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+      <Name>When &lt;subject&gt; stops colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2777,7 +2891,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; stops colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+          <Name>When &lt;subject&gt; stops colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -2803,7 +2917,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+      <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -2828,7 +2942,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt; at &lt;Contact Points&gt;</Name>
+          <Name>While &lt;subject&gt; is colliding with &lt;Colliding Object&gt; with &lt;Velocity&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -4339,6 +4453,14 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
+			<KnowIt>
+			  <Name>image</Name>
+			  <Visible>true</Visible>
+			  <Labels/>
+			  <Types>
+			    <Type>Image</Type>
+			  </Types>
+			</KnowIt>
           </Parameters>
           <Code>
             <FormatRef data="NONE" ref="children"/>
