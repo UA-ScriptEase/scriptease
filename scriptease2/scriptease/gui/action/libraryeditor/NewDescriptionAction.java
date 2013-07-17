@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -21,7 +21,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * 
  */
 @SuppressWarnings("serial")
-public class NewDescriptionAction extends ActiveTranslatorSensitiveAction {
+public class NewDescriptionAction extends ActiveModelSensitiveAction {
 	private static final String NEW_DESCRIPTION_NAME = "Description";
 
 	private static final NewDescriptionAction instance = new NewDescriptionAction();
