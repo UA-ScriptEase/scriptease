@@ -64,8 +64,6 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 		final Icon icon = UIManager.getIcon("OptionPane.errorIcon");
 
 		Toolkit.getDefaultToolkit().beep();
-
-		System.out.println("YAY WE GOT HERE.");
 		
 		if (thrown instanceof java.lang.Error) {
 			// Very Bad Things are happening. Duck and cover.
