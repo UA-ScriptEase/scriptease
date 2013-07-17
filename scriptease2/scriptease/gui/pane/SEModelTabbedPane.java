@@ -37,7 +37,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.controller.ModelAdapter;
-import scriptease.controller.observer.ResourceTreeObserver;
+import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.UndoManagerObserver;
@@ -413,11 +413,7 @@ class SEModelTabbedPane extends JTabbedPane {
 		});
 
 		ResourcePanel.getInstance().addObserver(topLevelPane,
-				new ResourceTreeObserver() {
-					public void resourceSelected(Resource resource) {
-						// Do nothing.
-					}
-
+				new ResourceTreeAdapter() {
 					@Override
 					public void resourceEditButtonClicked(Resource resource) {
 						if (resource instanceof DialogueLine) {

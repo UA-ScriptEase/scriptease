@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -662,7 +661,7 @@ public class SEGraph<E> extends JComponent {
 	 * @param node
 	 * @return
 	 */
-	private JComponent createComponentForNode(E node) {
+	private JComponent getComponentForNode(E node) {
 		final JComponent component;
 		final JComponent storedComponent;
 
@@ -748,19 +747,19 @@ public class SEGraph<E> extends JComponent {
 	 * @author kschenk
 	 */
 	private class SEGraphLayoutManager implements LayoutManager {
-		private static final int HORIZONTAL_GAP = 50;
+		private static final int HORIZONTAL_GAP = 60;
 		private static final int VERTICAL_GAP = 15;
 
 		@Override
 		public Dimension minimumLayoutSize(Container parent) {
+			final SEGraph<E> graph = SEGraph.this;
+
 			final Insets insets;
-			final Map<E, Integer> nodeMap;
 			final int numberOfLevels;
 			final Collection<Integer> levels;
 
 			insets = parent.getInsets();
-			nodeMap = SEGraph.this.model.getDepthMap();
-			levels = nodeMap.values();
+			levels = graph.model.getDepthMap().values();
 
 			if (levels.isEmpty())
 				numberOfLevels = 0;
@@ -771,23 +770,23 @@ public class SEGraph<E> extends JComponent {
 			int ySize = insets.top + insets.bottom;
 
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
-				final List<E> currentNodes = new ArrayList<E>();
-				// extract nodes for the level
-				for (Entry<E, Integer> entry : nodeMap.entrySet()) {
-					if (entry.getValue() == currentLevel)
-						currentNodes.add(entry.getKey());
-				}
+				final Collection<E> currentNodes;
+
+				currentNodes = graph.model.getNodesForLevel(currentLevel);
 
 				// Get the width of the widest JComponent in the level.
-				xSize += this.getMaxWidth(currentNodes) + HORIZONTAL_GAP;
 
-				int yNodeSize = VERTICAL_GAP;
+				int yNodeSize = 0;
+				int maxWidth = 0;
 				for (E node : currentNodes) {
-					JComponent component = SEGraph.this
-							.createComponentForNode(node);
-					yNodeSize += VERTICAL_GAP
-							+ component.getPreferredSize().height;
+					final Dimension size;
+					size = graph.getComponentForNode(node).getPreferredSize();
+
+					yNodeSize += VERTICAL_GAP + size.height;
+					maxWidth = Math.max(maxWidth, size.width);
 				}
+
+				xSize += maxWidth + HORIZONTAL_GAP;
 				ySize = Math.max(ySize, yNodeSize);
 			}
 			return new Dimension(xSize, ySize);
@@ -795,8 +794,9 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void layoutContainer(Container parent) {
+			final SEGraph<E> graph = SEGraph.this;
 			// Remove the current contents of the panel.
-			SEGraph.this.removeAll();
+			graph.removeAll();
 
 			final List<E> previousNodes = new ArrayList<E>();
 
@@ -804,68 +804,61 @@ public class SEGraph<E> extends JComponent {
 			final int numberOfLevels;
 			final double graphHeight;
 
-			nodeMap = SEGraph.this.model.getDepthMap();
+			nodeMap = graph.model.getDepthMap();
 			numberOfLevels = Collections.max(nodeMap.values());
-			graphHeight = SEGraph.this.getPreferredSize().getHeight();
+			graphHeight = graph.getPreferredSize().getHeight();
 
-			int xLocation = HORIZONTAL_GAP;
-			// For each level in the graph,
+			int xLocation = 10;
+
+			// Going through each level is faster than going through each node.
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
-				final List<E> currentNodes;
+				final Collection<E> currentNodes;
 
-				final int maxWidth;
 				final int numberOfNodes;
 				final double pixelsPerNode;
 
 				currentNodes = this.sortChildrenByParent(previousNodes,
-						this.getNodesForLevel(nodeMap, currentLevel));
+						graph.model.getNodesForLevel(currentLevel));
 				// Width of the widest JComponent in the level.
-				maxWidth = this.getMaxWidth(currentNodes);
 				numberOfNodes = currentNodes.size();
 				// Number of y pixels each node is allocated
 				pixelsPerNode = graphHeight / numberOfNodes;
 
+				int maxWidth = 0;
+				int position = 0;
 				// For each node at that level,
-				for (int currentNode = 0; currentNode < numberOfNodes; currentNode++) {
-					final E node;
+				for (E node : currentNodes) {
 					final JComponent component;
 					final Dimension componentSize;
-					final int nodeWidth;
 					final int yNodeLocation;
 
-					node = currentNodes.get(currentNode);
-					component = SEGraph.this.createComponentForNode(node);
+					component = graph.getComponentForNode(node);
 					// JComponent preferred width
 					componentSize = component.getPreferredSize();
-					nodeWidth = componentSize.width;
-
-					// TODO Change variable name (obvs) and determine what
-					// happens
-					final double heightddd = pixelsPerNode;
-					// componentSize.height + 20;
 
 					// The y Location for the node.
-					yNodeLocation = (int) (heightddd * (currentNode + 1) - 0.5
-							* heightddd - 0.5 * componentSize.height);
+					yNodeLocation = (int) (pixelsPerNode * (position + 0.5) - componentSize.height / 2);
 
 					if (component.getMouseListeners().length <= 1) {
-						component.addMouseListener(SEGraph.this.mouseAdapter);
-						component
-								.addMouseMotionListener(SEGraph.this.mouseAdapter);
+						component.addMouseListener(graph.mouseAdapter);
+						component.addMouseMotionListener(graph.mouseAdapter);
 					}
 
 					// Add the component to the panel, so it will draw
-					SEGraph.this.add(component);
-					SEGraph.this.nodesToComponents.put(node, component);
+					graph.add(component);
+					graph.nodesToComponents.put(node, component);
 
 					// Set the size and location of the component
 					component.setLocation(xLocation, yNodeLocation);
-					component.setSize(new Dimension(nodeWidth,
-							componentSize.height));
+					component.setSize(componentSize);
+
+					maxWidth = Math.max(maxWidth, componentSize.width);
+
+					position++;
 				}
 
 				// Update the x location for the next level.
-				xLocation = xLocation + maxWidth + HORIZONTAL_GAP;
+				xLocation += maxWidth + HORIZONTAL_GAP;
 
 				previousNodes.clear();
 				previousNodes.addAll(currentNodes);
@@ -875,76 +868,39 @@ public class SEGraph<E> extends JComponent {
 		/**
 		 * Sorts the given children in a fashion that has overlapping lines
 		 * 
-		 * @param parentNodes
-		 * @param childNodes
+		 * @param parents
+		 * @param children
 		 * @return
 		 */
-		private List<E> sortChildrenByParent(List<E> parentNodes,
-				List<E> childNodes) {
-			if (parentNodes == null || parentNodes.isEmpty()
-					|| childNodes == null || childNodes.isEmpty())
-				return childNodes;
+		private Collection<E> sortChildrenByParent(Collection<E> parents,
+				Collection<E> children) {
+			if (parents == null || parents.isEmpty() || children == null
+					|| children.isEmpty())
+				return children;
 
-			final List<E> sortedChildren = new IdentityArrayList<E>(
-					childNodes.size());
+			final List<E> sortedChildren;
+
+			sortedChildren = new IdentityArrayList<E>(children.size());
+
 			int newIndex = 0;
-			for (E parentNode : parentNodes) {
+			for (E parent : parents) {
 				int parentIndex = newIndex;
-				Collection<E> children = SEGraph.this.model
-						.getChildren(parentNode);
-				for (E childNode : childNodes) {
-					if (children.contains(childNode)) {
+				for (E child : children) {
+					if (SEGraph.this.model.getChildren(parent).contains(child)) {
 						// if the child has already been organized, move it to
 						// the first element of the current parent
-						if (sortedChildren.contains(childNode)) {
-							sortedChildren.remove(childNode);
-							sortedChildren.add(parentIndex - 1, childNode);
+						if (sortedChildren.contains(child)) {
+							sortedChildren.remove(child);
+							sortedChildren.add(parentIndex - 1, child);
 						} else {
 							// insert the childNode near the parent's index
-							sortedChildren.add(newIndex, childNode);
+							sortedChildren.add(newIndex, child);
 							newIndex++;
 						}
 					}
 				}
 			}
 			return sortedChildren;
-		}
-
-		private List<E> getNodesForLevel(Map<E, Integer> nodeMap, int level) {
-			List<E> currentNodes = new ArrayList<E>();
-			// extract nodes for the level
-			for (Entry<E, Integer> entry : nodeMap.entrySet()) {
-				if (entry.getValue() == level)
-					currentNodes.add(entry.getKey());
-			}
-			return currentNodes;
-		}
-
-		/**
-		 * Returns the width of the widest JComponent in the collection of
-		 * nodes.
-		 * 
-		 * @param nodes
-		 * @return
-		 */
-		private int getMaxWidth(Collection<E> nodes) {
-			int maxWidth = 0;
-
-			for (E node : nodes) {
-				// Get the component for the node.
-				final JComponent component = SEGraph.this
-						.createComponentForNode(node);
-
-				// Get the size of the JComponent.
-				final Dimension componentSize = component.getPreferredSize();
-
-				// Check for a new maximum.
-				if (componentSize.getWidth() > maxWidth) {
-					maxWidth = (int) componentSize.getWidth();
-				}
-			}
-			// Return the maximum width.
-			return maxWidth;
 		}
 
 		@Override
@@ -976,6 +932,8 @@ public class SEGraph<E> extends JComponent {
 			final float ARROW_WIDTH = 3.0f;
 			final int SPACER_FACTOR = 5;
 
+			final SEGraph<E> graph = SEGraph.this;
+
 			final Collection<E> selected;
 			final Map<E, Integer> nodeMap;
 			final int numberOfLevels;
@@ -983,29 +941,28 @@ public class SEGraph<E> extends JComponent {
 			final Graphics2D g2;
 			final BasicStroke lineStroke;
 
-			selected = SEGraph.this.getSelectedNodes();
-			nodeMap = SEGraph.this.model.getDepthMap();
+			selected = graph.getSelectedNodes();
+			nodeMap = graph.model.getDepthMap();
 			numberOfLevels = Collections.max(nodeMap.values());
 
 			g2 = (Graphics2D) g.create();
 			lineStroke = new BasicStroke(ARROW_WIDTH);
 
 			// Paint the graph's background.
-			g.setColor(SEGraph.this.getBackground());
-			g.fillRect(0, 0, SEGraph.this.getWidth(), SEGraph.this.getHeight());
+			g.setColor(graph.getBackground());
+			g.fillRect(0, 0, graph.getWidth(), graph.getHeight());
 
 			// Dragging behaviour for arrows, if we're currently dragging
-			if (SEGraph.this.draggedFromNode != null
-					&& SEGraph.this.mousePosition != null) {
-				final Mode mode = SEGraph.this.getToolBarMode();
+			if (graph.draggedFromNode != null && graph.mousePosition != null) {
+				final Mode mode = graph.getToolBarMode();
 
 				final Point start;
 				final Point end;
 				final Color lineColor;
 
-				start = GUIOp.getMidRight(SEGraph.this
-						.createComponentForNode(SEGraph.this.draggedFromNode));
-				end = SEGraph.this.mousePosition;
+				start = GUIOp.getMidRight(graph
+						.getComponentForNode(graph.draggedFromNode));
+				end = graph.mousePosition;
 
 				if (mode == Mode.INSERT || mode == Mode.CONNECT)
 					lineColor = ScriptEaseUI.COLOUR_INSERT_NODE;
@@ -1022,15 +979,8 @@ public class SEGraph<E> extends JComponent {
 
 			// For each level in the graph
 			for (int currentLevel = 0; currentLevel <= numberOfLevels; currentLevel++) {
-				final List<E> currentNodes = new ArrayList<E>();
-				// extract nodes for the level
-				for (Entry<E, Integer> entry : nodeMap.entrySet()) {
-					if (entry.getValue() == currentLevel)
-						currentNodes.add(entry.getKey());
-				}
-
 				// for each node in the level
-				for (E parent : currentNodes) {
+				for (E parent : graph.model.getNodesForLevel(currentLevel)) {
 					// Get the children of the node.
 					final Collection<E> children;
 					final JComponent parentComponent;
@@ -1039,17 +989,14 @@ public class SEGraph<E> extends JComponent {
 					final int childrenOffset;
 
 					final boolean parentSelected;
-					final Point arrowStart;
 
-					children = SEGraph.this.model.getChildren(parent);
-					parentComponent = SEGraph.this
-							.createComponentForNode(parent);
+					children = graph.getChildren(parent);
+					parentComponent = graph.getComponentForNode(parent);
 
 					parentY = parentComponent.getY();
 					childrenOffset = (children.size() - 1) * SPACER_FACTOR;
 
 					parentSelected = selected.contains(parent);
-					arrowStart = GUIOp.getMidRight(parentComponent);
 
 					// For each child,
 					int previousLevelOffset = -1;
@@ -1062,6 +1009,7 @@ public class SEGraph<E> extends JComponent {
 						final JComponent childComponent;
 						final Color lineColor;
 
+						final Point arrowStart;
 						final Point arrowEnd;
 
 						final int childY;
@@ -1070,9 +1018,9 @@ public class SEGraph<E> extends JComponent {
 
 						final boolean childSelected;
 
-						childComponent = SEGraph.this
-								.createComponentForNode(child);
+						childComponent = graph.getComponentForNode(child);
 
+						arrowStart = GUIOp.getMidRight(parentComponent);
 						arrowEnd = GUIOp.getMidLeft(childComponent);
 
 						childY = childComponent.getY();
@@ -1124,6 +1072,7 @@ public class SEGraph<E> extends JComponent {
 			}
 			// clean up
 			g.dispose();
+			g2.dispose();
 		}
 	}
 
@@ -1147,8 +1096,9 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			final SEGraph<E> graph = SEGraph.this;
 
-			Container parent = SEGraph.this.getParent();
+			Container parent = graph.getParent();
 			while (parent != null) {
 				if (parent instanceof JScrollPane) {
 					GUIOp.scrollJScrollPaneToMousePosition((JScrollPane) parent);
@@ -1157,105 +1107,94 @@ public class SEGraph<E> extends JComponent {
 				parent = parent.getParent();
 			}
 
-			final Point mousePosition;
-
-			mousePosition = SEGraph.this.getMousePosition();
+			final Point mousePosition = graph.getMousePosition();
 
 			if (mousePosition != null)
-				SEGraph.this.mousePosition.setLocation(mousePosition);
+				graph.mousePosition.setLocation(mousePosition);
 
-			SEGraph.this.repaint();
+			graph.repaint();
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			final Mode mode = SEGraph.this.getToolBarMode();
+			final SEGraph<E> graph = SEGraph.this;
+			final Mode mode = graph.getToolBarMode();
+
+			final E source;
+
+			source = graph.nodesToComponents.getKey((JComponent) e.getSource());
 
 			if (mode == Mode.INSERT || mode == Mode.CONNECT
 					|| mode == Mode.DISCONNECT) {
-				final E draggedFrom;
-
-				draggedFrom = SEGraph.this.nodesToComponents
-						.getKey((JComponent) e.getSource());
-
-				SEGraph.this.draggedFromNode = draggedFrom;
-
+				graph.draggedFromNode = source;
 			} else if (mode == Mode.GROUP || mode == Mode.UNGROUP) {
 
-				if (SEGraph.this.startNode == null) {
+				if (graph.startNode == null) {
 					// Deal with the first node that is being selected -
 					// which is the node that determines the start of the group
 
-					SEGraph.this.startNode = SEGraph.this.nodesToComponents
-							.getKey((JComponent) e.getSource());
+					graph.startNode = source;
 
-					SEGraph.this.showEndNodesFor(startNode);
+					graph.showEndNodesFor(graph.startNode);
 				} else {
 					// Deal with the next node that is being selected -
 					// which is the node that determines the end of the group
 
-					SEGraph.this.endNode = SEGraph.this.nodesToComponents
-							.getKey((JComponent) e.getSource());
+					graph.endNode = source;
 
 					// Make sure the node selected isn't a non-group-able one
-					if (!SEGraph.this.ungroupableNodes.contains(endNode)) {
+					if (!graph.ungroupableNodes.contains(endNode)) {
 
-						if (SEGraph.this.startNode != null
-								&& SEGraph.this.endNode != null) {
+						if (graph.startNode != null && graph.endNode != null) {
 
 							if (!UndoManager.getInstance()
 									.hasOpenUndoableAction())
-								UndoManager
-										.getInstance()
-										.startUndoableAction(
-												"Creating group from "
-														+ SEGraph.this.startNode
-														+ " to "
-														+ SEGraph.this.endNode);
+								UndoManager.getInstance().startUndoableAction(
+										"Creating group from "
+												+ graph.startNode + " to "
+												+ graph.endNode);
 
 							System.out.println("DEBUG: starting node: "
-									+ SEGraph.this.startNode);
+									+ graph.startNode);
 							System.out.println("DEBUG: ending node: "
-									+ SEGraph.this.endNode);
+									+ graph.endNode);
 
-							SEGraph.this.createNodeGroupAt(
-									SEGraph.this.startNode,
-									SEGraph.this.endNode);
+							graph.createNodeGroupAt(graph.startNode,
+									graph.endNode);
 
 							UndoManager.getInstance().endUndoableAction();
 
 						}
 					}
 
-					SEGraph.this.renderer.resetAppearances();
-					SEGraph.this.ungroupableNodes = new HashSet<E>();
-					SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
-					SEGraph.this.startNode = null;
-					SEGraph.this.endNode = null;
+					graph.renderer.resetAppearances();
+					graph.ungroupableNodes = new HashSet<E>();
+					graph.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
+					graph.startNode = null;
+					graph.endNode = null;
 				}
 			}
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
+			final SEGraph<E> graph = SEGraph.this;
 			final JComponent entered = (JComponent) e.getSource();
-			final Mode mode = SEGraph.this.getToolBarMode();
+			final Mode mode = graph.getToolBarMode();
 
-			this.lastEnteredNode = SEGraph.this.nodesToComponents
-					.getKey(entered);
+			this.lastEnteredNode = graph.nodesToComponents.getKey(entered);
 
-			if (this.lastEnteredNode == SEGraph.this.getStartNode())
+			if (this.lastEnteredNode == graph.getStartNode())
 				if (mode == Mode.DELETE) {
 					// Make the cursor appear unavailable for start node
 					// deletion
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			else if (SEGraph.this.ungroupableNodes
-					.contains(this.lastEnteredNode)) {
+			else if (graph.ungroupableNodes.contains(this.lastEnteredNode)) {
 				if (mode == Mode.GROUP)
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
-			} else if (SEGraph.this.isReadOnly)
+			} else if (graph.isReadOnly)
 				if (mode != Mode.SELECT) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
@@ -1266,8 +1205,9 @@ public class SEGraph<E> extends JComponent {
 		public void mouseExited(MouseEvent e) {
 			final JComponent exited = (JComponent) e.getSource();
 			final Mode mode = SEGraph.this.getToolBarMode();
-			
-			final E lastExitedNode = SEGraph.this.nodesToComponents.getKey(exited);
+
+			final E lastExitedNode = SEGraph.this.nodesToComponents
+					.getKey(exited);
 
 			if (mode == Mode.GROUP
 					&& SEGraph.this.ungroupableNodes.contains(lastExitedNode))
@@ -1276,14 +1216,15 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			final SEGraph<E> graph = SEGraph.this;
+
 			final JComponent source;
 			final E node;
 
 			source = (JComponent) e.getSource();
-			node = SEGraph.this.nodesToComponents.getKey((JComponent) e
-					.getSource());
+			node = graph.nodesToComponents.getKey((JComponent) e.getSource());
 
-			final Mode mode = SEGraph.this.getToolBarMode();
+			final Mode mode = graph.getToolBarMode();
 
 			if (mode == Mode.SELECT || mode == Mode.DELETE) {
 				final Point mouseLoc = MouseInfo.getPointerInfo().getLocation();
@@ -1305,22 +1246,20 @@ public class SEGraph<E> extends JComponent {
 				if (selectionMode == SelectionMode.SELECT_PATH_FROM_START
 						|| (selectionMode == SelectionMode.SELECT_PATH && e
 								.isShiftDown())) {
-					SEGraph.this.selectNodesUntil(node);
+					graph.selectNodesUntil(node);
 
-					for (E selectedNode : SEGraph.this.getSelectedNodes()) {
-						SEGraph.this.renderer.reconfigureAppearance(
-								SEGraph.this.nodesToComponents
-										.getValue(selectedNode), selectedNode);
+					for (E selectedNode : graph.getSelectedNodes()) {
+						graph.renderer.reconfigureAppearance(
+								graph.nodesToComponents.getValue(selectedNode),
+								selectedNode);
 					}
 				} else {
 					// Default behaviour is to select individual nodes
-					final Collection<E> nodes;
-
-					nodes = new ArrayList<E>();
+					final Collection<E> nodes = new ArrayList<E>();
 
 					nodes.add(node);
 
-					SEGraph.this.setSelectedNodes(nodes);
+					graph.setSelectedNodes(nodes);
 				}
 				source.requestFocusInWindow();
 			} else if (mode == Mode.INSERT) {
@@ -1329,7 +1268,7 @@ public class SEGraph<E> extends JComponent {
 						if (!UndoManager.getInstance().hasOpenUndoableAction())
 							UndoManager.getInstance().startUndoableAction(
 									"Add new node to " + node);
-						SEGraph.this.addNewNodeTo(node);
+						graph.addNewNodeTo(node);
 
 						UndoManager.getInstance().endUndoableAction();
 					} else {
@@ -1339,20 +1278,19 @@ public class SEGraph<E> extends JComponent {
 											+ this.lastEnteredNode + " and "
 											+ node);
 
-						SEGraph.this.addNewNodeBetween(this.lastEnteredNode,
-								node);
+						graph.addNewNodeBetween(this.lastEnteredNode, node);
 
 						UndoManager.getInstance().endUndoableAction();
 					}
 
-				SEGraph.this.getNodesToComponentsMap()
-						.getValue(this.lastEnteredNode).requestFocusInWindow();
+				graph.getNodesToComponentsMap().getValue(this.lastEnteredNode)
+						.requestFocusInWindow();
 			} else if (mode == Mode.DELETE) {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Remove " + node);
 
-				SEGraph.this.removeNode(node);
+				graph.removeNode(node);
 
 				UndoManager.getInstance().endUndoableAction();
 
@@ -1364,7 +1302,7 @@ public class SEGraph<E> extends JComponent {
 								"Connect " + this.lastEnteredNode + " to "
 										+ node);
 
-					SEGraph.this.connectNodes(this.lastEnteredNode, node);
+					graph.connectNodes(this.lastEnteredNode, node);
 
 					UndoManager.getInstance().endUndoableAction();
 				}
@@ -1376,19 +1314,19 @@ public class SEGraph<E> extends JComponent {
 								"Disconnect " + this.lastEnteredNode + " from "
 										+ node);
 
-					SEGraph.this.disconnectNodes(this.lastEnteredNode, node);
+					graph.disconnectNodes(this.lastEnteredNode, node);
 
 					UndoManager.getInstance().endUndoableAction();
 				}
 			}
 
-			SEFocusManager.getInstance().setFocus(SEGraph.this);
+			SEFocusManager.getInstance().setFocus(graph);
 
-			SEGraph.this.renderer.reconfigureAppearance(
-					SEGraph.this.nodesToComponents.getValue(node), node);
-			SEGraph.this.draggedFromNode = null;
+			graph.renderer.reconfigureAppearance(
+					graph.nodesToComponents.getValue(node), node);
+			graph.draggedFromNode = null;
 
-			SEGraph.this.repaint();
+			graph.repaint();
 		}
 	}
 }

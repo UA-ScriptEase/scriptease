@@ -9,6 +9,12 @@ import scriptease.translator.io.model.Resource;
  * 
  */
 public abstract class ResourceTreeAdapter implements ResourceTreeObserver {
+	
+	@Override
+	public void resourceTreeFilled() {
+		
+	}
+	
 	@Override
 	public void resourceAddButtonClicked(String type) {
 	}
@@ -17,6 +23,7 @@ public abstract class ResourceTreeAdapter implements ResourceTreeObserver {
 	public void resourceEditButtonClicked(Resource resource) {
 	}
 
+	@Override
 	public void resourceRemoveButtonClicked(Resource resource) {
 	};
 

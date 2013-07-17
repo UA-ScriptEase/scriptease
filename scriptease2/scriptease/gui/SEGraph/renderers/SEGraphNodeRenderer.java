@@ -183,30 +183,18 @@ public class SEGraphNodeRenderer<E> {
 	 */
 	public void setComponentAppearance(JComponent component, E node,
 			Color backgroundColour) {
-		final int INNER_BORDER_THICKNESS = 1;
-
-		final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(
-				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS,
-				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS);
+		final int INNER_BORDER_THICKNESS = 2;
 
 		final Border innerBorder;
 		final Border lineBorder;
 		final Border lineSpaceBorder;
 
-		lineBorder = BorderFactory.createRaisedBevelBorder();
-		innerBorder = EMPTY_BORDER;
-
-		if (node != this.graph.getStartNode()) {
-			lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
-					innerBorder);
-		} else {
-			final Border secondLineBorder;
-
-			secondLineBorder = BorderFactory.createCompoundBorder(lineBorder,
-					innerBorder);
-			lineSpaceBorder = BorderFactory.createCompoundBorder(
-					secondLineBorder, BorderFactory.createLoweredBevelBorder());
-		}
+		lineBorder = BorderFactory.createLineBorder(backgroundColour.darker());
+		innerBorder = BorderFactory.createEmptyBorder(INNER_BORDER_THICKNESS,
+				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS,
+				INNER_BORDER_THICKNESS);
+		lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
+				innerBorder);
 
 		component.setBorder(lineSpaceBorder);
 		component.setBackground(backgroundColour);

@@ -1,5 +1,6 @@
 package scriptease.gui.SEGraph.models;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -120,8 +121,8 @@ public abstract class SEGraphModel<E> {
 			this.addChild(firstNode, node);
 			added = true;
 		} else {
-			final int firstNodeDepth = this.depthMap.get(firstNode);
-			final int secondNodeDepth = this.depthMap.get(secondNode);
+			final int firstNodeDepth = this.getDepthMap().get(firstNode);
+			final int secondNodeDepth = this.getDepthMap().get(secondNode);
 
 			if (firstNodeDepth > secondNodeDepth) {
 				this.addChild(node, secondNode);
@@ -191,8 +192,8 @@ public abstract class SEGraphModel<E> {
 		} else if (this.getDescendants(parent).contains(child)) {
 			connected = this.addChild(child, parent);
 		} else {
-			final int childDepth = this.depthMap.get(child);
-			final int parentDepth = this.depthMap.get(parent);
+			final int childDepth = this.getDepthMap().get(child);
+			final int parentDepth = this.getDepthMap().get(parent);
 
 			if (childDepth >= parentDepth) {
 				connected = this.addChild(child, parent);
@@ -311,17 +312,17 @@ public abstract class SEGraphModel<E> {
 				}
 			}
 		}
-		
+
 		queue.add(node);
 		while (!queue.isEmpty()) {
 			final E currNode = queue.remove();
-			
+
 			if (currNode.toString().contains("O"))
 				System.out.println("ESRFSSF");
-			
+
 			if (visited.get(currNode) == -1)
 				break;
-			
+
 			if (this.getParents(currNode).size() == visited.get(currNode)) {
 
 				for (E childNode : this.getChildren(currNode)) {
@@ -353,6 +354,24 @@ public abstract class SEGraphModel<E> {
 	}
 
 	/**
+	 * Returns all of the nodes for the specific level.
+	 * 
+	 * @param level
+	 * @return
+	 */
+	public Collection<E> getNodesForLevel(int level) {
+		final Collection<E> nodes = new ArrayList<E>();
+
+		// extract nodes for the level
+		for (Entry<E, Integer> entry : this.depthMap.entrySet()) {
+			if (entry.getValue() == level)
+				nodes.add(entry.getKey());
+		}
+
+		return nodes;
+	}
+
+	/**
 	 * Recalculates the depth map. Should only be used when the graph model is
 	 * changed, as it is performance intensive.
 	 */
@@ -370,9 +389,8 @@ public abstract class SEGraphModel<E> {
 	 * @return
 	 */
 	private final Map<E, Integer> createDepthMap(E node) {
-		final Map<E, Integer> depthMap;
+		final Map<E, Integer> depthMap = new IdentityHashMap<E, Integer>();
 
-		depthMap = new IdentityHashMap<E, Integer>();
 		// Goes through every child of the node
 		for (E child : this.getChildren(node)) {
 			// Gets the depth map of every child
