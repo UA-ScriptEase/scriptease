@@ -933,7 +933,7 @@
       <Parameters/>
       <Implicits>
         <KnowIt>
-          <Name>Dying Player</Name>
+          <Name>Player</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -941,13 +941,13 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Dying Player</Name>
+              <Name>Player</Name>
               <Visible>true</Visible>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Dying Player</Name>
+                  <Name>Player</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Id>9</Id>
@@ -3213,7 +3213,7 @@
       <Parameters/>
       <Implicits>
         <KnowIt>
-          <Name>Dead Player</Name>
+          <Name>Player</Name>
           <Visible>true</Visible>
           <Labels/>
           <Types>
@@ -3221,13 +3221,13 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Dead Player</Name>
+              <Name>Player</Name>
               <Visible>true</Visible>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Dead Player</Name>
+                  <Name>Player</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Id>74</Id>
@@ -5948,7 +5948,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;dead player&gt; is killed by &lt;last hostile actor&gt;</Name>
+      <Name>In &lt;subject&gt;, when &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5973,7 +5973,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when &lt;dead player&gt; is killed by &lt;last hostile actor&gt;</Name>
+          <Name>In &lt;subject&gt;, when &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -5999,7 +5999,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;dying player&gt;&apos;s health reaches zero</Name>
+      <Name>In &lt;subject&gt;, when &lt;player&gt;&apos;s health reaches zero</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6024,7 +6024,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when &lt;dying player&gt;&apos;s health reaches zero</Name>
+          <Name>In &lt;subject&gt;, when &lt;player&gt;&apos;s health reaches zero</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
