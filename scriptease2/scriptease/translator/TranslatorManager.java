@@ -328,7 +328,8 @@ public class TranslatorManager {
 			// We have this here so we don't run into issues later if the
 			translator.getLibrary();
 			translator.getOptionalLibraries();
-		} else
-			this.notifyObservers();
+		}
+
+		this.notifyObservers();
 	}
 }
