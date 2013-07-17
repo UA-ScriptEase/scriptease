@@ -4357,8 +4357,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>Before the camera &lt;subject&gt; starts rendering the scene
-			</Name>
+      <Name>Before the camera &lt;subject&gt; starts rendering the scene</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -4383,8 +4382,7 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Before the camera &lt;subject&gt; starts rendering the scene
-			</Name>
+          <Name>Before the camera &lt;subject&gt; starts rendering the scene</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
