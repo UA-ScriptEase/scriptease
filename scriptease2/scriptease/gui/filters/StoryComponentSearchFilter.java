@@ -5,9 +5,11 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import scriptease.controller.AbstractFragmentAdapter;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -17,9 +19,15 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.container.IndentFragment;
+import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
+import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
+import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 
 /**
  * Accepts StoryComponents if one of their properties contains the text given in
@@ -142,7 +150,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 	 * Handles Aggregation of SearchableData for StoryComponents
 	 * 
 	 * @author mfchurch
-	 * 
+	 * @author jyuen
 	 */
 	private class SearchDataCompiler extends StoryAdapter {
 		private final Collection<String> searchData;
@@ -187,6 +195,54 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		}
 
 		@Override
+		public void processControlIt(ControlIt controlIt) {
+			defaultProcess(controlIt);
+			for (CodeBlock codeBlock : controlIt.getCodeBlocks())
+				codeBlock.process(this);
+		}
+
+		@Override
+		public void processCodeBlockSource(CodeBlockSource codeBlock) {
+			if (codeBlock.hasSlot())
+				this.searchData.add(codeBlock.getSlot());
+
+			final Collection<AbstractFragment> fragments = codeBlock.getCode();
+			for (AbstractFragment codeFrag : fragments) {
+				codeFrag.process(new AbstractFragmentAdapter() {
+
+					@Override
+					protected void defaultProcess(AbstractFragment fragment) {
+						searchData.add(fragment.getDirectiveText());
+					}
+
+					@Override
+					public void processScopeFragment(ScopeFragment fragment) {
+						for (AbstractFragment frag : fragment.getSubFragments())
+							frag.process(this);
+					}
+
+					@Override
+					public void processSeriesFragment(SeriesFragment fragment) {
+						for (AbstractFragment frag : fragment.getSubFragments())
+							frag.process(this);
+					}
+
+					@Override
+					public void processIndentFragment(IndentFragment fragment) {
+						for (AbstractFragment frag : fragment.getSubFragments())
+							frag.process(this);
+					}
+
+					@Override
+					public void processLineFragment(LineFragment fragment) {
+						for (AbstractFragment frag : fragment.getSubFragments())
+							frag.process(this);
+					}
+				});
+			}
+		}
+
+		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
 			defaultProcess(scriptIt);
 			for (KnowIt parameter : scriptIt.getParameters()) {
@@ -202,8 +258,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 			// searchable by slot
 			for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
-				if (codeBlock.hasSlot())
-					this.searchData.add(codeBlock.getSlot());
+				codeBlock.process(this);
 			}
 
 			this.addTypeData(scriptIt.getTypes());

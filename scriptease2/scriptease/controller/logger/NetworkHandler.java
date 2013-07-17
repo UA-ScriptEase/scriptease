@@ -148,12 +148,12 @@ public class NetworkHandler extends Handler {
 		report += ("\n=== Comment:\n\n");
 		report += comment + "\n";
 		report += ("\n=== Log:\n\n");
-		
+
 		if (log.equals(""))
 			report += this.retrieveDefaultLog();
 		else
 			report += log + "\n";
-		
+
 		report += ("\n=== System:\n\n");
 		String sys = System.getProperties().toString();
 		String[] properties = sys.split(",");
@@ -164,6 +164,9 @@ public class NetworkHandler extends Handler {
 		return report;
 	}
 
+	/**
+	 * Gets the LogRecord.
+	 **/
 	private String retrieveDefaultLog() {
 		String log = "";
 
@@ -178,7 +181,7 @@ public class NetworkHandler extends Handler {
 				log += formattedText + "\n";
 			}
 		}
-		
+
 		return log;
 	}
 

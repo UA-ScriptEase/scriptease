@@ -25,7 +25,7 @@ import scriptease.model.semodel.SEModelManager;
 @SuppressWarnings("serial")
 public class SaveModelWithoutCodeAction extends ActiveModelSensitiveAction {
 
-	private static final String SAVE_WITHOUT_CODE = "Save without Writing Code";
+	private static final String SAVE_WITHOUT_CODE = "Save Without Writing Code";
 
 	private static final Action instance = new SaveModelWithoutCodeAction();
 

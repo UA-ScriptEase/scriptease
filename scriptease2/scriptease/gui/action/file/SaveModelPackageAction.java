@@ -40,10 +40,10 @@ public class SaveModelPackageAction extends ActiveModelSensitiveAction {
 	private SaveModelPackageAction() {
 		super(SaveModelPackageAction.SAVE_AS_PACKAGE);
 
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
 		this.putValue(
 				Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK
+				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK
 						+ ActionEvent.SHIFT_MASK));
 	}
 

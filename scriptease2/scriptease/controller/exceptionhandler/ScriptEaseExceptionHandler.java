@@ -65,6 +65,8 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 
 		Toolkit.getDefaultToolkit().beep();
 
+		System.out.println("YAY WE GOT HERE.");
+		
 		if (thrown instanceof java.lang.Error) {
 			// Very Bad Things are happening. Duck and cover.
 			try {
