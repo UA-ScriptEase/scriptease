@@ -47,20 +47,28 @@ import scriptease.translator.io.model.Resource;
  */
 public abstract class Context {
 	private String indent = "";
-	// private final StoryPoint model;
-	// protected final Translator translator;
 	private final CodeGenerationNamifier namifier;
 	private final StoryModel model;
+
+	// This is a cached list of all story points. This prevents multiple
+	// expensive calls to StoryPoint#getDescendants()
+	private final Collection<StoryPoint> storyPoints;
 
 	protected LocationInformation locationInfo;
 
 	private static final String UNIMPLEMENTED = "<unimplemented in context>";
 
-	public Context(StoryModel model, String indent,
-			CodeGenerationNamifier existingNames) {
+	public Context(StoryModel model, Collection<StoryPoint> storyPoints,
+			String indent, CodeGenerationNamifier existingNames) {
 		this.model = model;
+		this.storyPoints = storyPoints;
 		this.indent = indent;
 		this.namifier = existingNames;
+	}
+
+	public Context(Context other) {
+		this(other.getModel(), other.getStoryPoints(), other.getIndent(), other
+				.getNamifier());
 	}
 
 	/**
@@ -140,7 +148,7 @@ public abstract class Context {
 		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
 
 		// for each story point
-		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
+		for (StoryPoint point : this.storyPoints) {
 			// Get all the components from each StoryPoint
 			components.addAll(StoryComponentUtils.getAllDescendants(point));
 		}
@@ -331,11 +339,7 @@ public abstract class Context {
 	}
 
 	public Collection<StoryPoint> getStoryPoints() {
-		return this.getStartStoryPoint().getDescendants();
-	}
-
-	public Collection<StoryPoint> getOrderedStoryPoints() {
-		return this.getStartStoryPoint().getOrderedDescendants();
+		return this.storyPoints;
 	}
 
 	/**

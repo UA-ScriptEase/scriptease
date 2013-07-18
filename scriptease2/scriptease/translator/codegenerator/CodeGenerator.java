@@ -137,7 +137,8 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileMultiThread(
-			Collection<Set<CodeBlock>> scriptBuckets, final StoryModel model) {
+			Collection<Set<CodeBlock>> scriptBuckets, final StoryModel model,
+			final Collection<StoryPoint> storyPoints) {
 
 		final Collection<ScriptInfo> scriptInfos;
 
@@ -184,7 +185,7 @@ public class CodeGenerator {
 					codeBlock = bucket.iterator().next();
 					locationInfo = new LocationInformation(codeBlock);
 					context = CodeGenerator.this.buildFileContext(model,
-							locationInfo);
+							storyPoints, locationInfo);
 					generated = generateScript(context);
 
 					scriptInfos.add(generated);
@@ -211,7 +212,8 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileSingleThread(
-			Collection<Set<CodeBlock>> scriptBuckets, StoryModel model) {
+			Collection<Set<CodeBlock>> scriptBuckets, StoryModel model,
+			Collection<StoryPoint> storyPoints) {
 
 		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
 		/*
@@ -230,7 +232,7 @@ public class CodeGenerator {
 			// subject, so we can just use the first one
 			codeBlock = bucket.iterator().next();
 			locationInfo = new LocationInformation(codeBlock);
-			context = this.buildFileContext(model, locationInfo);
+			context = this.buildFileContext(model, storyPoints, locationInfo);
 			generated = this.generateScript(context);
 
 			scriptInfos.add(generated);
@@ -248,8 +250,8 @@ public class CodeGenerator {
 	 * @return
 	 */
 	public Context buildFileContext(StoryModel model,
-			LocationInformation locationInfo) {
-		return new FileContext(model, locationInfo);
+			Collection<StoryPoint> storyPoints, LocationInformation locationInfo) {
+		return new FileContext(model, storyPoints, locationInfo);
 	}
 
 	/**
@@ -263,44 +265,46 @@ public class CodeGenerator {
 	 */
 	public Collection<ScriptInfo> generateCode(StoryModel model,
 			final Collection<StoryProblem> problems) {
+
 		final GameModule module;
 		final Translator translator;
 		final Collection<ScriptInfo> scriptInfos;
 		final StoryPoint root;
+		final Collection<StoryPoint> storyPoints;
 		final SemanticAnalyzer analyzer;
 
 		translator = model.getTranslator();
 		module = model.getModule();
 		scriptInfos = new ArrayList<ScriptInfo>();
 		root = model.getRoot();
+		storyPoints = root.getDescendants();
 		// do the first pass (semantic analysis) for the given story
-		analyzer = new SemanticAnalyzer(root);
+		analyzer = new SemanticAnalyzer(storyPoints);
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
 
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
-			final Collection<StoryComponent> storyPoints;
 			final Collection<StoryComponent> automatics;
 			final Collection<Set<CodeBlock>> scriptBuckets;
 
-			storyPoints = new ArrayList<StoryComponent>(root.getDescendants());
 			automatics = model.generateAutomatics();
 
 			// Temporarily add automatics.
 			root.addStoryChildren(automatics);
 
 			// aggregate the scripts based on the storyPoints
-			scriptBuckets = module.aggregateScripts(storyPoints);
+			scriptBuckets = module
+					.aggregateScripts(new ArrayList<StoryComponent>(storyPoints));
 
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
 					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
-							model));
+							model, storyPoints));
 				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
 					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
-							model));
+							model, storyPoints));
 			}
 
 			// Remove the automatics from the story again.

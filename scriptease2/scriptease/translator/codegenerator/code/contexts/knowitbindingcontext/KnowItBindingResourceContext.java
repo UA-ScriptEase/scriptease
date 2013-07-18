@@ -7,9 +7,6 @@ import java.util.regex.Pattern;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.semodel.StoryModel;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.util.StringOp;
@@ -22,21 +19,8 @@ import scriptease.util.StringOp;
  * 
  */
 public class KnowItBindingResourceContext extends KnowItBindingContext {
-
-	public KnowItBindingResourceContext(StoryModel model, String indent,
-			CodeGenerationNamifier existingNames,
-			LocationInformation locationInformation) {
-		super(model, indent, existingNames, locationInformation);
-	}
-
-	public KnowItBindingResourceContext(Context other) {
-		this(other.getModel(), other.getIndent(), other.getNamifier(), other
-				.getLocationInfo());
-	}
-
 	public KnowItBindingResourceContext(Context other, KnowItBinding source) {
-		this(other);
-		this.binding = source;
+		super(other, source);
 	}
 
 	/**
