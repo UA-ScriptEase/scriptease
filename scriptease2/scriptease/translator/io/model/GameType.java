@@ -30,7 +30,7 @@ public class GameType {
 	 * 
 	 * @author remiller
 	 */
-	public enum GUIType {
+	public static enum GUIType {
 		JTEXTFIELD, JSPINNER, JCOMBOBOX;
 	}
 

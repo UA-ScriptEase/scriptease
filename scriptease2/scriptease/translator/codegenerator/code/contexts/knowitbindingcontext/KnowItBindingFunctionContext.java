@@ -4,11 +4,8 @@ import java.util.List;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.semodel.StoryModel;
 import scriptease.translator.LanguageDictionary;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -21,21 +18,8 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * 
  */
 public class KnowItBindingFunctionContext extends KnowItBindingContext {
-
-	public KnowItBindingFunctionContext(StoryModel model, String indent,
-			CodeGenerationNamifier existingNames,
-			LocationInformation locationInfo) {
-		super(model, indent, existingNames, locationInfo);
-	}
-
-	public KnowItBindingFunctionContext(Context other) {
-		this(other.getModel(), other.getIndent(), other.getNamifier(), other
-				.getLocationInfo());
-	}
-
 	public KnowItBindingFunctionContext(Context other, KnowItBinding source) {
-		this(other);
-		this.binding = source;
+		super(other, source);
 	}
 
 	/**

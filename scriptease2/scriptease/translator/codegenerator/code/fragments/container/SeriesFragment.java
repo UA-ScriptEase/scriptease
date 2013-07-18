@@ -210,10 +210,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 						.name()))
 			data = context.getStoryPoints();
 		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.ORDEREDSTORYPOINTS
-						.name()))
-			data = context.getOrderedStoryPoints();
-		else if (dataLabel
 				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.PARENTNODES
 						.name())) {
 			data = context.getStoryPointParents();
