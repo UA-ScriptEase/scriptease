@@ -1,5 +1,6 @@
 package scriptease.model.semodel.librarymodel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,8 +36,9 @@ import scriptease.model.semodel.SEModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
-import scriptease.translator.io.model.Slot;
 import scriptease.translator.io.model.GameType.GUIType;
+import scriptease.translator.io.model.Slot;
+import scriptease.util.FileOp;
 import scriptease.util.StringOp;
 
 /**
@@ -57,7 +59,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private static final String AUTOMATIC_LABEL = "automatic";
 	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
 
+	// TODO Change this to use ObserverManager! I'm surprised it doesn't.
 	private final Collection<LibraryObserver> listeners;
+
+	private final Collection<String> includeFilePaths;
 	// We save this as a variable since add is called many times.
 	private final StoryAdapter categoryAdder;
 
@@ -65,6 +70,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final GameTypeManager typeManager;
 	private final EventSlotManager slotManager;
 
+	private File location;
 	private Translator translator;
 	private StoryComponentContainer effectsCategory;
 	private StoryComponentContainer causesCategory;
@@ -132,6 +138,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.typeManager = new GameTypeManager();
 		this.slotManager = new EventSlotManager();
 		this.describeItManager = new DescribeItManager();
+		this.includeFilePaths = new ArrayList<String>();
 
 		Collection<StoryComponentContainer> categories = new ArrayList<StoryComponentContainer>();
 
@@ -281,6 +288,68 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	public StoryComponentContainer getNoteContainer() {
 		return this.noteContainer;
+	}
+
+	/**
+	 * Sets the location of the .sel or .xml Library file.
+	 * 
+	 * @param location
+	 */
+	public void setLocation(File location) {
+		this.location = location;
+	}
+
+	/**
+	 * Returns the location of the .sel or .xml Library file.
+	 * 
+	 * @return
+	 */
+	public File getLocation() {
+		return this.location;
+	}
+
+	/**
+	 * Sets the include file paths to the passed in collection.
+	 * 
+	 * @param paths
+	 */
+	public void setIncludeFilePaths(Collection<String> paths) {
+		this.includeFilePaths.clear();
+		this.includeFilePaths.addAll(paths);
+	}
+
+	/**
+	 * Returns the include file paths. For the files, use
+	 * {@link #getIncludeFiles()} instead.
+	 * 
+	 * @return
+	 */
+	public Collection<String> getIncludeFilePaths() {
+		return this.includeFilePaths;
+	}
+
+	/**
+	 * Returns the include files used by the LibraryModel. For the paths, use
+	 * {@link #getIncludeFilePaths()} instead.
+	 * 
+	 * @return
+	 */
+	public Collection<File> getIncludeFiles() {
+		final Collection<File> includeFiles = new ArrayList<File>();
+
+		if (FileOp.exists(this.location)) {
+			for (String includeFilePath : this.includeFilePaths) {
+				final File includeFile;
+
+				includeFile = new File(this.location.getParentFile(),
+						includeFilePath);
+
+				if (FileOp.exists(includeFile))
+					includeFiles.add(includeFile);
+			}
+		}
+
+		return includeFiles;
 	}
 
 	/**
@@ -998,4 +1067,5 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void addSlots(Collection<Slot> slots) {
 		this.slotManager.addEventSlots(slots, this);
 	}
+
 }
