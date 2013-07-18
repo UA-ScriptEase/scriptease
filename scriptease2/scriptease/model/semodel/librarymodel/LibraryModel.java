@@ -11,6 +11,7 @@ import scriptease.controller.BindingAdapter;
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -59,8 +60,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private static final String AUTOMATIC_LABEL = "automatic";
 	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
 
-	// TODO Change this to use ObserverManager! I'm surprised it doesn't.
-	private final Collection<LibraryObserver> listeners;
+	private final ObserverManager<LibraryObserver> observerManager;
 
 	private final Collection<String> includeFilePaths;
 	// We save this as a variable since add is called many times.
@@ -157,7 +157,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		}
 
 		this.registerCategoryChildTypes();
-		this.listeners = new ArrayList<LibraryObserver>();
+		this.observerManager = new ObserverManager<LibraryObserver>();
 
 		this.categoryAdder = new StoryAdapter() {
 			final LibraryModel model = LibraryModel.this;
@@ -522,15 +522,15 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	public void addLibraryChangeListener(LibraryObserver observer) {
-		this.listeners.add(observer);
+		this.observerManager.addObserver(this, observer);
 	}
 
 	public void removeLibraryChangeListener(LibraryObserver observer) {
-		this.listeners.remove(observer);
+		this.observerManager.removeObserver(observer);
 	}
 
 	private void notifyChange(StoryComponent source, LibraryEvent.Type type) {
-		for (LibraryObserver observer : this.listeners) {
+		for (LibraryObserver observer : this.observerManager.getObservers()) {
 			observer.modelChanged(this, new LibraryEvent(source, type));
 		}
 	}
