@@ -3279,77 +3279,6 @@
       </Implicits>
     </Slot>
     <Slot>
-      <Name>TEST_OnPlayerDeath</Name>
-      <Keyword>TEST_Mod_OnPlrDeath</Keyword>
-      <Parameters/>
-      <Implicits>
-        <KnowIt>
-          <Name>Player</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Player</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Dead Player</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>271</Id>
-                  <Types>
-                    <Type>creature</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return GetLastPlayerDied();</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-        <KnowIt>
-          <Name>Last Hostile Actor</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Types>
-            <Type>creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Last Hostile Actor</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Last Hostile Actor</Name>
-                  <Visible>true</Visible>
-                  <Labels/>
-                  <Id>272</Id>
-                  <Types>
-                    <Type>creature</Type>
-                  </Types>
-                  <Code>
-                    <Line>
-                      <Literal>return GetLastHostileActor(GetLastPlayerDied());</Literal>
-                    </Line>
-                  </Code>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-      </Implicits>
-    </Slot>	
-    <Slot>
       <Name>OnHeartbeat</Name>
       <Keyword>ScriptHeartbeat</Keyword>
       <Parameters/>
@@ -6099,7 +6028,7 @@
           <Visible>true</Visible>
           <Labels/>
           <Subject/>
-          <Slot>TEST_Mod_OnPlrDeath</Slot>
+          <Slot>Mod_OnPlrDeath</Slot>
           <Id>270</Id>
           <Types>
             <Type>void</Type>
