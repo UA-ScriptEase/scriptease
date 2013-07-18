@@ -550,8 +550,19 @@ public final class ErfFile extends GameModule {
 			String scriptResRef;
 
 			code = scriptInfo.getCode();
-			receiverResRef = scriptInfo.getSubject().getTemplateID();
+			// receiverResRef = scriptInfo.getSubject().getTemplateID();
 
+			//TODO test code - remove later?
+			final Resource subject = scriptInfo.getSubject();
+			if (subject != null)
+				// Attach the script to the subject by default
+				receiverResRef = subject.getTemplateID();
+			else {
+				// Attach the script to the module if there is no subject
+				List<Resource> modules = this.getResourcesOfType(GenericFileFormat.TYPE_MODULE);
+				receiverResRef = modules.get(0).getTemplateID();
+			}
+			
 			idNum = "_" + Integer.toString(scriptCounter++, radix);
 
 			scriptResRef = receiverResRef;

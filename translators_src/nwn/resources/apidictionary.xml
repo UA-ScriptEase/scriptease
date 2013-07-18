@@ -3227,7 +3227,7 @@
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Player</Name>
+                  <Name>Dead Player</Name>
                   <Visible>true</Visible>
                   <Labels/>
                   <Id>74</Id>
@@ -3278,6 +3278,77 @@
         </KnowIt>
       </Implicits>
     </Slot>
+    <Slot>
+      <Name>TEST_OnPlayerDeath</Name>
+      <Keyword>TEST_Mod_OnPlrDeath</Keyword>
+      <Parameters/>
+      <Implicits>
+        <KnowIt>
+          <Name>Player</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>creature</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Player</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Dead Player</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>271</Id>
+                  <Types>
+                    <Type>creature</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return GetLastPlayerDied();</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+        <KnowIt>
+          <Name>Last Hostile Actor</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>creature</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Last Hostile Actor</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Last Hostile Actor</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>272</Id>
+                  <Types>
+                    <Type>creature</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return GetLastHostileActor(GetLastPlayerDied());</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
+    </Slot>	
     <Slot>
       <Name>OnHeartbeat</Name>
       <Keyword>ScriptHeartbeat</Keyword>
@@ -5998,6 +6069,47 @@
         </CodeBlockSource>
       </CodeBlocks>
     </CauseIt>
+    <CauseIt>
+      <Name>TEST: When &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
+      <Visible>true</Visible>
+      <Labels/>
+      <Children>
+        <StoryComponentContainer>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>TEST: When &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject/>
+          <Slot>TEST_Mod_OnPlrDeath</Slot>
+          <Id>270</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Code>
+            <FormatRef data="NONE" ref="children"/>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </CauseIt>	
     <CauseIt>
       <Name>In &lt;subject&gt;, when &lt;player&gt;&apos;s health reaches zero</Name>
       <Visible>true</Visible>

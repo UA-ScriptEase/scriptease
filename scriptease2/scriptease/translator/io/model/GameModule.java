@@ -35,6 +35,9 @@ import scriptease.translator.codegenerator.ScriptInfo;
  * @author kschenk
  */
 public abstract class GameModule {
+	//TODO testing - remove later?
+	public static final String CAUSES_WITHOUT_SUBJECT_KEY = "Module233232332";
+	
 	/**
 	 * Reads the game data into memory.<br>
 	 * <br>
@@ -237,9 +240,17 @@ public abstract class GameModule {
 					final List<CodeBlock> bucket;
 					final List<CodeBlock> existingBucket;
 
-					subject = codeBlock.getSubject();
+					//TODO test code - remove later?
 					slot = codeBlock.getSlot();
-					key = subject.getBinding().toString() + slot;
+					if (codeBlock.hasSubject()) {
+						// We're going to be attaching this piece of code to the subject
+						subject = codeBlock.getSubject();
+						key = subject.getBinding().toString() + slot;
+					} else {
+						// No subject? Attach to the module instead
+						key = GameModule.CAUSES_WITHOUT_SUBJECT_KEY;
+					}
+						
 					bucket = new ArrayList<CodeBlock>();
 					existingBucket = subjectToCodeBlocks.get(key);
 

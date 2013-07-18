@@ -17,14 +17,19 @@ public class LocationInformation {
 	private final Resource subject;
 
 	public LocationInformation(CodeBlock codeBlock) {
-		final KnowIt subject = codeBlock.getSubject();
-		final Object value = subject.getBinding().getValue();
+		// TODO - remove later?
+		if (codeBlock.hasSubject()) {
+			final KnowIt subject = codeBlock.getSubject();
+			final Object value = subject.getBinding().getValue();
 
-		if (!(value instanceof SimpleResource) && value instanceof Resource)
-			this.subject = (Resource) value;
-		else
-			throw new IllegalArgumentException(
-					"Subject must be bound to a Resource that is not simple.");
+			if (!(value instanceof SimpleResource) && value instanceof Resource)
+				this.subject = (Resource) value;
+			else
+				throw new IllegalArgumentException(
+						"Subject must be bound to a Resource that is not simple.");
+
+		} else
+			this.subject = null;
 
 		this.slot = codeBlock.getSlot();
 	}
@@ -39,10 +44,18 @@ public class LocationInformation {
 		final String slot;
 		final Object subject;
 
+		// TODO test - remove later?
 		slot = codeBlock.getSlot();
-		subject = codeBlock.getSubject().getBinding().getValue();
 
-		return this.slot.equals(slot) && this.subject.equals(subject);
+		if (codeBlock.hasSubject())
+			subject = codeBlock.getSubject().getBinding().getValue();
+		else
+			subject = null;
+
+		if (this.subject != null && subject != null)
+			return this.slot.equals(slot) && this.subject.equals(subject);
+		else
+			return this.slot.equals(slot);
 	}
 
 	public String getSlot() {
