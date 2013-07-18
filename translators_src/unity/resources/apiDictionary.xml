@@ -1,4 +1,8 @@
 <LibraryModel name="DefaultUnityLibraryModel" author="ScriptEase Team">
+  <IncludeFiles>
+  	<IncludeFile>includes/SEStory.js</IncludeFile>
+  	<IncludeFile>includes/SEVariable.js</IncludeFile>
+  </IncludeFiles>
   <Types>
     <Type>
       <Name>CapsuleCollider</Name>

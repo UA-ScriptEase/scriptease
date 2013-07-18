@@ -727,6 +727,16 @@ public final class FileManager {
 		return library;
 	}
 
+	/**
+	 * Finds the optional libraries from the
+	 * {@link DescriptionKeys#OPTIONAL_LIBRARIES_PATH}. This will find the
+	 * libraries in all subfolders as well, so we can organize our libraries
+	 * into folders with their include files.
+	 * 
+	 * 
+	 * @param translator
+	 * @return
+	 */
 	public Collection<LibraryModel> openOptionalLibraries(Translator translator) {
 		final File location;
 		final Collection<LibraryModel> optionalLibraries;
@@ -743,7 +753,7 @@ public final class FileManager {
 			}
 		};
 
-		if (location != null && location.exists()) {
+		if (FileOp.exists(location)) {
 			final Collection<File> optionalFiles;
 
 			optionalFiles = FileOp.findFiles(location, filter);

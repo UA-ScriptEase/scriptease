@@ -28,7 +28,9 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 
+import scriptease.gui.WindowFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 
 /**
@@ -283,6 +285,41 @@ public class GUIOp {
 		crp.add(c);
 		crp.paintComponent(img.createGraphics(), c, crp, c.getBounds());
 		return img;
+	}
+
+	/**
+	 * Saves a screenshot as a .png file to the passed in path. The path must
+	 * end with .png, or else an exception will be thrown. If you want to print
+	 * to the desktop, the code for that is:
+	 * <code>System.getProperty("user.home")
+				+ "/Desktop/image.png</code>
+	 * 
+	 * @param component
+	 *            The component to draw to the path.
+	 * @param pathThe
+	 *            path must end with .png, or else an exception will be thrown.
+	 * 
+	 */
+	public static void saveScreenshot(final Component component, String path) {
+		final String png = "png";
+		final BufferedImage image = GUIOp.getScreenshot(component);
+
+		if (!path.endsWith(png)) {
+			throw new IllegalArgumentException("Path must end in ." + png);
+		}
+
+		final File outputfile = new File(path);
+
+		try {
+			ImageIO.write(image, png, outputfile);
+		} catch (IOException e) {
+			WindowFactory.getInstance().showExceptionDialog(
+					"Could Not Save Image",
+					"The image wasn't saved.",
+					"Something went wrong when saving a screenshot to " + path
+							+ ".", UIManager.getIcon("OptionPane.warningIcon"),
+					e);
+		}
 	}
 
 	// from the example of user489041

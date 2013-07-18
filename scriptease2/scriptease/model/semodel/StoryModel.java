@@ -1,7 +1,6 @@
 package scriptease.model.semodel;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
-import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType.GUIType;
@@ -238,31 +236,15 @@ public final class StoryModel extends SEModel {
 	/**
 	 * Gets a collection of the files found in this model's include directory.
 	 * This can be empty if the translator does not specify an includes
-	 * directory, or the the translator's includes directory is empty. Any file
-	 * name that starts with .svn is ignored.
+	 * directory, or the the translator's includes directory is empty.
 	 * 
 	 */
 	public Collection<File> getIncludes() {
 		final Collection<File> includes = new ArrayList<File>();
-		final File includeDir;
-		final FileFilter filter;
 
-		includeDir = this.translator
-				.getPathProperty(DescriptionKeys.INCLUDES_PATH);
-		filter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				// Don't include .svn files (double checking)
-				return !file.getName().startsWith(".svn");
-			}
-		};
-
-		if (includeDir != null)
-			for (File includeFile : includeDir.listFiles(filter)) {
-				// TODO Check if the include file is in the LibraryModel's
-				// include file list.
-				includes.add(includeFile);
-			}
+		for (LibraryModel library : this.getLibraries()) {
+			includes.addAll(library.getIncludeFiles());
+		}
 
 		return includes;
 	}

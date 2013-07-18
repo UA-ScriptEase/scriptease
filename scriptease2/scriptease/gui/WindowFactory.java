@@ -304,6 +304,14 @@ public final class WindowFactory {
 	 * Shows the Exception Dialog if it is not already showing. The Error Dialog
 	 * is modal and will sit on top of any other window when shown.
 	 * 
+	 * @param title
+	 *            The title of the dialog
+	 * @param messageBrief
+	 *            The bold part of the message
+	 * @param message
+	 *            The message shown
+	 * @param dialogIcon
+	 *            The icon displayed for the exception
 	 * @param e
 	 *            Exception that is being thrown - can be null if it is not
 	 *            known.

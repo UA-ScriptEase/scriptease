@@ -1,4 +1,12 @@
 <LibraryModel name="DefaultNWNLibrary" author="ScriptEase2">
+   <IncludeFiles>
+   		<IncludeFile>includes/i_se_aux.nss</IncludeFile>
+   		<IncludeFile>includes/i_se_behav.nss</IncludeFile>
+   		<IncludeFile>includes/i_se_journal.nss</IncludeFile>
+   		<IncludeFile>includes/i_se_quest.nss</IncludeFile>
+   		<IncludeFile>includes/i_se_story.nss</IncludeFile>
+   		<IncludeFile>includes/i_se_structs.nss</IncludeFile>
+   </IncludeFiles>
   <Types>
     <Type>
       <Name>CameraMode</Name>
