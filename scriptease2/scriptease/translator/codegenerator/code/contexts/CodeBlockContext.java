@@ -132,15 +132,7 @@ public class CodeBlockContext extends Context {
 	 */
 	@Override
 	public Collection<KnowIt> getImplicits() {
-		final Collection<KnowIt> used = new ArrayList<KnowIt>();
-
-		// Only return implicits that are used in this Context
-		for (KnowIt implicit : this.codeBlock.getImplicits()) {
-			// TODO Get components does not return all implciits.
-			if (getComponents().contains(implicit))
-				used.add(implicit);
-		}
-		return used;
+		return this.codeBlock.getImplicits();
 	}
 
 	@Override

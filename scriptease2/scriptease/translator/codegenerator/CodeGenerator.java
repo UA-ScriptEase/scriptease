@@ -3,6 +3,7 @@ package scriptease.translator.codegenerator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -60,7 +61,9 @@ import scriptease.translator.io.model.Slot;
  */
 public class CodeGenerator {
 
-	private static CodeGenerator instance = new CodeGenerator();
+	private final Collection<StoryPoint> generatingStoryPoints;
+
+	private final static CodeGenerator instance = new CodeGenerator();
 
 	private enum ThreadMode {
 		SINGLE, MULTI
@@ -82,6 +85,104 @@ public class CodeGenerator {
 
 	private CodeGenerator() {
 		// Privatized constructor
+		this.generatingStoryPoints = new HashSet<StoryPoint>();
+	}
+
+	/**
+	 * Returns the story points currently getting generated. This is faster than
+	 * getting the descendants of the root. This should only be used while we're
+	 * actually generating code, since it won't reset until
+	 * {@link #generateCode(StoryModel, Collection)} is called.
+	 * 
+	 * @return
+	 */
+	public Collection<StoryPoint> getGeneratingStoryPoints() {
+		return this.generatingStoryPoints;
+	}
+
+	/**
+	 * Generates the script files based on the current state of the model.
+	 * Returns the generated scriptInfo files, and any problems that may have
+	 * arisen during the process.
+	 * 
+	 * @param model
+	 * @param problems
+	 * @return
+	 */
+	public Collection<ScriptInfo> generateCode(StoryModel model,
+			final Collection<StoryProblem> problems) {
+
+		final long initialTime = System.currentTimeMillis();
+
+		final GameModule module;
+		final Translator translator;
+		final Collection<ScriptInfo> scriptInfos;
+		final StoryPoint root;
+		final SemanticAnalyzer analyzer;
+
+		translator = model.getTranslator();
+		module = model.getModule();
+		scriptInfos = new ArrayList<ScriptInfo>();
+		root = model.getRoot();
+
+		this.generatingStoryPoints.clear();
+		this.generatingStoryPoints.addAll(root.getDescendants());
+		// do the first pass (semantic analysis) for the given story
+		analyzer = new SemanticAnalyzer(this.generatingStoryPoints);
+
+		// Find problems with code gen, such as slots missing bindings, etc.
+		problems.addAll(analyzer.getProblems());
+
+		// If no problems were detected, generate the scripts
+		if (problems.isEmpty()) {
+			final Collection<StoryComponent> automatics;
+			final Collection<Set<CodeBlock>> scriptBuckets;
+
+			automatics = model.generateAutomatics();
+
+			// Temporarily add automatics.
+			root.addStoryChildren(automatics);
+
+			// aggregate the scripts based on the storyPoints
+			scriptBuckets = module
+					.aggregateScripts(new ArrayList<StoryComponent>(
+							this.generatingStoryPoints));
+
+			if (scriptBuckets.size() > 0) {
+				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
+					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
+							model));
+				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
+					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
+							model));
+			}
+
+			// Remove the automatics from the story again.
+			root.removeStoryChildren(automatics);
+		} else {
+			WindowFactory.getInstance().showCompileProblems(problems);
+		}
+
+		final File compiler = translator.getCompiler();
+
+		if (compiler != null
+				&& !compiler.exists()
+				&& !compiler.getName().equalsIgnoreCase(
+						Translator.DescriptionKeys.FALSE)) {
+
+			System.err.println("Compiler at "
+					+ translator.getCompiler().getAbsolutePath()
+					+ " could not be found.");
+		}
+
+		final long secondsToWrite;
+
+		secondsToWrite = System.currentTimeMillis() - initialTime;
+
+		System.out.println("It took " + secondsToWrite
+				+ " milliseconds to write code.");
+
+		return scriptInfos;
 	}
 
 	private ScriptInfo generateScript(Context context) {
@@ -137,8 +238,7 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileMultiThread(
-			Collection<Set<CodeBlock>> scriptBuckets, final StoryModel model,
-			final Collection<StoryPoint> storyPoints) {
+			Collection<Set<CodeBlock>> scriptBuckets, final StoryModel model) {
 
 		final Collection<ScriptInfo> scriptInfos;
 
@@ -185,7 +285,7 @@ public class CodeGenerator {
 					codeBlock = bucket.iterator().next();
 					locationInfo = new LocationInformation(codeBlock);
 					context = CodeGenerator.this.buildFileContext(model,
-							storyPoints, locationInfo);
+							locationInfo);
 					generated = generateScript(context);
 
 					scriptInfos.add(generated);
@@ -212,8 +312,7 @@ public class CodeGenerator {
 	 * @return
 	 */
 	private Collection<ScriptInfo> compileSingleThread(
-			Collection<Set<CodeBlock>> scriptBuckets, StoryModel model,
-			Collection<StoryPoint> storyPoints) {
+			Collection<Set<CodeBlock>> scriptBuckets, StoryModel model) {
 
 		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
 		/*
@@ -232,7 +331,7 @@ public class CodeGenerator {
 			// subject, so we can just use the first one
 			codeBlock = bucket.iterator().next();
 			locationInfo = new LocationInformation(codeBlock);
-			context = this.buildFileContext(model, storyPoints, locationInfo);
+			context = this.buildFileContext(model, locationInfo);
 			generated = this.generateScript(context);
 
 			scriptInfos.add(generated);
@@ -249,81 +348,8 @@ public class CodeGenerator {
 	 * @param locationInfo
 	 * @return
 	 */
-	public Context buildFileContext(StoryModel model,
-			Collection<StoryPoint> storyPoints, LocationInformation locationInfo) {
-		return new FileContext(model, storyPoints, locationInfo);
-	}
-
-	/**
-	 * Generates the script files based on the current state of the model.
-	 * Returns the generated scriptInfo files, and any problems that may have
-	 * arisen during the process.
-	 * 
-	 * @param model
-	 * @param problems
-	 * @return
-	 */
-	public Collection<ScriptInfo> generateCode(StoryModel model,
-			final Collection<StoryProblem> problems) {
-
-		final GameModule module;
-		final Translator translator;
-		final Collection<ScriptInfo> scriptInfos;
-		final StoryPoint root;
-		final Collection<StoryPoint> storyPoints;
-		final SemanticAnalyzer analyzer;
-
-		translator = model.getTranslator();
-		module = model.getModule();
-		scriptInfos = new ArrayList<ScriptInfo>();
-		root = model.getRoot();
-		storyPoints = root.getDescendants();
-		// do the first pass (semantic analysis) for the given story
-		analyzer = new SemanticAnalyzer(storyPoints);
-
-		// Find problems with code gen, such as slots missing bindings, etc.
-		problems.addAll(analyzer.getProblems());
-
-		// If no problems were detected, generate the scripts
-		if (problems.isEmpty()) {
-			final Collection<StoryComponent> automatics;
-			final Collection<Set<CodeBlock>> scriptBuckets;
-
-			automatics = model.generateAutomatics();
-
-			// Temporarily add automatics.
-			root.addStoryChildren(automatics);
-
-			// aggregate the scripts based on the storyPoints
-			scriptBuckets = module
-					.aggregateScripts(new ArrayList<StoryComponent>(storyPoints));
-
-			if (scriptBuckets.size() > 0) {
-				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
-					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
-							model, storyPoints));
-				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
-					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
-							model, storyPoints));
-			}
-
-			// Remove the automatics from the story again.
-			root.removeStoryChildren(automatics);
-		} else {
-			WindowFactory.getInstance().showCompileProblems(problems);
-		}
-
-		final File compiler = translator.getCompiler();
-
-		if (compiler != null
-				&& !compiler.exists()
-				&& !compiler.getName().equalsIgnoreCase(
-						Translator.DescriptionKeys.FALSE)) {
-
-			System.err.println("Compiler at "
-					+ translator.getCompiler().getAbsolutePath()
-					+ " could not be found.");
-		}
-		return scriptInfos;
+	private Context buildFileContext(StoryModel model,
+			LocationInformation locationInfo) {
+		return new FileContext(model, this.generatingStoryPoints, locationInfo);
 	}
 }

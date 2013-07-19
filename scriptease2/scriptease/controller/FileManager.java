@@ -194,6 +194,8 @@ public final class FileManager {
 	 * @see #saveAs(StoryModel)
 	 */
 	public void save(SEModel model) {
+		final long initialTime = System.currentTimeMillis();
+
 		FileManager.this.saveWithoutCode(model);
 
 		model.process(new ModelAdapter() {
@@ -210,6 +212,11 @@ public final class FileManager {
 						});
 			}
 		});
+
+		final long timeTaken = System.currentTimeMillis() - initialTime;
+
+		System.out.println("It took " + timeTaken
+				+ " milliseconds to save the story.");
 	}
 
 	/**
