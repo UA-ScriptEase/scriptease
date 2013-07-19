@@ -36,7 +36,7 @@ import scriptease.translator.codegenerator.ScriptInfo;
  */
 public abstract class GameModule {
 	//TODO testing - remove later?
-	public static final String CAUSES_WITHOUT_SUBJECT_KEY = "Module233232332";
+	public static final String CAUSES_WITHOUT_SUBJECT_KEY = "SE_Module";
 	
 	/**
 	 * Reads the game data into memory.<br>
@@ -225,7 +225,7 @@ public abstract class GameModule {
 
 		// Split the story tree into groups by CodeBlock info.
 		codeBlockMapper = new StoryAdapter() {
-
+			
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				complex.processChildren(this);
@@ -239,6 +239,7 @@ public abstract class GameModule {
 					final String key;
 					final List<CodeBlock> bucket;
 					final List<CodeBlock> existingBucket;
+					
 
 					//TODO test code - remove later?
 					slot = codeBlock.getSlot();
@@ -247,11 +248,15 @@ public abstract class GameModule {
 						subject = codeBlock.getSubject();
 						key = subject.getBinding().toString() + slot;
 					} else {
+						GameModule.this.getAutomaticHandlers();
+						
+						
 						// No subject? Attach to the module instead
-						key = GameModule.CAUSES_WITHOUT_SUBJECT_KEY;
+						key = GameModule.CAUSES_WITHOUT_SUBJECT_KEY + slot;
 					}
 						
 					bucket = new ArrayList<CodeBlock>();
+					
 					existingBucket = subjectToCodeBlocks.get(key);
 
 					if (existingBucket != null)
