@@ -8,6 +8,7 @@ import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -31,6 +32,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author remiller
  * @author mfchurch
+ * @author jyuen
  */
 public class KnowItBindingConverter implements Converter {
 
@@ -45,6 +47,7 @@ public class KnowItBindingConverter implements Converter {
 	private static final String ATTRIBUTE_VALUE_FUNCTION_FLAVOUR = "function";
 	private static final String ATTRIBUTE_VALUE_REFERENCE_FLAVOUR = "reference";
 	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
+	private static final String ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR = "automatic";
 	private static final String ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR = "storyPoint";
 
 	/**
@@ -106,6 +109,12 @@ public class KnowItBindingConverter implements Converter {
 			}
 
 			@Override
+			public void processAutomatic(KnowItBindingAutomatic automatic) {
+				KnowItBindingConverter.this.marshallAutomaticBinding(automatic,
+						writer, context);
+			}
+
+			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
 						ATTRIBUTE_VALUE_NULL_FLAVOUR);
@@ -149,6 +158,18 @@ public class KnowItBindingConverter implements Converter {
 				ATTRIBUTE_VALUE_RESOURCE_FLAVOUR);
 
 		writer.setValue(resource.getTemplateID());
+	}
+
+	/*
+	 * Converts a KnowItBindingAutomatic to XML
+	 */
+	private void marshallAutomaticBinding(KnowItBindingAutomatic binding,
+			HierarchicalStreamWriter writer, MarshallingContext context) {
+
+		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
+				ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR);
+
+		writer.setValue(binding.getValue().getTemplateID());
 	}
 
 	/*
@@ -225,6 +246,9 @@ public class KnowItBindingConverter implements Converter {
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_REFERENCE_FLAVOUR))
 				binding = this.unmarshallReferenceBinding(reader, context);
 			else if (flavour
+					.equalsIgnoreCase(ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR))
+				binding = this.unmarshallAutomaticBinding(reader, context);
+			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR))
 				binding = this.unmarshallStoryPointBinding(reader, context);
 			else
@@ -285,6 +309,30 @@ public class KnowItBindingConverter implements Converter {
 					+ ", assigning null instead.");
 			return null;
 		}
+	}
+
+	private KnowItBindingResource unmarshallAutomaticBinding(
+			HierarchicalStreamReader reader, UnmarshallingContext context) {
+		final GameModule module;
+		final Resource resource;
+		final String resourceID;
+
+		module = StoryModelConverter.currentStory.getModule();
+		resourceID = reader.getValue();
+
+		if (module == null)
+			throw new IllegalStateException(
+					"Cannot unmarshall a Resource binding without a module loaded");
+
+		resource = module.getInstanceForObjectIdentifier(resourceID);
+
+		if (resource != null)
+			return new KnowItBindingResource(resource);
+		else
+			System.out.println("Binding lookup failed for id " + resourceID
+					+ ", assigning null instead.");
+
+		return null;
 	}
 
 	private KnowItBindingFunction unmarshallFunctionBinding(

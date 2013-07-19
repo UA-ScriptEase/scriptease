@@ -12,7 +12,7 @@ import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
@@ -269,8 +269,8 @@ public final class StoryModel extends SEModel {
 			for (Resource resource : automaticHandlers) {
 				final Collection<String> resourceTypes = resource.getTypes();
 
-				for (ScriptIt automatic : library.getAutomatics()) {
-					final ScriptIt copy = automatic.clone();
+				for (CauseIt automatic : library.getAutomatics()) {
+					final CauseIt copy = automatic.clone();
 					final Collection<KnowIt> parameters = copy.getParameters();
 
 					for (KnowIt parameter : parameters) {

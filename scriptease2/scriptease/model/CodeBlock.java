@@ -266,19 +266,13 @@ public abstract class CodeBlock extends StoryComponent implements
 	 */
 	public KnowIt getSubject() {
 		final CauseIt cause = this.getCause();
-
 		final KnowIt subject;
 
-		//TODO test code - remove later?
 		if (!this.hasSubject()) {
 			final CodeBlock parentBlock = cause.getMainCodeBlock();
-			if (parentBlock.hasSubject())
-				subject = parentBlock.getSubject();
-			else
-				return null;
+			subject = parentBlock.getSubject();
 		} else {
 			final ScriptIt owner = this.getOwner();
-
 			subject = owner.getParameter(this.getSubjectName());
 		}
 
