@@ -59,64 +59,78 @@ public class NWNDialogueLine extends NWNGameConstant {
 		this.indexes = indexes;
 	}
 
+	private List<Resource> children;
+
 	@Override
 	public List<Resource> getChildren() {
-		final List<Resource> children;
-		final String childListLabel;
-		final List<GffStruct> childSyncStructs;
-		List<String> indexes;
-		int index = 0;
+		if (this.children == null) {
+			this.children = new ArrayList<Resource>();
 
-		children = new ArrayList<Resource>();
+			final String childListLabel;
+			final List<GffStruct> childSyncStructs;
+			List<String> indexes;
+			int index = 0;
 
-		if (!this.isLink()) {
-			if (this.isPlayerLine)
-				childListLabel = "EntriesList";
-			else
-				childListLabel = "RepliesList";
+			if (!this.isLink()) {
+				if (this.isPlayerLine)
+					childListLabel = "EntriesList";
+				else
+					childListLabel = "RepliesList";
 
-			childSyncStructs = this.conversation.resolveSyncStruct(
-					this.dialogueSyncStruct, this.isPlayerLine).getList(
-					childListLabel);
+				childSyncStructs = this.conversation.resolveSyncStruct(
+						this.dialogueSyncStruct, this.isPlayerLine).getList(
+						childListLabel);
 
-			for (GffStruct syncStruct : childSyncStructs) {
-				indexes = new ArrayList<String>(this.indexes);
-				indexes.add(Integer.toString(index));
-				index++;
+				for (GffStruct syncStruct : childSyncStructs) {
+					indexes = new ArrayList<String>(this.indexes);
+					indexes.add(Integer.toString(index));
+					index++;
 
-				final String name;
+					final String name;
 
-				name = this.conversation.resolveSyncStruct(syncStruct,
-						!isPlayerLine).getString("Text");
+					name = this.conversation.resolveSyncStruct(syncStruct,
+							!isPlayerLine).getString("Text");
 
-				children.add(new NWNDialogueLine(this.conversation, syncStruct,
-						!this.isPlayerLine, indexes, name));
+					this.children.add(new NWNDialogueLine(this.conversation,
+							syncStruct, !this.isPlayerLine, indexes, name));
+				}
 			}
 		}
 
-		return children;
+		return this.children;
 	}
+
+	private Boolean isLink;
 
 	@Override
 	public boolean isLink() {
-		final String isChild;
-		final String label = "IsChild";
+		if (this.isLink == null) {
+			final String isChild;
+			final String label = "IsChild";
 
-		if (this.dialogueSyncStruct.hasField(label)) {
-			isChild = this.dialogueSyncStruct.getString(label);
+			if (this.dialogueSyncStruct.hasField(label)) {
+				isChild = this.dialogueSyncStruct.getString(label);
 
-			// Field 'IsChild' is 1 when it is a link. Because that
-			// totally makes sense, BioWare.
-			return isChild.equals("1");
-		} else {
-			return false;
+				// Field 'IsChild' is 1 when it is a link. Because that
+				// totally makes sense, BioWare.
+				this.isLink = isChild.equals("1");
+			} else {
+				this.isLink = false;
+			}
 		}
+
+		return this.isLink;
 	}
+
+	private String codeText;
 
 	@Override
 	public String getCodeText() {
-		return NWNDialogueLine.constructResRef(this.conversation,
-				this.dialogueSyncStruct, this.indexes);
+		if (this.codeText == null)
+			codeText = NWNDialogueLine.constructResRef(this.conversation,
+					this.dialogueSyncStruct, this.indexes);
+
+		return codeText;
 	}
 
 	@Override
@@ -126,7 +140,7 @@ public class NWNDialogueLine extends NWNGameConstant {
 		else
 			return "NPC";
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getName();

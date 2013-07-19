@@ -49,12 +49,6 @@ public class FileContext extends Context {
 			this.includeFiles.addAll(codeBlock.getIncludes());
 		}
 
-		final List<CodeBlock> bindingCodeBlocks = this.getBindingCodeBlocks();
-
-		for (CodeBlock bindingCodeBlock : bindingCodeBlocks) {
-			this.includeFiles.addAll(bindingCodeBlock.getIncludes());
-		}
-
 		this.includeFilesIterator = this.includeFiles.iterator();
 
 		return this.includeFiles;

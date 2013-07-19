@@ -18,10 +18,12 @@ import scriptease.util.FileOp;
 public class NWNConversation extends NWNGameConstant {
 	public static final String TYPE_DIALOGUE = "dialogue";
 	private final GenericFileFormat convo;
+	private List<Resource> children;
 
 	public NWNConversation(String resref, GenericFileFormat conversation) {
 		super(resref, TYPE_DIALOGUE, conversation.getResRef(), "");
 		this.convo = conversation;
+
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class NWNConversation extends NWNGameConstant {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() + convo.hashCode();
+		return super.hashCode() + this.convo.hashCode();
 	}
 
 	public boolean equals(Object obj) {
@@ -45,25 +47,27 @@ public class NWNConversation extends NWNGameConstant {
 
 	@Override
 	public List<Resource> getChildren() {
-		final List<Resource> roots;
-		final List<GffStruct> rootStructs;
-		int i = 0;
+		if (this.children == null) {
+			final List<GffStruct> rootStructs;
 
-		rootStructs = this.convo.getTopLevelStruct().getList("StartingList");
+			rootStructs = this.convo.getTopLevelStruct()
+					.getList("StartingList");
 
-		roots = new ArrayList<Resource>(rootStructs.size());
+			this.children = new ArrayList<Resource>(rootStructs.size());
 
-		for (GffStruct rootStruct : rootStructs) {
-			final String name;
+			int i = 0;
+			for (GffStruct rootStruct : rootStructs) {
+				final String name;
 
-			name = this.convo.resolveSyncStruct(rootStruct, false).getString(
-					"Text");
-			if (name != null)
-				roots.add(new NWNDialogueLine(this.convo, rootStruct, false,
-						Arrays.asList(Integer.toString(i)), name));
-			i++;
+				name = this.convo.resolveSyncStruct(rootStruct, false)
+						.getString("Text");
+				if (name != null)
+					this.children.add(new NWNDialogueLine(this.convo,
+							rootStruct, false, Arrays.asList(Integer
+									.toString(i)), name));
+				i++;
+			}
 		}
-
-		return roots;
+		return this.children;
 	}
 }
