@@ -4123,16 +4123,26 @@
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>TEST: When module's heart beats</Name>
+          <Name>TEST: When &lt;subject&gt;'s heart beats</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject/>
+          <Subject>subject</Subject>
           <Slot>Mod_OnHeartbeat</Slot>
           <Id>273</Id>
           <Types>
             <Type>void</Type>
           </Types>
-          <Parameters/>
+		  <Parameters>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>module</Type>
+              </Types>
+			  <Binding flavour="resource"></Binding>
+            </KnowIt>
+          </Parameters>
           <Code>
             <FormatRef data="NONE" ref="children"/>
           </Code>

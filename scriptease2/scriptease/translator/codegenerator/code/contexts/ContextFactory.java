@@ -6,6 +6,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -19,6 +20,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingAutomaticContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
@@ -129,6 +131,12 @@ public class ContextFactory {
 				ContextFactory.this.activeContext = new KnowItBindingStoryPointContext(
 						pastContext, storyPoint);
 
+			}
+
+			@Override
+			public void processAutomatic(KnowItBindingAutomatic automatic) {
+				ContextFactory.this.activeContext = new KnowItBindingAutomaticContext(
+						pastContext, automatic);
 			}
 		});
 

@@ -1,6 +1,7 @@
 package scriptease.controller;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -34,4 +35,6 @@ public interface BindingVisitor {
 	public void processNull(KnowItBindingNull nullBinding);
 
 	public void processStoryPoint(KnowItBindingStoryPoint storyPoint);
+	
+	public void processAutomatic(KnowItBindingAutomatic automatic);
 }

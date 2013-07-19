@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.BindingVisitor;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.gui.transfer.BindingWidgetTransferHandler;
 import scriptease.gui.ui.BindingWidgetUI;
@@ -177,7 +176,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	 *         regardless of whether the colour actually changed or not.
 	 */
 	private void updateBackgroundColour(KnowItBinding binding) {
-		binding.process(new BindingVisitor() {
+		binding.process(new BindingAdapter() {
 			@Override
 			public void processResource(KnowItBindingResource constant) {
 				if (constant.getValue() instanceof SimpleResource)
