@@ -200,16 +200,12 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
 	 * 
 	 * @return
+	 * @deprecated This is much slower than {@link #getDescendants()}. We want
+	 *             to use that instead. There shouldn't be a case where we need
+	 *             to use this method anymore.
 	 */
 	public List<StoryPoint> getOrderedDescendants() {
-		/*
-		 * TODO Not sure if this is redundant with {@link #getDescendants()}.
-		 * Check if we can remove the set version. We do need an ordered list
-		 * for some methods, but why would we need an unordered set as well?
-		 */
-		final List<StoryPoint> descendants;
-
-		descendants = new ArrayList<StoryPoint>();
+		final List<StoryPoint> descendants = new ArrayList<StoryPoint>();
 
 		descendants.add(this);
 
@@ -222,20 +218,18 @@ public class StoryPoint extends ComplexStoryComponent {
 
 	/**
 	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
-	 * That is, the successors, the successors of the successors, etc.
+	 * That is, the successors, the successors of the successors, etc. This is
+	 * computationally expensive, and should thus be used carefully. Try to
+	 * cache the descendants somewhere if they need to be accessed more than
+	 * once.
 	 * 
 	 * @return
 	 */
-	public Set<StoryPoint> getDescendants() {
-		if (this.successors.contains(this)) {
-			throw new IllegalStateException(
-					"Story Point contains itself as a child!");
-		}
-
-		Set<StoryPoint> descendants;
-		descendants = new HashSet<StoryPoint>();
+	public Collection<StoryPoint> getDescendants() {
+		final Set<StoryPoint> descendants = new HashSet<StoryPoint>();
 
 		descendants.add(this);
+
 		for (StoryPoint successor : this.successors) {
 			descendants.addAll(successor.getDescendants());
 		}
@@ -251,15 +245,18 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * @return
 	 */
 	public int getLongestPath() {
-		List<StoryPoint> descendents = this.getOrderedDescendants();
+		final List<StoryPoint> descendents = this.getOrderedDescendants();
 
 		// Initialize an array of 0 of size equivalent to the number of
 		// descendents
-		List<Integer> lengths = new ArrayList<Integer>(Collections.nCopies(
+		final List<Integer> lengths;
+		lengths = new ArrayList<Integer>(Collections.nCopies(
 				descendents.size(), 0));
 
 		for (StoryPoint storypoint : descendents) {
-			Collection<StoryPoint> successors = storypoint.getSuccessors();
+			final Collection<StoryPoint> successors;
+
+			successors = storypoint.getSuccessors();
 
 			for (StoryPoint successor : successors) {
 

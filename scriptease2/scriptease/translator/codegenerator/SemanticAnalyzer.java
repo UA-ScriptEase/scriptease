@@ -35,7 +35,6 @@ import scriptease.translator.TranslatorManager;
  * @author mfchurch
  */
 public class SemanticAnalyzer extends StoryAdapter {
-	private final StoryPoint root;
 	private final Collection<StoryRule> rules;
 
 	/**
@@ -47,15 +46,13 @@ public class SemanticAnalyzer extends StoryAdapter {
 	 * Creates a new instance that will recursively analyze the StoryComponent
 	 * tree.
 	 */
-	public SemanticAnalyzer(StoryPoint root) {
+	public SemanticAnalyzer(Collection<StoryPoint> storyPoints) {
 		this.problems = new ArrayList<StoryProblem>();
 		this.rules = new ArrayList<StoryRule>();
-		this.root = root;
 
 		// Make sure all parameters are bound before generating code
 		this.rules.add(new ParameterBoundRule());
 		// Get all the StoryPoints in the model
-		Collection<StoryPoint> storyPoints = this.root.getDescendants();
 		for (StoryPoint storyPoint : storyPoints) {
 			// Process all the components from each StoryPoint
 			for (StoryComponent child : storyPoint.getChildren()) {

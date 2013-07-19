@@ -22,26 +22,16 @@ import java.util.NoSuchElementException;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.FileManager;
-import scriptease.controller.ModelAdapter;
-import scriptease.controller.StoryAdapter;
-import scriptease.gui.StatusManager;
-import scriptease.model.StoryComponent;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
-import scriptease.model.complex.AskIt;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.StoryModel;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
@@ -90,6 +80,8 @@ public final class ErfFile extends GameModule {
 	 */
 	private final List<NWNResource> uncompiledScripts;
 
+	private final Collection<File> includeFiles;
+
 	/**
 	 * Location of the ErfFile.
 	 */
@@ -117,6 +109,7 @@ public final class ErfFile extends GameModule {
 	public ErfFile() {
 		this.resources = new ArrayList<NWNResource>();
 		this.uncompiledScripts = new ArrayList<NWNResource>();
+		this.includeFiles = new ArrayList<File>();
 	}
 
 	/**
@@ -173,80 +166,6 @@ public final class ErfFile extends GameModule {
 				}
 			});
 		}
-	}
-
-	/**
-	 * Adds journal categories for any existing effects. This is called when we
-	 * load a module, so that we can create journals for all of these ScriptIts.
-	 * 
-	 * @param observer
-	 */
-	private void parseModelForJournals(final StoryPoint root) {
-		final StoryAdapter adapter;
-
-		adapter = new StoryAdapter() {
-			@Override
-			public void processStoryPoint(StoryPoint storyPoint) {
-				this.defaultProcessComplex(storyPoint);
-
-				for (StoryPoint successor : storyPoint.getSuccessors())
-					successor.process(this);
-			}
-
-			@Override
-			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				for (StoryComponent child : complex.getChildren()) {
-					child.process(this);
-				}
-			}
-
-			@Override
-			public void processScriptIt(ScriptIt scriptIt) {
-				if (scriptIt.getDisplayText().equals(
-						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
-					ErfFile.this.addJournalCategory(scriptIt);
-
-				// TODO: processSubjects might be redundant.
-				// Ticket 49524483
-				scriptIt.processSubjects(this);
-				scriptIt.processParameters(this);
-				this.defaultProcessComplex(scriptIt);
-			}
-
-			@Override
-			public void processKnowIt(KnowIt knowIt) {
-				KnowItBinding binding = knowIt.getBinding();
-				final StoryAdapter outerAnonInnerClass = this;
-				binding.process(new BindingAdapter() {
-					@Override
-					public void processReference(
-							KnowItBindingReference reference) {
-						KnowIt referenced = reference.getValue();
-						referenced.process(outerAnonInnerClass);
-					}
-
-					@Override
-					public void processFunction(KnowItBindingFunction function) {
-						ScriptIt referenced = function.getValue();
-						referenced.process(outerAnonInnerClass);
-					}
-				});
-			}
-
-			@Override
-			public void processAskIt(AskIt askIt) {
-				askIt.getCondition().process(this);
-				this.defaultProcessComplex(askIt);
-			}
-
-			@Override
-			public void processStoryComponentContainer(
-					StoryComponentContainer container) {
-				this.defaultProcessComplex(container);
-			}
-		};
-
-		root.process(adapter);
 	}
 
 	/**
@@ -493,6 +412,8 @@ public final class ErfFile extends GameModule {
 
 	@Override
 	public void addIncludeFiles(Collection<File> includeList) {
+		this.includeFiles.clear();
+
 		for (File include : includeList) {
 			if (include.getName().startsWith("."))
 				continue;
@@ -506,8 +427,12 @@ public final class ErfFile extends GameModule {
 				continue;
 			}
 
-			String scriptResRef = FileOp.removeExtension(include).getName();
+			final String scriptResRef;
+
+			scriptResRef = FileOp.removeExtension(include).getName();
+
 			this.addScript(scriptResRef, code);
+			this.includeFiles.add(include);
 		}
 	}
 
@@ -521,7 +446,8 @@ public final class ErfFile extends GameModule {
 	 * @return returns the NWNresource that was added to resources
 	 */
 	private NWNResource addScript(String scriptResRef, String code) {
-		NWNResource scriptResource;
+		final NWNResource scriptResource;
+
 		scriptResource = new NWNResource(scriptResRef,
 				ErfKey.SCRIPT_SOURCE_TYPE, code.getBytes());
 
@@ -686,18 +612,15 @@ public final class ErfFile extends GameModule {
 		final long offsetToKeyList;
 		final long offsetToResourceList;
 
-		// Parse the model for create journal effects before it's saved.
-		SEModelManager.getInstance().getActiveModel()
-				.process(new ModelAdapter() {
-					@Override
-					public void processStoryModel(StoryModel storyModel) {
-						final StoryPoint root;
-
-						root = storyModel.getRoot();
-
-						ErfFile.this.parseModelForJournals(root);
-					}
-				});
+		for (StoryPoint point : CodeGenerator.getInstance()
+				.getGeneratingStoryPoints()) {
+			for (ScriptIt scriptIt : StoryComponentUtils
+					.getDescendantScriptIts(point)) {
+				if (scriptIt.getDisplayText().equals(
+						GeneratedJournalGFF.EFFECT_CREATE_JOURNAL_TEXT))
+					ErfFile.this.addJournalCategory((ScriptIt) scriptIt);
+			}
+		}
 
 		if (compile) {
 			try {
@@ -802,9 +725,7 @@ public final class ErfFile extends GameModule {
 			out.close();
 		}
 
-		Collection<File> includeList = ErfFile.getTranslator().getIncludes();
-
-		for (File include : includeList) {
+		for (File include : this.includeFiles) {
 			try {
 				String fileName = include.getName();
 				FileOp.copyFile(new File(include.getParent(), fileName),
@@ -856,13 +777,11 @@ public final class ErfFile extends GameModule {
 			byteCodeFile = FileOp.replaceExtension(resrefsToFiles.get(resRef),
 					"ncs").getAbsoluteFile();
 
-			if (!byteCodeFile.exists()) {
+			if (!byteCodeFile.exists())
 				// compiler error
 				throw new GameCompilerException(
 						"Compiler failed to create NCS file " + byteCodeFile
 								+ ".");
-			} else
-				StatusManager.getInstance().setStatus("Compilation Succeeded!");
 
 			byteCode = FileOp.readFileAsBytes(byteCodeFile);
 

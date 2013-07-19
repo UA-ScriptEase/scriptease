@@ -1,4 +1,7 @@
 <LibraryModel name="A* Pathfinding Library" author="ScriptEase Team">
+  <IncludeFiles>
+  	<IncludeFile>SEPath.js</IncludeFile>
+  </IncludeFiles>
   <Types/>
   <Slots defaultFormat="SECause">
     <Slot format="UnityCause">

@@ -1,4 +1,7 @@
 <LibraryModel name="EmotionLibrary" author="ScriptEase Team">
+  <IncludeFiles>
+  	<IncludeFile>EmotionController.js</IncludeFile>
+  </IncludeFiles>
   <Types/>
   <Slots defaultFormat="SECause"/>
   <Causes/>

@@ -35,7 +35,7 @@ public abstract class SEModel {
 	}
 
 	/**
-	 * @return The title of the StoryModel
+	 * @return The title of the Model
 	 */
 	public final String getTitle() {
 		return this.title;

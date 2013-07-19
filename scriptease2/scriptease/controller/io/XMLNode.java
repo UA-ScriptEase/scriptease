@@ -72,6 +72,10 @@ public enum XMLNode {
 	INCLUDE("Include"),
 
 	INCLUDES("Includes", INCLUDE),
+	
+	INCLUDE_FILE("IncludeFile"),
+	
+	INCLUDE_FILES("IncludeFiles", INCLUDE_FILE),
 
 	INDENT_STRING("IndentString"),
 

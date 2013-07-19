@@ -1,5 +1,6 @@
 package scriptease.model.semodel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import scriptease.controller.ModelVisitor;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -70,37 +72,6 @@ public final class StoryModel extends SEModel {
 		this.compatibleVersion = compatibleVersion;
 		this.optionalLibraries = optionalLibraries;
 		this.observerManager = new ObserverManager<StoryModelObserver>();
-
-		// Adds all of the automatic causes to the start point.
-		// Note that automatics can only be defined in a library model for now
-		for (LibraryModel library : this.getLibraries()) {
-
-			final Collection<Resource> resources = module
-					.getAutomaticHandlers();
-
-			for (Resource resource : resources) {
-				for (ScriptIt automatic : library.getAutomatics()) {
-
-					final ScriptIt copy = automatic.clone();
-					final Collection<KnowIt> parameters = copy.getParameters();
-
-					for (KnowIt parameter : parameters) {
-						final Collection<String> parameterTypes = parameter
-								.getTypes();
-						final Collection<String> resourceTypes = resource
-								.getTypes();
-
-						if (!parameterTypes.containsAll(resourceTypes))
-							throw new IllegalArgumentException(
-									"Found invalid types for automatics");
-
-						parameter.setBinding(resource);
-
-						this.startPoint.addStoryChild(copy);
-					}
-				}
-			}
-		}
 
 		// TODO load dialogues here.
 		this.dialogueRoots = new ArrayList<DialogueLine>();
@@ -260,6 +231,66 @@ public final class StoryModel extends SEModel {
 		}
 
 		return format;
+	}
+
+	/**
+	 * Gets a collection of the files found in this model's include directory.
+	 * This can be empty if the translator does not specify an includes
+	 * directory, or the the translator's includes directory is empty.
+	 * 
+	 */
+	public Collection<File> getIncludes() {
+		final Collection<File> includes = new ArrayList<File>();
+
+		for (LibraryModel library : this.getLibraries()) {
+			includes.addAll(library.getIncludeFiles());
+		}
+
+		return includes;
+	}
+
+	/**
+	 * Generates a collection of story components that should be automatically
+	 * added to the model. This should likely only be called right before
+	 * writing the code. The automatics generated will have the proper bindings
+	 * on their parameters, and are ready to be written out.
+	 * 
+	 * @param model
+	 * @return
+	 */
+	public Collection<StoryComponent> generateAutomatics() {
+		final Collection<StoryComponent> automatics;
+		final Collection<Resource> automaticHandlers;
+
+		automatics = new ArrayList<StoryComponent>();
+		automaticHandlers = this.module.getAutomaticHandlers();
+
+		for (LibraryModel library : this.getLibraries()) {
+			for (Resource resource : automaticHandlers) {
+				final Collection<String> resourceTypes = resource.getTypes();
+
+				for (ScriptIt automatic : library.getAutomatics()) {
+					final ScriptIt copy = automatic.clone();
+					final Collection<KnowIt> parameters = copy.getParameters();
+
+					for (KnowIt parameter : parameters) {
+						final Collection<String> parameterTypes;
+
+						parameterTypes = parameter.getTypes();
+
+						if (!parameterTypes.containsAll(resourceTypes))
+							throw new IllegalArgumentException(
+									"Found invalid types for automatics");
+
+						parameter.setBinding(resource);
+					}
+
+					automatics.add(copy);
+				}
+			}
+		}
+
+		return automatics;
 	}
 
 	@Override

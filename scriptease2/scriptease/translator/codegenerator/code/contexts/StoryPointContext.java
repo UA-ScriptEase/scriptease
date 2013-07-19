@@ -39,7 +39,7 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 
 		parents = new ArrayList<StoryPoint>();
 
-		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
+		for (StoryPoint point : this.getStoryPoints()) {
 			if (point.getSuccessors().contains(this.getComponent())) {
 				parents.add(point);
 			}
