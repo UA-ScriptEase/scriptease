@@ -5,9 +5,6 @@ import java.util.Collection;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.StoryModel;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -20,20 +17,8 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author remiller
  */
 public class KnowItBindingStoryPointContext extends KnowItBindingContext {
-
-	public KnowItBindingStoryPointContext(StoryModel model, String indent,
-			CodeGenerationNamifier existingNames,
-			LocationInformation locationInfo) {
-		super(model, indent, existingNames, locationInfo);
-	}
-
-	public KnowItBindingStoryPointContext(Context other) {
-		super(other);
-	}
-
 	public KnowItBindingStoryPointContext(Context other, KnowItBinding source) {
-		this(other);
-		this.binding = source;
+		super(other, source);
 	}
 
 	@Override

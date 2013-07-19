@@ -1,4 +1,7 @@
 <LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team">
+  <IncludeFiles>
+  	<IncludeFile>SEAnimationController.js</IncludeFile>
+  </IncludeFiles>
   <Types>
     <Type>
       <Name>RightLeft</Name>

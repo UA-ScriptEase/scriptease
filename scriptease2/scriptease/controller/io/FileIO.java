@@ -152,6 +152,7 @@ public class FileIO {
 
 		lib = (LibraryModel) this.readData(location, IoMode.LIBRARY);
 
+		lib.setLocation(location);
 		lib.setTranslator(translator);
 
 		BindingFixer.fixBindings(lib.getRoot());

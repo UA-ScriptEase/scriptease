@@ -240,18 +240,17 @@ public final class WindowFactory {
 	 * showing will create a new progress bar in front of it, giving the effect
 	 * of the text changing.
 	 * 
-	 * @param progressBarText
+	 * @param text
 	 *            The text to be shown on the progress bar. This is commonly
 	 *            "Loading...", but can be anything you set it to.
 	 * 
-	 * @param runnable
+	 * @param run
 	 *            The runnable to run. The progress bar will show as long as
 	 *            this is running.
 	 * 
 	 * @see #hideProgressBar()
 	 */
-	public static void showProgressBar(String progressBarText,
-			final Runnable runnable) {
+	public static void showProgressBar(final String text, final Runnable run) {
 		WindowFactory.getInstance().getCurrentFrame()
 				.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -268,12 +267,14 @@ public final class WindowFactory {
 		worker = new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				runnable.run();
+				StatusManager.getInstance().set(text);
+				run.run();
 				return null;
 			}
 
 			@Override
 			protected void done() {
+				StatusManager.getInstance().clear(text);
 				progressBarDialog.setVisible(false);
 				WindowFactory.getInstance().getCurrentFrame()
 						.setCursor(Cursor.getDefaultCursor());
@@ -283,7 +284,7 @@ public final class WindowFactory {
 		progressBar.setIndeterminate(true);
 		progressBar.setPreferredSize(new Dimension(200, 30));
 		progressBar.setOpaque(false);
-		progressBar.setString(progressBarText);
+		progressBar.setString(text);
 		progressBar.setStringPainted(true);
 
 		progressBarDialog.add(progressBar);
@@ -303,7 +304,17 @@ public final class WindowFactory {
 	 * Shows the Exception Dialog if it is not already showing. The Error Dialog
 	 * is modal and will sit on top of any other window when shown.
 	 * 
-	 * @param e Exception that is being thrown - can be null if it is not known.
+	 * @param title
+	 *            The title of the dialog
+	 * @param messageBrief
+	 *            The bold part of the message
+	 * @param message
+	 *            The message shown
+	 * @param dialogIcon
+	 *            The icon displayed for the exception
+	 * @param e
+	 *            Exception that is being thrown - can be null if it is not
+	 *            known.
 	 */
 	public void showExceptionDialog(String title, String messageBrief,
 			String message, Icon dialogIcon, Exception e) {

@@ -23,7 +23,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.io.FileIO;
-import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
@@ -89,7 +88,7 @@ public class Translator {
 		// Mandatory keys
 		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH, VERSION,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, INCLUDES_PATH, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH;
+		SUPPORTED_FILE_EXTENSIONS, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH;
 
 		public static final String FALSE = "false";
 		private static final String DIRECTORY = "directory";
@@ -242,27 +241,6 @@ public class Translator {
 		}
 
 		return new URLClassLoader(urlSourceLocations.toArray(new URL[0]));
-	}
-
-	/**
-	 * Gets a collection of the files found in the activeTranslators include
-	 * directory. This can be empty if the translator does not specify an
-	 * includes directory, or the the translator's includes directory is empty.
-	 * Any file name that starts with .svn is ignored.
-	 */
-	public Collection<File> getIncludes() {
-		final File includeDir = this
-				.getPathProperty(DescriptionKeys.INCLUDES_PATH);
-		final FileFilter filter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				// Don't include .svn files (double checking)
-				return !file.getName().startsWith(".svn");
-			}
-		};
-
-		return includeDir != null ? Arrays.asList(includeDir.listFiles(filter))
-				: new ArrayList<File>();
 	}
 
 	/**
@@ -425,7 +403,6 @@ public class Translator {
 	 *         <code>propertyName</code> is not a property supported by the
 	 *         translator.
 	 * @see #getProperty(String)
-	 * @see #getIncludes()
 	 */
 	public File getPathProperty(String propertyName) {
 		final String path = this.getProperty(propertyName);
@@ -456,7 +433,6 @@ public class Translator {
 	 *         <code>propertyName</code> is not a property supported by the
 	 *         translator.
 	 * @see #getProperty(String)
-	 * @see #getIncludes()
 	 */
 	public File getPathProperty(DescriptionKeys propertyKey) {
 		return this.getPathProperty(propertyKey.toString());
@@ -805,8 +781,6 @@ public class Translator {
 		final String LOADING_MODULE = "Loading Module...";
 		final GameModule module = this.createGameModuleInstance();
 		final GameModuleLoader loader = new GameModuleLoader();
-
-		StatusManager.getInstance().setStatus(LOADING_MODULE);
 
 		if (!location.exists()) {
 			// We need to do this separately, because otherwise "open" creates a

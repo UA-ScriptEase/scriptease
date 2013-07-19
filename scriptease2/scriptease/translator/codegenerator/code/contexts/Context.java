@@ -11,7 +11,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
@@ -47,20 +46,28 @@ import scriptease.translator.io.model.Resource;
  */
 public abstract class Context {
 	private String indent = "";
-	// private final StoryPoint model;
-	// protected final Translator translator;
 	private final CodeGenerationNamifier namifier;
 	private final StoryModel model;
+
+	// This is a cached list of all story points. This prevents multiple
+	// expensive calls to StoryPoint#getDescendants()
+	private final Collection<StoryPoint> storyPoints;
 
 	protected LocationInformation locationInfo;
 
 	private static final String UNIMPLEMENTED = "<unimplemented in context>";
 
-	public Context(StoryModel model, String indent,
-			CodeGenerationNamifier existingNames) {
+	public Context(StoryModel model, Collection<StoryPoint> storyPoints,
+			String indent, CodeGenerationNamifier existingNames) {
 		this.model = model;
+		this.storyPoints = storyPoints;
 		this.indent = indent;
 		this.namifier = existingNames;
+	}
+
+	public Context(Context other) {
+		this(other.getModel(), other.getStoryPoints(), other.getIndent(), other
+				.getNamifier());
 	}
 
 	/**
@@ -132,48 +139,6 @@ public abstract class Context {
 	}
 
 	/**
-	 * Gets all of the story components in this context.
-	 * 
-	 * @return
-	 */
-	protected final Collection<StoryComponent> getComponents() {
-		final Collection<StoryComponent> components = new ArrayList<StoryComponent>();
-
-		// for each story point
-		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
-			// Get all the components from each StoryPoint
-			components.addAll(StoryComponentUtils.getAllDescendants(point));
-		}
-
-		return components;
-	}
-
-	/**
-	 * Returns all of the scriptIts from the Context's symbolTable which match
-	 * the current slot
-	 * 
-	 * @return
-	 */
-	public Collection<ScriptIt> getScriptIts() {
-		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
-
-		for (StoryComponent key : this.getComponents()) {
-			if (key instanceof ScriptIt) {
-				final ScriptIt scriptIt = (ScriptIt) key;
-
-				final Collection<CodeBlock> codeBlocks;
-
-				codeBlocks = scriptIt
-						.getCodeBlocksForLocation(this.locationInfo);
-
-				if (!codeBlocks.isEmpty())
-					scriptIts.add(scriptIt);
-			}
-		}
-		return scriptIts;
-	}
-
-	/**
 	 * Returns all of the codeBlocks associated with the Context's current slot
 	 * 
 	 * @return
@@ -181,14 +146,26 @@ public abstract class Context {
 	public Collection<CodeBlock> getCodeBlocks() {
 		final Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
 
-		for (StoryComponent key : this.getComponents()) {
-			if (key instanceof ScriptIt) {
-				final ScriptIt scriptIt = (ScriptIt) key;
-				Collection<CodeBlock> codeBlocksForSlot = scriptIt
-						.getCodeBlocksForLocation(this.locationInfo);
-				codeBlocks.addAll(codeBlocksForSlot);
-			}
+		/**
+		 * Gets all of the story components in this context.
+		 * 
+		 * @return
+		 */
+		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
+
+		// for each story point
+		for (StoryPoint point : this.storyPoints) {
+			// Get all the components from each StoryPoint
+			scriptIts.addAll(StoryComponentUtils.getDescendantScriptIts(point));
 		}
+
+		for (StoryComponent key : scriptIts) {
+			final ScriptIt scriptIt = (ScriptIt) key;
+			Collection<CodeBlock> codeBlocksForSlot = scriptIt
+					.getCodeBlocksForLocation(this.locationInfo);
+			codeBlocks.addAll(codeBlocksForSlot);
+		}
+
 		return codeBlocks;
 	}
 
@@ -201,36 +178,28 @@ public abstract class Context {
 	 */
 	public List<CodeBlock> getBindingCodeBlocks() {
 		final List<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
-		final List<StoryComponent> effectList;
-
-		effectList = this.getTranslator().getLibrary().getEffectsCategory()
-				.getChildren();
-
-		for (StoryComponent key : this.getComponents()) {
-			// The method first checks if there is a Resource for the
-			// StoryComponent.
-			if (key instanceof KnowIt) {
-				KnowItBinding binding = ((KnowIt) key).getBinding();
-				if (binding instanceof KnowItBindingResource) {
-					final KnowItBindingResource kibConstant;
-					final String referenceValue;
-
-					kibConstant = (KnowItBindingResource) binding;
-					referenceValue = kibConstant.getScriptValue();
-
-					// Gets the code blocks from the LibraryModel from a
-					// ScriptIt whose display text matches the reference string.
-					for (StoryComponent component : effectList) {
-						if (component instanceof ScriptIt
-								&& component.getDisplayText().equals(
-										referenceValue)) {
-							codeBlocks.addAll(new ArrayList<CodeBlock>(
-									((ScriptIt) component).getCodeBlocks()));
-						}
-					}
-				}
-			}
-		}
+		/*
+		 * final List<StoryComponent> effectList;
+		 * 
+		 * effectList = this.getTranslator().getLibrary().getEffectsCategory()
+		 * .getChildren();
+		 * 
+		 * for (StoryComponent key : this.getComponents()) { // The method first
+		 * checks if there is a Resource for the // StoryComponent. if (key
+		 * instanceof KnowIt) { final KnowItBinding binding = ((KnowIt)
+		 * key).getBinding(); if (binding instanceof KnowItBindingResource) {
+		 * final KnowItBindingResource kibConstant; final String referenceValue;
+		 * 
+		 * kibConstant = (KnowItBindingResource) binding; referenceValue =
+		 * kibConstant.getScriptValue();
+		 * 
+		 * // Gets the code blocks from the LibraryModel from a // ScriptIt
+		 * whose display text matches the reference string. for (StoryComponent
+		 * component : effectList) { if (component instanceof ScriptIt &&
+		 * component.getDisplayText().equals( referenceValue)) {
+		 * codeBlocks.addAll(new ArrayList<CodeBlock>( ((ScriptIt)
+		 * component).getCodeBlocks())); } } } } }
+		 */
 		return codeBlocks;
 	}
 
@@ -312,30 +281,39 @@ public abstract class Context {
 	 */
 	public Collection<CauseIt> getCauses() {
 		final Collection<CauseIt> causes = new ArrayList<CauseIt>();
-		for (ScriptIt scriptIt : this.getScriptIts()) {
-			if (scriptIt instanceof CauseIt) {
-				boolean causeExists = false;
 
-				for (CauseIt cause : causes) {
-					if (cause.isEquivalentToCause((CauseIt) scriptIt)) {
-						causeExists = true;
-						break;
+		for (StoryPoint point : this.storyPoints) {
+			for (StoryComponent child : point.getChildren()) {
+				if (child instanceof CauseIt) {
+					final CauseIt causeIt = (CauseIt) child;
+
+					final Collection<CodeBlock> codeBlocks;
+
+					codeBlocks = causeIt
+							.getCodeBlocksForLocation(this.locationInfo);
+
+					if (!codeBlocks.isEmpty()) {
+						boolean causeExists = false;
+
+						for (CauseIt cause : causes) {
+							if (cause.isEquivalentToCause(causeIt)) {
+								causeExists = true;
+								break;
+							}
+						}
+
+						if (!causeExists)
+							causes.add(causeIt);
 					}
 				}
-
-				if (!causeExists)
-					causes.add((CauseIt) scriptIt);
 			}
 		}
+
 		return causes;
 	}
 
 	public Collection<StoryPoint> getStoryPoints() {
-		return this.getStartStoryPoint().getDescendants();
-	}
-
-	public Collection<StoryPoint> getOrderedStoryPoints() {
-		return this.getStartStoryPoint().getOrderedDescendants();
+		return this.storyPoints;
 	}
 
 	/**

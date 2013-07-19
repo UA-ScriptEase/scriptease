@@ -127,6 +127,16 @@ public class FileOp {
 	}
 
 	/**
+	 * Shorthand method to check if the file is not null and exists.
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static boolean exists(File file) {
+		return file != null && file.exists();
+	}
+
+	/**
 	 * Creates a new File with the file extension removed (.xxx) from the given
 	 * File object's path name and replaced with the supplied extension. The new
 	 * File is returned. <br>

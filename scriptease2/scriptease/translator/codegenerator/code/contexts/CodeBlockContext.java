@@ -14,10 +14,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.CodeGenerationException;
-import scriptease.translator.codegenerator.LocationInformation;
-import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -28,20 +25,8 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 public class CodeBlockContext extends Context {
 	private CodeBlock codeBlock;
 
-	public CodeBlockContext(StoryModel model, String indent,
-			CodeGenerationNamifier existingNames,
-			LocationInformation locationInfo) {
-		super(model, indent, existingNames);
-		this.setLocationInfo(locationInfo);
-	}
-
-	public CodeBlockContext(Context other) {
-		this(other.getModel(), other.getIndent(), other.getNamifier(), other
-				.getLocationInfo());
-	}
-
 	public CodeBlockContext(Context other, CodeBlock source) {
-		this(other);
+		super(other);
 		this.codeBlock = source;
 	}
 
@@ -147,15 +132,7 @@ public class CodeBlockContext extends Context {
 	 */
 	@Override
 	public Collection<KnowIt> getImplicits() {
-		final Collection<KnowIt> used = new ArrayList<KnowIt>();
-
-		// Only return implicits that are used in this Context
-		for (KnowIt implicit : this.codeBlock.getImplicits()) {
-			// TODO Get components does not return all implciits.
-			if (getComponents().contains(implicit))
-				used.add(implicit);
-		}
-		return used;
+		return this.codeBlock.getImplicits();
 	}
 
 	@Override
@@ -251,7 +228,7 @@ public class CodeBlockContext extends Context {
 		causeIt = this.codeBlock.getCause();
 		identicalCauses = new ArrayList<ScriptIt>();
 
-		for (StoryPoint point : this.getStartStoryPoint().getDescendants()) {
+		for (StoryPoint point : this.getStoryPoints()) {
 			for (StoryComponent child : point.getChildren()) {
 				if (child instanceof ScriptIt) {
 					if (causeIt.isEquivalentToCause((CauseIt) child)) {

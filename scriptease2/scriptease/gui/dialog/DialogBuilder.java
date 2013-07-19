@@ -148,13 +148,9 @@ public class DialogBuilder {
 			public void run() {
 				final String title = titleField.getText();
 				final String author = authorField.getText();
-
-				final StatusManager statusManager = StatusManager.getInstance();
-
-				statusManager.setStatus("Creating New Library ...");
-				TranslatorManager.getInstance().setActiveTranslator(translator);
-
 				final LibraryModel model;
+
+				TranslatorManager.getInstance().setActiveTranslator(translator);
 
 				model = new LibraryModel(title, author, translator);
 
@@ -256,7 +252,6 @@ public class DialogBuilder {
 				final String title = titleField.getText();
 				final String author = authorField.getText();
 
-				final StatusManager statusManager = StatusManager.getInstance();
 				final TranslatorManager translatorManager;
 				final Translator selectedTranslator;
 				final Translator oldTranslator;
@@ -269,7 +264,6 @@ public class DialogBuilder {
 						.getSelectedItem();
 				oldTranslator = translatorManager.getActiveTranslator();
 
-				statusManager.setStatus("Creating New Story ...");
 				translatorManager.setActiveTranslator(selectedTranslator);
 
 				if (selectedTranslator == null) {
@@ -277,8 +271,8 @@ public class DialogBuilder {
 							.getInstance()
 							.showProblemDialog("No translator",
 									"No translator was chosen. I can't make a story without it.");
-					statusManager
-							.setStatus("Story creation aborted: no translator chosen.");
+					StatusManager.getInstance().setTemp(
+							"Story creation aborted: no translator chosen.");
 					return;
 				}
 
@@ -286,8 +280,8 @@ public class DialogBuilder {
 
 				if (module == null) {
 					translatorManager.setActiveTranslator(oldTranslator);
-					statusManager
-							.setStatus("Story creation aborted: module failed to load.");
+					StatusManager.getInstance().setTemp(
+							"Story creation aborted: module failed to load.");
 
 					return;
 				} else {

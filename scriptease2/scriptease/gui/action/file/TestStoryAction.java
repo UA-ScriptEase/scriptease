@@ -77,11 +77,12 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 		testTask = new Runnable() {
 			@Override
 			public void run() {
+				final String title = activeModel.getTitle();
+
 				final ProcessBuilder procBuilder;
 				final Process tester;
-				final StatusManager frame = StatusManager.getInstance();
 
-				frame.setStatus("Testing " + activeModel.getTitle());
+				StatusManager.getInstance().set("Testing " + title);
 				try {
 					procBuilder = new ProcessBuilder();
 					if (activeModel instanceof StoryModel)
@@ -120,7 +121,8 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 							"I can't do that, Dave.",
 							"This translator doesn't actually support testing, sorry.\n\nThe translator author was supposed to tell me that in the translator.ini file.");
 				}
-				frame.setStatus("Finished testing " + activeModel.getTitle());
+				StatusManager.getInstance()
+						.setTemp("Finished testing " + title);
 			}
 		};
 

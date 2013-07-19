@@ -1,4 +1,8 @@
 <LibraryModel name="DefaultUnityLibraryModel" author="ScriptEase Team">
+  <IncludeFiles>
+  	<IncludeFile>includes/SEStory.js</IncludeFile>
+  	<IncludeFile>includes/SEVariable.js</IncludeFile>
+  </IncludeFiles>
   <Types>
     <Type>
       <Name>CapsuleCollider</Name>
@@ -13052,12 +13056,8 @@
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>YesNo</Type>
+                <Type>question</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>YesNo</Type>
-                <Value>false</Value>
-              </Binding>
             </KnowIt>
             <KnowIt>
               <Name>Key</Name>

@@ -20,6 +20,14 @@
 	<!-- Defines an api Dictionary file -->
 	<xsd:complexType name="LibraryModel_Type">
 		<xsd:sequence>
+			<xsd:element name="IncludeFiles">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="IncludeFile" type="xsd:string" maxOccurs="unbounded"
+							minOccurs="0" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
 			<xsd:element name="Types" type="TypeList_Type" />
 			<xsd:element name="Slots" type="SlotList_Type" />
 			<xsd:element name="Causes" type="CauseList_Type" />

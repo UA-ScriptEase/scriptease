@@ -275,7 +275,7 @@ public final class UndoManager {
 		command.undo();
 		history.redoStack.push(command);
 		this.performingUndoRedo = false;
-		StatusManager.getInstance().setStatus("Undo " + command.getName());
+		StatusManager.getInstance().setTemp("Undo " + command.getName());
 		this.notifyObservers();
 	}
 
@@ -304,7 +304,7 @@ public final class UndoManager {
 		command.redo();
 		history.undoStack.push(command);
 		this.performingUndoRedo = false;
-		StatusManager.getInstance().setStatus("Redo " + command.getName());
+		StatusManager.getInstance().setTemp("Redo " + command.getName());
 		this.notifyObservers();
 	}
 

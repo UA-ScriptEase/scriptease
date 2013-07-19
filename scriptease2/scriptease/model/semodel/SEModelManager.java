@@ -174,16 +174,16 @@ public final class SEModelManager {
 		this.activeModel = model;
 
 		if (model != null && this.models.contains(model)) {
-			StatusManager.getInstance().setStatus(model + " activated");
-			WindowFactory.showProgressBar("Activating " + model.getTitle()
-					+ "...", new Runnable() {
+			WindowFactory.showProgressBar(
+					"Loading " + model.getTitle() + "...", new Runnable() {
 
-				@Override
-				public void run() {
-					SEModelManager.this.notifyChange(model,
-							SEModelEvent.Type.ACTIVATED);
-				}
-			});
+						@Override
+						public void run() {
+							SEModelManager.this.notifyChange(model,
+									SEModelEvent.Type.ACTIVATED);
+						}
+					});
+			StatusManager.getInstance().setTemp(model + " loaded.");
 		} else {
 			throw new IllegalArgumentException("Model " + model
 					+ " not found in list of active models. "
