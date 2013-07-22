@@ -358,7 +358,7 @@
 		<xsd:attribute name="flavour" use="required">
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
-					<xsd:pattern value="constant|resource|function|reference|null" />
+					<xsd:pattern value="constant|resource|function|reference|null|automatic" />
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>

@@ -90,13 +90,16 @@ public abstract class KnowItBinding implements Cloneable {
 		// Get this KnowItBinding's types.
 		Collection<String> bindingTypes = this.getTypes();
 
+		// TODO REMOVE THE IF!!
 		// Check if any of the types match
-		for (String bindingType : bindingTypes) {
-			if (knowItTypes.contains(bindingType)) {
-				return true;
+		if (bindingTypes != null) {
+			for (String bindingType : bindingTypes) {
+				if (knowItTypes.contains(bindingType)) {
+					return true;
+				}
 			}
 		}
-
+		
 		// If the method has reached this point, there are no common types.
 		return false;
 	}
