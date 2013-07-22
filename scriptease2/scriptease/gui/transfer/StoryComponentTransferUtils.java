@@ -19,6 +19,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -49,45 +50,51 @@ public class StoryComponentTransferUtils {
 	public static boolean canImportToParent(
 			TransferHandler.TransferSupport support) {
 
-		// We don't want to be dealing with anything other than drag and drop
-		// for now.
-		// TODO: In the future we should extend this functionality to paste,
-		// cut, etc.
+		// TODO: We don't want to be dealing with anything other than drag and
+		// drop for now. In the future we should extend this functionality to
+		// paste, cut, etc.
 		if (!support.isDrop())
 			return false;
 
 		if (support
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
 
-			// If the destination panel isn't even in a StoryComponentPanel
-			// we shouldn't be dragging stuff there anyway.
 			Component destinationPanel = support.getComponent();
+
+			// Recursively get the first StoryComponentPanel by getting the
+			// parent panels until there are no more parents!
 			while (!(destinationPanel instanceof StoryComponentPanel)
 					&& destinationPanel != null) {
+
 				destinationPanel = destinationPanel.getParent();
 			}
+
+			// If the destination panel isn't even in a StoryComponentPanel
+			// we shouldn't be dragging stuff there anyway.
 			if (destinationPanel == null)
 				return false;
 
-			StoryComponent storyComponent = ((StoryComponentPanel) destinationPanel)
+			StoryComponent destinationComponent = ((StoryComponentPanel) destinationPanel)
 					.getStoryComponent();
 
 			// Make sure the panel we're dropping it in is a
 			// panel that can hold children (StoryComponentContainer or
-			// ControlIts) or else try the parent.
-			if (!(storyComponent instanceof StoryComponentContainer)
-					&& !(storyComponent instanceof ControlIt)
-					&& !(storyComponent instanceof AskIt)) {
+			// ControlIts or StoryPoint) or else try the parent.
+			if (!(destinationComponent instanceof StoryComponentContainer)
+					&& !(destinationComponent instanceof ControlIt)
+					&& !(destinationComponent instanceof AskIt)
+					&& !(destinationComponent instanceof StoryPoint)) {
 
 				destinationPanel = destinationPanel.getParent();
 
 				if (destinationPanel instanceof StoryComponentPanel) {
-					storyComponent = ((StoryComponentPanel) destinationPanel)
+					destinationComponent = ((StoryComponentPanel) destinationPanel)
 							.getStoryComponent();
 
-					if (!(storyComponent instanceof StoryComponentContainer)
-							&& !(storyComponent instanceof ControlIt)
-							&& !(storyComponent instanceof AskIt))
+					if (!(destinationComponent instanceof StoryComponentContainer)
+							&& !(destinationComponent instanceof ControlIt)
+							&& !(destinationComponent instanceof AskIt)
+							&& !(destinationComponent instanceof StoryPoint))
 						return false;
 				} else
 					return false;
@@ -104,15 +111,28 @@ public class StoryComponentTransferUtils {
 
 				// Check if its one of the acceptable components.
 				for (StoryComponent component : components)
-					if ((component instanceof ScriptIt && !(component instanceof CauseIt))
-							|| (component instanceof KnowIt)
+					if (component instanceof ScriptIt
+							|| component instanceof KnowIt
 							|| component instanceof AskIt
 							|| component instanceof ControlIt) {
 
 						// We don't want to be dropping questions in their own
 						// blocks.
-						if (storyComponent.getOwner() instanceof AskIt
+						if (destinationComponent.getOwner() instanceof AskIt
 								&& component instanceof AskIt)
+							return false;
+
+						// Nor do we want to be dropping causes in their own
+						// blocks, or anything other than other causes for this
+						// matter.
+						if (!(destinationComponent instanceof StoryPoint)
+								&& component instanceof CauseIt)
+							return false;
+
+						// Nor do we want effects, descriptions, controls, etc
+						// in causes / story points
+						if ((destinationComponent instanceof StoryPoint || destinationComponent instanceof CauseIt)
+								&& !(component instanceof CauseIt))
 							return false;
 
 						if (component instanceof ScriptIt) {
@@ -150,6 +170,8 @@ public class StoryComponentTransferUtils {
 	 * to go) - in this case the StoryComponentContainer.
 	 * 
 	 * @param support
+	 * @return true if the component successfully got imported to the parent,
+	 *         false otherwise
 	 */
 	@SuppressWarnings("unchecked")
 	public static boolean importToParent(TransferSupport support) {
@@ -158,55 +180,61 @@ public class StoryComponentTransferUtils {
 		final ComplexStoryComponent parent;
 		final int insertionIndex;
 
+		// Safety Check - canImportToParent is very likely being called
+		// twice, but we want to be safe in the scenario someone calls
+		// importToParent without the former method.
 		if (!StoryComponentTransferUtils.canImportToParent(support))
 			return false;
 
-		Component panel;
-		panel = support.getComponent();
-
-		// Get the first instance of a StoryComponentPanel if there is one.
-		while (!(panel instanceof StoryComponentPanel) && panel != null) {
-			panel = panel.getParent();
-		}
-
-		if (panel == null)
-			return false;
-
-		component = ((StoryComponentPanel) panel).getStoryComponent();
-
-		// Check if the component already is a container. If it is then
-		// the parent is just this container. Otherwise, we want to
-		// get the parent StoryComponentContainer.
-		if (component instanceof StoryComponentContainer) {
-			parent = (ComplexStoryComponent) ((StoryComponentPanel) panel)
-					.getStoryComponent();
-			insertionIndex = StoryComponentTransferUtils.getInsertionIndex(
-					(StoryComponentPanel) panel, support);
-		} else {
-			final StoryComponentPanel parentPanel;
-			parentPanel = (StoryComponentPanel) panel.getParent();
-
-			parent = (ComplexStoryComponent) parentPanel.getStoryComponent();
-			insertionIndex = StoryComponentTransferUtils
-					.getParentInsertionIndex((StoryComponentPanel) parentPanel,
-							(StoryComponentPanel) panel, support);
-		}
-
-		// Now we actually add the transfer data
+		// Try getting the components that need to be transfered.
 		try {
 			components = (Collection<StoryComponent>) support
 					.getTransferable()
 					.getTransferData(
 							StoryComponentPanelTransferHandler.storyCompFlavour);
-
-			for (StoryComponent newChild : components) {
-				StoryComponentTransferUtils.addTransferData(newChild, parent,
-						insertionIndex);
-			}
 		} catch (UnsupportedFlavorException e) {
 			return false;
 		} catch (IOException e) {
 			return false;
+		}
+
+		Component destinationPanel;
+		destinationPanel = support.getComponent();
+		
+		// Get the first instance of a StoryComponentPanel if there is one.
+		while (!(destinationPanel instanceof StoryComponentPanel)
+				&& destinationPanel != null) {
+			destinationPanel = destinationPanel.getParent();
+		}
+
+		if (destinationPanel == null)
+			return false;
+
+		component = ((StoryComponentPanel) destinationPanel)
+				.getStoryComponent();
+
+		// Check if the component already is a container. If it is then
+		// the parent is just this container. Otherwise, we want to
+		// get the parent StoryComponentContainer
+		if (component instanceof StoryComponentContainer) {
+			parent = (ComplexStoryComponent) ((StoryComponentPanel) destinationPanel)
+					.getStoryComponent();
+			insertionIndex = StoryComponentTransferUtils.getInsertionIndex(
+					(StoryComponentPanel) destinationPanel, support);
+		} else {
+			final StoryComponentPanel parentPanel;
+			parentPanel = (StoryComponentPanel) destinationPanel.getParent();
+
+			parent = (ComplexStoryComponent) parentPanel.getStoryComponent();
+			insertionIndex = StoryComponentTransferUtils
+					.getParentInsertionIndex((StoryComponentPanel) parentPanel,
+							(StoryComponentPanel) destinationPanel, support);
+		}
+
+		// Now we actually add the transfer data
+		for (StoryComponent newChild : components) {
+			StoryComponentTransferUtils.addTransferData(newChild, parent,
+					insertionIndex);
 		}
 
 		return true;
