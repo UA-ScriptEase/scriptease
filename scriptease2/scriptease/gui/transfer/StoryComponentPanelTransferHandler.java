@@ -55,7 +55,8 @@ import scriptease.util.GUIOp;
  * @author remiller
  * @author mfchurch
  * @author kschenk
- * @author jyuen
+ * @author jyuen - implemented component to parents transfer handling
+ * 
  * @see TransferHandler
  * @see StoryComponentTransferUtils
  */
@@ -221,7 +222,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * the accepting StoryComponent.
 	 * 
 	 * @param support
-	 * @return
+	 * @return true if the component can be imported, false otherwise.
 	 */
 	private boolean canImportAsChild(TransferSupport support) {
 		final StoryComponentPanel acceptingPanel;
@@ -263,7 +264,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	}
 
 	/**
-	 * The case where effects, descriptions, and controls are being dragged over
+	 * The case where causes, effects, descriptions, and controls are being dragged over
 	 * other components in a block. It seems more natural for them to go to the
 	 * parent block instead of denying the User this option.
 	 * 
