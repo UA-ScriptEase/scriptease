@@ -316,12 +316,11 @@ public class KnowItBindingConverter implements Converter {
 	private KnowItBindingFunction unmarshallFunctionBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		KnowItBindingFunction binding = new KnowItBindingFunction(null);
+		final ScriptIt scriptIt;
+		final KnowItBindingFunction knowItBindingFunction;
 
 		// move down and read as a doIt
 		reader.moveDown();
-
-		final ScriptIt scriptIt;
-		final KnowItBindingFunction knowItBindingFunction;
 
 		scriptIt = (ScriptIt) context.convertAnother(binding, ScriptIt.class);
 
