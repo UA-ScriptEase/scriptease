@@ -4098,58 +4098,6 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>TEST: When module's heart beats</Name>
-      <Visible>true</Visible>
-      <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>TEST: When &lt;subject&gt;'s heart beats</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Subject>subject</Subject>
-          <Slot>Mod_OnHeartbeat</Slot>
-          <Id>273</Id>
-          <Types>
-            <Type>void</Type>
-          </Types>
-		  <Parameters>
-            <KnowIt>
-              <Name>subject</Name>
-              <Visible>true</Visible>
-              <Labels/>
-              <Types>
-                <Type>module</Type>
-              </Types>
-			  <Binding flavour="automatic"></Binding>
-            </KnowIt>
-          </Parameters>
-          <Code>
-            <FormatRef data="NONE" ref="children"/>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </CauseIt>
-    <CauseIt>
       <Name>When &lt;subject&gt; is blocked by &lt;the blocking door&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
@@ -5651,7 +5599,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt;&apos;s heart beats</Name>
+      <Name>When module&apos;s heart beats</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5693,6 +5641,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5702,7 +5651,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; loads</Name>
+      <Name>When module loads</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5744,6 +5693,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5753,7 +5703,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;</Name>
+      <Name>When module is entered by &lt;entering client&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5795,6 +5745,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5804,7 +5755,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; is exited by &lt;exiting client&gt;</Name>
+      <Name>When module is exited by &lt;exiting client&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5846,6 +5797,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5855,7 +5807,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
+      <Name>When module&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5897,6 +5849,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5906,7 +5859,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;Player Character&gt; speaks &lt;Chat Message&gt;</Name>
+      <Name>When &lt;Player Character&gt; speaks &lt;Chat Message&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5948,6 +5901,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -5957,7 +5911,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;item loser&gt; loses &lt;item lost&gt;</Name>
+      <Name>When &lt;item loser&gt; loses &lt;item lost&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -5999,6 +5953,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6008,7 +5963,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
+      <Name>When &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6050,6 +6005,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6059,48 +6015,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>TEST: When &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
-      <Visible>true</Visible>
-      <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
-      <CodeBlocks>
-        <CodeBlockSource>
-          <Name>TEST: When &lt;player&gt; is killed by &lt;last hostile actor&gt;</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Subject/>
-          <Slot>Mod_OnPlrDeath</Slot>
-          <Id>270</Id>
-          <Types>
-            <Type>void</Type>
-          </Types>
-          <Code>
-            <FormatRef data="NONE" ref="children"/>
-          </Code>
-        </CodeBlockSource>
-      </CodeBlocks>
-    </CauseIt>	
-    <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;player&gt;&apos;s health reaches zero</Name>
+      <Name>When &lt;player&gt;&apos;s health reaches zero</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6142,6 +6057,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6151,7 +6067,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;levelling PC&gt; levels up</Name>
+      <Name>When &lt;levelling PC&gt; levels up</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6193,6 +6109,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6202,7 +6119,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;respawning player&gt; presses the respawn button</Name>
+      <Name>When &lt;respawning player&gt; presses the respawn button</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6244,6 +6161,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6253,7 +6171,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;last PC rested&gt; rests &lt;rest type&gt;</Name>
+      <Name>When &lt;last PC rested&gt; rests &lt;rest type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6295,6 +6213,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6304,7 +6223,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;cutscene aborter&gt; aborts a cutscene</Name>
+      <Name>When &lt;cutscene aborter&gt; aborts a cutscene</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6346,6 +6265,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6355,7 +6275,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;activator&gt; activates &lt;activated item&gt; on &lt;activated item target&gt; at &lt;activated item target location&gt;</Name>
+      <Name>When &lt;activator&gt; activates &lt;activated item&gt; on &lt;activated item target&gt; at &lt;activated item target location&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6397,6 +6317,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6406,7 +6327,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;acquirer&gt; acquires &lt;acquired item&gt; with &lt;stack size&gt; from &lt;object item was acquired from&gt;</Name>
+      <Name>When &lt;acquirer&gt; acquires &lt;acquired item&gt; with &lt;stack size&gt; from &lt;object item was acquired from&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6448,6 +6369,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6457,7 +6379,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;equipper&gt; equips &lt;last item equipped&gt;</Name>
+      <Name>When &lt;equipper&gt; equips &lt;last item equipped&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6499,6 +6421,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6508,7 +6431,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;unequipper&gt; unequips &lt;unequipped item&gt; from &lt;possessor&gt;</Name>
+      <Name>When &lt;unequipper&gt; unequips &lt;unequipped item&gt; from &lt;possessor&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6550,6 +6473,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -6661,7 +6585,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>In &lt;subject&gt;, when &lt;story point&gt; is enabled</Name>
+      <Name>When &lt;story point&gt; is enabled</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children>
@@ -6711,6 +6635,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
