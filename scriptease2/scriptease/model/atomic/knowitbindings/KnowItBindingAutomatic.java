@@ -2,10 +2,9 @@ package scriptease.model.atomic.knowitbindings;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.translator.io.model.GameModule;
+import scriptease.model.atomic.KnowIt;
 import scriptease.translator.io.model.Resource;
 
 /**
@@ -18,15 +17,7 @@ import scriptease.translator.io.model.Resource;
  * @see {@link scriptease.model.atomic.KnowIt}
  */
 public class KnowItBindingAutomatic extends KnowItBinding {
-	private final Resource automatic;
-
-	public KnowItBindingAutomatic(GameModule module) {
-		final List<Resource> automaticHandlers = new ArrayList<Resource>();
-
-		for (Resource resource : module.getAutomaticHandlers())
-			automaticHandlers.add(resource);
-
-		this.automatic = automaticHandlers.get(0);
+	public KnowItBindingAutomatic() {
 	}
 
 	@Override
@@ -34,14 +25,27 @@ public class KnowItBindingAutomatic extends KnowItBinding {
 		return "<automatic!>";
 	}
 
+	/**
+	 * Getting the value of a KnowItBindingAutomatic is an invalid operation,
+	 * but this method must be implemented because of the interface.
+	 * 
+	 * @throws UnsupportedOperationException
+	 *             whenever this method is called.
+	 */
 	@Override
 	public Resource getValue() {
-		return automatic;
+		throw new UnsupportedOperationException(
+				"Cannot get the value for an automatic KnowIt.");
+	}
+
+	@Override
+	public String toString() {
+		return "automatic";
 	}
 
 	@Override
 	public Collection<String> getTypes() {
-		return automatic.getTypes();
+		return new ArrayList<String>(0);
 	}
 
 	@Override
@@ -50,17 +54,41 @@ public class KnowItBindingAutomatic extends KnowItBinding {
 	}
 
 	@Override
+	public int hashCode() {
+		return 0;
+	}
+
+	/**
+	 * KnowItBindingAutomatics are always compatible
+	 */
+	@Override
+	public boolean compatibleWith(KnowIt knowIt) {
+		return true;
+	}
+
+	/**
+	 * KnowItBindingAutomatics always type match
+	 */
+	protected boolean typeMatches(Collection<String> knowItTypes) {
+		return true;
+	}
+
+	@Override
 	public KnowItBinding resolveBinding() {
+		return this;
+	}
+
+	/**
+	 * No need to clone KnowItBindingAutomatics, they aren't bound to anything
+	 * until code generation
+	 */
+	@Override
+	public KnowItBinding clone() {
 		return this;
 	}
 
 	@Override
 	public void process(BindingVisitor processController) {
 		processController.processAutomatic(this);
-	}
-
-	@Override
-	public String toString() {
-		return "KnowItBindingAutomatic : " + this.automatic.toString();
 	}
 }

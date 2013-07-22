@@ -165,11 +165,8 @@ public class KnowItBindingConverter implements Converter {
 	 */
 	private void marshallAutomaticBinding(KnowItBindingAutomatic binding,
 			HierarchicalStreamWriter writer, MarshallingContext context) {
-
 		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
 				ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR);
-
-		writer.setValue(binding.getValue().getTemplateID());
 	}
 
 	/*
@@ -311,28 +308,9 @@ public class KnowItBindingConverter implements Converter {
 		}
 	}
 
-	private KnowItBindingResource unmarshallAutomaticBinding(
+	private KnowItBindingAutomatic unmarshallAutomaticBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
-		final GameModule module;
-		final Resource resource;
-		final String resourceID;
-
-		module = StoryModelConverter.currentStory.getModule();
-		resourceID = reader.getValue();
-
-		if (module == null)
-			throw new IllegalStateException(
-					"Cannot unmarshall a Resource binding without a module loaded");
-
-		resource = module.getInstanceForObjectIdentifier(resourceID);
-
-		if (resource != null)
-			return new KnowItBindingResource(resource);
-		else
-			System.out.println("Binding lookup failed for id " + resourceID
-					+ ", assigning null instead.");
-
-		return null;
+		return new KnowItBindingAutomatic();
 	}
 
 	private KnowItBindingFunction unmarshallFunctionBinding(

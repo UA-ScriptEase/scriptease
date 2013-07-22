@@ -4140,7 +4140,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
-			  <Binding flavour="resource"></Binding>
+			  <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
