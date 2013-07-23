@@ -70,13 +70,15 @@ public class NWNResource implements Comparable<NWNResource> {
 		}
 	}
 
-	public NWNResource(ErfKey key, GenericFileFormat gff) {
-		this.key = key;
-		this.gff = gff;
-
-		// These are handled later when we write out.
-		this.byteData = null;
-		this.resourceListEntry = new ResourceListElement(-1, 0);
+	/**
+	 * Builds a new NWN Resource with a provided GFF.
+	 * 
+	 * @param resRef
+	 * @param fileType
+	 * @param gff
+	 */
+	protected NWNResource(String resRef, short fileType, GenericFileFormat gff) {
+		this(resRef, fileType, null, gff);
 	}
 
 	/**
@@ -97,24 +99,38 @@ public class NWNResource implements Comparable<NWNResource> {
 	 * @throws IOException
 	 */
 	protected NWNResource(String resRef, short fileType, byte[] data) {
-		final ResourceListElement newEntry;
-		final ErfKey newKey;
+		this(resRef, fileType, data, null);
+	}
 
-		// pear the name down to the max resref length if necessary
+	/**
+	 * Builds a new NWNResource with a provided GFF and data. This isn't
+	 * currently used anywhere apart from this class, so if you do use it, make
+	 * sure it works.
+	 * 
+	 * @param resRef
+	 * @param fileType
+	 * @param data
+	 * @param gff
+	 */
+	private NWNResource(String resRef, short fileType, byte[] data,
+			GenericFileFormat gff) {
+		final int listElementSize;
+
 		if (resRef.length() > ErfKey.RESREF_MAX_LENGTH)
 			resRef.substring(0, ErfKey.RESREF_MAX_LENGTH);
 
-		// resRefs must be lower case
-		resRef = resRef.toLowerCase();
+		if (data != null)
+			listElementSize = data.length;
+		else
+			listElementSize = 0;
 
-		// the next resourceID is the same as the number of entries
-		newKey = new ErfKey(resRef, fileType);
-		newEntry = new ResourceListElement(-1, data.length);
+		this.key = new ErfKey(resRef.toLowerCase(), fileType);
 
-		this.key = newKey;
-		this.resourceListEntry = newEntry;
+		this.resourceListEntry = new ResourceListElement(-1, listElementSize);
+
 		this.byteData = data;
 		this.gff = null;
+
 	}
 
 	/**
@@ -238,6 +254,18 @@ public class NWNResource implements Comparable<NWNResource> {
 	 */
 	public boolean isGFF() {
 		return this.key.isGFF();
+	}
+
+	/**
+	 * Whether the resource is a journal GFF. If it's not even a GFF, this will
+	 * return false.
+	 * 
+	 * @return
+	 */
+	public boolean isJournalGFF() {
+		return this.isGFF()
+				&& this.getGFF().getFileType().trim()
+						.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP);
 	}
 
 	/**

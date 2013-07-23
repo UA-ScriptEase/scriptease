@@ -25,6 +25,12 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 public class CodeBlockContext extends Context {
 	private CodeBlock codeBlock;
 
+	// Lazy loaded variables.
+	private Collection<ScriptIt> identicalCauses = null;
+	private Collection<KnowIt> parameters = null;
+	private Collection<KnowIt> parametersWithSlot = null;
+	private Collection<KnowIt> variables = null;
+
 	public CodeBlockContext(Context other, CodeBlock source) {
 		super(other);
 		this.codeBlock = source;
@@ -75,56 +81,59 @@ public class CodeBlockContext extends Context {
 		}
 		// if we have not found it locally, check the ScriptIt context. It could
 		// be a parameter of a sibling CodeBlock
-		final Context scriptItContext = ContextFactory.getInstance()
-				.createContext(this, this.codeBlock.getOwner());
+		final Context scriptItContext;
+
+		scriptItContext = ContextFactory.getInstance().createContext(this,
+				this.codeBlock.getOwner());
 
 		return scriptItContext.getParameter(keyword);
 	}
 
 	@Override
 	public Collection<KnowIt> getVariables() {
-		final Collection<KnowIt> variables = new ArrayList<KnowIt>();
+		if (this.variables == null) {
+			this.variables = new ArrayList<KnowIt>();
 
-		for (StoryComponent child : this.codeBlock.getOwner().getChildren()) {
-			variables.addAll(StoryComponentUtils.getVariables(child));
+			for (StoryComponent child : this.codeBlock.getOwner().getChildren()) {
+				this.variables.addAll(StoryComponentUtils.getVariables(child));
+			}
 		}
 
-		return variables;
-	}
-
-	private Collection<KnowIt> getParameterCollection() {
-		final ScriptIt owner = this.codeBlock.getOwner();
-		final Collection<KnowIt> parameters;
-
-		parameters = new ArrayList<KnowIt>();
-
-		if (owner instanceof ControlIt) {
-			parameters.addAll(((ControlIt) owner).getRequiredParameters());
-		} else {
-			parameters.addAll(this.codeBlock.getParameters());
-		}
-
-		return parameters;
+		return this.variables;
 	}
 
 	@Override
 	public Collection<KnowIt> getParameters() {
-		return this.getParameterCollection();
+		if (this.parameters == null) {
+			final ScriptIt owner = this.codeBlock.getOwner();
+
+			this.parameters = new ArrayList<KnowIt>();
+
+			if (owner instanceof ControlIt) {
+				this.parameters.addAll(((ControlIt) owner)
+						.getRequiredParameters());
+			} else {
+				this.parameters.addAll(this.codeBlock.getParameters());
+			}
+		}
+
+		return parameters;
 	}
 
 	@Override
 	public Collection<KnowIt> getParametersWithSlot() {
-		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
-		final CodeBlock mainBlock;
+		if (this.parametersWithSlot == null) {
+			this.parametersWithSlot = new ArrayList<KnowIt>();
+			final CodeBlock mainBlock;
 
-		mainBlock = this.codeBlock.getCause().getMainCodeBlock();
+			mainBlock = this.codeBlock.getCause().getMainCodeBlock();
 
-		parameters.addAll(mainBlock.getLibrary().getSlotParameters(
-				mainBlock.getSlot()));
+			this.parametersWithSlot.addAll(mainBlock.getLibrary()
+					.getSlotParameters(mainBlock.getSlot()));
 
-		parameters.addAll(this.getParameterCollection());
-
-		return parameters;
+			this.parametersWithSlot.addAll(this.getParameters());
+		}
+		return this.parametersWithSlot;
 	}
 
 	/**
@@ -222,22 +231,23 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public Collection<ScriptIt> getIdenticalCauses() {
-		final Collection<ScriptIt> identicalCauses;
-		final CauseIt causeIt;
+		if (this.identicalCauses == null) {
+			final CauseIt causeIt;
 
-		causeIt = this.codeBlock.getCause();
-		identicalCauses = new ArrayList<ScriptIt>();
+			causeIt = this.codeBlock.getCause();
+			this.identicalCauses = new ArrayList<ScriptIt>();
 
-		for (StoryPoint point : this.getStoryPoints()) {
-			for (StoryComponent child : point.getChildren()) {
-				if (child instanceof ScriptIt) {
-					if (causeIt.isEquivalentToCause((CauseIt) child)) {
-						identicalCauses.add((ScriptIt) child);
+			for (StoryPoint point : this.getStoryPoints()) {
+				for (StoryComponent child : point.getChildren()) {
+					if (child instanceof ScriptIt) {
+						if (causeIt.isEquivalentToCause((CauseIt) child)) {
+							this.identicalCauses.add((ScriptIt) child);
+						}
 					}
 				}
 			}
 		}
 
-		return identicalCauses;
+		return this.identicalCauses;
 	}
 }

@@ -2,7 +2,6 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -21,7 +20,6 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
-import scriptease.translator.io.model.Resource;
 
 /**
  * Context represents the object based context used in code generation. It
@@ -52,6 +50,13 @@ public abstract class Context {
 	// This is a cached list of all story points. This prevents multiple
 	// expensive calls to StoryPoint#getDescendants()
 	private final Collection<StoryPoint> storyPoints;
+
+	/**
+	 * The collection of code blocks known by the Context. These are lazy
+	 * loaded, and should thus only be called using the {@link #getCodeBlocks()}
+	 * method.
+	 */
+	private Collection<CodeBlock> codeBlocks = null;
 
 	protected LocationInformation locationInfo;
 
@@ -139,68 +144,31 @@ public abstract class Context {
 	}
 
 	/**
-	 * Returns all of the codeBlocks associated with the Context's current slot
+	 * Returns all of the codeBlocks associated with the Context's current slot.
+	 * These are lazy loaded.
 	 * 
 	 * @return
 	 */
 	public Collection<CodeBlock> getCodeBlocks() {
-		final Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
+		if (this.codeBlocks == null) {
 
-		/**
-		 * Gets all of the story components in this context.
-		 * 
-		 * @return
-		 */
-		final Collection<ScriptIt> scriptIts = new ArrayList<ScriptIt>();
+			this.codeBlocks = new ArrayList<CodeBlock>();
 
-		// for each story point
-		for (StoryPoint point : this.storyPoints) {
-			// Get all the components from each StoryPoint
-			scriptIts.addAll(StoryComponentUtils.getDescendantScriptIts(point));
+			// for each story point
+			for (StoryPoint point : this.storyPoints) {
+				for (ScriptIt scriptIt : StoryComponentUtils
+						.getDescendantScriptIts(point)) {
+					final Collection<CodeBlock> codeBlocksForSlot;
+
+					codeBlocksForSlot = scriptIt
+							.getCodeBlocksForLocation(this.locationInfo);
+
+					this.codeBlocks.addAll(codeBlocksForSlot);
+				}
+			}
 		}
 
-		for (StoryComponent key : scriptIts) {
-			final ScriptIt scriptIt = (ScriptIt) key;
-			Collection<CodeBlock> codeBlocksForSlot = scriptIt
-					.getCodeBlocksForLocation(this.locationInfo);
-			codeBlocks.addAll(codeBlocksForSlot);
-		}
-
-		return codeBlocks;
-	}
-
-	/**
-	 * This finds the CodeBlocks for special circumstances as described in the
-	 * class that implements {@link Resource} in the translator. In Neverwinter
-	 * Nights, this includes code blocks in i_se_aux.
-	 * 
-	 * @return
-	 */
-	public List<CodeBlock> getBindingCodeBlocks() {
-		final List<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
-		/*
-		 * final List<StoryComponent> effectList;
-		 * 
-		 * effectList = this.getTranslator().getLibrary().getEffectsCategory()
-		 * .getChildren();
-		 * 
-		 * for (StoryComponent key : this.getComponents()) { // The method first
-		 * checks if there is a Resource for the // StoryComponent. if (key
-		 * instanceof KnowIt) { final KnowItBinding binding = ((KnowIt)
-		 * key).getBinding(); if (binding instanceof KnowItBindingResource) {
-		 * final KnowItBindingResource kibConstant; final String referenceValue;
-		 * 
-		 * kibConstant = (KnowItBindingResource) binding; referenceValue =
-		 * kibConstant.getScriptValue();
-		 * 
-		 * // Gets the code blocks from the LibraryModel from a // ScriptIt
-		 * whose display text matches the reference string. for (StoryComponent
-		 * component : effectList) { if (component instanceof ScriptIt &&
-		 * component.getDisplayText().equals( referenceValue)) {
-		 * codeBlocks.addAll(new ArrayList<CodeBlock>( ((ScriptIt)
-		 * component).getCodeBlocks())); } } } } }
-		 */
-		return codeBlocks;
+		return this.codeBlocks;
 	}
 
 	public CodeBlock getMainCodeBlock() {
