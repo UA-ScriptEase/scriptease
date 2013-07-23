@@ -3,7 +3,6 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import scriptease.model.CodeBlock;

@@ -198,11 +198,10 @@ public class StoryPoint extends ComplexStoryComponent {
 
 	/**
 	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
+	 * This is much slower than {@link #getDescendants()}, so it should be used
+	 * sparingly.
 	 * 
 	 * @return
-	 * @deprecated This is much slower than {@link #getDescendants()}. We want
-	 *             to use that instead. There shouldn't be a case where we need
-	 *             to use this method anymore.
 	 */
 	public List<StoryPoint> getOrderedDescendants() {
 		final List<StoryPoint> descendants = new ArrayList<StoryPoint>();
