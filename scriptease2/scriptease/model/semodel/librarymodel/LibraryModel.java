@@ -525,6 +525,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.observerManager.addObserver(this, observer);
 	}
 
+	public void addLibraryChangeListener(Object object, LibraryObserver observer) {
+		this.observerManager.addObserver(object, observer);
+	}
+
 	public void removeLibraryChangeListener(LibraryObserver observer) {
 		this.observerManager.removeObserver(observer);
 	}

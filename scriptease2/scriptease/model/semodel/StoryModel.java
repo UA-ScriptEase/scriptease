@@ -35,7 +35,7 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public final class StoryModel extends SEModel {
-	private final GameModule module;
+	private GameModule module;
 	private final Translator translator;
 	private final String compatibleVersion;
 	private final Collection<LibraryModel> optionalLibraries;

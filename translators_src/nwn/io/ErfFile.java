@@ -576,6 +576,7 @@ public final class ErfFile extends GameModule {
 	@Override
 	public void close() throws IOException {
 		this.fileAccess.close();
+		
 	}
 
 	@Override
