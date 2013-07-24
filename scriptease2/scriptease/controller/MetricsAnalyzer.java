@@ -1,14 +1,19 @@
 package scriptease.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import scriptease.controller.io.FileIO;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
@@ -33,20 +38,19 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public class MetricsAnalyzer {
-
 	// Singleton
 	private static MetricsAnalyzer instance = null;
 
-	private final List<AskIt> questions;
-	private final List<ScriptIt> effects;
-	private final List<CauseIt> causes;
-	private final List<ControlIt> delays;
-	private final List<ControlIt> repeats;
-	private final List<StoryPoint> storyPoints;
-	private final List<KnowIt> descriptions;
-	private final List<Note> notes;
-	private final List<KnowIt> gameObjects;
-	private final List<KnowIt> implicits;
+	private final Collection<AskIt> questions;
+	private final Collection<ScriptIt> effects;
+	private final Collection<CauseIt> causes;
+	private final Collection<ControlIt> delays;
+	private final Collection<ControlIt> repeats;
+	private final Collection<StoryPoint> storyPoints;
+	private final Collection<KnowIt> descriptions;
+	private final Collection<Note> notes;
+	private final Collection<KnowIt> gameObjects;
+	private final Collection<KnowIt> implicits;
 
 	/**
 	 * Gets the sole instance of this particular type of Action
@@ -62,32 +66,16 @@ public class MetricsAnalyzer {
 	}
 
 	protected MetricsAnalyzer() {
-		this.questions = new ArrayList<AskIt>();
-		this.effects = new ArrayList<ScriptIt>();
-		this.causes = new ArrayList<CauseIt>();
-		this.delays = new ArrayList<ControlIt>();
-		this.repeats = new ArrayList<ControlIt>();
-		this.storyPoints = new ArrayList<StoryPoint>();
-		this.descriptions = new ArrayList<KnowIt>();
-		this.notes = new ArrayList<Note>();
-		this.gameObjects = new ArrayList<KnowIt>();
-		this.implicits = new ArrayList<KnowIt>();
-	}
-
-	/**
-	 * Processes the story components in the active model.
-	 */
-	public void processStoryComponents() {
-		this.questions.clear();
-		this.effects.clear();
-		this.causes.clear();
-		this.delays.clear();
-		this.repeats.clear();
-		this.storyPoints.clear();
-		this.descriptions.clear();
-		this.notes.clear();
-
-		parseStoryComponents(SEModelManager.getInstance().getActiveRoot());
+		this.questions = new HashSet<AskIt>();
+		this.effects = new HashSet<ScriptIt>();
+		this.causes = new HashSet<CauseIt>();
+		this.delays = new HashSet<ControlIt>();
+		this.repeats = new HashSet<ControlIt>();
+		this.storyPoints = new HashSet<StoryPoint>();
+		this.descriptions = new HashSet<KnowIt>();
+		this.notes = new HashSet<Note>();
+		this.gameObjects = new HashSet<KnowIt>();
+		this.implicits = new HashSet<KnowIt>();
 	}
 
 	/**
@@ -115,40 +103,31 @@ public class MetricsAnalyzer {
 	}
 
 	public Map<String, Integer> getStoryPointComplexity() {
+		final String LONGEST_BRANCH = "Longest Branch";
+		final String END_POINTS = "End Points";
+
 		final Map<String, Integer> metrics = new HashMap<String, Integer>();
+		final Map<StoryPoint, Integer> depthMap;
 
-		metrics.put("Longest Branch", this.getLongestBranch());
-		metrics.put("Story Point Leaves", this.getStoryPointLeaves());
+		final int longestPathLength;
+		int endPoints = 0;
 
-		return metrics;
-	}
+		depthMap = SEModelManager.getInstance().getActiveRoot()
+				.createDepthMap();
 
-	/**
-	 * Calculates longest Story Point path.
-	 * 
-	 * @return The longest path
-	 */
-	public int getLongestBranch() {
-		return SEModelManager.getInstance().getActiveRoot().getLongestPath();
-	}
+		longestPathLength = Collections.max(depthMap.values()) + 1;
 
-	/**
-	 * Gets the number of story points with no children.
-	 * 
-	 * @return
-	 */
-	public int getStoryPointLeaves() {
-		int count = 0;
-
-		List<StoryPoint> storyPoints = SEModelManager.getInstance()
-				.getActiveRoot().getOrderedDescendants();
-
-		for (StoryPoint storypoint : storyPoints) {
-			if (storypoint.getSuccessors().isEmpty())
-				count++;
+		for (StoryPoint storypoint : depthMap.keySet()) {
+			if (storypoint.getSuccessors().isEmpty()) {
+				System.out.println(storypoint.getDisplayText());
+				endPoints++;
+			}
 		}
 
-		return count;
+		metrics.put(LONGEST_BRANCH, longestPathLength);
+		metrics.put(END_POINTS, endPoints);
+
+		return metrics;
 	}
 
 	/**
@@ -371,18 +350,29 @@ public class MetricsAnalyzer {
 		return sortedMetrics;
 	}
 
-	private void parseStoryComponents(final StoryPoint root) {
+	public void processStoryComponents() {
+		this.questions.clear();
+		this.effects.clear();
+		this.causes.clear();
+		this.delays.clear();
+		this.repeats.clear();
+		this.storyPoints.clear();
+		this.descriptions.clear();
+		this.notes.clear();
+
 		final StoryAdapter adapter;
 
 		adapter = new StoryAdapter() {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
-				storyPoints.add(storyPoint);
+				if (!storyPoints.contains(storyPoint)) {
+					storyPoints.add(storyPoint);
 
-				this.defaultProcessComplex(storyPoint);
+					this.defaultProcessComplex(storyPoint);
 
-				for (StoryPoint successor : storyPoint.getSuccessors())
-					successor.process(this);
+					for (StoryPoint successor : storyPoint.getSuccessors())
+						successor.process(this);
+				}
 			}
 
 			@Override
@@ -399,44 +389,60 @@ public class MetricsAnalyzer {
 
 			@Override
 			public void processControlIt(ControlIt controlIt) {
-				if (controlIt.getFormat() == ControlIt.ControlItFormat.DELAY)
-					delays.add(controlIt);
-				else if (controlIt.getFormat() == ControlIt.ControlItFormat.REPEAT)
-					repeats.add(controlIt);
+				final boolean process;
 
-				controlIt.processParameters(this);
-				this.defaultProcessComplex(controlIt);
+				if (controlIt.getFormat() == ControlIt.ControlItFormat.DELAY) {
+					process = delays.contains(controlIt);
+					if (!process)
+						delays.add(controlIt);
+				} else if (controlIt.getFormat() == ControlIt.ControlItFormat.REPEAT) {
+					process = repeats.contains(controlIt);
+					if (!process)
+						repeats.add(controlIt);
+				} else
+					process = false;
+
+				if (process) {
+					controlIt.processParameters(this);
+					this.defaultProcessComplex(controlIt);
+				}
 			}
 
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
-				causes.add(causeIt);
+				if (!causes.contains(causeIt)) {
+					causes.add(causeIt);
 
-				causeIt.processParameters(this);
-				this.defaultProcessComplex(causeIt);
+					causeIt.processParameters(this);
+					this.defaultProcessComplex(causeIt);
+				}
 			}
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				effects.add(scriptIt);
+				if (!effects.contains(scriptIt)) {
+					effects.add(scriptIt);
 
-				scriptIt.processParameters(this);
-				this.defaultProcessComplex(scriptIt);
+					scriptIt.processParameters(this);
+					this.defaultProcessComplex(scriptIt);
+				}
 			}
 
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
-				final SEModel model;
+				if (!descriptions.contains(knowIt)) {
+					final SEModel model;
 
-				model = SEModelManager.getInstance().getActiveModel();
+					model = SEModelManager.getInstance().getActiveModel();
 
-				if (model instanceof StoryModel) {
-					for (LibraryModel library : ((StoryModel) model)
-							.getLibraries()) {
+					if (model instanceof StoryModel) {
+						for (LibraryModel library : ((StoryModel) model)
+								.getLibraries()) {
 
-						if (library.getDescribeIt(knowIt) != null) {
-							descriptions.add(knowIt);
-							break;
+							if (library.getDescribeIt(knowIt) != null) {
+								descriptions.add(knowIt);
+								break;
+							}
 						}
 					}
 				}
@@ -469,20 +475,16 @@ public class MetricsAnalyzer {
 
 			@Override
 			public void processAskIt(AskIt askIt) {
-				questions.add(askIt);
+				if (!questions.contains(askIt)) {
+					questions.add(askIt);
 
-				askIt.getCondition().process(this);
-				this.defaultProcessComplex(askIt);
-			}
-
-			@Override
-			public void processStoryComponentContainer(
-					StoryComponentContainer container) {
-				this.defaultProcessComplex(container);
+					askIt.getCondition().process(this);
+					this.defaultProcessComplex(askIt);
+				}
 			}
 		};
 
-		root.process(adapter);
+		SEModelManager.getInstance().getActiveRoot().process(adapter);
 	}
 
 	/**
@@ -504,5 +506,87 @@ public class MetricsAnalyzer {
 			Integer frequency2 = this.data.get(storyComponent2);
 			return frequency2.compareTo(frequency1);
 		}
+	}
+
+	/**
+	 * Export the .csv file to the user's requested directory.
+	 */
+	public void exportMetrics(File metricsFile) {
+		final Collection<ArrayList<String>> data;
+
+		final String STORY_COMPONENTS = "Story Components";
+		final String FREQUENCY = "Frequency";
+		final String AVERAGE = "Average";
+		final String COMPLEXITY = "Complexity";
+		final String CAUSE_BLOCK = "Cause Block";
+		final String FAVOURITE = "Favourite";
+		final String CAUSES = "Causes";
+		final String EFFECTS = "Effects";
+		final String DESCRIPTIONS = "Descriptions";
+		final String QUESTIONS = "Questions";
+		final String REPEATS = "Repeats";
+		final String DELAYS = "Delays";
+		final String STORY_POINT_COMPLEXITY = "Story Point Complexity";
+
+		data = new ArrayList<ArrayList<String>>();
+
+		processDataToCSV(STORY_COMPONENTS, FREQUENCY,
+				this.getNumStoryComponents(), data);
+
+		processDataToCSV(COMPLEXITY, AVERAGE + " " + FREQUENCY,
+				this.getStoryComponentComplexity(), data);
+
+		processDataToCSV(CAUSE_BLOCK, FREQUENCY, this.getCauseBlockMetrics(),
+				data);
+
+		processDataToCSV(FAVOURITE + " " + CAUSES, FREQUENCY,
+				this.getFavouriteCauses(), data);
+
+		processDataToCSV(FAVOURITE + " " + EFFECTS, FREQUENCY,
+				this.getFavouriteEffects(), data);
+
+		processDataToCSV(FAVOURITE + " " + DESCRIPTIONS, FREQUENCY,
+				this.getFavouriteDescriptions(), data);
+
+		processDataToCSV(FAVOURITE + " " + QUESTIONS, FREQUENCY,
+				this.getFavouriteQuestions(), data);
+
+		processDataToCSV(FAVOURITE + " " + REPEATS, FREQUENCY,
+				this.getFavouriteRepeats(), data);
+
+		processDataToCSV(FAVOURITE + " " + DELAYS, FREQUENCY,
+				this.getFavouriteDelays(), data);
+
+		processDataToCSV(STORY_POINT_COMPLEXITY, FREQUENCY,
+				this.getStoryPointComplexity(), data);
+
+		FileIO.getInstance().saveCSV(data, metricsFile);
+	}
+
+	private void processDataToCSV(String xComponentName, String yComponentName,
+			Map<String, ? extends Number> values,
+			final Collection<ArrayList<String>> data) {
+
+		ArrayList<String> tempRow = new ArrayList<String>();
+
+		tempRow.add(xComponentName);
+		tempRow.add(yComponentName);
+		data.add(tempRow);
+
+		for (Entry<String, ?> entry : values.entrySet()) {
+			tempRow = new ArrayList<String>();
+			tempRow.add(entry.getKey());
+
+			if (entry.getValue() instanceof Float)
+				tempRow.add(Float.toString((Float) entry.getValue()));
+			else if (entry.getValue() instanceof Integer)
+				tempRow.add(Integer.toString((Integer) entry.getValue()));
+
+			data.add(tempRow);
+		}
+
+		tempRow = new ArrayList<String>();
+		tempRow.add("");
+		data.add(tempRow);
 	}
 }
