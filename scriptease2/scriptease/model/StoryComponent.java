@@ -28,9 +28,9 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * 
  * <li><b>Display Text</b> - The displayText is that which is parameterized so
  * that segments of the string can be filled in dynamically, using the parameter
- * bindings. i.e. <blockquote>When &lt;p1&gt; is used by &lt;p2&gt; </blockquote>
- * becomes <blockquote>When <u>Sword of Ungainly Smiting</u> is used by <u>the
- * PC</u></blockquote></li>
+ * bindings. i.e. <blockquote>When &lt;p1&gt; is used by &lt;p2&gt;
+ * </blockquote> becomes <blockquote>When <u>Sword of Ungainly Smiting</u> is
+ * used by <u>the PC</u></blockquote></li>
  * 
  * <li><b>Parameters</b> - A collection of {@link KnowIt}s that are used as
  * parameters for times that this StoryComponent requires extra information for
@@ -274,6 +274,15 @@ public abstract class StoryComponent implements Cloneable {
 		this.observerManager.removeObserver(observer);
 	}
 
+	/**
+	 * Notify observers of this story component that there have been changes
+	 * made to this component.
+	 * 
+	 * @param event
+	 *            The information about the change made to this story component
+	 * 
+	 * @see StoryComponentEvent
+	 */
 	public final void notifyObservers(StoryComponentEvent event) {
 		for (StoryComponentObserver observer : this.observerManager
 				.getObservers())

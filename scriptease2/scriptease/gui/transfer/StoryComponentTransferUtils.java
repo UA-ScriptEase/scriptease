@@ -9,6 +9,9 @@ import java.util.Collection;
 import javax.swing.TransferHandler;
 import javax.swing.TransferHandler.TransferSupport;
 
+import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -200,7 +203,7 @@ public class StoryComponentTransferUtils {
 
 		Component destinationPanel;
 		destinationPanel = support.getComponent();
-		
+
 		// Get the first instance of a StoryComponentPanel if there is one.
 		while (!(destinationPanel instanceof StoryComponentPanel)
 				&& destinationPanel != null) {
@@ -233,8 +236,19 @@ public class StoryComponentTransferUtils {
 
 		// Now we actually add the transfer data
 		for (StoryComponent newChild : components) {
-			StoryComponentTransferUtils.addTransferData(newChild, parent,
-					insertionIndex);
+			final StoryComponent clone = StoryComponentTransferUtils
+					.addTransferData(newChild, parent, insertionIndex);
+
+			if (support.getDropAction() == TransferHandler.MOVE) {
+				newChild.process(new StoryAdapter() {
+					// Notify observers that the component has been moved
+					@Override
+					protected void defaultProcess(StoryComponent component) {
+						component.notifyObservers(new StoryComponentEvent(
+								clone, StoryComponentChangeEnum.CHANGE_MOVED));
+					}
+				});
+			}
 		}
 
 		return true;
@@ -247,8 +261,10 @@ public class StoryComponentTransferUtils {
 	 * @param child
 	 * @param parent
 	 * @param insertionIndex
+	 * 
+	 * @return the clone of the <code>child</code> being transferred
 	 */
-	public static void addTransferData(StoryComponent child,
+	public static StoryComponent addTransferData(StoryComponent child,
 			ComplexStoryComponent parent, int insertionIndex) {
 
 		final StoryComponent clone = child.clone();
@@ -268,6 +284,8 @@ public class StoryComponentTransferUtils {
 			throw new IllegalStateException("Was unable to add " + child
 					+ " to " + parent
 					+ ". This should have been prevented by canImport.");
+
+		return clone;
 	}
 
 	/**
