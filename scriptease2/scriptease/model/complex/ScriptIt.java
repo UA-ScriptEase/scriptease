@@ -253,7 +253,11 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 
 	@Override
 	public void revalidateKnowItBindings() {
-		for (KnowIt parameter : this.getParameters()) {
+		final Collection<KnowIt> parameters;
+		
+		parameters = this.getParameters();
+		
+		for (KnowIt parameter : parameters) {
 			final KnowItBinding binding;
 
 			binding = parameter.getBinding();

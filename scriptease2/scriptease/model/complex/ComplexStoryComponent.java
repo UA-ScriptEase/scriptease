@@ -326,9 +326,9 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	 * @return Whether the receiver could accept <code>potentialChild</code>
 	 */
 	public boolean canAcceptChild(StoryComponent potentialChild) {
-		return this.isValidChild(potentialChild) &&
-				this.roomForMoreOf(potentialChild) &&
-				!this.isDescendantOf(potentialChild);
+		return this.isValidChild(potentialChild)
+				&& this.roomForMoreOf(potentialChild)
+				&& !this.isDescendantOf(potentialChild);
 	}
 
 	private boolean isDescendantOf(StoryComponent potentialChild) {

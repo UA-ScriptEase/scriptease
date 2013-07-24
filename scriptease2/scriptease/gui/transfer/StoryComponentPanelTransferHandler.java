@@ -264,9 +264,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	}
 
 	/**
-	 * The case where causes, effects, descriptions, and controls are being dragged over
-	 * other components in a block. It seems more natural for them to go to the
-	 * parent block instead of denying the User this option.
+	 * The case where causes, effects, descriptions, and controls are being
+	 * dragged over other components in a block. It seems more natural for them
+	 * to go to the parent block instead of denying the User this option.
 	 * 
 	 * @param support
 	 * @return
@@ -306,6 +306,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	public boolean importData(TransferSupport support) {
 		final Component supportComponent = support.getComponent();
 
+		// Safety check. This is more than likely being called twice with ever
+		// transfer, but we don't want someone accidently calling importData
+		// without checking canImport first.
 		if (!this.canImport(support))
 			return false;
 

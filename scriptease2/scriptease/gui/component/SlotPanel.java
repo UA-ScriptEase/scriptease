@@ -54,13 +54,17 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 		this.knowIt = knowIt;
 		this.isNameEditable = isNameEditable;
+		this.bindingWidget = this.buildBindingWidget(this.knowIt);
 
 		// Set a border of 2 pixels around the slot.
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
 
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
-		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-
+		// this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		this.setBorder(BorderFactory.createLineBorder(
+				GUIOp.scaleColour(this.bindingWidget.getBackground(), 0.8), 1));
+		this.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
+				GUIOp.scaleColour(this.bindingWidget.getBackground(), 0.8)));
 		this.populate();
 
 		this.setEnabled(true);
@@ -71,6 +75,8 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 		// Set the layout for this panel.
 		final JPanel typesPanel;
 
+		this.bindingWidget = this.buildBindingWidget(this.knowIt);
+
 		// Set the layout for the types panel.
 		typesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
@@ -78,8 +84,6 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 		this.add(ScriptWidgetFactory.populateLegalTypesPanel(typesPanel,
 				this.knowIt));
-
-		this.bindingWidget = this.buildBindingWidget(this.knowIt);
 
 		this.add(this.bindingWidget);
 
@@ -207,23 +211,12 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 		if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 			this.bindingWidget.getBinding().process(new BindingAdapter() {
 				@Override
-				public void processResource(KnowItBindingResource constant) {
-					/*
-					 * We need this listener because the slot panel does not
-					 * otherwise get updated if we do a group binding. This
-					 * ensures that the slot panel is updated.
-					 */
-					if (!(constant.getValue() instanceof SimpleResource)) {
-						this.defaultProcess(constant);
-					}
-				}
-
-				@Override
 				protected void defaultProcess(KnowItBinding binding) {
 					SlotPanel.this.removeAll();
 					SlotPanel.this.populate();
 				}
 			});
+
 			this.repaint();
 			this.revalidate();
 		}

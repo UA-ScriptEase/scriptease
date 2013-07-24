@@ -27,6 +27,7 @@ import scriptease.model.semodel.SEModelManager;
  */
 @SuppressWarnings("serial")
 public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
+
 	// Singleton instance of the TransferHandler.
 	private static final SlotPanelTransferHandler instance = new SlotPanelTransferHandler();
 
@@ -72,11 +73,11 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 	public boolean canImport(TransferHandler.TransferSupport support) {
 		boolean canImport = false;
 
+		final Component destinationComponent = support.getComponent();
+
 		// Check the destination.
 		// If the destination component is a SlotPanel, and the Transferable
 		// is a SlotPanelTransferable.
-		final Component destinationComponent = support.getComponent();
-
 		if (destinationComponent instanceof SlotPanel
 				&& support
 						.isDataFlavorSupported(BindingWidgetTransferHandler.KnowItBindingFlavor)) {
@@ -158,6 +159,7 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Set Binding " + sourceBinding);
+				
 				if (BindingWidgetTransferHandler.lastDragShiftDown)
 					setGroupBindings(sourceBinding, destinationKnowIt, binding);
 				destinationKnowIt.setBinding(sourceBinding);
