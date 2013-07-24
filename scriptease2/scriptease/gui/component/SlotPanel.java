@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -38,6 +40,7 @@ import scriptease.util.GUIOp;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class SlotPanel extends JPanel implements StoryComponentObserver {
@@ -53,17 +56,9 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 		this.knowIt = knowIt;
 		this.isNameEditable = isNameEditable;
-		this.bindingWidget = this.buildBindingWidget(this.knowIt);
 
 		// Set a border of 2 pixels around the slot.
-		this.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
-
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
-		// this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		this.setBorder(BorderFactory.createLineBorder(
-				GUIOp.scaleColour(this.bindingWidget.getBackground(), 0.8), 1));
-		this.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
-				GUIOp.scaleColour(this.bindingWidget.getBackground(), 0.8)));
 		this.populate();
 
 		this.setEnabled(true);
@@ -73,6 +68,7 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 	public void populate() {
 		// Set the layout for this panel.
 		final JPanel typesPanel;
+		final KnowItBinding binding = this.knowIt.getBinding();
 
 		this.bindingWidget = this.buildBindingWidget(this.knowIt);
 
@@ -86,8 +82,34 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 		this.add(this.bindingWidget);
 
+		this.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
+				GUIOp.scaleColour(this.bindingWidget.getBackground(), 0.8)));
+
 		this.setBackground(GUIOp.scaleColour(
 				this.bindingWidget.getBackground(), 0.95));
+
+		// Set a tool tip for users in case they don't know what to drag in.
+		if (binding instanceof KnowItBindingNull) {
+			final List<String> types;
+
+			types = new ArrayList<String>();
+
+			types.addAll(knowIt.getTypes());
+
+			String tooltipTypes = "";
+			if (types.size() > 1) {
+				for (String type : types)
+					tooltipTypes += type += ", or ";
+
+				// Remove last ", or ".
+				tooltipTypes = tooltipTypes.substring(0,
+						tooltipTypes.length() - 5);
+			} else
+				tooltipTypes = types.get(0);
+			
+			this.setToolTipText("Drag a binding of type " + tooltipTypes
+					+ " in here!");
+		}
 	}
 
 	private BindingWidget buildBindingWidget(final KnowIt knowIt) {
