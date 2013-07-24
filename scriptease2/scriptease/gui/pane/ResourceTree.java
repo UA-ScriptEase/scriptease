@@ -548,33 +548,33 @@ class ResourceTree extends JPanel {
 
 			gameObjectBindingWidget.add(nameLabel);
 
-			panel.add(Box.createHorizontalStrut(STRUT_SIZE));
+			resourcePanel.add(Box.createHorizontalStrut(STRUT_SIZE));
 
 			if (resource.getChildren().size() > 0) {
-				final ExpansionButton button;
+				final ExpansionButton expansionButton;
 
-				button = ScriptWidgetFactory.buildExpansionButton(true);
+				expansionButton = ScriptWidgetFactory
+						.buildExpansionButton(true);
 
-				button.addActionListener(new ActionListener() {
+				expansionButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						final boolean isVisible = childPanel.isVisible();
-						button.setCollapsed(isVisible);
+						expansionButton.setCollapsed(isVisible);
 						childPanel.setVisible(!isVisible);
 					}
 				});
 
-				resourcePanel.add(button);
+				resourcePanel.add(expansionButton);
 			} else
 				resourcePanel.add(Box.createRigidArea(new Dimension(10, 0)));
 
-			if (resourceOwnerName != null && !resourceOwnerName.isEmpty()) {
+			// Add the owner label
+			if (StringOp.exists(resourceOwnerName)) {
 				final Color LINE_COLOR_1 = Color.red;
 				final Color LINE_COLOR_2 = Color.blue;
 
-				final JLabel prefixLabel;
-
-				prefixLabel = new JLabel();
+				final JLabel prefixLabel = new JLabel();
 
 				prefixLabel.setOpaque(true);
 				prefixLabel.setBackground(Color.LIGHT_GRAY);
@@ -586,7 +586,7 @@ class ResourceTree extends JPanel {
 					prefixLabel.setForeground(LINE_COLOR_1);
 				}
 
-				panel.add(prefixLabel);
+				resourcePanel.add(prefixLabel);
 			}
 
 			resourcePanel.add(gameObjectBindingWidget);
