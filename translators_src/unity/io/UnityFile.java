@@ -44,7 +44,6 @@ public class UnityFile extends Resource {
 		parser.setName("Unity Scene YAML Parser");
 	}
 
-	private final BufferedReader reader;
 	private final File location;
 	private final String filename;
 
@@ -107,7 +106,6 @@ public class UnityFile extends Resource {
 			throw new FileNotFoundException("Unity file "
 					+ location.getAbsolutePath() + " went missing!");
 
-		this.reader = new BufferedReader(new FileReader(location));
 		this.visibleChildren = new ArrayList<Resource>();
 		this.unityResources = new ArrayList<UnityResource>();
 		this.types = types;
@@ -144,6 +142,10 @@ public class UnityFile extends Resource {
 	 */
 	protected boolean read(Map<String, File> guidsToMetaFiles)
 			throws IOException {
+		final BufferedReader reader;
+
+		reader = new BufferedReader(new FileReader(location));
+
 		// First check if the first line is a valid Unity YAML header
 		String line;
 		while ((line = reader.readLine()) != null) {
@@ -157,6 +159,7 @@ public class UnityFile extends Resource {
 		if (line == null || !line.equals(YAML_HEADER)) {
 			System.err
 					.println("Could not read .unity file at " + this.location);
+			reader.close();
 			return false;
 		}
 
@@ -310,7 +313,8 @@ public class UnityFile extends Resource {
 				}
 			}
 		}
-
+		
+		reader.close();
 		return true;
 	}
 
@@ -405,7 +409,6 @@ public class UnityFile extends Resource {
 	 *             if there is a problem closing either stream.
 	 */
 	public void close() throws IOException {
-		this.reader.close();
 	}
 
 	/**

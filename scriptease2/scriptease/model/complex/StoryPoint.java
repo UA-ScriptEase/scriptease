@@ -2,9 +2,11 @@ package scriptease.model.complex;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -198,11 +200,10 @@ public class StoryPoint extends ComplexStoryComponent {
 
 	/**
 	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
+	 * This is much slower than {@link #getDescendants()}, so it should be used
+	 * sparingly.
 	 * 
 	 * @return
-	 * @deprecated This is much slower than {@link #getDescendants()}. We want
-	 *             to use that instead. There shouldn't be a case where we need
-	 *             to use this method anymore.
 	 */
 	public List<StoryPoint> getOrderedDescendants() {
 		final List<StoryPoint> descendants = new ArrayList<StoryPoint>();
@@ -231,44 +232,47 @@ public class StoryPoint extends ComplexStoryComponent {
 		descendants.add(this);
 
 		for (StoryPoint successor : this.successors) {
-			descendants.addAll(successor.getDescendants());
+			if (!descendants.contains(successor))
+				descendants.addAll(successor.getDescendants());
 		}
 
 		return descendants;
 	}
 
 	/**
-	 * Gets the longest path from the current StoryPoint, including the
-	 * StoryPoint itself. Calculated using the longest acyclic path in DAG
-	 * algorithm.
+	 * Gets a mapping of the depth of each StoryPoint. The depth corresponds to
+	 * the longest path it will take to get to the Story Point. This is very
+	 * computationally expensive, so it should not be used too often.
 	 * 
 	 * @return
 	 */
-	public int getLongestPath() {
-		final List<StoryPoint> descendents = this.getOrderedDescendants();
+	public final Map<StoryPoint, Integer> createDepthMap() {
+		final Map<StoryPoint, Integer> depthMap = new IdentityHashMap<StoryPoint, Integer>();
 
-		// Initialize an array of 0 of size equivalent to the number of
-		// descendents
-		final List<Integer> lengths;
-		lengths = new ArrayList<Integer>(Collections.nCopies(
-				descendents.size(), 0));
+		// Goes through every child of the node
+		for (StoryPoint child : this.getSuccessors()) {
+			// Gets the depth map of every child
+			final Map<StoryPoint, Integer> childDepthMap = child
+					.createDepthMap();
 
-		for (StoryPoint storypoint : descendents) {
-			final Collection<StoryPoint> successors;
+			for (Entry<StoryPoint, Integer> entry : childDepthMap.entrySet()) {
+				final StoryPoint childNode = entry.getKey();
+				final Integer depth = entry.getValue() + 1;
 
-			successors = storypoint.getSuccessors();
-
-			for (StoryPoint successor : successors) {
-
-				int length = lengths.get(descendents.indexOf(storypoint)) + 1;
-
-				if (lengths.get(descendents.indexOf(successor)) <= length) {
-					lengths.set(descendents.indexOf(successor), length);
-				}
+				// If the node is already in the depthMap and the new depth is
+				// greater, use the greater depth value.
+				if (depthMap.containsKey(childNode)) {
+					if (depth > depthMap.get(childNode))
+						depthMap.put(childNode, depth);
+				} else
+					depthMap.put(childNode, depth);
 			}
 		}
 
-		return Collections.max(lengths) + 1;
+		if (!depthMap.containsKey(this))
+			depthMap.put(this, 0);
+
+		return depthMap;
 	}
 
 	/**

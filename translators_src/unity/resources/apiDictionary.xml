@@ -2176,7 +2176,7 @@
                 <Line>
                   <Literal>var parentName:String;</Literal>
                 </Line>
-                <Series data="orderedStoryPoints" unique="true">
+                <Series data="storyPoints" unique="true">
                   <Line>
                     <Literal>parentName = </Literal>
                     <Fragment data="formattedValue"/>

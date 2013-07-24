@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.util.Collection;
 
 import javax.swing.JPanel;
@@ -81,6 +82,10 @@ public class DescribeItPanel extends JPanel {
 		} else
 			this.expansionButton.setVisible(false);
 
+		this.describeItGraph.addMouseListener(new MouseAdapter() {
+			// Do nothing except eat up the transfer handler events
+		});
+
 		this.add(this.describeItGraph);
 		this.add(this.scriptItPanel);
 	}
@@ -106,8 +111,8 @@ public class DescribeItPanel extends JPanel {
 					resolvedScriptIt = describeIt
 							.getScriptItForPath(describeItGraph
 									.getSelectedNodes());
-					
-					if(resolvedScriptIt == null)
+
+					if (resolvedScriptIt == null)
 						System.out.println("It's null.");
 
 					bindingIf: if (resolvedScriptIt != null) {

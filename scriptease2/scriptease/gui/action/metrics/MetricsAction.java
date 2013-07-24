@@ -4,6 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.Action;
 import javax.swing.BoxLayout;
@@ -11,9 +12,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.controller.MetricsAnalyzer;
-import scriptease.controller.MetricsExporter;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.MetricsPanel;
@@ -63,7 +64,7 @@ public class MetricsAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent arg0) {
 		MetricsAnalyzer.getInstance().processStoryComponents();
 
-		createDialogPane();
+		this.createDialogPane();
 	}
 
 	private void createDialogPane() {
@@ -95,7 +96,13 @@ public class MetricsAction extends ActiveModelSensitiveAction {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				MetricsExporter.getInstance().exportMetrics();
+				final File metricsFile;
+
+				metricsFile = WindowFactory.getInstance().showFileChooser(
+						"Save", "story_metrics.csv",
+						new FileNameExtensionFilter("csv", "csv"));
+
+				MetricsAnalyzer.getInstance().exportMetrics(metricsFile);
 			}
 		});
 

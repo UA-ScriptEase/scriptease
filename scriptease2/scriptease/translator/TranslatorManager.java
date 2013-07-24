@@ -72,19 +72,28 @@ public class TranslatorManager {
 		observer = new SEModelObserver() {
 			@Override
 			public void modelChanged(SEModelEvent event) {
-				final SEModelEvent.Type eventType = event.getEventType();
 				final SEModel model = event.getPatternModel();
-				Translator translator = (model == null ? null : model
-						.getTranslator());
 
-				if (eventType == SEModelEvent.Type.ACTIVATED) {
-					if (TranslatorManager.this.activeTranslator != translator) {
-						TranslatorManager.this.setActiveTranslator(translator);
-					}
-				} else if (eventType == SEModelEvent.Type.REMOVED) {
-					if (!SEModelManager.getInstance().usingTranslator(
-							translator)) {
-						TranslatorManager.this.setActiveTranslator(null);
+				if (model != null) {
+					final TranslatorManager manager = TranslatorManager.this;
+					final SEModelEvent.Type eventType = event.getEventType();
+					final Translator translator = model.getTranslator();
+					final Translator active = manager.activeTranslator;
+
+					if (eventType == SEModelEvent.Type.ACTIVATED) {
+						// A model is activated with a different translator
+						if (translator != active) {
+							manager.setActiveTranslator(translator);
+						}
+					} else if (eventType == SEModelEvent.Type.REMOVED) {
+						final SEModelManager modelManager;
+
+						modelManager = SEModelManager.getInstance();
+						// A model is removed and it's translators aren't used
+						if (!modelManager.usingTranslator(translator)
+								&& !modelManager.hasActiveModel()) {
+							manager.setActiveTranslator(null);
+						}
 					}
 				}
 			}
@@ -312,14 +321,14 @@ public class TranslatorManager {
 		}
 
 		return null;
-	}
+	} 
 
 	public void setActiveTranslator(Translator translator) {
 		if (this.activeTranslator == translator)
 			return;
 		this.activeTranslator = translator;
 
-		final String message = translator + " actived.";
+		final String message = translator + " activated.";
 
 		StatusManager.getInstance().setTemp(message);
 

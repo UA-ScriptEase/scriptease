@@ -92,11 +92,11 @@ public class MetricsPanel extends JPanel {
 		values = metrics.getStoryPointComplexity();
 
 		// Create the Histogram
-		histogram = createHistogram("StoryPoint Complexity", "", FREQUENCY,
-				values, true);
+		histogram = this.createHistogram("StoryPoint Complexity", "",
+				FREQUENCY, values, true);
 
 		// Create the Pie Chart
-		pieChart = createPieChart("StoryPoint Complexity", values);
+		pieChart = this.createPieChart("StoryPoint Complexity", values);
 
 		chartManager = new ChartManager(histogram, pieChart);
 

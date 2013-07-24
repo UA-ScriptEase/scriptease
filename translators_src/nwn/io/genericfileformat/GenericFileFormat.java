@@ -1852,9 +1852,7 @@ public class GenericFileFormat {
 	}
 
 	public void removeScriptEaseReferences() {
-		GffStruct gitFileStruct = this.getTopLevelStruct();
-
-		gitFileStruct.removeScriptEaseReferences();
+		this.getTopLevelStruct().removeScriptEaseReferences();
 	}
 
 	/**
@@ -1890,20 +1888,13 @@ public class GenericFileFormat {
 				continue;
 			}
 
-			// List of all (e.g.) creature structs in creature list.
-			List<GffStruct> instances = gitFileField.getListData();
-
-			// Parses the individual creatures from the list.
-			for (GffStruct instance : instances) {
-
-				List<GffField> instanceFields = instance.getGffFields();
-
+			// Parses all individual (e.g.) creatures structs.
+			for (GffStruct instance : gitFileField.getListData()) {
 				boolean shouldUpdate = false;
 				GffField toUpdate = null;
-
 				// Search the individual creature fields to see if this is an
 				// instance to update and to find the field to edit.
-				for (GffField instanceField : instanceFields) {
+				for (GffField instanceField : instance.getGffFields()) {
 					// Checks if the field equals TemplateResRef. This means the
 					// individualFieldStruct creature is the same as the
 					// individualFieldStructField creature.
