@@ -26,9 +26,9 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * <br>
  * <ol>
  * 
- * <li><b>Display Text</b> - The displayText is that which is parameterised so
+ * <li><b>Display Text</b> - The displayText is that which is parameterized so
  * that segments of the string can be filled in dynamically, using the parameter
- * bindings. ie <blockquote>When &lt;p1&gt; is used by &lt;p2&gt; </blockquote>
+ * bindings. i.e. <blockquote>When &lt;p1&gt; is used by &lt;p2&gt; </blockquote>
  * becomes <blockquote>When <u>Sword of Ungainly Smiting</u> is used by <u>the
  * PC</u></blockquote></li>
  * 
@@ -74,14 +74,14 @@ public abstract class StoryComponent implements Cloneable {
 	}
 
 	/**
-	 * Initialises the instance variables in an AbstractStoryComponent. If the
-	 * instance variables were already initialised, then the old values will be
+	 * Initializes the instance variables in an AbstractStoryComponent. If the
+	 * instance variables were already initialized, then the old values will be
 	 * lost. Subclasses that introduce new non-<code>StoryComponent</code>
-	 * instance variables should initialise them in this method.<br>
+	 * instance variables should initialize them in this method.<br>
 	 * <br>
 	 * This should be called only when creating new story components. <br>
 	 * <br>
-	 * Normally, instance variables should initialised in constructors. However,
+	 * Normally, instance variables should initialized in constructors. However,
 	 * we require deep cloning (cloning where the instance variables are also
 	 * cloned). This method allows us to init a clone to use new instances of
 	 * its instance variables in the exact same way that constructors do.
@@ -116,7 +116,7 @@ public abstract class StoryComponent implements Cloneable {
 	 * <b>Do not</b> use this method to <b>add</b> a child! It is
 	 * <b>critical</b> that child additions are done via
 	 * parent.addStoryChild(this) instead for consistency. Ideally this method
-	 * would be <b>protected</b>, but because of Java's stupid package heiarchy
+	 * would be <b>protected</b>, but because of Java's stupid package hierarchy
 	 * decisions it must be public.<BR>
 	 * <BR>
 	 * 
@@ -147,7 +147,7 @@ public abstract class StoryComponent implements Cloneable {
 	/**
 	 * Gets the display text stored for this <code>StoryComponent</code>.
 	 * 
-	 * @return The parameterised display text string.
+	 * @return The parameterized display text string.
 	 */
 	public String getDisplayText() {
 		return this.displayText;
@@ -222,7 +222,7 @@ public abstract class StoryComponent implements Cloneable {
 	 * Sets the display text to the new string.
 	 * 
 	 * @param newDisplayText
-	 *            The parameterised string to use as the new display text.
+	 *            The parameterized string to use as the new display text.
 	 */
 	public void setDisplayText(String newDisplayText) {
 		this.displayText = newDisplayText;

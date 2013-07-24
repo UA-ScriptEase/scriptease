@@ -278,7 +278,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				}
 				this.defaultProcess(nullBinding);
 			}
-
+			
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				defaultProcess(function);
@@ -288,7 +288,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				addObservers(doIt);
 				addParameterObservers(doIt);
 			}
-
+			
 			@Override
 			public void processReference(KnowItBindingReference reference) {
 				defaultProcess(reference);
@@ -499,6 +499,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		} else {
 			// Forward reference updates to this KnowIt's observers
 			this.knowItBinding.process(new BindingAdapter() {
+				
 				@Override
 				public void processReference(KnowItBindingReference reference) {
 					KnowIt.this.notifyObservers(event);

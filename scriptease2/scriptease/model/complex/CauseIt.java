@@ -174,7 +174,7 @@ public class CauseIt extends ScriptIt {
 
 	/**
 	 * Returns whether the two causes are equivalent. That is, whether they have
-	 * the same display text and the same bindings. If one of these ScriptIts is
+	 * the same display text and the same bindings. If one of these CauseIts is
 	 * not a cause, this returns false.
 	 * 
 	 * @param cause
