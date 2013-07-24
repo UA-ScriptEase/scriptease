@@ -278,7 +278,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				}
 				this.defaultProcess(nullBinding);
 			}
-			
+
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				defaultProcess(function);
@@ -288,7 +288,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				addObservers(doIt);
 				addParameterObservers(doIt);
 			}
-			
+
 			@Override
 			public void processReference(KnowItBindingReference reference) {
 				defaultProcess(reference);
@@ -493,13 +493,22 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	@Override
 	public void componentChanged(final StoryComponentEvent event) {
 		final StoryComponentChangeEnum type = event.getType();
-		// If the reference has been removed, unbind
-		if (type == StoryComponentChangeEnum.CHANGE_REMOVED) {
+
+		if (type == StoryComponentChangeEnum.CHANGE_MOVED) {
+			// If the reference has been moved, bind it to this new binding
+			if (event.getSource() instanceof KnowIt) {
+				final KnowIt knowIt = (KnowIt) event.getSource();
+				this.setBinding(knowIt);
+			}
+
+		} else if (type == StoryComponentChangeEnum.CHANGE_REMOVED) {
+			// If the reference has been removed, unbind
 			this.clearBinding();
+
 		} else {
 			// Forward reference updates to this KnowIt's observers
 			this.knowItBinding.process(new BindingAdapter() {
-				
+
 				@Override
 				public void processReference(KnowItBindingReference reference) {
 					KnowIt.this.notifyObservers(event);

@@ -20,6 +20,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.TransferHandler;
 
+import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
@@ -351,6 +354,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			// Now we actually add the transfer data
 			for (StoryComponent newChild : transferData) {
+				final StoryComponent clone;
 
 				// We want to transfer all the story component's children
 				// instead if the newChild is a StoryComponentContainer.
@@ -365,16 +369,46 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					// backwards so we reverse them.
 					Collections.reverse(children);
 
-					for (StoryComponent child : children)
-						StoryComponentTransferUtils.addTransferData(child,
-								(ComplexStoryComponent) parent, insertionIndex);
+					for (StoryComponent child : children) {
+						final StoryComponent copy;
 
+						copy = StoryComponentTransferUtils.addTransferData(
+								child, (ComplexStoryComponent) parent,
+								insertionIndex);
+
+							child.process(new StoryAdapter() {
+								// Notify observers that the component has been
+								// moved
+								@Override
+								protected void defaultProcess(
+										StoryComponent component) {
+									component
+											.notifyObservers(new StoryComponentEvent(
+													copy,
+													StoryComponentChangeEnum.CHANGE_MOVED));
+								}
+							});
+					}
 				}
 
 				// Handles the usual case.
 				else if (this.canImportAsChild(support)) {
-					StoryComponentTransferUtils.addTransferData(newChild,
-							(ComplexStoryComponent) parent, insertionIndex);
+					clone = StoryComponentTransferUtils.addTransferData(
+							newChild, (ComplexStoryComponent) parent,
+							insertionIndex);
+
+						newChild.process(new StoryAdapter() {
+							// Notify observers that the component has been
+							// moved
+							@Override
+							protected void defaultProcess(
+									StoryComponent component) {
+								component
+										.notifyObservers(new StoryComponentEvent(
+												clone,
+												StoryComponentChangeEnum.CHANGE_MOVED));
+							}
+						});
 				}
 
 				// Handle the case where Effects, Descriptions, or Controls
