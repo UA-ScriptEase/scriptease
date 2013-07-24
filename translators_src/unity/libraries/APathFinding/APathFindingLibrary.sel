@@ -1,6 +1,6 @@
 <LibraryModel name="A* Pathfinding Library" author="ScriptEase Team">
   <IncludeFiles>
-  	<IncludeFile>SEPath.js</IncludeFile>
+    <IncludeFile>SEPath.js</IncludeFile>
   </IncludeFiles>
   <Types/>
   <Slots defaultFormat="SECause">
@@ -120,11 +120,20 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEPath.GetPath(</Literal>
+              <Literal>var sePath : SEPath = SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).target = </Literal>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>sePath.canMove = true;</Literal>
+            </Line>
+            <Line>
+              <Literal>sePath.canSearch = true;</Literal>
+            </Line>
+            <Line>
+              <Literal>sePath.target = </Literal>
               <Scope data="ARGUMENT" ref="Target">
                 <Fragment data="NAME"/>
               </Scope>
@@ -167,6 +176,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -225,7 +238,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Object&gt; reaches its target when it is &lt;Percent&gt; percent of the new target distance away from the current target</Name>
+      <Name>&lt;Object&gt; reaches its target when it is &lt;Unit&gt; units away from the target</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -234,7 +247,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Object&gt; reaches its target when it is &lt;Percent&gt; percent of the new target distance away from the current target</Name>
+          <Name>&lt;Object&gt; reaches its target when it is &lt;Unit&gt; units away from the target</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>6</Id>
@@ -251,12 +264,16 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Percent</Name>
+              <Name>Unit</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -266,10 +283,10 @@
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>).endReachedDistance = </Literal>
-              <Scope data="ARGUMENT" ref="Percent">
+              <Scope data="ARGUMENT" ref="Unit">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>*0.01;</Literal>
+              <Literal>;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -308,6 +325,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -359,6 +380,10 @@
               <Types>
                 <Type>AllowDisallow</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>AllowDisallow</Type>
+                <Value>true</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -410,6 +435,10 @@
               <Types>
                 <Type>AllowDisallow</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>AllowDisallow</Type>
+                <Value>true</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -461,6 +490,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -480,7 +513,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; units from target</Name>
+      <Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; units away from the target</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>NOW</Label>
@@ -489,7 +522,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; units from target</Name>
+          <Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; units away from the target</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>11</Id>
@@ -512,6 +545,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -563,6 +600,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -998,16 +1039,6 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[17]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
     <ScriptIt>
       <Name>&lt;Object&gt; looks forward &lt;Distance&gt; units for a path</Name>
       <Visible>true</Visible>
@@ -1039,6 +1070,10 @@
               <Types>
                 <Type>float</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -1095,26 +1130,19 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[17]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
   </Effects>
   <DescribeIts>
-    <DescribeIt>
-      <Name>Turn Speed</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
     <DescribeIt>
       <Name>Look Distance</Name>
       <Types>
@@ -1127,16 +1155,16 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[33]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[23]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Target</Name>
+      <Name>Target Reached</Name>
       <Types>
-        <Type>GameObject</Type>
+        <Type>question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1145,14 +1173,14 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Switch Target Distance</Name>
+      <Name>Find Path Rate</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -1163,9 +1191,27 @@
       <PathMap>
         <Entry>
           <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Can Move</Name>
+      <Types>
+        <Type>question</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[4]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -1188,7 +1234,7 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Slow Down Distance</Name>
+      <Name>Switch Target Distance</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -1201,48 +1247,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[6]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[17]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Can Move</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[21]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Target Reached</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Find Path Rate</Name>
+      <Name>Turn Speed</Name>
       <Types>
         <Type>float</Type>
       </Types>
@@ -1253,9 +1263,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -1271,7 +1281,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
         </Entry>
@@ -1289,9 +1299,45 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Slow Down Distance</Name>
+      <Types>
+        <Type>float</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[10]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[17]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Target</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
