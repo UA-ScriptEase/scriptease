@@ -120,19 +120,20 @@ public final class ErfFile extends GameModule {
 	 * @param scriptIt
 	 */
 	private void addJournalCategory(final ScriptIt scriptIt) {
+		final GeneratedJournalGFF journalGFF = this.getJournalGFF();
+
 		final GeneratedJournalGFF journal;
 
-		if (this.getJournalGFF() == null) {
-			final ErfKey erfKey;
+		if (journalGFF == null) {
 			final NWNResource resource;
 
 			journal = new GeneratedJournalGFF(scriptIt);
-			erfKey = new ErfKey(journal.getResRef(), ErfKey.JOURNAL_FILE_TYPE);
-			resource = new NWNResource(erfKey, journal);
+			resource = new NWNResource(journal.getResRef(),
+					ErfKey.JOURNAL_FILE_TYPE, journal);
 
 			ErfFile.this.resources.add(resource);
 		} else {
-			journal = this.getJournalGFF();
+			journal = journalGFF;
 			journal.addCategory(scriptIt);
 		}
 
@@ -180,20 +181,17 @@ public final class ErfFile extends GameModule {
 		journals = new ArrayList<GeneratedJournalGFF>();
 
 		for (NWNResource resource : this.resources) {
-			if (resource.isGFF()) {
+			if (resource.isJournalGFF()) {
 				final GenericFileFormat gff;
 
 				gff = resource.getGFF();
 
-				if (gff.getFileType().trim()
-						.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP))
-					if (gff instanceof GeneratedJournalGFF) {
-						journals.add((GeneratedJournalGFF) gff);
-					} else
-						throw new IllegalArgumentException(
-								"Journal resource for non-"
-										+ "GeneratedJournalGFF journal "
-										+ "found.");
+				if (gff instanceof GeneratedJournalGFF) {
+					journals.add((GeneratedJournalGFF) gff);
+				} else
+					throw new IllegalArgumentException(
+							"Journal resource for non-"
+									+ "GeneratedJournalGFF journal " + "found.");
 			}
 		}
 
@@ -263,30 +261,15 @@ public final class ErfFile extends GameModule {
 
 		// create NWNResources for each ErfKey/ResourceListElement pair
 		for (int index = 0; index < entryCount; index++) {
-			NWNResource resource = new NWNResource(keys.get(index),
+			final NWNResource resource;
+
+			resource = new NWNResource(keys.get(index),
 					elementIndexes.get(index), this.fileAccess);
 
-			this.resources.add(resource);
+			// We don't include Journals.
+			if (!resource.isJournalGFF())
+				this.resources.add(resource);
 		}
-
-		final Collection<NWNResource> journalResources;
-
-		journalResources = new ArrayList<NWNResource>();
-
-		// Remove any journals that may have been created.
-		for (NWNResource resource : this.resources) {
-			if (resource.isGFF()) {
-				final GenericFileFormat gff;
-
-				gff = resource.getGFF();
-
-				if (gff.getFileType().trim()
-						.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP)) {
-					journalResources.add(resource);
-				}
-			}
-		}
-		this.resources.removeAll(journalResources);
 
 		// get rid of old scriptease-generated stuff from last save.
 		this.removeScriptEaseData();
@@ -541,16 +524,19 @@ public final class ErfFile extends GameModule {
 							+ "\" is not a GFF file.");
 		}
 
-		GenericFileFormat blueprintGFF = receiverResource.getGFF();
-		GenericFileFormat gff;
+		final GenericFileFormat blueprintGFF = receiverResource.getGFF();
 
 		blueprintGFF.setField(index, scriptInfo.getSlot(), scriptResRef);
 
+		// Update All Instances of the blueprint in the Areas it exists in if it
+		// allows it. Same as doing it in the toolset.
 		if (!blueprintGFF.isInstanceUpdatable()) {
 			for (NWNResource resource : this.resources) {
 				if (!resource.isGFF()) {
 					continue;
 				}
+
+				final GenericFileFormat gff;
 
 				gff = resource.getGFF();
 
@@ -590,6 +576,7 @@ public final class ErfFile extends GameModule {
 	@Override
 	public void close() throws IOException {
 		this.fileAccess.close();
+		
 	}
 
 	@Override
@@ -975,25 +962,25 @@ public final class ErfFile extends GameModule {
 
 	@Override
 	public String getAudioType() {
-		// TODO Auto-generated method stub
+		// We also don't have Audio in NWN.
 		return null;
 	}
 
 	@Override
 	public String getDialogueLineType() {
-		// TODO Auto-generated method stub
+		// TODO This will be required for the dialogue builder.
 		return null;
 	}
 
 	@Override
 	public String getDialogueType() {
-		// TODO Auto-generated method stub
+		// TODO This will be required for the dialogue builder.
 		return null;
 	}
 
 	@Override
 	public String getQuestionType() {
-		// TODO Auto-generated method stub
+		// TODO We don't use this yet. Once we do, we'll have to implement it.
 		return null;
 	}
 }
