@@ -87,7 +87,7 @@
       <Name>&lt;Object&gt; walks a path to &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -147,7 +147,7 @@
       <Name>&lt;Object&gt; walks at a speed of &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -202,7 +202,7 @@
       <Name>&lt;Object&gt; attempts to find its path again</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -241,7 +241,7 @@
       <Name>&lt;Object&gt; reaches its target when it is &lt;Unit&gt; units away from the target</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -296,7 +296,7 @@
       <Name>&lt;Object&gt; looks for a new path to its target at a rate of &lt;Rate&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -351,7 +351,7 @@
       <Name>&lt;Allow&gt; &lt;Object&gt; to look for a new path to its target</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -406,7 +406,7 @@
       <Name>&lt;Allow&gt; &lt;Object&gt; to move to its target</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -461,7 +461,7 @@
       <Name>&lt;Object&gt; turns at a speed of &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -516,7 +516,7 @@
       <Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; units away from the target</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -571,7 +571,7 @@
       <Name>&lt;Object&gt; switches to a new target when it is &lt;Distance&gt; units from its current target</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -702,7 +702,7 @@
       <Name>&lt;Object&gt; loses its target</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -1043,7 +1043,7 @@
       <Name>&lt;Object&gt; looks forward &lt;Distance&gt; units for a path</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label>NOW</Label>
+        <Label></Label>
         <Label>A*</Label>
       </Labels>
       <Children/>
