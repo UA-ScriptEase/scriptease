@@ -245,14 +245,11 @@ public class LibraryEditorPanelFactory {
 						labels.add(label.trim());
 					}
 
-					final Collection<String> oldLabels = component.getLabels();
-					if (!oldLabels.containsAll(labels)) {
-						UndoManager.getInstance().startUndoableAction(
-								"Setting " + component + "'s labels to "
-										+ labelFieldText);
-						component.setLabels(labels);
-						UndoManager.getInstance().endUndoableAction();
-					}
+					UndoManager.getInstance().startUndoableAction(
+							"Setting " + component + "'s labels to "
+									+ labelFieldText);
+					component.setLabels(labels);
+					UndoManager.getInstance().endUndoableAction();
 				}
 			}
 		};
