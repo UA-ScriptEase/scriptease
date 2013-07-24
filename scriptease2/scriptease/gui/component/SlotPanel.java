@@ -8,7 +8,6 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.MouseForwardingAdapter;
