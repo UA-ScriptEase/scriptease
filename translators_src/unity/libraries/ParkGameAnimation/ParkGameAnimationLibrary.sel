@@ -39,7 +39,7 @@
       <Name>Play nod head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -76,7 +76,7 @@
       <Name>Play run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -136,7 +136,7 @@
       <Name>&lt;Play&gt; sit animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -189,7 +189,7 @@
       <Name>&lt;Play&gt; wave animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -242,7 +242,7 @@
       <Name>Play kick animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -279,7 +279,7 @@
       <Name>Play startle animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -316,7 +316,7 @@
       <Name>Play pick up animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -372,7 +372,7 @@
       <Name>&lt;Enable&gt; shake head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -442,7 +442,7 @@
       <Name>Play check animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -479,7 +479,7 @@
       <Name>Play talk animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -516,7 +516,7 @@
       <Name>Set &lt;Character&gt;&apos;s emotion to &lt;Emotion&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -747,7 +747,7 @@
       <Name>Perform &lt;AngryHappy&gt; kick animation for &lt;Character&gt; with &lt;LeftRight&gt; foot</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -866,7 +866,7 @@
       <Name>While &lt;Character&gt; is sitting, play talk animation to the character on your &lt;LeftRight&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -951,7 +951,7 @@
       <Name>Play drink animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -1014,7 +1014,7 @@
       <Name>Drop the item that &lt;Character&gt; is currently holding</Name>
       <Visible>true</Visible>
       <Labels>
-        <Label></Label>
+        
         <Label>ANI</Label>
       </Labels>
       <Children/>
