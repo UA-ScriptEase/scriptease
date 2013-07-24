@@ -863,32 +863,25 @@ public final class FileManager {
 	 *            The model whose files should be closed.
 	 */
 	public boolean close(SEModel model) {
-		final File modelLocation;
-
 		if (model == null)
 			return false;
 
-		model.process(new ModelAdapter() {
-			@Override
-			public void processStoryModel(StoryModel storyModel) {
-				final GameModule module = storyModel.getModule();
+		if (model instanceof StoryModel) {
+			final GameModule module = ((StoryModel) model).getModule();
 
-				try {
-					module.close();
-				} catch (IOException e) {
-					// I can't think of anything better to do with this sort
-					// of error except let ScriptEase explode. - remiller
-					Thread.getDefaultUncaughtExceptionHandler()
-							.uncaughtException(Thread.currentThread(),
-									new IOError(e));
-				}
+			try {
+				module.close();
+			} catch (IOException e) {
+				// I can't think of anything better to do with this sort
+				// of error except let ScriptEase explode. - remiller
+				Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+						Thread.currentThread(), new IOError(e));
 			}
-		});
+		}
 
 		SEModelManager.getInstance().remove(model);
 
-		modelLocation = this.openFiles.getKey(model);
-		this.openFiles.removeKey(modelLocation);
+		this.openFiles.removeValue(model);
 
 		return true;
 	}

@@ -138,8 +138,8 @@ public class BiHashMap<K, V> {
 	 * @param key
 	 *            The key to remove
 	 */
-	public void removeKey(final K key) {
-		this.mainMap.remove(key);
+	public boolean removeKey(final K key) {
+		return this.mainMap.remove(key) != null;
 	}
 
 	/**
@@ -148,16 +148,17 @@ public class BiHashMap<K, V> {
 	 * @param value
 	 *            The value to remove
 	 */
-	public void removeValue(final V value) {
-		final Set<Entry<K, V>> entrySetCopy;
+	public boolean removeValue(final V value) {
+		K toRemove = null;
 
-		entrySetCopy = new HashSet<Entry<K, V>>(this.mainMap.entrySet());
-
-		for (Entry<K, V> entry : entrySetCopy) {
+		for (Entry<K, V> entry : this.mainMap.entrySet()) {
 			if (entry.getValue() == value) {
-				this.mainMap.remove(entry.getKey());
+				toRemove = entry.getKey();
+				break;
 			}
 		}
+
+		return toRemove != null && this.removeKey(toRemove);
 	}
 
 	/**

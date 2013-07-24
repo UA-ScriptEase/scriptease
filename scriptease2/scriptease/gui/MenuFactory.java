@@ -414,6 +414,7 @@ public class MenuFactory {
 		final JMenuItem throwErrorItem;
 		final JMenuItem generateCodeItem;
 		final JMenuItem consoleOutputItem;
+		final JMenuItem metricsItem;
 
 		menu.add(MenuFactory.buildStoryMenu());
 
@@ -422,8 +423,9 @@ public class MenuFactory {
 		throwExceptionItem = new JMenuItem("Throw Exception!");
 		throwErrorItem = new JMenuItem("Throw Error!");
 		generateCodeItem = new JMenuItem("Generate Code");
-		consoleOutputItem = new JMenuItem(MetricsAction.getInstance());
-
+		consoleOutputItem = new JMenuItem("Do Nothing");
+		metricsItem = new JMenuItem(MetricsAction.getInstance());
+		
 		throwExceptionItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -503,6 +505,9 @@ public class MenuFactory {
 		consoleOutputItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// This is convenient for setting a breakpoint on to pause
+				// our program.
+				System.out.println("Did nothing.");
 			}
 		});
 
@@ -511,8 +516,9 @@ public class MenuFactory {
 		menu.add(throwErrorItem);
 		menu.addSeparator();
 		menu.add(generateCodeItem);
-		menu.addSeparator();
 		menu.add(consoleOutputItem);
+		menu.addSeparator();
+		menu.add(metricsItem);
 
 		return menu;
 	}

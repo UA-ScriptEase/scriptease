@@ -94,8 +94,13 @@ public class CodeGenerationNamifier {
 	private String buildLegalName(StoryComponent component, Pattern legalFormat) {
 		final String displayText = component.getDisplayText();
 		String name;
+		
+		if(StringOp.exists(displayText)) {
+			name = displayText;
+		} else
+			name = "noname";
 
-		name = StringOp.removeIllegalCharacters(displayText, legalFormat, true);
+		name = StringOp.removeIllegalCharacters(name, legalFormat, true);
 
 		name = StringOp.removeNonCharPrefix(name);
 

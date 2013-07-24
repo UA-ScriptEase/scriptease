@@ -189,7 +189,7 @@ public class StringOp {
 			return source;
 		Matcher legalMatcher = legalFormat.matcher(source);
 
-		if (source == null || source.isEmpty()) {
+		if (!StringOp.exists(source)) {
 			throw new IllegalArgumentException(
 					"source string cannot be null or empty");
 		}

@@ -20,4 +20,6 @@ public interface StoryComponentObserver {
 	 *            The event that encapsulates the information about the change.
 	 */
 	public void componentChanged(StoryComponentEvent event);
+	
+	
 }

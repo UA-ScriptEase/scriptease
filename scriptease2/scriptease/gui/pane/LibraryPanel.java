@@ -146,13 +146,15 @@ public class LibraryPanel extends JTabbedPane {
 					model.process(new ModelAdapter() {
 						@Override
 						public void processLibraryModel(LibraryModel library) {
-							library.addLibraryChangeListener(libraryObserver);
+							library.addLibraryChangeListener(library,
+									libraryObserver);
 						}
 
 						@Override
 						public void processStoryModel(StoryModel story) {
 							for (LibraryModel library : story.getLibraries()) {
-								library.addLibraryChangeListener(libraryObserver);
+								library.addLibraryChangeListener(library,
+										libraryObserver);
 							}
 
 							story.addStoryModelObserver(new StoryModelObserver() {
