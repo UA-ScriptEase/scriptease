@@ -1093,6 +1093,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
 		private E lastEnteredNode = null;
+		private E lastExitedNode = null;
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -1206,11 +1207,11 @@ public class SEGraph<E> extends JComponent {
 			final JComponent exited = (JComponent) e.getSource();
 			final Mode mode = SEGraph.this.getToolBarMode();
 
-			final E lastExitedNode = SEGraph.this.nodesToComponents
-					.getKey(exited);
+			this.lastExitedNode = SEGraph.this.nodesToComponents.getKey(exited);
 
 			if (mode == Mode.GROUP
-					&& SEGraph.this.ungroupableNodes.contains(lastExitedNode))
+					&& SEGraph.this.ungroupableNodes
+							.contains(this.lastExitedNode))
 				exited.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
 		}
 
@@ -1296,7 +1297,8 @@ public class SEGraph<E> extends JComponent {
 
 			} else if (mode == Mode.CONNECT) {
 				if (this.lastEnteredNode != null
-						&& this.lastEnteredNode != node) {
+						&& this.lastEnteredNode != node
+						&& this.lastExitedNode != this.lastEnteredNode) {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())
 						UndoManager.getInstance().startUndoableAction(
 								"Connect " + this.lastEnteredNode + " to "
