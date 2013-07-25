@@ -1183,6 +1183,7 @@ public class SEGraph<E> extends JComponent {
 			final JComponent entered = (JComponent) e.getSource();
 			final Mode mode = graph.getToolBarMode();
 
+			this.lastExitedNode = null;
 			this.lastEnteredNode = graph.nodesToComponents.getKey(entered);
 
 			if (this.lastEnteredNode == graph.getStartNode())
@@ -1234,7 +1235,7 @@ public class SEGraph<E> extends JComponent {
 				 * Only respond to releases that happen over this component. The
 				 * default is to respond to releases if the press occurred in
 				 * this component. This seems to be a Java bug, but I can't find
-				 * any kind of complaint for it. Either way, we want this
+				 * any kind of complaint for it. Either way, we want this 
 				 * behaviour, not the default. - remiller
 				 */
 				if (!source.contains(mouseLoc.x
