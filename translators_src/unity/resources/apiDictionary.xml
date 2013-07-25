@@ -39,8 +39,7 @@
       <Name>InputAxisType</Name>
       <Keyword>InputAxisType</Keyword>
       <CodeSymbol>String</CodeSymbol>
-      <Enum>&quot;Mouse Y&quot;&lt;Mouse Y&gt;|&quot;Mouse X&quot;&lt;Mouse
-				X&gt;|&quot;Vertical&quot;&lt;Vertical&gt;|&quot;Horizontal&quot;&lt;Horizontal&gt;</Enum>
+      <Enum>&quot;Mouse Y&quot;&lt;Mouse Y&gt;|&quot;Mouse X&quot;&lt;Mouse	X&gt;|&quot;Vertical&quot;&lt;Vertical&gt;|&quot;Horizontal&quot;&lt;Horizontal&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
