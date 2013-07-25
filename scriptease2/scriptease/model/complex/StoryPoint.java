@@ -243,7 +243,7 @@ public class StoryPoint extends ComplexStoryComponent {
 	private <E extends Collection<StoryPoint>> E addDescendants(E descendants) {
 		descendants.add(this);
 
-		for (StoryPoint successor : this.successors) {
+		for (StoryPoint successor : this.getSuccessors()) {
 			/*
 			 * This check prevents us from going over paths twice, which saves a
 			 * ton of time in complex stories. Note that the contains
