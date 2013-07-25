@@ -2,6 +2,7 @@
   <IncludeFiles>
     <IncludeFile>includes/SEStory.js</IncludeFile>
     <IncludeFile>includes/SEVariable.js</IncludeFile>
+    <IncludeFile>includes/SEGameObject.cs</IncludeFile>
   </IncludeFiles>
   <Types>
     <Type>
@@ -4941,10 +4942,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
               <Scope data="argument" ref="Game Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>.rigidbody.velocity = transform.TransformDirection (Vector3(</Literal>
+              <Literal>).velocity = transform.TransformDirection (Vector3(</Literal>
               <Scope data="argument" ref="Right Speed">
                 <Fragment data="name"/>
               </Scope>
@@ -5024,10 +5026,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Light&gt;(</Literal>
               <Scope data="argument" ref="Game Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>.light.color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));</Literal>
+              <Literal>).color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -5132,10 +5135,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Renderer&gt;(</Literal>
               <Scope data="argument" ref="Game Object">
                 <Fragment data="name"/>
               </Scope>
-              <Literal>.renderer.material.color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));</Literal>
+              <Literal>).material.color = Color(Random.Range(0.0,1.0),Random.Range(0.0,1.0), Random.Range(0.0,1.0));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -6079,10 +6083,11 @@
           </Parameters>
           <Code>
             <Line>
+             <Literal>SEGameObject.Get.&lt;MouseLook&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.GetComponent(typeof(MouseLook)).locked = </Literal>
+              <Literal>).locked = </Literal>
               <Scope data="ARGUMENT" ref="Lock">
                 <Fragment data="NAME"/>
               </Scope>
@@ -6178,10 +6183,11 @@
             </Line>
             <Indent>
               <Line>
+                <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
                 <Scope data="ARGUMENT" ref="Object">
                   <Fragment data="NAME"/>
                 </Scope>
-                <Literal>.rigidbody.isKinematic = true;</Literal>
+                <Literal>).isKinematic = true;</Literal>
               </Line>
             </Indent>
             <Line>
@@ -6189,18 +6195,20 @@
             </Line>
             <Indent>
               <Line>
+               <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
                 <Scope data="ARGUMENT" ref="Object">
                   <Fragment data="NAME"/>
                 </Scope>
-                <Literal>.rigidbody.isKinematic = false;</Literal>
+                <Literal>).isKinematic = false;</Literal>
               </Line>
             </Indent>
             <Indent>
               <Line>
+               <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
                 <Scope data="ARGUMENT" ref="Object">
                   <Fragment data="NAME"/>
                 </Scope>
-                <Literal>.rigidbody.wakeup();</Literal>
+                <Literal>).wakeup();</Literal>
               </Line>
             </Indent>
             <Line>
@@ -6248,10 +6256,11 @@
           </Parameters>
           <Code>
             <Line>
+             <Literal>SEGameObject.Get.&lt;Collider&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.collider.enabled =</Literal>
+              <Literal>).enabled =</Literal>
               <Scope data="ARGUMENT" ref="Disable">
                 <Fragment data="NAME"/>
               </Scope>
@@ -6622,10 +6631,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.isKinematic = </Literal>
+              <Literal>).isKinematic = </Literal>
               <Scope data="ARGUMENT" ref="Enable">
                 <Fragment data="NAME"/>
               </Scope>
@@ -7896,15 +7906,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Number One&gt; is &lt;Operator&gt; &lt;Number Two&gt;
-			</Name>
+      <Name>if &lt;Number One&gt; is &lt;Operator&gt; &lt;Number Two&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Number One&gt; is &lt;Operator&gt; &lt;Number Two&gt;
-			</Name>
+          <Name>if &lt;Number One&gt; is &lt;Operator&gt; &lt;Number Two&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>166</Id>
@@ -8111,10 +8119,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.AddForce(</Literal>
+              <Literal>).AddForce(</Literal>
               <Scope data="ARGUMENT" ref="x">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8194,10 +8203,12 @@
           </Parameters>
           <Code>
             <Line>
+            <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
+              
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.AddTorque(</Literal>
+              <Literal>).AddTorque(</Literal>
               <Scope data="ARGUMENT" ref="x">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8249,10 +8260,12 @@
           </Parameters>
           <Code>
             <Line>
+            <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
+              
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.MovePosition(</Literal>
+              <Literal>).MovePosition(</Literal>
               <Scope data="ARGUMENT" ref="Position">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8324,10 +8337,12 @@
           </Parameters>
           <Code>
             <Line>
+            <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
+              
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.AddRelativeForce(</Literal>
+              <Literal>).AddRelativeForce(</Literal>
               <Scope data="ARGUMENT" ref="x">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8407,10 +8422,12 @@
           </Parameters>
           <Code>
             <Line>
+            <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
+              
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.AddRelativeTorque(</Literal>
+              <Literal>).AddRelativeTorque(</Literal>
               <Scope data="ARGUMENT" ref="x">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8466,10 +8483,11 @@
           </Parameters>
           <Code>
             <Line>
+            <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.SetDensity(</Literal>
+              <Literal>).SetDensity(</Literal>
               <Scope data="ARGUMENT" ref="Density">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8521,10 +8539,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.AddForceAtPosition(</Literal>
+              <Literal>).AddForceAtPosition(</Literal>
               <Scope data="ARGUMENT" ref="Position">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8707,15 +8726,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>if &lt;Position One&gt; and &lt;Position Two&gt; are equal
-			</Name>
+      <Name>if &lt;Position One&gt; and &lt;Position Two&gt; are equal</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>if &lt;Position One&gt; and &lt;Position Two&gt; are equal
-			</Name>
+          <Name>if &lt;Position One&gt; and &lt;Position Two&gt; are equal</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>179</Id>
@@ -8812,10 +8829,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.AddExplosionForce(</Literal>
+              <Literal>).AddExplosionForce(</Literal>
               <Scope data="ARGUMENT" ref="Strength">
                 <Fragment data="NAME"/>
               </Scope>
@@ -8869,10 +8887,11 @@
           </Parameters>
           <Code>
             <Line>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>.rigidbody.useGravity = </Literal>
+              <Literal>).useGravity = </Literal>
               <Scope data="ALWAYSCHILD" ref="Disable">
                 <Fragment data="NAME"/>
               </Scope>
@@ -10017,15 +10036,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>the &lt;number&gt; clamped between &lt;min&gt; and &lt;max&gt;
-			</Name>
+      <Name>the &lt;number&gt; clamped between &lt;min&gt; and &lt;max&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>the &lt;number&gt; clamped between &lt;min&gt; and &lt;max&gt;
-			</Name>
+          <Name>the &lt;number&gt; clamped between &lt;min&gt; and &lt;max&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>201</Id>
@@ -13063,7 +13080,7 @@
               <Literal>, Quaternion.identity);</Literal>
             </Line>
             <Line>
-              <Literal>clone.rigidbody.velocity = transform.TransformDirection(Vector3(</Literal>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(clone).velocity = transform.TransformDirection(Vector3(</Literal>
               <Scope data="ARGUMENT" ref="Right Speed">
                 <Fragment data="NAME"/>
               </Scope>
@@ -13209,13 +13226,13 @@
               <Literal>if (Mathf.Abs(Vix) &lt;= Mathf.Abs(Viz))</Literal>
             </Line>
             <Line>
-              <Literal>clone.rigidbody.velocity = transform.TransformDirection(Vector3(0, 0, Mathf.Abs(Viz * 1.5)));</Literal>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(clone).velocity = transform.TransformDirection(Vector3(0, 0, Mathf.Abs(Viz * 1.5)));</Literal>
             </Line>
             <Line>
               <Literal>else</Literal>
             </Line>
             <Line>
-              <Literal>clone.rigidbody.velocity = transform.TransformDirection(Vector3(0, 0, Mathf.Abs(Vix * 1.5)));</Literal>
+              <Literal>SEGameObject.Get.&lt;Rigidbody&gt;(clone).velocity = transform.TransformDirection(Vector3(0, 0, Mathf.Abs(Vix * 1.5)));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>

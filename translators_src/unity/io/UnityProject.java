@@ -65,6 +65,7 @@ public final class UnityProject extends GameModule {
 	// gigantic, binary gigafile (cough NWN cough). So we have can have a
 	// directory where all of our ScriptEase generated stuff is stored.
 	private File scripteaseGeneratedDirectory;
+	private File scripteaseCScriptDirectory;
 
 	private Collection<File> includeFiles;
 	private Collection<UnityFile> scenes;
@@ -452,6 +453,10 @@ public final class UnityProject extends GameModule {
 			file.delete();
 		}
 
+		for (File file : this.scripteaseCScriptDirectory.listFiles()) {
+			file.delete();
+		}
+
 		// Write out the scene files.
 		for (UnityFile scene : this.scenes) {
 			scene.write();
@@ -471,9 +476,16 @@ public final class UnityProject extends GameModule {
 		}
 
 		for (File includeFile : this.includeFiles) {
-			final File includeCopy = new File(this.scripteaseGeneratedDirectory
-					+ "/" + includeFile.getName());
-			FileOp.copyFile(includeFile, includeCopy);
+			final String includeName = includeFile.getName();
+			final File copyDir;
+
+			if (includeName.endsWith(".cs")) {
+				copyDir = this.scripteaseCScriptDirectory;
+			} else {
+				copyDir = this.scripteaseGeneratedDirectory;
+			}
+
+			FileOp.copyFile(includeFile, new File(copyDir + "/" + includeName));
 		}
 
 		// Reset the story to the state it was at before the save.
@@ -502,17 +514,28 @@ public final class UnityProject extends GameModule {
 
 		final String locationPath = this.projectLocation.getAbsolutePath();
 		final String SCRIPTEASE_FOLDER = "/ScriptEase Scripts";
+		final String PLUGINS_FOLDER = "/Plugins";
+		final String SCRIPTEASE_C_FOLDER = PLUGINS_FOLDER
+				+ "/Scriptease C Scripts";
 		final String ASSETS_FOLDER = "/Assets";
-		final String folderName;
+		final String seGeneratedFolderName;
+		final String seCScriptFolderName;
 
 		if (locationPath.endsWith(ASSETS_FOLDER)) {
-			folderName = locationPath + SCRIPTEASE_FOLDER;
-		} else
-			folderName = locationPath + ASSETS_FOLDER + SCRIPTEASE_FOLDER;
+			seGeneratedFolderName = locationPath + SCRIPTEASE_FOLDER;
+			seCScriptFolderName = locationPath + SCRIPTEASE_C_FOLDER;
+		} else {
+			seGeneratedFolderName = locationPath + ASSETS_FOLDER
+					+ SCRIPTEASE_FOLDER;
+			seCScriptFolderName = locationPath + ASSETS_FOLDER
+					+ SCRIPTEASE_C_FOLDER;
+		}
 
-		this.scripteaseGeneratedDirectory = new File(folderName);
+		this.scripteaseGeneratedDirectory = new File(seGeneratedFolderName);
+		this.scripteaseCScriptDirectory = new File(seCScriptFolderName);
 		// Seriously Java? mkdir()? What kind of method name is that!?
 		this.scripteaseGeneratedDirectory.mkdir();
+		this.scripteaseCScriptDirectory.mkdirs();
 	}
 
 	@Override
