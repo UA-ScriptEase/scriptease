@@ -236,10 +236,13 @@ public class StoryComponentTransferUtils {
 
 		// Now we actually add the transfer data
 		for (StoryComponent newChild : components) {
-			final StoryComponent clone = StoryComponentTransferUtils
-					.addTransferData(newChild, parent, insertionIndex);
+			final StoryComponent clone;
 
-			if (support.getDropAction() == TransferHandler.MOVE) {
+			clone = StoryComponentTransferUtils.addTransferData(newChild,
+					parent, insertionIndex);
+
+			if (support.isDrop()
+					&& support.getDropAction() == TransferHandler.MOVE) {
 				newChild.process(new StoryAdapter() {
 					// Notify observers that the component has been moved
 					@Override
