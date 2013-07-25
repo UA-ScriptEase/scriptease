@@ -285,6 +285,17 @@ public abstract class Context {
 	}
 
 	/**
+	 * Gets the descendants in an ordered list. This is slower than
+	 * {@link #getStoryPoints()}, so make sure you know what you are getting
+	 * into.
+	 * 
+	 * @return
+	 */
+	public Collection<? extends Object> getOrderedStoryPoints() {
+		return this.model.getRoot().getOrderedDescendants();
+	}
+
+	/**
 	 * Returns the immediate children of the {@link StoryPoint}.
 	 * 
 	 * @return
