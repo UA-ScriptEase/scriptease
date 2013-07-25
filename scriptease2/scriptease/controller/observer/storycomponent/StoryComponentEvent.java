@@ -13,6 +13,8 @@ import scriptease.model.StoryComponent;
  * StoryPoint's <i>Journal Entry</i> property.
  * 
  * @author remiller
+ * @author jyuen
+ * 
  */
 public final class StoryComponentEvent {
 	private final StoryComponent source;
