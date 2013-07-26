@@ -31,6 +31,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
@@ -96,7 +97,7 @@ class ParameterPanel extends JPanel {
 		 * 
 		 * Ticket: 33433841
 		 */
-		deleteButton = new JButton("-");
+		deleteButton = ComponentFactory.buildRemoveButton();
 		groupLayout = new GroupLayout(this);
 		bindingConstantComponent = new JPanel();
 
