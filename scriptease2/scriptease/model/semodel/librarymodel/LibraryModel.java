@@ -892,6 +892,17 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	@Override
+	public GameType getType(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		final GameType type = this.gameTypes.get(keyword);
+
+		if (type == null && defaultLibrary != null && this != defaultLibrary) {
+			return defaultLibrary.getType(keyword);
+		} else
+			return type;
+	}
+
+	@Override
 	public String getTypeRegex(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
 		final GameType type = this.gameTypes.get(keyword);

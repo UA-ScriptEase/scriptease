@@ -45,7 +45,6 @@ public class GameType {
 	private String codeSymbol;
 	private Map<String, String> escapes;
 
-
 	/**
 	 * Build a new Game Type representation.
 	 * 

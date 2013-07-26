@@ -215,6 +215,18 @@ public final class StoryModel extends SEModel {
 		return keywords;
 	}
 
+	@Override
+	public GameType getType(String keyword) {
+		for (LibraryModel library : this.getLibraries()) {
+			final GameType type = library.getType(keyword);
+
+			if (type != null)
+				return type;
+		}
+
+		return null;
+	}
+
 	/**
 	 * Searches for the type format in all of the libraries contained in this
 	 * story.
@@ -254,9 +266,9 @@ public final class StoryModel extends SEModel {
 	}
 
 	/**
-	 * Attaches the automatic bindings for any causes in the given
-	 * story points, if an automatic binding is required for the specific
-	 * cause as outlined in the API dictionary.
+	 * Attaches the automatic bindings for any causes in the given story points,
+	 * if an automatic binding is required for the specific cause as outlined in
+	 * the API dictionary.
 	 * 
 	 * @param storyPoints
 	 *            The collection of story points that automatic bindings should
