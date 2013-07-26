@@ -92,11 +92,6 @@ class ParameterPanel extends JPanel {
 		types = new ArrayList<String>();
 		typesButton = new JButton(typeAction);
 		defaultTypeBox = new JComboBox();
-		/*
-		 * TODO Need a trash icon for deleteButton
-		 * 
-		 * Ticket: 33433841
-		 */
 		deleteButton = ComponentFactory.buildRemoveButton();
 		groupLayout = new GroupLayout(this);
 		bindingConstantComponent = new JPanel();
