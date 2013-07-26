@@ -42,6 +42,7 @@ import scriptease.gui.component.TypeWidget;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.translator.io.model.GameType;
 import scriptease.util.GUIOp;
 
 /**
@@ -67,7 +68,7 @@ public class TypeDialogBuilder {
 		MAX_SCROLLPANE_SIZE = new Dimension(PANEL_WIDTH + 100, 500);
 	}
 
-	private final Map<String, Boolean> typesToSelected;
+	private final Map<GameType, Boolean> typesToSelected;
 	private final List<CheckBoxPanel> checkBoxPanels;
 	private final JButton allButton;
 
@@ -76,27 +77,20 @@ public class TypeDialogBuilder {
 	private Runnable closeAction;
 
 	/**
-	 * Creates a new TypeSelectionDialogBuilder, intializing the variables.
-	 */
-	public TypeDialogBuilder(Collection<String> keywords) {
-		this.allButton = new JButton("Deselect All");
-		this.typesToSelected = new HashMap<String, Boolean>();
-		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
-
-		for (String type : keywords) {
-			this.typesToSelected.put(type, Boolean.TRUE);
-		}
-	}
-
-	/**
 	 * Creates a new TypeSelectionDialogBuilder. The passed okAction will run
 	 * when "Ok" is pressed on the dialog.
 	 * 
 	 * @param closeAction
 	 */
-	public TypeDialogBuilder(Collection<String> keywords, Runnable closeAction) {
-		this(keywords);
+	public TypeDialogBuilder(Collection<GameType> types, Runnable closeAction) {
 		this.closeAction = closeAction;
+		this.allButton = new JButton("Deselect All");
+		this.typesToSelected = new HashMap<GameType, Boolean>();
+		this.checkBoxPanels = new ArrayList<CheckBoxPanel>();
+
+		for (GameType type : types) {
+			this.typesToSelected.put(type, Boolean.TRUE);
+		}
 	}
 
 	/**
@@ -122,7 +116,7 @@ public class TypeDialogBuilder {
 		final JSeparator separator;
 		final JDialog typeDialog;
 
-		final Map<String, Boolean> previousSelected;
+		final Map<GameType, Boolean> previousSelected;
 
 		final GroupLayout groupLayout;
 
@@ -136,7 +130,7 @@ public class TypeDialogBuilder {
 
 		groupLayout = new GroupLayout(content);
 
-		previousSelected = new HashMap<String, Boolean>(this.typesToSelected);
+		previousSelected = new HashMap<GameType, Boolean>(this.typesToSelected);
 
 		groupLayout.setAutoCreateGaps(true);
 		groupLayout.setAutoCreateContainerGaps(true);
@@ -233,7 +227,7 @@ public class TypeDialogBuilder {
 			return new JScrollPane();
 
 		// create a menu item for each type
-		for (String type : this.typesToSelected.keySet()) {
+		for (GameType type : this.typesToSelected.keySet()) {
 			final CheckBoxPanel checkBoxPanel;
 			final Boolean typeBool;
 
@@ -251,9 +245,8 @@ public class TypeDialogBuilder {
 		Collections.sort(checkBoxPanels, new Comparator<CheckBoxPanel>() {
 			@Override
 			public int compare(CheckBoxPanel o1, CheckBoxPanel o2) {
-				return String.CASE_INSENSITIVE_ORDER.compare(
-						model.getTypeDisplayText(o1.getTypeKeyword()),
-						model.getTypeDisplayText(o2.getTypeKeyword()));
+				return String.CASE_INSENSITIVE_ORDER.compare(o1.getType()
+						.getDisplayName(), o2.getType().getDisplayName());
 			}
 		});
 
@@ -268,13 +261,13 @@ public class TypeDialogBuilder {
 		listCBPanels = new ArrayList<CheckBoxPanel>();
 
 		for (CheckBoxPanel checkBoxPanel : checkBoxPanels) {
-			final String type;
+			final GameType type;
 
-			type = checkBoxPanel.getTypeKeyword();
+			type = checkBoxPanel.getType();
 
-			if (!model.getTypeEnumeratedValues(type).isEmpty()) {
+			if (type.hasEnum()) {
 				listCBPanels.add(checkBoxPanel);
-			} else if (model.getTypeSlots(type).size() > 0) {
+			} else if (type.getSlots().size() > 0) {
 				gameObjectCBPanels.add(checkBoxPanel);
 			} else {
 				gameConstantCBPanels.add(checkBoxPanel);
@@ -398,10 +391,10 @@ public class TypeDialogBuilder {
 	 * 
 	 * @return a collection of selected type check boxes
 	 */
-	public Collection<String> getSelectedTypes() {
-		final List<String> checked = new ArrayList<String>();
+	public Collection<GameType> getSelectedTypes() {
+		final List<GameType> checked = new ArrayList<GameType>();
 
-		for (String key : this.typesToSelected.keySet()) {
+		for (GameType key : this.typesToSelected.keySet()) {
 			final Boolean isAccepted = this.typesToSelected.get(key);
 
 			if (isAccepted)
@@ -409,14 +402,24 @@ public class TypeDialogBuilder {
 		}
 		return checked;
 	}
+	
+	public Collection<String> getSelectedTypeKeywords() {
+		final Collection<String> keywords = new ArrayList<String>();
+		
+		for(GameType type : this.getSelectedTypes()) {
+			keywords.add(type.getKeyword());
+		}
+		
+		return keywords;
+	}
 
 	public void deselectAll() {
-		for (String type : this.typesToSelected.keySet()) {
+		for (GameType type : this.typesToSelected.keySet()) {
 			selectType(type, false);
 		}
 	}
 
-	public Collection<String> getTypes() {
+	public Collection<GameType> getTypes() {
 		return this.typesToSelected.keySet();
 	}
 
@@ -426,9 +429,24 @@ public class TypeDialogBuilder {
 	 * @param types
 	 * @param isSelected
 	 */
-	public void selectTypes(Collection<String> types, boolean isSelected) {
-		for (String type : types)
+	public void selectTypes(Collection<GameType> types, boolean isSelected) {
+		for (GameType type : types)
 			selectType(type, isSelected);
+	}
+
+	/**
+	 * Selects a collection of types based on keywords
+	 * 
+	 * @param types
+	 * @param isSelected
+	 */
+	public void selectTypesByKeyword(Collection<String> keywords,
+			boolean isSelected) {
+		for (GameType type : this.typesToSelected.keySet()) {
+			if (keywords.contains(type.getKeyword())) {
+				selectType(type, isSelected);
+			}
+		}
 	}
 
 	/**
@@ -438,11 +456,11 @@ public class TypeDialogBuilder {
 	 * @param type
 	 * @param isSelected
 	 */
-	public void selectType(String type, boolean isSelected) {
+	public void selectType(GameType type, boolean isSelected) {
 		this.typesToSelected.put(type, Boolean.valueOf(isSelected));
 
 		for (CheckBoxPanel panel : this.checkBoxPanels) {
-			if (panel.getTypeKeyword().equals(type))
+			if (panel.getType().equals(type))
 				panel.setSelected(isSelected);
 		}
 
@@ -473,9 +491,9 @@ public class TypeDialogBuilder {
 
 		// private final JCheckBox checkBox;
 		private final TypeWidget typeWidget;
-		private final String typeKeyword;
+		private final GameType typeKeyword;
 
-		private CheckBoxPanel(String typeKeyword) {
+		private CheckBoxPanel(GameType typeKeyword) {
 			super();
 			final Dimension MAX_PANEL_SIZE = new Dimension(2400, 25);
 			final Dimension MIN_PANEL_SIZE = new Dimension(10, 25);
@@ -485,11 +503,10 @@ public class TypeDialogBuilder {
 			final JLabel typeLabel;
 			final JPanel typePanel;
 
-			typeDisplayText = SEModelManager.getInstance().getActiveModel()
-					.getTypeDisplayText(typeKeyword);
-
 			this.typeKeyword = typeKeyword;
-			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeKeyword);
+			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeKeyword
+					.getKeyword());
+			typeDisplayText = typeKeyword.getDisplayName();
 
 			typeLabel = new JLabel(" " + typeDisplayText);
 			typePanel = new JPanel();
@@ -605,7 +622,7 @@ public class TypeDialogBuilder {
 		 * 
 		 * @return
 		 */
-		private String getTypeKeyword() {
+		private GameType getType() {
 			return this.typeKeyword;
 		}
 

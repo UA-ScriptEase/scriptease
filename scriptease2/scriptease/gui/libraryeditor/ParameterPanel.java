@@ -125,7 +125,8 @@ class ParameterPanel extends JPanel {
 		types.addAll(knowIt.getTypes());
 
 		typeAction.getTypeSelectionDialogBuilder().deselectAll();
-		typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+		typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(types,
+				true);
 
 		for (String type : types)
 			defaultTypeBox.addItem(library.getTypeDisplayText(type) + " - "
@@ -148,7 +149,7 @@ class ParameterPanel extends JPanel {
 			@Override
 			public void run() {
 				knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
-						.getSelectedTypes());
+						.getSelectedTypeKeywords());
 
 				knowIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPES_SET));
