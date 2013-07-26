@@ -16,6 +16,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
@@ -25,6 +26,9 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.translator.io.model.Resource;
+import scriptease.util.StringOp;
 
 /**
  * Displays a tree of game objects and contains various methods of filtering
@@ -155,6 +159,38 @@ public class ResourcePanel extends JPanel {
 				});
 
 		this.setVisible(SEModelManager.getInstance().getActiveModel() instanceof StoryModel);
+
+		this.addObserver(this, new ResourceTreeAdapter() {
+			@Override
+			public void resourceAddButtonClicked(String type) {
+				final StoryModel story;
+				final String dialogueType;
+
+				story = SEModelManager.getInstance().getActiveStoryModel();
+
+				if (story != null) {
+					dialogueType = story.getModule().getDialogueType();
+					if (StringOp.exists(dialogueType)
+							&& type.equals(dialogueType))
+						story.createAndAddDialogueRoot();
+				}
+			}
+
+			@Override
+			public void resourceRemoveButtonClicked(Resource resource) {
+				// This will obviously need changes if we ever add/remove
+				// anything that isn't a dialogue line.
+				if (!(resource instanceof DialogueLine))
+					return;
+
+				final StoryModel story;
+
+				story = SEModelManager.getInstance().getActiveStoryModel();
+
+				if (story != null)
+					story.removeDialogueRoot((DialogueLine) resource);
+			}
+		});
 	}
 
 	/**
