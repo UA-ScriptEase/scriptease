@@ -41,6 +41,7 @@ import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.io.model.EditableResource;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.GUIOp;
 import scriptease.util.StringOp;
@@ -128,7 +129,13 @@ class ResourceTree extends JPanel {
 			this.revalidate();
 			return;
 		}
-		this.filterTypes.addAll(story.getTypeKeywords());
+		final Collection<String> keywords = new ArrayList<String>();
+		
+		for(GameType type : story.getTypes()) {
+			keywords.add(type.getKeyword());
+		}
+		
+		this.filterTypes.addAll(keywords);
 
 		final List<String> types;
 

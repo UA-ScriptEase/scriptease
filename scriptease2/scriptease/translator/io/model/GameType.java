@@ -45,6 +45,7 @@ public class GameType {
 	private String codeSymbol;
 	private Map<String, String> escapes;
 
+
 	/**
 	 * Build a new Game Type representation.
 	 * 
@@ -316,7 +317,7 @@ public class GameType {
 			if (obj == this) {
 				return true;
 			}
-			GameType other = (GameType) obj;
+			final GameType other = (GameType) obj;
 			return other.keyword.equals(this.keyword);
 		}
 		return false;
@@ -336,9 +337,7 @@ public class GameType {
 	 * @return
 	 */
 	public boolean hasGUI() {
-		if (this.guiEditorName != null)
-			return true;
-		return false;
+		return this.guiEditorName != null;
 	}
 
 	/**

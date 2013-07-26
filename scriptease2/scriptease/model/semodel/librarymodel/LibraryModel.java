@@ -870,15 +870,15 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	@Override
-	public Collection<String> getTypeKeywords() {
+	public Collection<GameType> getTypes() {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final Collection<String> keywords = new ArrayList<String>();
+		final Collection<GameType> keywords = new ArrayList<GameType>();
 
 		if (defaultLibrary != null && this != defaultLibrary) {
-			keywords.addAll(defaultLibrary.getLibraryTypeKeywords());
+			keywords.addAll(defaultLibrary.getLibraryTypes());
 		}
 
-		keywords.addAll(this.getLibraryTypeKeywords());
+		keywords.addAll(this.getLibraryTypes());
 
 		return keywords;
 	}
@@ -887,8 +887,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * Returns a collection of keywords associated with types stored by this
 	 * LibraryModel only.
 	 */
-	public Collection<String> getLibraryTypeKeywords() {
-		return new ArrayList<String>(this.gameTypes.keySet());
+	public Collection<GameType> getLibraryTypes() {
+		return new ArrayList<GameType>(this.gameTypes.values());
 	}
 
 	@Override

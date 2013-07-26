@@ -23,6 +23,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
@@ -204,11 +205,11 @@ public final class StoryModel extends SEModel {
 	}
 
 	@Override
-	public Collection<String> getTypeKeywords() {
-		final Collection<String> keywords = new ArrayList<String>();
+	public Collection<GameType> getTypes() {
+		final Collection<GameType> keywords = new ArrayList<GameType>();
 
 		for (LibraryModel library : this.getLibraries()) {
-			keywords.addAll(library.getLibraryTypeKeywords());
+			keywords.addAll(library.getLibraryTypes());
 		}
 
 		return keywords;
