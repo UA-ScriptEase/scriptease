@@ -24,6 +24,7 @@ import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
@@ -162,6 +163,15 @@ public final class UnityProject extends GameModule {
 					this.scripts.add(new UnityScript(scriptInfo, prefab));
 				}
 			}
+		}
+	}
+
+	@Override
+	public void handleDialogues(Collection<DialogueLine> dialogueRoots) {
+		for (DialogueLine root : dialogueRoots) {
+			// Write a conversation file for the dialogue root.
+			
+			
 		}
 	}
 
