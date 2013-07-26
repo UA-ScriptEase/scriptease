@@ -9,8 +9,6 @@ import scriptease.ScriptEase;
 import scriptease.controller.MouseForwardingAdapter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.gui.ui.TypeWidgetUI;
-import scriptease.model.semodel.SEModel;
-import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.util.StringOp;
 
@@ -24,16 +22,13 @@ import scriptease.util.StringOp;
  */
 @SuppressWarnings("serial")
 public class TypeWidget extends JToggleButton {
-	private final String type;
 	private static final float LABEL_FONT_SIZE_SCALE_FACTOR = 1.1f;
 
-	public TypeWidget(final String type) {
+	public TypeWidget(final GameType type) {
 		final int baseFontSize;
 		final int fontSize;
 		final String typeName;
 		final String widgetText;
-
-		final SEModel model;
 
 		this.setUI(TypeWidgetUI.getInstance());
 		this.setEnabled(false);
@@ -50,7 +45,6 @@ public class TypeWidget extends JToggleButton {
 		// drawing settings
 		this.setForeground(Color.WHITE);
 
-		model = SEModelManager.getInstance().getActiveModel();
 		baseFontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
 				ScriptEase.FONT_SIZE_KEY));
 		fontSize = Math.round(LABEL_FONT_SIZE_SCALE_FACTOR * baseFontSize);
@@ -58,20 +52,19 @@ public class TypeWidget extends JToggleButton {
 
 		this.setBackground(ScriptEaseUI.COLOUR_GAME_OBJECT);
 
-		this.type = type;
+		if (type != null) {
+			final String widgetName = type.getWidgetName();
 
-		if (model != null && StringOp.exists(type)) {
-			final String widgetName = model.getTypeWidgetName(type);
-
-			typeName = model.getTypeDisplayText(this.type);
+			typeName = type.getDisplayName();
 
 			if (StringOp.exists(widgetName)) {
 				widgetText = widgetName;
 			} else {
-				if (!model.getTypeEnumeratedValues(type).isEmpty())
+				if (!type.getEnumMap().isEmpty())
 					widgetText = GameType.DEFAULT_LIST_WIDGET;
 				else
-					widgetText = type.substring(0, 2).toUpperCase();
+					widgetText = type.getKeyword().substring(0, 2)
+							.toUpperCase();
 			}
 		} else {
 			widgetText = "!";
@@ -91,10 +84,5 @@ public class TypeWidget extends JToggleButton {
 	@Override
 	public void setEnabled(boolean b) {
 		super.setEnabled(false);
-	}
-
-	@Override
-	public String toString() {
-		return "TypeWidget [" + this.type + "]";
 	}
 }

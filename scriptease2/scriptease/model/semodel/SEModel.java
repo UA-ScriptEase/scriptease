@@ -85,6 +85,13 @@ public abstract class SEModel {
 	public abstract Collection<GameType> getTypes();
 
 	/**
+	 * Returns the type matching the keyword from the model.
+	 * 
+	 * @return
+	 */
+	public abstract GameType getType(String keyword);
+
+	/**
 	 * Returns the regex of the type known by the model.
 	 * 
 	 * @param keyword

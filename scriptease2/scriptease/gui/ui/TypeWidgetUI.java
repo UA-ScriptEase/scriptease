@@ -75,9 +75,10 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements ScriptEaseUI {
 	@Override
 	public Dimension getPreferredSize(JComponent comp) {
 		final Dimension size = super.getPreferredSize(comp);
+		final double height = size.getHeight();
 
-		if (size.getWidth() < size.getHeight()) {
-			size.setSize(size.getHeight(), size.getHeight());
+		if (size.getWidth() < height) {
+			size.setSize(height, height);
 		}
 
 		return size;
