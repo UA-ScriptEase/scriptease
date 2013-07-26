@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -170,6 +169,14 @@ public abstract class GameModule {
 	public abstract void addIncludeFiles(Collection<File> includeFiles);
 
 	/**
+	 * Handles the dialogue roots present in the story model. This happens right
+	 * before {@link #addScripts(Collection)} is called.
+	 * 
+	 * @param dialogueRoots
+	 */
+	public abstract void handleDialogues(Collection<DialogueLine> dialogueRoots);
+
+	/**
 	 * Creates a list of String arguments for running a process that executes
 	 * this GameModule in the game. The list is as would be given to a
 	 * ProcessBuilder. For example:
@@ -241,7 +248,7 @@ public abstract class GameModule {
 					subject = codeBlock.getSubject();
 					key = subject.getBinding().toString() + slot;
 
-					//GameModule.this.getAutomaticHandlers();
+					// GameModule.this.getAutomaticHandlers();
 
 					bucket = new ArrayList<CodeBlock>();
 
@@ -324,9 +331,4 @@ public abstract class GameModule {
 	 * @return
 	 */
 	public abstract String getQuestionType();
-
-	public String getCompatibleVersion() {
-
-		return ScriptEase.getInstance().getVersion();
-	}
 }

@@ -15,6 +15,7 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StatusObserver;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.StatusManager;
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
@@ -78,6 +79,9 @@ public final class PanelFactory {
 		librarySplitPane.setTopComponent(libraryPanel);
 
 		librarySplitPane.setResizeWeight(0.5d);
+
+		WidgetDecorator.setSimpleDivider(librarySplitPane);
+		librarySplitPane.setBorder(null);
 
 		return librarySplitPane;
 	}
