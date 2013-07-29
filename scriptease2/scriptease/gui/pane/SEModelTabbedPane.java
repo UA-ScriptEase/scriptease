@@ -294,13 +294,16 @@ class SEModelTabbedPane extends JTabbedPane {
 
 				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
 					event.getSource().addStoryComponentObserver(this);
+					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
 				} else if (type == StoryComponentChangeEnum.CHANGE_FAN_IN
 						|| type == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
 				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
 

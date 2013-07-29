@@ -180,6 +180,14 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Forwards the depth map recalculation to the model. Should only be used
+	 * when the graph model is changed, as it is performance intensive.
+	 */
+	public void recalculateDepthMap() {
+		this.model.recalculateDepthMap();
+	}
+
+	/**
 	 * Set the selection mode to path or node.
 	 * 
 	 * @param mode
@@ -1235,7 +1243,7 @@ public class SEGraph<E> extends JComponent {
 				 * Only respond to releases that happen over this component. The
 				 * default is to respond to releases if the press occurred in
 				 * this component. This seems to be a Java bug, but I can't find
-				 * any kind of complaint for it. Either way, we want this 
+				 * any kind of complaint for it. Either way, we want this
 				 * behaviour, not the default. - remiller
 				 */
 				if (!source.contains(mouseLoc.x
@@ -1293,6 +1301,7 @@ public class SEGraph<E> extends JComponent {
 							"Remove " + node);
 
 				graph.removeNode(node);
+				graph.repaint();
 
 				UndoManager.getInstance().endUndoableAction();
 

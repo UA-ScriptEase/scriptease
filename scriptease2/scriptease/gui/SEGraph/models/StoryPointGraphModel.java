@@ -44,7 +44,7 @@ public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 		if (added) {
 			child.setFanIn(child.getFanIn());
 		}
-
+		
 		return added;
 	}
 
@@ -58,7 +58,7 @@ public class StoryPointGraphModel extends SEGraphModel<StoryPoint> {
 			if (initialFanIn > 1)
 				child.setFanIn(initialFanIn - 1);
 		}
-
+		
 		return removed;
 	}
 
