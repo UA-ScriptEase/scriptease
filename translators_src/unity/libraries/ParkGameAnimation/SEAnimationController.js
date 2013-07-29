@@ -456,7 +456,6 @@ function Update () {
 		var putDownPass : boolean = waitingAnim.Contains("passItemDown") && animation.IsPlaying(waitingAnim) && notDone && passDown.time < 0.05;
 		var putdownGarb : boolean = waitingAnim.Contains("throwItem") && animation.IsPlaying(waitingAnim) && notDone && throwItem.time > (throwItem.length / 2);
 		
-		
 		var pickUpGround : boolean = waitingAnim.Contains("pickFromGround") && animation.IsPlaying(waitingAnim) && notDone && pickGround.time > 1.50;
 		var pickFromTable : boolean = waitingAnim.Contains("pickFromTable") && animation.IsPlaying(waitingAnim) && notDone && pickTable.time > 0.60;
 	
@@ -857,7 +856,6 @@ function hold() {
 			animation.CrossFade(neutralAnimName);	
 			neutral.AddMixingTransform(root);		
 			lookIdle = false;
-			
 		} 
 		
 		if (lookIdle && playLookAtItem) {

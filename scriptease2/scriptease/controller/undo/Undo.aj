@@ -688,41 +688,7 @@ public aspect Undo {
 
 		this.addModification(mod);
 	}
-
-/*	
- * TODO 
- * before(final CodeBlock codeBlock, final String subject): settingCodeBlockSubject() && args(subject) && this(codeBlock) {
-		Modification mod = new FieldModification<String>(subject,
-				codeBlock.getSubjectName()) {
-			public void setOp(String newSubject) {
-				codeBlock.setSubject(newSubject);
-			};
-
-			@Override
-			public String toString() {
-				return "setting " + codeBlock + "'s subject to " + subject;
-			}
-		};
-
-		this.addModification(mod);
-	}
-
-	before(final CodeBlock codeBlock, final String slot): settingCodeBlockSlot() && args(slot) && this(codeBlock) {
-		Modification mod = new FieldModification<String>(slot,
-				codeBlock.getSlot()) {
-			public void setOp(String newSlot) {
-				codeBlock.setSlot(newSlot);
-			};
-
-			@Override
-			public String toString() {
-				return "setting " + codeBlock + "'s slot to " + slot;
-			}
-		};
-
-		this.addModification(mod);
-	}
-*/
+	
 	before(final CodeBlock codeBlock, final KnowIt parameter): addingParameter() && args(parameter) && this(codeBlock) {
 		Modification mod = new Modification() {
 

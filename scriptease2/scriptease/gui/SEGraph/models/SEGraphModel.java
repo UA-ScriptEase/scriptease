@@ -317,9 +317,6 @@ public abstract class SEGraphModel<E> {
 		while (!queue.isEmpty()) {
 			final E currNode = queue.remove();
 
-			if (currNode.toString().contains("O"))
-				System.out.println("ESRFSSF");
-
 			if (visited.get(currNode) == -1)
 				break;
 
