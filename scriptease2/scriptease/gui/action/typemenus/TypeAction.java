@@ -11,6 +11,7 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.translator.io.model.GameType;
 
 /**
  * The Action for showing the Select Type selection dialog. This action is added
@@ -60,7 +61,7 @@ public final class TypeAction extends AbstractAction {
 					final SEModel model = event.getPatternModel();
 
 					TypeAction.this.typeBuilder = new TypeDialogBuilder(
-							model.getTypeKeywords(), TypeAction.this.action);
+							model.getTypes(), TypeAction.this.action);
 					TypeAction.this.updateName();
 				}
 			}
@@ -98,8 +99,8 @@ public final class TypeAction extends AbstractAction {
 			final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 			if (model != null)
-				this.typeBuilder = new TypeDialogBuilder(
-						model.getTypeKeywords(), newAction);
+				this.typeBuilder = new TypeDialogBuilder(model.getTypes(),
+						newAction);
 		}
 		this.updateName();
 	}
@@ -133,7 +134,6 @@ public final class TypeAction extends AbstractAction {
 			return;
 
 		final int selectedCount = this.typeBuilder.getSelectedTypes().size();
-		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 		String name;
 
@@ -143,8 +143,8 @@ public final class TypeAction extends AbstractAction {
 			name = "All Types";
 		} else if (selectedCount == 1) {
 			// show just the first one
-			name = model.getTypeDisplayText(this.typeBuilder.getSelectedTypes()
-					.iterator().next());
+			name = this.typeBuilder.getSelectedTypes().iterator().next()
+					.getDisplayName();
 		} else {
 			// show the number of selected types
 			name = selectedCount + " Types";
@@ -158,8 +158,12 @@ public final class TypeAction extends AbstractAction {
 	 * 
 	 * @return
 	 */
-	public Collection<String> getSelectedTypes() {
+	public Collection<GameType> getSelectedTypes() {
 		return this.typeBuilder.getSelectedTypes();
+	}
+
+	public Collection<String> getSelectedTypeKeywords() {
+		return this.typeBuilder.getSelectedTypeKeywords();
 	}
 
 	/**

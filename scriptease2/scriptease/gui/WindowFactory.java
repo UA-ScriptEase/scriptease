@@ -1170,6 +1170,9 @@ public final class WindowFactory {
 					}
 				});
 
+		WidgetDecorator.setSimpleDivider(middleSplit);
+		middleSplit.setBorder(null);
+
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 

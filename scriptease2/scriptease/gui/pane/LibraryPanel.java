@@ -287,7 +287,8 @@ public class LibraryPanel extends JTabbedPane {
 			@Override
 			public void run() {
 				list.updateFilter(new TypeFilter(typeFilter
-						.getTypeSelectionDialogBuilder().getSelectedTypes()));
+						.getTypeSelectionDialogBuilder()
+						.getSelectedTypeKeywords()));
 
 				updateList(list);
 			}

@@ -16,20 +16,22 @@ package scriptease.translator.codegenerator;
 public interface CodeGenerationConstants {
 
 	// Used in: KnowItBindingFunctionContext
-	public static enum FunctionConstants {
+	public static enum FunctionConstant {
 		FUNCTION_AS_VALUE
 	}
 
 	// Used in ScopeFragment.
-	public static enum ScopeTypes {
+	public static enum ScopeType {
 		ACTIVECHILD,
 		ALWAYSCHILD,
 		ARGUMENT,
 		ASKIT,
+		AUDIO,
 		BINDING,
 		CAUSE,
 		ELSECHILD,
 		END,
+		IMAGE,
 		IFCHILD,
 		INACTIVECHILD,
 		MAINCODEBLOCK,
@@ -41,19 +43,23 @@ public interface CodeGenerationConstants {
 	}
 
 	// Used in SimpleDataFragment
-	public static enum DataTypes {
+	public static enum DataType {
 		CODE,
 		CONDITION,
 		CONTROLITFORMAT,
+		ENABLED,
 		FANIN,
 		FORMATTEDVALUE,
+		ID,
 		INCLUDE,
 		NAME,
 		NOTE,
 		PARENTNAME,
 		SLOTCONDITIONAL,
+		SPEAKER,
 		SUBJECT,
 		TEMPLATEID,
+		TEXT,
 		TYPE,
 		UNIQUEID,
 		UNIQUE32CHARNAME,
@@ -79,12 +85,14 @@ public interface CodeGenerationConstants {
 	}
 
 	// Used in SeriesFragment
-	public static enum SeriesTypes {
+	public static enum SeriesType {
 		ARGUMENTS,
 		CAUSES,
+		CHILDLINES,
 		CHILDREN,
 		CHILDRENNODES,
 		CODEBLOCKS,
+		DIALOGUEROOTS,
 		IDENTICALCAUSES,
 		IMPLICITS,
 		INCLUDES,
@@ -93,6 +101,8 @@ public interface CodeGenerationConstants {
 		STORYPOINTS,
 		SLOTPARAMETERS,
 		VARIABLES, 
-		PARAMETERSWITHSLOT
+		PARAMETERSWITHSLOT,
+		ORDEREDDIALOGUELINES,
+		ORDEREDSTORYPOINTS
 	}
 }

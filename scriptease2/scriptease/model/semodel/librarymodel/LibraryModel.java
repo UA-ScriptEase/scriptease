@@ -67,8 +67,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final StoryAdapter categoryAdder;
 
 	private final DescribeItManager describeItManager;
-	private final GameTypeManager typeManager;
 	private final EventSlotManager slotManager;
+	private final Map<String, GameType> gameTypes;
+	private final TypeConverter typeConverter;
 
 	private File location;
 	private Translator translator;
@@ -132,10 +133,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public LibraryModel(String title, String author, Translator translator) {
 		super(title, author);
+		this.gameTypes = new HashMap<String, GameType>();
+		this.typeConverter = new TypeConverter();
 
 		this.translator = translator;
 		this.modelRoot = new StoryComponentContainer(title);
-		this.typeManager = new GameTypeManager();
 		this.slotManager = new EventSlotManager();
 		this.describeItManager = new DescribeItManager();
 		this.includeFilePaths = new ArrayList<String>();
@@ -809,13 +811,12 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Returns all of the {@link GameType}s stored by the
-	 * {@link GameTypeManager} of this Library.
+	 * Returns all of the {@link GameType}s stored by the Library.
 	 * 
 	 * @return
 	 */
 	public Collection<GameType> getGameTypes() {
-		return this.typeManager.getGameTypes();
+		return new ArrayList<GameType>(this.gameTypes.values());
 	}
 
 	/**
@@ -824,7 +825,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param types
 	 */
 	public void addGameTypes(Collection<GameType> types) {
-		this.typeManager.addGameTypes(types);
+		for (GameType type : types)
+			this.gameTypes.put(type.getKeyword(), type);
 	}
 
 	/**
@@ -833,7 +835,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public TypeConverter getTypeConverter() {
-		return this.typeManager.getTypeConverter();
+		return this.typeConverter;
 	}
 
 	/**
@@ -844,7 +846,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public Collection<AbstractFragment> getTypeFormat(String keyword) {
-		return this.typeManager.getTypeFormat(keyword);
+		final GameType type = this.gameTypes.get(keyword);
+		final Collection<AbstractFragment> format = new ArrayList<AbstractFragment>();
+		if (type != null)
+			format.addAll(type.getFormat());
+		return format;
 	}
 
 	/**
@@ -864,15 +870,15 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	@Override
-	public Collection<String> getTypeKeywords() {
+	public Collection<GameType> getTypes() {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final Collection<String> keywords = new ArrayList<String>();
+		final Collection<GameType> keywords = new ArrayList<GameType>();
 
 		if (defaultLibrary != null && this != defaultLibrary) {
-			keywords.addAll(defaultLibrary.getLibraryTypeKeywords());
+			keywords.addAll(defaultLibrary.getLibraryTypes());
 		}
 
-		keywords.addAll(this.getLibraryTypeKeywords());
+		keywords.addAll(this.getLibraryTypes());
 
 		return keywords;
 	}
@@ -881,15 +887,31 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * Returns a collection of keywords associated with types stored by this
 	 * LibraryModel only.
 	 */
-	public Collection<String> getLibraryTypeKeywords() {
-		return this.typeManager.getTypeKeywords();
+	public Collection<GameType> getLibraryTypes() {
+		return new ArrayList<GameType>(this.gameTypes.values());
+	}
+
+	@Override
+	public GameType getType(String keyword) {
+		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		final GameType type = this.gameTypes.get(keyword);
+
+		if (type == null && defaultLibrary != null && this != defaultLibrary) {
+			return defaultLibrary.getType(keyword);
+		} else
+			return type;
 	}
 
 	@Override
 	public String getTypeRegex(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
+		final GameType type = this.gameTypes.get(keyword);
 
-		String regex = this.typeManager.getTypeRegex(keyword);
+		String regex;
+		if (type != null) {
+			regex = type.getReg();
+		} else
+			regex = "";
 
 		if (!StringOp.exists(regex) && defaultLibrary != null
 				&& this != defaultLibrary) {
@@ -903,8 +925,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public Map<String, String> getTypeEnumeratedValues(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
 		final Map<String, String> enums = new HashMap<String, String>();
+		final GameType type = this.gameTypes.get(keyword);
 
-		enums.putAll(this.typeManager.getTypeEnumeratedValues(keyword));
+		if (type != null)
+			enums.putAll(type.getEnumMap());
 
 		if (enums.isEmpty() && defaultLibrary != null && this != defaultLibrary) {
 			enums.putAll(defaultLibrary.getTypeEnumeratedValues(keyword));
@@ -916,7 +940,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public String getTypeDisplayText(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		String displayText = this.typeManager.getDisplayText(keyword);
+		final GameType type = this.gameTypes.get(keyword);
+
+		String displayText;
+		if (type != null) {
+			displayText = type.getDisplayName();
+		} else
+			displayText = "";
 
 		if (!StringOp.exists(displayText) && defaultLibrary != null
 				&& this != defaultLibrary) {
@@ -931,8 +961,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
 
 		final Collection<String> slots = new ArrayList<String>();
+		final GameType type = this.gameTypes.get(keyword);
 
-		slots.addAll(this.typeManager.getSlots(keyword));
+		if (type != null)
+			slots.addAll(type.getSlots());
 
 		if (slots.isEmpty() && defaultLibrary != null && this != defaultLibrary) {
 			slots.addAll(defaultLibrary.getTypeSlots(keyword));
@@ -944,7 +976,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public String getTypeCodeSymbol(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		String codeSymbol = this.typeManager.getCodeSymbol(keyword);
+		final GameType type = this.gameTypes.get(keyword);
+
+		String codeSymbol;
+		if (type != null) {
+			codeSymbol = type.getCodeSymbol();
+		} else
+			codeSymbol = "";
 
 		if (!StringOp.exists(codeSymbol) && defaultLibrary != null
 				&& this != defaultLibrary) {
@@ -958,8 +996,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public Map<String, String> getTypeEscapes(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
 		final Map<String, String> escapes = new HashMap<String, String>();
+		final GameType type = this.gameTypes.get(keyword);
 
-		escapes.putAll(this.typeManager.getEscapes(keyword));
+		if (type != null)
+			escapes.putAll(type.getEscapes());
 
 		if (escapes.isEmpty() && defaultLibrary != null
 				&& this != defaultLibrary) {
@@ -972,7 +1012,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public GUIType getTypeGUI(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		GUIType gui = this.typeManager.getGui(keyword);
+		final GameType type = this.gameTypes.get(keyword);
+
+		GUIType gui;
+		if (type != null)
+			gui = type.getGui();
+		else
+			gui = null;
 
 		if (gui == null && defaultLibrary != null && this != defaultLibrary) {
 			gui = defaultLibrary.getTypeGUI(keyword);
@@ -984,7 +1030,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public String getTypeWidgetName(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		String widgetName = this.typeManager.getWidgetName(keyword);
+		final GameType type = this.gameTypes.get(keyword);
+
+		String widgetName;
+		if (type != null)
+			widgetName = type.getWidgetName();
+		else
+			widgetName = null;
 
 		if (!StringOp.exists(widgetName) && defaultLibrary != null
 				&& this != defaultLibrary) {

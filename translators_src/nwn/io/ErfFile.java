@@ -460,7 +460,7 @@ public final class ErfFile extends GameModule {
 
 			code = scriptInfo.getCode();
 			receiverResRef = scriptInfo.getSubject().getTemplateID();
-			
+
 			idNum = "_" + Integer.toString(scriptCounter++, radix);
 
 			scriptResRef = receiverResRef;
@@ -576,7 +576,7 @@ public final class ErfFile extends GameModule {
 	@Override
 	public void close() throws IOException {
 		this.fileAccess.close();
-		
+
 	}
 
 	@Override
@@ -955,18 +955,6 @@ public final class ErfFile extends GameModule {
 	}
 
 	@Override
-	public String getImageType() {
-		// We don't have images in NWN.
-		return null;
-	}
-
-	@Override
-	public String getAudioType() {
-		// We also don't have Audio in NWN.
-		return null;
-	}
-
-	@Override
 	public String getDialogueLineType() {
 		// TODO This will be required for the dialogue builder.
 		return null;
@@ -981,6 +969,18 @@ public final class ErfFile extends GameModule {
 	@Override
 	public String getQuestionType() {
 		// TODO We don't use this yet. Once we do, we'll have to implement it.
+		return null;
+	}
+
+	@Override
+	public String getImageType() {
+		// We don't have images in NWN.
+		return null;
+	}
+
+	@Override
+	public String getAudioType() {
+		// We also don't have Audio in NWN.
 		return null;
 	}
 }

@@ -19,6 +19,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingAutomaticContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
@@ -83,7 +84,9 @@ public class ContextFactory {
 		// by it because they're subclasses.
 		else if (source instanceof StoryComponent) {
 			created = this.createContext(context, (StoryComponent) source);
-		} else {
+		} else if (source instanceof DialogueLine)
+			created = this.createContext(context, (DialogueLine) source);
+		else {
 			throw new CodeGenerationException(
 					"Cannot Generate Context for Object: " + source);
 		}
@@ -172,7 +175,7 @@ public class ContextFactory {
 				ContextFactory.this.activeContext = new ScriptItContext(
 						pastContext, scriptIt);
 			}
-			
+
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
 				ContextFactory.this.activeContext = new CauseItContext(
@@ -219,6 +222,12 @@ public class ContextFactory {
 	private Context createContext(final Context pastContext,
 			final CodeBlock source) {
 		this.activeContext = new CodeBlockContext(pastContext, source);
+
+		return this.activeContext;
+	}
+
+	private Context createContext(Context pastContext, DialogueLine source) {
+		this.activeContext = new DialogueLineContext(pastContext, source);
 
 		return this.activeContext;
 	}
