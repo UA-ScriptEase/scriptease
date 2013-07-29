@@ -46,9 +46,9 @@ import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentUpAction;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
-import scriptease.translator.codegenerator.CodeGenerationConstants.ScopeTypes;
+import scriptease.translator.codegenerator.CodeGenerationConstants.ScopeType;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
-import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesTypes;
+import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesType;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
@@ -358,7 +358,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		directiveLabel.setLabelFor(directiveBox);
 		nameRefLabel.setLabelFor(nameRefField);
 
-		for (ScopeTypes directiveType : ScopeTypes.values())
+		for (ScopeType directiveType : ScopeType.values())
 			directiveBox.addItem(directiveType.name());
 
 		directiveBox.setSelectedItem(scopeFragment.getDirectiveText()
@@ -464,7 +464,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		filterLabel.setLabelFor(filterField);
 		filterTypeLabel.setLabelFor(filterTypeBox);
 
-		for (SeriesTypes directiveType : SeriesTypes.values())
+		for (SeriesType directiveType : SeriesType.values())
 			directiveBox.addItem(directiveType.name());
 
 		directiveBox.setSelectedItem(seriesFragment.getDirectiveText()
@@ -601,7 +601,7 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		directiveLabel.setLabelFor(directiveBox);
 		legalRangeLabel.setLabelFor(legalRangeField);
 
-		for (CodeGenerationConstants.DataTypes directiveType : CodeGenerationConstants.DataTypes
+		for (CodeGenerationConstants.DataType directiveType : CodeGenerationConstants.DataType
 				.values())
 			directiveBox.addItem(directiveType.name());
 

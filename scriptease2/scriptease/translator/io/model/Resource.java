@@ -2,6 +2,7 @@ package scriptease.translator.io.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import scriptease.model.TypedComponent;
@@ -67,19 +68,37 @@ public abstract class Resource implements TypedComponent {
 	}
 
 	/**
-	 * Returns all descendants of the editable resource including the resource
-	 * itself.
+	 * Returns all descendants of the resource including the resource itself.
 	 * 
 	 * @return
 	 */
 	public Collection<Resource> getDescendants() {
-		final Collection<Resource> descendants = new ArrayList<Resource>();
+		return this.addDescendants(new HashSet<Resource>());
+	}
+
+	/**
+	 * Returns all descendants including the resource itself in an ordered list.
+	 * Slightly slower than {@link #getDescendants()}.
+	 * 
+	 * @return
+	 */
+	public Collection<Resource> getOrderedDescendants() {
+		return this.addDescendants(new ArrayList<Resource>());
+	}
+
+	private <E extends Collection<Resource>> E addDescendants(E descendants) {
 		descendants.add(this);
 
 		for (Resource child : this.getChildren()) {
-			descendants.addAll(child.getDescendants());
+			/*
+			 * This check prevents us from going over paths twice, which saves a
+			 * ton of time in complex stories. Note that the contains
+			 * implementation in Sets is much faster, which is why
+			 * getDescendants is faster than getOrderedDescendants.
+			 */
+			if (!descendants.contains(child))
+				child.addDescendants(descendants);
 		}
-
 		return descendants;
 	}
 

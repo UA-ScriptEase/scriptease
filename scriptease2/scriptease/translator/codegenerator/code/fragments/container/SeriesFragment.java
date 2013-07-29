@@ -15,8 +15,8 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
+import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -169,62 +169,44 @@ public class SeriesFragment extends AbstractContainerFragment {
 		Iterator<? extends Object> it;
 
 		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
-		if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.INCLUDES
-						.name())) {
+		if (dataLabel.equalsIgnoreCase(SeriesType.INCLUDES.name())) {
 			data = context.getIncludeFiles();
-		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CODEBLOCKS
-						.name())) {
+		} else if (dataLabel.equalsIgnoreCase(SeriesType.CODEBLOCKS.name())) {
 			data = context.getCodeBlocks();
-		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CAUSES
-						.name()))
+		} else if (dataLabel.equalsIgnoreCase(SeriesType.CAUSES.name()))
 			data = context.getCauses();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.PARAMETERS
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.PARAMETERS.name()))
 			data = context.getParameters();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.PARAMETERSWITHSLOT
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.PARAMETERSWITHSLOT
+				.name()))
 			data = context.getParametersWithSlot();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.SLOTPARAMETERS
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.SLOTPARAMETERS.name()))
 			data = context.getSlotParameters();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.VARIABLES
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.VARIABLES.name()))
 			data = context.getVariables();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.IMPLICITS
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.IMPLICITS.name()))
 			data = context.getImplicits();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CHILDREN
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.CHILDREN.name()))
 			data = context.getChildren();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.STORYPOINTS
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.STORYPOINTS.name()))
 			data = context.getStoryPoints();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.ORDEREDSTORYPOINTS
-						.name()))
+		else if (dataLabel.equalsIgnoreCase(SeriesType.ORDEREDSTORYPOINTS
+				.name()))
 			data = context.getOrderedStoryPoints();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.PARENTNODES
-						.name())) {
+		else if (dataLabel.equalsIgnoreCase(SeriesType.PARENTNODES.name())) {
 			data = context.getStoryPointParents();
-		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.CHILDRENNODES
-						.name())) {
+		} else if (dataLabel.equalsIgnoreCase(SeriesType.CHILDRENNODES.name())) {
 			data = context.getStoryPointChildren();
-		} else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.SeriesTypes.IDENTICALCAUSES
-						.name())) {
+		} else if (dataLabel.equalsIgnoreCase(SeriesType.IDENTICALCAUSES
+				.name())) {
 			data = context.getIdenticalCauses();
+		} else if (dataLabel.equalsIgnoreCase(SeriesType.DIALOGUEROOTS.name())) {
+			data = context.getDialogueRoots();
+		} else if (dataLabel.equalsIgnoreCase(SeriesType.ORDEREDDIALOGUELINES
+				.name())) {
+			data = context.getOrderedDialogueLines();
+		} else if (dataLabel.equalsIgnoreCase(SeriesType.CHILDLINES.name())) {
+			data = context.getChildLines();
 		} else {
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "

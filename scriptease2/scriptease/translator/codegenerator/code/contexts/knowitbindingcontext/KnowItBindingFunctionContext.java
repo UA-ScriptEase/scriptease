@@ -42,7 +42,7 @@ public class KnowItBindingFunctionContext extends KnowItBindingContext {
 		 * Ticket: 32213279
 		 */
 		format = languageDictionary
-				.getFormat(CodeGenerationConstants.FunctionConstants.FUNCTION_AS_VALUE
+				.getFormat(CodeGenerationConstants.FunctionConstant.FUNCTION_AS_VALUE
 						.name());
 		value = AbstractFragment.resolveFormat(format, scriptItContext);
 

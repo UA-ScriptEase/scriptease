@@ -130,7 +130,10 @@
     <Type>
       <Name>Dialogue</Name>
       <Keyword>Dialogue</Keyword>
-      <CodeSymbol>String</CodeSymbol>
+      <CodeSymbol>int</CodeSymbol>
+      <Format>
+        <Fragment data="uniqueID"/>
+      </Format>
       <WidgetName>D</WidgetName>
     </Type>
     <Type>
@@ -255,7 +258,10 @@
     <Type>
       <Name>Dialogue Line</Name>
       <Keyword>DialogueLine</Keyword>
-      <CodeSymbol>String</CodeSymbol>
+      <CodeSymbol>int</CodeSymbol>
+      <Format>
+        <Fragment data="uniqueID"/>
+      </Format>
       <WidgetName>Dl</WidgetName>
     </Type>
     <Type>
@@ -2112,8 +2118,7 @@
   </Slots>
   <Causes>
     <CauseIt>
-      <Name>When &lt;subject&gt; wakes up initialize the story system
-			</Name>
+      <Name>When &lt;subject&gt; wakes up initialize the story system</Name>
       <Visible>false</Visible>
       <Labels>
         <Label>automatic</Label>
@@ -2197,6 +2202,69 @@
                 <Literal>}</Literal>
               </Line>
             </Scope>
+     <!--          <Line />
+              <Line>
+              	<Literal>//Initialize the Dialogue system.</Literal>
+              </Line>
+              <Line>
+                <Literal>if(!SEDialogue.DialoguesInitialized){</Literal>
+              </Line>
+              <Indent>
+              	<Series data="dialogueRoots" unique="true">
+	                <Line>
+	                  <Literal>SEDialogue.RegisterRoot("</Literal>
+	                  <Fragment data="text"/>
+	                  <Literal>", </Literal>
+	                  <Fragment data="formattedValue"/>
+	                  <Literal>, </Literal>
+	                  <Fragment data="speaker"/>
+	                  <Literal>, </Literal>
+	                  <Fragment data="enabled"/>
+	                  <Literal>, </Literal>
+	                  <Scope data="image">
+                		<Fragment data="name"/>
+            		  </Scope>
+	                  <Literal>, </Literal>
+	                   <Scope data="audio">
+                		<Fragment data="name"/>
+            		  </Scope>
+	                  <Literal>);</Literal>
+	                </Line>
+	                <Line>
+	                  <Literal>var parentID:int;</Literal>
+	                </Line>
+	                <Series data="orderedDialogueLines" unique="true">
+	                  <Line>
+	                    <Literal>parentID = </Literal>
+	                    <Fragment data="formattedValue"/>
+	                    <Literal>;</Literal>
+	                  </Line>
+	                  <Series data="childLines" unique="true">
+	                    <Line>
+	                    <Literal>SEStory.RegisterChild(parentID, "</Literal>
+                        <Fragment data="text"/>
+		                <Literal>", </Literal>
+		                <Fragment data="formattedValue"/>
+		                <Literal>, </Literal>
+		                <Fragment data="speaker"/>
+		                <Literal>, </Literal>
+		                <Fragment data="enabled"/>
+		                <Scope data="image">
+                			<Fragment data="name"/>
+            			</Scope>
+	                  	<Literal>, </Literal>
+	                   	<Scope data="audio">
+                			<Fragment data="name"/>
+            		  	</Scope>
+	                  	<Literal>);</Literal>
+	                    </Line>
+	                  </Series>
+	                </Series>
+                </Series>
+              </Indent>
+              <Line>
+                <Literal>}</Literal>
+              </Line> -->
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
