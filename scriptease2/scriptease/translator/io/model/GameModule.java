@@ -169,14 +169,6 @@ public abstract class GameModule {
 	public abstract void addIncludeFiles(Collection<File> includeFiles);
 
 	/**
-	 * Handles the dialogue roots present in the story model. This happens right
-	 * before {@link #addScripts(Collection)} is called.
-	 * 
-	 * @param dialogueRoots
-	 */
-	public abstract void handleDialogues(Collection<DialogueLine> dialogueRoots);
-
-	/**
 	 * Creates a list of String arguments for running a process that executes
 	 * this GameModule in the game. The list is as would be given to a
 	 * ProcessBuilder. For example:

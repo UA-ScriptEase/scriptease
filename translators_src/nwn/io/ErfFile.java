@@ -28,7 +28,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -953,11 +952,6 @@ public final class ErfFile extends GameModule {
 	public String toString() {
 		return "Erf [" + this.getName() + ", nResource: "
 				+ this.resources.size() + " ]";
-	}
-
-	@Override
-	public void handleDialogues(Collection<DialogueLine> dialogueRoots) {
-		// TODO Does nothing. Will need to do something eventually.
 	}
 
 	@Override

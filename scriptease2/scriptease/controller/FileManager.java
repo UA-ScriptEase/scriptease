@@ -523,8 +523,6 @@ public final class FileManager {
 		scriptInfos = CodeGenerator.getInstance().generateCode(model, problems);
 		compiler = translator.getCompiler();
 
-		module.handleDialogues(model.getDialogueRoots());
-		
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(model.getIncludes());
 

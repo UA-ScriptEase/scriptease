@@ -16,6 +16,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
@@ -296,6 +297,15 @@ public abstract class Context {
 	}
 
 	/**
+	 * Return the dialogue roots of the model.
+	 * 
+	 * @return
+	 */
+	public Collection<DialogueLine> getDialogueRoots() {
+		return this.model.getDialogueRoots();
+	}
+
+	/**
 	 * Returns the immediate children of the {@link StoryPoint}.
 	 * 
 	 * @return
@@ -450,6 +460,31 @@ public abstract class Context {
 		return null;
 	}
 
+	public Collection<DialogueLine> getOrderedDialogueLines() {
+		unimplemented("getOrderedDialogueLines");
+		return null;
+	}
+
+	public Collection<DialogueLine> getChildLines() {
+		unimplemented("getChildLines");
+		return null;
+	}
+
+	public String getText() {
+		unimplemented("getText");
+		return null;
+	}
+
+	public String getSpeaker() {
+		unimplemented("getSpeaker");
+		return null;
+	}
+
+	public String getEnabled() {
+		unimplemented("getEnabled");
+		return null;
+	}
+
 	/**
 	 * Throws a CodeGenerationException if the called method is not implemented
 	 * in a subclass, or the implementation is not correctly called.
@@ -459,5 +494,15 @@ public abstract class Context {
 	private void unimplemented(String methodName) {
 		throw (new CodeGenerationException(UNIMPLEMENTED + ": " + methodName
 				+ " unimplemented in " + this.getClass().getName()));
+	}
+
+	public KnowIt getAudio() {
+		unimplemented("getAudio");
+		return null;
+	}
+
+	public KnowIt getImage() {
+		unimplemented("getImage");
+		return null;
 	}
 }
