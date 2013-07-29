@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scriptease.controller.AbstractFragmentVisitor;
-import scriptease.translator.codegenerator.CodeGenerationConstants;
+import scriptease.translator.codegenerator.CodeGenerationConstants.ScopeType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -49,7 +49,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-		final Object scope= this.getScope(context);
+		final Object scope = this.getScope(context);
 
 		if (scope != null) {
 			Context newContext = ContextFactory.getInstance().createContext(
@@ -68,71 +68,48 @@ public class ScopeFragment extends AbstractContainerFragment {
 	 * @return
 	 */
 	private Object getScope(Context context) {
-		final String dataLabel = this.getDirectiveText();
+		final ScopeType scope;
+
+		scope = ScopeType.valueOf(this.getDirectiveText().toUpperCase());
 
 		// IF+ELSE BLOCK (scope data= <dataLabel> )
-		if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.SUBJECT
-						.name()))
+		switch (scope) {
+		case SUBJECT:
 			return context.getSubject();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.OWNER
-						.name()))
+		case OWNER:
 			return context.getOwner();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.ARGUMENT
-						.name()))
+		case ARGUMENT:
 			return context.getParameter(this.nameRef);
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.SLOTPARAMETER
-						.name()))
+		case SLOTPARAMETER:
 			return context.getSlotParameter(this.nameRef);
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.MAINCODEBLOCK
-						.name()))
+		case MAINCODEBLOCK:
 			return context.getMainCodeBlock();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.SCRIPTIT
-						.name()))
+		case SCRIPTIT:
 			return context.getScriptIt(this.nameRef);
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.ASKIT
-						.name()))
+		case ASKIT:
 			return context.getAskIt();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.IFCHILD
-						.name()))
+		case IFCHILD:
 			return context.getIfChild();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.ELSECHILD
-						.name()))
+		case ELSECHILD:
 			return context.getElseChild();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.BINDING
-						.name()))
+		case BINDING:
 			return context.getBinding();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.START
-						.name()))
+		case START:
 			return context.getStartStoryPoint();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.ACTIVECHILD
-						.name()))
+		case ACTIVECHILD:
 			return context.getActiveChild();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.INACTIVECHILD
-						.name()))
+		case INACTIVECHILD:
 			return context.getInactiveChild();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.ALWAYSCHILD
-						.name()))
+		case ALWAYSCHILD:
 			return context.getAlwaysChild();
-		else if (dataLabel
-				.equalsIgnoreCase(CodeGenerationConstants.ScopeTypes.CAUSE
-						.name()))
+		case CAUSE:
 			return context.getCause();
-		else {
-			System.err.println("Unrecognizable Scope tag : " + dataLabel);
+		case AUDIO:
+			return context.getAudio();
+		case IMAGE:
+			return context.getImage();
+		default:
+			System.err.println("Unrecognizable Scope tag : " + scope.name());
 			return null;
 		}
 	}

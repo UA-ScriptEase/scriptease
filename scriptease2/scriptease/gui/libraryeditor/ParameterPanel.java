@@ -31,6 +31,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
@@ -91,12 +92,7 @@ class ParameterPanel extends JPanel {
 		types = new ArrayList<String>();
 		typesButton = new JButton(typeAction);
 		defaultTypeBox = new JComboBox();
-		/*
-		 * TODO Need a trash icon for deleteButton
-		 * 
-		 * Ticket: 33433841
-		 */
-		deleteButton = new JButton("-");
+		deleteButton = ComponentFactory.buildRemoveButton();
 		groupLayout = new GroupLayout(this);
 		bindingConstantComponent = new JPanel();
 
@@ -125,7 +121,8 @@ class ParameterPanel extends JPanel {
 		types.addAll(knowIt.getTypes());
 
 		typeAction.getTypeSelectionDialogBuilder().deselectAll();
-		typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+		typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(types,
+				true);
 
 		for (String type : types)
 			defaultTypeBox.addItem(library.getTypeDisplayText(type) + " - "
@@ -148,7 +145,7 @@ class ParameterPanel extends JPanel {
 			@Override
 			public void run() {
 				knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
-						.getSelectedTypes());
+						.getSelectedTypeKeywords());
 
 				knowIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPES_SET));

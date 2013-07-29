@@ -56,13 +56,48 @@ public class SEGraphToolBar extends JToolBar {
 	 * 
 	 */
 	public static enum Mode {
-		SELECT, INSERT, DELETE, CONNECT, DISCONNECT, GROUP, UNGROUP;
+		SELECT(false), INSERT, DELETE, CONNECT, DISCONNECT, GROUP, UNGROUP;
 
 		private static final String CURSOR_DIRECTORY = "scriptease/resources/icons/buttonicons/";
 		private static final String CURSOR_EXTENSION = ".png";
 
-		private String iconName() {
-			return this.name().toLowerCase();
+		private final ImageIcon image;
+		private final Cursor cursor;
+
+		private Mode() {
+			this(true);
+		}
+
+		private Mode(boolean useCustomCursor) {
+			final String iconName = this.name().toLowerCase();
+
+			ImageIcon image;
+
+			try {
+				final BufferedImage buttonImage;
+
+				buttonImage = ImageIO.read(FileOp
+						.getFileResource(CURSOR_DIRECTORY + iconName
+								+ CURSOR_EXTENSION));
+
+				image = new ImageIcon(buttonImage);
+			} catch (IOException e) {
+				UncaughtExceptionHandler handler = Thread
+						.getDefaultUncaughtExceptionHandler();
+				handler.uncaughtException(Thread.currentThread(),
+						new IllegalStateException("Exception " + e
+								+ "while adding the icon for "
+								+ "ToolBarButton " + this.name()));
+				image = null;
+			}
+
+			if (useCustomCursor) {
+				this.cursor = GUIOp.createCursor(iconName);
+			} else
+				this.cursor = null;
+
+			this.image = image;
+
 		}
 
 		/**
@@ -72,14 +107,7 @@ public class SEGraphToolBar extends JToolBar {
 		 * @return
 		 */
 		public Cursor getCursor() {
-			final Cursor cursor;
-
-			if (this == SELECT) {
-				cursor = null;
-			} else
-				cursor = GUIOp.createCursor(this.iconName());
-			
-			return cursor;
+			return this.cursor;
 		}
 
 		/**
@@ -98,23 +126,7 @@ public class SEGraphToolBar extends JToolBar {
 		 *         cannot be loaded.
 		 */
 		private ImageIcon getIcon() {
-			try {
-				final BufferedImage buttonImage;
-
-				buttonImage = ImageIO.read(FileOp
-						.getFileResource(CURSOR_DIRECTORY + this.iconName()
-								+ CURSOR_EXTENSION));
-
-				return new ImageIcon(buttonImage);
-			} catch (IOException e) {
-				UncaughtExceptionHandler handler = Thread
-						.getDefaultUncaughtExceptionHandler();
-				handler.uncaughtException(Thread.currentThread(),
-						new IllegalStateException("Exception " + e
-								+ "while adding the icon for "
-								+ "ToolBarButton " + this.iconName()));
-				return null;
-			}
+			return this.image;
 		}
 	}
 

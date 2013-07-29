@@ -60,7 +60,6 @@ import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.BiHashMap;
-import scriptease.util.StringOp;
 
 /**
  * The model tab panel creates a new tab for each new model created. Using an
@@ -427,31 +426,7 @@ class SEModelTabbedPane extends JTabbedPane {
 					}
 
 					@Override
-					public void resourceAddButtonClicked(String type) {
-						final StoryModel story;
-						final String dialogueType;
-
-						story = SEModelManager.getInstance()
-								.getActiveStoryModel();
-						dialogueType = story.getModule().getDialogueType();
-
-						if (StringOp.exists(dialogueType)
-								&& type.equals(dialogueType))
-							story.createAndAddDialogueRoot();
-					}
-
-					@Override
 					public void resourceRemoveButtonClicked(Resource resource) {
-						if (!(resource instanceof DialogueLine))
-							return;
-
-						final StoryModel story;
-
-						story = SEModelManager.getInstance()
-								.getActiveStoryModel();
-
-						story.removeDialogueRoot((DialogueLine) resource);
-
 						if (dialogueEditor.getDialogueLine() == resource) {
 							layout.show(topLevelPane, STORY_EDITOR);
 							dialogueEditor.setDialogueLine(null);

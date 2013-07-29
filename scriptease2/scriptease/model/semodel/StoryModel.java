@@ -23,6 +23,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
@@ -204,14 +205,26 @@ public final class StoryModel extends SEModel {
 	}
 
 	@Override
-	public Collection<String> getTypeKeywords() {
-		final Collection<String> keywords = new ArrayList<String>();
+	public Collection<GameType> getTypes() {
+		final Collection<GameType> keywords = new ArrayList<GameType>();
 
 		for (LibraryModel library : this.getLibraries()) {
-			keywords.addAll(library.getLibraryTypeKeywords());
+			keywords.addAll(library.getLibraryTypes());
 		}
 
 		return keywords;
+	}
+
+	@Override
+	public GameType getType(String keyword) {
+		for (LibraryModel library : this.getLibraries()) {
+			final GameType type = library.getType(keyword);
+
+			if (type != null)
+				return type;
+		}
+
+		return null;
 	}
 
 	/**
@@ -253,9 +266,9 @@ public final class StoryModel extends SEModel {
 	}
 
 	/**
-	 * Attaches the automatic bindings for any causes in the given
-	 * story points, if an automatic binding is required for the specific
-	 * cause as outlined in the API dictionary.
+	 * Attaches the automatic bindings for any causes in the given story points,
+	 * if an automatic binding is required for the specific cause as outlined in
+	 * the API dictionary.
 	 * 
 	 * @param storyPoints
 	 *            The collection of story points that automatic bindings should

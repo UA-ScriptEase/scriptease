@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -9,8 +10,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.util.GUIOp;
 
@@ -23,6 +26,25 @@ import scriptease.util.GUIOp;
  * 
  */
 public class WidgetDecorator {
+	/**
+	 * Sets the pane's divider to a more simple one.
+	 * 
+	 * @param pane
+	 */
+	public static void setSimpleDivider(JSplitPane pane) {
+		for (Component component : pane.getComponents()) {
+			if (component instanceof BasicSplitPaneDivider) {
+				final BasicSplitPaneDivider divider;
+
+				divider = (BasicSplitPaneDivider) component;
+				divider.setBackground(Color.WHITE);
+				divider.setBorder(null);
+
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Adds focus and action listeners to a JTextField so that it commits its
 	 * text to the model when focus is lost or enter is pressed. Also gives the

@@ -1,0 +1,3 @@
+class XMLNodeList extends Array{
+
+}

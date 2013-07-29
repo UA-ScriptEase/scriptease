@@ -45,7 +45,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
@@ -120,7 +122,15 @@ public class ScriptWidgetFactory {
 	 * 
 	 * @return A button that displays a type.
 	 */
-	public static TypeWidget getTypeWidget(final String type) {
+	public static TypeWidget getTypeWidget(final String keyword) {
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+		final GameType type;
+		
+		if(model != null)
+			type = model.getType(keyword);
+		else
+			type = null;
+
 		return new TypeWidget(type);
 	}
 
@@ -264,7 +274,6 @@ public class ScriptWidgetFactory {
 			KnowIt knowIt) {
 		typePanel.removeAll();
 		final KnowItBinding binding = knowIt.getBinding();
-
 		final Collection<String> types = knowIt.getAcceptableTypes();
 
 		// for each type the KnowIt can accept

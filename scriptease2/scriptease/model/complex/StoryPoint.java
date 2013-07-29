@@ -199,41 +199,59 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
-	 * This is much slower than {@link #getDescendants()}, so it should be used
-	 * sparingly.
+	 * Gets all descendants of the StoryPoint in an unordered set, including the
+	 * StoryPoint itself. That is, the successors, the successors of the
+	 * successors, etc. This is computationally expensive, and should thus be
+	 * used carefully. Try to cache the descendants somewhere if they need to be
+	 * accessed more than once. If order matters, use
+	 * {@link #getOrderedDescendants()}.
 	 * 
-	 * @return
+	 * @see #getOrderedDescendants()
+	 * @return An unordered set of the story point's descendants.
 	 */
-	public List<StoryPoint> getOrderedDescendants() {
-		final List<StoryPoint> descendants = new ArrayList<StoryPoint>();
-
-		descendants.add(this);
-
-		for (StoryPoint successor : this.successors) {
-			descendants.addAll(successor.getOrderedDescendants());
-		}
-
-		return descendants;
+	public Set<StoryPoint> getDescendants() {
+		return this.addDescendants(new HashSet<StoryPoint>());
 	}
 
 	/**
 	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
-	 * That is, the successors, the successors of the successors, etc. This is
-	 * computationally expensive, and should thus be used carefully. Try to
-	 * cache the descendants somewhere if they need to be accessed more than
-	 * once.
+	 * This is much slower than {@link #getDescendants()}, so it should be used
+	 * sparingly.
 	 * 
-	 * @return
+	 * @see #getDescendants()
+	 * @return An ordered list of the story point's descendants.
 	 */
-	public Collection<StoryPoint> getDescendants() {
-		final Set<StoryPoint> descendants = new HashSet<StoryPoint>();
+	public List<StoryPoint> getOrderedDescendants() {
+		return this.addDescendants(new ArrayList<StoryPoint>());
+	}
 
+	/**
+	 * Adds the descendants to the passed in collection. You should use
+	 * {@link #getDescendants()} or {@link #getOrderedDescendants()} instead of
+	 * this method. Having this method separate lets us keep our descendant
+	 * collecting code in one method for different types of collections. It also
+	 * lets us avoid going through the graph multiple times in cases where we
+	 * branch around.
+	 * 
+	 * @see #getDescendants()
+	 * @see #getOrderedDescendants()
+	 * @param descendants
+	 *            The collection to add to and to return.
+	 * @return The same collection that was passed in, but with descendants
+	 *         added.
+	 */
+	private <E extends Collection<StoryPoint>> E addDescendants(E descendants) {
 		descendants.add(this);
 
-		for (StoryPoint successor : this.successors) {
+		for (StoryPoint successor : this.getSuccessors()) {
+			/*
+			 * This check prevents us from going over paths twice, which saves a
+			 * ton of time in complex stories. Note that the contains
+			 * implementation in Sets is much faster, which is why
+			 * getDescendants is faster than getOrderedDescendants.
+			 */
 			if (!descendants.contains(successor))
-				descendants.addAll(successor.getDescendants());
+				successor.addDescendants(descendants);
 		}
 
 		return descendants;
@@ -334,4 +352,5 @@ public class StoryPoint extends ComplexStoryComponent {
 	public int hashCode() {
 		return super.hashCode() + this.getUniqueID();
 	}
+
 }

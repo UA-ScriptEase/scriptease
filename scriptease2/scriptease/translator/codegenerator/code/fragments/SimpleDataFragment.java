@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import scriptease.controller.AbstractFragmentVisitor;
 import scriptease.translator.codegenerator.CodeGenerationConstants;
+import scriptease.translator.codegenerator.CodeGenerationConstants.DataType;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.Context;
 
@@ -78,16 +79,16 @@ public class SimpleDataFragment extends AbstractFragment {
 		try {
 			// IF+ELSE BLOCK (fragment data = <dataLabel>)
 			if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.NAME
+					.equalsIgnoreCase(CodeGenerationConstants.DataType.NAME
 							.name()))
 				resolveString = context.getUniqueName(Pattern
 						.compile(this.legalRange));
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.DISPLAYTEXT
+					.equalsIgnoreCase(CodeGenerationConstants.DataType.DISPLAYTEXT
 							.name())) {
 				resolveString = context.getDisplayText();
 			} else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.TYPE
+					.equalsIgnoreCase(CodeGenerationConstants.DataType.TYPE
 							.name())) {
 				try {
 					resolveString = context.getType();
@@ -97,67 +98,48 @@ public class SimpleDataFragment extends AbstractFragment {
 					else
 						throw e;
 				}
-			} else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CODE
-							.name()))
+			} else if (dataLabel.equalsIgnoreCase(DataType.CODE.name()))
 				resolveString = context.getCode();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.TEMPLATEID
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.TEMPLATEID.name()))
 				resolveString = context.getTemplateID();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.VALUE
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.VALUE.name()))
 				resolveString = context.getValue();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CONDITION
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.CONDITION.name()))
 				resolveString = context.getCondition();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CONTROLITFORMAT
-							.name())) {
+			else if (dataLabel.equalsIgnoreCase(DataType.CONTROLITFORMAT
+					.name())) {
 				resolveString = context.getControlItFormat();
-			} else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.CURRENTSTORYPOINT
-							.name()))
+			} else if (dataLabel.equalsIgnoreCase(DataType.CURRENTSTORYPOINT
+					.name()))
 				resolveString = context.getUnique32CharName();
 			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.FORMATTEDVALUE
-							.name()))
+					.equalsIgnoreCase(DataType.FORMATTEDVALUE.name()))
 				resolveString = context.getFormattedValue();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.INCLUDE
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.INCLUDE.name()))
 				resolveString = context.getInclude();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.SUBJECT
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.SUBJECT.name()))
 				resolveString = context.getSubject().getBinding()
 						.getScriptValue();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.SLOTCONDITIONAL
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.SLOTCONDITIONAL
+					.name()))
 				resolveString = context.getSlotConditional();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.FANIN
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.FANIN.name()))
 				resolveString = context.getFanIn();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.NOTE
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.NOTE.name()))
 				resolveString = context.getDisplayText();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.PARENTNAME
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.PARENTNAME.name()))
 				resolveString = context.getParentName();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.UNIQUEID
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.UNIQUEID.name()))
 				resolveString = context.getUniqueID();
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataTypes.UNIQUE32CHARNAME
-							.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.UNIQUE32CHARNAME
+					.name()))
 				resolveString = context.getUnique32CharName();
+			else if (dataLabel.equalsIgnoreCase(DataType.TEXT.name()))
+				resolveString = context.getText();
+			else if (dataLabel.equalsIgnoreCase(DataType.SPEAKER.name()))
+				resolveString = context.getSpeaker();
+			else if (dataLabel.equalsIgnoreCase(DataType.ENABLED.name()))
+				resolveString = context.getEnabled();
 			else
 				throw (new CodeGenerationException(
 						"Simple Data Fragment was unable to be resolved for data: "

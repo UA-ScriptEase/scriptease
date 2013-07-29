@@ -6,6 +6,7 @@ import java.util.Map;
 import scriptease.controller.ModelVisitor;
 import scriptease.gui.component.TypeWidget;
 import scriptease.translator.Translator;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Slot;
 
@@ -77,11 +78,18 @@ public abstract class SEModel {
 	}
 
 	/**
-	 * Returns all of the type keywords known by the model.
+	 * Returns all of the types known by the model.
 	 * 
 	 * @return
 	 */
-	public abstract Collection<String> getTypeKeywords();
+	public abstract Collection<GameType> getTypes();
+
+	/**
+	 * Returns the type matching the keyword from the model.
+	 * 
+	 * @return
+	 */
+	public abstract GameType getType(String keyword);
 
 	/**
 	 * Returns the regex of the type known by the model.

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -241,7 +240,7 @@ public abstract class GameModule {
 					subject = codeBlock.getSubject();
 					key = subject.getBinding().toString() + slot;
 
-					//GameModule.this.getAutomaticHandlers();
+					// GameModule.this.getAutomaticHandlers();
 
 					bucket = new ArrayList<CodeBlock>();
 
@@ -324,9 +323,4 @@ public abstract class GameModule {
 	 * @return
 	 */
 	public abstract String getQuestionType();
-
-	public String getCompatibleVersion() {
-
-		return ScriptEase.getInstance().getVersion();
-	}
 }

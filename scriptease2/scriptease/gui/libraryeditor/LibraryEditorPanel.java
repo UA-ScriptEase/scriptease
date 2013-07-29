@@ -33,6 +33,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
@@ -203,8 +204,8 @@ public class LibraryEditorPanel extends JPanel implements
 				nameLabel.setFont(LibraryEditorPanelFactory.labelFont);
 
 				typeAction.getTypeSelectionDialogBuilder().deselectAll();
-				typeAction.getTypeSelectionDialogBuilder().selectTypes(
-						knowIt.getTypes(), true);
+				typeAction.getTypeSelectionDialogBuilder()
+						.selectTypesByKeyword(knowIt.getTypes(), true);
 
 				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
 						commitText, false, Color.white);
@@ -219,7 +220,7 @@ public class LibraryEditorPanel extends JPanel implements
 					public void run() {
 						final Collection<String> types = typeAction
 								.getTypeSelectionDialogBuilder()
-								.getSelectedTypes();
+								.getSelectedTypeKeywords();
 
 						// Important: DescribeIt types MUST be set first because
 						// KnowIts notify observers when their's are changed,
@@ -380,7 +381,7 @@ public class LibraryEditorPanel extends JPanel implements
 			codePanel = new CodeEditorPanel(codeBlock);
 
 			deleteCodeBlockButton = new JButton("Delete CodeBlock");
-			addParameterButton = new JButton("+");
+			addParameterButton = ComponentFactory.buildAddButton();
 			typesButton = new JButton(typeAction);
 
 			codeBlockEditorLayout = new GroupLayout(this);
@@ -429,7 +430,8 @@ public class LibraryEditorPanel extends JPanel implements
 			final ArrayList<String> types = new ArrayList<String>(
 					codeBlock.getTypes());
 			typeAction.getTypeSelectionDialogBuilder().deselectAll();
-			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+			typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(
+					types, true);
 
 			String implicits = "";
 
@@ -444,7 +446,7 @@ public class LibraryEditorPanel extends JPanel implements
 					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 						final Collection<String> selectedTypes = typeAction
 								.getTypeSelectionDialogBuilder()
-								.getSelectedTypes();
+								.getSelectedTypeKeywords();
 						UndoManager.getInstance().startUndoableAction(
 								"Setting CodeBlock " + codeBlock + " types to "
 										+ selectedTypes);
@@ -628,7 +630,8 @@ public class LibraryEditorPanel extends JPanel implements
 			final ArrayList<String> types = new ArrayList<String>(
 					this.codeBlock.getTypes());
 			typeAction.getTypeSelectionDialogBuilder().deselectAll();
-			typeAction.getTypeSelectionDialogBuilder().selectTypes(types, true);
+			typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(
+					types, true);
 			typeAction.updateName();
 		}
 	}
