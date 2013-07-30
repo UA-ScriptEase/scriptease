@@ -2202,7 +2202,7 @@
                 <Literal>}</Literal>
               </Line>
             </Scope>
-     <!--          <Line />
+             <Line />
               <Line>
               	<Literal>//Initialize the Dialogue system.</Literal>
               </Line>
@@ -2222,11 +2222,11 @@
 	                  <Fragment data="enabled"/>
 	                  <Literal>, </Literal>
 	                  <Scope data="image">
-                		<Fragment data="name"/>
+                		<Fragment data="formattedValue"/>
             		  </Scope>
 	                  <Literal>, </Literal>
 	                   <Scope data="audio">
-                		<Fragment data="name"/>
+                		<Fragment data="formattedValue"/>
             		  </Scope>
 	                  <Literal>);</Literal>
 	                </Line>
@@ -2249,12 +2249,13 @@
 		                <Fragment data="speaker"/>
 		                <Literal>, </Literal>
 		                <Fragment data="enabled"/>
+		                <Literal>, </Literal>
 		                <Scope data="image">
-                			<Fragment data="name"/>
+                			<Fragment data="formattedValue"/>
             			</Scope>
 	                  	<Literal>, </Literal>
 	                   	<Scope data="audio">
-                			<Fragment data="name"/>
+                			<Fragment data="formattedValue"/>
             		  	</Scope>
 	                  	<Literal>);</Literal>
 	                    </Line>
@@ -2264,7 +2265,7 @@
               </Indent>
               <Line>
                 <Literal>}</Literal>
-              </Line> -->
+              </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>

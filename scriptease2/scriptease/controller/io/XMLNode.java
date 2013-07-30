@@ -72,9 +72,9 @@ public enum XMLNode {
 	INCLUDE("Include"),
 
 	INCLUDES("Includes", INCLUDE),
-	
+
 	INCLUDE_FILE("IncludeFile"),
-	
+
 	INCLUDE_FILES("IncludeFiles", INCLUDE_FILE),
 
 	INDENT_STRING("IndentString"),
@@ -296,6 +296,7 @@ public enum XMLNode {
 		this.checkNodeName(reader);
 
 		e = (E) context.convertAnother(null, c);
+
 		reader.moveUp();
 
 		return e;

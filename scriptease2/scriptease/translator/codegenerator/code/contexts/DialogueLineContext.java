@@ -70,16 +70,16 @@ public class DialogueLineContext extends Context {
 	public String getEnabled() {
 		return Boolean.toString(this.line.isEnabled());
 	}
-//
-//	@Override
-//	public KnowIt getAudio() {
-//		return this.line.getAudio();
-//	}
-//
-//	@Override
-//	public KnowIt getImage() {
-//		return this.line.getImage();
-//	}
+
+	@Override
+	public KnowIt getAudio() {
+		return this.line.getAudio();
+	}
+
+	@Override
+	public KnowIt getImage() {
+		return this.line.getImage();
+	}
 
 	@Override
 	public String getValue() {
