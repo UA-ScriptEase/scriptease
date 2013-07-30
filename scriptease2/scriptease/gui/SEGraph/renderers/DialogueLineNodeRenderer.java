@@ -240,53 +240,22 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 			final SlotType slotType) {
 		final JComponent slotPanel;
 		final String type;
-		final Resource resource;
+		final KnowIt knowIt;
 
 		if (slotType == SlotType.AUDIO) {
 			type = module.getAudioType();
-			resource = line.getAudio();
+			knowIt = line.getAudio();
 		} else if (slotType == SlotType.IMAGE) {
 			type = module.getImageType();
-			resource = line.getImage();
+			knowIt = line.getImage();
 		} else {
 			type = "";
-			resource = null;
+			// We never reach a point where the knowIt is used at this point.
+			knowIt = null;
 		}
 
 		if (StringOp.exists(type)) {
-			final KnowIt knowIt;
-			final StoryComponentObserver observer;
-
-			knowIt = new KnowIt(StringOp.toProperCase(type), type);
-			observer = new StoryComponentObserver() {
-
-				@Override
-				public void componentChanged(StoryComponentEvent event) {
-					if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
-						final Resource resource;
-						final KnowItBinding binding;
-
-						binding = ((KnowIt) event.getSource()).getBinding();
-
-						if (binding instanceof KnowItBindingResource) {
-							resource = ((KnowItBindingResource) binding)
-									.getValue();
-						} else
-							resource = null;
-
-						if (slotType == SlotType.AUDIO)
-							line.setAudio(resource);
-						else if (slotType == SlotType.IMAGE)
-							line.setImage(resource);
-					}
-				}
-			};
 			slotPanel = ScriptWidgetFactory.buildSlotPanel(knowIt, false);
-
-			if (resource != null)
-				knowIt.setBinding(resource);
-
-			knowIt.addStoryComponentObserver(observer);
 		} else
 			slotPanel = new JPanel();
 
