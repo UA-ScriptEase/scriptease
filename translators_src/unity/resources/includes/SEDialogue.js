@@ -12,6 +12,7 @@ import System.Collections.Generic;
 
 static var DialogueRoots:List.<DialogueLine> = new List.<DialogueLine>();
 static var DialoguesInitialized:boolean = false;
+static var currentLine : DialogueLine;
 
 /**
  * Registers a dialogue root.
@@ -55,10 +56,65 @@ static function IsEnabled(id:int):boolean  {
 	}
 }
 
+static function ShowDialogueGUI() {
+	if(currentLine != null) {
+		var children : List.<DialogueLine> = this.currentLine.Children;
+		
+		// Display the text
+		var boxHorCenter : int = Screen.width / 2;
+		var boxVertCenter : int = Screen.height - 150;
+		var boxHorStart : int = boxHorCenter - 400;
+		var boxWidth : int = 800;
+		
+		// a box surrounding the entire conversation
+		GUI.Box (Rect (boxHorStart, Screen.height - 250, boxWidth, 200), "");
+		
+		// line of dialogue from NPC currently being said
+		GUI.Label (Rect ((boxHorCenter - 375), boxVertCenter - 90, 750, 40), this.currentLine.Text);
+
+		// center image pointing at the four possible responses
+		if(this.currentLine.Image != null)
+			GUI.Label (Rect ((boxHorCenter - 50), Screen.height - 190, 100, 100), this.currentLine.Image);
+		
+		// Play the audio
+	// TODO ??
+		//		if(this.currentLine.Audio != null)
+//			AudioSource.PlayClipAtPoint(this.currentLine.Audio, Camera.main.transform.position);
+		
+		var offset:int = boxHorStart;
+		
+		var sizeForEachChild = boxWidth/this.currentLine.Children.Count;
+		
+		for(var child : DialogueLine in this.currentLine.Children) {
+			if(!child.Enabled)
+				continue;			
+			
+			var content : GUIContent;
+			
+			if(child.Image != null)
+				content = GUIContent(child.Text, child.Image);
+			else
+				content = GUIContent(child.Text);
+				
+			if (GUI.Button (Rect ((offset), Screen.height - 200, sizeForEachChild, 60), content)) {
+				if(child.Children.Count <= 0) {
+					this.currentLine = null;
+					break;
+				} else {
+					this.currentLine = child.Children[0];
+					break;
+				}
+			}
+			
+			offset += sizeForEachChild;				
+		}
+	}
+}
+
 /**
  * Finds the Dialouge Line that matches the unique ID
  */
-private static function FindDialogueLine(id:int) : DialogueLine {
+static function FindDialogueLine(id:int) : DialogueLine {
 	for(var root:DialogueLine in SEDialogue.DialogueRoots) {
 		var dialogueLine = FindDialogueLineInDescendants(root, id);
 		
