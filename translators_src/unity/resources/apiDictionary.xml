@@ -1,5 +1,6 @@
 <LibraryModel name="DefaultUnityLibraryModel" author="ScriptEase Team">
   <IncludeFiles>
+    <IncludeFile>includes/SEDialogue.js</IncludeFile>
     <IncludeFile>includes/SEStory.js</IncludeFile>
     <IncludeFile>includes/SEVariable.js</IncludeFile>
     <IncludeFile>includes/SEGameObject.cs</IncludeFile>
@@ -2241,7 +2242,7 @@
 	                  </Line>
 	                  <Series data="childLines" unique="true">
 	                    <Line>
-	                    <Literal>SEStory.RegisterChild(parentID, "</Literal>
+	                    <Literal>SEDialogue.RegisterChild(parentID, "</Literal>
                         <Fragment data="text"/>
 		                <Literal>", </Literal>
 		                <Fragment data="formattedValue"/>
@@ -2266,6 +2267,61 @@
               <Line>
                 <Literal>}</Literal>
               </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </CauseIt>
+    <CauseIt>
+      <Name>When &lt;subject&gt;'s GUI Updates show the Dialogue GUI</Name>
+      <Visible>false</Visible>
+      <Labels>
+        <Label>automatic</Label>
+      </Labels>
+      <Children>
+        <StoryComponentContainer>
+          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
+          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+        <StoryComponentContainer>
+          <Name>Always:</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Children/>
+        </StoryComponentContainer>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+     	 <Name>When &lt;subject&gt;'s GUI Updates show the Dialogue GUI</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Subject>subject</Subject>
+          <Slot>OnGUI</Slot>
+          <Id>264</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+          	<Line>
+	            <Literal>SEDialogue.ShowDialogueGUI();</Literal>
+          	</Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
