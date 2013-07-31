@@ -424,9 +424,6 @@ function Start() {
 	//showTalk = true;
 	weightStartle = 0.5;
 	//toggleTalk();
-	
-	
-	
 }
 
 

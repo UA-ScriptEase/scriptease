@@ -11607,13 +11607,13 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>the modifiable text at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+      <Name>the modifiable text at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with the default text &lt;Text&gt;</Name>
       <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>the modifiable text at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+          <Name>the modifiable text at &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with the default text &lt;Text&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>242</Id>

@@ -100,9 +100,7 @@ public class SEGraphNodeRenderer<E> {
 					return;
 
 				SEGraphNodeRenderer.this.pressedComponent = null;
-
-				if (SEGraphNodeRenderer.this.graph.getToolBarMode() != Mode.GROUP)
-					resetAppearances();
+				resetAppearances();
 
 				/*
 				 * We redraw the actual clicked on components by calling
@@ -228,19 +226,15 @@ public class SEGraphNodeRenderer<E> {
 			mode = this.graph.getToolBarMode();
 
 			if (!graph.isReadOnly()
-					&& (mode == Mode.INSERT || mode == Mode.CONNECT)) {
+					&& (mode == Mode.INSERT || mode == Mode.CONNECT || mode == Mode.GROUP)) {
 				toolColour = ScriptEaseUI.COLOUR_INSERT_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			} else if (!graph.isReadOnly()
-					&& (mode == Mode.DELETE || mode == Mode.DISCONNECT)) {
+					&& (mode == Mode.DELETE || mode == Mode.DISCONNECT || mode == Mode.UNGROUP)) {
 				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
-			} else if (!graph.isReadOnly() && (mode == Mode.GROUP)) {
-				toolColour = component.getBackground();
-				toolHighlight = component.getBackground();
-				toolPress = component.getBackground();
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.25);
@@ -254,6 +248,9 @@ public class SEGraphNodeRenderer<E> {
 				// If hovered over
 				backgroundColour = toolHighlight;
 			}
+
+			this.setComponentAppearance(component, node, backgroundColour);
+
 		} else if (this.graph.getSelectedNodes().contains(node)) {
 			/*
 			 * Use a bright tool colour if its pressed, use the tool colour if
@@ -274,21 +271,38 @@ public class SEGraphNodeRenderer<E> {
 			} else
 				backgroundColour = initialColour;
 
+			this.setComponentAppearance(component, node, backgroundColour);
+
 			// If nothing and selected
 		} else {
 			final E lastSelectedNode;
+			final Mode mode;
 
 			lastSelectedNode = this.graph.getLastSelectedNode();
+			mode = this.graph.getToolBarMode();
 
-			if (this.graph.getParents(lastSelectedNode).contains(node)) {
-				backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
-			} else if (this.graph.getChildren(lastSelectedNode).contains(node)) {
-				backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+			if (mode == Mode.GROUP) {
+				for (E groupNode : this.graph.group) {
+					final JComponent groupNodeComponent;
+					groupNodeComponent = this.graph.nodesToComponents
+							.getValue(groupNode);
+
+					this.setComponentAppearance(groupNodeComponent, groupNode,
+							ScriptEaseUI.COLOUR_GROUPABLE_END_NODE);
+				}
 			} else {
-				backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+				if (this.graph.getParents(lastSelectedNode).contains(node)) {
+					backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
+				} else if (this.graph.getChildren(lastSelectedNode).contains(
+						node)) {
+					backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+				} else {
+					backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+				}
+
+				this.setComponentAppearance(component, node, backgroundColour);
 			}
 		}
 
-		this.setComponentAppearance(component, node, backgroundColour);
 	}
 }
