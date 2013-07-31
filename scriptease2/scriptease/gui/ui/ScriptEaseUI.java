@@ -105,7 +105,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (green) used for the insert node tool
 	 */
-	public static final Color COLOUR_GROUPABLE__END_NODE = new Color(255, 41,
+	public static final Color COLOUR_GROUPABLE_END_NODE = new Color(255, 41,
 			41);
 
 	/**
