@@ -36,6 +36,7 @@ public class DialogueLineConverter implements Converter {
 		final DialogueLine line = (DialogueLine) source;
 
 		XMLNode.NAME.writeString(writer, line.getName());
+		XMLNode.ID.writeInteger(writer, line.getUniqueID());
 		XMLNode.CHILDREN.writeObject(writer, context, line.getChildren());
 		XMLNode.ENABLED.writeBoolean(writer, line.isEnabled());
 		XMLNode.IMAGE.writeObject(writer, context, line.getImage());
@@ -48,6 +49,7 @@ public class DialogueLineConverter implements Converter {
 			UnmarshallingContext context) {
 		final DialogueLine line;
 		final String name;
+		final int id;
 		final List<Resource> children;
 		final boolean enabled;
 
@@ -57,6 +59,7 @@ public class DialogueLineConverter implements Converter {
 		children = new ArrayList<Resource>();
 
 		name = XMLNode.NAME.readString(reader);
+		id = Integer.parseInt(XMLNode.ID.readString(reader));
 
 		// TODO This isn't the way we should be loading stuff from XML. We need
 		// to use XMLNode methods
@@ -77,7 +80,7 @@ public class DialogueLineConverter implements Converter {
 		audio = XMLNode.AUDIO.readObject(reader, context, KnowIt.class);
 
 		line = new DialogueLine(StoryModelConverter.currentStory, Speaker.PC,
-				name, enabled, image, audio, children);
+				name, id, enabled, image, audio, children);
 
 		return line;
 	}

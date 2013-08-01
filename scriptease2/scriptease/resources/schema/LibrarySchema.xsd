@@ -226,7 +226,11 @@
 	<xsd:complexType name="StoryComponentContainer_Type">
 		<xsd:sequence minOccurs="0" maxOccurs="2">
 			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:element name="Children" type="xsd:string" />
+			<!-- TODO Right now we can have anything in these.
+			It's kind of insecure, so change it to only accept
+			story components (will have to be a new type using
+			xsd:choice  -->
+			<xsd:element name="Children" />
 		</xsd:sequence>
 	</xsd:complexType>
 
