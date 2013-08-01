@@ -7,6 +7,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
@@ -70,10 +71,24 @@ public class KnowItBindingResource extends KnowItBinding {
 
 				model = SEModelManager.getInstance().getActiveModel();
 				if (model instanceof StoryModel) {
+					final Resource resource = this.getValue();
 
 					final StoryModel storyModel = (StoryModel) model;
 					final GameModule module = storyModel.getModule();
-					final Resource resource = this.getValue();
+					final Collection<DialogueLine> dialogueRoots;
+
+					dialogueRoots = storyModel.getDialogueRoots();
+
+					if (resource.getTypes().contains(module.getDialogueType())
+							&& dialogueRoots.contains(resource))
+						return true;
+					else if (resource.getTypes().contains(
+							module.getDialogueLineType()))
+						for (DialogueLine line : storyModel.getDialogueRoots()) {
+							if (line.getDescendants().contains(resource))
+								return true;
+						}
+
 					final String templateID = resource.getTemplateID();
 
 					final Resource res = module
@@ -81,9 +96,6 @@ public class KnowItBindingResource extends KnowItBinding {
 
 					if (res != null)
 						return true;
-					else
-						return false;
-
 				} else if (model == null) {
 					return true;
 				}

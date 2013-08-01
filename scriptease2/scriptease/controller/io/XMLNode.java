@@ -66,6 +66,8 @@ public enum XMLNode {
 	GAME_MODULE("GameModule"),
 
 	GUI("GUI"),
+	
+	ID("ID"),
 
 	IMAGE("Image"),
 
@@ -158,7 +160,17 @@ public enum XMLNode {
 			writer.setValue(data);
 		writer.endNode();
 	}
-
+	
+	/**
+	 * Writes an integer as a string to the passed in writer.
+	 * 
+	 * @param writer
+	 * @param bool
+	 */
+	public void writeInteger(HierarchicalStreamWriter writer, int integer) {
+		this.writeString(writer, Integer.toString(integer));
+	}
+	
 	/**
 	 * Writes a boolean as a string to the passed in writer.
 	 * 

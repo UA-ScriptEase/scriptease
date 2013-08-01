@@ -80,6 +80,13 @@ public final class DialogueLine extends EditableResource {
 	 */
 	public DialogueLine(StoryModel story, Speaker speaker, String dialogue,
 			boolean enabled, KnowIt image, KnowIt audio, List<Resource> children) {
+		this(story, speaker, dialogue, uniqueNumberCount++, enabled, image,
+				audio, children);
+	}
+
+	public DialogueLine(StoryModel story, Speaker speaker, String dialogue,
+			int id, boolean enabled, KnowIt image, KnowIt audio,
+			List<Resource> children) {
 		super(dialogue, children);
 
 		this.enabled = enabled;
@@ -97,7 +104,9 @@ public final class DialogueLine extends EditableResource {
 		else
 			this.image = image;
 
-		this.uniqueID = uniqueNumberCount++;
+		this.uniqueID = id;
+
+		uniqueNumberCount = Math.max(id, uniqueNumberCount);
 
 		// Set up the speakers
 		for (Resource child : children) {
@@ -271,8 +280,7 @@ public final class DialogueLine extends EditableResource {
 
 	@Override
 	public String getTemplateID() {
-		// TODO Does this need to be uniquer? Yes it does!
-		return this.getName();
+		return this.getName() + this.getUniqueID();
 	}
 
 	@Override

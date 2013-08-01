@@ -16,6 +16,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
@@ -299,13 +300,23 @@ public class KnowItBindingConverter implements Converter {
 
 		resource = currentModule.getInstanceForObjectIdentifier(id);
 
-		if (resource != null) {
+		if (resource != null)
 			return new KnowItBindingResource(resource);
-		} else {
-			System.err.println("Binding lookup failed for id " + id
-					+ ", assigning null instead.");
-			return null;
+
+		for (DialogueLine line : StoryModelConverter.currentStory
+				.getDialogueRoots()) {
+			if (line.getTemplateID().equals(id))
+				return new KnowItBindingResource(line);
+
+			for (Resource descendant : line.getDescendants()) {
+				if (descendant.getTemplateID().equals(id))
+					return new KnowItBindingResource(descendant);
+			}
 		}
+
+		System.err.println("Binding lookup failed for id " + id
+				+ ", assigning null instead.");
+		return null;
 	}
 
 	private KnowItBindingAutomatic unmarshallAutomaticBinding(
