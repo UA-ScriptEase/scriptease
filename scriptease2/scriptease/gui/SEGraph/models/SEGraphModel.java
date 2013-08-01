@@ -387,7 +387,6 @@ public abstract class SEGraphModel<E> {
 				// no children, so back up one
 				visited.add(nodes.pop());
 			}
-
 		}
 
 		return group;
