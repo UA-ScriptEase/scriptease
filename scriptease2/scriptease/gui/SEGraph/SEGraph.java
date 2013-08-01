@@ -71,7 +71,7 @@ public class SEGraph<E> extends JComponent {
 		SELECT_NODE, SELECT_PATH, SELECT_PATH_FROM_START
 	}
 
-	private final SEGraphModel<E> model;
+	public final SEGraphModel<E> model;
 
 	private SEGraphNodeRenderer<E> renderer;
 

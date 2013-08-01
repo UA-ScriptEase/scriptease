@@ -409,13 +409,17 @@ public abstract class SEGraphModel<E> {
 
 		for (E node : nodes) {
 			for (E child : this.getChildren(node)) {
-				if (!nodes.contains(child))
+				if (!nodes.contains(child)) {
 					numChild++;
+					break;
+				}
 			}
 
 			for (E parent : this.getParents(node)) {
-				if (!nodes.contains(parent))
+				if (!nodes.contains(parent)) {
 					numParents++;
+					break;
+				}
 			}
 
 			if (numParents > 1 || numChild > 1) {

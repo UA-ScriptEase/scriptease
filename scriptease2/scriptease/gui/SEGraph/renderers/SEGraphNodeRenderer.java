@@ -282,13 +282,22 @@ public class SEGraphNodeRenderer<E> {
 			mode = this.graph.getToolBarMode();
 
 			if (mode == Mode.GROUP) {
-				for (E groupNode : this.graph.group) {
-					final JComponent groupNodeComponent;
-					groupNodeComponent = this.graph.nodesToComponents
-							.getValue(groupNode);
+				final Color colour;
 
-					this.setComponentAppearance(groupNodeComponent, groupNode,
-							ScriptEaseUI.COLOUR_GROUPABLE_END_NODE);
+				if (this.graph.model.isGroup(this.graph.group))
+					colour = ScriptEaseUI.COLOUR_GROUPABLE_END_NODE;
+				else
+					colour = ScriptEaseUI.COLOUR_GROUPABLE_NODE;
+
+				for (E n : this.graph.getNodes()) {
+					final JComponent nComponent;
+					nComponent = this.graph.nodesToComponents.getValue(n);
+
+					if (this.graph.group.contains(n))
+						this.setComponentAppearance(nComponent, n, colour);
+					else
+						this.setComponentAppearance(nComponent, n,
+								ScriptEaseUI.COLOUR_NODE_DEFAULT);
 				}
 			} else {
 				if (this.graph.getParents(lastSelectedNode).contains(node)) {
