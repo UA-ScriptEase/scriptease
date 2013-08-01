@@ -154,8 +154,10 @@ public class SEGraphToolBar extends JToolBar {
 		buttonGroup.add(this.deleteButton);
 		buttonGroup.add(this.connectButton);
 		buttonGroup.add(this.disconnectButton);
-		buttonGroup.add(this.groupButton);
-		buttonGroup.add(this.ungroupButton);
+		
+		/* TODO: Uncomment the below 2 lines when we move to groups */
+		//buttonGroup.add(this.groupButton);
+		//buttonGroup.add(this.ungroupButton);
 
 		// Sorry about the bizarre loop, but that's the way these work :(
 		for (final Enumeration<AbstractButton> buttons = buttonGroup
