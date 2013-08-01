@@ -481,10 +481,6 @@ public class LibraryEditorPanel extends JPanel implements
 					else
 						codeBlock.setSlot("");
 
-					if (scriptIt instanceof CauseIt) {
-						CauseIt causeIt = (CauseIt) scriptIt;
-						causeIt.updateStoryChildren();
-					}
 					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 							StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));
 				}
