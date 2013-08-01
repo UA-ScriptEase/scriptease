@@ -22,8 +22,6 @@ public interface CodeGenerationConstants {
 
 	// Used in ScopeFragment.
 	public static enum ScopeType {
-		ACTIVECHILD,
-		ALWAYSCHILD,
 		ARGUMENT,
 		ASKIT,
 		AUDIO,
@@ -33,7 +31,6 @@ public interface CodeGenerationConstants {
 		END,
 		IMAGE,
 		IFCHILD,
-		INACTIVECHILD,
 		MAINCODEBLOCK,
 		OWNER,
 		SLOTPARAMETER,

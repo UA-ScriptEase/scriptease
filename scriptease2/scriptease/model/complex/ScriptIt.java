@@ -38,7 +38,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		this.codeBlocks = new ArrayList<CodeBlock>();
 
 		// Only classes that extend ScriptIts should be able to have children.
-		this.registerChildType(
+		this.registerChildTypes(
 				new ArrayList<Class<? extends StoryComponent>>(), 0);
 	}
 
@@ -255,9 +255,9 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	@Override
 	public void revalidateKnowItBindings() {
 		final Collection<KnowIt> parameters;
-		
+
 		parameters = this.getParameters();
-		
+
 		for (KnowIt parameter : parameters) {
 			final KnowItBinding binding;
 

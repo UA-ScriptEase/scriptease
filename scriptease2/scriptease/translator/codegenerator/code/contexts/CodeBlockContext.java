@@ -171,47 +171,6 @@ public class CodeBlockContext extends Context {
 		return "CodeBlockContext [" + this.codeBlock + "]";
 	}
 
-	/**
-	 * Get the ScriptIt's Story Point Active Child
-	 */
-	@Override
-	public StoryComponentContainer getActiveChild() {
-		CauseIt cause = this.codeBlock.getCause();
-		if (cause != null)
-			return cause.getActiveBlock();
-		else
-			throw new CodeGenerationException(
-					"Attempted to get Story Point Active Block for a "
-							+ "CodeBlock without a Cause: " + this.codeBlock);
-	}
-
-	/**
-	 * Get the ScriptIt's Story Point Inactive Child
-	 */
-	@Override
-	public StoryComponentContainer getInactiveChild() {
-		CauseIt cause = this.codeBlock.getCause();
-		if (cause != null)
-			return cause.getInactiveBlock();
-		else
-			throw new CodeGenerationException(
-					"Attempted to get Story Point Inactive Block for a "
-							+ "CodeBlock without a Cause: " + this.codeBlock);
-		// CodeBlock Without A Cause. (Not) Starring James Dean
-	}
-
-	@Override
-	public StoryComponentContainer getAlwaysChild() {
-		CauseIt cause = this.codeBlock.getCause();
-		if (cause != null)
-			return cause.getAlwaysBlock();
-		else
-			throw new CodeGenerationException(
-					"Attempted to get Story Point Inactive Block for a "
-							+ "CodeBlock without a Cause: " + this.codeBlock);
-
-	}
-
 	@Override
 	public KnowIt getSlotParameter(String keyword) {
 		final CodeBlock mainBlock;
