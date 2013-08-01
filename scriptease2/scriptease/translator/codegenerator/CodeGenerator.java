@@ -208,6 +208,7 @@ public class CodeGenerator {
 			throw new IllegalStateException("Unable to find slot " + slotName
 					+ ". Check that it exists in the Library.");
 		}
+
 		// Get the format keyword from the slot and get the format from the
 		// language dictionary
 		format = slot.getFormatKeyword().toUpperCase();
