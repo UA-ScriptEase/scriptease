@@ -9,12 +9,45 @@
       <Keyword>TargetReached</Keyword>
       <Condition>Start</Condition>
       <Parameters/>
-      <Implicits/>
+      <Implicits>
+        <KnowIt>
+          <Name>Target</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Types>
+            <Type>GameObject</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Target</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Target</Name>
+                  <Visible>true</Visible>
+                  <Labels/>
+                  <Id>29</Id>
+                  <Types>
+                    <Type>GameObject</Type>
+                  </Types>
+                  <Code>
+					<Line>
+					  <Literal>return SEPath.GetPath(this.gameObject).target;</Literal>
+					</Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+	  </Implicits>
     </Slot>
   </Slots>
   <Causes>
     <CauseIt>
-      <Name>When &lt;subject&gt; reaches its target</Name>
+      <Name>When &lt;subject&gt; reaches its &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>A*</Label>
@@ -87,7 +120,6 @@
       <Name>&lt;Object&gt; walks a path to &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>A*</Label>
       </Labels>
       <Children/>
@@ -147,7 +179,6 @@
       <Name>&lt;Object&gt; walks at a speed of &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>A*</Label>
       </Labels>
       <Children/>

@@ -14884,13 +14884,13 @@
       </CodeBlocks>
     </ControlIt>
     <ControlIt control="BLOCK">
-      <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+	  <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with the content box at position &lt;Content x&gt;, &lt;Content y&gt; that is &lt;Content Width&gt; wide and &lt;Content Height&gt; tall and the scroll position at &lt;Position x&gt;, &lt;Position y&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall</Name>
+          <Name>Create a Scroll View at position &lt;x&gt;, &lt;y&gt; that is &lt;Width&gt; wide and &lt;Height&gt; tall with the content box at position &lt;Content x&gt;, &lt;Content y&gt; that is &lt;Content Width&gt; wide and &lt;Content Height&gt; tall and the scroll position at &lt;Position x&gt;, &lt;Position y&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>225</Id>
@@ -14936,6 +14936,78 @@
             </KnowIt>
             <KnowIt>
               <Name>Height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Content x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Content y</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Content Width</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Content Height</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Position x</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Position y</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>

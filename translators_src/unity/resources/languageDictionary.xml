@@ -458,6 +458,30 @@
             	<Scope data="argument" ref="Height">
             		<Fragment data="name" />
             	</Scope>
+            	<Literal>), Vector2(</Literal>
+            	<Scope data="argument" ref="Position x">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Position y">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>), Rect(</Literal>
+            	<Scope data="argument" ref="Content x">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Content y">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Content Width">
+            		<Fragment data="name" />
+            	</Scope>
+            	<Literal>, </Literal>
+            	<Scope data="argument" ref="Content Height">
+            		<Fragment data="name" />
+            	</Scope>
             	<Literal>));</Literal>
             </Line>
             <FormatRef ref="childrenWithoutImplicits"/>
