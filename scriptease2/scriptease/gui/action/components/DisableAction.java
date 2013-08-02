@@ -1,21 +1,18 @@
 package scriptease.gui.action.components;
 
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.ScriptEase;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 
@@ -87,20 +84,14 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 
 		final StoryComponent component = componentPanel.getStoryComponent();
 
-		final Font disabledFont = new Font(Font.MONOSPACED, Font.ITALIC,
-				Integer.parseInt(ScriptEase.getInstance().getPreference(
-						ScriptEase.FONT_SIZE_KEY)));
-
-		final Font regularFont = new Font(Font.MONOSPACED, Font.PLAIN,
-				Integer.parseInt(ScriptEase.getInstance().getPreference(
-						ScriptEase.FONT_SIZE_KEY)));
-
 		final boolean disabled = component.isDisabled();
 
 		// Don't want to be enabling the component if it's owner is disabled.
-		if (component.getOwner().isDisabled())
+		if (component.getOwner() != null
+				&& !(component.getOwner() instanceof StoryPoint)
+				&& component.getOwner().isDisabled())
 			return;
-		
+
 		System.out.println("DEBUG - story component panel "
 				+ componentPanel.toString()
 				+ " is about to be disabled/enabled");
