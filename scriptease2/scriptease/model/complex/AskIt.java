@@ -9,8 +9,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.translator.io.model.GameType;
 
 /**
@@ -22,9 +20,9 @@ import scriptease.translator.io.model.GameType;
  * methods on an AskIt will give results based on the two containers for those
  * groups, not their contents. For example,
  * {@link ComplexStoryComponent#getChildren()} always returns a list of size 2
- * that whose contents are the two <code>StoryComponentContainer</code>s that contain
- * the sub-groups. To add children to either group, get the container for that
- * group first, via either {@link AskIt#getIfBlock()} or
+ * that whose contents are the two <code>StoryComponentContainer</code>s that
+ * contain the sub-groups. To add children to either group, get the container
+ * for that group first, via either {@link AskIt#getIfBlock()} or
  * {@link AskIt#getElseBlock()}. <br>
  * <br>
  * The If and Else blocks of an AskIt will only accept DoIts and AskIts as
@@ -192,16 +190,7 @@ public final class AskIt extends ComplexStoryComponent {
 
 	@Override
 	public void revalidateKnowItBindings() {
-		final KnowIt condition;
-		final KnowItBinding binding;
-
-		condition = this.getCondition();
-		binding = condition.getBinding();
-
-		if (!binding.compatibleWith(condition)) {
-			condition.setBinding(new KnowItBindingNull());
-		}
-
+		this.getCondition().revalidateKnowItBindings();
 		this.getIfBlock().revalidateKnowItBindings();
 		this.getElseBlock().revalidateKnowItBindings();
 	}

@@ -258,8 +258,9 @@ public class MenuFactory {
 		editMenu = new JMenu(Il8nResources.getString("Edit"));
 		preferencesItem = new JMenuItem(Il8nResources.getString("Preferences")
 				+ "...");
-		translatorPreferencesItem = new JMenuItem(TranslatorPreferencesAction.getInstance());
-		
+		translatorPreferencesItem = new JMenuItem(
+				TranslatorPreferencesAction.getInstance());
+
 		// Set up the edit menu item
 		editMenu.setMnemonic(KeyEvent.VK_E);
 
@@ -288,10 +289,10 @@ public class MenuFactory {
 			}
 		});
 		preferencesItem.setMnemonic(KeyEvent.VK_R);
-		
+
 		editMenu.add(preferencesItem);
 		editMenu.add(translatorPreferencesItem);
-		
+
 		// Return the Edit menu.
 		return editMenu;
 	}
@@ -425,7 +426,7 @@ public class MenuFactory {
 		generateCodeItem = new JMenuItem("Generate Code");
 		consoleOutputItem = new JMenuItem("Do Nothing");
 		metricsItem = new JMenuItem(MetricsAction.getInstance());
-		
+
 		throwExceptionItem.addActionListener(new ActionListener() {
 
 			@Override
