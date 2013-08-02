@@ -6415,6 +6415,7 @@
               <Types>
                 <Type>module</Type>
               </Types>
+              <Binding flavour="automatic"></Binding>
             </KnowIt>
           </Parameters>
           <Code>
