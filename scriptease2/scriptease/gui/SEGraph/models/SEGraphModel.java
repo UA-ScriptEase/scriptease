@@ -20,6 +20,7 @@ import java.util.Stack;
  * .equals(Object) method, or else the graph will not draw correctly.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  * @param <E>
  */

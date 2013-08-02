@@ -787,21 +787,22 @@ public class SEGraph<E> extends JComponent {
 			}
 		}
 
-		if (this.model.isGroup(group)) {
-			// TODO do something here later - like change all their colors
-			for (E n : this.group) {
-
-			}
-		} else {
-			// Let's do some repainting on the components.
-			for (E groupableNode : this.group) {
-				final JComponent component;
-				component = this.nodesToComponents.getValue(groupableNode);
-
-				// this.renderer.setComponentAppearance(component,
-				// groupableNode, backgroundColour)
-			}
-		}
+		// TODO these two methods need to do something when I get back to groups
+		// if (this.model.isGroup(group)) {
+		// // TODO do something here later - like change all their colors
+		// for (E n : this.group) {
+		//
+		// }
+		// } else {
+		// // Let's do some repainting on the components.
+		// for (E groupableNode : this.group) {
+		// final JComponent component;
+		// component = this.nodesToComponents.getValue(groupableNode);
+		//
+		// // this.renderer.setComponentAppearance(component,
+		// // groupableNode, backgroundColour)
+		// }
+		// }
 
 	}
 

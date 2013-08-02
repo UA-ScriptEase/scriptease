@@ -1,6 +1,5 @@
 package scriptease.gui.action.components;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -12,6 +11,7 @@ import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
+import scriptease.model.StoryComponent;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 
@@ -79,7 +79,16 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 	 * 
 	 * @param component
 	 */
-	private void disableComponent(StoryComponentPanel component) {
+	private void disableComponent(StoryComponentPanel componentPanel) {
+		final StoryComponent component = componentPanel.getStoryComponent();
+
+		if (component.isDisabled()) {
+			component.setDisabled(false);
+			System.out.println("DEBUG: NO LONGER DISABLED");
+		} else {
+			component.setDisabled(true);
+			System.out.println("DEBUG: DISABLED");
+		}
 	}
 
 	@Override

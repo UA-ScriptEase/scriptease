@@ -48,12 +48,14 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jtduncan
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public abstract class StoryComponent implements Cloneable {
 
 	private String displayText;
 	private Collection<String> labels;
 	private Boolean isVisible;
+	private Boolean isDisabled;
 
 	private LibraryModel library;
 
@@ -92,6 +94,7 @@ public abstract class StoryComponent implements Cloneable {
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new ArrayList<String>();
 		this.isVisible = true;
+		this.isDisabled = false;
 	}
 
 	/**
@@ -160,6 +163,15 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public Boolean isVisible() {
 		return this.isVisible;
+	}
+
+	/**
+	 * Returns whether the StoryComponent is disabled
+	 * 
+	 * @return
+	 */
+	public Boolean isDisabled() {
+		return this.isDisabled;
 	}
 
 	/**
@@ -239,6 +251,12 @@ public abstract class StoryComponent implements Cloneable {
 		this.isVisible = isVisible;
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_VISIBILITY));
+	}
+
+	public void setDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_DISABILITY));
 	}
 
 	/**
