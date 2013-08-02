@@ -57,9 +57,14 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_BOUND = Color.LIGHT_GRAY;
 
 	/**
+	 * The color (Grayish Blue) used for disabled components.
+	 */
+	public static final Color COLOUR_DISABLED = new Color(97, 130, 135);
+	
+	/**
 	 * The colour (Grey) used for selected UI Components
 	 */
-	public static final Color SELECTED_COLOUR = new Color(200, 200, 200);
+	public static final Color SELECTED_COLOUR = new Color(209, 227, 215);
 
 	/**
 	 * The colour (White) used for unselected UI components

@@ -333,6 +333,7 @@ public abstract class StoryComponent implements Cloneable {
 		// make them the same again, now that they're less conjoined.
 		clone.setDisplayText(new String(this.displayText));
 		clone.setVisible(this.isVisible);
+		clone.setDisabled(this.isDisabled);
 		clone.setOwner(this.ownerComponent);
 
 		clone.setLibrary(this.library);

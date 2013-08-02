@@ -325,6 +325,12 @@ public class StoryComponentPanelManager {
 		if (isSelected) {
 			final boolean focusOnAPanel;
 
+			if (panel.getStoryComponent().isDisabled()) {
+				panel.setBackground(GUIOp.scaleWhite(
+						ScriptEaseUI.COLOUR_DISABLED, 0.6));
+				return;
+			}
+
 			focusOnAPanel = SEFocusManager.getInstance().getFocus() instanceof StoryComponentPanel;
 
 			if (focusOnAPanel)
@@ -333,18 +339,14 @@ public class StoryComponentPanelManager {
 				panel.setBackground(GUIOp.scaleWhite(
 						ScriptEaseUI.SELECTED_COLOUR, 1.15));
 			}
-			final StoryComponentPanel parent;
 
-			parent = panel.getParentStoryComponentPanel();
-
-			// If the parent is selected, don't draw a box around the child
-			if (selected.containsKey(parent) && !this.selected.get(parent)
-					&& focusOnAPanel)
-				panel.setBorder(ScriptEaseUI.SELECTED_BORDER);
-			else
-				panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 		} else {
-			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+
+			if (panel.getStoryComponent().isDisabled())
+				panel.setBackground(ScriptEaseUI.COLOUR_DISABLED);
+			else
+				panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
+
 			final StoryComponent panelComponent;
 
 			panelComponent = panel.getStoryComponent();

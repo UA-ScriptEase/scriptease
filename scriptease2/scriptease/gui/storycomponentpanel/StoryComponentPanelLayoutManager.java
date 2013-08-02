@@ -14,6 +14,10 @@ import javax.swing.JPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
+/**
+ * 
+ * @author mfchurch
+ */
 public class StoryComponentPanelLayoutManager implements LayoutManager {
 	// these are the constraints possible with the
 	// StoryComponentPanelLayoutManager
