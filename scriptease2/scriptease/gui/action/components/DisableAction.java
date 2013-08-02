@@ -97,7 +97,7 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 				+ " is about to be disabled/enabled");
 
 		component.setDisabled(!disabled);
-
+		
 		for (StoryComponentPanel childPanel : componentPanel.getDescendants()) {
 			childPanel.getStoryComponent().setDisabled(!disabled);
 		}
