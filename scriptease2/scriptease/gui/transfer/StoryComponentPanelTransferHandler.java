@@ -280,16 +280,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		acceptingPanel = (StoryComponentPanel) support.getComponent();
 
 		if (StoryComponentTransferUtils.canImportToParent(support)) {
-			final StoryComponentPanel parentPanel;
-
 			if (this.hoveredPanel != null
 					&& this.hoveredPanel.getSelectionManager() != null)
 				this.hoveredPanel.getSelectionManager()
 						.updatePanelBackgrounds();
 
-			parentPanel = acceptingPanel.getParentStoryComponentPanel();
-
-			this.setPanelAndChildrenBackground(Color.LIGHT_GRAY, parentPanel);
 			this.setPanelAndChildrenBackground(Color.GRAY, acceptingPanel);
 
 			this.hoveredPanel = acceptingPanel;

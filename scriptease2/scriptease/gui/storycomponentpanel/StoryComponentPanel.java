@@ -274,6 +274,8 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
 			this.setVisible(component.isVisible());
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
+			//this.setBackground(new Color(0, 0, 0, 64));
 		}
 		
 		// revalidate the panel

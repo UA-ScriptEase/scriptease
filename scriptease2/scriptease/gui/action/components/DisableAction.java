@@ -1,6 +1,5 @@
 package scriptease.gui.action.components;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -15,6 +14,8 @@ import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 
@@ -83,9 +84,6 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 	 * @param component
 	 */
 	private void disableComponent(StoryComponentPanel componentPanel) {
-		System.out.println("DEBUG - story component panel "
-				+ componentPanel.toString()
-				+ " is about to be disabled/enabled");
 
 		final StoryComponent component = componentPanel.getStoryComponent();
 
@@ -97,20 +95,20 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 				Integer.parseInt(ScriptEase.getInstance().getPreference(
 						ScriptEase.FONT_SIZE_KEY)));
 
-		if (component.isDisabled()) {
-			component.setDisabled(false);
+		final boolean disabled = component.isDisabled();
 
-			for (Component childComponent : componentPanel.getComponents()) {
-				childComponent.setFont(regularFont);
-			}
+		// Don't want to be enabling the component if it's owner is disabled.
+		if (component.getOwner().isDisabled())
+			return;
+		
+		System.out.println("DEBUG - story component panel "
+				+ componentPanel.toString()
+				+ " is about to be disabled/enabled");
 
-		} else {
-			component.setDisabled(true);
+		component.setDisabled(!disabled);
 
-			for (Component childComponent : componentPanel.getComponents()) {
-				childComponent.setFont(disabledFont);
-				childComponent.setBackground(Color.black);
-			}
+		for (StoryComponentPanel childPanel : componentPanel.getDescendants()) {
+			childPanel.getStoryComponent().setDisabled(!disabled);
 		}
 
 		componentPanel.repaint();
