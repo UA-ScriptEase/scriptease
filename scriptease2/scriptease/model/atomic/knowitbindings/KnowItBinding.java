@@ -104,7 +104,10 @@ public abstract class KnowItBinding implements Cloneable {
 	// Gross there has to be a better way instead of blindly grabbing the first
 	// type.
 	public String getFirstType() {
-		return this.getTypes().iterator().next();
+		if (this.getTypes().size() > 0)
+			return this.getTypes().iterator().next();
+		else
+			return "";
 	}
 
 	/**

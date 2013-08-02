@@ -192,6 +192,7 @@ public class StoryComponentPanelFactory {
 	 * 
 	 * @author graves
 	 * @author mfchurch
+	 * @author jyuen
 	 */
 	public void parseDisplayText(JPanel displayNamePanel,
 			StoryComponent storyComponent, boolean addLabels) {
