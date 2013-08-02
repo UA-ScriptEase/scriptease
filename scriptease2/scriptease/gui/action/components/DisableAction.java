@@ -1,12 +1,15 @@
 package scriptease.gui.action.components;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.ScriptEase;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
@@ -80,15 +83,37 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 	 * @param component
 	 */
 	private void disableComponent(StoryComponentPanel componentPanel) {
+		System.out.println("DEBUG - story component panel "
+				+ componentPanel.toString()
+				+ " is about to be disabled/enabled");
+
 		final StoryComponent component = componentPanel.getStoryComponent();
+
+		final Font disabledFont = new Font(Font.MONOSPACED, Font.ITALIC,
+				Integer.parseInt(ScriptEase.getInstance().getPreference(
+						ScriptEase.FONT_SIZE_KEY)));
+
+		final Font regularFont = new Font(Font.MONOSPACED, Font.PLAIN,
+				Integer.parseInt(ScriptEase.getInstance().getPreference(
+						ScriptEase.FONT_SIZE_KEY)));
 
 		if (component.isDisabled()) {
 			component.setDisabled(false);
-			System.out.println("DEBUG: NO LONGER DISABLED");
+
+			for (Component childComponent : componentPanel.getComponents()) {
+				childComponent.setFont(regularFont);
+			}
+
 		} else {
 			component.setDisabled(true);
-			System.out.println("DEBUG: DISABLED");
+
+			for (Component childComponent : componentPanel.getComponents()) {
+				childComponent.setFont(disabledFont);
+				childComponent.setBackground(Color.black);
+			}
 		}
+
+		componentPanel.repaint();
 	}
 
 	@Override

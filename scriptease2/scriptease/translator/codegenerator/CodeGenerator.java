@@ -208,58 +208,56 @@ public class CodeGenerator {
 
 		for (Set<CodeBlock> codeBlocks : scriptBuckets) {
 			for (CodeBlock codeBlock : codeBlocks) {
-				if (codeBlock.getCode() instanceof List) {
-					final List<AbstractFragment> codePieces;
+				final List<AbstractFragment> codePieces;
 
-					codePieces = (List<AbstractFragment>) codeBlock.getCode();
+				codePieces = (List<AbstractFragment>) codeBlock.getCode();
 
-					if (codeBlock.ownerComponent.isDisabled()) {
+				if (codeBlock.ownerComponent.isDisabled()) {
 
-						// There already are comments - do nothing
-						if (codePieces.size() > 2) {
-							if (codePieces.get(0) instanceof LiteralFragment
-									&& codePieces.get(codePieces.size() - 1) instanceof LiteralFragment) {
-								final LiteralFragment start;
-								final LiteralFragment end;
+					// There already are comments - do nothing
+					if (codePieces.size() > 2) {
+						if (codePieces.get(0) instanceof LiteralFragment
+								&& codePieces.get(codePieces.size() - 1) instanceof LiteralFragment) {
+							final LiteralFragment start;
+							final LiteralFragment end;
 
-								start = (LiteralFragment) codePieces.get(0);
-								end = (LiteralFragment) codePieces
-										.get(codePieces.size() - 1);
+							start = (LiteralFragment) codePieces.get(0);
+							end = (LiteralFragment) codePieces.get(codePieces
+									.size() - 1);
 
-								if (start.getDirectiveText().equals(
-										headComment.getDirectiveText())
-										&& end.getDirectiveText().equals(
-												endComment.getDirectiveText()))
-									break;
-							}
+							if (start.getDirectiveText().equals(
+									headComment.getDirectiveText())
+									&& end.getDirectiveText().equals(
+											endComment.getDirectiveText()))
+								break;
 						}
+					}
 
-						codePieces.add(0, headComment);
-						codePieces.add(endComment);
+					codePieces.add(0, headComment);
+					codePieces.add(endComment);
 
-						codeBlock.setCode(codePieces);
+					codeBlock.setCode(codePieces);
 
-					} else {
-						// Remove the comments if there are any.
-						if (codePieces.size() > 2) {
-							if (codePieces.get(0) instanceof LiteralFragment
-									&& codePieces.get(codePieces.size() - 1) instanceof LiteralFragment) {
-								final LiteralFragment start;
-								final LiteralFragment end;
+				} else {
+					// Remove the comments if there are any.
+					if (codePieces.size() > 2) {
+						if (codePieces.get(0) instanceof LiteralFragment
+								&& codePieces.get(codePieces.size() - 1) instanceof LiteralFragment) {
+							final LiteralFragment start;
+							final LiteralFragment end;
 
-								start = (LiteralFragment) codePieces.get(0);
-								end = (LiteralFragment) codePieces
-										.get(codePieces.size() - 1);
+							start = (LiteralFragment) codePieces.get(0);
+							end = (LiteralFragment) codePieces.get(codePieces
+									.size() - 1);
 
-								if (start.getDirectiveText().equals(
-										headComment.getDirectiveText())
-										&& end.getDirectiveText().equals(
-												endComment.getDirectiveText())) {
-									codePieces.remove(0);
-									codePieces.remove(codePieces.get(codePieces
-											.size() - 1));
-									codeBlock.setCode(codePieces);
-								}
+							if (start.getDirectiveText().equals(
+									headComment.getDirectiveText())
+									&& end.getDirectiveText().equals(
+											endComment.getDirectiveText())) {
+								codePieces.remove(0);
+								codePieces.remove(codePieces.get(codePieces
+										.size() - 1));
+								codeBlock.setCode(codePieces);
 							}
 						}
 					}
