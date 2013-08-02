@@ -54,6 +54,7 @@ import scriptease.translator.io.model.SimpleResource;
  * @author remiller
  * @author graves
  * @author mfchurch
+ * @author jyuen
  */
 public final class KnowIt extends StoryComponent implements TypedComponent,
 		StoryComponentObserver {
@@ -505,6 +506,17 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// If the reference has been removed, unbind
 			this.clearBinding();
 
+		} else if (type == StoryComponentChangeEnum.CHANGE_DISABILITY) {
+			// If the reference has been disabled, we need to disable the effects using it
+			if (event.getSource() instanceof KnowIt) {
+				final KnowIt binding = (KnowIt) event.getSource();
+				
+				if (binding.isDisabled())
+					this.getOwner().getOwner().setDisabled(true);
+				else
+					this.getOwner().getOwner().setDisabled(false);
+			}
+			
 		} else {
 			// Forward reference updates to this KnowIt's observers
 			this.knowItBinding.process(new BindingAdapter() {
