@@ -528,39 +528,8 @@
 
 		<!-- Format for ScriptIts -->
 		<Format id="scriptItConditional">
-			<Line>
-				<Literal>var enabledPoints : List.&lt;String&gt; = SEStory.GetAllActive();</Literal>
-			</Line>
-			<Line />
-			
 			<Series data="identicalCauses">
-			<Line> 
-				<Literal>if (enabledPoints.Contains("</Literal> 
-				<Fragment data="currentstorypoint" />
-				<Literal>")) {</Literal> 
-			</Line>
-				<Indent>
-					<Scope data="activeChild">
-						<FormatRef ref="childrenWithoutImplicits" />
-					</Scope>
-				</Indent>
-			<Line> 
-				<Literal>} else {</Literal> 
-			</Line>
-				<Indent>
-					<Scope data="inactiveChild">
-						<FormatRef ref="childrenWithoutImplicits" />
-					</Scope>
-				</Indent>
-			<Line> 
-				<Literal>}</Literal> 
-			</Line>
-			<Line />
-			<Line>
-				<Scope data="alwaysChild">
-					<FormatRef ref="childrenWithoutImplicits" />
-				</Scope>
-			</Line>
+				<FormatRef ref="childrenWithoutImplicits" />
 			</Series>
 		</Format>
 
@@ -708,6 +677,5 @@
 			<Line />
 			<Line />
 		</Format>
-
 	</Formats>
 </LanguageDictionary>

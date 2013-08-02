@@ -39,7 +39,6 @@
       <Name>Play nod head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -951,7 +950,6 @@
       <Name>Play drink animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -1014,7 +1012,6 @@
       <Name>Drop the item that &lt;Character&gt; is currently holding</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>

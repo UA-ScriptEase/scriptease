@@ -15,7 +15,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.translator.codegenerator.LocationInformation;
 
 /**
@@ -80,6 +79,28 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 					return (CauseIt) cause;
 			}
 		return null;
+	}
+
+	/**
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean codeBlocksEqual(ScriptIt other) {
+		final Collection<CodeBlock> thisBlocks = this.getCodeBlocks();
+		final Collection<CodeBlock> otherBlocks = other.getCodeBlocks();
+
+		boolean equal = super.equals(other);
+
+		if (equal) {
+			equal &= thisBlocks.size() == otherBlocks.size();
+
+			for (CodeBlock thisblock : thisBlocks) {
+				equal &= thisblock.idIsInCollection(otherBlocks);
+			}
+		}
+
+		return equal;
 	}
 
 	@Override
@@ -259,12 +280,11 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		parameters = this.getParameters();
 
 		for (KnowIt parameter : parameters) {
-			final KnowItBinding binding;
+			parameter.revalidateKnowItBindings();
+		}
 
-			binding = parameter.getBinding();
-
-			if (!binding.compatibleWith(parameter))
-				parameter.setBinding(new KnowItBindingNull());
+		for (StoryComponent child : this.getChildren()) {
+			child.revalidateKnowItBindings();
 		}
 	}
 

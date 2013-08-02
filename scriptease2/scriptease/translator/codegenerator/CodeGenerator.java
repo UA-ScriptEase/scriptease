@@ -132,7 +132,6 @@ public class CodeGenerator {
 		analyzer = new SemanticAnalyzer(this.generatingStoryPoints);
 
 		// Set the automatic bindings for any causes that require one.
-		model.setAutomaticBindings(this.generatingStoryPoints);
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
@@ -141,6 +140,8 @@ public class CodeGenerator {
 		if (problems.isEmpty()) {
 			final Collection<StoryComponent> automatics;
 			final Collection<Set<CodeBlock>> scriptBuckets;
+
+			model.setAutomaticBindings(this.generatingStoryPoints);
 
 			automatics = model.generateAutomaticCauses();
 

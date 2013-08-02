@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -19,6 +20,8 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
@@ -533,12 +536,50 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		binding = this.getBinding();
 
-		binding.process(new BindingAdapter() {
-			@Override
-			public void processFunction(KnowItBindingFunction function) {
+		if (!binding.compatibleWith(this)) {
+			if (binding instanceof KnowItBindingReference) {
+				// Try to fix reference bindings
+				final KnowIt referred;
+				// This is the previous knowIt we had a reference to.
+				// We need to find out if the same KnowIt exists where we added
+				// it to.
+				referred = ((KnowItBindingReference) binding).getValue();
 
-				function.getValue().revalidateKnowItBindings();
+				final KnowIt replacement;
+
+				replacement = this.getReplacementForReference(referred);
+
+				if (replacement != null) {
+					this.setBinding(replacement);
+					this.revalidateKnowItBindings();
+				} else
+					this.setBinding(new KnowItBindingNull());
+			} else
+				this.setBinding(new KnowItBindingNull());
+		} else
+			binding.process(new BindingAdapter() {
+				@Override
+				public void processFunction(KnowItBindingFunction function) {
+					function.getValue().revalidateKnowItBindings();
+				}
+			});
+	}
+
+	private KnowIt getReplacementForReference(final KnowIt reference) {
+		// Kind of ugly, but the only way we can return something.
+		StoryComponent owner = this.getOwner();
+
+		while (owner != null) {
+			if (owner instanceof ComplexStoryComponent) {
+				for (StoryComponent child : ((ComplexStoryComponent) owner)
+						.getChildren()) {
+					if (child instanceof KnowIt && child.equals(reference))
+						return (KnowIt) child;
+				}
 			}
-		});
+			owner = owner.getOwner();
+		}
+
+		return null;
 	}
 }

@@ -12,7 +12,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -33,6 +32,7 @@ public class CodeBlockContext extends Context {
 
 	public CodeBlockContext(Context other, CodeBlock source) {
 		super(other);
+		this.setLocationInfo(other.getLocationInfo());
 		this.codeBlock = source;
 	}
 

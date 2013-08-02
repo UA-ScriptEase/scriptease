@@ -70,6 +70,11 @@ public class CauseIt extends ScriptIt {
 	}
 
 	@Override
+	public CauseIt clone() {
+		return (CauseIt) super.clone();
+	}
+
+	@Override
 	public void process(StoryVisitor processController) {
 		processController.processCauseIt(this);
 	}
