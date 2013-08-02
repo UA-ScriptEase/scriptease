@@ -51,7 +51,6 @@ public class StoryComponentPanel extends JPanel implements
 	private boolean editable;
 	private boolean selectable;
 	private boolean removable;
-	private boolean disabled;
 	
 	private ExpansionButton expansionButton;
 
@@ -144,14 +143,6 @@ public class StoryComponentPanel extends JPanel implements
 
 	public boolean isSelectable() {
 		return this.selectable;
-	}
-	
-	public boolean isDisabled() {
-		return this.disabled;
-	}
-
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
 	}
 	
 	public void setExpansionButton(ExpansionButton expansionButton) {
