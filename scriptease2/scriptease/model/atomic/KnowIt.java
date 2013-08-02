@@ -20,6 +20,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -507,16 +508,16 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			this.clearBinding();
 
 		} else if (type == StoryComponentChangeEnum.CHANGE_DISABILITY) {
-			// If the reference has been disabled, we need to disable the effects using it
+			// If the reference has been disabled, we need to disable the
+			// effects using it
 			if (event.getSource() instanceof KnowIt) {
 				final KnowIt binding = (KnowIt) event.getSource();
-				
-				if (binding.isDisabled())
-					this.getOwner().getOwner().setDisabled(true);
-				else
-					this.getOwner().getOwner().setDisabled(false);
+				final StoryComponent owner = this.getOwner().getOwner();
+
+				if (!(owner instanceof StoryComponentContainer)) {
+					owner.setDisabled(binding.isDisabled());
+				}
 			}
-			
 		} else {
 			// Forward reference updates to this KnowIt's observers
 			this.knowItBinding.process(new BindingAdapter() {
