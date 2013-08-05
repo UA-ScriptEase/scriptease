@@ -8,6 +8,7 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.observer.SEFocusObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -74,13 +75,13 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 
 	/**
 	 * Disables <code>components</code> visually by graying out the bindings,
-	 * text, etc.
+	 * text, etc. Enables them again if they are already disabled.
 	 * 
 	 * Also signifies to code gen to add comments to the piece of code.
 	 * 
 	 * @param component
 	 */
-	private void disableComponent(StoryComponentPanel componentPanel) {
+	public void disableComponent(StoryComponentPanel componentPanel) {
 
 		final StoryComponent component = componentPanel.getStoryComponent();
 
@@ -97,9 +98,10 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 				+ " is about to be disabled/enabled");
 
 		component.setDisabled(!disabled);
-		
+
 		for (StoryComponentPanel childPanel : componentPanel.getDescendants()) {
 			childPanel.getStoryComponent().setDisabled(!disabled);
+			childPanel.repaint();
 		}
 
 		componentPanel.repaint();
@@ -112,7 +114,13 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
+			if (!UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().startUndoableAction("Disable");
+
 			this.disableComponent((StoryComponentPanel) focusOwner);
+
+			if (UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().endUndoableAction();
 		}
 	}
 
