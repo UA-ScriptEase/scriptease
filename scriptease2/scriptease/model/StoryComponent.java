@@ -94,7 +94,10 @@ public abstract class StoryComponent implements Cloneable {
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new ArrayList<String>();
 		this.isVisible = true;
-		this.isDisabled = false;
+		if (this.ownerComponent != null && this.ownerComponent.isDisabled)
+			this.isDisabled = true;
+		else
+			this.isDisabled = false;
 	}
 
 	/**
@@ -333,8 +336,12 @@ public abstract class StoryComponent implements Cloneable {
 		// make them the same again, now that they're less conjoined.
 		clone.setDisplayText(new String(this.displayText));
 		clone.setVisible(this.isVisible);
-		clone.setDisabled(this.isDisabled);
 		clone.setOwner(this.ownerComponent);
+
+		if (clone.ownerComponent != null && clone.ownerComponent.isDisabled)
+			clone.setDisabled(true);
+		else
+			clone.setDisabled(this.isDisabled);
 
 		clone.setLibrary(this.library);
 

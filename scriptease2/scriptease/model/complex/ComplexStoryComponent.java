@@ -135,6 +135,8 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			this.childComponents.add(siblingIndex, newChild);
 
 		newChild.setOwner(this);
+		if (this.isDisabled())
+			newChild.setDisabled(true);
 
 		super.notifyObservers(new StoryComponentEvent(newChild,
 				StoryComponentChangeEnum.CHANGE_CHILD_ADDED));
