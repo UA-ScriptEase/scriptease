@@ -66,9 +66,9 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 	private DisableAction() {
 		super(DisableAction.DISABLE_TEXT);
 
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_SPACE);
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 		this.putValue(Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
+				KeyStroke.getKeyStroke(KeyEvent.VK_D, 0));
 
 		SEFocusManager.getInstance().addSEFocusObserver(this);
 	}
