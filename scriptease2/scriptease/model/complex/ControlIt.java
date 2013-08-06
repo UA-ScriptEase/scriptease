@@ -140,9 +140,9 @@ public class ControlIt extends ScriptIt {
 
 				final StoryComponent owner = complex.getOwner();
 
-				if (owner != null
-						&& owner instanceof ComplexStoryComponent
-						&& !(owner instanceof CauseIt)) {
+				if (owner != null && owner instanceof ComplexStoryComponent
+						//&& !(owner instanceof CauseIt)
+						&& !(owner instanceof StoryPoint)) {
 					owner.process(this);
 				}
 			}

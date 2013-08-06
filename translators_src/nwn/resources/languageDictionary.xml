@@ -69,6 +69,32 @@
 				<Literal>;</Literal>
 			</Line>
 		</Format>
+		<Format id="variablesDefinition">
+			<Line>
+				<Literal>// Variables Definition</Literal>
+			</Line>
+			<Series data="variables">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+		</Format>
+		<Format id="childVariablesDeclaration">
+			<Line>
+				<Literal>// Variable Declarations</Literal>
+			</Line>
+			<Series data="children">
+				<FormatRef ref="variablesDeclaration" />
+			</Series>
+			<Line />
+		</Format>
+		<Format id="childVariablesDefinition">
+			<Line>
+				<Literal>// Variable Definitions</Literal>
+			</Line>
+			<Series data="children">
+				<FormatRef ref="variablesDefinition" />
+			</Series>
+			<Line />
+		</Format>
 
 
 		<!-- Implicits -->
@@ -117,7 +143,7 @@
 		<Format id="functionHeader">
 			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			<Literal>(</Literal>
-			<Series data="parameters" unique="true" separator=", ">
+			<Series data="parametersWithSlot" unique="true" separator=", ">
 				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
 			</Series>
 			<Literal>)</Literal>
@@ -126,9 +152,6 @@
 		<Format id="functionCall">
 			<!-- Code block context -->
 			<Scope data="mainCodeBlock">
-				<Series data="parameters">
-					<FormatRef ref="variableDefinition" />
-				</Series>
 				<Line>
 					<FormatRef ref="functionHeader" />
 					<Literal>;</Literal>
@@ -164,22 +187,30 @@
 		<Format id="children">
 			<FormatRef ref="implicitsDeclaration" />
 			<FormatRef ref="implicitsDefinition" />
-			<FormatRef ref="scriptItConditional" />
+			<Series data="identicalCauses">
+				<FormatRef ref="childVariablesDeclaration" />
+				<FormatRef ref="childVariablesDefinition" />
+				<FormatRef ref="storyComponentChildren" />
+				<Line />
+			</Series>
 		</Format>
-		<!-- Gets the appropriate format for the type -->
-		<Format id="childrenWithoutImplicits">
-			<FormatRef ref="variablesDeclaration" />
+		<!-- Gets the children of the story component -->
+		<Format id="storyComponentChildren">
 			<Line>
 				<Literal>// Children</Literal>
 			</Line>
-			<!-- Actions and description definitions come last -->
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
 				<FormatRef data="askIt" ref="askItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
-				<FormatRef data="knowIt" ref="knowItDefinition" />
 				<FormatRef data="controlIt" ref="controlItCall" />
 			</Series>
+		</Format>
+		<!-- Gets the appropriate format for the type -->
+		<Format id="childrenWithoutImplicits">
+			<FormatRef ref="variablesDeclaration" />
+			<FormatRef ref="variablesDefinition" />
+			<FormatRef ref="storyComponentChildren" />
 		</Format>
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
@@ -232,9 +263,6 @@
 
 		<!-- Format for the delay controller -->
 		<Format id="delay">
-			<Scope data="argument" ref="Number">
-				<FormatRef ref="variableDefinition" />
-			</Scope>
 			<Line>
 				<Literal>DelayCommand(</Literal>
 				<Scope data="argument" ref="Number">
@@ -248,9 +276,6 @@
 
 		<!-- Format for the repeat controller -->
 		<Format id="repeat">
-			<Scope data="argument" ref="Number">
-				<FormatRef ref="variableDefinition" />
-			</Scope>
 			<Line>
 				<Literal>int i = 0;</Literal>
 			</Line>
@@ -270,13 +295,6 @@
 			<Line>
 				<Literal>}</Literal>
 			</Line>
-		</Format>
-
-		<!-- Format for ScriptIts -->
-		<Format id="scriptItConditional">
-			<Series data="identicalCauses">
-				<FormatRef ref="childrenWithoutImplicits" />
-			</Series>
 		</Format>
 
 		<!-- Format for askits -->
@@ -322,6 +340,7 @@
 				</Line>
 				<Series data="causes" unique="true">
 					<FormatRef ref="variablesDeclaration" />
+					<FormatRef ref="variablesDefinition" />
 				</Series>
 				<Line>
 					<Literal>//Function Calls</Literal>
