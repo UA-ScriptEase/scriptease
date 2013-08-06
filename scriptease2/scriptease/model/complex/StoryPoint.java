@@ -10,11 +10,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.util.StringOp;
 
@@ -87,6 +91,82 @@ public class StoryPoint extends ComplexStoryComponent {
 		 */
 		return super.clone();
 	}
+
+	@Override
+	public boolean addStoryChildBefore(StoryComponent newChild,
+			StoryComponent sibling) {
+		final boolean accepted = super.addStoryChildBefore(newChild, sibling);
+
+		if (accepted && newChild instanceof CauseIt) {
+			for (StoryComponent child : ((CauseIt) newChild).getChildren())
+				if (child instanceof KnowIt
+						&& child.getDisplayText().contains("Is Active")) {
+					((KnowIt) child).getBinding().process(new BindingAdapter() {
+						@Override
+						public void processFunction(
+								KnowItBindingFunction function) {
+							for (KnowIt param : function.getValue()
+									.getParameters()) {
+								if (param.getBinding() instanceof KnowItBindingNull
+										&& param.getTypes().contains(
+												StoryPoint.STORY_POINT_TYPE)) {
+									param.setBinding(StoryPoint.this);
+								}
+							}
+						}
+					});
+
+				}
+		}
+
+		return accepted;
+	}
+
+	//
+	// @Override
+	// public boolean addStoryChildBefore(StoryComponent newChild,
+	// StoryComponent sibling) {
+	// final boolean accepted = super.addStoryChildBefore(newChild, sibling);
+	//
+	// final LibraryModel model;
+	//
+	// model = SEModelManager.getInstance().getActiveModel().getTranslator()
+	// .getLibrary();
+	//
+	// if (accepted && newChild instanceof CauseIt) {
+	// final CauseIt causeIt = (CauseIt) newChild;
+	//
+	// for (StoryComponent description : model.getDescriptionsCategory()
+	// .getChildren()) {
+	// if (description instanceof KnowIt
+	// && description.getDisplayText().contains("Is Active")) {
+	// final KnowIt knowIt = ((KnowIt) description).clone();
+	// final AskIt askIt = new AskIt();
+	//
+	// knowIt.getBinding().process(new BindingAdapter() {
+	// @Override
+	// public void processFunction(
+	// KnowItBindingFunction function) {
+	// for (KnowIt param : function.getValue()
+	// .getParameters()) {
+	// if (param.getTypes().contains(STORY_POINT_TYPE)) {
+	// param.setBinding(StoryPoint.this);
+	// }
+	// }
+	// }
+	// });
+	//
+	// causeIt.addStoryChild(knowIt);
+	// causeIt.addStoryChild(askIt);
+	// askIt.getCondition().setBinding(knowIt);
+	//
+	// break;
+	// }
+	// }
+	// }
+	//
+	// return accepted;
+	// }
 
 	/**
 	 * Only accepts Causes, not effects, as children.

@@ -157,14 +157,7 @@ public class MetricsAnalyzer {
 
 		// Check the complexity of causes.
 		for (CauseIt cause : causes) {
-
-			final List<StoryComponent> children = new ArrayList<StoryComponent>();
-
-			children.addAll(cause.getActiveBlock().getChildren());
-			children.addAll(cause.getInactiveBlock().getChildren());
-			children.addAll(cause.getAlwaysBlock().getChildren());
-
-			for (StoryComponent child : children) {
+			for (StoryComponent child : cause.getChildren()) {
 
 				if (child instanceof ControlIt) {
 					ControlIt controlIt = (ControlIt) child;
@@ -220,35 +213,6 @@ public class MetricsAnalyzer {
 		metrics.put("Descriptions/Cause", totalDescriptionsInCauses / numCauses);
 		metrics.put("Causes/Story Point", totalCausesInStoryPoints
 				/ numStoryPoints);
-
-		return metrics;
-	}
-
-	/**
-	 * Calculates the use of the cause sections (inactive, active, and always)
-	 * 
-	 * @return A map containing metric values for the frequency each block is
-	 *         used.
-	 */
-	public Map<String, Integer> getCauseBlockMetrics() {
-		Map<String, Integer> metrics = new HashMap<String, Integer>();
-
-		metrics.put("Active", 0);
-		metrics.put("Inactive", 0);
-		metrics.put("Always", 0);
-
-		for (CauseIt cause : causes) {
-			StoryComponentContainer activeBlock = cause.getActiveBlock();
-			StoryComponentContainer inactiveBlock = cause.getInactiveBlock();
-			StoryComponentContainer alwaysBlock = cause.getAlwaysBlock();
-
-			metrics.put("Active", metrics.get("Active")
-					+ activeBlock.getChildren().size());
-			metrics.put("Inactive", metrics.get("Inactive")
-					+ inactiveBlock.getChildren().size());
-			metrics.put("Always", metrics.get("Always")
-					+ alwaysBlock.getChildren().size());
-		}
 
 		return metrics;
 	}
@@ -518,7 +482,6 @@ public class MetricsAnalyzer {
 		final String FREQUENCY = "Frequency";
 		final String AVERAGE = "Average";
 		final String COMPLEXITY = "Complexity";
-		final String CAUSE_BLOCK = "Cause Block";
 		final String FAVOURITE = "Favourite";
 		final String CAUSES = "Causes";
 		final String EFFECTS = "Effects";
@@ -535,9 +498,6 @@ public class MetricsAnalyzer {
 
 		processDataToCSV(COMPLEXITY, AVERAGE + " " + FREQUENCY,
 				this.getStoryComponentComplexity(), data);
-
-		processDataToCSV(CAUSE_BLOCK, FREQUENCY, this.getCauseBlockMetrics(),
-				data);
 
 		processDataToCSV(FAVOURITE + " " + CAUSES, FREQUENCY,
 				this.getFavouriteCauses(), data);
