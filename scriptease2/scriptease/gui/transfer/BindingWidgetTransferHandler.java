@@ -18,6 +18,8 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
@@ -215,6 +217,12 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 					setGroupBindings(sourceBinding, destinationKnowIt, binding);
 				destinationKnowIt.setBinding(sourceBinding);
 
+				// Check if the source binding is disabled. If it is, we should
+				// disable this component too.
+				if (this.isWidgetOwnerDisabled(support)) {
+					destinationKnowIt.getOwner().getOwner().setDisabled(true);
+				}
+
 				this.repopulateParentOf(destinationComponent);
 
 				if (UndoManager.getInstance().hasOpenUndoableAction())
@@ -266,23 +274,57 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		});
 	}
 
-	/*
+	/**
 	 * Attempts to extract a binding from the transfer support. Returns null on
 	 * failure.
+	 * 
+	 * @param support
+	 * @return
 	 */
-	private KnowItBinding extractBinding(TransferHandler.TransferSupport support) {
-		Transferable transferable = support.getTransferable();
-		KnowItBinding binding = null;
+	protected KnowItBinding extractBinding(TransferHandler.TransferSupport support) {
+		KnowItBinding sourceBinding = null;
 
 		try {
-			binding = ((BindingWidget) transferable
-					.getTransferData(KnowItBindingFlavor)).getBinding();
+			sourceBinding = ((BindingWidget) support.getTransferable()
+					.getTransferData(
+							BindingWidgetTransferHandler.KnowItBindingFlavor))
+					.getBinding();
 		} catch (UnsupportedFlavorException e) {
-			// No chocolate for you!
 			return null;
 		} catch (IOException e) {
 			return null;
 		}
-		return binding;
+
+		return sourceBinding;
+	}
+
+	/**
+	 * Check if the source binding is a disabled description - if it is, disable
+	 * the destination owner effect.
+	 */
+	protected boolean isWidgetOwnerDisabled(
+			TransferHandler.TransferSupport support) {
+		try {
+			final BindingWidget bindingWidget;
+			bindingWidget = (BindingWidget) support.getTransferable()
+					.getTransferData(KnowItBindingFlavor);
+
+			if (bindingWidget.getParent().getParent() instanceof StoryComponentPanel) {
+				final StoryComponentPanel panel = (StoryComponentPanel) bindingWidget
+						.getParent().getParent();
+				final StoryComponent component = panel.getStoryComponent();
+
+				if (component.isDisabled())
+					return true;
+				else
+					return false;
+			}
+		} catch (UnsupportedFlavorException e) {
+			return false;
+		} catch (IOException e) {
+			return false;
+		}
+		
+		return false;
 	}
 }

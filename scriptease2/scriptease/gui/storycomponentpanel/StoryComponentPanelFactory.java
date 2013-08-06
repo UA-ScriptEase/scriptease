@@ -186,11 +186,16 @@ public class StoryComponentPanelFactory {
 	 * graphical representation that uses different GUI components.
 	 * 
 	 * @param storyComponent
+	 * @param addLabels
+	 *            whether you want labels added to the
+	 *            <code>StoryComponentPanel</code>
+	 * 
 	 * @author graves
 	 * @author mfchurch
+	 * @author jyuen
 	 */
 	public void parseDisplayText(JPanel displayNamePanel,
-			StoryComponent storyComponent) {
+			StoryComponent storyComponent, boolean addLabels) {
 		int paramTagStart;
 		int paramTagEnd;
 		String tagName;
@@ -203,14 +208,16 @@ public class StoryComponentPanelFactory {
 		displayNamePanel.setOpaque(false);
 		displayNamePanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
-		// Add the StoryComponent's labels
-		for (String labelText : storyComponent.getLabels()) {
-			if (!labelText.isEmpty()) {
-				JLabel label = ScriptWidgetFactory.buildLabel(labelText,
-						ScriptWidgetFactory.LABEL_TEXT_COLOUR,
-						ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
-				displayNamePanel.add(label);
-				displayNamePanel.add(Box.createHorizontalStrut(5));
+		if (addLabels) {
+			// Add the StoryComponent's labels
+			for (String labelText : storyComponent.getLabels()) {
+				if (!labelText.isEmpty()) {
+					JLabel label = ScriptWidgetFactory.buildLabel(labelText,
+							ScriptWidgetFactory.LABEL_TEXT_COLOUR,
+							ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
+					displayNamePanel.add(label);
+					displayNamePanel.add(Box.createHorizontalStrut(5));
+				}
 			}
 		}
 
@@ -366,7 +373,7 @@ public class StoryComponentPanelFactory {
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
 
-				parseDisplayText(mainPanel, complex);
+				parseDisplayText(mainPanel, complex, true);
 
 				// Add a label for the complex story component
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
@@ -378,42 +385,58 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
 				final JPanel mainPanel;
-				final BindingAdapter adapter;
 
 				mainPanel = new JPanel();
-
-				adapter = new BindingAdapter() {
-					@Override
-					public void processNull(KnowItBindingNull nullBinding) {
-					}
-
-					@Override
-					public void processFunction(KnowItBindingFunction function) {
-						mainPanel.add(ScriptWidgetFactory.buildLabel(
-								" describes ", Color.black));
-
-						final Translator active;
-						final DescribeIt describeIt;
-
-						active = TranslatorManager.getInstance()
-								.getActiveTranslator();
-
-						describeIt = active.getDescribeIt(knowIt);
-
-						if (describeIt != null) {
-							mainPanel.add(new DescribeItPanel(knowIt,
-									describeIt));
-						}
-					}
-				};
 
 				mainPanel.setOpaque(false);
 				mainPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
 
-				StoryComponentPanelFactory.this.addWidget(mainPanel, knowIt,
-						true);
+				knowIt.getBinding().resolveBinding()
+						.process(new BindingAdapter() {
+							@Override
+							public void processNull(
+									KnowItBindingNull nullBinding) {
+							}
 
-				knowIt.getBinding().resolveBinding().process(adapter);
+							@Override
+							public void processFunction(
+									KnowItBindingFunction function) {
+
+								for (String labelText : function.getValue()
+										.getLabels()) {
+									if (!labelText.isEmpty()) {
+										JLabel label = ScriptWidgetFactory
+												.buildLabel(
+														labelText,
+														ScriptWidgetFactory.LABEL_TEXT_COLOUR,
+														ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
+										mainPanel.add(label);
+										mainPanel.add(Box
+												.createHorizontalStrut(5));
+									}
+								}
+
+								StoryComponentPanelFactory.this.addWidget(
+										mainPanel, knowIt, true);
+
+								mainPanel.add(ScriptWidgetFactory.buildLabel(
+										" describes ", Color.black));
+
+								final Translator active;
+								final DescribeIt describeIt;
+
+								active = TranslatorManager.getInstance()
+										.getActiveTranslator();
+
+								describeIt = active.getDescribeIt(knowIt);
+
+								if (describeIt != null) {
+									mainPanel.add(new DescribeItPanel(knowIt,
+											describeIt));
+								}
+							}
+						});
+
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 			}
 

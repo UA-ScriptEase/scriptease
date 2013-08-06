@@ -293,13 +293,16 @@ class SEModelTabbedPane extends JTabbedPane {
 
 				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
 					event.getSource().addStoryComponentObserver(this);
+					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
 				} else if (type == StoryComponentChangeEnum.CHANGE_FAN_IN
 						|| type == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
 				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
 
@@ -435,7 +438,7 @@ class SEModelTabbedPane extends JTabbedPane {
 	}
 
 	/**
-	 * Panel intended to be used as a closeable tab for a JTabbedPane.
+	 * Panel intended to be used as a close-able tab for a JTabbedPane.
 	 * 
 	 * This code originally came from an Oracle tutorial, although there have
 	 * been modifications. The following copyright notice is still required.

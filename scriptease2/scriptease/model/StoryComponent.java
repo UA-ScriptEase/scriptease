@@ -48,12 +48,14 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jtduncan
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public abstract class StoryComponent implements Cloneable {
 
 	private String displayText;
 	private Collection<String> labels;
 	private Boolean isVisible;
+	private Boolean isDisabled;
 
 	private LibraryModel library;
 
@@ -92,6 +94,10 @@ public abstract class StoryComponent implements Cloneable {
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new ArrayList<String>();
 		this.isVisible = true;
+		if (this.ownerComponent != null && this.ownerComponent.isDisabled)
+			this.isDisabled = true;
+		else
+			this.isDisabled = false;
 	}
 
 	/**
@@ -160,6 +166,15 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public Boolean isVisible() {
 		return this.isVisible;
+	}
+
+	/**
+	 * Returns whether the StoryComponent is disabled
+	 * 
+	 * @return
+	 */
+	public Boolean isDisabled() {
+		return this.isDisabled;
 	}
 
 	/**
@@ -241,6 +256,12 @@ public abstract class StoryComponent implements Cloneable {
 				StoryComponentChangeEnum.CHANGE_VISIBILITY));
 	}
 
+	public void setDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_DISABILITY));
+	}
+
 	/**
 	 * Registers an instance of <code>StoryComponentObserver</code> as an
 	 * observer of this <code>StoryComponent</code>. The given observer will be
@@ -316,6 +337,11 @@ public abstract class StoryComponent implements Cloneable {
 		clone.setDisplayText(new String(this.displayText));
 		clone.setVisible(this.isVisible);
 		clone.setOwner(this.ownerComponent);
+
+		if (clone.ownerComponent != null && clone.ownerComponent.isDisabled)
+			clone.setDisabled(true);
+		else
+			clone.setDisabled(this.isDisabled);
 
 		clone.setLibrary(this.library);
 

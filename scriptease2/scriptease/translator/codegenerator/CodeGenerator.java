@@ -19,6 +19,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.FileContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 import scriptease.translator.io.model.GameModule;
@@ -153,6 +154,10 @@ public class CodeGenerator {
 					.aggregateScripts(new ArrayList<StoryComponent>(
 							this.generatingStoryPoints));
 
+			// Check if any of the components are disabled i.e. need to be
+			// commented out.
+			this.commentDisabledComponents(scriptBuckets);
+
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
 					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
@@ -190,6 +195,78 @@ public class CodeGenerator {
 		return scriptInfos;
 	}
 
+	/**
+	 * Comments out comments that are disabled so that they do not affect code
+	 * generation.
+	 * 
+	 * @param scriptBuckets
+	 */
+	private void commentDisabledComponents(
+			Collection<Set<CodeBlock>> scriptBuckets) {
+
+		final LiteralFragment headComment = new LiteralFragment("/*\n");
+		final LiteralFragment endComment = new LiteralFragment("*/\n");
+
+		for (Set<CodeBlock> codeBlocks : scriptBuckets) {
+			for (CodeBlock codeBlock : codeBlocks) {
+				final List<AbstractFragment> codePieces;
+
+				codePieces = (List<AbstractFragment>) codeBlock.getCode();
+
+				if (codeBlock.ownerComponent.isDisabled()) {
+
+					// There already are comments - do nothing
+					if (codePieces.size() > 2) {
+						if (codePieces.get(0) instanceof LiteralFragment
+								&& codePieces.get(codePieces.size() - 1) instanceof LiteralFragment) {
+							final LiteralFragment start;
+							final LiteralFragment end;
+
+							start = (LiteralFragment) codePieces.get(0);
+							end = (LiteralFragment) codePieces.get(codePieces
+									.size() - 1);
+
+							if (start.getDirectiveText().equals(
+									headComment.getDirectiveText())
+									&& end.getDirectiveText().equals(
+											endComment.getDirectiveText()))
+								break;
+						}
+					}
+
+					codePieces.add(0, headComment);
+					codePieces.add(endComment);
+
+					codeBlock.setCode(codePieces);
+
+				} else {
+					// Remove the comments if there are any.
+					if (codePieces.size() > 2) {
+						if (codePieces.get(0) instanceof LiteralFragment
+								&& codePieces.get(codePieces.size() - 1) instanceof LiteralFragment) {
+							final LiteralFragment start;
+							final LiteralFragment end;
+
+							start = (LiteralFragment) codePieces.get(0);
+							end = (LiteralFragment) codePieces.get(codePieces
+									.size() - 1);
+
+							if (start.getDirectiveText().equals(
+									headComment.getDirectiveText())
+									&& end.getDirectiveText().equals(
+											endComment.getDirectiveText())) {
+								codePieces.remove(0);
+								codePieces.remove(codePieces.get(codePieces
+										.size() - 1));
+								codeBlock.setCode(codePieces);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private ScriptInfo generateScript(Context context) {
 		// generate the script file
 		final LocationInformation location;
@@ -210,6 +287,7 @@ public class CodeGenerator {
 			throw new IllegalStateException("Unable to find slot " + slotName
 					+ ". Check that it exists in the Library.");
 		}
+
 		// Get the format keyword from the slot and get the format from the
 		// language dictionary
 		format = slot.getFormatKeyword().toUpperCase();

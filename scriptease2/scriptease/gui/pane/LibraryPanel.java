@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -195,6 +196,13 @@ public class LibraryPanel extends JTabbedPane {
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Blocks", this.createTab(blocksList));
 
+		// Set up Hotkeys
+		this.setMnemonicAt(0, KeyEvent.VK_1);
+		this.setMnemonicAt(1, KeyEvent.VK_2);
+		this.setMnemonicAt(2, KeyEvent.VK_3);
+		this.setMnemonicAt(3, KeyEvent.VK_4);
+		this.setMnemonicAt(4, KeyEvent.VK_5);
+		
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);

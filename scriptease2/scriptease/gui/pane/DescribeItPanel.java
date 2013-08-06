@@ -64,7 +64,7 @@ public class DescribeItPanel extends JPanel {
 				path = describeIt.getPath(scriptIt);
 
 				StoryComponentPanelFactory.getInstance().parseDisplayText(
-						scriptItPanel, scriptIt);
+						scriptItPanel, scriptIt, false);
 
 				if (path.size() > 0)
 					describeItGraph.setSelectedNodes(path);
@@ -141,7 +141,7 @@ public class DescribeItPanel extends JPanel {
 						scriptItPanel.removeAll();
 
 						StoryComponentPanelFactory.getInstance()
-								.parseDisplayText(scriptItPanel, clone);
+								.parseDisplayText(scriptItPanel, clone, true);
 
 						UndoManager.getInstance().endUndoableAction();
 					}

@@ -57,9 +57,14 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_BOUND = Color.LIGHT_GRAY;
 
 	/**
+	 * The color (Grayish Blue) used for disabled components.
+	 */
+	public static final Color COLOUR_DISABLED = new Color(148, 172, 176);
+	
+	/**
 	 * The colour (Grey) used for selected UI Components
 	 */
-	public static final Color SELECTED_COLOUR = new Color(200, 200, 200);
+	public static final Color SELECTED_COLOUR = new Color(180, 180, 180);
 
 	/**
 	 * The colour (White) used for unselected UI components
@@ -99,14 +104,13 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (green) used for the insert node tool
 	 */
-	public static final Color COLOUR_UNGROUPABLE_END_NODE = new Color(207, 207,
-			207);
+	public static final Color COLOUR_GROUPABLE_END_NODE = new Color(122, 255,
+			117);
 
 	/**
 	 * The colour (green) used for the insert node tool
 	 */
-	public static final Color COLOUR_GROUPABLE__END_NODE = new Color(255, 41,
-			41);
+	public static final Color COLOUR_GROUPABLE_NODE = new Color(162, 240, 250);
 
 	/**
 	 * The colour (White) used by Fragments by default Story Component Builder.
@@ -235,13 +239,13 @@ public interface ScriptEaseUI {
 	 */
 	public static final Cursor CURSOR_GROUP_START = GUIOp.createCursor("group",
 			new Point(15, 15));
-	
+
 	/**
 	 * Cursor to represent the end of the grouping action, after the beginning
 	 * group node has already been selected.
 	 */
-	public static final Cursor CURSOR_GROUP_END = GUIOp.createCursor("group_end",
-			new Point(15, 15));
+	public static final Cursor CURSOR_GROUP_END = GUIOp.createCursor(
+			"group_end", new Point(15, 15));
 
 	/**
 	 * The maximum screen width that ScriptEase can support. Can be increased if

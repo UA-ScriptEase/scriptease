@@ -21,6 +21,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -55,6 +56,7 @@ import scriptease.translator.io.model.SimpleResource;
  * @author remiller
  * @author graves
  * @author mfchurch
+ * @author jyuen
  */
 public final class KnowIt extends StoryComponent implements TypedComponent,
 		StoryComponentObserver {
@@ -506,6 +508,17 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// If the reference has been removed, unbind
 			this.clearBinding();
 
+		} else if (type == StoryComponentChangeEnum.CHANGE_DISABILITY) {
+			// If the reference has been disabled, we need to disable the
+			// effects using it
+			if (event.getSource() instanceof KnowIt) {
+				final KnowIt binding = (KnowIt) event.getSource();
+				final StoryComponent owner = this.getOwner().getOwner();
+
+				if (!(owner instanceof StoryComponentContainer)) {
+					owner.setDisabled(binding.isDisabled());
+				}
+			}
 		} else {
 			// Forward reference updates to this KnowIt's observers
 			this.knowItBinding.process(new BindingAdapter() {
