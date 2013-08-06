@@ -3738,26 +3738,7 @@
       <Name>When &lt;subject&gt; is attacked with &lt;weapon used&gt; by &lt;the attacker&gt; in &lt;attack mode&gt; with &lt;attack type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is attacked with &lt;weapon used&gt; by &lt;the attacker&gt; in &lt;attack mode&gt; with &lt;attack type&gt;</Name>
@@ -3789,26 +3770,7 @@
       <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
@@ -3840,26 +3802,7 @@
       <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
@@ -3891,26 +3834,7 @@
       <Name>When &lt;subject&gt; converses with &lt;the speaker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; converses with &lt;the speaker&gt;</Name>
@@ -3942,26 +3866,7 @@
       <Name>When &lt;subject&gt;&apos;s &lt;disturbed item&gt; is disturbed by &lt;last disturber&gt; with &lt;disturbance type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s &lt;disturbed item&gt; is disturbed by &lt;last disturber&gt; with &lt;disturbance type&gt;</Name>
@@ -3993,26 +3898,7 @@
       <Name>When &lt;subject&gt;&apos;s combat round ends</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s combat round ends</Name>
@@ -4044,26 +3930,7 @@
       <Name>When &lt;subject&gt;&apos;s heart beats</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s heart beats</Name>
@@ -4095,26 +3962,7 @@
       <Name>When &lt;subject&gt; is blocked by &lt;the blocking door&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is blocked by &lt;the blocking door&gt;</Name>
@@ -4146,26 +3994,7 @@
       <Name>When &lt;subject&gt; perceives &lt;last perceived&gt; that is &lt;last perceived heard&gt;, &lt;last perceived inaudible&gt;, &lt;last perceived seen&gt;, or &lt;last perceived vanished&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; perceives &lt;last perceived&gt; that is &lt;last perceived heard&gt;, &lt;last perceived inaudible&gt;, &lt;last perceived seen&gt;, or &lt;last perceived vanished&gt;</Name>
@@ -4197,26 +4026,7 @@
       <Name>When &lt;Subject&gt; becomes rested</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt; becomes rested</Name>
@@ -4248,26 +4058,7 @@
       <Name>When &lt;subject&gt; is spawned</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is spawned</Name>
@@ -4299,26 +4090,7 @@
       <Name>When &lt;subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt; and if &lt;spell is harmful&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt; and if &lt;spell is harmful&gt;</Name>
@@ -4350,26 +4122,7 @@
       <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
@@ -4402,26 +4155,7 @@
       <Name>When &lt;subject&gt; is closed by &lt;last closer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is closed by &lt;last closer&gt;</Name>
@@ -4454,26 +4188,7 @@
       <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is damaged by &lt;the damager&gt; for &lt;damage amount&gt;</Name>
@@ -4506,26 +4221,7 @@
       <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is killed by &lt;the killer&gt;</Name>
@@ -4558,26 +4254,7 @@
       <Name>When &lt;subject&gt; is disarmed by &lt;disarmer&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is disarmed by &lt;disarmer&gt;</Name>
@@ -4611,26 +4288,7 @@
       <Name>When &lt;Subject&gt;&apos;s heart beats</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt;&apos;s heart beats</Name>
@@ -4665,26 +4323,7 @@
       <Name>When &lt;subject&gt; is locked by &lt;locker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is locked by &lt;locker&gt;</Name>
@@ -4717,26 +4356,7 @@
       <Name>When &lt;subject&gt; is melee attacked with &lt;weapon used&gt; by &lt;the attacker&gt; in &lt;attack mode&gt; with &lt;attack type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is melee attacked with &lt;weapon used&gt; by &lt;the attacker&gt; in &lt;attack mode&gt; with &lt;attack type&gt;</Name>
@@ -4769,26 +4389,7 @@
       <Name>When &lt;subject&gt; is opened by &lt;last opener&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is opened by &lt;last opener&gt;</Name>
@@ -4821,26 +4422,7 @@
       <Name>When &lt;Subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt; and if &lt;spell is harmful&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt; becomes the target of &lt;spell&gt; cast by &lt;spell caster&gt; and if &lt;spell is harmful&gt;</Name>
@@ -4873,26 +4455,7 @@
       <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;triggering creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;Subject&gt;&apos;s trap is triggered by &lt;triggering creature&gt;</Name>
@@ -4926,26 +4489,7 @@
       <Name>When &lt;subject&gt; is unlocked by &lt;unlocker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is unlocked by &lt;unlocker&gt;</Name>
@@ -4978,26 +4522,7 @@
       <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
@@ -5032,26 +4557,7 @@
       <Name>When &lt;subject&gt;&apos;s &lt;disturbed item&gt; is disturbed by &lt;last disturber&gt; with &lt;disturbance type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s &lt;disturbed item&gt; is disturbed by &lt;last disturber&gt; with &lt;disturbance type&gt;</Name>
@@ -5083,26 +4589,7 @@
       <Name>When &lt;subject&gt; is used by &lt;last user&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is used by &lt;last user&gt;</Name>
@@ -5134,26 +4621,7 @@
       <Name>When &lt;subject&gt; is clicked by &lt;clicking creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is clicked by &lt;clicking creature&gt;</Name>
@@ -5187,26 +4655,7 @@
       <Name>When &lt;subject&gt; fails to open for &lt;last clicker&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; fails to open for &lt;last clicker&gt;</Name>
@@ -5238,26 +4687,7 @@
       <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
@@ -5289,26 +4719,7 @@
       <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
@@ -5340,26 +4751,7 @@
       <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;entering creature&gt;</Name>
@@ -5391,26 +4783,7 @@
       <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exited by &lt;exiting creature&gt;</Name>
@@ -5443,26 +4816,7 @@
       <Name>When &lt;subject&gt; is exhausted</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exhausted</Name>
@@ -5494,26 +4848,7 @@
       <Name>When &lt;subject&gt; is ended</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is ended</Name>
@@ -5545,26 +4880,7 @@
       <Name>When &lt;subject&gt; is aborted</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is aborted</Name>
@@ -5596,26 +4912,7 @@
       <Name>When module&apos;s heart beats</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s heart beats</Name>
@@ -5648,26 +4945,7 @@
       <Name>When module loads</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; loads</Name>
@@ -5700,26 +4978,7 @@
       <Name>When module is entered by &lt;entering client&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;entering client&gt;</Name>
@@ -5752,26 +5011,7 @@
       <Name>When module is exited by &lt;exiting client&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is exited by &lt;exiting client&gt;</Name>
@@ -5804,26 +5044,7 @@
       <Name>When module&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt;&apos;s user-defined event &lt;Event Number&gt; occurs</Name>
@@ -5856,26 +5077,7 @@
       <Name>When &lt;Player Character&gt; speaks &lt;Chat Message&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;Player Character&gt; speaks &lt;Chat Message&gt;</Name>
@@ -5908,26 +5110,7 @@
       <Name>When &lt;item loser&gt; loses &lt;item lost&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;item loser&gt; loses &lt;item lost&gt;</Name>
@@ -5960,26 +5143,7 @@
       <Name>When &lt;Player&gt; is killed by &lt;last hostile actor&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;Player&gt; is killed by &lt;last hostile actor&gt;</Name>
@@ -6012,26 +5176,7 @@
       <Name>When &lt;Player&gt;&apos;s health reaches zero</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;Player&gt;&apos;s health reaches zero</Name>
@@ -6064,26 +5209,7 @@
       <Name>When &lt;levelling PC&gt; levels up</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;levelling PC&gt; levels up</Name>
@@ -6116,26 +5242,7 @@
       <Name>When &lt;Player&gt; presses the respawn button</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;Player&gt; presses the respawn button</Name>
@@ -6168,26 +5275,7 @@
       <Name>When &lt;last PC rested&gt; rests &lt;rest type&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;last PC rested&gt; rests &lt;rest type&gt;</Name>
@@ -6220,26 +5308,7 @@
       <Name>When &lt;cutscene aborter&gt; aborts a cutscene</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;cutscene aborter&gt; aborts a cutscene</Name>
@@ -6272,26 +5341,7 @@
       <Name>When &lt;activator&gt; activates &lt;activated item&gt; on &lt;activated item target&gt; at &lt;activated item target location&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;activator&gt; activates &lt;activated item&gt; on &lt;activated item target&gt; at &lt;activated item target location&gt;</Name>
@@ -6324,26 +5374,7 @@
       <Name>When &lt;acquirer&gt; acquires &lt;acquired item&gt; with &lt;stack size&gt; from &lt;object item was acquired from&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;acquirer&gt; acquires &lt;acquired item&gt; with &lt;stack size&gt; from &lt;object item was acquired from&gt;</Name>
@@ -6376,26 +5407,7 @@
       <Name>When &lt;equipper&gt; equips &lt;last item equipped&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>In &lt;subject&gt;, when &lt;equipper&gt; equips &lt;last item equipped&gt;</Name>
@@ -6428,29 +5440,10 @@
       <Name>When &lt;unequipper&gt; unequips &lt;unequipped item&gt; from &lt;possessor&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+     <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when &lt;unequipper&gt; unequips &lt;unequipped item&gt; from &lt;possessor&gt;</Name>
+          <Name>When &lt;unequipper&gt; unequips &lt;unequipped item&gt; from &lt;possessor&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -6480,26 +5473,7 @@
       <Name>When &lt;subject&gt; is entered by &lt;Entering Creature&gt;</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is entered by &lt;Entering Creature&gt;</Name>
@@ -6531,26 +5505,7 @@
       <Name>When &lt;subject&gt; is reached</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is reached</Name>
@@ -6582,29 +5537,10 @@
       <Name>When &lt;story point&gt; is enabled</Name>
       <Visible>true</Visible>
       <Labels/>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>In &lt;subject&gt;, when &lt;story point&gt; is enabled</Name>
+          <Name>When &lt;story point&gt; is enabled</Name>
           <Visible>true</Visible>
           <Labels/>
           <Subject>subject</Subject>
@@ -6668,26 +5604,7 @@
       <Labels>
         <Label>automatic</Label>
       </Labels>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; starts</Name>
