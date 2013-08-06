@@ -15,6 +15,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.codegenerator.LocationInformation;
 
 /**
@@ -285,6 +286,20 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 
 		for (StoryComponent child : this.getChildren()) {
 			child.revalidateKnowItBindings();
+		}
+	}
+	
+	@Override
+	public void setDisabled(Boolean isDisabled) {
+		super.setDisabled(isDisabled);
+
+		final Collection<KnowItBinding> bindings = this.getBindings();
+		
+		for (KnowItBinding binding : bindings) {
+			if (binding instanceof KnowItBindingReference) {
+				final KnowItBindingReference reference = (KnowItBindingReference) binding;
+				
+			}
 		}
 	}
 
