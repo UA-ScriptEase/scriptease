@@ -1,6 +1,7 @@
 package scriptease.model.complex;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.StoryVisitor;
@@ -43,6 +44,7 @@ import scriptease.translator.io.model.GameType;
  * 
  * @author friesen
  * @author remiller
+ * @author jyuen
  */
 public final class AskIt extends ComplexStoryComponent {
 	private KnowIt condition;
@@ -194,4 +196,24 @@ public final class AskIt extends ComplexStoryComponent {
 		this.getIfBlock().revalidateKnowItBindings();
 		this.getElseBlock().revalidateKnowItBindings();
 	}
-}
+
+	@Override
+	public void setDisabled(Boolean isDisabled) {
+		super.setDisabled(isDisabled);
+
+		final Collection<StoryComponent> blocks = this.getChildren();
+		
+		for (StoryComponent block : blocks) {
+			block.setDisabled(true);
+			
+			if (block instanceof StoryComponentContainer) {
+				final StoryComponentContainer container;
+				
+				container = (StoryComponentContainer) block;
+				
+				for (StoryComponent child : container.getChildren())
+					child.setDisabled(true);
+				}
+			}
+		}
+	}

@@ -19,9 +19,10 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -513,12 +514,20 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// effects using it
 			if (event.getSource() instanceof KnowIt) {
 				final KnowIt binding = (KnowIt) event.getSource();
-				
-				if (binding.isDisabled()) {
-					final StoryComponent owner = this.getOwner().getOwner();
 
-					if (!(owner instanceof StoryComponentContainer)) {
+				if (binding.isDisabled()) {
+					final StoryComponent owner = this.getOwner();
+
+					if (owner instanceof AskIt)
+						// Disable the question if it references this binding
 						owner.setDisabled(true);
+					else {
+						// Or else disable the effect
+						final StoryComponent ownersOwner = owner.getOwner();
+						if (ownersOwner instanceof ScriptIt
+								&& !(ownersOwner instanceof CauseIt)) {
+							ownersOwner.setDisabled(true);
+						}
 					}
 				}
 			}
@@ -530,6 +539,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				public void processReference(KnowItBindingReference reference) {
 					KnowIt.this.notifyObservers(event);
 				}
+
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					KnowIt.this.notifyObservers(event);
