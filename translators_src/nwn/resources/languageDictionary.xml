@@ -275,32 +275,7 @@
 		<!-- Format for ScriptIts -->
 		<Format id="scriptItConditional">
 			<Series data="identicalCauses">
-				<Line>
-					<Literal>if(SE2_Story_GetState(GetFirstPC(), "</Literal>
-					<Fragment data="currentstorypoint" />
-					<Literal>") == STORY_POINT_STATE_ENABLED){</Literal>
-				</Line>
-				<Indent>
-					<Scope data="activeChild">
-						<FormatRef ref="childrenWithoutImplicits" />
-					</Scope>
-				</Indent>
-				<Line>
-					<Literal>} else {</Literal>
-				</Line>
-				<Indent>
-					<Scope data="inactiveChild">
-						<FormatRef ref="childrenWithoutImplicits" />
-					</Scope>
-				</Indent>
-				<Line>
-					<Literal>}</Literal>
-				</Line>
-				<Line>
-					<Scope data="alwaysChild">
-						<FormatRef ref="childrenWithoutImplicits" />
-					</Scope>
-				</Line>
+				<FormatRef ref="childrenWithoutImplicits" />
 			</Series>
 		</Format>
 

@@ -37,7 +37,7 @@ public class KnowItBindingFunction extends KnowItBinding {
 	public boolean equals(Object other) {
 		return (other instanceof KnowItBindingFunction)
 				&& ((KnowItBindingFunction) other).functionValue
-						.equals(this.functionValue);
+						.codeBlocksEqual(this.functionValue);
 	}
 
 	@Override

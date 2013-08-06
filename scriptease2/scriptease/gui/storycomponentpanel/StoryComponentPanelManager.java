@@ -109,7 +109,8 @@ public class StoryComponentPanelManager {
 		// We don't want to remove the StoryComponentPanel if it belongs to
 		// a StoryComponentContainer - only remove the contents.
 		for (StoryComponentPanel parent : toDelete) {
-			if (parent.getStoryComponent() instanceof StoryComponentContainer) {
+			final StoryComponent parentComponent = parent.getStoryComponent();
+			if (parentComponent instanceof StoryComponentContainer) {
 				toDelete = this.getSelectedPanels();
 				toDelete.removeAll(this.getSelectedParents());
 				break;

@@ -53,7 +53,6 @@ public class MetricsPanel extends JPanel {
 	private static final String QUESTIONS = "Questions";
 	private static final String REPEATS = "Repeats";
 	private static final String DELAYS = "Delays";
-	private static final String CAUSE_BLOCKS = "Cause Blocks";
 
 	/**
 	 * Creates a new MetricsPanel with the default tabs and histograms.
@@ -65,7 +64,6 @@ public class MetricsPanel extends JPanel {
 
 		tabs.addTab(COMPONENT_COUNT, createNumComponentsPage());
 		tabs.addTab(FAVOURITE, createFavoriteCausesPage());
-		tabs.addTab(CAUSE_BLOCKS, createCauseBlocksPage());
 		tabs.addTab(STORY_COMPONENT + " " + COMPLEXITY,
 				createStoryComponentComplexityPage());
 		tabs.addTab(STORY_POINT + " " + COMPLEXITY,
@@ -125,33 +123,6 @@ public class MetricsPanel extends JPanel {
 
 		// Create the Pie Chart
 		pieChart = createPieChart("Average " + COMPLEXITY, complexityValues);
-
-		chartManager = new ChartManager(histogram, pieChart);
-
-		return chartManager.getChartPanel();
-	}
-
-	/**
-	 * Create the body for the cause blocks page. I.e. The number of times a
-	 * specific cause block was used (active/inactive/always).
-	 * 
-	 * @return the page body.
-	 */
-	private JSplitPane createCauseBlocksPage() {
-		final Map<String, Integer> causeBlockValues;
-
-		final ChartPanel histogram;
-		final ChartPanel pieChart;
-		final ChartManager chartManager;
-
-		causeBlockValues = metrics.getCauseBlockMetrics();
-
-		// Create the Histogram
-		histogram = createHistogram(CAUSE_BLOCKS, CAUSE_BLOCKS, FREQUENCY,
-				causeBlockValues, true);
-
-		// Create the Pie Chart
-		pieChart = createPieChart(CAUSE_BLOCKS, causeBlockValues);
 
 		chartManager = new ChartManager(histogram, pieChart);
 

@@ -16,6 +16,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
@@ -315,7 +316,7 @@ public final class StoryModel extends SEModel {
 				final Collection<String> resourceTypes = resource.getTypes();
 
 				for (CauseIt automatic : library.getAutomatics()) {
-					final CauseIt copy = automatic.clone();
+					final ScriptIt copy = automatic.clone();
 					final Collection<KnowIt> parameters = copy.getParameters();
 
 					for (KnowIt parameter : parameters) {

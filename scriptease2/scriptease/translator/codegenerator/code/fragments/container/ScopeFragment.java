@@ -96,12 +96,6 @@ public class ScopeFragment extends AbstractContainerFragment {
 			return context.getBinding();
 		case START:
 			return context.getStartStoryPoint();
-		case ACTIVECHILD:
-			return context.getActiveChild();
-		case INACTIVECHILD:
-			return context.getInactiveChild();
-		case ALWAYSCHILD:
-			return context.getAlwaysChild();
 		case CAUSE:
 			return context.getCause();
 		case AUDIO:

@@ -197,21 +197,6 @@ public abstract class Context {
 		return null;
 	}
 
-	public StoryComponentContainer getActiveChild() {
-		unimplemented("getActiveChild");
-		return null;
-	}
-
-	public StoryComponentContainer getInactiveChild() {
-		unimplemented("getInactiveChild");
-		return null;
-	}
-
-	public StoryComponentContainer getAlwaysChild() {
-		unimplemented("getAlwaysChild");
-		return null;
-	}
-
 	public Collection<KnowIt> getImplicits() {
 		unimplemented("getImplicits");
 		return null;

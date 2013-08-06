@@ -52,26 +52,7 @@
       <Labels>
         <Label>A*</Label>
       </Labels>
-      <Children>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Active:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>&lt;#currentStoryPoint&gt; Inactive:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-        <StoryComponentContainer>
-          <Name>Always:</Name>
-          <Visible>true</Visible>
-          <Labels/>
-          <Children/>
-        </StoryComponentContainer>
-      </Children>
+      <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>When &lt;subject&gt; reaches its target</Name>

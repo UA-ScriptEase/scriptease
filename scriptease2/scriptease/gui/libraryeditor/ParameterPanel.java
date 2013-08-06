@@ -330,7 +330,7 @@ class ParameterPanel extends JPanel {
 
 				bindingField = new JTextField(30);
 
-				if (bindingText.equals("<unbound!>"))
+				if (bindingText.equals("null"))
 					bindingField.setText("");
 				else
 					bindingField.setText(bindingText);
@@ -368,7 +368,7 @@ class ParameterPanel extends JPanel {
 
 				final float initVal;
 
-				if (bindingText.equals("<unbound!>") || bindingText.isEmpty())
+				if (bindingText.equals("null") || bindingText.isEmpty())
 					initVal = 0;
 				else
 					initVal = Float.parseFloat(bindingText);
@@ -404,7 +404,7 @@ class ParameterPanel extends JPanel {
 				for (String key : map.keySet())
 					bindingBox.addItem(map.get(key));
 
-				if (bindingText.equals("<unbound!>"))
+				if (bindingText.equals("null"))
 					bindingBox.setSelectedItem(null);
 				else
 					bindingBox.setSelectedItem(map.get(bindingText));
