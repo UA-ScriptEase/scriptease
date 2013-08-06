@@ -576,6 +576,10 @@ public final class FileManager {
 					return;
 				}
 			}
+		} catch (Exception e) {
+			// Need to deal with default exceptions as well.
+			Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
+					Thread.currentThread(), e);
 		}
 	}
 
