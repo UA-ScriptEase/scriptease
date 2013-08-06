@@ -93,10 +93,6 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 				&& component.getOwner().isDisabled())
 			return;
 
-		System.out.println("DEBUG - story component panel "
-				+ componentPanel.toString()
-				+ " is about to be disabled/enabled");
-
 		component.setDisabled(!disabled);
 
 		for (StoryComponentPanel childPanel : componentPanel.getDescendants()) {
