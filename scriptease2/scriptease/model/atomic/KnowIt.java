@@ -19,9 +19,10 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -513,10 +514,32 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// effects using it
 			if (event.getSource() instanceof KnowIt) {
 				final KnowIt binding = (KnowIt) event.getSource();
-				final StoryComponent owner = this.getOwner().getOwner();
 
-				if (!(owner instanceof StoryComponentContainer)) {
-					owner.setDisabled(binding.isDisabled());
+				if (binding.isDisabled()) {
+					final StoryComponent owner = this.getOwner();
+
+					if (owner == null)
+						return;
+
+					if (owner instanceof AskIt)
+						// Disable the question if it references this binding
+						owner.setDisabled(true);
+					else {
+						// Or else disable the effect or description
+						final StoryComponent scriptIt = owner.getOwner();
+						if (scriptIt instanceof ScriptIt
+								&& !(scriptIt instanceof CauseIt)) {
+
+							final StoryComponent description = scriptIt
+									.getOwner();
+
+							if (description != null
+									&& description instanceof KnowIt)
+								description.setDisabled(true);
+							else
+								scriptIt.setDisabled(true);
+						}
+					}
 				}
 			}
 		} else {
@@ -605,5 +628,18 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		}
 
 		return null;
+	}
+	
+	@Override
+	public void setDisabled(Boolean disabled) {
+		super.setDisabled(disabled);
+		
+		final KnowItBinding binding = this.getBinding();
+		if (binding instanceof KnowItBindingFunction) {
+			final KnowItBindingFunction function = (KnowItBindingFunction) binding;
+			final ScriptIt scriptIt = function.getValue();
+			
+			scriptIt.setDisabled(disabled);
+		}
 	}
 }

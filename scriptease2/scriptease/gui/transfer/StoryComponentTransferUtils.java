@@ -80,29 +80,6 @@ public class StoryComponentTransferUtils {
 			StoryComponent destinationComponent = ((StoryComponentPanel) destinationPanel)
 					.getStoryComponent();
 
-			// Make sure the panel we're dropping it in is a
-			// panel that can hold children (StoryComponentContainer or
-			// ControlIts or StoryPoint) or else try the parent.
-			if (!(destinationComponent instanceof StoryComponentContainer)
-					&& !(destinationComponent instanceof ControlIt)
-					&& !(destinationComponent instanceof AskIt)
-					&& !(destinationComponent instanceof StoryPoint)) {
-
-				destinationPanel = destinationPanel.getParent();
-
-				if (destinationPanel instanceof StoryComponentPanel) {
-					destinationComponent = ((StoryComponentPanel) destinationPanel)
-							.getStoryComponent();
-
-					if (!(destinationComponent instanceof StoryComponentContainer)
-							&& !(destinationComponent instanceof ControlIt)
-							&& !(destinationComponent instanceof AskIt)
-							&& !(destinationComponent instanceof StoryPoint))
-						return false;
-				} else
-					return false;
-			}
-
 			// Finally, check whether we have a valid component.
 			try {
 				final Collection<StoryComponent> components;
@@ -125,10 +102,8 @@ public class StoryComponentTransferUtils {
 								&& component instanceof AskIt)
 							return false;
 
-						// Nor do we want to be dropping causes in their own
-						// blocks, or anything other than other causes for this
-						// matter.
-						if (!(destinationComponent instanceof StoryPoint)
+						// Nor do we want to be dropping causes in effects
+						if ((!(destinationComponent instanceof StoryPoint) && !(destinationComponent instanceof CauseIt))
 								&& component instanceof CauseIt)
 							return false;
 
