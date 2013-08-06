@@ -6648,7 +6648,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Scope data="ALWAYSCHILD" ref="Object">
+              <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="INCLUDE"/>
               </Scope>
               <Literal>.animation.Stop();</Literal>
@@ -7998,7 +7998,7 @@
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>).useGravity = </Literal>
-              <Scope data="ALWAYSCHILD" ref="Disable">
+              <Scope data="ARGUMENT" ref="Disable">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>;</Literal>

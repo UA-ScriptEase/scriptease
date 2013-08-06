@@ -518,15 +518,26 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				if (binding.isDisabled()) {
 					final StoryComponent owner = this.getOwner();
 
+					if (owner == null)
+						return;
+
 					if (owner instanceof AskIt)
 						// Disable the question if it references this binding
 						owner.setDisabled(true);
 					else {
-						// Or else disable the effect
-						final StoryComponent ownersOwner = owner.getOwner();
-						if (ownersOwner instanceof ScriptIt
-								&& !(ownersOwner instanceof CauseIt)) {
-							ownersOwner.setDisabled(true);
+						// Or else disable the effect or description
+						final StoryComponent scriptIt = owner.getOwner();
+						if (scriptIt instanceof ScriptIt
+								&& !(scriptIt instanceof CauseIt)) {
+
+							final StoryComponent description = scriptIt
+									.getOwner();
+
+							if (description != null
+									&& description instanceof KnowIt)
+								description.setDisabled(true);
+							else
+								scriptIt.setDisabled(true);
 						}
 					}
 				}
