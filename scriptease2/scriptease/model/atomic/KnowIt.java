@@ -512,10 +512,13 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// effects using it
 			if (event.getSource() instanceof KnowIt) {
 				final KnowIt binding = (KnowIt) event.getSource();
-				final StoryComponent owner = this.getOwner().getOwner();
+				
+				if (binding.isDisabled()) {
+					final StoryComponent owner = this.getOwner().getOwner();
 
-				if (!(owner instanceof StoryComponentContainer)) {
-					owner.setDisabled(binding.isDisabled());
+					if (!(owner instanceof StoryComponentContainer)) {
+						owner.setDisabled(true);
+					}
 				}
 			}
 		} else {
@@ -526,7 +529,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				public void processReference(KnowItBindingReference reference) {
 					KnowIt.this.notifyObservers(event);
 				}
-
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					KnowIt.this.notifyObservers(event);
