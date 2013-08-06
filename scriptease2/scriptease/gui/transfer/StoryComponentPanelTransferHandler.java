@@ -250,7 +250,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 								.updatePanelBackgrounds();
 
 					if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer
-							|| acceptingPanel.getStoryComponent() instanceof ControlIt)
+							|| acceptingPanel.getStoryComponent() instanceof ControlIt
+							|| acceptingPanel.getStoryComponent() instanceof CauseIt)
+
 						setPanelAndChildrenBackground(Color.LIGHT_GRAY,
 								acceptingPanel);
 					else
