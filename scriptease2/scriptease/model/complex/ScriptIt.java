@@ -15,6 +15,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.codegenerator.LocationInformation;
 
 /**
@@ -54,7 +55,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	 */
 	public Collection<CodeBlock> getCodeBlocksForLocation(
 			LocationInformation locationInfo) {
-		
+
 		final Collection<CodeBlock> matching = new ArrayList<CodeBlock>(1);
 
 		for (CodeBlock codeBlock : this.codeBlocks) {
@@ -285,6 +286,28 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 
 		for (StoryComponent child : this.getChildren()) {
 			child.revalidateKnowItBindings();
+		}
+	}
+
+	@Override
+	public void setDisabled(Boolean disable) {
+		super.setDisabled(disable);
+
+		if (!disable) {
+			// Enable the descriptions that are used as bindings if the effect
+			// is enabled
+			final Collection<KnowItBinding> bindings = this.getBindings();
+
+			for (KnowItBinding binding : bindings) {
+				if (binding instanceof KnowItBindingReference) {
+					final KnowItBindingReference reference = (KnowItBindingReference) binding;
+
+					final KnowIt value = reference.getValue();
+
+					if (value.isDisabled())
+						value.setDisabled(false);
+				}
+			}
 		}
 	}
 
