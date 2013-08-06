@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.UIManager;
+
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
@@ -276,7 +278,6 @@ public class CodeGenerator {
 		final Slot slot;
 		final String format;
 		final List<AbstractFragment> fileFormat;
-		final String scriptContent;
 
 		location = context.getLocationInfo();
 		translator = context.getTranslator();
@@ -293,9 +294,32 @@ public class CodeGenerator {
 		format = slot.getFormatKeyword().toUpperCase();
 		fileFormat = translator.getLanguageDictionary().getFormat(format);
 		// resolve the format into code
-		scriptContent = AbstractFragment.resolveFormat(fileFormat, context);
 
-		return new ScriptInfo(scriptContent, location);
+		try {
+			final String scriptContent;
+
+			scriptContent = AbstractFragment.resolveFormat(fileFormat, context);
+
+			return new ScriptInfo(scriptContent, location);
+		} catch (Exception e) {
+			final String scriptContent;
+
+			e.printStackTrace();
+
+			WindowFactory
+					.getInstance()
+					.showExceptionDialog(
+							"Code Generation Exception",
+							"Code did not write correctly.",
+							"ScriptEase II encountered an error while writing code.<br>"
+									+ "The code has either not been written, or written incorrectly.<br>"
+									+ "Please send us an error report so we can fix the issue.",
+							UIManager.getIcon("OptionPane.errorIcon"), e);
+
+			scriptContent = "Code Generation Exception";
+			return new ScriptInfo(scriptContent, location);
+		}
+
 	}
 
 	/**
