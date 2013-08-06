@@ -7,8 +7,10 @@ import java.util.regex.Pattern;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
 
 /**
@@ -41,6 +43,21 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 		}
 
 		return AbstractFragment.resolveFormat(typeFormat, this);
+	}
+
+	@Override
+	public String getUniqueID() {
+		final KnowItBindingResource binding;
+		final Resource value;
+
+		binding = (KnowItBindingResource) this.binding;
+		value = binding.getValue();
+
+		if (value instanceof DialogueLine)
+			return Integer.toString(((DialogueLine) value).getUniqueID());
+		else
+			return "Cannot get a Unique ID for non Dialogue Line Resource"
+					+ "bindings.";
 	}
 
 	/**

@@ -104,7 +104,7 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 				// Remove last ", or ".
 				tooltipTypes = tooltipTypes.substring(0,
 						tooltipTypes.length() - 5);
-			} else if (types.size() > 0)
+			} else if (types.size() == 1)
 				tooltipTypes = types.get(0);
 
 			this.setToolTipText("Drag a binding of type " + tooltipTypes

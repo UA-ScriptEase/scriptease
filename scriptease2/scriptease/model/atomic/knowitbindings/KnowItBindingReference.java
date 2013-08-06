@@ -139,7 +139,10 @@ public class KnowItBindingReference extends KnowItBinding {
 	}
 
 	/**
-	 * No need to clone references, the point is that they stay the same
+	 * TODO We need to clone references sometimes. Say we clone both the thing
+	 * it's referenced to, and the reference holder. Then what?
+	 * 
+	 * But at other times, we don't want to change anything.
 	 */
 	@Override
 	public KnowItBinding clone() {

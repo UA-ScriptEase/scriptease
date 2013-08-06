@@ -57,9 +57,9 @@ public class StoryModelConverter implements Converter {
 		XMLNode.TRANSLATOR.writeString(writer, model.getTranslator().getName());
 		XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
 		XMLNode.GAME_MODULE.writeString(writer, modulePath);
-		XMLNode.START_STORY_POINT.writeObject(writer, context, model.getRoot());
 		XMLNode.DIALOGUES
 				.writeObject(writer, context, model.getDialogueRoots());
+		XMLNode.START_STORY_POINT.writeObject(writer, context, model.getRoot());
 	}
 
 	@Override
@@ -160,6 +160,11 @@ public class StoryModelConverter implements Converter {
 		// them after assigning the story to the static variable.
 		currentStory = model;
 
+		lines = XMLNode.DIALOGUES.readCollection(reader, context,
+				DialogueLine.class);
+
+		model.addDialogueRoots(lines);
+
 		WindowFactory.showProgressBar(READ_STORY, new Runnable() {
 			@Override
 			public void run() {
@@ -167,11 +172,6 @@ public class StoryModelConverter implements Converter {
 						context, StoryPoint.class));
 			}
 		});
-
-		lines = XMLNode.DIALOGUES.readCollection(reader, context,
-				DialogueLine.class);
-
-		model.addDialogueRoots(lines);
 
 		// reset these to free the memory.
 		currentStory = null;

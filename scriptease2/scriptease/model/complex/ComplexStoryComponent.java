@@ -234,7 +234,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		this.allowableChildMap.put(newType, numAllowed);
 	}
 
-	public final void registerChildType(
+	public final void registerChildTypes(
 			Collection<Class<? extends StoryComponent>> newTypes,
 			Integer numAllowed) {
 

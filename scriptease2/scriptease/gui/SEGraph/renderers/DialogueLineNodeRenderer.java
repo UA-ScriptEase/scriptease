@@ -19,24 +19,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.translator.io.model.GameModule;
-import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
 
 /**
@@ -240,53 +234,22 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 			final SlotType slotType) {
 		final JComponent slotPanel;
 		final String type;
-		final Resource resource;
+		final KnowIt knowIt;
 
 		if (slotType == SlotType.AUDIO) {
 			type = module.getAudioType();
-			resource = line.getAudio();
+			knowIt = line.getAudio();
 		} else if (slotType == SlotType.IMAGE) {
 			type = module.getImageType();
-			resource = line.getImage();
+			knowIt = line.getImage();
 		} else {
 			type = "";
-			resource = null;
+			// We never reach a point where the knowIt is used at this point.
+			knowIt = null;
 		}
 
 		if (StringOp.exists(type)) {
-			final KnowIt knowIt;
-			final StoryComponentObserver observer;
-
-			knowIt = new KnowIt(StringOp.toProperCase(type), type);
-			observer = new StoryComponentObserver() {
-
-				@Override
-				public void componentChanged(StoryComponentEvent event) {
-					if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
-						final Resource resource;
-						final KnowItBinding binding;
-
-						binding = ((KnowIt) event.getSource()).getBinding();
-
-						if (binding instanceof KnowItBindingResource) {
-							resource = ((KnowItBindingResource) binding)
-									.getValue();
-						} else
-							resource = null;
-
-						if (slotType == SlotType.AUDIO)
-							line.setAudio(resource);
-						else if (slotType == SlotType.IMAGE)
-							line.setImage(resource);
-					}
-				}
-			};
 			slotPanel = ScriptWidgetFactory.buildSlotPanel(knowIt, false);
-
-			if (resource != null)
-				knowIt.setBinding(resource);
-
-			knowIt.addStoryComponentObserver(observer);
 		} else
 			slotPanel = new JPanel();
 

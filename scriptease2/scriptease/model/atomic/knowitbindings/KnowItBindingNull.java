@@ -19,7 +19,8 @@ public class KnowItBindingNull extends KnowItBinding {
 
 	@Override
 	public String getScriptValue() {
-		return "<unbound!>";
+		// TODO This should be translator dependant
+		return "null";
 	}
 
 	/**
