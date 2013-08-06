@@ -54,7 +54,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	 */
 	public Collection<CodeBlock> getCodeBlocksForLocation(
 			LocationInformation locationInfo) {
-
+		
 		final Collection<CodeBlock> matching = new ArrayList<CodeBlock>(1);
 
 		for (CodeBlock codeBlock : this.codeBlocks) {
