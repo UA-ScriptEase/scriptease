@@ -199,6 +199,7 @@ public class CodeGenerator {
 		final Slot slot;
 		final String format;
 		final List<AbstractFragment> fileFormat;
+		final String scriptContent;
 
 		location = context.getLocationInfo();
 		translator = context.getTranslator();
@@ -213,22 +214,10 @@ public class CodeGenerator {
 		// language dictionary
 		format = slot.getFormatKeyword().toUpperCase();
 		fileFormat = translator.getLanguageDictionary().getFormat(format);
-
 		// resolve the format into code
-		try {
-			final String scriptContent;
+		scriptContent = AbstractFragment.resolveFormat(fileFormat, context);
 
-			scriptContent = AbstractFragment.resolveFormat(fileFormat, context);
-
-			return new ScriptInfo(scriptContent, location);
-		} catch (CodeGenerationException e) {
-			final String scriptContent;
-
-			scriptContent = "CodeGenerationException occured at the script generating level with message: "
-					+ e.getMessage();
-
-			return new ScriptInfo(scriptContent, location);
-		}
+		return new ScriptInfo(scriptContent, location);
 	}
 
 	/**

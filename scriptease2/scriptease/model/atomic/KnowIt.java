@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import scriptease.controller.BindingAdapter;
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -20,7 +19,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
-import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -565,12 +563,25 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			});
 	}
 
+	/**
+	 * Finds the replacement for a lost reference.
+	 * 
+	 * @param reference
+	 * @return
+	 */
 	private KnowIt getReplacementForReference(final KnowIt reference) {
 		// Kind of ugly, but the only way we can return something.
 		StoryComponent owner = this.getOwner();
 
 		while (owner != null) {
 			if (owner instanceof ComplexStoryComponent) {
+				if (owner instanceof ScriptIt) {
+					for (KnowIt implicit : ((ScriptIt) owner).getImplicits()) {
+						if (implicit.equals(reference))
+							return implicit;
+					}
+				}
+
 				for (StoryComponent child : ((ComplexStoryComponent) owner)
 						.getChildren()) {
 					if (child instanceof KnowIt && child.equals(reference))
