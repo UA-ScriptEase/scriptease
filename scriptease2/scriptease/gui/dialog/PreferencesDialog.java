@@ -173,7 +173,7 @@ public class PreferencesDialog {
 
 		final JPanel outputDirectoryPanel;
 		final JTextField outputDirectoryTextField;
-		
+
 		final JPanel debugModePanel;
 		final JCheckBox debugModeCheckBox;
 
@@ -200,7 +200,7 @@ public class PreferencesDialog {
 		outputDirectoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		outputDirectoryTextField = new JTextField(this.outputDirectory);
 		outputDirectoryTextField.addCaretListener(new CaretListener() {
-			
+
 			@Override
 			public void caretUpdate(CaretEvent e) {
 				PreferencesDialog.this.outputDirectory = outputDirectoryTextField
@@ -215,7 +215,7 @@ public class PreferencesDialog {
 		debugModeCheckBox = new JCheckBox();
 		debugModeCheckBox.setSelected(this.debugMode);
 		debugModeCheckBox.addChangeListener(new ChangeListener() {
-			
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				PreferencesDialog.this.debugMode = debugModeCheckBox
@@ -228,7 +228,7 @@ public class PreferencesDialog {
 		generalPanel.add(undoStackSizePanel);
 		generalPanel.add(outputDirectoryPanel);
 		generalPanel.add(debugModePanel);
-		
+
 		return generalPanel;
 	}
 

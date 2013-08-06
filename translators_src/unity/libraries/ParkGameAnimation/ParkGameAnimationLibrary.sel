@@ -1,6 +1,6 @@
 <LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team">
   <IncludeFiles>
-  	<IncludeFile>SEAnimationController.js</IncludeFile>
+    <IncludeFile>SEAnimationController.js</IncludeFile>
   </IncludeFiles>
   <Types>
     <Type>
@@ -72,16 +72,15 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
+      <Name>&lt;Play&gt; run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
+          <Name>&lt;Play&gt; run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>1</Id>
@@ -107,26 +106,54 @@
                 <Value>0.0</Value>
               </Binding>
             </KnowIt>
+            <KnowIt>
+              <Name>Play</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>EnableDisable</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>EnableDisable</Type>
+                <Value>true</Value>
+              </Binding>
+            </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController(</Literal>
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).CharSpeed = </Literal>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>seAnimationController.CharSpeed = </Literal>
               <Scope data="ARGUMENT" ref="Speed">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>;</Literal>
             </Line>
             <Line>
-              <Literal>SEAnimationController.GetAnimationController(</Literal>
-              <Scope data="ARGUMENT" ref="Character">
+              <Literal>if (</Literal>
+              <Scope data="ARGUMENT" ref="Play">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).doRun = true;</Literal>
+              <Literal>)</Literal>
             </Line>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.doRun = true; </Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.doRun = false;</Literal>
+              </Line>
+            </Indent>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -135,7 +162,6 @@
       <Name>&lt;Play&gt; sit animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -188,7 +214,6 @@
       <Name>&lt;Play&gt; wave animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -241,7 +266,6 @@
       <Name>Play kick animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -278,7 +302,6 @@
       <Name>Play startle animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -315,7 +338,6 @@
       <Name>Play pick up animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -350,18 +372,18 @@
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).itemHeld = </Literal>
-              <Scope data="ARGUMENT" ref="Object">
-                <Fragment data="NAME"/>
-              </Scope>
-              <Literal>.transform;</Literal>
+              <Literal>).doPickUp = true;</Literal>
             </Line>
             <Line>
               <Literal>SEAnimationController.GetAnimationController(</Literal>
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).doPickUp = true;</Literal>
+              <Literal>).itemHeld = </Literal>
+              <Scope data="ARGUMENT" ref="Object">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>.transform;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -371,7 +393,6 @@
       <Name>&lt;Enable&gt; shake head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -441,7 +462,6 @@
       <Name>Play check animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -478,7 +498,6 @@
       <Name>Play talk animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -515,7 +534,6 @@
       <Name>Set &lt;Character&gt;&apos;s emotion to &lt;Emotion&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -746,7 +764,6 @@
       <Name>Perform &lt;AngryHappy&gt; kick animation for &lt;Character&gt; with &lt;LeftRight&gt; foot</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -865,7 +882,6 @@
       <Name>While &lt;Character&gt; is sitting, play talk animation to the character on your &lt;LeftRight&gt;</Name>
       <Visible>true</Visible>
       <Labels>
-        
         <Label>ANI</Label>
       </Labels>
       <Children/>
@@ -947,7 +963,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>Play drink animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
+      <Name>&lt;Play&gt; drink animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Labels>
         <Label>ANI</Label>
@@ -955,7 +971,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Play drink animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
+          <Name>&lt;Play&gt; drink animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Labels/>
           <Id>14</Id>
@@ -970,40 +986,54 @@
               </Types>
             </KnowIt>
             <KnowIt>
-              <Name>Object</Name>
+              <Name>Play</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
-                <Type>GameObject</Type>
+                <Type>EnableDisable</Type>
               </Types>
+              <Binding flavour="constant">
+                <Type>EnableDisable</Type>
+                <Value>true</Value>
+              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController(</Literal>
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).itemHeld = </Literal>
-              <Scope data="ARGUMENT" ref="Object">
-                <Fragment data="NAME"/>
-              </Scope>
-              <Literal>.transform;</Literal>
+              <Literal>);</Literal>
             </Line>
             <Line>
-              <Literal>SEAnimationController.GetAnimationController(</Literal>
-              <Scope data="ARGUMENT" ref="Character">
-                <Fragment data="NAME"/>
-              </Scope>
-              <Literal>).wasDrinking = true;</Literal>
+              <Literal>if (seAnimationController.itemHeld == null)</Literal>
             </Line>
+            <Indent>
+              <Line>
+                <Literal>return;</Literal>
+              </Line>
+            </Indent>
             <Line>
-              <Literal>SEAnimationController.GetAnimationController(</Literal>
-              <Scope data="ARGUMENT" ref="Character">
+              <Literal>if (</Literal>
+              <Scope data="ARGUMENT" ref="Play">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).doHold = true;</Literal>
+              <Literal>)</Literal>
             </Line>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.playDrink = true;</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>else</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>seAnimationController.playDrink = false;</Literal>
+              </Line>
+            </Indent>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -1038,7 +1068,72 @@
               <Scope data="ARGUMENT" ref="Character">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>).itemHeld = null;</Literal>
+              <Literal>).throwOut = true;</Literal>
+            </Line>
+            <Line>
+              <Literal>SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>).toggleHold();</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
+    <ScriptIt>
+      <Name>Play walk animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
+      <Visible>true</Visible>
+      <Labels>
+        <Label>ANI</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>Play walk animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
+          <Visible>true</Visible>
+          <Labels/>
+          <Id>16</Id>
+          <Types/>
+          <Parameters>
+            <KnowIt>
+              <Name>Speed</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>float</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>float</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>Character</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+            <Line>
+              <Literal>var seAnimationController : SEAnimationController = SEAnimationController.GetAnimationController(</Literal>
+              <Scope data="ARGUMENT" ref="Character">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>);</Literal>
+            </Line>
+            <Line>
+              <Literal>seAnimationController.doRun = false;</Literal>
+            </Line>
+            <Line>
+              <Literal>seAnimationController.CharSpeed = </Literal>
+              <Scope data="ARGUMENT" ref="Speed">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>

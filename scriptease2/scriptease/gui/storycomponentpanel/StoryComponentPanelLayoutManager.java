@@ -14,6 +14,10 @@ import javax.swing.JPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
+/**
+ * 
+ * @author mfchurch
+ */
 public class StoryComponentPanelLayoutManager implements LayoutManager {
 	// these are the constraints possible with the
 	// StoryComponentPanelLayoutManager
@@ -26,9 +30,9 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	private final int PARENT_CHILD_GAP = 5;
 	private final int PRE_CHILD_INDENT = 20;
 	private final int POST_CHILD_INDENT = 15;
-	private final int CHILD_VGAP = 5;
-	private final int TOP_GAP = 1;
-	private final int BOTTOM_GAP = 1;
+	private final int CHILD_VGAP = 0;
+	private final int TOP_GAP = 3;
+	private final int BOTTOM_GAP = 3;
 	private final int MAIN_INDENT = 5;
 	private final int BUTTON_GAP = 3;
 

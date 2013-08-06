@@ -280,16 +280,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		acceptingPanel = (StoryComponentPanel) support.getComponent();
 
 		if (StoryComponentTransferUtils.canImportToParent(support)) {
-			final StoryComponentPanel parentPanel;
-
 			if (this.hoveredPanel != null
 					&& this.hoveredPanel.getSelectionManager() != null)
 				this.hoveredPanel.getSelectionManager()
 						.updatePanelBackgrounds();
 
-			parentPanel = acceptingPanel.getParentStoryComponentPanel();
-
-			this.setPanelAndChildrenBackground(Color.LIGHT_GRAY, parentPanel);
 			this.setPanelAndChildrenBackground(Color.GRAY, acceptingPanel);
 
 			this.hoveredPanel = acceptingPanel;
@@ -354,8 +349,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			// Now we actually add the transfer data
 			for (StoryComponent newChild : transferData) {
-				final StoryComponent clone;
-
 				// We want to transfer all the story component's children
 				// instead if the newChild is a StoryComponentContainer.
 				if (newChild instanceof StoryComponentContainer) {
@@ -370,32 +363,21 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					Collections.reverse(children);
 
 					for (StoryComponent child : children) {
-						final StoryComponent copy;
-
-						copy = StoryComponentTransferUtils.addTransferData(
-								child, (ComplexStoryComponent) parent,
-								insertionIndex);
-
-							child.process(new StoryAdapter() {
-								// Notify observers that the component has been
-								// moved
-								@Override
-								protected void defaultProcess(
-										StoryComponent component) {
-									component
-											.notifyObservers(new StoryComponentEvent(
-													copy,
-													StoryComponentChangeEnum.CHANGE_MOVED));
-								}
-							});
+						StoryComponentTransferUtils.addTransferData(child,
+								(ComplexStoryComponent) parent, insertionIndex);
 					}
 				}
 
 				// Handles the usual case.
 				else if (this.canImportAsChild(support)) {
+					final StoryComponent clone;
+
 					clone = StoryComponentTransferUtils.addTransferData(
 							newChild, (ComplexStoryComponent) parent,
 							insertionIndex);
+
+					if (support.isDrop()
+							&& support.getDropAction() == TransferHandler.MOVE) {
 
 						newChild.process(new StoryAdapter() {
 							// Notify observers that the component has been
@@ -409,6 +391,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 												StoryComponentChangeEnum.CHANGE_MOVED));
 							}
 						});
+					}
 				}
 
 				// Handle the case where Effects, Descriptions, or Controls

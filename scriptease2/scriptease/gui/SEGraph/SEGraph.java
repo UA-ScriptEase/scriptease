@@ -18,8 +18,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -69,13 +71,13 @@ public class SEGraph<E> extends JComponent {
 		SELECT_NODE, SELECT_PATH, SELECT_PATH_FROM_START
 	}
 
-	private final SEGraphModel<E> model;
+	public final SEGraphModel<E> model;
 
 	private SEGraphNodeRenderer<E> renderer;
 
 	private final SEGraphNodeTransferHandler<E> transferHandler;
 
-	private final BiHashMap<E, JComponent> nodesToComponents;
+	public final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
 	private final List<SEGraphObserver<E>> observers;
 	private final LinkedHashSet<E> selectedNodes;
@@ -177,6 +179,14 @@ public class SEGraph<E> extends JComponent {
 
 		this.repaint();
 		this.revalidate();
+	}
+
+	/**
+	 * Forwards the depth map recalculation to the model. Should only be used
+	 * when the graph model is changed, as it is performance intensive.
+	 */
+	public void recalculateDepthMap() {
+		this.model.recalculateDepthMap();
 	}
 
 	/**
@@ -678,65 +688,122 @@ public class SEGraph<E> extends JComponent {
 		return component;
 	}
 
+	public Set<E> group = new HashSet<E>();
+	private E groupStartNode = null;
+
 	/**
-	 * Creates a group of nodes in the graph from @param startingNode to @param
-	 * endingNode.
+	 * Find children who are now all orphaned and remove them from the group.
 	 * 
-	 * @param startingNode
-	 *            The node at the start of the group
-	 * @param endingNode
-	 *            The ending node of the group
+	 * @param node
 	 */
-	private void createNodeGroupAt(E startingNode, E endingNode) {
-		// TODO This doesn't actually create the node group yet
+	private void removeGroupOrphans(E node) {
+		final Queue<E> examine = new LinkedList<E>();
+		examine.add(node);
 
-		final Collection<E> nodeGroup;
+		while (!examine.isEmpty()) {
+			final E currentNode = examine.poll();
 
-		nodeGroup = this.model.getPathBetweenNodes(startingNode, endingNode);
+			for (E child : this.model.getChildren(currentNode)) {
+				boolean parentInGroup = false;
 
-		for (SEGraphObserver<E> observer : this.observers) {
-			observer.nodesGrouped(nodeGroup);
+				for (E parent : this.model.getParents(child)) {
+					if (group.contains(parent)) {
+						parentInGroup = true;
+					}
+				}
+
+				if (!parentInGroup) {
+					examine.add(child);
+					group.remove(child);
+				}
+			}
 		}
-
-		this.repaint();
-		this.revalidate();
 	}
 
 	/**
-	 * Shows the possible end nodes for @param node visually. All nodes that can
-	 * node be end nodes are grayed out and not available for selection.
+	 * Adds the <code>node</code> to the possible group.
 	 * 
 	 * @param node
 	 * @return
 	 */
-	private void showEndNodesFor(E node) {
-		final Set<E> allNodes;
-		final Set<E> possibleEndNodes;
+	private void addNodeToGroup(E node) {
+		if (group.isEmpty()) {
+			if (SEGraph.this.model.isValidGroupStart(node)) {
+				this.groupStartNode = node;
+				this.group.add(node);
+			}
+		} else if (groupStartNode != null) {
+			// Check whether the node is already in the group
+			if (group.contains(node) && node != groupStartNode) {
+				group.remove(node);
+				this.removeGroupOrphans(node);
 
-		possibleEndNodes = SEGraph.this.model.getGroupableEndNodes(node);
-
-		allNodes = SEGraph.this.model.getDescendants(getStartNode());
-		allNodes.add(getStartNode());
-
-		// Call the graph renderer to visually identify which
-		// nodes are group-able and which are non-group-able
-		for (E currNode : allNodes) {
-			final JComponent component;
-
-			component = SEGraph.this.nodesToComponents.getValue(currNode);
-
-			if (possibleEndNodes.contains(currNode)) {
-				SEGraph.this.renderer.setComponentAppearance(component,
-						currNode, ScriptEaseUI.COLOUR_GROUPABLE__END_NODE);
 			} else {
-				SEGraph.this.ungroupableNodes.add(currNode);
+				// Now we can start forming a group
 
-				SEGraph.this.renderer.setComponentAppearance(component,
-						currNode, ScriptEaseUI.COLOUR_UNGROUPABLE_END_NODE);
+				// We don't want to add anything behind the start node.
+				if (!this.model.getParents(node).contains(groupStartNode)) {
+					// We need to find path back to start
+					final Set<E> tempGroup = new HashSet<E>();
+					final Queue<E> backQueue = new LinkedList<E>();
+					boolean foundStart = false;
+
+					// Must always include start in set
+					tempGroup.add(groupStartNode);
+					tempGroup.add(node);
+					backQueue.add(node);
+
+					while (!backQueue.isEmpty() && !foundStart) {
+						final E currNode = backQueue.poll();
+
+						for (E parent : this.getParents(currNode)) {
+							if (parent == groupStartNode) {
+								foundStart = true;
+							}
+
+							if (!tempGroup.contains(parent)) {
+								tempGroup.add(parent);
+
+								if (!backQueue.contains(parent)) {
+									backQueue.offer(parent);
+								}
+							}
+						}
+					}
+
+					if (foundStart) {
+						// There is at least once path from start to node, time
+						// to find all of them and add nodes
+						group = this.model.findGroupPaths(node, group,
+								this.groupStartNode);
+						group.add(node);
+					}
+
+				} else {
+					// Parent is already in graph, don't do extra work
+					group.add(node);
+				}
+
 			}
 		}
 
-		SEGraph.this.setCursor(ScriptEaseUI.CURSOR_GROUP_END);
+		// TODO these two methods need to do something when I get back to groups
+		// if (this.model.isGroup(group)) {
+		// // TODO do something here later - like change all their colors
+		// for (E n : this.group) {
+		//
+		// }
+		// } else {
+		// // Let's do some repainting on the components.
+		// for (E groupableNode : this.group) {
+		// final JComponent component;
+		// component = this.nodesToComponents.getValue(groupableNode);
+		//
+		// // this.renderer.setComponentAppearance(component,
+		// // groupableNode, backgroundColour)
+		// }
+		// }
+
 	}
 
 	/**
@@ -1077,9 +1144,6 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	private E draggedFromNode = null;
-	private E startNode = null;
-	private E endNode = null;
-	private Set<E> ungroupableNodes = new HashSet<E>();
 
 	/**
 	 * Mouse adapter that gets added to every node. This is where the model gets
@@ -1093,6 +1157,7 @@ public class SEGraph<E> extends JComponent {
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
 		private E lastEnteredNode = null;
+		private E lastExitedNode = null;
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -1127,52 +1192,11 @@ public class SEGraph<E> extends JComponent {
 			if (mode == Mode.INSERT || mode == Mode.CONNECT
 					|| mode == Mode.DISCONNECT) {
 				graph.draggedFromNode = source;
-			} else if (mode == Mode.GROUP || mode == Mode.UNGROUP) {
-
-				if (graph.startNode == null) {
-					// Deal with the first node that is being selected -
-					// which is the node that determines the start of the group
-
-					graph.startNode = source;
-
-					graph.showEndNodesFor(graph.startNode);
-				} else {
-					// Deal with the next node that is being selected -
-					// which is the node that determines the end of the group
-
-					graph.endNode = source;
-
-					// Make sure the node selected isn't a non-group-able one
-					if (!graph.ungroupableNodes.contains(endNode)) {
-
-						if (graph.startNode != null && graph.endNode != null) {
-
-							if (!UndoManager.getInstance()
-									.hasOpenUndoableAction())
-								UndoManager.getInstance().startUndoableAction(
-										"Creating group from "
-												+ graph.startNode + " to "
-												+ graph.endNode);
-
-							System.out.println("DEBUG: starting node: "
-									+ graph.startNode);
-							System.out.println("DEBUG: ending node: "
-									+ graph.endNode);
-
-							graph.createNodeGroupAt(graph.startNode,
-									graph.endNode);
-
-							UndoManager.getInstance().endUndoableAction();
-
-						}
-					}
-
-					graph.renderer.resetAppearances();
-					graph.ungroupableNodes = new HashSet<E>();
-					graph.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
-					graph.startNode = null;
-					graph.endNode = null;
-				}
+				SEGraph.this.group.clear();
+			} else if (mode == Mode.GROUP) {
+				graph.addNodeToGroup(source);
+			} else {
+				SEGraph.this.group.clear();
 			}
 		}
 
@@ -1182,18 +1206,16 @@ public class SEGraph<E> extends JComponent {
 			final JComponent entered = (JComponent) e.getSource();
 			final Mode mode = graph.getToolBarMode();
 
+			this.lastExitedNode = null;
 			this.lastEnteredNode = graph.nodesToComponents.getKey(entered);
 
-			if (this.lastEnteredNode == graph.getStartNode())
+			if (this.lastEnteredNode == graph.getStartNode()) {
 				if (mode == Mode.DELETE) {
 					// Make the cursor appear unavailable for start node
 					// deletion
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			else if (graph.ungroupableNodes.contains(this.lastEnteredNode)) {
-				if (mode == Mode.GROUP)
-					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 			} else if (graph.isReadOnly)
 				if (mode != Mode.SELECT) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
@@ -1204,14 +1226,8 @@ public class SEGraph<E> extends JComponent {
 		@Override
 		public void mouseExited(MouseEvent e) {
 			final JComponent exited = (JComponent) e.getSource();
-			final Mode mode = SEGraph.this.getToolBarMode();
 
-			final E lastExitedNode = SEGraph.this.nodesToComponents
-					.getKey(exited);
-
-			if (mode == Mode.GROUP
-					&& SEGraph.this.ungroupableNodes.contains(lastExitedNode))
-				exited.setCursor(ScriptEaseUI.CURSOR_GROUP_START);
+			this.lastExitedNode = SEGraph.this.nodesToComponents.getKey(exited);
 		}
 
 		@Override
@@ -1291,12 +1307,14 @@ public class SEGraph<E> extends JComponent {
 							"Remove " + node);
 
 				graph.removeNode(node);
+				graph.repaint();
 
 				UndoManager.getInstance().endUndoableAction();
 
 			} else if (mode == Mode.CONNECT) {
 				if (this.lastEnteredNode != null
-						&& this.lastEnteredNode != node) {
+						&& this.lastEnteredNode != node
+						&& this.lastExitedNode != this.lastEnteredNode) {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())
 						UndoManager.getInstance().startUndoableAction(
 								"Connect " + this.lastEnteredNode + " to "

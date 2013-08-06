@@ -38,6 +38,7 @@ import scriptease.util.GUIOp;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanel extends JPanel implements
@@ -50,7 +51,7 @@ public class StoryComponentPanel extends JPanel implements
 	private boolean editable;
 	private boolean selectable;
 	private boolean removable;
-
+	
 	private ExpansionButton expansionButton;
 
 	public StoryComponentPanel(StoryComponent component) {
@@ -143,7 +144,7 @@ public class StoryComponentPanel extends JPanel implements
 	public boolean isSelectable() {
 		return this.selectable;
 	}
-
+	
 	public void setExpansionButton(ExpansionButton expansionButton) {
 		this.expansionButton = expansionButton;
 	}
@@ -271,9 +272,10 @@ public class StoryComponentPanel extends JPanel implements
 				StoryComponentPanelFactory.getInstance().removeChild(this,
 						component);
 			}
-		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY))
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
 			this.setVisible(component.isVisible());
-
+		} 
+		
 		// revalidate the panel
 		this.revalidate();
 		this.repaint();

@@ -2,7 +2,6 @@ package scriptease.gui.SEGraph.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * Model class for SEGraph. This stores and handles all of the nodes in the
@@ -20,6 +20,7 @@ import java.util.Set;
  * .equals(Object) method, or else the graph will not draw correctly.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  * @param <E>
  */
@@ -284,63 +285,149 @@ public abstract class SEGraphModel<E> {
 	}
 
 	/**
-	 * Finds the possible end nodes for groups. This is implemented using a
-	 * small alteration of the Breadth first search, where we don't advance pass
-	 * a node until it has been accessed the same amount of times as the number
-	 * of parents it has.
+	 * Checks whether the node is a valid group start
 	 * 
 	 * @param node
+	 */
+	public boolean isValidGroupStart(E node) {
+		final Queue<E> nodes = new LinkedList<E>();
+
+		boolean notDone = true;
+		boolean result = false;
+
+		for (E child : this.getChildren(node)) {
+			nodes.add(child);
+		}
+
+		while (notDone && nodes.size() >= 1) {
+			final E currentNode = nodes.poll();
+			
+			Set<E> group = new HashSet<E>();
+
+			// Must always include start in set
+			group.add(node);
+			group = this.findGroupPaths(currentNode, group, null);
+
+			result = this.isGroup(group);
+
+			if (result) {
+				notDone = false;
+			} else {
+				for (E temp : this.getChildren(currentNode)) {
+					nodes.add(temp);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * A nodes should be visited when: 1. All of it's children are visited. 2.
+	 * It's been used to find a path to the goal.
+	 * 
+	 * Retreat once we find a child that is either the end or part of the group.
+	 * Retreat when there are no children. When retreating, go back one, see if
+	 * there are other children to visit.
+	 * 
+	 * @param endNode
+	 * @param group
 	 * @return
 	 */
-	public final Set<E> getGroupableEndNodes(E node) {
-		final HashSet<E> endNodes = new HashSet<E>();
+	public Set<E> findGroupPaths(E endNode, Set<E> group, E startNode) {
+		final Stack<E> nodes = new Stack<E>();
+		final Set<E> visited = new HashSet<E>();
 
-		final Map<E, Integer> visited = new HashMap<E, Integer>();
-		final Queue<E> queue = new LinkedList<E>();
+		nodes.push(endNode);
 
-		final Collection<E> descendants = this.getDescendants(node);
+		boolean notDone = true;
+		boolean found = false;
 
-		visited.put(node, this.getParents(node).size());
-		for (E child : descendants) {
-			visited.put(child, 0);
+		while (!nodes.isEmpty() && notDone) {
+			E currentNode = nodes.peek();
 
-			final Collection<E> parents = this.getParents(child);
-			for (E parent : parents) {
-				if (!descendants.contains(parent) && !parent.equals(node)) {
-					visited.put(child, -1);
+			boolean foundChildInGroup = false;
+			if (currentNode == startNode || group.contains(currentNode)
+					&& currentNode != startNode) {
+
+				// We found an end point, back up one
+
+				visited.add(currentNode);
+				nodes.pop();
+				group.add(currentNode);
+
+			} else if (this.getParents(currentNode).size() > 0) {
+				found = false;
+
+				for (E child : this.getParents(currentNode)) {
+					if (group.contains(child)) {
+						foundChildInGroup = true;
+					} else if (visited.contains(child)) {
+						// ignore
+					} else {
+						// not done yet add child
+						found = true;
+						nodes.push(child);
+					}
+
+					if (found)
+						break;
+				}
+
+				if (!found) {
+					// no children were found
+					final E node = nodes.pop();
+					visited.add(node);
+					// if one child is in group, add parent...
+					if (foundChildInGroup) {
+						group.add(node);
+					}
+				}
+
+			} else {
+				// no children, so back up one
+				visited.add(nodes.pop());
+			}
+		}
+
+		return group;
+	}
+
+	/**
+	 * Checks whether <code>nodes</code> is a valid group.
+	 * 
+	 * @param nodes
+	 * @return
+	 */
+	public boolean isGroup(Set<E> nodes) {
+		int numChild = 0;
+		int numParents = 0;
+		
+		// Can't group only one node.
+		if (nodes.size() <= 1)
+			return false;
+
+		for (E node : nodes) {
+			for (E child : this.getChildren(node)) {
+				if (!nodes.contains(child)) {
+					numChild++;
 					break;
 				}
 			}
-		}
 
-		queue.add(node);
-		while (!queue.isEmpty()) {
-			final E currNode = queue.remove();
-
-			if (currNode.toString().contains("O"))
-				System.out.println("ESRFSSF");
-
-			if (visited.get(currNode) == -1)
-				break;
-
-			if (this.getParents(currNode).size() == visited.get(currNode)) {
-
-				for (E childNode : this.getChildren(currNode)) {
-					visited.put(childNode, visited.get(childNode) + 1);
-
-					if (!queue.contains(childNode))
-						queue.add(childNode);
+			for (E parent : this.getParents(node)) {
+				if (!nodes.contains(parent)) {
+					numParents++;
+					break;
 				}
-			} else {
-				queue.add(currNode);
 			}
 
-			if (queue.size() == 1) {
-				endNodes.add(queue.peek());
+			if (numParents > 1 || numChild > 1) {
+				return false;
 			}
 		}
 
-		return endNodes;
+		return true;
 	}
 
 	/**

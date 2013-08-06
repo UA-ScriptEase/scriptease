@@ -13,6 +13,8 @@ import scriptease.model.StoryComponent;
  * StoryPoint's <i>Journal Entry</i> property.
  * 
  * @author remiller
+ * @author jyuen
+ * 
  */
 public final class StoryComponentEvent {
 	private final StoryComponent source;
@@ -49,6 +51,7 @@ public final class StoryComponentEvent {
 		CHANGE_MOVED,
 		CHANGE_CONDITION_BOUND,
 		CHANGE_VISIBILITY,
+		CHANGE_DISABILITY,
 		CODE_BLOCKS_SET,
 		CHANGE_CODE_BLOCK_TYPES,
 		CODE_BLOCK_SUBJECT_SET,

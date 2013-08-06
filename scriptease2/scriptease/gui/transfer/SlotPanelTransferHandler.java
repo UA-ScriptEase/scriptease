@@ -3,8 +3,6 @@ package scriptease.gui.transfer;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -159,10 +157,16 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Set Binding " + sourceBinding);
-				
+
 				if (BindingWidgetTransferHandler.lastDragShiftDown)
 					setGroupBindings(sourceBinding, destinationKnowIt, binding);
 				destinationKnowIt.setBinding(sourceBinding);
+
+				// Check if the source binding is disabled. If it is, we should
+				// disable this component too.
+				if (this.isWidgetOwnerDisabled(support)) {
+					destinationKnowIt.getOwner().getOwner().setDisabled(true);
+				}
 
 				this.repopulateParentOf(destinationWidget);
 
@@ -173,29 +177,5 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Attempts to extract a binding from the transfer support. Returns null on
-	 * failure.
-	 * 
-	 * @param support
-	 * @return
-	 */
-	private KnowItBinding extractBinding(TransferHandler.TransferSupport support) {
-		KnowItBinding sourceBinding = null;
-
-		try {
-			sourceBinding = ((BindingWidget) support.getTransferable()
-					.getTransferData(
-							BindingWidgetTransferHandler.KnowItBindingFlavor))
-					.getBinding();
-		} catch (UnsupportedFlavorException e) {
-			return null;
-		} catch (IOException e) {
-			return null;
-		}
-
-		return sourceBinding;
 	}
 }

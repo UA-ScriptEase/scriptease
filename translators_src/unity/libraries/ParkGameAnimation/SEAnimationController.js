@@ -409,6 +409,15 @@ var doTalk : boolean = false;
 var itemHeld : Transform = null;
 var setParent : Transform = null;
 
+private var motor : CharacterMotor;
+	
+/*
+* Find out if this character has a character motor
+*/
+function Awake () {
+	motor = GetComponent(CharacterMotor);
+}
+	
 function Start() {
 	//itemHeld = null;
 	//itemHeld = "paper cup";
@@ -436,19 +445,10 @@ var doingPickUp = false;
 function Update () {
 
 
-	/*if (waitingAnim.Contains("standUp")) {
-		Debug.Log("We are trying to stand up... " + standUp.time + " and length " + standUp.length);
-		checkAnimationsPlaying();
-		return;
-	}*/
 	// there's an animation in progress we need to let finish before starting a new one
 	// this applies to sitting down, standing up, picking up, putting down, startle, kick
 	// but not holding or waving, or once actually sitting
 	if (waitForAnimDone) { 
-		
-		//var putDownTable : boolean = waitingAnim.Contains("pickFromTable") && animation.IsPlaying(waitingAnim) && notDone && Mathf.Abs(pickTable.time - 0.5) < 0.3;
-		//var putDownPass : boolean = waitingAnim.Contains("passItemDown") && animation.IsPlaying(waitingAnim) && notDone && passDown.time < 0.05;
-		//var putdownGarb : boolean = waitingAnim.Contains("throwItem") && animation.IsPlaying(waitingAnim) && notDone && throwItem.time > (throwItem.length / 2);
 		
 		var putDownTable : boolean = false;
 		if (!doingPickUp) 
@@ -464,14 +464,8 @@ function Update () {
 		if (pickUpGround || pickFromTable) {
 			notDone = false;
 		
-			/*var gos : GameObject[]  = GameObject.FindObjectsOfType(typeof(GameObject));
-			for (var go : GameObject in gos) {
-				if (go && go.transform.parent == null) {
-					go.gameObject.BroadcastMessage("performPickUp", null, SendMessageOptions.DontRequireReceiver);
-				}
-			}*/
 			performPickUp();
-			Debug.Log("SeNDING PERFORM PICK UP MESSAGE");
+			
 		}
 		
 		if (putDownTable || putDownPass || putdownGarb) {
@@ -487,33 +481,39 @@ function Update () {
 				if (putDownPass && !setParent.name.Contains("Props")) {
 					var rHand = setParent.Find("SK Root/SK Pelvis/SK Spine/SK Spine1/SK Spine2/SK Spine3/SK Neck/SK R Clavicle/SK R UpperArm/SK R Forearm/SK R Hand").transform;
 					itemHeld.parent = rHand;
-					if (itemHeld.name.Contains("book")) {
-						transform.localPosition = Vector3(-4,4,3);
-						transform.localEulerAngles = Vector3(0,0,270);
+					itemHeld.rigidbody.collider.enabled = false;
+				
+					if (itemHeld.name.Contains("newspaper")) {
+						itemHeld.transform.localPosition = Vector3(-4,2,0);
+						itemHeld.localEulerAngles = Vector3(355,200,180);	
+					} else if (itemHeld.name.Contains("papercup")) {
+						itemHeld.localPosition = Vector3(-4,2.3,0.5);
+						itemHeld.localEulerAngles = Vector3(355,0,180);
+					} else if (itemHeld.name.Contains("book")) {
+						itemHeld.localPosition = Vector3(-4,4,3);
+						itemHeld.localEulerAngles = Vector3(0,0,270);
 					} else {
-						transform.localPosition = Vector3(-4,2,0);
-						transform.localEulerAngles = Vector3(355,200,180);
-					} 
+						itemHeld.localPosition = Vector3(-5,4,5); 
+						itemHeld.localEulerAngles = Vector3(23, 6, 103);
+					}
 				} else {
 					itemHeld.eulerAngles = Vector3(270,0,0);
-					if (itemHeld.name.Contains("newspaper") || itemHeld.name.Contains("papercup") || itemHeld.name.Contains("book")) {
-						itemHeld.rigidbody.detectCollisions = true;
-						itemHeld.rigidbody.isKinematic = false;
-					}
+					itemHeld.rigidbody.detectCollisions = true;
+					itemHeld.rigidbody.isKinematic = false;
+					itemHeld.rigidbody.collider.enabled = true;
 				}
 				
 				
 				setParent = null;
-				//Debug.Log("FOUND ITEM AND PUTTING IT DOWN");
+		
 				itemHeld = null;
-			}// else 
-				//Debug.Log("COULD NOT FIND ITEM");
+			}
 			notDone = false;
 			return;
 		}
 		
 		if (waitingAnim.Contains("passItemUp") && (passUp.time > (passUp.length * 2)) && notDone) {
-			Debug.Log("WE'VE GONE THROUGH A SINGLE PING PONG");
+		
 			passUp.enabled = false;
 			notDone = false;
 			stopPassUp = true;
@@ -527,7 +527,7 @@ function Update () {
 		
 		if (waitingAnim.Contains("standUp") && !animation.IsPlaying(waitingAnim)) {
 			// we're done standing up
-			Debug.Log("We are done standing. So time to reposition");
+		
 			// should toggle reposition
 			transform.position = Vector3(transform.position.x + (transform.forward.x * 0.77), transform.position.y, transform.position.z + (transform.forward.z * 0.77));
 			
@@ -546,28 +546,19 @@ function Update () {
 				// now that we've put the item down, we should crossfade with neutral arms
 				animation.CrossFade(neutralAnimName);
 			}
-			//if (waitingAnim.Contains("startled_mild") && !startled) {
-			//	startStartle();
-			//} else {
-				//Debug.Log("stopPass up is " + stopPassUp);
-				//Debug.Log("IsPlaying " + animation.IsPlaying(waitingAnim));
-				//Debug.Log("GOT HERE!!! standuptime " + standUp.time + " and length " + standUp.length + " and waiting Anim " + waitingAnim + " and stopPU " + stopPassUp);
-				//checkAnimationsPlaying();
-				waitForAnimDone = false;
-				incidentWait = false;
-				stopPassUp = false;
-				doingPickUp = false;
-				// what animation just finished? if sitting
-
-			//}
+			waitForAnimDone = false;
+			incidentWait = false;
+			stopPassUp = false;
+			doingPickUp = false;
+			
 			if (areHolding && (waitingAnim.Contains("pickFromTable") || waitingAnim.Contains("pickFromGround") || waitingAnim.Contains("passItemUp"))) {
-				Debug.Log("Just finished picking up should show hold idle");
+			
 				pickGround.enabled = false;
 				pickTable.enabled = false;
 				passUp.enabled = false;
 				hold();
 			}
-			//Debug.Log("Just finished executing animation " + waitingAnim);
+			
 		
 		} else {
 			return;
@@ -580,8 +571,6 @@ function Update () {
 			areHolding = true;
 		}
 		
-		//if (transform.name.Contains("guy_tshirt"))
-		//	checkAnimationsPlaying();
 		
 		// assume we want to reset the main unless we specify not to...
 		changed = true;
@@ -619,7 +608,7 @@ function Update () {
 		}
 		
 		if (doCheck) {
-			Debug.Log("Should check over shoulder");
+			//Debug.Log("Should check over shoulder");
 			// do shoulder check animation
 			doShoulderCheck();
 		}
@@ -639,7 +628,7 @@ function Update () {
 				//changed = false;
 				//Debug.Log(transform.name + " is HOLDING a " + itemHeld);
 			} else {
-				Debug.Log(transform.name + " thought it was holding something but IT IS NOT!!!!!");
+			//	Debug.Log(transform.name + " thought it was holding something but IT IS NOT!!!!!");
 				areHolding = false;
 				itemHeld = null;
 				holdIdle.enabled = false;
@@ -651,16 +640,16 @@ function Update () {
 
 		
 		if (doWave) {
-			Debug.Log("Should Toggle Wave");
+			//Debug.Log("Should Toggle Wave");
 			// start or stop waving
 			toggleWave();
 		}
 		
 		if (doNod) {
-			Debug.Log("Should Toggle Nod");
+			//Debug.Log("Should Toggle Nod");
 			toggleNod();
 		} else if (doShake) {
-			Debug.Log("Should Toggle Shake");
+			//Debug.Log("Should Toggle Shake");
 			toggleShake();	
 		}
 		
@@ -681,136 +670,157 @@ internal var blendWalk : float = 1;
 * states include standing idle, walking and running. 
 */
 function setMainAnimation() {
-
-	if (waitingAnim.Contains("standUp") || areSitting) {
-		// we're sitting, so don't worry about any of the below
-		//Debug.Log("we're suppose to be standing");
+	if (motor != null) {
+		if ((motor.inputMoveDirection.x < 0.1 && motor.inputMoveDirection.z < 0.1) && (motor.inputMoveDirection.x > -0.1 && motor.inputMoveDirection.z >- 0.1)) {
+			//gameObject.animation.CrossFade("stand_Idle");
+			CharSpeed = 0;
+			//standIdle.enabled = true;
+			animation.CrossFade(standIdleAnimName);
 		
-		// we should probably turn off all, so that sitting overrides...
-		happy.enabled = false;
-		happyArm.enabled = false;
-		sad.enabled = false;
-		sadArm.enabled = false;
-		angry.enabled = false;
-		angryArm.enabled = false;
-		afraid.enabled = false;
-		afraidArm.enabled = false;
-		afraidHead.enabled = false;
-		
-		return;
-	}
-	
-	if (happyWeight != 0){
-		happy.enabled = true;
-		happyArm.enabled = true;
-		happy.weight = happyWeight;
-	//	happyArm.weight = happyWeight;
-		animation.CrossFade(happyAnimName, 0.5, PlayMode.StopSameLayer);
-	//	animation.CrossFade(happyArmAnimName, 0.5, PlayMode.StopSameLayer);
-	} else {
-		happy.weight = 0;
-	//	happy.enabled = false;
-	//	happyArm.enabled = false;
-	}
-	
-	if (sadWeight != 0){
-		sad.enabled = true;
-	//	sadArm.enabled = true;
-		sad.weight = sadWeight;
-	//	sadArm.weight = Mathf.Clamp(0,sadWeight, 0.6);
-		
-		//if (sadArm.weight > 0.6){
-		//	sadArm.weight = 0.6;
-		//}
-		
-		animation.CrossFade(sadAnimName, 0.5, PlayMode.StopSameLayer);
-	//	animation.CrossFade(sadArmAnimName, 0.5, PlayMode.StopSameLayer);
-	} else {
-		sad.weight = 0;
-	//	sad.enabled = false;
-	//	sadArm.enabled = false;
-	}
-	
-	if (angryWeight != 0){
-		angry.enabled = true;
-	//	angryArm.enabled = true;
-		angry.weight = angryWeight;
-	//	angryArm.weight = angryWeight;
-		animation.CrossFade(angryAnimName, 0.5, PlayMode.StopSameLayer);
-	//	animation.CrossFade(angryArmAnimName, 0.5, PlayMode.StopSameLayer);
-	} else {
-		angry.weight = 0;
-	//	angry.enabled = false;
-	//	angryArm.enabled = false;
-	}
-	
-	if (afraidWeight != 0){
-		//afraid.enabled = true;
-		afraidArm.enabled = true;
-		afraidHead.enabled = true;
-		
-		//afraid.weight = afraidWeight;
-		afraidArm.weight = afraidWeight-0.3;
-		
-		// need to blend in a different face (with no emotions) to cover afraid
-		
-		//animation.Blend(afraidAnimName);
-		animation.CrossFade(afraidArmAnimName, 0.5, PlayMode.StopSameLayer);
-		//afraidHead.wrapMode = WrapMode.Loop;
-		animation.CrossFade(afraidHeadAnimName, 0.5, PlayMode.StopSameLayer);
-		//checkAnimationsPlaying();
-	} else {
-		afraid.weight = 0;
-//		afraid.enabled = false;
-		afraidArm.enabled = false;
-		afraidHead.enabled = false;
-	}
-	
-	
-//	if (angryWeight == 0 && sadWeight == 0 && happyWeight == 0 && afraidWeight == 0) {
-		// no emotions, so do neutral walk and run	
-//	}
-	
-	if (doRun && CharSpeed > 0) {
-		CharSpeed = runSpeedDefault;
-		run.speed = (1 / runSpeedDefault) * CharSpeed;
-		run.enabled = true;
-		animation.CrossFade(runAnimName);
-	//	runArm.enabled = true;
-	//	animation.CrossFade(runArmAnimName);
-	
-		walk.enabled = false;
-		walkArm.enabled = false;
-		standIdle.enabled = false;
-		
-	} else if (CharSpeed > 0) {
-		//walk.speed = blendWalk * CharSpeed;
-		walk.speed = (1 / walkSpeedDefault) * CharSpeed;
-		walk.enabled = true;
-		animation.Blend(walkAnimName);
-	//	walkArm.enabled = true;
-	//	animation.Blend(walkArmAnimName); 
-		
-		run.enabled = false;
-		runArm.enabled = false;
-		standIdle.enabled = false;
-	} else {
-	//	Debug.Log("Play neutral");
-		if (areSitting) {
-			sit();
+			//walk.enabled = false;
+			//walkArm.enabled = false;
 		} else {
+			//gameObject.animation.CrossFade("walkNeutral");
+			walk.speed = (1 / walkSpeedDefault) * CharSpeed;
+			CharSpeed = 1.5;
+			//walk.enabled = true;
+			animation.CrossFade(walkAnimName);
+
+		}
 	
+	} else {
+		
+		if (waitingAnim.Contains("standUp") || areSitting) {
+			// we're sitting, so don't worry about any of the below
+			//Debug.Log("we're suppose to be standing");
 			
-			standIdle.enabled = true;
-			animation.Blend(standIdleAnimName);
+			// we should probably turn off all, so that sitting overrides...
+			happy.enabled = false;
+			happyArm.enabled = false;
+			sad.enabled = false;
+			sadArm.enabled = false;
+			angry.enabled = false;
+			angryArm.enabled = false;
+			afraid.enabled = false;
+			afraidArm.enabled = false;
+			afraidHead.enabled = false;
+			
+			return;
+		}
+		
+		if (happyWeight != 0){
+			happy.enabled = true;
+			happyArm.enabled = true;
+			happy.weight = happyWeight;
+			happyArm.weight = happyWeight;
+			animation.CrossFade(happyAnimName, 0.5, PlayMode.StopSameLayer);
+			animation.CrossFade(happyArmAnimName, 0.5, PlayMode.StopSameLayer);
+		} else {
+			happy.weight = 0;
+		//	happy.enabled = false;
+			happyArm.enabled = false;
+		}
+		
+		if (sadWeight != 0){
+			sad.enabled = true;
+		//	sadArm.enabled = true;
+			sad.weight = sadWeight;
+		//	sadArm.weight = Mathf.Clamp(0,sadWeight, 0.6);
+			
+			//if (sadArm.weight > 0.6){
+			//	sadArm.weight = 0.6;
+			//}
+			
+			animation.CrossFade(sadAnimName, 0.5, PlayMode.StopSameLayer);
+			animation.CrossFade(sadArmAnimName, 0.5, PlayMode.StopSameLayer);
+		} else {
+			sad.weight = 0;
+		//	sad.enabled = false;
+			sadArm.enabled = false;
+		}
+		
+		if (angryWeight != 0){
+			angry.enabled = true;
+		//	angryArm.enabled = true;
+			angry.weight = angryWeight;
+		//	angryArm.weight = angryWeight;
+			animation.CrossFade(angryAnimName, 0.5, PlayMode.StopSameLayer);
+			animation.CrossFade(angryArmAnimName, 0.5, PlayMode.StopSameLayer);
+		} else {
+			angry.weight = 0;
+		//	angry.enabled = false;
+			angryArm.enabled = false;
+		}
+		
+		if (afraidWeight != 0){
+			//afraid.enabled = true;
+			afraidArm.enabled = true;
+			afraidHead.enabled = true;
+			
+			//afraid.weight = afraidWeight;
+			afraidArm.weight = afraidWeight-0.3;
+			
+			// need to blend in a different face (with no emotions) to cover afraid
+			
+			//animation.Blend(afraidAnimName);
+			animation.CrossFade(afraidArmAnimName, 0.5, PlayMode.StopSameLayer);
+			//afraidHead.wrapMode = WrapMode.Loop;
+			animation.CrossFade(afraidHeadAnimName, 0.5, PlayMode.StopSameLayer);
+			//checkAnimationsPlaying();
+		} else {
+			afraid.weight = 0;
+	//		afraid.enabled = false;
+			afraidArm.enabled = false;
+			afraidHead.enabled = false;
+		}
+		
+		
+	//	if (angryWeight == 0 && sadWeight == 0 && happyWeight == 0 && afraidWeight == 0) {
+			// no emotions, so do neutral walk and run	
+	//	}
+		
+		if (doRun && CharSpeed > 0) {
+			CharSpeed = runSpeedDefault;
+			run.speed = (1 / runSpeedDefault) * CharSpeed;
+			run.weight = 0.8;
+			run.enabled = true;
+			animation.CrossFade(runAnimName);
+			runArm.enabled = true;
+			runArm.weight = 0.5;
+			animation.CrossFade(runArmAnimName);
 		
 			walk.enabled = false;
 			walkArm.enabled = false;
+			standIdle.enabled = false;
+			
+		} else if (CharSpeed > 0) {
+			//walk.speed = blendWalk * CharSpeed;
+			walk.speed = (1 / walkSpeedDefault) * CharSpeed;
+			walk.enabled = true;
+			animation.Blend(walkAnimName);
+			walkArm.enabled = true;
+			animation.Blend(walkArmAnimName); 
+			
 			run.enabled = false;
 			runArm.enabled = false;
-		}
-	}		
-	
+			standIdle.enabled = false;
+		} else {
+		//	Debug.Log("Play neutral");
+			if (areSitting) {
+				sit();
+			} else {
+		
+				
+				standIdle.enabled = true;
+				animation.Blend(standIdleAnimName);
+			
+				walk.enabled = false;
+				walkArm.enabled = false;
+				run.enabled = false;
+				runArm.enabled = false;
+			}
+		}		
+	}
 }
 
 var wasDrinking : boolean = false;
@@ -822,7 +832,7 @@ var waveDone : boolean = false;
 function hold() {
 	if (playLookAtItem && !lookIdle) {
 		//lookAt.time = 5;
-		Debug.Log("look at item");
+		//Debug.Log("look at item");
 		animation.CrossFade(lookAtAnimName);
 		lookIdle = true;
 		//animation.PlayQueued(lookAtIdleAnimName, QueueMode.CompleteOthers);
@@ -833,17 +843,17 @@ function hold() {
 		
 	} else if (playWithIPad) {
 		//wasDrinking = true;
-		Debug.Log("Play Ipad Anim");
+		//("Play Ipad Anim");
 		animation.CrossFade(playIPadAnimName);
 	} else {
 		if (waveDone) {
-			Debug.Log("BlendArm");
+		//	Debug.Log("BlendArm");
 			animation.CrossFade(neutralAnimName);
 			//wasDrinking = false;
 			waveDone = false;
 		}
 		if (wasDrinking) {
-			Debug.Log("WAS DRINKING blEND STUFF");
+		//	Debug.Log("WAS DRINKING blEND STUFF");
 			animation.CrossFade(neutralAnimName);
 			neutral.AddMixingTransform(spine); 
 			animation.CrossFade(neutralAnimName);	
@@ -851,7 +861,7 @@ function hold() {
 			wasDrinking = false;
 		}
 		if (lookIdle && !playLookAtItem) {
-			Debug.Log("Look Idle and !Play");
+		//	Debug.Log("Look Idle and !Play");
 			animation.CrossFade(neutralAnimName);
 			neutral.AddMixingTransform(spine); 
 			animation.CrossFade(neutralAnimName);	
@@ -881,14 +891,14 @@ function toggleHold() {
 	pickTable.AddMixingTransform(spine);
 	pickTable.AddMixingTransform(root);
 	if (areHolding) {
-		Debug.Log("Put Down Item");
+		//("Put Down Item");
 		//holdIdle.enabled = true;
 		pickTable.speed = -1;
 		pickTable.time = pickTable.length;
 		notDone = true;
 		
 		if(areSitting) {
-			Debug.Log("Need to PUT DOWN while sitting");
+			//Debug.Log("Need to PUT DOWN while sitting");
 			pickTable.RemoveMixingTransform(root);
 			//pickTable.AddMixingTransform(spine);
 		} else {
@@ -902,7 +912,7 @@ function toggleHold() {
 			throwOut = false;
 		} else if (doPass && !areSitting) {
 			// we're getting rid of item, so put arm 'down' after
-			Debug.Log("TIME TO DO PASS ITEM DOWN");
+			//Debug.Log("TIME TO DO PASS ITEM DOWN");
 			passUp.wrapMode = WrapMode.Once;
 			animation.Play(passUpAnimName);
 			
@@ -924,7 +934,7 @@ function toggleHold() {
 		notDone = false;
 		
 		if(areSitting) {
-			Debug.Log("Need to PICK UP while sitting");
+			//Debug.Log("Need to PICK UP while sitting");
 			pickTable.RemoveMixingTransform(root);
 			//pickTable.AddMixingTransform(spine);
 		} else {
@@ -1031,7 +1041,7 @@ function toggleWave() {
 		
 		// should wave with right hand, unless holding object, then wave left (or specified left)
 		if (areHolding || leftHand) {
-			Debug.Log("Should Wave Left");
+			//Debug.Log("Should Wave Left");
 			wave.RemoveMixingTransform(shoulderR);
 		} else {
 			wave.RemoveMixingTransform(shoulderL);
@@ -1166,7 +1176,7 @@ function sit() {
 }
 
 function toggleSit() {
-	Debug.Log("Toggle SIT animation");
+//	Debug.Log("Toggle SIT animation");
 	
 	doSit = false;
 	
@@ -1202,7 +1212,7 @@ function toggleSit() {
 		//Debug.Log(transform.name + " should have rotated as well.");
 
 		//animation.PlayQueued("sitIdle", QueueMode.CompleteOthers);
-		//areSitting = true;
+		areSitting = true;
 		waitingAnim = "sitDown";
 	}
 	
@@ -1348,10 +1358,8 @@ function performPickUp() {
 
 			
 	itemHeld.rigidbody.isKinematic = true;
-	//rigidbody.detectCollisions = false;
-	itemHeld.collider.enabled = false;
-	//rigidbody.useGravity = false;
-	//rigidbody.mass = 0.001;
+	itemHeld.rigidbody.detectCollisions = false;
+
 	itemHeld.parent = rHand;
 	
 	if (itemHeld.name.Contains("newspaper")) {
@@ -1368,7 +1376,4 @@ function performPickUp() {
 		itemHeld.localEulerAngles = Vector3(23, 6, 103);
 	}
 	
-	collider.enabled = false;
-	Debug.Log(itemHeld.name + " local position is " + itemHeld.localPosition);
-
 }
