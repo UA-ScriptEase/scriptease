@@ -12,7 +12,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -33,6 +32,7 @@ public class CodeBlockContext extends Context {
 
 	public CodeBlockContext(Context other, CodeBlock source) {
 		super(other);
+		this.setLocationInfo(other.getLocationInfo());
 		this.codeBlock = source;
 	}
 
@@ -169,47 +169,6 @@ public class CodeBlockContext extends Context {
 	@Override
 	public String toString() {
 		return "CodeBlockContext [" + this.codeBlock + "]";
-	}
-
-	/**
-	 * Get the ScriptIt's Story Point Active Child
-	 */
-	@Override
-	public StoryComponentContainer getActiveChild() {
-		CauseIt cause = this.codeBlock.getCause();
-		if (cause != null)
-			return cause.getActiveBlock();
-		else
-			throw new CodeGenerationException(
-					"Attempted to get Story Point Active Block for a "
-							+ "CodeBlock without a Cause: " + this.codeBlock);
-	}
-
-	/**
-	 * Get the ScriptIt's Story Point Inactive Child
-	 */
-	@Override
-	public StoryComponentContainer getInactiveChild() {
-		CauseIt cause = this.codeBlock.getCause();
-		if (cause != null)
-			return cause.getInactiveBlock();
-		else
-			throw new CodeGenerationException(
-					"Attempted to get Story Point Inactive Block for a "
-							+ "CodeBlock without a Cause: " + this.codeBlock);
-		// CodeBlock Without A Cause. (Not) Starring James Dean
-	}
-
-	@Override
-	public StoryComponentContainer getAlwaysChild() {
-		CauseIt cause = this.codeBlock.getCause();
-		if (cause != null)
-			return cause.getAlwaysBlock();
-		else
-			throw new CodeGenerationException(
-					"Attempted to get Story Point Inactive Block for a "
-							+ "CodeBlock without a Cause: " + this.codeBlock);
-
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.GameModule;
@@ -36,8 +37,8 @@ public final class DialogueLine extends EditableResource {
 	private final StoryModel story;
 
 	private boolean enabled;
-	private Resource image;
-	private Resource audio;
+	private KnowIt image;
+	private KnowIt audio;
 
 	/**
 	 * Creates a new dialogue line for the story.
@@ -78,17 +79,34 @@ public final class DialogueLine extends EditableResource {
 	 *            Any dialogue line children attached.
 	 */
 	public DialogueLine(StoryModel story, Speaker speaker, String dialogue,
-			boolean enabled, Resource image, Resource audio,
+			boolean enabled, KnowIt image, KnowIt audio, List<Resource> children) {
+		this(story, speaker, dialogue, uniqueNumberCount++, enabled, image,
+				audio, children);
+	}
+
+	public DialogueLine(StoryModel story, Speaker speaker, String dialogue,
+			int id, boolean enabled, KnowIt image, KnowIt audio,
 			List<Resource> children) {
 		super(dialogue, children);
 
 		this.enabled = enabled;
 		this.speaker = speaker;
-		this.image = image;
-		this.audio = audio;
 		this.story = story;
 
-		this.uniqueID = uniqueNumberCount++;
+		if (audio == null)
+			this.audio = new KnowIt("Audio", this.story.getModule()
+					.getAudioType());
+		else
+			this.audio = audio;
+		if (image == null)
+			this.image = new KnowIt("Image", this.story.getModule()
+					.getImageType());
+		else
+			this.image = image;
+
+		this.uniqueID = id;
+
+		uniqueNumberCount = Math.max(id, uniqueNumberCount);
 
 		// Set up the speakers
 		for (Resource child : children) {
@@ -155,7 +173,7 @@ public final class DialogueLine extends EditableResource {
 				this.story.getModule().getImageType());
 
 		if (setImage)
-			this.image = image;
+			this.image.setBinding(image);
 
 		return setImage;
 	}
@@ -173,7 +191,7 @@ public final class DialogueLine extends EditableResource {
 				this.story.getModule().getAudioType());
 
 		if (setAudio)
-			this.audio = audio;
+			this.audio.setBinding(audio);
 
 		return setAudio;
 	}
@@ -196,7 +214,7 @@ public final class DialogueLine extends EditableResource {
 	 * 
 	 * @return
 	 */
-	public Resource getAudio() {
+	public KnowIt getAudio() {
 		return this.audio;
 	}
 
@@ -205,7 +223,7 @@ public final class DialogueLine extends EditableResource {
 	 * 
 	 * @return
 	 */
-	public Resource getImage() {
+	public KnowIt getImage() {
 		return this.image;
 	}
 
@@ -262,8 +280,7 @@ public final class DialogueLine extends EditableResource {
 
 	@Override
 	public String getTemplateID() {
-		// TODO Does this need to be uniquer? Yes it does!
-		return this.getName();
+		return this.getName() + this.getUniqueID();
 	}
 
 	@Override

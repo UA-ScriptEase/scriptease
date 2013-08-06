@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.io.XMLNode;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.translator.io.model.EditableResource;
-import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -34,25 +34,13 @@ public class DialogueLineConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final DialogueLine line = (DialogueLine) source;
-		final Resource image = line.getImage();
-		final Resource audio = line.getAudio();
-		final String imageName;
-		final String audioName;
-
-		if (image != null)
-			imageName = image.getName();
-		else
-			imageName = null;
-		if (audio != null)
-			audioName = audio.getName();
-		else
-			audioName = null;
 
 		XMLNode.NAME.writeString(writer, line.getName());
+		XMLNode.ID.writeInteger(writer, line.getUniqueID());
 		XMLNode.CHILDREN.writeObject(writer, context, line.getChildren());
 		XMLNode.ENABLED.writeBoolean(writer, line.isEnabled());
-		XMLNode.IMAGE.writeString(writer, imageName);
-		XMLNode.AUDIO.writeString(writer, audioName);
+		XMLNode.IMAGE.writeObject(writer, context, line.getImage());
+		XMLNode.AUDIO.writeObject(writer, context, line.getAudio());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,18 +49,17 @@ public class DialogueLineConverter implements Converter {
 			UnmarshallingContext context) {
 		final DialogueLine line;
 		final String name;
+		final int id;
 		final List<Resource> children;
 		final boolean enabled;
-		final String imageTemplateID;
-		final String audioTemplateID;
-		final GameModule currentModule;
 
-		final Resource image;
-		final Resource audio;
+		final KnowIt image;
+		final KnowIt audio;
 
 		children = new ArrayList<Resource>();
 
 		name = XMLNode.NAME.readString(reader);
+		id = Integer.parseInt(XMLNode.ID.readString(reader));
 
 		// TODO This isn't the way we should be loading stuff from XML. We need
 		// to use XMLNode methods
@@ -89,16 +76,11 @@ public class DialogueLineConverter implements Converter {
 
 		enabled = Boolean.parseBoolean(XMLNode.ENABLED.readString(reader));
 
-		imageTemplateID = XMLNode.IMAGE.readString(reader);
-		audioTemplateID = XMLNode.AUDIO.readString(reader);
+		image = XMLNode.IMAGE.readObject(reader, context, KnowIt.class);
+		audio = XMLNode.AUDIO.readObject(reader, context, KnowIt.class);
 
-		currentModule = StoryModelConverter.currentStory.getModule();
-
-		image = currentModule.getInstanceForObjectIdentifier(imageTemplateID);
-		audio = currentModule.getInstanceForObjectIdentifier(audioTemplateID);
-
-		line = new DialogueLine(StoryModelConverter.currentStory,
-				Speaker.PC, name, enabled, image, audio, children);
+		line = new DialogueLine(StoryModelConverter.currentStory, Speaker.PC,
+				name, id, enabled, image, audio, children);
 
 		return line;
 	}

@@ -86,6 +86,20 @@ public abstract class CodeBlock extends StoryComponent implements
 		return hashCode;
 	}
 
+	/**
+	 * Returns whether the ID exists in the collection of code blocks.
+	 * 
+	 * @param codeBlocks
+	 * @return
+	 */
+	public boolean idIsInCollection(Collection<CodeBlock> codeBlocks) {
+		for (CodeBlock block : codeBlocks) {
+			if (block.getId() == this.getId())
+				return true;
+		}
+		return false;
+	}
+
 	@Override
 	public CodeBlock clone() {
 		final CodeBlock clone = (CodeBlock) super.clone();

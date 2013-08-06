@@ -98,30 +98,29 @@ public class SimpleDataFragment extends AbstractFragment {
 					else
 						throw e;
 				}
-			} else if (dataLabel.equalsIgnoreCase(DataType.CODE.name()))
+			} else if (dataLabel.equalsIgnoreCase(DataType.CODE.name())) {
 				resolveString = context.getCode();
-			else if (dataLabel.equalsIgnoreCase(DataType.TEMPLATEID.name()))
+			} else if (dataLabel.equalsIgnoreCase(DataType.TEMPLATEID.name()))
 				resolveString = context.getTemplateID();
 			else if (dataLabel.equalsIgnoreCase(DataType.VALUE.name()))
 				resolveString = context.getValue();
 			else if (dataLabel.equalsIgnoreCase(DataType.CONDITION.name()))
 				resolveString = context.getCondition();
-			else if (dataLabel.equalsIgnoreCase(DataType.CONTROLITFORMAT
-					.name())) {
+			else if (dataLabel
+					.equalsIgnoreCase(DataType.CONTROLITFORMAT.name())) {
 				resolveString = context.getControlItFormat();
 			} else if (dataLabel.equalsIgnoreCase(DataType.CURRENTSTORYPOINT
 					.name()))
 				resolveString = context.getUnique32CharName();
-			else if (dataLabel
-					.equalsIgnoreCase(DataType.FORMATTEDVALUE.name()))
+			else if (dataLabel.equalsIgnoreCase(DataType.FORMATTEDVALUE.name()))
 				resolveString = context.getFormattedValue();
 			else if (dataLabel.equalsIgnoreCase(DataType.INCLUDE.name()))
 				resolveString = context.getInclude();
 			else if (dataLabel.equalsIgnoreCase(DataType.SUBJECT.name()))
 				resolveString = context.getSubject().getBinding()
 						.getScriptValue();
-			else if (dataLabel.equalsIgnoreCase(DataType.SLOTCONDITIONAL
-					.name()))
+			else if (dataLabel
+					.equalsIgnoreCase(DataType.SLOTCONDITIONAL.name()))
 				resolveString = context.getSlotConditional();
 			else if (dataLabel.equalsIgnoreCase(DataType.FANIN.name()))
 				resolveString = context.getFanIn();

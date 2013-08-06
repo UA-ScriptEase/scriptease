@@ -133,7 +133,6 @@ public class CodeGenerator {
 		analyzer = new SemanticAnalyzer(this.generatingStoryPoints);
 
 		// Set the automatic bindings for any causes that require one.
-		model.setAutomaticBindings(this.generatingStoryPoints);
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
@@ -142,6 +141,8 @@ public class CodeGenerator {
 		if (problems.isEmpty()) {
 			final Collection<StoryComponent> automatics;
 			final Collection<Set<CodeBlock>> scriptBuckets;
+
+			model.setAutomaticBindings(this.generatingStoryPoints);
 
 			automatics = model.generateAutomaticCauses();
 
@@ -275,6 +276,7 @@ public class CodeGenerator {
 		final Slot slot;
 		final String format;
 		final List<AbstractFragment> fileFormat;
+		final String scriptContent;
 
 		location = context.getLocationInfo();
 		translator = context.getTranslator();
@@ -290,22 +292,10 @@ public class CodeGenerator {
 		// language dictionary
 		format = slot.getFormatKeyword().toUpperCase();
 		fileFormat = translator.getLanguageDictionary().getFormat(format);
-
 		// resolve the format into code
-		try {
-			final String scriptContent;
+		scriptContent = AbstractFragment.resolveFormat(fileFormat, context);
 
-			scriptContent = AbstractFragment.resolveFormat(fileFormat, context);
-
-			return new ScriptInfo(scriptContent, location);
-		} catch (CodeGenerationException e) {
-			final String scriptContent;
-
-			scriptContent = "CodeGenerationException occured at the script generating level with message: "
-					+ e.getMessage();
-
-			return new ScriptInfo(scriptContent, location);
-		}
+		return new ScriptInfo(scriptContent, location);
 	}
 
 	/**

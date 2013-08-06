@@ -337,15 +337,33 @@ public final class UnityProject extends GameModule {
 	private Collection<Resource> loadResources() {
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
+		final Collection<String> audioExtensions;
 		final Collection<String> imageExtensions;
+
 		final FileFilter resourceFolderFilter;
+		final FileFilter audioFilter;
 		final FileFilter imageFilter;
 		final FileFilter guiSkinFilter;
 
+		final Collection<File> audios = new ArrayList<File>();
 		final Collection<File> images = new ArrayList<File>();
 		final Collection<File> guiSkins = new ArrayList<File>();
 		final Collection<File> resourceFolders;
 
+		audioExtensions = new ArrayList<String>() {
+			{
+				// As Seen On:
+				// http://docs.unity3d.com/Documentation/Manual/AudioFiles.html
+				this.add("mp3");
+				this.add("aif");
+				this.add("wav");
+				this.add("ogg");
+				this.add("xm");
+				this.add("mod");
+				this.add("it");
+				this.add("s3m");
+			}
+		};
 		imageExtensions = new ArrayList<String>() {
 			{
 				this.add("psd");
@@ -365,6 +383,14 @@ public final class UnityProject extends GameModule {
 			public boolean accept(File file) {
 				return file.getName().endsWith(RESOURCE_FOLDER_NAME)
 						&& file.isDirectory();
+			}
+		};
+
+		audioFilter = new FileFilter() {
+			public boolean accept(File file) {
+				final String ext = FileOp.getExtension(file).toLowerCase();
+
+				return audioExtensions.contains(ext);
 			}
 		};
 
@@ -390,9 +416,13 @@ public final class UnityProject extends GameModule {
 				resourceFolderFilter);
 
 		for (File resourceFolder : resourceFolders) {
+			audios.addAll(FileOp.findFiles(resourceFolder, audioFilter));
 			images.addAll(FileOp.findFiles(resourceFolder, imageFilter));
 			guiSkins.addAll(FileOp.findFiles(resourceFolder, guiSkinFilter));
 		}
+
+		resources.addAll(this.buildSimpleUnityResources(audios,
+				UnityType.SE_AUDIO));
 
 		resources.addAll(this.buildSimpleUnityResources(images,
 				UnityType.SE_IMAGE));
