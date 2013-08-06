@@ -629,4 +629,17 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		return null;
 	}
+	
+	@Override
+	public void setDisabled(Boolean disabled) {
+		super.setDisabled(disabled);
+		
+		final KnowItBinding binding = this.getBinding();
+		if (binding instanceof KnowItBindingFunction) {
+			final KnowItBindingFunction function = (KnowItBindingFunction) binding;
+			final ScriptIt scriptIt = function.getValue();
+			
+			scriptIt.setDisabled(disabled);
+		}
+	}
 }
