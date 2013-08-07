@@ -2,6 +2,7 @@ package scriptease.gui.action.components;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
@@ -67,16 +68,16 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 
 		return activeModel != null && isLegal;
 	}
-	
+
 	/**
 	 * Defines a <code>CopyAction</code> object with no icon.
 	 */
 	private DisableAction() {
 		super(DisableAction.DISABLE_TEXT);
 
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
-		this.putValue(Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_D, 0));
+		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
+		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+				KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
 
 		SEFocusManager.getInstance().addSEFocusObserver(this);
 	}
@@ -90,7 +91,6 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 	 * @param component
 	 */
 	public void disableComponent(StoryComponentPanel componentPanel) {
-
 		final StoryComponent component = componentPanel.getStoryComponent();
 
 		final boolean enabled = component.isEnabled();
