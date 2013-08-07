@@ -29,6 +29,7 @@ public interface CodeGenerationConstants {
 		CAUSE,
 		ELSECHILD,
 		END,
+		FIRSTCAUSE,
 		IMAGE,
 		IFCHILD,
 		MAINCODEBLOCK,
