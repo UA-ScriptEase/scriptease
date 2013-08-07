@@ -166,6 +166,7 @@
 		<xsd:sequence>
 			<xsd:element name="Name" type="xsd:string" />
 			<xsd:element name="Visible" type="xsd:boolean" />
+			<xsd:element name="Enabled" type="xsd:boolean" />
 			<xsd:element name="Labels">
 				<xsd:complexType>
 					<xsd:sequence>
