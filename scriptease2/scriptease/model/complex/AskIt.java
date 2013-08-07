@@ -10,6 +10,8 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.translator.io.model.GameType;
 
 /**
@@ -202,18 +204,34 @@ public final class AskIt extends ComplexStoryComponent {
 		super.setEnabled(enabled);
 
 		final Collection<StoryComponent> blocks = this.getChildren();
-		
+
 		for (StoryComponent block : blocks) {
 			block.setEnabled(enabled);
-			
+
 			if (block instanceof StoryComponentContainer) {
 				final StoryComponentContainer container;
-				
+
 				container = (StoryComponentContainer) block;
-				
+
 				for (StoryComponent child : container.getChildren())
 					child.setEnabled(enabled);
-				}
+			}
+		}
+
+		// Enable the descriptions that are used as bindings if this
+		// is enabled
+		if (enabled) {
+			final KnowIt condition = this.getCondition();
+			final KnowItBinding binding = condition.getBinding();
+			
+			if (binding instanceof KnowItBindingReference) {
+				final KnowItBindingReference reference = (KnowItBindingReference) binding;
+				
+				final KnowIt value = reference.getValue();
+				
+				if (!value.isEnabled())
+					value.setEnabled(true);
 			}
 		}
 	}
+}
