@@ -220,7 +220,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				// Check if the source binding is disabled. If it is, we should
 				// disable this component too.
 				if (this.isWidgetOwnerDisabled(support)) {
-					destinationKnowIt.getOwner().getOwner().setDisabled(true);
+					destinationKnowIt.disableOwner();
 				}
 
 				this.repopulateParentOf(destinationComponent);
@@ -281,7 +281,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 * @param support
 	 * @return
 	 */
-	protected KnowItBinding extractBinding(TransferHandler.TransferSupport support) {
+	protected KnowItBinding extractBinding(
+			TransferHandler.TransferSupport support) {
 		KnowItBinding sourceBinding = null;
 
 		try {
@@ -324,7 +325,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		} catch (IOException e) {
 			return false;
 		}
-		
+
 		return false;
 	}
 }
