@@ -65,7 +65,8 @@ public abstract class StoryComponent implements Cloneable {
 
 	private static final Set<Class<? extends StoryComponent>> noValidChildren = new HashSet<Class<? extends StoryComponent>>();
 	public static final String BLANK_TEXT = "";
-
+	public static final String DISABLE_TEXT = " X ";
+	
 	protected StoryComponent() {
 		this(StoryComponent.BLANK_TEXT);
 	}
@@ -256,10 +257,10 @@ public abstract class StoryComponent implements Cloneable {
 	public void setEnabled(Boolean enable) {
 		this.isEnabled = enable;
 		
-		if (!enable && !this.labels.contains("Disabled"))
-			this.labels.add("Disabled");
-		else if (enable && this.labels.contains("Disabled"))
-			this.labels.remove("Disabled");
+		if (!enable && !this.labels.contains(StoryComponent.DISABLE_TEXT))
+			this.labels.add(StoryComponent.DISABLE_TEXT);
+		else if (enable && this.labels.contains(StoryComponent.DISABLE_TEXT))
+			this.labels.remove(StoryComponent.DISABLE_TEXT);
 		
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_DISABILITY));
@@ -340,18 +341,17 @@ public abstract class StoryComponent implements Cloneable {
 		clone.setDisplayText(new String(this.displayText));
 		clone.setVisible(this.isVisible);
 		clone.setOwner(this.ownerComponent);
-
-		if (clone.ownerComponent != null && !clone.ownerComponent.isEnabled)
-			clone.setEnabled(false);
-		else
-			clone.setEnabled(this.isEnabled);
-
 		clone.setLibrary(this.library);
 
 		// add all of the labels
 		for (String label : this.labels) {
 			clone.addLabel(new String(label));
 		}
+
+		if (clone.ownerComponent != null && !clone.ownerComponent.isEnabled)
+			clone.setEnabled(false);
+		else
+			clone.setEnabled(this.isEnabled);
 
 		return clone;
 	}

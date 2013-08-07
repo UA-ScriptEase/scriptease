@@ -26,6 +26,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.component.ExpansionButton;
+import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -51,7 +52,7 @@ public class StoryComponentPanel extends JPanel implements
 	private boolean editable;
 	private boolean selectable;
 	private boolean removable;
-	
+
 	private ExpansionButton expansionButton;
 
 	public StoryComponentPanel(StoryComponent component) {
@@ -144,7 +145,7 @@ public class StoryComponentPanel extends JPanel implements
 	public boolean isSelectable() {
 		return this.selectable;
 	}
-	
+
 	public void setExpansionButton(ExpansionButton expansionButton) {
 		this.expansionButton = expansionButton;
 	}
@@ -274,8 +275,33 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
 			this.setVisible(component.isVisible());
-		} 
-		
+		} else if (type == StoryComponentChangeEnum.CHANGE_LABELS_CHANGED) {
+			final JLabel disableLabel = ScriptWidgetFactory.buildLabel(
+					"Disabled", ScriptWidgetFactory.LABEL_TEXT_COLOUR,
+					ScriptEaseUI.COLOUR_DISABLED);
+
+			final JPanel mainPanel = this.getLayout().getMainPanel();
+
+			final Component[] children = mainPanel.getComponents();
+
+			boolean disableLabelFound = false;
+			for (Component child : children) {
+				if (child instanceof JLabel) {
+					final JLabel label = (JLabel) child;
+
+					if (label.getText().equals(StoryComponent.DISABLE_TEXT)) {
+						if (component.isEnabled())
+							mainPanel.remove(child);
+
+						disableLabelFound = true;
+					}
+				}
+			}
+
+			if (!disableLabelFound && !component.isEnabled())
+				mainPanel.add(disableLabel, 0);
+		}
+
 		// revalidate the panel
 		this.revalidate();
 		this.repaint();
