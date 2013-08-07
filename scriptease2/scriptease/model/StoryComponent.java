@@ -258,6 +258,7 @@ public abstract class StoryComponent implements Cloneable {
 
 	public void setDisabled(Boolean isDisabled) {
 		this.isDisabled = isDisabled;
+		
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_DISABILITY));
 	}

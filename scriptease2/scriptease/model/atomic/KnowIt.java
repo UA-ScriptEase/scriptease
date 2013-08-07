@@ -515,7 +515,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			if (event.getSource() instanceof KnowIt) {
 				final KnowIt binding = (KnowIt) event.getSource();
 				if (binding.isDisabled())
-					binding.disableOwner();
+					this.disableOwner();
 			}
 		} else {
 			// Forward reference updates to this KnowIt's observers
