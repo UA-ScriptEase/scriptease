@@ -328,7 +328,7 @@ public class StoryComponentPanelManager {
 
 			if (!panel.getStoryComponent().isEnabled()) {
 				panel.setBackground(GUIOp.scaleWhite(
-						ScriptEaseUI.COLOUR_DISABLED, 1.2));
+						ScriptEaseUI.COLOUR_DISABLED, 0.8));
 				return;
 			}
 
