@@ -4048,21 +4048,44 @@
           <Name>When &lt;subject&gt; succeeds</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject>subject</Subject>
+          <Subject>ScriptEase</Subject>
           <Slot>Start</Slot>
           <Id>268</Id>
           <Types/>
           <Parameters>
             <KnowIt>
-              <Name>subject</Name>
+              <Name>ScriptEase</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>GameObject</Type>
               </Types>
+              <Binding flavour="automatic"></Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
             </KnowIt>
           </Parameters>
-          <Code/>
+          <Code>
+          	<Line>
+	          	<Literal>SEStory.AddSucceedFunctionToStoryPoint(</Literal>
+	          	<Scope data="ARGUMENT" ref="subject">
+	               <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+	            </Scope>
+	            <Literal>, function(){</Literal>
+	       </Line>
+	       <Indent>
+	          	<FormatRef data="NONE" ref="children"/>
+	       </Indent>
+           <Line>
+	          	<Literal>});</Literal>
+	        </Line>
+          </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </CauseIt>
@@ -4078,21 +4101,44 @@
           <Name>When &lt;subject&gt; fails</Name>
           <Visible>true</Visible>
           <Labels/>
-          <Subject>subject</Subject>
+          <Subject>ScriptEase</Subject>
           <Slot>Start</Slot>
           <Id>269</Id>
           <Types/>
           <Parameters>
             <KnowIt>
-              <Name>subject</Name>
+              <Name>ScriptEase</Name>
               <Visible>true</Visible>
               <Labels/>
               <Types>
                 <Type>GameObject</Type>
               </Types>
+              <Binding flavour="automatic"></Binding>
+            </KnowIt>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Labels/>
+              <Types>
+                <Type>storyPoint</Type>
+              </Types>
             </KnowIt>
           </Parameters>
-          <Code/>
+          <Code>
+          	<Line>
+	          	<Literal>SEStory.AddFailFunctionToStoryPoint(</Literal>
+	          	<Scope data="ARGUMENT" ref="subject">
+	               <Fragment data="NAME" legalValues="^[a-zA-Z]+[0-9a-zA-Z]*"/>
+	            </Scope>
+	            <Literal>, function(){</Literal>
+	       </Line>
+	       <Indent>
+	          	<FormatRef data="NONE" ref="children"/>
+	       </Indent>
+           <Line>
+	          	<Literal>});</Literal>
+	        </Line>
+          </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </CauseIt>

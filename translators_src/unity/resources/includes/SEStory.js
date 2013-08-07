@@ -273,15 +273,16 @@ private class StoryPoint {
 	function Enable() {
 		if(this.state == State.ENABLED)
 			return;
+		var previousState : State = this.state;
 		
-		if(this.state == State.PRESUCCEEDED) {
-			this.Succeed();
-		}
 		this.state = State.ENABLED;
-		
+			
 		for(var funxion : Function in this.enableFunctions) {
 			funxion();
 		}
+	
+		if(previousState == State.PRESUCCEEDED)			
+			this.Succeed();
 	}
 	
 	/**
