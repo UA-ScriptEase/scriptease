@@ -192,7 +192,6 @@ public class StoryComponentPanelFactory {
 	 * 
 	 * @author graves
 	 * @author mfchurch
-	 * @author jyuen
 	 */
 	public void parseDisplayText(JPanel displayNamePanel,
 			StoryComponent storyComponent, boolean addLabels) {
@@ -220,7 +219,7 @@ public class StoryComponentPanelFactory {
 				}
 			}
 		}
-
+		
 		String toParse = storyComponent.getDisplayText();
 		// Loop through the display text until there is no more to parse.
 		while (toParse.length() > 0) {

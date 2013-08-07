@@ -317,6 +317,10 @@ public class DescribeItPanel extends JPanel {
 		}
 	}
 
+	public JPanel getScriptItPanel() {
+		return this.scriptItPanel;
+	}
+	
 	@Override
 	public String toString() {
 		return "DescribeItPanel [" + this.describeItGraph.getStartNode() + "]";
