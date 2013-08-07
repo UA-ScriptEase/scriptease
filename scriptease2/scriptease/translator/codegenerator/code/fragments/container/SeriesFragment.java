@@ -174,7 +174,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 			final StoryComponent storyComponent = codeBlockContext
 					.getComponent();
 
-			if (storyComponent != null && storyComponent.isDisabled())
+			if (storyComponent != null && !storyComponent.isEnabled())
 				return true;
 		}
 

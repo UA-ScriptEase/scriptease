@@ -55,7 +55,7 @@ public abstract class StoryComponent implements Cloneable {
 	private String displayText;
 	private Collection<String> labels;
 	private Boolean isVisible;
-	private Boolean isDisabled;
+	private Boolean isEnabled;
 
 	private LibraryModel library;
 
@@ -94,10 +94,7 @@ public abstract class StoryComponent implements Cloneable {
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new ArrayList<String>();
 		this.isVisible = true;
-		if (this.ownerComponent != null && this.ownerComponent.isDisabled)
-			this.isDisabled = true;
-		else
-			this.isDisabled = false;
+		this.isEnabled = true;
 	}
 
 	/**
@@ -169,12 +166,12 @@ public abstract class StoryComponent implements Cloneable {
 	}
 
 	/**
-	 * Returns whether the StoryComponent is disabled
+	 * Returns whether the StoryComponent is enabled
 	 * 
 	 * @return
 	 */
-	public Boolean isDisabled() {
-		return this.isDisabled;
+	public Boolean isEnabled() {
+		return this.isEnabled;
 	}
 
 	/**
@@ -256,9 +253,9 @@ public abstract class StoryComponent implements Cloneable {
 				StoryComponentChangeEnum.CHANGE_VISIBILITY));
 	}
 
-	public void setDisabled(Boolean isDisabled) {
-		this.isDisabled = isDisabled;
-		
+	public void setEnabled(Boolean enable) {
+		this.isEnabled = enable;
+
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_DISABILITY));
 	}
@@ -339,10 +336,10 @@ public abstract class StoryComponent implements Cloneable {
 		clone.setVisible(this.isVisible);
 		clone.setOwner(this.ownerComponent);
 
-		if (clone.ownerComponent != null && clone.ownerComponent.isDisabled)
-			clone.setDisabled(true);
+		if (clone.ownerComponent != null && !clone.ownerComponent.isEnabled)
+			clone.setEnabled(false);
 		else
-			clone.setDisabled(this.isDisabled);
+			clone.setEnabled(this.isEnabled);
 
 		clone.setLibrary(this.library);
 

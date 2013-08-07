@@ -514,7 +514,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// effects using it
 			if (event.getSource() instanceof KnowIt) {
 				final KnowIt binding = (KnowIt) event.getSource();
-				if (binding.isDisabled())
+				if (!binding.isEnabled())
 					this.disableOwner();
 			}
 		} else {
@@ -612,15 +612,15 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	}
 
 	@Override
-	public void setDisabled(Boolean disabled) {
-		super.setDisabled(disabled);
+	public void setEnabled(Boolean enabled) {
+		super.setEnabled(enabled);
 
 		final KnowItBinding binding = this.getBinding();
 		if (binding instanceof KnowItBindingFunction) {
 			final KnowItBindingFunction function = (KnowItBindingFunction) binding;
 			final ScriptIt scriptIt = function.getValue();
 
-			scriptIt.setDisabled(disabled);
+			scriptIt.setEnabled(enabled);
 		}
 	}
 
@@ -636,7 +636,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		if (owner instanceof AskIt)
 			// Disable the question if it references this binding
-			owner.setDisabled(true);
+			owner.setEnabled(false);
 		else {
 			// Or else disable the effect or description
 			final StoryComponent scriptIt = owner.getOwner();
@@ -645,9 +645,9 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				final StoryComponent description = scriptIt.getOwner();
 
 				if (description != null && description instanceof KnowIt)
-					description.setDisabled(true);
+					description.setEnabled(false);
 				else
-					scriptIt.setDisabled(true);
+					scriptIt.setEnabled(false);
 			}
 		}
 	}
