@@ -209,4 +209,12 @@ public class CodeBlockContext extends Context {
 
 		return this.identicalCauses;
 	}
+	
+	/** 
+	 * Return the Story Component this <code>CodeBlock</code> is attached to
+	 * @return
+	 */
+	public StoryComponent getComponent() {
+		return this.codeBlock.ownerComponent;
+	}
 }
