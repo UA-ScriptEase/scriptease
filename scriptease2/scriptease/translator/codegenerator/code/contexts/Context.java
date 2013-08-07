@@ -228,6 +228,31 @@ public abstract class Context {
 	}
 
 	/**
+	 * Gets the first cause that matches the location information.
+	 * 
+	 * @return
+	 */
+	public CauseIt getFirstCause() {
+		for (StoryPoint point : this.storyPoints) {
+			for (StoryComponent child : point.getChildren()) {
+				if (child instanceof CauseIt) {
+					final CauseIt causeIt = (CauseIt) child;
+
+					final Collection<CodeBlock> codeBlocks;
+
+					codeBlocks = causeIt
+							.getCodeBlocksForLocation(this.locationInfo);
+
+					if (!codeBlocks.isEmpty())
+						return causeIt;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Returns unique causes based on the
 	 * {@link CauseIt#isEquivalentToCause(CauseIt)} method.
 	 * 
@@ -250,6 +275,7 @@ public abstract class Context {
 						boolean causeExists = false;
 
 						for (CauseIt cause : causes) {
+							// Don't add equivalent causes to the list
 							if (cause.isEquivalentToCause(causeIt)) {
 								causeExists = true;
 								break;

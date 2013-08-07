@@ -98,6 +98,8 @@ public class ScopeFragment extends AbstractContainerFragment {
 			return context.getStartStoryPoint();
 		case CAUSE:
 			return context.getCause();
+		case FIRSTCAUSE:
+			return context.getFirstCause();
 		case AUDIO:
 			return context.getAudio();
 		case IMAGE:

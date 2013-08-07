@@ -14,6 +14,8 @@ static var root:StoryPoint;
 
 static var storyInitialized:boolean = false;
 
+
+
 /**
  * Registers the root of the story. This should only be called when we first
  * start it.
@@ -42,6 +44,45 @@ static function RegisterChild(parentName:String, uniqueName:String, fanIn:int) {
 		Debug.Log("SESTory Warning: Could not find parent with unique name "
 			+ uniqueName);
 	}
+}
+
+/**
+ * Adds a function to the Story Point that will be called when it succeeds.
+ */
+static function AddSucceedFunctionToStoryPoint(uniqueName:String, funxion:Function) {
+	var storyPoint:StoryPoint = FindStoryPoint(uniqueName);
+	
+	if(storyPoint != null) {
+		storyPoint.AddSucceedFunction(funxion);
+	} else
+		Debug.Log("SEStory Warning: Attempted to add succeed function to nonexistant Story " +
+		"Point " + uniqueName);
+}
+
+/**
+ * Adds a function to the Story Point that will be called when it fails.
+ */
+static function AddFailFunctionToStoryPoint(uniqueName:String, funxion:Function) {
+	var storyPoint:StoryPoint = FindStoryPoint(uniqueName);
+	
+	if(storyPoint != null) {
+		storyPoint.AddFailFunction(funxion);
+	} else
+		Debug.Log("SEStory Warning: Attempted to add fail function to nonexistant Story " +
+		"Point " + uniqueName);
+}
+
+/**
+ * Adds a function to the Story Point that will be called when it is enabled.
+ */
+static function AddEnableFunctionToStoryPoint(uniqueName:String, funxion:Function) {
+	var storyPoint:StoryPoint = FindStoryPoint(uniqueName);
+	
+	if(storyPoint != null) {
+		storyPoint.AddEnableFunction(funxion);
+	} else
+		Debug.Log("SEStory Warning: Attempted to add enable function to nonexistant Story " +
+		"Point " + uniqueName);
 }
 
 /**
@@ -171,6 +212,10 @@ private static function FindStoryPointInDescendants(parent:StoryPoint, uniqueNam
  * Represents a Story Point from ScriptEase II.
  */
 private class StoryPoint {
+	var enableFunctions : List.<Function>;
+	var failFunctions : List.<Function>;
+	var succeedFunctions : List.<Function>;
+
 	var children:List.<StoryPoint>;
 	var parents:List.<StoryPoint>;
 	var fanIn:int;
@@ -195,6 +240,30 @@ private class StoryPoint {
 		this.children = new List.<StoryPoint>();
 		this.parents = new List.<StoryPoint>();
 		this.state = State.DISABLED;
+		this.enableFunctions = new List.<Function>();
+		this.succeedFunctions = new List.<Function>();
+		this.failFunctions = new List.<Function>();
+	}
+	
+	function AddEnableFunction(funxion : Function) {
+		if(this.IsEnabled())
+			funxion();
+			
+		this.enableFunctions.Add(funxion);
+	}
+	
+	function AddFailFunction(funxion : Function) {
+		if(this.HasFailed())
+			funxion();
+		
+		this.enableFunctions.Add(funxion);
+	}
+	
+	function AddSucceedFunction(funxion : Function) {
+		if(this.HasSucceeded())
+			funxion();
+			
+		this.succeedFunctions.Add(funxion);
 	}
 	
 	/*
@@ -202,11 +271,18 @@ private class StoryPoint {
 	 * we automatically succeed the point.
 	 */
 	function Enable() {
-		if(this.state == State.PRESUCCEEDED) {
-			this.state = State.ENABLED;
+		if(this.state == State.ENABLED)
+			return;
+		var previousState : State = this.state;
+		
+		this.state = State.ENABLED;
+			
+		for(var funxion : Function in this.enableFunctions) {
+			funxion();
+		}
+	
+		if(previousState == State.PRESUCCEEDED)			
 			this.Succeed();
-		} else 
-			this.state = State.ENABLED;
 	}
 	
 	/**
@@ -220,6 +296,10 @@ private class StoryPoint {
 		
 		if(this.state == State.ENABLED) {
 			this.state = State.SUCCEEDED;
+			
+			for(var funxion : Function in this.succeedFunctions) {
+				funxion();
+			}
 		
 			for(child in this.children) {
 				if(child.state == State.ENABLED || child.state == State.SUCCEEDED)
@@ -284,6 +364,10 @@ private class StoryPoint {
 	 */
 	function Fail() {
 		this.state = State.FAILED;
+		
+		for(var funxion : Function in this.failFunctions) {
+			funxion();
+		}
 	}
 	
 	function IsEnabled() {
