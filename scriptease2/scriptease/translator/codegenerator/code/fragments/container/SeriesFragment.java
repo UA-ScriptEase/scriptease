@@ -17,6 +17,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesType;
+import scriptease.translator.codegenerator.code.contexts.CodeBlockContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -32,6 +33,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author mfchurch
  * @author jtduncan
  * @author kschenk
+ * @author jyuen
  */
 public class SeriesFragment extends AbstractContainerFragment {
 	private String separator;
@@ -145,14 +147,38 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 			newContext = contextFactory.createContext(context, next);
 
-			code.append(AbstractFragment.resolveFormat(this.subFragments,
-					newContext));
+			if (this.isComponentDisabled(newContext)) {
+				code.append("/*\n");
+				code.append(AbstractFragment.resolveFormat(this.subFragments,
+						newContext));
+				code.append("*/\n");
+			} else
+				code.append(AbstractFragment.resolveFormat(this.subFragments,
+						newContext));
 
 			if (it.hasNext())
 				code.append(this.separator);
 		}
 
 		return code.toString();
+	}
+
+	/**
+	 * Whether the story component has been disabled and the code should be
+	 * commented out.
+	 */
+	private boolean isComponentDisabled(Context context) {
+		if (context instanceof CodeBlockContext) {
+			final CodeBlockContext codeBlockContext = (CodeBlockContext) context;
+
+			final StoryComponent storyComponent = codeBlockContext
+					.getComponent();
+
+			if (storyComponent != null && storyComponent.isDisabled())
+				return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -197,8 +223,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 			data = context.getStoryPointParents();
 		} else if (dataLabel.equalsIgnoreCase(SeriesType.CHILDRENNODES.name())) {
 			data = context.getStoryPointChildren();
-		} else if (dataLabel.equalsIgnoreCase(SeriesType.IDENTICALCAUSES
-				.name())) {
+		} else if (dataLabel
+				.equalsIgnoreCase(SeriesType.IDENTICALCAUSES.name())) {
 			data = context.getIdenticalCauses();
 		} else if (dataLabel.equalsIgnoreCase(SeriesType.DIALOGUEROOTS.name())) {
 			data = context.getDialogueRoots();

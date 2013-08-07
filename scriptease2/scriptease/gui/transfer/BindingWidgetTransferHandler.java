@@ -18,11 +18,10 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -220,7 +219,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				// Check if the source binding is disabled. If it is, we should
 				// disable this component too.
 				if (this.isWidgetOwnerDisabled(support)) {
-					destinationKnowIt.getOwner().getOwner().setDisabled(true);
+					destinationKnowIt.disableOwner();
 				}
 
 				this.repopulateParentOf(destinationComponent);
@@ -281,7 +280,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 * @param support
 	 * @return
 	 */
-	protected KnowItBinding extractBinding(TransferHandler.TransferSupport support) {
+	protected KnowItBinding extractBinding(
+			TransferHandler.TransferSupport support) {
 		KnowItBinding sourceBinding = null;
 
 		try {
@@ -309,22 +309,19 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			bindingWidget = (BindingWidget) support.getTransferable()
 					.getTransferData(KnowItBindingFlavor);
 
-			if (bindingWidget.getParent().getParent() instanceof StoryComponentPanel) {
-				final StoryComponentPanel panel = (StoryComponentPanel) bindingWidget
-						.getParent().getParent();
-				final StoryComponent component = panel.getStoryComponent();
-
-				if (component.isDisabled())
+			if (bindingWidget.getBinding() instanceof KnowItBindingReference) {
+				final KnowItBindingReference reference = (KnowItBindingReference) bindingWidget.getBinding();
+				final KnowIt knowIt = reference.getValue();
+				
+				if (knowIt.isDisabled())
 					return true;
-				else
-					return false;
 			}
 		} catch (UnsupportedFlavorException e) {
 			return false;
 		} catch (IOException e) {
 			return false;
 		}
-		
+
 		return false;
 	}
 }
