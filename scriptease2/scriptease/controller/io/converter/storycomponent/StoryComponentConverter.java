@@ -30,6 +30,7 @@ public abstract class StoryComponentConverter implements Converter {
 	private static final String TAG_LABELS = "Labels";
 	private static final String TAG_LABEL = "Label";
 	private static final String TAG_VISIBLE = "Visible";
+	private static final String TAG_DISABLE = "Disabled";
 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
@@ -44,6 +45,11 @@ public abstract class StoryComponentConverter implements Converter {
 		// Visibility
 		writer.startNode(TAG_VISIBLE);
 		writer.setValue(comp.isVisible().toString());
+		writer.endNode();
+		
+		// Disability
+		writer.startNode(TAG_DISABLE);
+		writer.setValue(comp.isDisabled().toString());
 		writer.endNode();
 
 		// Labels
@@ -68,12 +74,14 @@ public abstract class StoryComponentConverter implements Converter {
 		final StoryComponent comp;
 		final String displayText;
 		final String visibility;
+		final String disability;
 		final Collection<String> labels = new ArrayList<String>();
 
 		comp = this.buildComponent(reader, context);
 
 		displayText = XMLNode.NAME.readString(reader);
 		visibility = XMLNode.VISIBLE.readString(reader);
+		disability = XMLNode.DISABLE.readString(reader);
 
 		// Labels
 		reader.moveDown();
@@ -91,6 +99,7 @@ public abstract class StoryComponentConverter implements Converter {
 		comp.setDisplayText(displayText);
 		comp.addLabels(labels);
 		comp.setVisible(visibility.equalsIgnoreCase("true"));
+		comp.setDisabled(disability.equalsIgnoreCase("true"));
 
 		return comp;
 	}
