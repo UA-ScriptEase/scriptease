@@ -165,7 +165,7 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 				// Check if the source binding is disabled. If it is, we should
 				// disable this component too.
 				if (this.isWidgetOwnerDisabled(support)) {
-					destinationKnowIt.getOwner().getOwner().setDisabled(true);
+					destinationKnowIt.disableOwner();
 				}
 
 				this.repopulateParentOf(destinationWidget);

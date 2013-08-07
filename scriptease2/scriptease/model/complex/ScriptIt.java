@@ -290,10 +290,10 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	}
 
 	@Override
-	public void setDisabled(Boolean disable) {
-		super.setDisabled(disable);
+	public void setEnabled(Boolean enable) {
+		super.setEnabled(enable);
 
-		if (!disable) {
+		if (enable) {
 			// Enable the descriptions that are used as bindings if the effect
 			// is enabled
 			final Collection<KnowItBinding> bindings = this.getBindings();
@@ -304,8 +304,8 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 
 					final KnowIt value = reference.getValue();
 
-					if (value.isDisabled())
-						value.setDisabled(false);
+					if (!value.isEnabled())
+						value.setEnabled(true);
 				}
 			}
 		}

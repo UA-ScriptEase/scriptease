@@ -1,22 +1,24 @@
 <LibraryModel name="EmotionLibrary" author="ScriptEase Team">
   <IncludeFiles>
-  	<IncludeFile>EmotionController.js</IncludeFile>
+    <IncludeFile>EmotionController.js</IncludeFile>
   </IncludeFiles>
   <Types/>
   <Slots defaultFormat="SECause"/>
   <Causes/>
   <Effects>
-  <ScriptIt>
+    <ScriptIt>
       <Name>Allow &lt;Object&gt; to have emotions</Name>
       <Visible>true</Visible>
+      <Enabled>true</Enabled>
       <Labels>
-      	<Label>E</Label>
+        <Label>E</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
           <Name>Allow &lt;Object&gt; to have emotions</Name>
           <Visible>true</Visible>
+          <Enabled>true</Enabled>
           <Labels/>
           <Id>1</Id>
           <Types>
@@ -26,6 +28,7 @@
             <KnowIt>
               <Name>Object</Name>
               <Visible>true</Visible>
+              <Enabled>true</Enabled>
               <Labels/>
               <Types>
                 <Type>GameObject</Type>

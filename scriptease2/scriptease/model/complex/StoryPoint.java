@@ -373,6 +373,11 @@ public class StoryPoint extends ComplexStoryComponent {
 		return depthMap;
 	}
 
+	@Override
+	public void setEnabled(Boolean isDisabled) {
+		// Do nothing - don't want to be able to disable story points
+	}
+	
 	/**
 	 * Returns a 32 character, lower case string that uses the unique id to
 	 * generate a unique name for the story point.

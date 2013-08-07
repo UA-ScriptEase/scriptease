@@ -326,7 +326,7 @@ public class StoryComponentPanelManager {
 		if (isSelected) {
 			final boolean focusOnAPanel;
 
-			if (panel.getStoryComponent().isDisabled()) {
+			if (!panel.getStoryComponent().isEnabled()) {
 				panel.setBackground(GUIOp.scaleWhite(
 						ScriptEaseUI.COLOUR_DISABLED, 1.2));
 				return;
@@ -343,7 +343,7 @@ public class StoryComponentPanelManager {
 
 		} else {
 
-			if (panel.getStoryComponent().isDisabled())
+			if (!panel.getStoryComponent().isEnabled())
 				panel.setBackground(ScriptEaseUI.COLOUR_DISABLED);
 			else
 				panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);

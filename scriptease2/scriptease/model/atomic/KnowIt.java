@@ -514,33 +514,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// effects using it
 			if (event.getSource() instanceof KnowIt) {
 				final KnowIt binding = (KnowIt) event.getSource();
-
-				if (binding.isDisabled()) {
-					final StoryComponent owner = this.getOwner();
-
-					if (owner == null)
-						return;
-
-					if (owner instanceof AskIt)
-						// Disable the question if it references this binding
-						owner.setDisabled(true);
-					else {
-						// Or else disable the effect or description
-						final StoryComponent scriptIt = owner.getOwner();
-						if (scriptIt instanceof ScriptIt
-								&& !(scriptIt instanceof CauseIt)) {
-
-							final StoryComponent description = scriptIt
-									.getOwner();
-
-							if (description != null
-									&& description instanceof KnowIt)
-								description.setDisabled(true);
-							else
-								scriptIt.setDisabled(true);
-						}
-					}
-				}
+				if (!binding.isEnabled())
+					this.disableOwner();
 			}
 		} else {
 			// Forward reference updates to this KnowIt's observers
@@ -635,17 +610,45 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		return null;
 	}
-	
+
 	@Override
-	public void setDisabled(Boolean disabled) {
-		super.setDisabled(disabled);
-		
+	public void setEnabled(Boolean enabled) {
+		super.setEnabled(enabled);
+
 		final KnowItBinding binding = this.getBinding();
 		if (binding instanceof KnowItBindingFunction) {
 			final KnowItBindingFunction function = (KnowItBindingFunction) binding;
 			final ScriptIt scriptIt = function.getValue();
-			
-			scriptIt.setDisabled(disabled);
+
+			scriptIt.setEnabled(enabled);
+		}
+	}
+
+	/**
+	 * Disables the owner story component of this KnowIt - should only be used
+	 * for non description KnowIts
+	 */
+	public void disableOwner() {
+		final StoryComponent owner = this.getOwner();
+
+		if (owner == null)
+			return;
+
+		if (owner instanceof AskIt)
+			// Disable the question if it references this binding
+			owner.setEnabled(false);
+		else {
+			// Or else disable the effect or description
+			final StoryComponent scriptIt = owner.getOwner();
+			if (scriptIt instanceof ScriptIt && !(scriptIt instanceof CauseIt)) {
+
+				final StoryComponent description = scriptIt.getOwner();
+
+				if (description != null && description instanceof KnowIt)
+					description.setEnabled(false);
+				else
+					scriptIt.setEnabled(false);
+			}
 		}
 	}
 }

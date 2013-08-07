@@ -85,18 +85,18 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 
 		final StoryComponent component = componentPanel.getStoryComponent();
 
-		final boolean disabled = component.isDisabled();
+		final boolean enabled = component.isEnabled();
 
 		// Don't want to be enabling the component if it's owner is disabled.
 		if (component.getOwner() != null
 				&& !(component.getOwner() instanceof StoryPoint)
-				&& component.getOwner().isDisabled())
+				&& !component.getOwner().isEnabled())
 			return;
 
-		component.setDisabled(!disabled);
-
+		component.setEnabled(!enabled);
+		
 		for (StoryComponentPanel childPanel : componentPanel.getDescendants()) {
-			childPanel.getStoryComponent().setDisabled(!disabled);
+			childPanel.getStoryComponent().setEnabled(!enabled);
 			childPanel.repaint();
 		}
 
