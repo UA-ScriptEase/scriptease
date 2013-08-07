@@ -10,12 +10,15 @@ import javax.swing.KeyStroke;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
+import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Represents and performs a disable action on a story component. Disabling a
@@ -44,6 +47,7 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 	 * Updates the action to either be enabled or disabled depending on the
 	 * current selection.
 	 */
+	@Override
 	protected boolean isLegal() {
 		final SEModel activeModel;
 		final Component focusOwner;
@@ -54,12 +58,16 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
+		} else if (focusOwner instanceof StoryComponentPanelJList) {
+			isLegal = SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+		} else if (focusOwner instanceof SEGraph) {
+			isLegal = !((SEGraph<?>) focusOwner).isReadOnly();
 		} else
 			isLegal = false;
 
 		return activeModel != null && isLegal;
 	}
-
+	
 	/**
 	 * Defines a <code>CopyAction</code> object with no icon.
 	 */
