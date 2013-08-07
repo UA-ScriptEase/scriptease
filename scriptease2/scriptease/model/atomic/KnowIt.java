@@ -548,6 +548,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		binding = this.getBinding();
 
 		if (!binding.compatibleWith(this)) {
+			final KnowItBinding newBinding;
+
 			if (binding instanceof KnowItBindingReference) {
 				// Try to fix reference bindings
 				final KnowIt referred;
@@ -557,16 +559,20 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				referred = ((KnowItBindingReference) binding).getValue();
 
 				final KnowIt replacement;
+				final KnowItBinding replacementBinding;
 
 				replacement = this.getReplacementForReference(referred);
+				replacementBinding = new KnowItBindingReference(replacement);
 
-				if (replacement != null) {
-					this.setBinding(replacement);
-					this.revalidateKnowItBindings();
+				if (replacement != null
+						&& replacementBinding.compatibleWith(this)) {
+					newBinding = replacementBinding;
 				} else
-					this.setBinding(new KnowItBindingNull());
+					newBinding = new KnowItBindingNull();
 			} else
-				this.setBinding(new KnowItBindingNull());
+				newBinding = new KnowItBindingNull();
+
+			this.setBinding(newBinding);
 		} else
 			binding.process(new BindingAdapter() {
 				@Override

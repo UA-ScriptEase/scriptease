@@ -647,9 +647,9 @@
 		<Format id="UnityCauseMain">
 			<Line>
 			</Line>
-			<Series data="causes" unique="true">
-				<Line>
-					<Literal>function </Literal>
+			<Line>
+				<Literal>function </Literal>
+				<Scope data="firstCause">
 					<Fragment data="slotConditional" />
 					<Literal>(</Literal>
 						<Series data="slotParameters" unique="true" separator=", ">
@@ -657,18 +657,20 @@
 							<FormatRef ref="variableWithType" />
 						</Series>	
 					<Literal>) {</Literal>
-				</Line>
-				<Indent>
+				</Scope>
+			</Line>
+			<Indent>
+				<Series data="causes" unique="true">
 					<FormatRef ref="variablesDeclaration" />
 					<Line>
 						<Literal>//Function Calls</Literal>
 					</Line>
 					<FormatRef ref="causeFunctionCall" />
-				</Indent>
-				<Line>
-					<Literal>}</Literal>
-				</Line>
-			</Series>
+				</Series>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
 		</Format>
 
 

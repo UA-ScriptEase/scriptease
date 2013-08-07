@@ -14,7 +14,7 @@ import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
@@ -57,7 +57,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		final LibraryModel library;
 
-		final ScriptIt newCause;
+		final CauseIt newCause;
 		final CodeBlock codeBlock;
 		final KnowIt parameter;
 		final Collection<KnowIt> parameters;
@@ -68,7 +68,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		newCause = new ScriptIt("When <" + SUBJECT + ">");
+		newCause = new CauseIt("When <" + SUBJECT + ">");
 
 		type = null;
 		parameter = new KnowIt(SUBJECT);
