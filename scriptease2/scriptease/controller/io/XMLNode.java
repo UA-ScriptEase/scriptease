@@ -128,8 +128,6 @@ public enum XMLNode {
 	VALUE("Value"),
 
 	VISIBLE("Visible"),
-	
-	DISABLE("Disabled"),
 
 	WIDGETNAME("WidgetName"),
 

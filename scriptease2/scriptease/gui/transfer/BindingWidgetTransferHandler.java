@@ -313,7 +313,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				final KnowItBindingReference reference = (KnowItBindingReference) bindingWidget.getBinding();
 				final KnowIt knowIt = reference.getValue();
 				
-				if (knowIt.isDisabled())
+				if (!knowIt.isEnabled())
 					return true;
 			}
 		} catch (UnsupportedFlavorException e) {

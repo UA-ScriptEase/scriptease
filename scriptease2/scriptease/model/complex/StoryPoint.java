@@ -374,7 +374,7 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	@Override
-	public void setDisabled(Boolean isDisabled) {
+	public void setEnabled(Boolean isDisabled) {
 		// Do nothing - don't want to be able to disable story points
 	}
 	

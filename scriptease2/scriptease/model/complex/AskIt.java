@@ -198,13 +198,13 @@ public final class AskIt extends ComplexStoryComponent {
 	}
 
 	@Override
-	public void setDisabled(Boolean isDisabled) {
-		super.setDisabled(isDisabled);
+	public void setEnabled(Boolean enabled) {
+		super.setEnabled(enabled);
 
 		final Collection<StoryComponent> blocks = this.getChildren();
 		
 		for (StoryComponent block : blocks) {
-			block.setDisabled(true);
+			block.setEnabled(enabled);
 			
 			if (block instanceof StoryComponentContainer) {
 				final StoryComponentContainer container;
@@ -212,7 +212,7 @@ public final class AskIt extends ComplexStoryComponent {
 				container = (StoryComponentContainer) block;
 				
 				for (StoryComponent child : container.getChildren())
-					child.setDisabled(true);
+					child.setEnabled(enabled);
 				}
 			}
 		}
