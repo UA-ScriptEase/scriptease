@@ -94,6 +94,10 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 			return;
 
 		component.setDisabled(!disabled);
+		
+		for (Component comp : componentPanel.getComponents()) {
+			System.out.println("DEBUG  " + comp.getName());
+		}
 
 		for (StoryComponentPanel childPanel : componentPanel.getDescendants()) {
 			childPanel.getStoryComponent().setDisabled(!disabled);
