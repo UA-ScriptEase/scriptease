@@ -96,8 +96,8 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		if (equal) {
 			equal &= thisBlocks.size() == otherBlocks.size();
 
-			for (CodeBlock thisblock : thisBlocks) {
-				equal &= thisblock.idIsInCollection(otherBlocks);
+			for (CodeBlock thisBlock : thisBlocks) {
+				equal &= thisBlock.idIsInCollection(otherBlocks);
 			}
 		}
 
