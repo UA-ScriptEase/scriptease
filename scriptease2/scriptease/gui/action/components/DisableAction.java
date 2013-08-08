@@ -4,14 +4,17 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.observer.SEFocusObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
@@ -57,7 +60,7 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 			isLegal = true;
 		} else
 			isLegal = false;
-		
+
 		return activeModel != null && isLegal;
 	}
 
@@ -113,15 +116,28 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
-			//TODO Need to fix undo
-			
-//			if (!UndoManager.getInstance().hasOpenUndoableAction())
-//				UndoManager.getInstance().startUndoableAction("Disable");
+			// TODO Need to fix undo
 
-			this.disableComponent((StoryComponentPanel) focusOwner);
+			final StoryComponentPanel panel;
+			final StoryComponentPanelManager manager;
 
-//			if (UndoManager.getInstance().hasOpenUndoableAction())
-//				UndoManager.getInstance().endUndoableAction();
+			panel = (StoryComponentPanel) focusOwner;
+			manager = panel.getSelectionManager();
+
+			if (manager != null) {
+				final List<StoryComponentPanel> toDisable = manager
+						.getSelectedParents();
+
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction("Disable");
+
+				for (StoryComponentPanel comp : toDisable) {
+					this.disableComponent(comp);
+				}
+
+				if (UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().endUndoableAction();
+			}
 		}
 	}
 
