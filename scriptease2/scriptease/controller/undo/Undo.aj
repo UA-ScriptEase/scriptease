@@ -3,8 +3,6 @@ package scriptease.controller.undo;
 import java.util.Collection;
 
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.action.components.DisableAction;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -235,12 +233,6 @@ public aspect Undo {
 	 */
 	public pointcut removingSuccessor():
 		within(StoryPoint+) && execution(* removeSuccessor(StoryPoint+));
-
-	/**
-	 * Defines the Disable Component operation in DisableAction.
-	 */
-//	public pointcut disablingComponent():
-//		within(DisableAction+) && execution(* disableComponent(StoryComponentPanel+));
 	
 	/*
 	 * ====================== ADVICE ======================
@@ -842,26 +834,4 @@ public aspect Undo {
 		};
 		this.addModification(mod);
 	}
-	
-//	before(final DisableAction disableAction, final StoryComponentPanel panel): disablingComponent() && args(panel) && this(disableAction) {
-//		Modification mod = new Modification() {
-//
-//			@Override
-//			public void redo() {
-//				disableAction.disableComponent(panel);
-//			}
-//
-//			@Override
-//			public void undo() {
-//				disableAction.disableComponent(panel);
-//			}
-//			
-//			@Override
-//			public String toString() {
-//				return "disabling " + panel;
-//			}
-//		};
-//		
-//		this.addModification(mod);
-//	}
 }
