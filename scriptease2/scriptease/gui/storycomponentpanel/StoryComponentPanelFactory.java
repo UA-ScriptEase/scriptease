@@ -211,15 +211,25 @@ public class StoryComponentPanelFactory {
 			// Add the StoryComponent's labels
 			for (String labelText : storyComponent.getLabels()) {
 				if (!labelText.isEmpty()) {
-					JLabel label = ScriptWidgetFactory.buildLabel(labelText,
-							ScriptWidgetFactory.LABEL_TEXT_COLOUR,
-							ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
+					final Color bgColor;
+					if (labelText
+							.equals(StoryComponent.DISABLE_TEXT))
+						bgColor = ScriptEaseUI.COLOUR_DISABLED;
+					else
+						bgColor = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
+
+					JLabel label = ScriptWidgetFactory
+							.buildLabel(
+									labelText,
+									ScriptWidgetFactory.LABEL_TEXT_COLOUR,
+									bgColor);
+
 					displayNamePanel.add(label);
 					displayNamePanel.add(Box.createHorizontalStrut(5));
 				}
 			}
 		}
-		
+
 		String toParse = storyComponent.getDisplayText();
 		// Loop through the display text until there is no more to parse.
 		while (toParse.length() > 0) {
@@ -404,11 +414,18 @@ public class StoryComponentPanelFactory {
 								for (String labelText : function.getValue()
 										.getLabels()) {
 									if (!labelText.isEmpty()) {
+										final Color bgColor;
+										if (labelText
+												.equals(StoryComponent.DISABLE_TEXT))
+											bgColor = ScriptEaseUI.COLOUR_DISABLED;
+										else
+											bgColor = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
+
 										JLabel label = ScriptWidgetFactory
 												.buildLabel(
 														labelText,
 														ScriptWidgetFactory.LABEL_TEXT_COLOUR,
-														ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
+														bgColor);
 										mainPanel.add(label);
 										mainPanel.add(Box
 												.createHorizontalStrut(5));

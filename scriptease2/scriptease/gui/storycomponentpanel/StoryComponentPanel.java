@@ -27,6 +27,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -277,7 +278,8 @@ public class StoryComponentPanel extends JPanel implements
 			this.setVisible(component.isVisible());
 		} else if (type == StoryComponentChangeEnum.CHANGE_LABELS_CHANGED) {
 			final JLabel disableLabel = ScriptWidgetFactory.buildLabel(
-					"Disabled", ScriptWidgetFactory.LABEL_TEXT_COLOUR,
+					StoryComponent.DISABLE_TEXT,
+					ScriptWidgetFactory.LABEL_TEXT_COLOUR,
 					ScriptEaseUI.COLOUR_DISABLED);
 
 			final JPanel mainPanel = this.getLayout().getMainPanel();
@@ -295,6 +297,36 @@ public class StoryComponentPanel extends JPanel implements
 
 						disableLabelFound = true;
 					}
+
+					if (!label.getBackground().equals(
+							ScriptEaseUI.COLOUR_DISABLED)
+							&& !label
+									.getBackground()
+									.equals(ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR)) {
+
+						if (component.isEnabled())
+							label.setForeground(Color.BLACK);
+						else
+							label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
+					}
+				} else if (child instanceof DescribeItPanel) {
+					final DescribeItPanel describeItPanel = (DescribeItPanel) child;
+
+					final Component[] describeItPanels = describeItPanel
+							.getScriptItPanel().getComponents();
+
+					for (Component panel : describeItPanels) {
+						if (panel instanceof JLabel) {
+							final JLabel label = (JLabel) panel;
+							if (!component.isEnabled())
+								label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
+							else
+								label.setForeground(Color.black);
+
+							label.repaint();
+						}
+					}
+
 				}
 			}
 

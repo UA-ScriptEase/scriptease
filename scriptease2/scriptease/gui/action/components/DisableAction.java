@@ -1,30 +1,22 @@
 package scriptease.gui.action.components;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
-import javax.swing.JLabel;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
-import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Represents and performs a disable action on a story component. Disabling a
@@ -63,14 +55,10 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel) {
-			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
-		} else if (focusOwner instanceof StoryComponentPanelJList) {
-			isLegal = SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
-		} else if (focusOwner instanceof SEGraph) {
-			isLegal = !((SEGraph<?>) focusOwner).isReadOnly();
+			isLegal = true;
 		} else
 			isLegal = false;
-
+		
 		return activeModel != null && isLegal;
 	}
 
@@ -107,52 +95,6 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 			return;
 
 		component.setEnabled(!enabled);
-
-		final Component[] components = componentPanel.getLayout()
-				.getMainPanel().getComponents();
-		
-		boolean disableLabelEncountered = true;
-		
-		// TODO this is gross, need to clean up later.
-//		for (Component comp : components) {
-//			if (comp instanceof JLabel) {
-//				final JLabel label = (JLabel) comp;
-//
-//				if (label.getText().equals("Disabled")) {
-//					if (component.isEnabled())
-//						label.setBackground(ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR);
-//					else
-//						label.setBackground(ScriptEaseUI.COLOUR_DISABLED);
-//
-//					disableLabelEncountered = true;
-//					
-//				} else if (disableLabelEncountered){
-//					if (component.isEnabled())
-//						label.setForeground(Color.black);
-//					else
-//						label.setForeground(Color.red);
-//				}
-//				
-//				label.repaint();
-//			} else if (comp instanceof DescribeItPanel) {
-//				final DescribeItPanel describeItPanel = (DescribeItPanel) comp;
-//
-//				final Component[] describeItPanels = describeItPanel
-//						.getScriptItPanel().getComponents();
-//				for (Component panel : describeItPanels) {
-//					if (panel instanceof JLabel) {
-//						final JLabel label = (JLabel) panel;
-//						if (!component.isEnabled())
-//							label.setForeground(Color.red);
-//						else
-//							label.setForeground(Color.black);
-//
-//						label.repaint();
-//					}
-//				}
-//
-//			}
-//		}
 
 		if (!(component instanceof StoryPoint)) {
 			for (StoryComponentPanel childPanel : componentPanel
