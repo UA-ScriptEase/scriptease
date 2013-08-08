@@ -395,7 +395,7 @@ public final class UndoManager {
 	/**
 	 * Determines whether the UndoManager has an open Undoable Action.
 	 * 
-	 * @return <code>true</code> iff there is an open Undoable Action.
+	 * @return <code>true</code> if there is an open Undoable Action.
 	 */
 	public boolean hasOpenUndoableAction() {
 		return this.unfinishedCommand != null;
