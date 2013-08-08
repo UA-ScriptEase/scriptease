@@ -60,7 +60,9 @@ public final class CloseActiveModelAction extends ActiveModelSensitiveAction {
 		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (activeModel != null) {
-			FileManager.getInstance().close(activeModel);
+			if (FileManager.getInstance().hasUnsavedChanges(activeModel)) {
+				FileManager.getInstance().close(activeModel);
+			}
 		}
 	}
 }
