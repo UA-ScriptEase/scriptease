@@ -192,6 +192,7 @@ public class StoryComponentPanelFactory {
 	 * 
 	 * @author graves
 	 * @author mfchurch
+	 * @author jyuen
 	 */
 	public void parseDisplayText(JPanel displayNamePanel,
 			StoryComponent storyComponent, boolean addLabels) {
@@ -275,8 +276,14 @@ public class StoryComponentPanelFactory {
 				}
 			}
 
+			final Color textColor;
+			if (storyComponent.isEnabled())
+				textColor = Color.BLACK;
+			else 
+				textColor = ScriptEaseUI.COLOUR_DISABLED;
+			
 			plainTextLabel = ScriptWidgetFactory.buildLabel(plainText,
-					Color.BLACK);
+					textColor);
 
 			displayNamePanel.add(plainTextLabel);
 
@@ -435,8 +442,14 @@ public class StoryComponentPanelFactory {
 								StoryComponentPanelFactory.this.addWidget(
 										mainPanel, knowIt, true);
 
+								final Color textColor;
+								if (knowIt.isEnabled())
+									textColor = Color.black;
+								else
+									textColor = ScriptEaseUI.COLOUR_DISABLED;
+								
 								mainPanel.add(ScriptWidgetFactory.buildLabel(
-										" describes ", Color.black));
+										" describes ", textColor));
 
 								final Translator active;
 								final DescribeIt describeIt;
