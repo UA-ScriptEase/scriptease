@@ -326,11 +326,11 @@ public class StoryComponentPanelManager {
 		if (isSelected) {
 			final boolean focusOnAPanel;
 
-			if (!panel.getStoryComponent().isEnabled()) {
-				panel.setBackground(GUIOp.scaleWhite(
-						ScriptEaseUI.COLOUR_DISABLED, 0.8));
-				return;
-			}
+//			if (!panel.getStoryComponent().isEnabled()) {
+//				panel.setBackground(GUIOp.scaleWhite(
+//						ScriptEaseUI.COLOUR_DISABLED, 0.8));
+//				return;
+//			}
 
 			focusOnAPanel = SEFocusManager.getInstance().getFocus() instanceof StoryComponentPanel;
 
@@ -343,9 +343,9 @@ public class StoryComponentPanelManager {
 
 		} else {
 
-			if (!panel.getStoryComponent().isEnabled())
-				panel.setBackground(ScriptEaseUI.COLOUR_DISABLED);
-			else
+//			if (!panel.getStoryComponent().isEnabled())
+//				panel.setBackground(ScriptEaseUI.COLOUR_DISABLED);
+//			else
 				panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
 			final StoryComponent panelComponent;

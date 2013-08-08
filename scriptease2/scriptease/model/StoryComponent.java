@@ -258,9 +258,9 @@ public abstract class StoryComponent implements Cloneable {
 		this.isEnabled = enable;
 		
 		if (!enable && !this.labels.contains(StoryComponent.DISABLE_TEXT))
-			this.labels.add(StoryComponent.DISABLE_TEXT);
+			this.addLabel(StoryComponent.DISABLE_TEXT);
 		else if (enable && this.labels.contains(StoryComponent.DISABLE_TEXT))
-			this.labels.remove(StoryComponent.DISABLE_TEXT);
+			this.removeLabel(StoryComponent.DISABLE_TEXT);
 		
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_DISABILITY));
