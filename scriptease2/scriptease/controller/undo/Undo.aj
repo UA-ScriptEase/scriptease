@@ -109,6 +109,9 @@ public aspect Undo {
 
 	public pointcut settingVisible():
 		within(StoryComponent+) && execution(* setVisible(Boolean));
+	
+	public pointcut settingEnabled():
+		within(StoryComponent+) && execution(* setEnabled(Boolean));
 
 	/**
 	 * Defines the Add Observer operation in StoryComponents.
@@ -236,8 +239,8 @@ public aspect Undo {
 	/**
 	 * Defines the Disable Component operation in DisableAction.
 	 */
-	public pointcut disablingComponent():
-		within(DisableAction+) && execution(* disableComponent(StoryComponentPanel+));
+//	public pointcut disablingComponent():
+//		within(DisableAction+) && execution(* disableComponent(StoryComponentPanel+));
 	
 	/*
 	 * ====================== ADVICE ======================
@@ -370,6 +373,22 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "setting " + owner + "'s visiblity to " + visible;
+			}
+		};
+		this.addModification(mod);
+	}
+	
+	before(final StoryComponent owner, final Boolean enable): settingEnabled() && args(enable) && this(owner) {
+		Modification mod = new FieldModification<Boolean>(enable,
+				owner.isEnabled()) {
+			@Override
+			public void setOp(Boolean value) {
+				owner.setEnabled(value);
+			}
+
+			@Override
+			public String toString() {
+				return "setting " + owner + "'s enable factor to " + enable;
 			}
 		};
 		this.addModification(mod);
@@ -824,25 +843,25 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 	
-	before(final DisableAction disableAction, final StoryComponentPanel panel): disablingComponent() && args(panel) && this(disableAction) {
-		Modification mod = new Modification() {
-
-			@Override
-			public void redo() {
-				disableAction.disableComponent(panel);
-			}
-
-			@Override
-			public void undo() {
-				disableAction.disableComponent(panel);
-			}
-			
-			@Override
-			public String toString() {
-				return "disabling " + panel;
-			}
-		};
-		
-		this.addModification(mod);
-	}
+//	before(final DisableAction disableAction, final StoryComponentPanel panel): disablingComponent() && args(panel) && this(disableAction) {
+//		Modification mod = new Modification() {
+//
+//			@Override
+//			public void redo() {
+//				disableAction.disableComponent(panel);
+//			}
+//
+//			@Override
+//			public void undo() {
+//				disableAction.disableComponent(panel);
+//			}
+//			
+//			@Override
+//			public String toString() {
+//				return "disabling " + panel;
+//			}
+//		};
+//		
+//		this.addModification(mod);
+//	}
 }
