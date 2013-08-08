@@ -9,7 +9,6 @@ import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.controller.observer.SEFocusObserver;
-import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -114,13 +113,15 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
-			if (!UndoManager.getInstance().hasOpenUndoableAction())
-				UndoManager.getInstance().startUndoableAction("Disable");
+			//TODO Need to fix undo
+			
+//			if (!UndoManager.getInstance().hasOpenUndoableAction())
+//				UndoManager.getInstance().startUndoableAction("Disable");
 
 			this.disableComponent((StoryComponentPanel) focusOwner);
 
-			if (UndoManager.getInstance().hasOpenUndoableAction())
-				UndoManager.getInstance().endUndoableAction();
+//			if (UndoManager.getInstance().hasOpenUndoableAction())
+//				UndoManager.getInstance().endUndoableAction();
 		}
 	}
 
