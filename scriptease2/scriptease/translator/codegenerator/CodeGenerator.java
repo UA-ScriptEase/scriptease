@@ -242,7 +242,6 @@ public class CodeGenerator {
 			scriptContent = "Code Generation Exception";
 			return new ScriptInfo(scriptContent, location);
 		}
-
 	}
 
 	/**

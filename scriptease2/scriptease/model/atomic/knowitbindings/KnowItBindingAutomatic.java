@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.model.atomic.KnowIt;
-import scriptease.translator.io.model.Resource;
 
 /**
  * This class represents a <b>automatic</b> binding for a <code>KnowIt</code>.
@@ -33,9 +32,8 @@ public class KnowItBindingAutomatic extends KnowItBinding {
 	 *             whenever this method is called.
 	 */
 	@Override
-	public Resource getValue() {
-		throw new UnsupportedOperationException(
-				"Cannot get the value for an automatic KnowIt.");
+	public String getValue() {
+		return "Cannot get the value for an automatic KnowIt.";
 	}
 
 	@Override

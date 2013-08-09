@@ -62,6 +62,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 	 * Updates the action to either be enabled or disabled depending on the
 	 * current selection.
 	 */
+	@Override
 	protected boolean isLegal() {
 		final SEModel activeModel;
 		final Component focusOwner;

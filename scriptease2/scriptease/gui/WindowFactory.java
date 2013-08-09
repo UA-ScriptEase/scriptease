@@ -104,7 +104,7 @@ public final class WindowFactory {
 			+ "<br><b>Ph.D. Students:</b> Neesha Desai, Richard Zhao"
 			+ "<br><b>Programmer Analysts:</b> Matthew Church, Jason Duncan, Eric Graves, Adel Lari, Robin Miller, Kevin Schenk, Jessica Yuen"
 			+ "<br><b>Artists:</b> Wei Li, Jamie Schmitt"
-			+ "<br><b>Interns:</b> Alex Czeto, Kirsten Svidal"
+			+ "<br><b>Interns:</b> Delia Cormier, Alex Czeto, Kirsten Svidal"
 			+ "<br><br>Visit us online at http://www.cs.ualberta.ca/~script/<br></html>";
 	private static final String LAST_DIRECTORY_KEY = "LastDirectory_FilterType";
 	private static final String CONFIRM_OVERWRITE_TITLE = "Save As";
