@@ -116,28 +116,6 @@ static function StartDialogue(dialogue:int) {
 }
 
 static var audioObject : GameObject;
-
-/** 
- * We need this because the default PlayClipAtPoint doesn't let us
- * stop the clip from playing! 
- */
-static function PlayClip(clip: AudioClip, pos: Vector3) : GameObject {
-  var tempGO : GameObject;
-  var aSource : AudioSource;
-  
-  tempGO = GameObject("TemporaryDialogueAudio");
-  aSource = tempGO.AddComponent(AudioSource);
-  
-  tempGO.transform.position = pos;
-  aSource.clip = clip;
-
-  aSource.Play();
-  // destroy object after clip duration
-  Destroy(tempGO, clip.length); 
-  
-  return tempGO;
-}
-
 static var functionsFired : boolean = false;
 
 /**
@@ -174,7 +152,7 @@ static function ShowDialogueGUI() {
 		// Play the audio
 		if(this.currentLine.Audio != null) {
 			if(this.audioObject == null) {
-				this.audioObject = SEDialogue.PlayClip(this.currentLine.Audio, Camera.main.transform.position);
+				this.audioObject = SEFunctions.PlayClip(this.currentLine.Audio, Camera.main.transform.position);
 			}
 		} else
 			audioObject = null;
