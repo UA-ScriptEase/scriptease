@@ -13,6 +13,7 @@ import System.Collections.Generic;
 static var DialogueRoots:List.<DialogueLine> = new List.<DialogueLine>();
 static var DialoguesInitialized:boolean = false;
 static var currentLine : DialogueLine;
+static var currentRoot : DialogueLine;
 
 /**
  * Registers a dialogue root.
@@ -70,11 +71,33 @@ static function AddWhenReachedFunction(funxion:Function, id:int) {
 	var line:DialogueLine = FindDialogueLine(id);
 	
 	if(line != null)
-		line.AddWhenReachedFunction(funxion);
+		line.WhenReachedFunctions.Add(funxion);
 	else
 		Debug.Log("SEDialogue Warning: Attempted to add When Reached function to " +
 			"nonexistant DialogueLine " + id);
 }
+
+static function AddOnStartFunction(funxion:Function, id:int) {
+	var line:DialogueLine = FindDialogueLine(id);
+	
+	if(line != null)
+		line.OnStartFunctions.Add(funxion);
+	else
+		Debug.Log("SEDialogue Warning: Attempted to add On Start function to " +
+			"nonexistant DialogueLine " + id);
+}
+
+static function AddOnFinishedFunction(funxion:Function, id:int) {
+	var line:DialogueLine = FindDialogueLine(id);
+	
+	if(line != null)
+		line.OnFinishedFunctions.Add(funxion);
+	else
+		Debug.Log("SEDialogue Warning: Attempted to add On Finished function to " +
+			"nonexistant DialogueLine " + id);
+}
+
+
 /**
  * Starts the passed in dialogue. Should be a root.
  */
@@ -82,6 +105,10 @@ static function StartDialogue(dialogue:int) {
 	var foundLine = SEDialogue.FindDialogueRoot(dialogue);
 	for(var child : DialogueLine in foundLine.Children) {
 		if(child.Enabled && child.Children.Count > 0) {
+			currentRoot = foundLine;
+			
+			foundLine.OnStart();
+			
 			currentLine = child;
 			break;
 		}
@@ -112,6 +139,7 @@ static function PlayClip(clip: AudioClip, pos: Vector3) : GameObject {
 }
 
 static var functionsFired : boolean = false;
+
 /**
  * Shows the GUI for dialogues. This needs to be called from an
  * OnGUI function. It assumes that there is only one GUI being 
@@ -170,6 +198,9 @@ static function ShowDialogueGUI() {
 				child.WhenReached();
 				
 				if(child.Children.Count <= 0) {
+					this.currentRoot.OnFinish();
+					
+					this.currentRoot = null;
 					this.currentLine = null;
 				} else {
 					this.currentLine = child.Children[0];
@@ -241,6 +272,9 @@ private class DialogueLine {
 	var Enabled:boolean;
 	
 	var WhenReachedFunctions : List.<Function>;
+	var OnFinishedFunctions : List.<Function>;
+	var OnStartFunctions : List.<Function>;
+	
 	var Children : List.<DialogueLine>;
 	var Parents : List.<DialogueLine>;
 	
@@ -258,14 +292,24 @@ private class DialogueLine {
 		this.Children = new List.<DialogueLine>();
 		this.Parents = new List.<DialogueLine>();
 		this.WhenReachedFunctions = new List.<Function>();
-	}
-	
-	function AddWhenReachedFunction(funxion : Function) {
-		this.WhenReachedFunctions.Add(funxion);
+		this.OnFinishedFunctions = new List.<Function>();
+		this.OnStartFunctions = new List.<Function>();
 	}
 	
 	function WhenReached() {
 		for(var funxion : Function in WhenReachedFunctions) {
+			funxion();
+		}
+	}
+	
+	function OnStart() {
+		for(var funxion : Function in OnStartFunctions) {
+			funxion();
+		}
+	}
+	
+	function OnFinish() {
+		for(var funxion : Function in OnFinishedFunctions) {
 			funxion();
 		}
 	}

@@ -279,12 +279,7 @@ public class StoryComponentPanel extends JPanel implements
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_LABELS_CHANGED)) {
 			StoryComponentPanelFactory.getInstance().rebuildLabels(this);
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
-			// Add the labels
-//			if (!this.component.isEnabled() && !this.component.getLabels().contains(StoryComponent.DISABLE_TEXT))
-//				this.component.addLabel(StoryComponent.DISABLE_TEXT);
-//			else if (this.component.isEnabled() && this.component.getLabels().contains(StoryComponent.DISABLE_TEXT))
-//				this.component.removeLabel(StoryComponent.DISABLE_TEXT);
-//			
+
 			// Change the font color to red if disabled
 			final JPanel mainPanel = this.getLayout().getMainPanel();
 			final Component[] children = mainPanel.getComponents();
