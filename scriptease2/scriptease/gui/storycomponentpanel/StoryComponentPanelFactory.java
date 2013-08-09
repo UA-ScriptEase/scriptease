@@ -52,6 +52,7 @@ import scriptease.translator.TranslatorManager;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 public class StoryComponentPanelFactory {
 	public static final String CURRENT_STORY_POINT_TAG = "#currentStoryPoint";
@@ -97,6 +98,51 @@ public class StoryComponentPanelFactory {
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
 		return panel;
+	}
+
+	/**
+	 * Reconstructs the StoryComponentPanel labels
+	 * 
+	 * @param panel
+	 */
+	public void rebuildLabels(StoryComponentPanel panel) {
+		final JPanel mainPanel = panel.getLayout().getMainPanel();
+		final Component[] children = mainPanel.getComponents();
+		final StoryComponent component = panel.getStoryComponent();
+
+		// Remove all existing labels
+		for (Component child : children) {
+			if (child instanceof JLabel) {
+				final JLabel label = (JLabel) child;
+
+				// Terrible way to identify labels but it's the only way to
+				// distinguish them from other JLabels right now
+				if ((label.getBackground().equals(
+						ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR) || label
+						.getBackground().equals(ScriptEaseUI.COLOUR_DISABLED))
+						&& label.getForeground().equals(
+								ScriptWidgetFactory.LABEL_TEXT_COLOUR)) {
+
+					mainPanel.remove(child);
+				}
+			}
+		}
+
+		// Add the new labels.
+		for (String label : component.getLabels()) {
+			final Color bgColour;
+			final JLabel newLabel;
+
+			if (label.equals(StoryComponent.DISABLE_TEXT))
+				bgColour = ScriptEaseUI.COLOUR_DISABLED;
+			else
+				bgColour = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
+
+			newLabel = ScriptWidgetFactory.buildLabel(label,
+					ScriptWidgetFactory.LABEL_TEXT_COLOUR, bgColour);
+
+			mainPanel.add(newLabel, 0);
+		}
 	}
 
 	/**
@@ -213,17 +259,13 @@ public class StoryComponentPanelFactory {
 			for (String labelText : storyComponent.getLabels()) {
 				if (!labelText.isEmpty()) {
 					final Color bgColor;
-					if (labelText
-							.equals(StoryComponent.DISABLE_TEXT))
+					if (labelText.equals(StoryComponent.DISABLE_TEXT))
 						bgColor = ScriptEaseUI.COLOUR_DISABLED;
 					else
 						bgColor = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
 
-					JLabel label = ScriptWidgetFactory
-							.buildLabel(
-									labelText,
-									ScriptWidgetFactory.LABEL_TEXT_COLOUR,
-									bgColor);
+					JLabel label = ScriptWidgetFactory.buildLabel(labelText,
+							ScriptWidgetFactory.LABEL_TEXT_COLOUR, bgColor);
 
 					displayNamePanel.add(label);
 					displayNamePanel.add(Box.createHorizontalStrut(5));
@@ -279,9 +321,9 @@ public class StoryComponentPanelFactory {
 			final Color textColor;
 			if (storyComponent.isEnabled())
 				textColor = Color.BLACK;
-			else 
+			else
 				textColor = ScriptEaseUI.COLOUR_DISABLED;
-			
+
 			plainTextLabel = ScriptWidgetFactory.buildLabel(plainText,
 					textColor);
 
@@ -447,7 +489,7 @@ public class StoryComponentPanelFactory {
 									textColor = Color.black;
 								else
 									textColor = ScriptEaseUI.COLOUR_DISABLED;
-								
+
 								mainPanel.add(ScriptWidgetFactory.buildLabel(
 										" describes ", textColor));
 

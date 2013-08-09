@@ -53,7 +53,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 public abstract class StoryComponent implements Cloneable {
 
 	private String displayText;
-	private Collection<String> labels;
+	private Set<String> labels;
 	private Boolean isVisible;
 	private Boolean isEnabled;
 
@@ -66,7 +66,7 @@ public abstract class StoryComponent implements Cloneable {
 	private static final Set<Class<? extends StoryComponent>> noValidChildren = new HashSet<Class<? extends StoryComponent>>();
 	public static final String BLANK_TEXT = "";
 	public static final String DISABLE_TEXT = " X ";
-	
+
 	protected StoryComponent() {
 		this(StoryComponent.BLANK_TEXT);
 	}
@@ -93,7 +93,7 @@ public abstract class StoryComponent implements Cloneable {
 		this.ownerComponent = null;
 		this.observerManager = new ObserverManager<StoryComponentObserver>();
 		this.displayText = StoryComponent.BLANK_TEXT;
-		this.labels = new ArrayList<String>();
+		this.labels = new HashSet<String>();
 		this.isVisible = true;
 		this.isEnabled = true;
 	}
@@ -226,7 +226,9 @@ public abstract class StoryComponent implements Cloneable {
 	 * @param labels
 	 */
 	public void setLabels(Collection<String> labels) {
-		this.labels = labels;
+		final Set<String> labelSet = new HashSet<String>();
+		labelSet.addAll(labels);
+		this.labels = labelSet;
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_LABELS_CHANGED));
 	}
@@ -256,12 +258,12 @@ public abstract class StoryComponent implements Cloneable {
 
 	public void setEnabled(Boolean enable) {
 		this.isEnabled = enable;
-		
-		if (!enable && !this.labels.contains(StoryComponent.DISABLE_TEXT))
+
+		if (!enable && !this.getLabels().contains(StoryComponent.DISABLE_TEXT))
 			this.addLabel(StoryComponent.DISABLE_TEXT);
-		else if (enable && this.labels.contains(StoryComponent.DISABLE_TEXT))
+		else if (enable && this.getLabels().contains(StoryComponent.DISABLE_TEXT))
 			this.removeLabel(StoryComponent.DISABLE_TEXT);
-		
+
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_DISABILITY));
 	}

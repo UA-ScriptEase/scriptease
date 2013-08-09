@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -238,7 +240,7 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public void run() {
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-					final Collection<String> labels = new ArrayList<String>();
+					final Set<String> labels = new HashSet<String>();
 					final String labelFieldText = labelField.getText();
 					final String[] labelArray = labelFieldText.split(SEPARATOR);
 					for (String label : labelArray) {

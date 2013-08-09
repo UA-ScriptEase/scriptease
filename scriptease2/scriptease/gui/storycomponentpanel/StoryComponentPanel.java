@@ -276,27 +276,22 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
 			this.setVisible(component.isVisible());
-		} else if (type == StoryComponentChangeEnum.CHANGE_LABELS_CHANGED) {
-			final JLabel disableLabel = ScriptWidgetFactory.buildLabel(
-					StoryComponent.DISABLE_TEXT,
-					ScriptWidgetFactory.LABEL_TEXT_COLOUR,
-					ScriptEaseUI.COLOUR_DISABLED);
-
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_LABELS_CHANGED)) {
+			StoryComponentPanelFactory.getInstance().rebuildLabels(this);
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
+			// Add the labels
+//			if (!this.component.isEnabled() && !this.component.getLabels().contains(StoryComponent.DISABLE_TEXT))
+//				this.component.addLabel(StoryComponent.DISABLE_TEXT);
+//			else if (this.component.isEnabled() && this.component.getLabels().contains(StoryComponent.DISABLE_TEXT))
+//				this.component.removeLabel(StoryComponent.DISABLE_TEXT);
+//			
+			// Change the font color to red if disabled
 			final JPanel mainPanel = this.getLayout().getMainPanel();
-
 			final Component[] children = mainPanel.getComponents();
 
-			boolean disableLabelFound = false;
 			for (Component child : children) {
 				if (child instanceof JLabel) {
 					final JLabel label = (JLabel) child;
-
-					if (label.getText().equals(StoryComponent.DISABLE_TEXT)) {
-						if (component.isEnabled())
-							mainPanel.remove(child);
-
-						disableLabelFound = true;
-					}
 
 					if (!label.getBackground().equals(
 							ScriptEaseUI.COLOUR_DISABLED)
@@ -308,6 +303,8 @@ public class StoryComponentPanel extends JPanel implements
 							label.setForeground(Color.BLACK);
 						else
 							label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
+
+						label.repaint();
 					}
 				} else if (child instanceof DescribeItPanel) {
 					final DescribeItPanel describeItPanel = (DescribeItPanel) child;
@@ -329,9 +326,6 @@ public class StoryComponentPanel extends JPanel implements
 
 				}
 			}
-
-			if (!disableLabelFound && !component.isEnabled())
-				mainPanel.add(disableLabel, 0);
 		}
 
 		// revalidate the panel
