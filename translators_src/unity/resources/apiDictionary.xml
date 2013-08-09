@@ -261,7 +261,7 @@
         <Fragment data="ScriptEase Variable"/>
         <Literal>&quot;</Literal>
       </Format>
-      <WidgetName>GUI</WidgetName>
+      <WidgetName>g</WidgetName>
     </Type>
     <Type>
       <Name>Collider</Name>
@@ -301,7 +301,7 @@
         <Literal>&quot;, GUISkin)</Literal>
       </Format>
       <LegalValues>[^\&quot;]*</LegalValues>
-      <WidgetName>g</WidgetName>
+      <WidgetName>gs</WidgetName>
     </Type>
     <Type>
       <Name>Dialogue Line</Name>
