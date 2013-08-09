@@ -198,6 +198,13 @@
 		<!-- Unity Reserved -->
 		<Word>GameObject</Word>
 		<Word>Animation</Word>
+		<Word>AudioClip</Word>
+		<Word>Function</Word>
+		<Word>Transform</Word>
+		<Word>Rigidbody</Word>
+		<Word>Animation</Word>
+		<Word>AudioSource</Word>
+		<Word>this</Word>
 	</ReservedWords>
 	<Formats>
 		<!-- Variables -->
