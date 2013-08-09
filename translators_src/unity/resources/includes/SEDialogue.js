@@ -67,7 +67,7 @@ static function SetEnabled(enabled:boolean, id:int) {
 			"nonexistant DialogueLine " + id);
 }
 
-static function AddWhenReachedFunction(funxion:Function, id:int) {
+static function AddWhenReachedFunction(id:int, funxion:Function) {
 	var line:DialogueLine = FindDialogueLine(id);
 	
 	if(line != null)
@@ -77,7 +77,7 @@ static function AddWhenReachedFunction(funxion:Function, id:int) {
 			"nonexistant DialogueLine " + id);
 }
 
-static function AddOnStartFunction(funxion:Function, id:int) {
+static function AddOnStartFunction(id:int, funxion:Function) {
 	var line:DialogueLine = FindDialogueLine(id);
 	
 	if(line != null)
@@ -87,7 +87,7 @@ static function AddOnStartFunction(funxion:Function, id:int) {
 			"nonexistant DialogueLine " + id);
 }
 
-static function AddOnFinishedFunction(funxion:Function, id:int) {
+static function AddOnFinishedFunction(id:int, funxion:Function) {
 	var line:DialogueLine = FindDialogueLine(id);
 	
 	if(line != null)
