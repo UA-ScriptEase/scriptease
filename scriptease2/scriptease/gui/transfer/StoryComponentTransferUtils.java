@@ -16,6 +16,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -94,7 +95,8 @@ public class StoryComponentTransferUtils {
 					if (component instanceof ScriptIt
 							|| component instanceof KnowIt
 							|| component instanceof AskIt
-							|| component instanceof ControlIt) {
+							|| component instanceof ControlIt
+							|| component instanceof Note) {
 
 						// We don't want to be dropping questions in their own
 						// blocks.
