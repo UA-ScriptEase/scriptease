@@ -255,7 +255,7 @@ public class KnowItBindingConverter implements Converter {
 						+ flavour);
 		}
 
-		if (binding == null)
+		if (binding == null || binding.getValue() == null)
 			return new KnowItBindingNull();
 		else
 			return binding;
@@ -362,13 +362,11 @@ public class KnowItBindingConverter implements Converter {
 
 	private KnowItBindingStoryPoint unmarshallStoryPointBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
-		StoryPoint storyPoint = null;
-		final KnowItBindingStoryPoint binding = new KnowItBindingStoryPoint(
-				storyPoint);
+		final StoryPoint storyPoint;
 
 		// move down and read as a story point
 		reader.moveDown();
-		storyPoint = (StoryPoint) context.convertAnother(binding,
+		storyPoint = (StoryPoint) context.convertAnother(null,
 				StoryPoint.class);
 		reader.moveUp();
 
