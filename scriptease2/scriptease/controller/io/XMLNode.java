@@ -66,7 +66,7 @@ public enum XMLNode {
 	GAME_MODULE("GameModule"),
 
 	GUI("GUI"),
-	
+
 	ID("ID"),
 
 	IMAGE("Image"),
@@ -160,7 +160,7 @@ public enum XMLNode {
 			writer.setValue(data);
 		writer.endNode();
 	}
-	
+
 	/**
 	 * Writes an integer as a string to the passed in writer.
 	 * 
@@ -170,7 +170,7 @@ public enum XMLNode {
 	public void writeInteger(HierarchicalStreamWriter writer, int integer) {
 		this.writeString(writer, Integer.toString(integer));
 	}
-	
+
 	/**
 	 * Writes a boolean as a string to the passed in writer.
 	 * 
@@ -345,7 +345,8 @@ public enum XMLNode {
 	}
 
 	/**
-	 * Reads the children into a list of types of the passed in class.
+	 * Reads the children into a list of types of the passed in class. Reads
+	 * children as the node's default child.
 	 * 
 	 * @param reader
 	 * @param context
@@ -355,15 +356,31 @@ public enum XMLNode {
 	 */
 	public <E> Collection<E> readCollection(HierarchicalStreamReader reader,
 			UnmarshallingContext context, Class<E> c) {
+		this.checkChild();
+		return this.readCollection(this.child, reader, context, c);
+	}
+
+	/**
+	 * Reads the children into a list of types of the passed in class.
+	 * 
+	 * @param childNode
+	 * @param reader
+	 * @param context
+	 * @param parent
+	 * @param c
+	 * @return
+	 */
+	public <E> Collection<E> readCollection(XMLNode childNode,
+			HierarchicalStreamReader reader, UnmarshallingContext context,
+			Class<E> c) {
 		final Collection<E> collection = new ArrayList<E>();
 
 		reader.moveDown();
 
-		this.checkChild();
 		this.checkNodeName(reader);
 
 		while (reader.hasMoreChildren()) {
-			collection.add(this.child.readObject(reader, context, c));
+			collection.add(childNode.readObject(reader, context, c));
 		}
 		reader.moveUp();
 
