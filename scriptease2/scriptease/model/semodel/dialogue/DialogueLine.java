@@ -56,32 +56,12 @@ public final class DialogueLine extends EditableResource {
 	 * @param speaker
 	 */
 	public DialogueLine(StoryModel story, Speaker speaker) {
-		this(story, speaker, DEFAULT_DIALOGUE, true, null, null,
-				new ArrayList<Resource>());
+		this(story, speaker, uniqueNumberCount++);
 	}
 
-	/**
-	 * Creates a new dialouge line with the passed in parameters.
-	 * 
-	 * @param story
-	 *            The story to create the dialogue line for * @param speaker The
-	 *            speaker of the line.
-	 * @param dialogue
-	 *            The text to be displayed
-	 * 
-	 * @param enabled
-	 *            Whether the dialogue line is enabled or disabled by default
-	 * @param image
-	 *            The image attached to the line
-	 * @param audio
-	 *            Audio attached to the line
-	 * @param children
-	 *            Any dialogue line children attached.
-	 */
-	public DialogueLine(StoryModel story, Speaker speaker, String dialogue,
-			boolean enabled, KnowIt image, KnowIt audio, List<Resource> children) {
-		this(story, speaker, dialogue, uniqueNumberCount++, enabled, image,
-				audio, children);
+	public DialogueLine(StoryModel story, Speaker speaker, int id) {
+		this(story, speaker, DEFAULT_DIALOGUE, id, true, null, null,
+				new ArrayList<Resource>());
 	}
 
 	public DialogueLine(StoryModel story, Speaker speaker, String dialogue,

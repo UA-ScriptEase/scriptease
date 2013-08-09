@@ -37,7 +37,7 @@
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return SEPath.GetPath(this.gameObject).target;</Literal>
+                      <Literal>return SEPath.GetPath(this.gameObject).target.gameObject;</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>

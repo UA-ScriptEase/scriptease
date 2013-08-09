@@ -1,7 +1,6 @@
 package scriptease.controller.io.converter.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.io.XMLNode;
@@ -11,7 +10,6 @@ import scriptease.model.semodel.dialogue.DialogueLine.Speaker;
 import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.Resource;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -27,8 +25,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  */
 public class DialogueLineConverter implements Converter {
-	public static final String TAG_DIALOGUE = "DialogueLine";
-	private static final String TAG_CHILDREN = "Children";
 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
@@ -43,7 +39,6 @@ public class DialogueLineConverter implements Converter {
 		XMLNode.AUDIO.writeObject(writer, context, line.getAudio());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
@@ -61,18 +56,8 @@ public class DialogueLineConverter implements Converter {
 		name = XMLNode.NAME.readString(reader);
 		id = Integer.parseInt(XMLNode.ID.readString(reader));
 
-		// TODO This isn't the way we should be loading stuff from XML. We need
-		// to use XMLNode methods
-		reader.moveDown();
-		if (reader.hasMoreChildren())
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_CHILDREN)) {
-				throw new ConversionException("Expected child list but found "
-						+ reader.getNodeName());
-			} else {
-				children.addAll((Collection<DialogueLine>) context
-						.convertAnother(null, ArrayList.class));
-			}
-		reader.moveUp();
+		children.addAll(XMLNode.CHILDREN.readCollection(XMLNode.DIALOGUE_LINE,
+				reader, context, DialogueLine.class));
 
 		enabled = Boolean.parseBoolean(XMLNode.ENABLED.readString(reader));
 
