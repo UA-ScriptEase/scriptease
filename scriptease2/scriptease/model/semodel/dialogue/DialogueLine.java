@@ -29,7 +29,9 @@ public final class DialogueLine extends EditableResource {
 
 	private static int uniqueNumberCount = 0;
 
-	private static final String DEFAULT_DIALOGUE = "New Dialogue Line";
+	private static final String DEFAULT_DIALOGUE = "New Dialogue";
+	private static final String DEFAULT_DIALOGUE_LINE = DEFAULT_DIALOGUE
+			+ " Line";
 
 	private final int uniqueID;
 
@@ -40,27 +42,23 @@ public final class DialogueLine extends EditableResource {
 	private KnowIt image;
 	private KnowIt audio;
 
-	/**
-	 * Creates a new dialogue line for the story.
-	 * 
-	 * @param story
-	 */
-	public DialogueLine(StoryModel story) {
-		this(story, null);
+	public static DialogueLine createDialogueLine(StoryModel story) {
+		return new DialogueLine(story, null, DEFAULT_DIALOGUE_LINE);
+	}
+
+	public static DialogueLine createDialogueRoot(StoryModel story) {
+		return new DialogueLine(story, Speaker.PC, DEFAULT_DIALOGUE);
 	}
 
 	/**
-	 * Creates a new dialogue line for the story with the speaker.
+	 * Creates a new dialogue line for the story with the speaker and default
+	 * text.
 	 * 
 	 * @param story
 	 * @param speaker
 	 */
-	public DialogueLine(StoryModel story, Speaker speaker) {
-		this(story, speaker, uniqueNumberCount++);
-	}
-
-	public DialogueLine(StoryModel story, Speaker speaker, int id) {
-		this(story, speaker, DEFAULT_DIALOGUE, id, true, null, null,
+	public DialogueLine(StoryModel story, Speaker speaker, String dialogue) {
+		this(story, speaker, dialogue, uniqueNumberCount++, true, null, null,
 				new ArrayList<Resource>());
 	}
 
