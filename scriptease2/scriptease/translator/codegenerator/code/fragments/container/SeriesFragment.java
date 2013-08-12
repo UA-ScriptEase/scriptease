@@ -17,9 +17,10 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesType;
-import scriptease.translator.codegenerator.code.contexts.CodeBlockContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
+import scriptease.translator.codegenerator.code.contexts.KnowItContext;
+import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -168,10 +169,20 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 * commented out.
 	 */
 	private boolean isComponentDisabled(Context context) {
-		if (context instanceof CodeBlockContext) {
-			final CodeBlockContext codeBlockContext = (CodeBlockContext) context;
+		if (context instanceof KnowItContext) {
+			final KnowItContext knowItContext = (KnowItContext) context;
 
-			final StoryComponent storyComponent = codeBlockContext
+			final StoryComponent storyComponent = knowItContext.getComponent();
+			
+			if (storyComponent != null && !storyComponent.isEnabled()) {
+				return true;
+			}
+		}
+
+		if (context instanceof ScriptItContext) {
+			final ScriptItContext scriptItContext = (ScriptItContext) context;
+
+			final StoryComponent storyComponent = scriptItContext
 					.getComponent();
 
 			if (storyComponent != null && !storyComponent.isEnabled())

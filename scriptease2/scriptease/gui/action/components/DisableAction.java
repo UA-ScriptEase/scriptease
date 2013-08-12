@@ -116,8 +116,6 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
 		if (focusOwner instanceof StoryComponentPanel) {
-			// TODO Need to fix undo
-
 			final StoryComponentPanel panel;
 			final StoryComponentPanelManager manager;
 
