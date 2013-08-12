@@ -111,7 +111,13 @@ public class StoryComponentPanelFactory {
 		final StoryComponent component = panel.getStoryComponent();
 
 		// Remove all existing labels
+		boolean isSpacer = false;
 		for (Component child : children) {
+			if (isSpacer) {
+				// Remove the buffer after the label.
+				mainPanel.remove(child);
+				isSpacer = false;
+			}
 			if (child instanceof JLabel) {
 				final JLabel label = (JLabel) child;
 
@@ -124,6 +130,7 @@ public class StoryComponentPanelFactory {
 								ScriptWidgetFactory.LABEL_TEXT_COLOUR)) {
 
 					mainPanel.remove(child);
+					isSpacer = true;
 				}
 			}
 		}
@@ -142,6 +149,7 @@ public class StoryComponentPanelFactory {
 					ScriptWidgetFactory.LABEL_TEXT_COLOUR, bgColour);
 
 			mainPanel.add(newLabel, 0);
+			mainPanel.add(Box.createHorizontalStrut(5), 1);
 		}
 	}
 
@@ -258,17 +266,17 @@ public class StoryComponentPanelFactory {
 			// Add the StoryComponent's labels
 			for (String labelText : storyComponent.getLabels()) {
 				if (!labelText.isEmpty()) {
-					final Color bgColor;
+					final Color bgColour;
 					if (labelText.equals(StoryComponent.DISABLE_TEXT))
-						bgColor = ScriptEaseUI.COLOUR_DISABLED;
+						bgColour = ScriptEaseUI.COLOUR_DISABLED;
 					else
-						bgColor = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
+						bgColour = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
 
 					JLabel label = ScriptWidgetFactory.buildLabel(labelText,
-							ScriptWidgetFactory.LABEL_TEXT_COLOUR, bgColor);
+							ScriptWidgetFactory.LABEL_TEXT_COLOUR, bgColour);
 
-					displayNamePanel.add(label);
-					displayNamePanel.add(Box.createHorizontalStrut(5));
+					displayNamePanel.add(label, 0);
+					displayNamePanel.add(Box.createHorizontalStrut(5), 1);
 				}
 			}
 		}
@@ -475,9 +483,9 @@ public class StoryComponentPanelFactory {
 														labelText,
 														ScriptWidgetFactory.LABEL_TEXT_COLOUR,
 														bgColor);
-										mainPanel.add(label);
+										mainPanel.add(label, 0);
 										mainPanel.add(Box
-												.createHorizontalStrut(5));
+												.createHorizontalStrut(5), 1);
 									}
 								}
 

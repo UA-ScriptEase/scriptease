@@ -65,7 +65,7 @@ public abstract class StoryComponent implements Cloneable {
 
 	private static final Set<Class<? extends StoryComponent>> noValidChildren = new HashSet<Class<? extends StoryComponent>>();
 	public static final String BLANK_TEXT = "";
-	public static final String DISABLE_TEXT = " X ";
+	public static final String DISABLE_TEXT = "DISABLED";
 
 	protected StoryComponent() {
 		this(StoryComponent.BLANK_TEXT);
