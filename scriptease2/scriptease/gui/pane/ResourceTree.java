@@ -130,11 +130,11 @@ class ResourceTree extends JPanel {
 			return;
 		}
 		final Collection<String> keywords = new ArrayList<String>();
-		
-		for(GameType type : story.getTypes()) {
+
+		for (GameType type : story.getTypes()) {
 			keywords.add(type.getKeyword());
 		}
-		
+
 		this.filterTypes.addAll(keywords);
 
 		final List<String> types;
@@ -660,7 +660,13 @@ class ResourceTree extends JPanel {
 			panel.add(resourcePanel);
 			panel.add(childPanel);
 
-			for (Resource child : resource.getChildren()) {
+			final List<Resource> children;
+
+			children = new ArrayList<Resource>(resource.getChildren());
+
+			Collections.sort(children, constantSorter);
+
+			for (Resource child : children) {
 				childPanel.add(this.createResourcePanel(child, indent + 1));
 			}
 

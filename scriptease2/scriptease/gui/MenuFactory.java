@@ -57,6 +57,7 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.util.FileOp;
+import scriptease.util.GUIOp;
 
 /**
  * MenuFactory is responsible for building all of the menus in ScriptEase
@@ -508,6 +509,15 @@ public class MenuFactory {
 			public void actionPerformed(ActionEvent e) {
 				// This is convenient for setting a breakpoint on to pause
 				// our program.
+
+				// Code to save a screenshot of the entire thing. Watch out,
+				// this also removes the content pane since it reassigns its
+				// parent.
+
+				// GUIOp.saveScreenshot(WindowFactory.getInstance()
+				// .getCurrentFrame().getContentPane(),
+				// System.getProperty("user.home") + "/Desktop/image.png");
+
 				System.out.println("Did nothing.");
 			}
 		});
