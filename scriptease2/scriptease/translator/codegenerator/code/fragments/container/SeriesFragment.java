@@ -149,10 +149,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 			newContext = contextFactory.createContext(context, next);
 
 			if (this.isComponentDisabled(newContext)) {
-				code.append("/*\n");
-				code.append(AbstractFragment.resolveFormat(this.subFragments,
-						newContext));
-				code.append("*/\n");
+//				code.append("/*\n");
+//				code.append(AbstractFragment.resolveFormat(this.subFragments,
+//						newContext));
+//				code.append("*/\n");
 			} else
 				code.append(AbstractFragment.resolveFormat(this.subFragments,
 						newContext));
@@ -169,16 +169,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 * commented out.
 	 */
 	private boolean isComponentDisabled(Context context) {
-		if (context instanceof KnowItContext) {
-			final KnowItContext knowItContext = (KnowItContext) context;
-
-			final StoryComponent storyComponent = knowItContext.getComponent();
-			
-			if (storyComponent != null && !storyComponent.isEnabled()) {
-				return true;
-			}
-		}
-
 		if (context instanceof ScriptItContext) {
 			final ScriptItContext scriptItContext = (ScriptItContext) context;
 
@@ -187,6 +177,16 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 			if (storyComponent != null && !storyComponent.isEnabled())
 				return true;
+		}
+
+		if (context instanceof KnowItContext) {
+			final KnowItContext knowItContext = (KnowItContext) context;
+			
+			final StoryComponent storyComponent = knowItContext.getComponent();
+			
+			if (storyComponent != null && !storyComponent.isEnabled()) {
+				return true;
+			}
 		}
 
 		return false;
