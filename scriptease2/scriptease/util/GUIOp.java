@@ -273,7 +273,6 @@ public class GUIOp {
 	 * @return
 	 */
 	public static BufferedImage getScreenshot(Component c) {
-
 		// Set it to it's preferred size. (optional)
 		c.setSize(c.getPreferredSize());
 		layoutComponent(c);

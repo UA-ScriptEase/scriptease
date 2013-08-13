@@ -182,7 +182,7 @@
 	<xsd:complexType name="ScriptIt_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:element name="Children" type="StoryComponentContainerList_Type" />
+			<xsd:element name="Children" />
 			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
@@ -192,7 +192,7 @@
 	<xsd:complexType name="CauseIt_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:element name="Children" type="StoryComponentContainerList_Type" />
+			<xsd:element name="Children" />
 			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />

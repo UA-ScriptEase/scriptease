@@ -198,6 +198,13 @@
 		<!-- Unity Reserved -->
 		<Word>GameObject</Word>
 		<Word>Animation</Word>
+		<Word>AudioClip</Word>
+		<Word>Function</Word>
+		<Word>Transform</Word>
+		<Word>Rigidbody</Word>
+		<Word>Animation</Word>
+		<Word>AudioSource</Word>
+		<Word>this</Word>
 	</ReservedWords>
 	<Formats>
 		<!-- Variables -->
@@ -396,13 +403,10 @@
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
 			</Scope>
-			<Scope data="argument" ref="Number">
-				<FormatRef ref="variableDefinition" />
-			</Scope>
 			<Line>
 				<Literal>yield WaitForSeconds(</Literal>
 				<Scope data="argument" ref="Number">
-					<Fragment data="name" />
+					<Fragment data="value" />
 				</Scope>
 				<Literal>);</Literal>
 			</Line>
@@ -415,34 +419,22 @@
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
 			</Scope>
-            <Scope data="argument" ref="x">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
-            <Scope data="argument" ref="y">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
-            <Scope data="argument" ref="Width">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
-            <Scope data="argument" ref="Height">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
             <Line>
             	<Literal>GUI.BeginGroup(Rect(</Literal>
             	<Scope data="argument" ref="x">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="y">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>	
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Width">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Height">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>));</Literal>
             </Line>
@@ -458,58 +450,46 @@
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
 			</Scope>
-            <Scope data="argument" ref="x">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
-            <Scope data="argument" ref="y">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
-            <Scope data="argument" ref="Width">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
-            <Scope data="argument" ref="Height">
-              <FormatRef ref="variableDefinition"/>
-            </Scope>
             <Line>
             	<Literal>GUI.BeginScrollView(Rect(</Literal>
             	<Scope data="argument" ref="x">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="y">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>	
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Width">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Height">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>), Vector2(</Literal>
             	<Scope data="argument" ref="Position x">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Position y">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>), Rect(</Literal>
             	<Scope data="argument" ref="Content x">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Content y">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Content Width">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>, </Literal>
             	<Scope data="argument" ref="Content Height">
-            		<Fragment data="name" />
+            		<Fragment data="value" />
             	</Scope>
             	<Literal>));</Literal>
             </Line>
@@ -558,13 +538,10 @@
 
 		<!-- Format for the repeat controller -->
 		<Format id="repeat">
-			<Scope data="argument" ref="Number">
-				<FormatRef ref="variableDefinition" />
-			</Scope>
 			<Line>
 				<Literal>for(var i=0; i &lt; </Literal>
 				<Scope data="argument" ref="Number">
-					<Fragment data="name" />
+					<Fragment data="value" />
 				</Scope>
 				<Literal>; i++) {</Literal>
 			</Line>

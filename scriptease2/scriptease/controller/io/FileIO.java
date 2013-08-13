@@ -388,6 +388,21 @@ public class FileIO {
 
 			if (retry)
 				this.writeData(dataModel, location, mode, true);
+			/*
+			 * TODO #54926402
+			 * 
+			 * Save the XML file to a temporary file first. If there are no
+			 * exceptions, then we copy its contents to the actual location and
+			 * delete the temporary file. Else if there were exceptions, just
+			 * destroy the temporary file and show the exception dialog.
+			 * 
+			 * This will be MUCH safer than whatever we're doing now, which just
+			 * nukes the file.
+			 * 
+			 * To find out if there was an exception, we could catch any
+			 * exception ever. To test if it works, throw an exception in one of
+			 * the converters' marshall methods.
+			 */
 		} finally {
 			try {
 				if (fileOut != null)
