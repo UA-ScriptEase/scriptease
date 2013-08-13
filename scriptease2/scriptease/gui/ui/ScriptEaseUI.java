@@ -57,11 +57,6 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_BOUND = Color.LIGHT_GRAY;
 
 	/**
-	 * The color (Grayish Pink) used for disabled components.
-	 */
-	public static final Color COLOUR_DISABLED = new Color(224, 27, 93);
-	
-	/**
 	 * The colour (Grey) used for selected UI Components
 	 */
 	public static final Color SELECTED_COLOUR = new Color(180, 180, 180);
@@ -175,6 +170,11 @@ public interface ScriptEaseUI {
 	 * The color used for the background of the text field for Notes.
 	 */
 	public static final Color COLOUR_NOTE_TEXT_BG = new Color(255, 252, 161);
+	
+	/**
+	 * The colour (Bright Pink) used for disabled components.
+	 */
+	public static final Color COLOUR_DISABLED = new Color(255, 106, 0);
 
 	public static final Color COLOUR_ADD_BUTTON = COLOUR_KNOWN_OBJECT;
 

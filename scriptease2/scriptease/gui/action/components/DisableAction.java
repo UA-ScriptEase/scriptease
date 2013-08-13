@@ -30,7 +30,7 @@ import scriptease.model.semodel.SEModelManager;
 public class DisableAction extends ActiveModelSensitiveAction implements
 		SEFocusObserver {
 
-	private static final String DISABLE_TEXT = "Disable";
+	private static final String DISABLE_TEXT = "Enable / Disable";
 
 	private static final Action instance = new DisableAction();
 
