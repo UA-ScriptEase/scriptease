@@ -2670,14 +2670,14 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;Mouse Button&gt; is pressed on &lt;subject&gt;</Name>
+      <Name>When &lt;Mouse Button&gt; is clicked on &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;Mouse Button&gt; is pressed on &lt;subject&gt;</Name>
+          <Name>When &lt;Mouse Button&gt; is clicked on &lt;subject&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
@@ -2705,14 +2705,14 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;Mouse Button&gt; is dragged on &lt;subject&gt;</Name>
+      <Name>While &lt;Mouse Button&gt; is pressed on &lt;subject&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;Mouse Button&gt; is dragged on &lt;subject&gt;</Name>
+          <Name>While &lt;Mouse Button&gt; is pressed on &lt;subject&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
