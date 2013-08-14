@@ -17,6 +17,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesType;
+import scriptease.translator.codegenerator.code.contexts.AskItContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.contexts.KnowItContext;
@@ -143,22 +144,23 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 		it = this.buildDataIterator(context);
 
+		boolean firstIteration = true;
 		while (it.hasNext()) {
 			next = it.next();
 
 			newContext = contextFactory.createContext(context, next);
 
-			if (this.isComponentDisabled(newContext)) {
-//				code.append("/*\n");
-//				code.append(AbstractFragment.resolveFormat(this.subFragments,
-//						newContext));
-//				code.append("*/\n");
-			} else
+			// If the component for this context is disabled, we don't want to
+			// include it in the code generation
+			if (!this.isComponentDisabled(newContext)) {
+				if (!firstIteration)
+					code.append(this.separator);
+				else
+					firstIteration = false;
+
 				code.append(AbstractFragment.resolveFormat(this.subFragments,
 						newContext));
-
-			if (it.hasNext())
-				code.append(this.separator);
+			}
 		}
 
 		return code.toString();
@@ -178,12 +180,22 @@ public class SeriesFragment extends AbstractContainerFragment {
 			if (storyComponent != null && !storyComponent.isEnabled())
 				return true;
 		}
+		
+		if (context instanceof AskItContext) {
+			final AskItContext askItContext = (AskItContext) context;
+
+			final StoryComponent storyComponent = askItContext
+					.getComponent();
+
+			if (storyComponent != null && !storyComponent.isEnabled())
+				return true;
+		}
 
 		if (context instanceof KnowItContext) {
 			final KnowItContext knowItContext = (KnowItContext) context;
-			
+
 			final StoryComponent storyComponent = knowItContext.getComponent();
-			
+
 			if (storyComponent != null && !storyComponent.isEnabled()) {
 				return true;
 			}
