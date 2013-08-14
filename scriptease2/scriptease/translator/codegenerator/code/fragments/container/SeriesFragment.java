@@ -22,6 +22,7 @@ import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.contexts.KnowItContext;
 import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
+import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -171,35 +172,68 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 * commented out.
 	 */
 	private boolean isComponentDisabled(Context context) {
-		if (context instanceof ScriptItContext) {
-			final ScriptItContext scriptItContext = (ScriptItContext) context;
+		if (context instanceof KnowItContext
+				|| context instanceof ScriptItContext
+				|| context instanceof AskItContext) {
 
-			final StoryComponent storyComponent = scriptItContext
-					.getComponent();
+			final StoryComponent component;
 
-			if (storyComponent != null && !storyComponent.isEnabled())
-				return true;
-		}
+			component = ((StoryComponentContext) context).getComponent();
 
-		if (context instanceof AskItContext) {
-			final AskItContext askItContext = (AskItContext) context;
-
-			final StoryComponent storyComponent = askItContext.getComponent();
-
-			if (storyComponent != null && !storyComponent.isEnabled())
-				return true;
-		}
-
-		if (context instanceof KnowItContext) {
-			final KnowItContext knowItContext = (KnowItContext) context;
-
-			final StoryComponent storyComponent = knowItContext.getComponent();
-
-			if (storyComponent != null && !storyComponent.isEnabled())
+			if (component != null && !component.isEnabled())
 				return true;
 		}
 
 		return false;
+	}
+
+	private Collection<? extends Object> getData(Context context) {
+		final SeriesType series;
+
+		series = SeriesType.valueOf(this.getDirectiveText().toUpperCase());
+
+		switch (series) {
+		case INCLUDES:
+			return context.getIncludeFiles();
+
+		case CODEBLOCKS:
+			return context.getCodeBlocks();
+		case CAUSES:
+			return context.getCauses();
+		case PARAMETERS:
+			return context.getParameters();
+		case PARAMETERSWITHSLOT:
+			return context.getParametersWithSlot();
+		case SLOTPARAMETERS:
+			return context.getSlotParameters();
+		case VARIABLES:
+			return context.getVariables();
+		case IMPLICITS:
+			return context.getImplicits();
+		case CHILDREN:
+			return context.getChildren();
+		case STORYPOINTS:
+			return context.getStoryPoints();
+		case ORDEREDSTORYPOINTS:
+			return context.getOrderedStoryPoints();
+		case PARENTNODES:
+			return context.getStoryPointParents();
+		case CHILDRENNODES:
+			return context.getStoryPointChildren();
+		case IDENTICALCAUSES:
+			return context.getIdenticalCauses();
+		case DIALOGUEROOTS:
+			return context.getDialogueRoots();
+		case ORDEREDDIALOGUELINES:
+			return context.getOrderedDialogueLines();
+		case CHILDLINES:
+			return context.getChildLines();
+		default:
+			// Default return 'cuz they didn't tell us a real label!
+			System.err.println("Series was unable to be resolved for data: "
+					+ series + " >");
+			return new ArrayList<String>();
+		}
 	}
 
 	/**
@@ -211,56 +245,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 *         series' <code>dataLabel</code>.
 	 */
 	private Iterator<? extends Object> buildDataIterator(Context context) {
-		final String dataLabel = this.getDirectiveText();
 		final Collection<? extends Object> data;
 		Iterator<? extends Object> it;
 
-		// IF+ELSE BLOCK ( series ... data= <dataLabel> )
-		if (dataLabel.equalsIgnoreCase(SeriesType.INCLUDES.name())) {
-			data = context.getIncludeFiles();
-		} else if (dataLabel.equalsIgnoreCase(SeriesType.CODEBLOCKS.name())) {
-			data = context.getCodeBlocks();
-		} else if (dataLabel.equalsIgnoreCase(SeriesType.CAUSES.name()))
-			data = context.getCauses();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.PARAMETERS.name()))
-			data = context.getParameters();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.PARAMETERSWITHSLOT
-				.name()))
-			data = context.getParametersWithSlot();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.SLOTPARAMETERS.name()))
-			data = context.getSlotParameters();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.VARIABLES.name()))
-			data = context.getVariables();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.IMPLICITS.name()))
-			data = context.getImplicits();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.CHILDREN.name()))
-			data = context.getChildren();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.STORYPOINTS.name()))
-			data = context.getStoryPoints();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.ORDEREDSTORYPOINTS
-				.name()))
-			data = context.getOrderedStoryPoints();
-		else if (dataLabel.equalsIgnoreCase(SeriesType.PARENTNODES.name())) {
-			data = context.getStoryPointParents();
-		} else if (dataLabel.equalsIgnoreCase(SeriesType.CHILDRENNODES.name())) {
-			data = context.getStoryPointChildren();
-		} else if (dataLabel
-				.equalsIgnoreCase(SeriesType.IDENTICALCAUSES.name())) {
-			data = context.getIdenticalCauses();
-		} else if (dataLabel.equalsIgnoreCase(SeriesType.DIALOGUEROOTS.name())) {
-			data = context.getDialogueRoots();
-		} else if (dataLabel.equalsIgnoreCase(SeriesType.ORDEREDDIALOGUELINES
-				.name())) {
-			data = context.getOrderedDialogueLines();
-		} else if (dataLabel.equalsIgnoreCase(SeriesType.CHILDLINES.name())) {
-			data = context.getChildLines();
-		} else {
-			// Default return 'cuz they didn't tell us a real label!
-			System.err.println("Series was unable to be resolved for data: "
-					+ dataLabel + " >");
-			return new ArrayList<String>().iterator();
-		}
-
+		data = this.getData(context);
 		it = data.iterator();
 
 		if (this.isUnique) {

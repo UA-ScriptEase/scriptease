@@ -203,7 +203,7 @@ public abstract class Context {
 	}
 
 	public Collection<KnowIt> getVariables() {
-		unimplemented("getKnowIts");
+		unimplemented("getVariables");
 		return null;
 	}
 
