@@ -207,13 +207,14 @@ public final class AskIt extends ComplexStoryComponent {
 		for (StoryComponent descendent : descendents) {
 			descendent.setEnabled(enabled);
 		}
+		condition.setEnabled(enabled);
 
 		// Enable the descriptions that are used as bindings if this
 		// is enabled
 		if (enabled) {
 			final KnowIt condition = this.getCondition();
 			final KnowItBinding binding = condition.getBinding();
-
+			
 			if (binding instanceof KnowItBindingReference) {
 				final KnowItBindingReference reference = (KnowItBindingReference) binding;
 

@@ -180,12 +180,11 @@ public class SeriesFragment extends AbstractContainerFragment {
 			if (storyComponent != null && !storyComponent.isEnabled())
 				return true;
 		}
-		
+
 		if (context instanceof AskItContext) {
 			final AskItContext askItContext = (AskItContext) context;
 
-			final StoryComponent storyComponent = askItContext
-					.getComponent();
+			final StoryComponent storyComponent = askItContext.getComponent();
 
 			if (storyComponent != null && !storyComponent.isEnabled())
 				return true;
@@ -196,9 +195,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 			final StoryComponent storyComponent = knowItContext.getComponent();
 
-			if (storyComponent != null && !storyComponent.isEnabled()) {
+			if (storyComponent != null && !storyComponent.isEnabled())
 				return true;
-			}
 		}
 
 		return false;
