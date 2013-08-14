@@ -203,19 +203,9 @@ public final class AskIt extends ComplexStoryComponent {
 	public void setEnabled(Boolean enabled) {
 		super.setEnabled(enabled);
 
-		final Collection<StoryComponent> blocks = this.getChildren();
-
-		for (StoryComponent block : blocks) {
-			block.setEnabled(enabled);
-
-			if (block instanceof StoryComponentContainer) {
-				final StoryComponentContainer container;
-
-				container = (StoryComponentContainer) block;
-
-				for (StoryComponent child : container.getChildren())
-					child.setEnabled(enabled);
-			}
+		final Collection<StoryComponent> descendents = this.getDescendents();
+		for (StoryComponent descendent : descendents) {
+			descendent.setEnabled(enabled);
 		}
 
 		// Enable the descriptions that are used as bindings if this
@@ -223,12 +213,12 @@ public final class AskIt extends ComplexStoryComponent {
 		if (enabled) {
 			final KnowIt condition = this.getCondition();
 			final KnowItBinding binding = condition.getBinding();
-			
+
 			if (binding instanceof KnowItBindingReference) {
 				final KnowItBindingReference reference = (KnowItBindingReference) binding;
-				
+
 				final KnowIt value = reference.getValue();
-				
+
 				if (!value.isEnabled())
 					value.setEnabled(true);
 			}

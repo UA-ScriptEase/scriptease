@@ -228,6 +228,20 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	public List<StoryComponent> getChildren() {
 		return new ArrayList<StoryComponent>(this.childComponents);
 	}
+	
+	public List<StoryComponent> getDescendents() {
+		final List<StoryComponent> descendents = new ArrayList<StoryComponent>();
+		
+		for (StoryComponent child : this.childComponents) {
+			descendents.add(child);
+			
+			if (child instanceof ComplexStoryComponent) {
+				descendents.addAll(((ComplexStoryComponent) child).getDescendents());
+			}
+		}
+		
+		return descendents;
+	}
 
 	public final void registerChildType(
 			Class<? extends StoryComponent> newType, Integer numAllowed) {
