@@ -253,7 +253,10 @@ public class NWNResource implements Comparable<NWNResource> {
 	 * @see {@link ErfKey#isGFF()}
 	 */
 	public boolean isGFF() {
-		return this.key.isGFF();
+		if (this.key != null)
+			return this.key.isGFF();
+
+		return false;
 	}
 
 	/**
@@ -263,9 +266,16 @@ public class NWNResource implements Comparable<NWNResource> {
 	 * @return
 	 */
 	public boolean isJournalGFF() {
-		return this.isGFF()
-				&& this.getGFF().getFileType().trim()
-						.equalsIgnoreCase(GenericFileFormat.TYPE_JOURNAL_BP);
+		if (this.isGFF()) {
+			final GenericFileFormat GFF = this.getGFF();
+
+			if (GFF != null) {
+				return this.getGFF().getFileType().trim()
+						.equals(GenericFileFormat.TYPE_JOURNAL_BP);
+			}
+		}
+
+		return false;
 	}
 
 	/**
