@@ -208,7 +208,7 @@ public class UnityResource extends Resource {
 			Map<String, File> guidsToMetas) {
 		final List<Resource> animationChildren = new ArrayList<Resource>();
 		final List<PropertyValue> animations;
-		final String animType = UnityType.SE_ANIMATIONELEMENT.getName();
+		final String animType = UnityType.SE_ANIMATION.getName();
 		final String nameStart = "@";
 		final String nameEnd = "_";
 
