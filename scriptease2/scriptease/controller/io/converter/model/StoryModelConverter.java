@@ -168,8 +168,13 @@ public class StoryModelConverter implements Converter {
 		WindowFactory.showProgressBar(READ_STORY, new Runnable() {
 			@Override
 			public void run() {
-				model.setRoot(XMLNode.START_STORY_POINT.readObject(reader,
-						context, StoryPoint.class));
+				try {
+					model.setRoot(XMLNode.START_STORY_POINT.readObject(reader,
+							context, StoryPoint.class));
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("WUT");
+				}
 			}
 		});
 
