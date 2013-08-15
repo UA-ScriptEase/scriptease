@@ -1,5 +1,6 @@
 package scriptease.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -129,5 +130,15 @@ public class ListOp {
 			if (object == key)
 				return object;
 		return null;
+	}
+	
+	public static <T> ArrayList<T> createList(T... contents) {
+		final ArrayList<T> list = new ArrayList<T>();
+		
+		for(T content : contents) {
+			list.add(content);
+		}
+		
+		return list;
 	}
 }

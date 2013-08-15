@@ -46,9 +46,9 @@
       <Keyword>Prefab</Keyword>
       <CodeSymbol>Prefab</CodeSymbol>
       <Format>
-        <Literal>Resources.LoadAssetAtPath(&quot;Assets/</Literal>
+        <Literal>Resources.Load(&quot;</Literal>
         <Fragment data="value"/>
-        <Literal>&quot;, typeof(GameObject)) as GameObject</Literal>
+        <Literal>&quot;, GameObject)</Literal>
       </Format>
     </Type>
     <Type>
