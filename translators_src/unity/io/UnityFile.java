@@ -33,6 +33,10 @@ import scriptease.util.FileOp;
  * @author kschenk
  */
 public class UnityFile extends Resource {
+	public static final String SCENE_FILE_EXTENSION = ".unity";
+	public static final String PREFAB_FILE_EXTENSION = ".prefab";
+	public static final String META_EXTENSION = ".meta";
+
 	// The first line in any valid YAML file.
 	private static final String YAML_HEADER = "%YAML 1.1";
 	private static final String SCRIPTEASE_OBJECT_NAME = "ScriptEase";
@@ -313,7 +317,7 @@ public class UnityFile extends Resource {
 				}
 			}
 		}
-		
+
 		reader.close();
 		return true;
 	}
@@ -454,7 +458,13 @@ public class UnityFile extends Resource {
 
 	@Override
 	public String getCodeText() {
-		return this.location.getName();
+		if (this.filename.toLowerCase().endsWith(PREFAB_FILE_EXTENSION))
+			return FileOp.removeExtension(FileOp.getFileNameUpTo(this.location,
+					"Resources"));
+		else if (this.filename.toLowerCase().endsWith(SCENE_FILE_EXTENSION))
+			return this.filename;
+		else
+			return "Invalid Unity File!";
 	}
 
 	@Override

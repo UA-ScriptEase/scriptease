@@ -205,6 +205,7 @@
 		<Word>Animation</Word>
 		<Word>AudioSource</Word>
 		<Word>this</Word>
+		<Word>GUI</Word>
 	</ReservedWords>
 	<Formats>
 		<!-- Variables -->
