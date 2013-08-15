@@ -129,7 +129,7 @@ public class NWNResource implements Comparable<NWNResource> {
 		this.resourceListEntry = new ResourceListElement(-1, listElementSize);
 
 		this.byteData = data;
-		this.gff = null;
+		this.gff = gff;
 
 	}
 
