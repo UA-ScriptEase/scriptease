@@ -158,12 +158,15 @@ public class LibraryModelConverter implements Converter {
 	 */
 	private void addDefaultCauseChildren(LibraryModel library,
 			Collection<CauseIt> causes) {
+
+		if (library.getTitle().contains("Path")) {
+			System.out.println(library.getTitle());
+		}
 		final Collection<CauseIt> automatics = library.getAutomatics();
 
 		for (CauseIt cause : causes) {
 			if (automatics.contains(cause))
 				continue;
-
 			for (StoryComponent description : library.getDescriptionsCategory()
 					.getChildren()) {
 				if (description instanceof KnowIt

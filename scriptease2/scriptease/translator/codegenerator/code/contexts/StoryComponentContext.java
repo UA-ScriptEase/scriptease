@@ -1,8 +1,11 @@
 package scriptease.translator.codegenerator.code.contexts;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 
 /**
  * StoryComponentContext is Context for a StoryComponent. Story Component
@@ -85,5 +88,11 @@ public class StoryComponentContext extends Context {
 	 */
 	public StoryComponent getComponent() {
 		return this.component;
+	}
+
+	@Override
+	public Collection<KnowIt> getVariables() {
+		// We return nothing by default, such as for notes.
+		return new ArrayList<KnowIt>();
 	}
 }
