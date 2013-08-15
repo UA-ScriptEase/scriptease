@@ -287,6 +287,27 @@ public class FileOp {
 	}
 
 	/**
+	 * Retrieves the part of a file path before the first instance of folder.
+	 * 
+	 * @param source
+	 *            The file to copy from.
+	 * @param folder
+	 *            The folder that gets cut off.
+	 */
+	public static String getFileNameUpToIncluding(File source, String folder) {
+		final String filepath = source.getAbsolutePath();
+
+		// Check if the filepath even contains the desired cutoff string
+		if (!filepath.contains(folder))
+			throw new IllegalArgumentException(
+					"The requested cut off folder does not exist in the file path");
+
+		int cutoffIndex = filepath.indexOf(folder) + folder.length() + 1;
+
+		return filepath.substring(cutoffIndex);
+	}
+
+	/**
 	 * Retrieves the part of a file path after the first instance of excluded @param
 	 * folder.
 	 * 
@@ -502,5 +523,22 @@ public class FileOp {
 			matchingFiles.add(directory);
 
 		return matchingFiles;
+	}
+
+	public static FileFilter createExtensionFilter(final String... extensions) {
+		return new FileFilter() {
+
+			@Override
+			public boolean accept(File pathName) {
+				final String name = pathName.getName().toLowerCase();
+
+				for (String extension : extensions) {
+					if (name.endsWith(extension.toLowerCase()))
+						return true;
+				}
+
+				return false;
+			}
+		};
 	}
 }

@@ -3,8 +3,11 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.UIManager;
+
 import scriptease.controller.io.FileIO;
 import scriptease.controller.io.XMLNode;
+import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
@@ -16,6 +19,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -86,8 +90,28 @@ public class KnowItConverter extends StoryComponentConverter {
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			if (reader.getNodeName().equals(TAG_BINDING)) {
-				binding = (KnowItBinding) context.convertAnother(knowIt,
-						KnowItBinding.class);
+				try {
+
+					binding = (KnowItBinding) context.convertAnother(knowIt,
+							KnowItBinding.class);
+				} catch (ConversionException e) {
+					// TODO #55240202 This shouldn't even be happening. Find out
+					// what's up and fix it. Consult ticket for more info.
+					e.printStackTrace();
+					WindowFactory
+							.getInstance()
+							.showExceptionDialog(
+									"Loading Problems",
+									"Loading Problem",
+									"I had some trouble loading the file.<br>"
+											+ "One of the bindings didn't save properly for a slot called \""
+											+ knowIt.getDisplayText()
+											+ "\".<br>You will need to rebind it."
+											+ " Sorry! Please send us a report.",
+									UIManager.getIcon("OptionPane.warningIcon"),
+									e);
+					binding = null;
+				}
 
 				// Check if a DescribeIt exists for the binding. If so, map it
 				if (binding instanceof KnowItBindingFunction) {

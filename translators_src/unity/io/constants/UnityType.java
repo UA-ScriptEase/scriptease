@@ -331,7 +331,7 @@ public enum UnityType {
 
 	SUBSTANCEIMPORTER(1112, "SubstanceImporter"),
 
-	SE_ANIMATIONELEMENT("AnimationElement"),
+	SE_ANIMATION("Animation"),
 
 	SE_AUDIO("Audio"),
 

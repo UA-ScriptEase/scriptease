@@ -29,6 +29,7 @@ import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.FileOp;
+import scriptease.util.ListOp;
 
 /**
  * Represents a Unity Project file. Implements the GameModule interface to
@@ -230,40 +231,19 @@ public final class UnityProject extends GameModule {
 
 	@Override
 	public void load(boolean readOnly) throws IOException {
-		final FileFilter sceneFileFilter = new FileFilter() {
-			private final String SCENE_FILE_EXTENSION = ".unity";
-
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.getName().endsWith(SCENE_FILE_EXTENSION);
-			}
-		};
-		final FileFilter prefabFileFilter = new FileFilter() {
-			private final String PREFAB_FILE_EXTENSION = ".prefab";
-
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.getName().endsWith(PREFAB_FILE_EXTENSION);
-			}
-		};
-		final FileFilter metaFileFilter = new FileFilter() {
-			private static final String META_EXTENSION = ".meta";
-
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.getName().endsWith(META_EXTENSION);
-			}
-		};
+		final FileFilter sceneFileFilter;
+		final FileFilter metaFileFilter;
 
 		final Collection<File> sceneFiles;
-		final Collection<File> prefabFiles;
 		final Collection<File> metaFiles;
+
+		sceneFileFilter = FileOp
+				.createExtensionFilter(UnityFile.SCENE_FILE_EXTENSION);
+
+		metaFileFilter = FileOp.createExtensionFilter(UnityFile.META_EXTENSION);
 
 		// sniff out .unity and .prefab files and read them all into memory
 		sceneFiles = FileOp.findFiles(this.projectLocation, sceneFileFilter);
-
-		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
-
 		metaFiles = FileOp.findFiles(this.projectLocation, metaFileFilter);
 
 		for (File metaFile : metaFiles) {
@@ -287,29 +267,15 @@ public final class UnityProject extends GameModule {
 		for (File sceneFile : sceneFiles) {
 			final UnityFile scene;
 
-			final Collection<String> type = new ArrayList<String>();
+			final Collection<String> type;
 
-			type.add(UnityType.SCENE.getName());
+			type = ListOp.createList(UnityType.SCENE.getName());
 
 			scene = UnityFile.buildUnityFile(sceneFile, this.guidsToMetaFiles,
 					type);
 
 			if (scene != null)
 				this.scenes.add(scene);
-		}
-
-		for (File prefabFile : prefabFiles) {
-			UnityFile prefab;
-
-			final Collection<String> type = new ArrayList<String>();
-
-			type.add(UnityType.PREFAB.getName());
-
-			prefab = UnityFile.buildUnityFile(prefabFile,
-					this.guidsToMetaFiles, type);
-
-			if (prefab != null)
-				this.prefabs.add(prefab);
 		}
 
 		if (this.scenes.size() <= 0)
@@ -333,50 +299,31 @@ public final class UnityProject extends GameModule {
 		this.resources.addAll(this.loadResources());
 	}
 
-	@SuppressWarnings("serial")
-	private Collection<Resource> loadResources() {
+	private Collection<Resource> loadResources() throws IOException {
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
-		final Collection<String> audioExtensions;
-		final Collection<String> imageExtensions;
+		final String[] audioExtensions;
+		final String[] imageExtensions;
 
 		final FileFilter resourceFolderFilter;
 		final FileFilter audioFilter;
 		final FileFilter imageFilter;
 		final FileFilter guiSkinFilter;
+		final FileFilter prefabFilter;
 
 		final Collection<File> audios = new ArrayList<File>();
 		final Collection<File> images = new ArrayList<File>();
 		final Collection<File> guiSkins = new ArrayList<File>();
+		final Collection<File> prefabFiles = new ArrayList<File>();
 		final Collection<File> resourceFolders;
 
-		audioExtensions = new ArrayList<String>() {
-			{
+		audioExtensions = new String[] {
 				// As Seen On:
 				// http://docs.unity3d.com/Documentation/Manual/AudioFiles.html
-				this.add("mp3");
-				this.add("aif");
-				this.add("wav");
-				this.add("ogg");
-				this.add("xm");
-				this.add("mod");
-				this.add("it");
-				this.add("s3m");
-			}
-		};
-		imageExtensions = new ArrayList<String>() {
-			{
-				this.add("psd");
-				this.add("tiff");
-				this.add("jpg");
-				this.add("tga");
-				this.add("png");
-				this.add("gif");
-				this.add("bmp");
-				this.add("iff");
-				this.add("pict");
-			}
-		};
+				".mp3", ".aif", ".wav", ".ogg", ".xm", ".mod", ".it", ".s3m" };
+
+		imageExtensions = new String[] { "psd", "tiff", "jpg", "tga", "png",
+				"gif", "bmp", "iff", "pict" };
 
 		resourceFolderFilter = new FileFilter() {
 			@Override
@@ -386,32 +333,12 @@ public final class UnityProject extends GameModule {
 			}
 		};
 
-		audioFilter = new FileFilter() {
-			public boolean accept(File file) {
-				final String ext = FileOp.getExtension(file).toLowerCase();
-
-				return audioExtensions.contains(ext);
-			}
-		};
-
-		imageFilter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				final String ext = FileOp.getExtension(file).toLowerCase();
-
-				return imageExtensions.contains(ext);
-			}
-		};
-
-		guiSkinFilter = new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				final String ext = FileOp.getExtension(file).toLowerCase();
-
-				return ext.equals("guiskin");
-			}
-		};
-
+		audioFilter = FileOp.createExtensionFilter(audioExtensions);
+		imageFilter = FileOp.createExtensionFilter(imageExtensions);
+		guiSkinFilter = FileOp.createExtensionFilter("guiskin");
+		prefabFilter = FileOp
+				.createExtensionFilter(UnityFile.PREFAB_FILE_EXTENSION);
+		
 		resourceFolders = FileOp.findFiles(this.projectLocation,
 				resourceFolderFilter);
 
@@ -419,6 +346,7 @@ public final class UnityProject extends GameModule {
 			audios.addAll(FileOp.findFiles(resourceFolder, audioFilter));
 			images.addAll(FileOp.findFiles(resourceFolder, imageFilter));
 			guiSkins.addAll(FileOp.findFiles(resourceFolder, guiSkinFilter));
+			prefabFiles.addAll(FileOp.findFiles(resourceFolder, prefabFilter));
 		}
 
 		resources.addAll(this.buildSimpleUnityResources(audios,
@@ -429,6 +357,22 @@ public final class UnityProject extends GameModule {
 
 		resources.addAll(this.buildSimpleUnityResources(guiSkins,
 				UnityType.SE_GUISKIN));
+
+//		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
+
+		for (File prefabFile : prefabFiles) {
+			UnityFile prefab;
+
+			final Collection<String> type;
+
+			type = ListOp.createList(UnityType.PREFAB.getName());
+
+			prefab = UnityFile.buildUnityFile(prefabFile,
+					this.guidsToMetaFiles, type);
+
+			if (prefab != null)
+				this.prefabs.add(prefab);
+		}
 
 		return resources;
 	}
