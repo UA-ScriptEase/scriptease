@@ -1,7 +1,6 @@
 package scriptease.gui.action;
 
 import javax.swing.AbstractAction;
-import javax.swing.SwingUtilities;
 
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
@@ -33,25 +32,20 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 	 */
 	protected ActiveModelSensitiveAction(String name) {
 		super(name);
-		final SEModelObserver observer;
 
-		observer = new SEModelObserver() {
-			@Override
-			public void modelChanged(final SEModelEvent event) {
-				if (event.getEventType() == SEModelEvent.Type.ACTIVATED
-						|| event.getEventType() == SEModelEvent.Type.REMOVED) {
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
+		SEModelManager.getInstance().addSEModelObserver(this,
+				new SEModelObserver() {
+					@Override
+					public void modelChanged(final SEModelEvent event) {
+						if (event.getEventType() == SEModelEvent.Type.ACTIVATED
+								|| event.getEventType() == SEModelEvent.Type.REMOVED) {
 							ActiveModelSensitiveAction.this
 									.updateEnabledState();
 						}
-					});
-				}
-			}
-		};
+					}
+				});
 
-		this.updateEnabledState();
-		SEModelManager.getInstance().addSEModelObserver(this, observer);
+		this.setEnabled(false);
 	}
 
 	/**
@@ -59,7 +53,7 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 	 * definition of {@link #isLegal()}.
 	 */
 	protected final void updateEnabledState() {
-		setEnabled(this.isLegal());
+		this.setEnabled(this.isLegal());
 	}
 
 	/**
