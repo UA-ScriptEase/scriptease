@@ -20,7 +20,6 @@ import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -82,42 +81,9 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void focusLost(FocusEvent e) {
+				
 			}
 		});
-
-		SEFocusManager.getInstance().addSEFocusObserver(this,
-				new SEFocusObserver() {
-					@Override
-					public void gainFocus(Component oldFocus) {
-						final Component newFocus;
-
-						newFocus = SEFocusManager.getInstance().getFocus();
-
-						if (newFocus instanceof StoryComponentPanel) {
-							((StoryComponentPanel) newFocus)
-									.getSelectionManager()
-									.updatePanelBackgrounds();
-						}
-					}
-
-					@Override
-					public void loseFocus(Component oldFocus) {
-						final Component newFocus;
-
-						newFocus = SEFocusManager.getInstance().getFocus();
-
-						if (oldFocus instanceof StoryComponentPanel
-								&& !(newFocus instanceof StoryComponentPanel)) {
-							final StoryComponentPanelManager manager;
-
-							manager = ((StoryComponentPanel) oldFocus)
-									.getSelectionManager();
-
-							if (manager != null)
-								manager.updatePanelBackgrounds();
-						}
-					}
-				});
 
 		this.setVisible(component.isVisible());
 	}

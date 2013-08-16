@@ -18,7 +18,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
-import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
@@ -30,8 +29,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class DeleteAction extends ActiveModelSensitiveAction implements
-		SEFocusObserver {
+public final class DeleteAction extends ActiveModelSensitiveAction {
 	private static final String DELETE_TEXT = "Delete";
 
 	private static final Action instance = new DeleteAction();
@@ -55,7 +53,18 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
-		SEFocusManager.getInstance().addSEFocusObserver(this);
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				DeleteAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				DeleteAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	/**
@@ -63,12 +72,10 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 	 * current selection.
 	 */
 	protected boolean isLegal() {
-		final SEModel activeModel;
 		final Component focusOwner;
 		final boolean isLegal;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
-		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
@@ -79,17 +86,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction implements
 		} else
 			isLegal = false;
 
-		return activeModel != null && isLegal;
-	}
-
-	@Override
-	public void gainFocus(Component oldFocus) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void loseFocus(Component oldFocus) {
-		this.updateEnabledState();
+		return super.isLegal() && isLegal;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

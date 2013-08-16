@@ -24,8 +24,7 @@ import scriptease.model.semodel.SEModelManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class CutAction extends ActiveModelSensitiveAction implements
-		SEFocusObserver {
+public final class CutAction extends ActiveModelSensitiveAction {
 	private static final String CUT_TEXT = "Cut";
 
 	private static final Action instance = new CutAction();
@@ -69,7 +68,18 @@ public final class CutAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
 
-		SEFocusManager.getInstance().addSEFocusObserver(this);
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				CutAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				CutAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	/**
@@ -92,15 +102,5 @@ public final class CutAction extends ActiveModelSensitiveAction implements
 		if (focusOwner instanceof StoryComponentPanel) {
 			this.cutComponent((StoryComponentPanel) focusOwner);
 		}
-	}
-
-	@Override
-	public void gainFocus(Component oldFocus) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void loseFocus(Component oldFocus) {
-		this.updateEnabledState();
 	}
 }

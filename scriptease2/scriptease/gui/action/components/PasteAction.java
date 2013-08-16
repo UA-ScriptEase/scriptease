@@ -16,8 +16,6 @@ import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
-import scriptease.model.semodel.SEModel;
-import scriptease.model.semodel.SEModelManager;
 
 /**
  * Represents and performs the Paste command, as well as encapsulates its
@@ -26,8 +24,7 @@ import scriptease.model.semodel.SEModelManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class PasteAction extends ActiveModelSensitiveAction implements
-		SEFocusObserver {
+public final class PasteAction extends ActiveModelSensitiveAction {
 	private static final String PASTE_TEXT = "Paste";
 
 	private static final Action instance = new PasteAction();
@@ -51,7 +48,18 @@ public final class PasteAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK));
 
-		SEFocusManager.getInstance().addSEFocusObserver(this);
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				PasteAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				PasteAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	/**
@@ -60,12 +68,10 @@ public final class PasteAction extends ActiveModelSensitiveAction implements
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected boolean isLegal() {
-		final SEModel activeModel;
 		final Component focusOwner;
 		final boolean isLegal;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
-		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			isLegal = ((StoryComponentPanel) focusOwner).getTransferHandler()
@@ -93,17 +99,7 @@ public final class PasteAction extends ActiveModelSensitiveAction implements
 			isLegal = false;
 		}
 
-		return activeModel != null && isLegal;
-	}
-
-	@Override
-	public void gainFocus(Component oldFocus) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void loseFocus(Component oldFocus) {
-		this.updateEnabledState();
+		return super.isLegal() && isLegal;
 	}
 
 	/**

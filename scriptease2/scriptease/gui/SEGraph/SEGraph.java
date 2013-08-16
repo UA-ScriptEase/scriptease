@@ -154,7 +154,6 @@ public class SEGraph<E> extends JComponent {
 
 								selected.setBackground(GUIOp.scaleWhite(
 										background, 1.2));
-
 							}
 						}
 					}
