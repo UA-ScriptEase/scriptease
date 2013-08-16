@@ -264,8 +264,6 @@ public class NWNResource implements Comparable<NWNResource> {
 	 */
 	public boolean isJournalGFF() {
 		if (this.isGFF()) {
-			System.out.println("DEBUG");
-			
 			final GenericFileFormat GFF = this.getGFF();
 			return GFF.getFileType().trim()
 					.equals(GenericFileFormat.TYPE_JOURNAL_BP);

@@ -17,8 +17,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.SEModel;
-import scriptease.model.semodel.SEModelManager;
 
 /**
  * Represents and performs a disable action on a story component. Disabling a
@@ -27,8 +25,7 @@ import scriptease.model.semodel.SEModelManager;
  * @author jyuen
  */
 @SuppressWarnings("serial")
-public class DisableAction extends ActiveModelSensitiveAction implements
-		SEFocusObserver {
+public class DisableAction extends ActiveModelSensitiveAction {
 
 	private static final String DISABLE_TEXT = "Enable / Disable";
 
@@ -49,23 +46,19 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 	 */
 	@Override
 	protected boolean isLegal() {
-		final SEModel activeModel;
-		final Component focusOwner;
-		final boolean isLegal;
-
+		final Component focusOwner; 
+		
 		focusOwner = SEFocusManager.getInstance().getFocus();
-		activeModel = SEModelManager.getInstance().getActiveModel();
 
-		if (focusOwner instanceof StoryComponentPanel) {
-			isLegal = true;
-		} else
-			isLegal = false;
-
-		return activeModel != null && isLegal;
+		if (focusOwner instanceof StoryComponentPanel) 
+			return super.isLegal();
+		else
+			return false;
 	}
 
 	/**
-	 * Defines a <code>CopyAction</code> object with no icon.
+	 * Defines a <code>DisableAction</code> object with a mnemonic and
+	 * accelerator.
 	 */
 	private DisableAction() {
 		super(DisableAction.DISABLE_TEXT);
@@ -74,7 +67,18 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK));
 
-		SEFocusManager.getInstance().addSEFocusObserver(this);
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				DisableAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				DisableAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	/**
@@ -137,15 +141,5 @@ public class DisableAction extends ActiveModelSensitiveAction implements
 					UndoManager.getInstance().endUndoableAction();
 			}
 		}
-	}
-
-	@Override
-	public void gainFocus(Component oldFocus) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void loseFocus(Component oldFocus) {
-		this.updateEnabledState();
 	}
 }

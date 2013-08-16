@@ -17,8 +17,6 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
-import scriptease.model.semodel.SEModel;
-import scriptease.model.semodel.SEModelManager;
 
 /**
  * Represents and performs the Copy command, as well as encapsulates its enabled
@@ -27,8 +25,7 @@ import scriptease.model.semodel.SEModelManager;
  * @author kschenk
  */
 @SuppressWarnings("serial")
-public final class CopyAction extends ActiveModelSensitiveAction implements
-		SEFocusObserver {
+public final class CopyAction extends ActiveModelSensitiveAction {
 	private static final String COPY_TEXT = "Copy";
 
 	private static final Action instance = new CopyAction();
@@ -52,7 +49,18 @@ public final class CopyAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK));
 
-		SEFocusManager.getInstance().addSEFocusObserver(this);
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				CopyAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				CopyAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	/**
@@ -61,31 +69,16 @@ public final class CopyAction extends ActiveModelSensitiveAction implements
 	 */
 	@Override
 	protected boolean isLegal() {
-		final SEModel activeModel;
 		final Component focusOwner;
-		final boolean isLegal;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
-		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel
 				|| focusOwner instanceof StoryComponentPanelJList
 				|| focusOwner instanceof SEGraph) {
-			isLegal = true;
+			return super.isLegal();
 		} else
-			isLegal = false;
-
-		return activeModel != null && isLegal;
-	}
-
-	@Override
-	public void gainFocus(Component oldFocus) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void loseFocus(Component oldFocus) {
-		this.updateEnabledState();
+			return false;
 	}
 
 	/**

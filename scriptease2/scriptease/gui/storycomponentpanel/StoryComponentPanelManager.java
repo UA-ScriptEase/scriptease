@@ -1,6 +1,7 @@
 package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -34,6 +36,40 @@ public class StoryComponentPanelManager {
 
 	public StoryComponentPanelManager() {
 		this.selected = new HashMap<StoryComponentPanel, Boolean>();
+		
+		SEFocusManager.getInstance().addSEFocusObserver(this,
+				new SEFocusObserver() {
+					@Override
+					public void gainFocus(Component oldFocus) {
+						final Component newFocus;
+
+						newFocus = SEFocusManager.getInstance().getFocus();
+
+						if (newFocus instanceof StoryComponentPanel) {
+							((StoryComponentPanel) newFocus)
+									.getSelectionManager()
+									.updatePanelBackgrounds();
+						}
+					}
+
+					@Override
+					public void loseFocus(Component oldFocus) {
+						final Component newFocus;
+
+						newFocus = SEFocusManager.getInstance().getFocus();
+
+						if (oldFocus instanceof StoryComponentPanel
+								&& !(newFocus instanceof StoryComponentPanel)) {
+							final StoryComponentPanelManager manager;
+
+							manager = ((StoryComponentPanel) oldFocus)
+									.getSelectionManager();
+
+							if (manager != null)
+								manager.updatePanelBackgrounds();
+						}
+					}
+				});
 	}
 
 	/**
