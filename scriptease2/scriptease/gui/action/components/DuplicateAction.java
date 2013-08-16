@@ -32,8 +32,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author mfchurch
  */
 @SuppressWarnings("serial")
-public final class DuplicateAction extends ActiveModelSensitiveAction implements
-		SEFocusObserver {
+public final class DuplicateAction extends ActiveModelSensitiveAction {
 	private static final String DUPLICATE_TEXT = "Duplicate";
 
 	private static final Action instance = new DuplicateAction();
@@ -57,7 +56,18 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
 		
-		SEFocusManager.getInstance().addSEFocusObserver(this);
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				DuplicateAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				DuplicateAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	/**
@@ -80,16 +90,6 @@ public final class DuplicateAction extends ActiveModelSensitiveAction implements
 			isLegal = false;
 
 		return activeModel != null && isLegal;
-	}
-
-	@Override
-	public void gainFocus(Component oldFocus) {
-		this.updateEnabledState();
-	}
-
-	@Override
-	public void loseFocus(Component oldFocus) {
-		this.updateEnabledState();
 	}
 
 	@Override
