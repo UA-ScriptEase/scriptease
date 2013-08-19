@@ -235,7 +235,7 @@ public class StoryComponentPanel extends JPanel implements
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_CHILD_REMOVED)) {
 			if (component.getOwner() == null
 					|| component.getOwner() == this.component
-					&& component instanceof ComplexStoryComponent) {
+					&& component instanceof StoryComponent) {
 				component.removeStoryComponentObserverFromChildren(this);
 				StoryComponentPanelFactory.getInstance().removeChild(this,
 						component);

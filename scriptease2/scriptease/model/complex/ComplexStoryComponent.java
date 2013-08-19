@@ -135,7 +135,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			this.childComponents.add(siblingIndex, newChild);
 
 		newChild.setOwner(this);
-		
+
 		if (!this.isEnabled())
 			newChild.setEnabled(false);
 
@@ -181,10 +181,10 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			}
 		});
 
+		success = this.childComponents.remove(child);
+
 		super.notifyObservers(new StoryComponentEvent(child,
 				StoryComponentChangeEnum.CHANGE_CHILD_REMOVED));
-
-		success = this.childComponents.remove(child);
 
 		child.setOwner(null);
 
@@ -227,18 +227,19 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	public List<StoryComponent> getChildren() {
 		return new ArrayList<StoryComponent>(this.childComponents);
 	}
-	
+
 	public List<StoryComponent> getDescendents() {
 		final List<StoryComponent> descendents = new ArrayList<StoryComponent>();
-		
+
 		for (StoryComponent child : this.childComponents) {
 			descendents.add(child);
-			
+
 			if (child instanceof ComplexStoryComponent) {
-				descendents.addAll(((ComplexStoryComponent) child).getDescendents());
+				descendents.addAll(((ComplexStoryComponent) child)
+						.getDescendents());
 			}
 		}
-		
+
 		return descendents;
 	}
 

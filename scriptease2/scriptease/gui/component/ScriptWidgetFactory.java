@@ -125,8 +125,8 @@ public class ScriptWidgetFactory {
 	public static TypeWidget getTypeWidget(final String keyword) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 		final GameType type;
-		
-		if(model != null)
+
+		if (model != null)
 			type = model.getType(keyword);
 		else
 			type = null;
@@ -237,7 +237,7 @@ public class ScriptWidgetFactory {
 
 			widget.setTransferHandler(BindingTransferHandlerExportOnly
 					.getInstance());
-			
+
 			// Set an empty border to prevent line crowding.
 			widget.setBorder(BorderFactory.createEmptyBorder(
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,
@@ -398,7 +398,7 @@ public class ScriptWidgetFactory {
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
 		final JTextField textField;
-		
+
 		final String scriptValue;
 
 		final StoryComponentObserver observer;
@@ -414,11 +414,11 @@ public class ScriptWidgetFactory {
 		model = new SpinnerNumberModel(initVal, MIN, MAX, STEP_SIZE);
 		spinner = new JSpinner(model);
 		scriptValue = knowIt.getBinding().getScriptValue();
-		
-		textField = ((JSpinner.DefaultEditor) spinner
-				.getEditor()).getTextField();
+
+		textField = ((JSpinner.DefaultEditor) spinner.getEditor())
+				.getTextField();
 		textField.setBackground(ScriptEaseUI.COLOUR_SIMPLE_TEXT);
-		
+
 		// For some annoying reason, JSpinners don't automatically resize when
 		// you set their max and min values...
 		int length = textField.getText().length();
@@ -506,7 +506,7 @@ public class ScriptWidgetFactory {
 		};
 
 		spinner.addChangeListener(changeListener);
-		
+
 		knowIt.addStoryComponentObserver(observer);
 
 		widgetsToStoryComponents.put(spinner, knowIt);
@@ -764,10 +764,15 @@ public class ScriptWidgetFactory {
 	 */
 	public static JSpinner buildFanInSpinner(final StoryPoint storyPoint,
 			Comparable<?> max) {
-		final SpinnerNumberModel model;
+		SpinnerNumberModel model;
 		final JSpinner fanInSpinner;
+		
+		try {
+			model = new SpinnerNumberModel(storyPoint.getFanIn(), 1, max, 1);
+		} catch (Exception e) {
+			model = new SpinnerNumberModel(1, 1, 1, 1);
+		}
 
-		model = new SpinnerNumberModel(storyPoint.getFanIn(), 1, max, 1);
 		fanInSpinner = new JSpinner(model);
 
 		fanInSpinner.addChangeListener(new ChangeListener() {
