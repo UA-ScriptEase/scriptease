@@ -429,7 +429,7 @@ public class StoryComponentPanel extends JPanel implements
 				e.consume();
 			}
 
-			private final Timer hoverTimer = new Timer(100,
+			private final Timer hoverTimer = new Timer(150,
 					new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 
