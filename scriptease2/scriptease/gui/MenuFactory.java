@@ -57,7 +57,6 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerator;
 import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.util.FileOp;
-import scriptease.util.GUIOp;
 
 /**
  * MenuFactory is responsible for building all of the menus in ScriptEase
@@ -382,7 +381,11 @@ public class MenuFactory {
 			action = new OpenLibraryEditorAction(translator);
 			translatorItem = new JMenuItem(action);
 
-			menu.add(translatorItem);
+			/*
+			 * TODO: RE-ENABLE THIS AFTER RELEASING TO 250
+			 */
+			
+			 menu.add(translatorItem);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);

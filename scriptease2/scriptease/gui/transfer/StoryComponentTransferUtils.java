@@ -250,6 +250,8 @@ public class StoryComponentTransferUtils {
 		final StoryComponent clone = child.clone();
 		final boolean success;
 
+		clone.revalidateKnowItBindings();
+
 		StoryComponent sibling = parent.getChildAt(insertionIndex);
 		if (sibling != null) {
 			// add in the middle
@@ -257,8 +259,6 @@ public class StoryComponentTransferUtils {
 		} else {
 			success = parent.addStoryChild(clone);
 		}
-
-		clone.revalidateKnowItBindings();
 
 		if (!success)
 			throw new IllegalStateException("Was unable to add " + child

@@ -318,6 +318,8 @@ public abstract class CodeBlock extends StoryComponent implements
 		 * close as we can get. - remiller
 		 */
 		StoryComponent owner = this.getOwner();
+		
+		
 		if (owner instanceof CauseIt) {
 			return (CauseIt) owner;
 		} else {
@@ -328,6 +330,7 @@ public abstract class CodeBlock extends StoryComponent implements
 			}
 
 			if (owner == null) {
+				//this.getCause();
 				throw new IllegalStateException(
 						"Failed to locate enclosing Cause for CodeBlock "
 								+ this.toString());

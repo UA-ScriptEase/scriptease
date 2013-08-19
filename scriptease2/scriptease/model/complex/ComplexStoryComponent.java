@@ -181,13 +181,12 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			}
 		});
 
+		super.notifyObservers(new StoryComponentEvent(child,
+				StoryComponentChangeEnum.CHANGE_CHILD_REMOVED));
+
 		success = this.childComponents.remove(child);
 
 		child.setOwner(null);
-
-		if (success)
-			super.notifyObservers(new StoryComponentEvent(child,
-					StoryComponentChangeEnum.CHANGE_CHILD_REMOVED));
 
 		return success;
 	}
