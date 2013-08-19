@@ -381,11 +381,7 @@ public class MenuFactory {
 			action = new OpenLibraryEditorAction(translator);
 			translatorItem = new JMenuItem(action);
 
-			/*
-			 * TODO: RE-ENABLE THIS AFTER RELEASING TO 250
-			 */
-			
-			 menu.add(translatorItem);
+			menu.add(translatorItem);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);
