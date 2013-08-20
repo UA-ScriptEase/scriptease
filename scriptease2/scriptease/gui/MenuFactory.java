@@ -381,7 +381,10 @@ public class MenuFactory {
 			action = new OpenLibraryEditorAction(translator);
 			translatorItem = new JMenuItem(action);
 
-			menu.add(translatorItem);
+			/*
+			 * TODO: Uncomment after releasing to 250
+			 */
+			// menu.add(translatorItem);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);
