@@ -246,7 +246,7 @@ public class StoryComponentPanel extends JPanel implements
 			StoryComponentPanelFactory.getInstance().rebuildLabels(this);
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
 
-			// Change the font color to red if disabled
+			// Change the font color to orange if disabled
 			final JPanel mainPanel = this.getLayout().getMainPanel();
 			final Component[] children = mainPanel.getComponents();
 
@@ -254,13 +254,14 @@ public class StoryComponentPanel extends JPanel implements
 				if (child instanceof JLabel) {
 					final JLabel label = (JLabel) child;
 
+					// Get all the JLabels i.e. not Labels.
 					if (!label.getBackground().equals(
 							ScriptEaseUI.COLOUR_DISABLED)
 							&& !label
 									.getBackground()
 									.equals(ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR)) {
 
-						if (component.isEnabled())
+						if (this.component.isEnabled())
 							label.setForeground(Color.BLACK);
 						else
 							label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
@@ -276,10 +277,10 @@ public class StoryComponentPanel extends JPanel implements
 					for (Component panel : describeItPanels) {
 						if (panel instanceof JLabel) {
 							final JLabel label = (JLabel) panel;
-							if (!component.isEnabled())
-								label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
+							if (component.isEnabled())
+								label.setForeground(Color.BLACK);
 							else
-								label.setForeground(Color.black);
+								label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
 
 							label.repaint();
 						}

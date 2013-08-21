@@ -94,6 +94,9 @@ public class DisableAction extends ActiveModelSensitiveAction {
 
 		final boolean enabled = component.isEnabled();
 
+		if (component instanceof StoryPoint)
+			return;
+		
 		// Don't want to be enabling the component if it's owner is disabled.
 		if (component.getOwner() != null
 				&& !(component.getOwner() instanceof StoryPoint)

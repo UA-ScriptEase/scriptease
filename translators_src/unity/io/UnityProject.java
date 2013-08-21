@@ -388,7 +388,7 @@ public final class UnityProject extends GameModule {
 
 			String name = FileOp.getFileNameUpTo(file, UnityProject.RESOURCE_FOLDER_NAME);
 			
-			name = FileOp.removeExtension(file.getAbsolutePath());
+			name = FileOp.removeExtension(name);
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);
 
