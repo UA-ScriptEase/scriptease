@@ -29,6 +29,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 public class LibraryModelConverter implements Converter {
 	@Override
@@ -60,6 +61,7 @@ public class LibraryModelConverter implements Converter {
 
 		XMLAttribute.NAME.write(writer, library.getTitle());
 		XMLAttribute.AUTHOR.write(writer, library.getAuthor());
+		XMLAttribute.DESCRIPTION.write(writer, library.getInformation());
 
 		XMLNode.INCLUDE_FILES.writeChildren(writer,
 				library.getIncludeFilePaths());
@@ -101,6 +103,7 @@ public class LibraryModelConverter implements Converter {
 
 		library.setTitle(XMLAttribute.NAME.read(reader));
 		library.setAuthor(XMLAttribute.AUTHOR.read(reader));
+		library.setInformation(XMLAttribute.DESCRIPTION.read(reader));
 
 		includeFilePaths = XMLNode.INCLUDE_FILES.readStringCollection(reader);
 		types = XMLNode.TYPES.readCollection(reader, context, GameType.class);

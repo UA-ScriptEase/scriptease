@@ -55,10 +55,14 @@ import scriptease.util.StringOp;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private static final String AUTOMATIC_LABEL = "automatic";
 	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
+
+	// Information about the library that we want the user to know about.
+	private String information;
 
 	private final ObserverManager<LibraryObserver> observerManager;
 
@@ -83,7 +87,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private int nextID;
 
 	private static final LibraryModel COMMON_LIBRARY = new LibraryModel(
-			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
+			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
 		{
 			this.add(new AskIt());
 			this.add(new Note());
@@ -101,11 +105,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Builds a new Library model with a blank author and title, and null
-	 * translator.
+	 * Builds a new Library model with a blank author, title, description, and
+	 * null translator.
 	 */
 	public LibraryModel() {
-		this("", "", null);
+		this("", "", "", null);
 	}
 
 	/**
@@ -115,9 +119,12 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param title
 	 *            the name of the library.
 	 * @param author
+	 *            the author of the library.
+	 * @param information
+	 *            details of the library.
 	 */
-	public LibraryModel(String title, String author) {
-		this(title, author, null);
+	public LibraryModel(String title, String author, String information) {
+		this(title, author, information, null);
 	}
 
 	/**
@@ -128,15 +135,19 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 *            the name of the library.
 	 * @param author
 	 *            the author of the library.
+	 * @param information
+	 *            details of the library.
 	 * @param translator
 	 *            The translator that this library belongs to.
 	 */
-	public LibraryModel(String title, String author, Translator translator) {
+	public LibraryModel(String title, String author, String information,
+			Translator translator) {
 		super(title, author);
 		this.gameTypes = new HashMap<String, GameType>();
 		this.typeConverter = new TypeConverter();
 
 		this.translator = translator;
+		this.information = information;
 		this.modelRoot = new StoryComponentContainer(title);
 		this.slotManager = new EventSlotManager();
 		this.describeItManager = new DescribeItManager();
@@ -1122,5 +1133,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	public void addSlots(Collection<Slot> slots) {
 		this.slotManager.addEventSlots(slots, this);
+	}
+	
+	public String getInformation() {
+		return this.information;
+	}
+	
+	public void setInformation(String information) {
+		this.information = information;
 	}
 }

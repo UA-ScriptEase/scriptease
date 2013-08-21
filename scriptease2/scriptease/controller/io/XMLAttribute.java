@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * methods to read and write the attributes.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  */
 public enum XMLAttribute {
@@ -15,8 +16,9 @@ public enum XMLAttribute {
 
 	DEFAULT_FORMAT("defaultFormat"),
 	
-	NAME("name")
+	NAME("name"),
 
+	DESCRIPTION("description")
 	;
 	private final String name;
 
