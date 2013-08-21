@@ -92,7 +92,7 @@ public final class WindowFactory {
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
 
-	private static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
+	public static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
 			+ "<font size=\"2\">Version: Beta "
 			+ ScriptEase.getInstance().getVersion()
 			+ "<br>Revision: "

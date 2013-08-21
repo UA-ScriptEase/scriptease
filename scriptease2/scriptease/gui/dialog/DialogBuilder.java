@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -49,6 +50,10 @@ import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;
 
+/**
+ * @author Previous ScriptEase devs
+ * @author jyuen
+ */
 public class DialogBuilder {
 	/**
 	 * Simple renderer that replaces Translators with their names in a JList.
@@ -114,6 +119,9 @@ public class DialogBuilder {
 		final String TITLE = "New Library Wizard";
 		final int TEXTFIELD_COLUMNS = 20;
 
+		final int TEXTAREA_COLUMNS = 40;
+		final int TEXTAREA_ROWS = 10;
+
 		final JPanel newStoryPanel = new JPanel();
 
 		final JLabel authorLabel = new JLabel("Author: ");
@@ -122,7 +130,11 @@ public class DialogBuilder {
 
 		final JTextField authorField = new JTextField(TEXTFIELD_COLUMNS);
 		final JTextField titleField = new JTextField(TEXTFIELD_COLUMNS);
-		final JTextField descriptionField = new JTextField(TEXTFIELD_COLUMNS);
+		final JTextArea descriptionField = new JTextArea(TEXTAREA_ROWS,
+				TEXTAREA_COLUMNS);
+
+		// final JTextField descriptionField = new
+		// JTextField(TEXTFIELD_COLUMNS);
 
 		final GroupLayout layout = new GroupLayout(newStoryPanel);
 
@@ -148,11 +160,12 @@ public class DialogBuilder {
 			public void run() {
 				final String title = titleField.getText();
 				final String author = authorField.getText();
+				final String description = descriptionField.getText();
 				final LibraryModel model;
 
 				TranslatorManager.getInstance().setActiveTranslator(translator);
 
-				model = new LibraryModel(title, author, translator);
+				model = new LibraryModel(title, author, description, translator);
 
 				SEModelManager.getInstance().addAndActivate(model);
 				translator.addOptionalLibrary(model);
@@ -528,6 +541,43 @@ public class DialogBuilder {
 		}
 	}
 
+	/**
+	 * Shows information about the library that is about to be added.
+	 * 
+	 * @return true If the user clicks accept, false if the user clicks cancel
+	 */
+	public void showAddLibraryInfoDialog(final LibraryModel library) {
+		final String ADD_LIBRARY = "Are you sure you want to add "
+				+ library.getTitle() + "?";
+
+		final String title;
+		final String author;
+		final String information;
+
+		final String message;
+
+		title = "<h3>".concat(library.getTitle()).concat("</h3>");
+		author = "<h4>".concat(library.getAuthor()).concat("</h4>");
+		information = library.getInformation();
+
+		message = "<html>".concat(title).concat(author).concat("<br>")
+				.concat(information).concat("<br><br>").concat(ADD_LIBRARY)
+				.concat("</html>");
+
+		if (WindowFactory.getInstance().showYesNoConfirmDialog(message,
+				ADD_LIBRARY)) {
+			final StoryModel model;
+
+			model = (StoryModel) SEModelManager.getInstance().getActiveModel();
+
+			model.addLibrary(library);
+		}
+	}
+
+	/**
+	 * Dialog box that allows the user to edit the NwN translator's compiler and
+	 * game directory path.
+	 */
 	public void showTranslatorPreferencesDialog() {
 		final String PROGRAM_RESTART_REQUIRED_TEXT = "Changes to Preferences may not take effect until ScriptEase is restarted.";
 		final String PROGRAM_RESTART_REQUIRED_TITLE = "Program restart required.";
