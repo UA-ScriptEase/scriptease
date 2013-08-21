@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.swing.Icon;
-import javax.swing.UIManager;
-
 import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -55,7 +52,8 @@ public final class UnityProject extends GameModule {
 	 */
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
 
-	private static final String RESOURCE_FOLDER_NAME = "Resources";
+	public static final String RESOURCE_FOLDER_NAME = "Resources";
+	public static final String ASSETS_FOLDER_NAME = "Assets";
 
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
@@ -158,7 +156,6 @@ public final class UnityProject extends GameModule {
 
 			for (UnityFile prefab : this.prefabs) {
 				final Resource subject = scriptInfo.getSubject();
-
 				if (subject.getTemplateID().equals(prefab.getTemplateID())) {
 					this.scripts.add(new UnityScript(scriptInfo, prefab));
 				}
@@ -358,8 +355,6 @@ public final class UnityProject extends GameModule {
 		resources.addAll(this.buildSimpleUnityResources(guiSkins,
 				UnityType.SE_GUISKIN));
 
-//		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
-
 		for (File prefabFile : prefabFiles) {
 			UnityFile prefab;
 
@@ -386,32 +381,14 @@ public final class UnityProject extends GameModule {
 	 */
 	private final Collection<Resource> buildSimpleUnityResources(
 			final Collection<File> files, final UnityType type) {
-		final String title = "Internal Error";
-		final String messageBrief = "ScriptEase has encountered an internal error.";
-		final String message = "It may be possible to continue past this error.<br>Would you like to help make ScriptEase better by reporting the problem?";
-		final Icon icon = UIManager.getIcon("OptionPane.errorIcon");
-
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
 		for (File file : files) {
 			final SimpleResource resource;
 
-			String name = FileOp.removeExtension(file.getAbsolutePath());
-			// Since split takes a regex, we need to escape \ twice
-			final String[] splitBackSlash = name.split("\\\\"
-					+ RESOURCE_FOLDER_NAME + "\\\\");
-			if (splitBackSlash.length == 2)
-				name = splitBackSlash[1];
-			else {
-				final String[] splitForwardSlash = name.split("/"
-						+ RESOURCE_FOLDER_NAME + "/");
-
-				if (splitForwardSlash.length == 2)
-					name = splitForwardSlash[1];
-				else
-					WindowFactory.getInstance().showExceptionDialog(title,
-							messageBrief, message, icon, null);
-			}
+			String name = FileOp.getFileNameUpTo(file, UnityProject.RESOURCE_FOLDER_NAME);
+			
+			name = FileOp.removeExtension(file.getAbsolutePath());
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);
 

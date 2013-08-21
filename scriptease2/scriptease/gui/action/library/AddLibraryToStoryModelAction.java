@@ -24,6 +24,8 @@ public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
 
 	public AddLibraryToStoryModelAction(LibraryModel library) {
 		super(library.getTitle());
+		
+		this.setEnabled(true);
 
 		this.library = library;
 
