@@ -1,5 +1,5 @@
-<LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team" description="&lt;html&gt;This library contains custom animations for the BELIEVE park game at:
-&lt;br&gt;http://cs.ualberta.ca/~script&lt;/html&gt;">
+<LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team" description="This library contains custom animations for the BELIEVE park game at:
+&lt;br&gt;http://cs.ualberta.ca/~script">
   <IncludeFiles>
     <IncludeFile>SEAnimationController.js</IncludeFile>
   </IncludeFiles>

@@ -1,4 +1,4 @@
-<LibraryModel name="A* Pathfinding Library" author="ScriptEase Team" description="&lt;html&gt;Library situated for Aron Granberg&apos;s &lt;b&gt;A* Pathfinding Project&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
+<LibraryModel name="A* Pathfinding Library" author="ScriptEase Team" description="Library situated for Aron Granberg&apos;s &lt;b&gt;A* Pathfinding Project&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
 
 To use this library you will need to download the A* Pathfinding Project at:&lt;br&gt;
 http://arongranberg.com/astar/download&lt;br&gt;&lt;br&gt;
@@ -8,7 +8,7 @@ compilation errors if you wish to add this library.&lt;br&gt;&lt;br&gt;
 
 For detailed instructions on how to install this package, follow the&lt;br&gt;
 instructions in Unity Tutorial 2 at:&lt;br&gt;
-http://cs.ualberta.ca/~script&lt;/html&gt;">
+http://cs.ualberta.ca/~script">
   <IncludeFiles>
     <IncludeFile>SEPath.js</IncludeFile>
   </IncludeFiles>
