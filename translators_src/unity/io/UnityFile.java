@@ -31,6 +31,7 @@ import scriptease.util.FileOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public class UnityFile extends Resource {
 	public static final String SCENE_FILE_EXTENSION = ".unity";
@@ -49,7 +50,7 @@ public class UnityFile extends Resource {
 	}
 
 	private final File location;
-	private final String filename;
+	private String filename;
 
 	private final Collection<String> types;
 	private final List<UnityResource> unityResources;
@@ -114,7 +115,13 @@ public class UnityFile extends Resource {
 		this.unityResources = new ArrayList<UnityResource>();
 		this.types = types;
 		this.location = location;
-		this.filename = FileOp.getFileNameUpTo(location, "Assets");
+
+		if (!this.types.contains(UnityType.PREFAB.getName()))
+			this.filename = FileOp.getFileNameUpTo(location, UnityProject.ASSETS_FOLDER_NAME);
+		else
+			this.filename = FileOp.getFileNameUpTo(location, UnityProject.RESOURCE_FOLDER_NAME);
+		
+		this.filename = FileOp.removeExtension(filename);
 	}
 
 	/**
