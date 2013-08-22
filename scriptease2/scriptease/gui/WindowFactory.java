@@ -16,9 +16,14 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.ParallelGroup;
+import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,6 +47,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
@@ -872,6 +878,7 @@ public final class WindowFactory {
 	 */
 	public JDialog buildFeedbackDialog() {
 		final String TITLE = "Send Feedback";
+		final int MAX_ATTACHMENTS = 3;
 		final JDialog feedbackDialog;
 
 		final JPanel content;
@@ -881,7 +888,8 @@ public final class WindowFactory {
 		final JScrollPane areaScrollPane;
 		final JLabel emailLabel;
 		final JTextField emailField;
-
+		final JLabel fileLabel;
+		final Map<JTextField, JButton> fileFields;
 		final GroupLayout layout;
 
 		feedbackDialog = this.buildDialog(TITLE);
@@ -891,8 +899,32 @@ public final class WindowFactory {
 		cancelButton = new JButton("Cancel");
 		commentArea = new JTextArea();
 		areaScrollPane = new JScrollPane(commentArea);
-		emailLabel = new JLabel("Email");
+		emailLabel = new JLabel("Email: ");
 		emailField = new JTextField();
+		fileLabel = new JLabel("Story Files(Optional): ");
+		fileFields = new HashMap<JTextField, JButton>();
+
+		for (int i = 0; i < MAX_ATTACHMENTS; i++)
+			fileFields.put(new JTextField(), new JButton("Browse"));
+
+		for (final Entry<JTextField, JButton> fileField : fileFields.entrySet()) {
+			JButton browseButton = fileField.getValue();
+
+			browseButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					final File filePath;
+
+					filePath = WindowFactory.getInstance().showFileChooser(
+							"Select", "",
+							new FileNameExtensionFilter("ses", "ses"));
+
+					if (filePath != null)
+						fileField.getKey().setText(filePath.getAbsolutePath());
+				}
+			});
+		}
 
 		commentArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		commentArea.setLineWrap(true);
@@ -900,7 +932,7 @@ public final class WindowFactory {
 
 		areaScrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		areaScrollPane.setPreferredSize(new Dimension(250, 250));
+		areaScrollPane.setPreferredSize(new Dimension(350, 350));
 		areaScrollPane.setBorder(BorderFactory.createTitledBorder("Feedback"));
 
 		layout = new GroupLayout(content);
@@ -916,16 +948,6 @@ public final class WindowFactory {
 					e.consume();
 					// \(^o^)/ nom nom nom
 				}
-			}
-		});
-
-		emailField.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				NetworkHandler.getInstance().sendFeedback(
-						commentArea.getText(), emailField.getText());
-				feedbackDialog.setVisible(false);
-				feedbackDialog.dispose();
 			}
 		});
 
@@ -947,27 +969,46 @@ public final class WindowFactory {
 			}
 		});
 
-		layout.setHorizontalGroup(layout
+		ParallelGroup parallelGroup;
+		SequentialGroup sequentialGroup;
+
+		parallelGroup = layout
 				.createParallelGroup()
 				.addComponent(areaScrollPane)
 				.addGroup(
 						GroupLayout.Alignment.CENTER,
 						layout.createSequentialGroup().addComponent(emailLabel)
-								.addComponent(emailField))
-				.addGroup(
-						GroupLayout.Alignment.TRAILING,
-						layout.createSequentialGroup().addComponent(sendButton)
-								.addComponent(cancelButton)));
-
-		layout.setVerticalGroup(layout
+								.addComponent(emailField));
+		sequentialGroup = layout
 				.createSequentialGroup()
 				.addComponent(areaScrollPane)
 				.addGroup(
 						layout.createParallelGroup().addComponent(emailLabel)
-								.addComponent(emailField))
-				.addGroup(
-						layout.createParallelGroup().addComponent(sendButton)
-								.addComponent(cancelButton)));
+								.addComponent(emailField)).addGap(5);
+
+		for (final Entry<JTextField, JButton> fileField : fileFields.entrySet()) {
+			final JTextField field = fileField.getKey();
+			final JButton button = fileField.getValue();
+
+			parallelGroup = parallelGroup.addGroup(
+					GroupLayout.Alignment.LEADING, layout
+							.createSequentialGroup().addComponent(fileLabel)
+							.addComponent(field).addComponent(button));
+
+			sequentialGroup = sequentialGroup.addGroup(layout
+					.createParallelGroup().addComponent(fileLabel)
+					.addComponent(field).addComponent(button));
+		}
+
+		parallelGroup = parallelGroup.addGroup(GroupLayout.Alignment.TRAILING,
+				layout.createSequentialGroup().addComponent(sendButton)
+						.addComponent(cancelButton));
+		sequentialGroup = sequentialGroup.addGap(10).addGroup(
+				layout.createParallelGroup().addComponent(sendButton)
+						.addComponent(cancelButton));
+
+		layout.setHorizontalGroup(parallelGroup);
+		layout.setVerticalGroup(sequentialGroup);
 
 		feedbackDialog.setContentPane(content);
 		feedbackDialog.pack();
