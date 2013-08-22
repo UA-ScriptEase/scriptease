@@ -48,7 +48,7 @@ public abstract class SEModel {
 	 * @throws IllegalArgumentException
 	 *             if <code>title</code> is null.
 	 */
-	public final void setTitle(String title) {
+	public void setTitle(String title) {
 		if (this.title == null)
 			throw new IllegalArgumentException(
 					"Cannot give a StoryModel a null name.");

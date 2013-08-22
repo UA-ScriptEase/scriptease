@@ -9,6 +9,7 @@ import java.util.Map;
 
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
@@ -479,6 +480,14 @@ public final class StoryModel extends SEModel {
 		}
 
 		return slot;
+	}
+
+	@Override
+	public void setTitle(String title) {
+		super.setTitle(title);
+
+		SEModelManager.getInstance().notifyChange(this,
+				SEModelEvent.Type.TITLECHANGED);
 	}
 
 	@Override

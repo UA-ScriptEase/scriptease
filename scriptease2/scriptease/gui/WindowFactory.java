@@ -67,6 +67,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -1177,7 +1178,8 @@ public final class WindowFactory {
 				activated = eventType == SEModelEvent.Type.ACTIVATED;
 
 				if (activated
-						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)) {
+						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)
+						|| (eventType == SEModelEvent.Type.TITLECHANGED)) {
 
 					final JMenuBar bar;
 
@@ -1188,8 +1190,19 @@ public final class WindowFactory {
 					String newTitle = "";
 					if (activeModel != null) {
 						String modelTitle = activeModel.getTitle();
-						if (!modelTitle.isEmpty())
-							newTitle += modelTitle + " - ";
+						String moduleTitle = "";
+
+						if (activeModel instanceof StoryModel) {
+							final StoryModel story = (StoryModel) activeModel;
+							moduleTitle = story.getModule().getLocation()
+									.getName();
+							if (!modelTitle.isEmpty() && !moduleTitle.isEmpty())
+								newTitle += modelTitle + " [" + moduleTitle
+										+ " ] - ";
+						} else {
+							if (!modelTitle.isEmpty())
+								newTitle += modelTitle + " - ";
+						}
 					}
 					newTitle += ScriptEase.TITLE + " "
 							+ ScriptEase.getInstance().getVersion();
