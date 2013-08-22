@@ -59,7 +59,7 @@ public class NetworkHandler extends Handler {
 		this.post = new HttpPost(ScriptEase.getInstance().getConfiguration(
 				ConfigurationKeys.BugServer));
 
-		System.out.println(this.post + " < > " + this.client);
+		System.out.println(this.post.getURI() + " < > " + this.client);
 	}
 
 	@Override
@@ -122,8 +122,11 @@ public class NetworkHandler extends Handler {
 			if (response.getStatusLine().getStatusCode() == NetworkHandler.HTML_SUCCESS) {
 				this.success();
 				this.buffered = null;
-			} else
+			} else {
+				System.out.println("Failed to send report. HTTP Response: "
+						+ response.getStatusLine().getStatusCode());
 				throw new IOException();
+			}
 		} catch (Throwable e) {
 			// inform the user of an error sending the report
 			this.error();
@@ -193,7 +196,7 @@ public class NetworkHandler extends Handler {
 		final String errorMessage;
 
 		errorMessage = "The reporting system was unable to connect to the server.\n"
-				+ "Please email the latest log file to scriptease@cs.ualberta.ca.";
+				+ "Please email script@cs.ualberta.ca.";
 
 		WindowFactory.getInstance().showProblemDialog("Error Report Failed",
 				errorMessage);

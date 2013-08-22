@@ -9,8 +9,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -28,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
@@ -71,6 +77,7 @@ import scriptease.util.BiHashMap;
  * 
  * @author ScriptEase Team
  * @author kschenk - major refactor to make it MVC and less buggy
+ * @author jyuen
  * 
  */
 @SuppressWarnings("serial")
@@ -84,7 +91,12 @@ class SEModelTabbedPane extends JTabbedPane {
 	protected SEModelTabbedPane() {
 		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
-		// Register a change listener for the tabs
+		// Register a mouse listener for the tabs to listen for title changes
+		TabTitleEditListener titleListener = new TabTitleEditListener(this);
+		this.addMouseListener(titleListener);
+		this.addChangeListener(titleListener);
+
+		// Register a change listener for the tabs to set the active model
 		this.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent evt) {
 				final Component tab = SEModelTabbedPane.this
@@ -173,7 +185,6 @@ class SEModelTabbedPane extends JTabbedPane {
 					// Creates a story editor panel with a story graph
 					final StoryPoint root;
 					final JComponent panel;
-					final String savedTitle;
 					String modelTitle;
 
 					root = storyModel.getRoot();
@@ -184,11 +195,7 @@ class SEModelTabbedPane extends JTabbedPane {
 					if (modelTitle == null || modelTitle.equals(""))
 						modelTitle = "<Untitled>";
 
-					savedTitle = modelTitle + "("
-							+ storyModel.getModule().getLocation().getName()
-							+ ")";
-
-					SEModelTabbedPane.this.buildTab(savedTitle, storyModel,
+					SEModelTabbedPane.this.buildTab(modelTitle, storyModel,
 							panel);
 				}
 			});
@@ -597,7 +604,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			Component component = e.getComponent();
+			final Component component = e.getComponent();
 			if (component instanceof AbstractButton) {
 				AbstractButton button = (AbstractButton) component;
 				button.setBorderPainted(true);
@@ -606,11 +613,127 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			Component component = e.getComponent();
+			final Component component = e.getComponent();
 			if (component instanceof AbstractButton) {
 				AbstractButton button = (AbstractButton) component;
 				button.setBorderPainted(false);
 			}
 		}
 	};
+
+	/**
+	 * Listens for double mouse clicks on tabs. Creates a textField over the tab
+	 * and allows the user to change the name of their story.
+	 * 
+	 * @author jyuen
+	 */
+	private class TabTitleEditListener extends MouseAdapter implements
+			ChangeListener {
+
+		private final JTextField editor;
+		private final JTabbedPane tabbedPane;
+
+		public TabTitleEditListener(final JTabbedPane tabbedPane) {
+			this.tabbedPane = tabbedPane;
+			this.editor = new JTextField();
+
+			editor.setBorder(BorderFactory.createEmptyBorder());
+			editor.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					renameTabTitle();
+				}
+			});
+			editor.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						renameTabTitle();
+					} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+						cancelEditing();
+					} else {
+						editor.setPreferredSize(editor.getText().length() > length ? null
+								: dimension);
+						tabbedPane.revalidate();
+					}
+				}
+			});
+		}
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			renameTabTitle();
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			final Rectangle rect;
+			rect = tabbedPane.getUI().getTabBounds(tabbedPane,
+					tabbedPane.getSelectedIndex());
+			if (rect != null && rect.contains(e.getPoint())
+					&& e.getClickCount() == 2) {
+				startEditing();
+			} else {
+				renameTabTitle();
+			}
+		}
+
+		private int editingIndex = -1;
+		private int length = -1;
+		private Dimension dimension;
+		private Component tabComponent = null;
+
+		private void startEditing() {
+			editingIndex = tabbedPane.getSelectedIndex();
+			tabComponent = tabbedPane.getTabComponentAt(editingIndex);
+			tabbedPane.setTabComponentAt(editingIndex, editor);
+			editor.setVisible(true);
+			editor.setText(tabbedPane.getTitleAt(editingIndex));
+			editor.selectAll();
+			editor.requestFocusInWindow();
+			length = editor.getText().length();
+			dimension = editor.getPreferredSize();
+			editor.setMinimumSize(dimension);
+		}
+
+		private void cancelEditing() {
+			if (editingIndex >= 0) {
+				tabbedPane.setTabComponentAt(editingIndex, tabComponent);
+				editor.setVisible(false);
+				editingIndex = -1;
+				length = -1;
+				tabComponent = null;
+				editor.setPreferredSize(null);
+				tabbedPane.requestFocusInWindow();
+			}
+		}
+
+		private void renameTabTitle() {
+			String title = editor.getText().trim();
+			if (editingIndex >= 0 && !title.isEmpty()) {
+				final Component tab = SEModelTabbedPane.this
+						.getSelectedComponent();
+				final SEModel model = SEModelTabbedPane.this.modelToComponent
+						.getKey(tab);
+
+				// Musn't use * - reserved for isSaved!
+				if ((!title.contains("*") && title.length() > 0)
+						|| (title.length() > 1 && title.charAt(0) == '*' && !title
+								.substring(1, title.length() - 1).contains("*"))) {
+					if (UndoManager.getInstance().isSaved(model)) {
+						tabbedPane.setTitleAt(editingIndex, title);
+					} else {
+						if (!tabbedPane.getTitleAt(0).contains("*"))
+							tabbedPane.setTitleAt(editingIndex, "*" + title);
+					}
+
+					if (tab != null && model != null) {
+						model.setTitle(title);
+					}
+				}
+			}
+
+			cancelEditing();
+		}
+	}
 }
