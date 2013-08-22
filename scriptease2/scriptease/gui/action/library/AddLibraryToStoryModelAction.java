@@ -1,10 +1,6 @@
 package scriptease.gui.action.library;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Action;
-import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.dialog.DialogBuilder;
@@ -29,12 +25,6 @@ public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
 		this.setEnabled(true);
 
 		this.library = library;
-
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
-		this.putValue(
-				Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK
-						+ ActionEvent.SHIFT_MASK));
 	}
 
 	@Override

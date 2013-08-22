@@ -1,7 +1,6 @@
 package scriptease.model.complex;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.StoryVisitor;
@@ -203,10 +202,6 @@ public final class AskIt extends ComplexStoryComponent {
 	public void setEnabled(Boolean enabled) {
 		super.setEnabled(enabled);
 
-		final Collection<StoryComponent> descendents = this.getDescendents();
-		for (StoryComponent descendent : descendents) {
-			descendent.setEnabled(enabled);
-		}
 		condition.setEnabled(enabled);
 
 		// Enable the descriptions that are used as bindings if this
