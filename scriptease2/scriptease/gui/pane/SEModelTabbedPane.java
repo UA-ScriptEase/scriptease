@@ -35,6 +35,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -105,23 +106,17 @@ class SEModelTabbedPane extends JTabbedPane {
 						if (event.getEventType() == SEModelEvent.Type.REMOVED) {
 							tabs.removeTabForModel(model);
 						} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
-
-							// TODO I don't see the below statement as a problem
-							// anymore but uncomment if it is?
-							
 							// We need to delay this until the model is loaded
 							// because it switches tabs to the new tab, which
 							// fires the previously created change listener,
 							// which causes a ConcurrentModificationException,
 							// which kills the ScriptEase.
-							// SwingUtilities.invokeLater(new Runnable() {
-							// @Override
-							// public void run() {
-							// tabs.createTabForModel(model);
-							// }
-							// });
-							
-							tabs.createTabForModel(model);
+							SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+									tabs.createTabForModel(model);
+								}
+							});
 						}
 					}
 				});
@@ -649,9 +644,8 @@ class SEModelTabbedPane extends JTabbedPane {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			cancelEditing();
-			
-			final Component tab = SEModelTabbedPane.this
-					.getSelectedComponent();
+
+			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
 			final SEModel model = SEModelTabbedPane.this.modelToComponent
 					.getKey(tab);
 
@@ -683,12 +677,11 @@ class SEModelTabbedPane extends JTabbedPane {
 			tabComponent = tabbedPane.getTabComponentAt(editingIndex);
 			tabbedPane.setTabComponentAt(editingIndex, editor);
 			editor.setVisible(true);
-			
-			final Component tab = SEModelTabbedPane.this
-					.getSelectedComponent();
+
+			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
 			final SEModel model = SEModelTabbedPane.this.modelToComponent
 					.getKey(tab);
-			
+
 			editor.setText(model.getTitle());
 			editor.selectAll();
 			editor.requestFocusInWindow();

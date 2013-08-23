@@ -14,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 
+import scriptease.controller.FileManager;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
 import scriptease.controller.io.converter.fragment.FormatDefinitionFragmentConverter;
@@ -354,64 +355,69 @@ public class FileIO {
 
 		FileOutputStream fileOut = null;
 
-		if (createBackup) {
+		if (createBackup && location.exists()) {
 			final File backupLocation;
 
-			backupLocation = FileOp.replaceExtension(location,
-					FileOp.getExtension(location) + "_backup");
-			// Create/empty the file we're saving to,
-			try {
-				if ((backupLocation.exists() && !backupLocation.delete())
-						|| !location.renameTo(backupLocation))
-					System.err.println("Failed to create a backup file for "
-							+ backupLocation + "!");
+			backupLocation = new File(location.getAbsolutePath().concat(
+					"_backup"));
 
+			try {
+				FileOp.copyFile(location, backupLocation);
+			} catch (IOException e) {
+				Thread.currentThread()
+						.getUncaughtExceptionHandler()
+						.uncaughtException(
+								Thread.currentThread(),
+								new IOException(
+										"Exception when creating backup file :"
+												+ e));
+			}
+		}
+
+		if (!location.exists()) {
+			try {
 				location.createNewFile();
 			} catch (IOException e) {
-				Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
-						Thread.currentThread(), e);
+				Thread.currentThread()
+						.getUncaughtExceptionHandler()
+						.uncaughtException(
+								Thread.currentThread(),
+								new IOException(
+										"Couldn't create save file location: "
+												+ e));
 			}
 		}
 
 		// save the ScriptEase patterns.
+		final File tempLocation = FileManager.getInstance().createTempFile(
+				"tmp", ".ses", location.getParentFile(), 100);
+
 		try {
-			fileOut = new FileOutputStream(location);
+			fileOut = new FileOutputStream(tempLocation);
 			this.buildXStream().toXML(dataModel, fileOut);
-		} catch (IOException e) {
-			System.err.println("Patterns save problem: Could not access "
-					+ location.getAbsolutePath());
+
+			// If we reached this point, we've succeeded so now we'll copy the
+			// contents on the actual desired location
+			FileOp.copyFile(tempLocation, location);
+		} catch (Exception e) {
+			System.err.println("Patterns save problem: " + e);
 
 			boolean retry = WindowFactory.getInstance().showRetryProblemDialog(
 					"Save Patterns File",
-					"ScriptEase was unable to access "
-							+ location.getAbsolutePath());
+					"ScriptEase was unable save your story.");
 
 			if (retry)
-				this.writeData(dataModel, location, mode, true);
-			/*
-			 * TODO #54926402
-			 * 
-			 * Save the XML file to a temporary file first. If there are no
-			 * exceptions, then we copy its contents to the actual location and
-			 * delete the temporary file. Else if there were exceptions, just
-			 * destroy the temporary file and show the exception dialog.
-			 * 
-			 * This will be MUCH safer than whatever we're doing now, which just
-			 * nukes the file.
-			 * 
-			 * To find out if there was an exception, we could catch any
-			 * exception ever. To test if it works, throw an exception in one of
-			 * the converters' marshall methods.
-			 */
+				this.writeData(dataModel, location, mode, false);
 		} finally {
 			try {
 				if (fileOut != null)
 					fileOut.close();
-			} catch (IOException e2) {
+			} catch (IOException e) {
 				System.err
 						.println("Failed to close an output file connection.");
 			}
 
+			FileManager.getInstance().deleteTempFile(tempLocation);
 			this.mode = prevMode;
 		}
 	}

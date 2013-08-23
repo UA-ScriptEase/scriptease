@@ -51,15 +51,20 @@ public class StoryModelConverter implements Converter {
 			libraryNames.add(library.getTitle());
 		}
 
-		XMLNode.TITLE.writeString(writer, model.getTitle());
-		XMLNode.AUTHOR.writeString(writer, model.getAuthor());
-		XMLNode.VERSION.writeString(writer, model.getCompatibleVersion());
-		XMLNode.TRANSLATOR.writeString(writer, model.getTranslator().getName());
-		XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
-		XMLNode.GAME_MODULE.writeString(writer, modulePath);
-		XMLNode.DIALOGUES
-				.writeObject(writer, context, model.getDialogueRoots());
-		XMLNode.START_STORY_POINT.writeObject(writer, context, model.getRoot());
+			XMLNode.TITLE.writeString(writer, model.getTitle());
+			XMLNode.AUTHOR.writeString(writer, model.getAuthor());
+			XMLNode.VERSION.writeString(writer, model.getCompatibleVersion());
+			XMLNode.TRANSLATOR.writeString(writer, model.getTranslator()
+					.getName());
+			XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
+			XMLNode.GAME_MODULE.writeString(writer, modulePath);
+			XMLNode.DIALOGUES.writeObject(writer, context,
+					model.getDialogueRoots());
+			XMLNode.START_STORY_POINT.writeObject(writer, context,
+					model.getRoot());
+
+			throw new IllegalStateException("WORKS MUAHAHA");
+
 	}
 
 	@Override
