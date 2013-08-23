@@ -1,4 +1,4 @@
-<LibraryModel name="ColourLibrary" author="ScriptEase Team" description="The Library contains the Colour type so you don&apos;t have to deal &lt;br&gt;with RGB values. &lt;br&gt;&lt;br&gt;i.e. Instead of remembering the RGB values for Black, you can just use the &lt;br&gt;description &quot;Black describes...&quot;">
+<LibraryModel name="ColourLibrary" author="ScriptEase Team" description="This Library contains the Colour type so you don&apos;t have to deal &lt;br&gt;with RGB values. &lt;br&gt;&lt;br&gt;i.e. Instead of remembering the RGB values for Black, you can just use the &lt;br&gt;description &quot;Black describes...&quot;">
   <IncludeFiles/>
   <Types>
     <Type>
@@ -661,22 +661,57 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[13]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[2]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[9]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[6]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[13]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[3]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[6]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[9]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
     <ScriptIt reference="/LibraryModel/Effects/ScriptIt[5]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
+    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
+    <ScriptIt>
+      <Name>a random colour </Name>
+      <Visible>false</Visible>
+      <Enabled>true</Enabled>
+      <Labels>
+        <Label>COLOUR</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>a random colour </Name>
+          <Visible>true</Visible>
+          <Enabled>true</Enabled>
+          <Labels/>
+          <Id>19</Id>
+          <Types>
+            <Type>Colour</Type>
+          </Types>
+          <Code>
+            <Line>
+              <Literal>var red : float = Random.Range(0.0, 1.0);</Literal>
+            </Line>
+            <Line>
+              <Literal>var green : float = Random.Range(0.0, 1.0);</Literal>
+            </Line>
+            <Line>
+              <Literal>var blue : float = Random.Range(0.0, 1.0);</Literal>
+            </Line>
+            <Line>
+              <Literal>return Color(red, green, blue);</Literal>
+            </Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </ScriptIt>
   </Effects>
   <DescribeIts>
     <DescribeIt>
-      <Name>Yellow</Name>
+      <Name>Cyan</Name>
       <Types>
         <Type>Colour</Type>
       </Types>
@@ -689,25 +724,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Colour</Name>
-      <Types>
-        <Type>Colour</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[2]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[6]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -723,14 +740,32 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[9]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Cyan</Name>
+      <Name>Yellow</Name>
+      <Types>
+        <Type>Colour</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[3]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Black</Name>
       <Types>
         <Type>Colour</Type>
       </Types>
@@ -743,12 +778,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[4]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[6]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Colour</Name>
+      <Name>Green</Name>
       <Types>
         <Type>Colour</Type>
       </Types>
@@ -761,7 +796,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[5]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -784,24 +819,6 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Green</Name>
-      <Types>
-        <Type>Colour</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[8]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
       <Name>Blue</Name>
       <Types>
         <Type>Colour</Type>
@@ -813,7 +830,7 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[3]"/>
         </Entry>
@@ -831,9 +848,27 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Colour</Name>
+      <Types>
+        <Type>Colour</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[2]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -856,7 +891,7 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Black</Name>
+      <Name>White</Name>
       <Types>
         <Type>Colour</Type>
       </Types>
@@ -869,12 +904,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[4]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>White</Name>
+      <Name>Random Colour</Name>
       <Types>
         <Type>Colour</Type>
       </Types>
@@ -887,7 +922,25 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[12]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[29]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Colour</Name>
+      <Types>
+        <Type>Colour</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[13]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt"/>
         </Entry>
       </PathMap>
     </DescribeIt>
