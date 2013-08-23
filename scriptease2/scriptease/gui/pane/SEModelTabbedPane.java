@@ -657,8 +657,13 @@ class SEModelTabbedPane extends JTabbedPane {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			final Rectangle rect;
-			rect = tabbedPane.getUI().getTabBounds(tabbedPane,
-					tabbedPane.getSelectedIndex());
+
+			int index = tabbedPane.getSelectedIndex();
+
+			if (index == -1)
+				return;
+			
+			rect = tabbedPane.getUI().getTabBounds(tabbedPane, index);
 			if (rect != null && rect.contains(e.getPoint())
 					&& e.getClickCount() == 2) {
 				startEditing();
