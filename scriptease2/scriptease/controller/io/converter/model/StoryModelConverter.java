@@ -62,9 +62,6 @@ public class StoryModelConverter implements Converter {
 					model.getDialogueRoots());
 			XMLNode.START_STORY_POINT.writeObject(writer, context,
 					model.getRoot());
-
-			throw new IllegalStateException("WORKS MUAHAHA");
-
 	}
 
 	@Override
