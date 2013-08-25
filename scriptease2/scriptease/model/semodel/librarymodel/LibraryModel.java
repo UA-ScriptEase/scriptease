@@ -1134,11 +1134,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void addSlots(Collection<Slot> slots) {
 		this.slotManager.addEventSlots(slots, this);
 	}
-	
+
 	public String getInformation() {
 		return this.information;
 	}
-	
+
 	public void setInformation(String information) {
 		this.information = information;
 	}
