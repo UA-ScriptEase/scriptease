@@ -202,7 +202,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(2, KeyEvent.VK_3);
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
-		
+
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);

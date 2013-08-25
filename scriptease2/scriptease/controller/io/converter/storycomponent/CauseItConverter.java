@@ -31,8 +31,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class CauseItConverter extends ScriptItConverter {
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class. 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {

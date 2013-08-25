@@ -16,6 +16,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
@@ -139,6 +140,38 @@ public final class StoryModel extends SEModel {
 	public void addLibrary(LibraryModel library) {
 		if (!this.optionalLibraries.contains(library)) {
 			this.optionalLibraries.add(library);
+
+			// Get the Is Active Description from the default library.
+			KnowIt isActiveDescription = null;
+			outer: for (LibraryModel existingLibrary : this.getLibraries()) {
+				for (StoryComponent description : existingLibrary
+						.getDescriptionsCategory().getChildren()) {
+
+					if (description instanceof KnowIt
+							&& description.getDisplayText().contains(
+									"Is Active")) {
+						isActiveDescription = (KnowIt) description;
+						break outer;
+					}
+				}
+			}
+
+			// Add the active description and question to optional library
+			// causes. We have to do this here instead of the apidictionary
+			// because optional libraries do not have the is active description.
+			if (isActiveDescription != null) {
+				for (StoryComponent cause : library.getCausesCategory()
+						.getChildren()) {
+
+					final CauseIt causeIt = (CauseIt) cause;
+					final KnowIt knowIt = isActiveDescription.clone();
+					final AskIt askIt = new AskIt();
+
+					causeIt.addStoryChild(knowIt);
+					causeIt.addStoryChild(askIt);
+					askIt.getCondition().setBinding(knowIt);
+				}
+			}
 
 			for (StoryModelObserver observer : this.observerManager
 					.getObservers()) {
