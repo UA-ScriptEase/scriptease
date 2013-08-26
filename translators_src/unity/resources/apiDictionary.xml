@@ -2529,18 +2529,18 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When the &lt;Scene&gt;&apos;s &lt;GUI&gt; is updated</Name>
+      <Name>When the &lt;GUI&gt; is updated</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When the &lt;Scene&gt;&apos;s &lt;GUI&gt; is updated</Name>
+          <Name>When the &lt;GUI&gt; is updated</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Subject>Scene</Subject>
+          <Subject>ScriptEase</Subject>
           <Slot>OnGUI</Slot>
           <Id>32</Id>
           <Types>
@@ -2548,13 +2548,14 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>Scene</Name>
+              <Name>ScriptEase</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>Scene</Type>
+                <Type>GameObject</Type>
               </Types>
+              <Binding flavour="automatic"/>
             </KnowIt>
           </Parameters>
           <Code>
