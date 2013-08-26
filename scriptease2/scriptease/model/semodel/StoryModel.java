@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import scriptease.controller.ModelVisitor;
@@ -13,6 +14,9 @@ import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
@@ -294,6 +298,45 @@ public final class StoryModel extends SEModel {
 		}
 
 		return includes;
+	}
+
+	/**
+	 * TODO SCENE FILE AUTOMATICS REMOVE LATER
+	 * @param storyPoints
+	 */
+	public void setAutomaticSceneBindings(Collection<StoryPoint> storyPoints) {
+		for (StoryPoint storyPoint : storyPoints) {
+			for (StoryComponent component : storyPoint.getChildren()) {
+				if (component instanceof CauseIt) {
+					final CauseIt cause = (CauseIt) component;
+
+					final KnowIt subject = cause.getMainCodeBlock()
+							.getSubject();
+
+					if (subject.getDisplayText().contains("Scene")) {
+
+						final Collection<Resource> automatics = module
+								.getAutomaticHandlers();
+
+						for (Resource automatic : automatics) {
+							final Resource owner = automatic.getOwner();
+							final KnowItBinding binding = subject.getBinding();
+
+							if (binding instanceof KnowItBindingResource) {
+								final KnowItBindingResource resourceBinding;
+								resourceBinding = (KnowItBindingResource) binding;
+
+								if (resourceBinding.getResource() == owner) {
+//									subject.setBinding(automatic);
+									
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**

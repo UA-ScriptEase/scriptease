@@ -70,7 +70,13 @@ public class ScopeFragment extends AbstractContainerFragment {
 	private Object getScope(Context context) {
 		final ScopeType scope;
 
-		scope = ScopeType.valueOf(this.getDirectiveText().toUpperCase());
+		final String directiveText = this.getDirectiveText();
+		try {
+			scope = ScopeType.valueOf(directiveText.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			System.out.println("Couldn't find the value of : " + directiveText);
+			return null;
+		}
 
 		// IF+ELSE BLOCK (scope data= <dataLabel> )
 		switch (scope) {
