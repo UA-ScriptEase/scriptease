@@ -116,6 +116,10 @@ public class KnowItBindingResource extends KnowItBinding {
 		return !(this.resource instanceof SimpleResource);
 	}
 
+	public Resource getResource() {
+		return this.resource;
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if (this.resource.getCodeText() != null)
@@ -129,7 +133,7 @@ public class KnowItBindingResource extends KnowItBinding {
 	public KnowItBinding resolveBinding() {
 		return this;
 	}
-
+	
 	/**
 	 * No need to clone constants, that is why they are constant.
 	 * 

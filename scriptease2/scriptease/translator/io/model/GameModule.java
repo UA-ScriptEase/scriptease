@@ -240,8 +240,6 @@ public abstract class GameModule {
 					subject = codeBlock.getSubject();
 					key = subject.getBinding().toString() + slot;
 
-					// GameModule.this.getAutomaticHandlers();
-
 					bucket = new ArrayList<CodeBlock>();
 
 					existingBucket = subjectToCodeBlocks.get(key);
@@ -272,7 +270,7 @@ public abstract class GameModule {
 
 		return scriptBuckets;
 	}
-	
+
 	/**
 	 * This returns the keyword for the image type. It is used in
 	 * {@link DialogueLine}s right now but may have other functionality in the
