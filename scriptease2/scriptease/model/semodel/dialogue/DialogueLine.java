@@ -58,7 +58,7 @@ public final class DialogueLine extends EditableResource {
 	 * @param speaker
 	 */
 	public DialogueLine(StoryModel story, Speaker speaker, String dialogue) {
-		this(story, speaker, dialogue, uniqueNumberCount++, true, null, null,
+		this(story, speaker, dialogue, ++uniqueNumberCount, true, null, null,
 				new ArrayList<Resource>());
 	}
 
