@@ -2529,7 +2529,7 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When the &lt;GUI&gt; is updated</Name>
+      <Name>When the &lt;Scene&gt;&apos; &lt;GUI&gt; is updated</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
       <Labels/>
@@ -2540,7 +2540,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Subject>ScriptEase</Subject>
+          <Subject>Scene</Subject>
           <Slot>OnGUI</Slot>
           <Id>32</Id>
           <Types>
@@ -2548,14 +2548,13 @@
           </Types>
           <Parameters>
             <KnowIt>
-              <Name>ScriptEase</Name>
+              <Name>Scene</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>GameObject</Type>
+                <Type>Scene</Type>
               </Types>
-              <Binding flavour="automatic"/>
             </KnowIt>
           </Parameters>
           <Code>

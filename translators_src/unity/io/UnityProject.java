@@ -146,16 +146,16 @@ public final class UnityProject extends GameModule {
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
 		for (ScriptInfo scriptInfo : scriptList) {
+			final Resource subject = scriptInfo.getSubject();
 
 			for (UnityFile scene : this.scenes) {
-				if (scene.getObjectByTemplateID(scriptInfo.getSubject()
-						.getTemplateID()) != null) {
+				if (scene.getTemplateID().equals(subject.getTemplateID())
+						|| scene.getObjectByTemplateID(subject.getTemplateID()) != null) {
 					this.scripts.add(new UnityScript(scriptInfo, scene));
 				}
 			}
 
 			for (UnityFile prefab : this.prefabs) {
-				final Resource subject = scriptInfo.getSubject();
 				if (subject.getTemplateID().equals(prefab.getTemplateID())) {
 					this.scripts.add(new UnityScript(scriptInfo, prefab));
 				}
@@ -335,7 +335,7 @@ public final class UnityProject extends GameModule {
 		guiSkinFilter = FileOp.createExtensionFilter("guiskin");
 		prefabFilter = FileOp
 				.createExtensionFilter(UnityFile.PREFAB_FILE_EXTENSION);
-		
+
 		resourceFolders = FileOp.findFiles(this.projectLocation,
 				resourceFolderFilter);
 
@@ -386,8 +386,9 @@ public final class UnityProject extends GameModule {
 		for (File file : files) {
 			final SimpleResource resource;
 
-			String name = FileOp.getFileNameUpTo(file, UnityProject.RESOURCE_FOLDER_NAME);
-			
+			String name = FileOp.getFileNameUpTo(file,
+					UnityProject.RESOURCE_FOLDER_NAME);
+
 			name = FileOp.removeExtension(name);
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);

@@ -46,17 +46,15 @@ public class KnowItBindingAutomatic extends KnowItBinding {
 
 		final SEModel seModel = SEModelManager.getInstance().getActiveModel();
 
-		if (seModel == null)
-			return new SimpleResource(new ArrayList<String>(), "");
-
 		if (seModel instanceof StoryModel) {
 			StoryModel storyModel = (StoryModel) seModel;
 			automatics.addAll(storyModel.getModule().getAutomaticHandlers());
 		}
 
-		final Resource automatic = automatics.get(0);
-
-		return automatic;
+		if (automatics.isEmpty())
+			return new SimpleResource(new ArrayList<String>(), "No Automatic Handlers");
+		else
+			return automatics.get(0);
 	}
 
 	@Override
