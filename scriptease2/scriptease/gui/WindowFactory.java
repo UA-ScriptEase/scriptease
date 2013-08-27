@@ -56,6 +56,7 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
+import scriptease.gui.action.libraryeditor.MergeLibraryAction;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
@@ -742,6 +743,103 @@ public final class WindowFactory {
 				Dialog.ModalityType.DOCUMENT_MODAL);
 
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		return dialog;
+	}
+
+	/**
+	 * Creates a dialog that lets the user choose which library they would like
+	 * to merge into the existing one.
+	 * 
+	 * @param translator
+	 */
+	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
+		final String TITLE = "Library to Merge";
+
+		final JDialog dialog;
+
+		final JPanel content;
+		final JLabel message;
+		final JComboBox libraryChoice;
+		final JButton mergeButton;
+		final JButton cancelButton;
+
+		final GroupLayout layout;
+
+		dialog = this.buildDialog(TITLE);
+
+		content = new JPanel();
+		message = new JLabel("Which Library would you like to merge?");
+		libraryChoice = new JComboBox();
+		mergeButton = new JButton("Merge");
+		cancelButton = new JButton("Cancel");
+
+		layout = new GroupLayout(content);
+
+		content.setLayout(layout);
+
+		final SEModel currentLibrary = SEModelManager.getInstance()
+				.getActiveModel();
+
+		if (translator.getLibrary() != currentLibrary)
+			libraryChoice.addItem(translator.getLibrary());
+
+		for (LibraryModel library : translator.getOptionalLibraries()) {
+			if (library != currentLibrary)
+				libraryChoice.addItem(library);
+		}
+
+		mergeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Object selectedItem = libraryChoice.getSelectedItem();
+
+				if (selectedItem instanceof LibraryModel) {
+					final LibraryModel library = (LibraryModel) selectedItem;
+					MergeLibraryAction.getInstance().mergeLibrary(library);
+				}
+				
+				dialog.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
+
+		final JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+
+		layout.setHorizontalGroup(layout
+				.createParallelGroup()
+				.addComponent(message)
+				.addComponent(libraryChoice)
+				.addComponent(separator)
+				.addGroup(
+						GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup()
+								.addComponent(mergeButton)
+								.addComponent(cancelButton)));
+
+		layout.setVerticalGroup(layout
+				.createSequentialGroup()
+				.addComponent(message)
+				.addComponent(libraryChoice)
+				.addComponent(separator)
+				.addGroup(
+						layout.createParallelGroup().addComponent(mergeButton)
+								.addComponent(cancelButton)).addGap(0));
+
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		dialog.setContentPane(content);
+		dialog.pack();
+		dialog.setResizable(false);
+		dialog.setLocationRelativeTo(dialog.getParent());
+
 		return dialog;
 	}
 
