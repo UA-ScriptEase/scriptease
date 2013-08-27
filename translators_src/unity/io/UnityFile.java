@@ -120,8 +120,6 @@ public class UnityFile extends Resource {
 			this.filename = FileOp.getFileNameUpTo(location, UnityProject.ASSETS_FOLDER_NAME);
 		else
 			this.filename = FileOp.getFileNameUpTo(location, UnityProject.RESOURCE_FOLDER_NAME);
-		
-		// this.filename = FileOp.removeExtension(filename);
 	}
 
 	/**

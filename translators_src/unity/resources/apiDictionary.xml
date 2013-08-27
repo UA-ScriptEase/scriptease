@@ -2529,14 +2529,14 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When the &lt;Scene&gt;&apos; &lt;GUI&gt; is updated</Name>
+      <Name>When the &lt;Scene&gt;&apos;s &lt;GUI&gt; is updated</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When the &lt;GUI&gt; is updated</Name>
+          <Name>When the &lt;Scene&gt;&apos;s &lt;GUI&gt; is updated</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
