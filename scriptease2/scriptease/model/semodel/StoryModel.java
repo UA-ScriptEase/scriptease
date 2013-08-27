@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import scriptease.controller.ModelVisitor;
@@ -14,8 +13,6 @@ import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
@@ -297,35 +294,6 @@ public final class StoryModel extends SEModel {
 		}
 
 		return includes;
-	}
-
-	/**
-	 * Attaches the automatic bindings for any causes in the given story points,
-	 * if an automatic binding is required for the specific cause as outlined in
-	 * the API dictionary.
-	 * 
-	 * @param storyPoints
-	 *            The collection of story points that automatic bindings should
-	 *            be attached to.
-	 */
-	public void setAutomaticBindings(Collection<StoryPoint> storyPoints) {
-		for (StoryPoint storyPoint : storyPoints) {
-			for (StoryComponent component : storyPoint.getChildren()) {
-				if (component instanceof CauseIt) {
-					final CauseIt cause = (CauseIt) component;
-					for (KnowIt parameter : cause.getParameters()) {
-
-						final KnowItBinding binding = parameter.getBinding();
-						if (binding instanceof KnowItBindingAutomatic) {
-							final List<Resource> automatics = new ArrayList<Resource>();
-							automatics.addAll(module.getAutomaticHandlers());
-
-							parameter.setBinding(automatics.get(0));
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**
