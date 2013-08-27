@@ -84,7 +84,6 @@ public class CodeBlockReference extends CodeBlock {
 		// parameters
 		for (KnowIt parameter : originalParameters) {
 			final KnowIt clonedParameter = parameter.clone();
-
 			clonedParameters.add(clonedParameter);
 		}
 

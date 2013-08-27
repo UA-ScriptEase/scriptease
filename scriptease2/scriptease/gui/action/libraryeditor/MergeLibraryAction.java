@@ -2,12 +2,18 @@ package scriptease.gui.action.libraryeditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
+import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockSource;
+import scriptease.model.StoryComponent;
+import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
@@ -51,8 +57,9 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 		if (library == null)
 			return;
 
-		WindowFactory.getInstance().buildMergeLibraryChoiceDialog(
-				library.getTranslator());
+		WindowFactory.getInstance()
+				.buildMergeLibraryChoiceDialog(library.getTranslator())
+				.setVisible(true);
 	}
 
 	/**
@@ -67,9 +74,49 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 		if (library == null || libraryToMerge == null
 				|| library == libraryToMerge)
 			return;
-		
-		//final StoryComponentlibraryToMerge.getCausesCategory();
-		
-		
+
+		final StoryComponentContainer causes = libraryToMerge
+				.getCausesCategory();
+		final StoryComponentContainer effects = libraryToMerge
+				.getEffectsCategory();
+		final StoryComponentContainer descriptions = libraryToMerge
+				.getDescriptionsCategory();
+		final StoryComponentContainer controls = libraryToMerge
+				.getControllersCategory();
+
+//		// Add the include files
+//		final Collection<String> includeFiles = library.getIncludeFilePaths();
+//		includeFiles.addAll(libraryToMerge.getIncludeFilePaths());
+//		library.setIncludeFilePaths(includeFiles);
+//
+//		for (StoryComponent cause : causes.getChildren()) {
+//			CauseIt causeIt = (CauseIt) cause;
+//
+//			CauseIt clone = causeIt.clone();
+//
+//			for (CodeBlock codeBlock : clone.getCodeBlocks())
+//				clone.removeCodeBlock(codeBlock);
+//
+//			for (CodeBlock codeBlock : causeIt.getCodeBlocks()) {
+//				if (codeBlock instanceof CodeBlockSource) {
+//					CodeBlockSource source = (CodeBlockSource) codeBlock;
+//					clone.addCodeBlock(source.copySource());
+//				}
+//			}
+//
+//			library.add(clone);
+//		}
+//
+//		for (StoryComponent effect : effects.getChildren()) {
+//			library.add(effect.clone());
+//		}
+//
+//		for (StoryComponent description : descriptions.getChildren()) {
+//			library.add(description.clone());
+//		}
+//
+//		for (StoryComponent control : controls.getChildren()) {
+//			library.add(control.clone());
+//		}
 	}
 }
