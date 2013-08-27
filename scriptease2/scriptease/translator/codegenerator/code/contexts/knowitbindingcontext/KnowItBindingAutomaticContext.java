@@ -41,12 +41,12 @@ public class KnowItBindingAutomaticContext extends KnowItBindingContext {
 	@Override
 	public String getValue() {
 		final List<Resource> automatics = new ArrayList<Resource>();
-		
+
 		automatics.addAll(this.getModel().getModule().getAutomaticHandlers());
 
-		final Resource automatic = automatics.get(0);
-		
-		return automatic.getCodeText();
+		if (!automatics.isEmpty())
+			return automatics.get(0).getCodeText();
+		else
+			return "No automatics found";
 	}
-
 }
