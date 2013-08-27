@@ -177,6 +177,10 @@ public class CodeBlockSource extends CodeBlock {
 		// Sources can't be cloned, since they're supposed to be unique.
 		return new CodeBlockReference(this);
 	}
+	
+	public CodeBlock copySource() {
+		return super.clone();
+	}
 
 	/**
 	 * Creates a duplicate of the CodeBlock with the given ID assigned. This is
