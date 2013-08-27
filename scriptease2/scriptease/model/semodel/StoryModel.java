@@ -16,7 +16,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
@@ -301,37 +300,27 @@ public final class StoryModel extends SEModel {
 	}
 
 	/**
-	 * TODO SCENE FILE AUTOMATICS REMOVE LATER
+	 * Attaches the automatic bindings for any causes in the given story points,
+	 * if an automatic binding is required for the specific cause as outlined in
+	 * the API dictionary.
+	 * 
 	 * @param storyPoints
+	 *            The collection of story points that automatic bindings should
+	 *            be attached to.
 	 */
-	public void setAutomaticSceneBindings(Collection<StoryPoint> storyPoints) {
+	public void setAutomaticBindings(Collection<StoryPoint> storyPoints) {
 		for (StoryPoint storyPoint : storyPoints) {
 			for (StoryComponent component : storyPoint.getChildren()) {
 				if (component instanceof CauseIt) {
 					final CauseIt cause = (CauseIt) component;
+					for (KnowIt parameter : cause.getParameters()) {
 
-					final KnowIt subject = cause.getMainCodeBlock()
-							.getSubject();
+						final KnowItBinding binding = parameter.getBinding();
+						if (binding instanceof KnowItBindingAutomatic) {
+							final List<Resource> automatics = new ArrayList<Resource>();
+							automatics.addAll(module.getAutomaticHandlers());
 
-					if (subject.getDisplayText().contains("Scene")) {
-
-						final Collection<Resource> automatics = module
-								.getAutomaticHandlers();
-
-						for (Resource automatic : automatics) {
-							final Resource owner = automatic.getOwner();
-							final KnowItBinding binding = subject.getBinding();
-
-							if (binding instanceof KnowItBindingResource) {
-								final KnowItBindingResource resourceBinding;
-								resourceBinding = (KnowItBindingResource) binding;
-
-								if (resourceBinding.getResource() == owner) {
-//									subject.setBinding(automatic);
-									
-									break;
-								}
-							}
+							parameter.setBinding(automatics.get(0));
 						}
 					}
 				}
