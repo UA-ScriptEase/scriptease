@@ -138,16 +138,14 @@ public class CodeGenerator {
 
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
-			final Collection<StoryComponent> automatics;
+			final Collection<StoryComponent> automaticCauses;
 			final Collection<Set<CodeBlock>> scriptBuckets;
 
-			model.setAutomaticBindings(this.generatingStoryPoints);
-
 			// Set the automatic bindings for any causes that require one.
-			automatics = model.generateAutomaticCauses();
+			automaticCauses = model.generateAutomaticCauses();
 
 			// Temporarily add automatics.
-			root.addStoryChildren(automatics);
+			root.addStoryChildren(automaticCauses);
 
 			// aggregate the scripts based on the storyPoints
 			scriptBuckets = module
@@ -164,7 +162,7 @@ public class CodeGenerator {
 			}
 
 			// Remove the automatics from the story again.
-			root.removeStoryChildren(automatics);
+			root.removeStoryChildren(automaticCauses);
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
 		}
