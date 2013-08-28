@@ -59,7 +59,7 @@ import scriptease.util.FileOp;
  */
 public final class FileManager {
 	private static final String SAVE_AS = Il8nResources
-			.getString("Save_Model_As");
+			.getString("Save_Model");
 
 	private static final String SAVE_AS_PACKAGE = "Save As Package";
 	/**
