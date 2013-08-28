@@ -84,7 +84,10 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 
 		// Add the include files
 		final Collection<String> includeFiles = library.getIncludeFilePaths();
-		includeFiles.addAll(libraryToMerge.getIncludeFilePaths());
+		for(String includeFile : libraryToMerge.getIncludeFilePaths()) {
+			if (!includeFiles.contains(includeFile))
+				includeFiles.add(includeFile);
+		}
 
 		// Add the types
 		library.addGameTypes(libraryToMerge.getGameTypes());

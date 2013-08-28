@@ -177,6 +177,15 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
+				for (StoryComponent child : this.model.effectsCategory
+						.getChildren()) {
+					final ScriptIt scriptItChild = (ScriptIt) child;
+
+					if (scriptIt.getMainCodeBlock().getId() == scriptItChild
+							.getMainCodeBlock().getId())
+						return;
+				}
+
 				final boolean success = this.model.effectsCategory
 						.addStoryChild(scriptIt);
 				if (success)
