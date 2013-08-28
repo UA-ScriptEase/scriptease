@@ -12,7 +12,7 @@ import scriptease.model.semodel.SEModelManager;
  * generate code.
  * 
  * @author mfchurch
- * 
+ * @author jyuen
  */
 public class Slot {
 	private String displayName;
@@ -32,6 +32,19 @@ public class Slot {
 		this.parameters.addAll(parameters);
 		this.formatKeyword = formatKeyword;
 		this.condition = condition;
+	}
+
+	public Slot clone() {
+		final Collection<KnowIt> implicits = new ArrayList<KnowIt>();
+		for (KnowIt implicit : this.implicits)
+			implicits.add(implicit.clone());
+
+		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
+		for (KnowIt parameter : this.parameters)
+			parameters.add(parameter.clone());
+
+		return new Slot(this.displayName, this.keyword, parameters, implicits,
+				this.formatKeyword, this.condition);
 	}
 
 	/**
@@ -84,6 +97,10 @@ public class Slot {
 	 */
 	public Collection<KnowIt> getImplicits() {
 		return new ArrayList<KnowIt>(this.implicits);
+	}
+	
+	public void setImplicits(Collection<KnowIt> implicits) {
+		this.implicits = implicits;
 	}
 
 	public void addImplicit(KnowIt implicit) {
