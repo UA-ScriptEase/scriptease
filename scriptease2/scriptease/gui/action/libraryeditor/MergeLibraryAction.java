@@ -15,6 +15,7 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.ScriptIt;
@@ -122,8 +123,8 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 		// Add the causes, descriptions, effects, and controls
 		final StoryComponentContainer causes = libraryToMerge
 				.getCausesCategory();
-		final Collection<DescribeIt> describeIts = libraryToMerge
-				.getDescribeIts();
+		final StoryComponentContainer descriptions = libraryToMerge
+				.getDescriptionsCategory();
 		final StoryComponentContainer effects = libraryToMerge
 				.getEffectsCategory();
 		final StoryComponentContainer controls = libraryToMerge
@@ -133,40 +134,62 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 			library.add(this.cloneScriptIt((ScriptIt) cause, library));
 		}
 
-		for (DescribeIt describeIt : describeIts) {
-			library.add(describeIt);
+		for (StoryComponent control : controls.getChildren()) {
+			library.add(this.cloneScriptIt((ScriptIt) control, library));
 		}
 
 		for (StoryComponent effect : effects.getChildren()) {
-			final ScriptIt scriptIt = (ScriptIt) effect;
-			final ScriptIt clone = this.cloneScriptIt(scriptIt, library);
+			library.add(this.cloneScriptIt((ScriptIt) effect, library));
+		}
 
-			final StoryComponentContainer descrips = library
-					.getDescriptionsCategory();
+		for (StoryComponent description : descriptions.getChildren()) {
+			final KnowIt knowIt = (KnowIt) description;
+			final KnowIt clone = knowIt.clone();
 
-			for (StoryComponent description : descrips.getChildren()) {
-				KnowIt knowIt = (KnowIt) description;
-				KnowItBinding binding = knowIt.getBinding();
+			final KnowItBinding binding = clone.getBinding();
 
-				if (binding instanceof KnowItBindingFunction) {
-					KnowItBindingFunction function = (KnowItBindingFunction) binding;
+			final KnowItBindingFunction function = (KnowItBindingFunction) binding;
+			final ScriptIt value = function.getValue();
 
-					ScriptIt value = function.getValue();
+			for (StoryComponent effect : library.getEffectsCategory().getChildren()) {
+				final ScriptIt scriptIt = (ScriptIt) effect;
 
-					if (value.getDisplayText()
-							.equals(scriptIt.getDisplayText())
-							&& value.getMainCodeBlock().getId() == scriptIt
-									.getMainCodeBlock().getId()) {
-						function.setValue(clone);
-					}
+				if (scriptIt.getDisplayText().equals(value)
+						&& scriptIt.getTypes().equals(value.getTypes())) {
+					function.setValue(scriptIt);
+					break;
 				}
 			}
 
-			library.add(clone);
-		}
+			final DescribeItNode describeItNode = new DescribeItNode(
+					"Placeholder Node");
 
-		for (StoryComponent control : controls.getChildren()) {
-			library.add(this.cloneScriptIt((ScriptIt) control, library));
+			final DescribeIt newDescribeIt = new DescribeIt(clone.getDisplayText(),
+					describeItNode, null, clone.getTypes());
+
+			final KnowIt newKnowIt = library
+					.createKnowItForDescribeIt(newDescribeIt);
+
+			final Collection<DescribeItNode> collection;
+
+			collection = new ArrayList<DescribeItNode>();
+			collection.add(describeItNode);
+
+			final ScriptIt newValue = ((KnowItBindingFunction) clone
+					.getBinding()).getValue();
+			newDescribeIt.assignScriptItToPath(collection, newValue);
+
+			final ScriptIt scriptItForPath = newDescribeIt
+					.getScriptItForPath(newDescribeIt.getShortestPath());
+
+			if (scriptItForPath != null) {
+				newKnowIt.setBinding(scriptItForPath);
+			} else {
+				newKnowIt.clearBinding();
+			}
+
+			library.add(newKnowIt);
+			library.addDescribeIt(newDescribeIt, newKnowIt);
 		}
 	}
 
