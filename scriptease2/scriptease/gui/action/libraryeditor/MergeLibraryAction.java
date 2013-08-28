@@ -2,6 +2,7 @@ package scriptease.gui.action.libraryeditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.Action;
@@ -13,9 +14,9 @@ import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.semodel.SEModelManager;
@@ -80,63 +81,65 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 				|| library == libraryToMerge)
 			return;
 
-		final StoryComponentContainer causes = libraryToMerge
-				.getCausesCategory();
-		final StoryComponentContainer effects = libraryToMerge
-				.getEffectsCategory();
-		final StoryComponentContainer descriptions = libraryToMerge
-				.getDescriptionsCategory();
-		final StoryComponentContainer controls = libraryToMerge
-				.getControllersCategory();
-
 		// Add the include files
 		final Collection<String> includeFiles = library.getIncludeFilePaths();
 		includeFiles.addAll(libraryToMerge.getIncludeFilePaths());
 
 		// Add the slots
 		final Collection<Slot> slots = libraryToMerge.getSlots();
-		library.addSlots(slots);
+		final Collection<Slot> newSlots = new ArrayList<Slot>();
+		for (Slot slot : slots) {
+			Slot clone = slot.clone();
 
-		library.getDescribeIts();
+			// Remove all existing implicits, we don't want references to the
+			// old library.
+			clone.setImplicits(new ArrayList<KnowIt>());
 
-		for (StoryComponent cause : causes.getChildren()) {
-			CauseIt causeIt = (CauseIt) cause;
+			for (KnowIt implicit : slot.getImplicits()) {
 
-			CauseIt clone = causeIt.clone();
+				final KnowItBinding binding = implicit.getBinding();
+				if (binding instanceof KnowItBindingFunction) {
 
-			for (CodeBlock codeBlock : clone.getCodeBlocks())
-				clone.removeCodeBlock(codeBlock);
+					final ScriptIt scriptIt = (ScriptIt) binding.getValue();
 
-			for (CodeBlock codeBlock : causeIt.getCodeBlocks()) {
-				if (codeBlock instanceof CodeBlockSource) {
-					CodeBlockSource source = (CodeBlockSource) codeBlock;
-					clone.addCodeBlock(source.duplicate(library
-							.getNextCodeBlockID()));
+					final ScriptIt scriptItClone = this.cloneScriptIt(scriptIt,
+							library);
+
+					final KnowIt knowItClone = implicit.clone();
+
+					knowItClone.setBinding(new KnowItBindingFunction(
+							scriptItClone));
+
+					clone.addImplicit(knowItClone);
 				}
 			}
 
-			library.add(clone);
+			newSlots.add(clone);
+
+		}
+		library.addSlots(newSlots);
+
+		// Add the causes, descriptions, effects, and controls
+		final StoryComponentContainer causes = libraryToMerge
+				.getCausesCategory();
+		final Collection<DescribeIt> describeIts = libraryToMerge
+				.getDescribeIts();
+		final StoryComponentContainer effects = libraryToMerge
+				.getEffectsCategory();
+		final StoryComponentContainer controls = libraryToMerge
+				.getControllersCategory();
+
+		for (StoryComponent cause : causes.getChildren()) {
+			library.add(this.cloneScriptIt((ScriptIt) cause, library));
 		}
 
-		for (StoryComponent description : descriptions.getChildren()) {
-			library.add(description.clone());
+		for (DescribeIt describeIt : describeIts) {
+			library.add(describeIt);
 		}
 
 		for (StoryComponent effect : effects.getChildren()) {
-			ScriptIt scriptIt = (ScriptIt) effect;
-
-			ScriptIt clone = scriptIt.clone();
-
-			for (CodeBlock codeBlock : clone.getCodeBlocks())
-				clone.removeCodeBlock(codeBlock);
-
-			for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
-				if (codeBlock instanceof CodeBlockSource) {
-					CodeBlockSource source = (CodeBlockSource) codeBlock;
-					clone.addCodeBlock(source.duplicate(library
-							.getNextCodeBlockID()));
-				}
-			}
+			final ScriptIt scriptIt = (ScriptIt) effect;
+			final ScriptIt clone = this.cloneScriptIt(scriptIt, library);
 
 			final StoryComponentContainer descrips = library
 					.getDescriptionsCategory();
@@ -150,7 +153,8 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 
 					ScriptIt value = function.getValue();
 
-					if (value.getDisplayText().equals(scriptIt.getDisplayText())
+					if (value.getDisplayText()
+							.equals(scriptIt.getDisplayText())
 							&& value.getMainCodeBlock().getId() == scriptIt
 									.getMainCodeBlock().getId()) {
 						function.setValue(clone);
@@ -162,22 +166,25 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 		}
 
 		for (StoryComponent control : controls.getChildren()) {
-			ScriptIt scriptIt = (ScriptIt) control;
-
-			ScriptIt clone = scriptIt.clone();
-
-			for (CodeBlock codeBlock : clone.getCodeBlocks())
-				clone.removeCodeBlock(codeBlock);
-
-			for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
-				if (codeBlock instanceof CodeBlockSource) {
-					CodeBlockSource source = (CodeBlockSource) codeBlock;
-					clone.addCodeBlock(source.duplicate(library
-							.getNextCodeBlockID()));
-				}
-			}
-
-			library.add(clone);
+			library.add(this.cloneScriptIt((ScriptIt) control, library));
 		}
+	}
+
+	private ScriptIt cloneScriptIt(ScriptIt scriptIt, LibraryModel library) {
+		final ScriptIt clone = scriptIt.clone();
+
+		// Remove all codeblocks referencing the old library
+		for (CodeBlock codeBlock : clone.getCodeBlocks())
+			clone.removeCodeBlock(codeBlock);
+
+		for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
+			if (codeBlock instanceof CodeBlockSource) {
+				CodeBlockSource source = (CodeBlockSource) codeBlock;
+				clone.addCodeBlock(source.duplicate(library
+						.getNextCodeBlockID()));
+			}
+		}
+
+		return clone;
 	}
 }
