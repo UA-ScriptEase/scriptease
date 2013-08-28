@@ -86,6 +86,9 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 		final Collection<String> includeFiles = library.getIncludeFilePaths();
 		includeFiles.addAll(libraryToMerge.getIncludeFilePaths());
 
+		// Add the types
+		library.addGameTypes(libraryToMerge.getGameTypes());
+
 		// Add the slots
 		final Collection<Slot> slots = libraryToMerge.getSlots();
 		final Collection<Slot> newSlots = new ArrayList<Slot>();
@@ -151,7 +154,8 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 			final KnowItBindingFunction function = (KnowItBindingFunction) binding;
 			final ScriptIt value = function.getValue();
 
-			for (StoryComponent effect : library.getEffectsCategory().getChildren()) {
+			for (StoryComponent effect : library.getEffectsCategory()
+					.getChildren()) {
 				final ScriptIt scriptIt = (ScriptIt) effect;
 
 				if (scriptIt.getDisplayText().equals(value.getDisplayText())
@@ -164,8 +168,9 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 			final DescribeItNode describeItNode = new DescribeItNode(
 					"Placeholder Node");
 
-			final DescribeIt newDescribeIt = new DescribeIt(clone.getDisplayText(),
-					describeItNode, null, clone.getTypes());
+			final DescribeIt newDescribeIt = new DescribeIt(
+					clone.getDisplayText(), describeItNode, null,
+					clone.getTypes());
 
 			final KnowIt newKnowIt = library
 					.createKnowItForDescribeIt(newDescribeIt);
