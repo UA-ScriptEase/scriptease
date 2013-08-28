@@ -343,7 +343,7 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>the colour magneta</Name>
+      <Name>the colour magenta</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
       <Labels>
@@ -352,7 +352,7 @@
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>the colour magneta</Name>
+          <Name>the colour magenta</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
@@ -362,7 +362,7 @@
           </Types>
           <Code>
             <Line>
-              <Literal>return Color.magneta;</Literal>
+              <Literal>return Color.magenta;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -784,7 +784,7 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Magneta</Name>
+      <Name>magenta</Name>
       <Types>
         <Type>Colour</Type>
       </Types>
