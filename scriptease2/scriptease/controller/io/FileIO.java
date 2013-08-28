@@ -389,8 +389,11 @@ public class FileIO {
 		}
 
 		// save the ScriptEase patterns.
-		final File tempLocation = FileManager.getInstance().createTempFile(
-				"tmp", ".ses", location.getParentFile(), 100);
+		final File tempLocation;
+
+		tempLocation = FileManager.getInstance().createTempFile("tmp",
+				"." + FileOp.getExtension(location), location.getParentFile(),
+				100);
 
 		try {
 			fileOut = new FileOutputStream(tempLocation);
