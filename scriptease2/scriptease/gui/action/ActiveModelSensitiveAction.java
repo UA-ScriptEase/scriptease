@@ -45,7 +45,7 @@ public abstract class ActiveModelSensitiveAction extends AbstractAction {
 					}
 				});
 
-		this.setEnabled(false);
+		this.setEnabled(true);
 	}
 
 	/**

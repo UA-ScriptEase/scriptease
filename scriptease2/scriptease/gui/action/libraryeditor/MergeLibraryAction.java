@@ -154,7 +154,7 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 			for (StoryComponent effect : library.getEffectsCategory().getChildren()) {
 				final ScriptIt scriptIt = (ScriptIt) effect;
 
-				if (scriptIt.getDisplayText().equals(value)
+				if (scriptIt.getDisplayText().equals(value.getDisplayText())
 						&& scriptIt.getTypes().equals(value.getTypes())) {
 					function.setValue(scriptIt);
 					break;
