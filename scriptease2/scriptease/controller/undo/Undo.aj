@@ -17,6 +17,8 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.io.model.EditableResource;
+import scriptease.translator.io.model.Resource;
 
 /**
  * This aspect inserts Undo-specific code into any model object that must
@@ -52,6 +54,86 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author jyuen
  */
 public aspect Undo {
+	/*
+	 * =========================== Undo.aj 101 =================================
+	 * 
+	 * First off, everything in this class is model side. So if you have a
+	 * button that adds a child to a resource, we worry about the addition, not
+	 * the button. We don't even care if the button changes colour; that's not
+	 * Undo's problem. That should be handled by a listener on the button.
+	 * 
+	 * After you find exactly which piece of the model is getting changed, you
+	 * need to remember the opposite action of this. So if we're adding
+	 * children, the opposite would be removing them. Remember this.
+	 * 
+	 * We can now add code to this class. First, create a pointcut just like the
+	 * ones that already exist.
+	 * 
+	 * Let's use one of the most simple ones to understand how to do this.
+	 * 
+	 * ============================ POINTCUTS ==================================
+	 * 
+	 * public pointcut addingResourceChild(): within(EditableResource+) &&
+	 * execution(* addChild(Resource+));
+	 * 
+	 * Dissection:
+	 * 
+	 * "public pointcut addingResourceChild():" - the definition.
+	 * 
+	 * "within(EditableResource+)" -The class that contains the method we want
+	 * to undo. The + indicates that we also want to undo the method for every
+	 * class that extends this one.
+	 * 
+	 * "&& execution(* addChild(Resource+));" - The method that we want to undo.
+	 * Note that the parameter is a type, and we also add the plus here to
+	 * indicate that subclasses of Resource should also be undone.
+	 * 
+	 * ============================= ADVICE ====================================
+	 * 
+	 * The point cut tells this Aspect that we should be looking at a certain
+	 * method inside a certain class. Any time that method is called, the Aspect
+	 * knows. Now we actually need to do something. This is what Advice is for.
+	 * We can choose to do things before, after, or while a method executes.
+	 * 
+	 * What follows is an examination of a "before" advice. They all work
+	 * similarly, though, and you only need to worry about "before" for Undo.
+	 * 
+	 * "before(final EditableResource resource, final Resource child):" - The
+	 * parameters for the advice. This will include any parameters in the method
+	 * we are cutting into, and also the object for which we are undoing stuff.
+	 * In this case, we have the resource that a child is getting added to
+	 * (this) and the child itself (.addChild(child)).
+	 * 
+	 * "addingResourceChild()" - This is the name of the pointcut.
+	 * 
+	 * "&& args(child)" - All arguments are passed in like this. The
+	 * "addChild(Resource)" method has one parameter. We give it the same name
+	 * as one of the parameters in the advice declaration so that "child" in the
+	 * called method is assigned to "child" in the advice. To add more
+	 * parameters, you would just use another "&& args(param)".
+	 * 
+	 * "&& this(resource) {" - This is a special type of parameter. It returns
+	 * what would get returned when we call "this" in the undone method, then
+	 * assigns it to resource.
+	 * 
+	 * Everything in the curly brackets is what gets executed. In this case, it
+	 * adds a new modification to the UndoManager's modifications list. I'm not
+	 * going to copy this part of the code, as it's pretty straight forward.
+	 * Just remember that you can use the two variables, resource and child,
+	 * that we defined earlier.
+	 * 
+	 * ========================= IMPLEMENTATION ================================
+	 * 
+	 * We are now able to track undoable changes. However, we still need to tell
+	 * the UndoManager that we should start undoing something. Since there could
+	 * be places where we want to add or remove a child where it shouldn't be
+	 * undoable, such as when loading a file, we don't do it in the model. We go
+	 * back to the button for this and call the relevant methods to open an
+	 * undoable action. This also lets us undo more than one modification at a
+	 * time. Always remember to close your undoable action after all the
+	 * undoable things are done with.
+	 */
+
 	/*
 	 * ====================== UNDO POINT CUTS ======================
 	 */
@@ -108,7 +190,7 @@ public aspect Undo {
 
 	public pointcut settingVisible():
 		within(StoryComponent+) && execution(* setVisible(Boolean));
-	
+
 	public pointcut settingEnabled():
 		within(StoryComponent+) && execution(* setEnabled(Boolean));
 
@@ -234,7 +316,10 @@ public aspect Undo {
 	 */
 	public pointcut removingSuccessor():
 		within(StoryPoint+) && execution(* removeSuccessor(StoryPoint+));
-	
+
+	public pointcut addingResourceChild():
+		within(EditableResource+) && execution(* addChild(Resource+));
+
 	/*
 	 * ====================== ADVICE ======================
 	 */
@@ -370,7 +455,7 @@ public aspect Undo {
 		};
 		this.addModification(mod);
 	}
-	
+
 	before(final StoryComponent owner, final Boolean enable): settingEnabled() && args(enable) && this(owner) {
 		Modification mod = new FieldModification<Boolean>(enable,
 				owner.isEnabled()) {
@@ -709,7 +794,7 @@ public aspect Undo {
 
 		this.addModification(mod);
 	}
-	
+
 	before(final CodeBlock codeBlock, final KnowIt parameter): addingParameter() && args(parameter) && this(codeBlock) {
 		Modification mod = new Modification() {
 
@@ -835,4 +920,26 @@ public aspect Undo {
 		};
 		this.addModification(mod);
 	}
+
+	before(final EditableResource resource, final Resource child): addingResourceChild() && args(child) && this(resource) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				resource.addChild(child);
+			}
+
+			@Override
+			public void undo() {
+				resource.removeChild(child);
+			}
+
+			@Override
+			public String toString() {
+				return "adding" + child + " to " + resource;
+			}
+		};
+		this.addModification(mod);
+	}
+
 }
