@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -18,10 +17,10 @@ import scriptease.util.StringOp;
  * 
  * @see Context
  * @author mfchurch
- * 
+ * @author jyuen
  */
 public class KnowItBindingResourceContext extends KnowItBindingContext {
-	public KnowItBindingResourceContext(Context other, KnowItBinding source) {
+	public KnowItBindingResourceContext(Context other, KnowItBindingResource source) {
 		super(other, source);
 	}
 
@@ -45,6 +44,11 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 		return AbstractFragment.resolveFormat(typeFormat, this);
 	}
 
+	@Override
+	public String getTemplateID() {
+		return ((KnowItBindingResource) this.binding).getTemplateID();
+	}
+	
 	@Override
 	public String getUniqueID() {
 		final KnowItBindingResource binding;

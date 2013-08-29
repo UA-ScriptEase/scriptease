@@ -367,7 +367,8 @@ public class UnityResource extends Resource {
 			owner = owner.getOwner();
 		}
 
-		return "GameObject.Find(\"" + name + "\")";
+		return "SEVariable.GetGameObject(\"" + this.getTemplateID() +  "\")";
+		//return "GameObject.Find(\"" + name + "\")";
 	}
 
 	@Override
