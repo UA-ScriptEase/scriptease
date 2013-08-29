@@ -1085,19 +1085,22 @@ public final class WindowFactory {
 						layout.createParallelGroup().addComponent(emailLabel)
 								.addComponent(emailField)).addGap(5);
 
-		for (final Entry<JTextField, JButton> fileField : fileFields.entrySet()) {
-			final JTextField field = fileField.getKey();
-			final JButton button = fileField.getValue();
-
-			parallelGroup = parallelGroup.addGroup(
-					GroupLayout.Alignment.LEADING, layout
-							.createSequentialGroup().addComponent(fileLabel)
-							.addComponent(field).addComponent(button));
-
-			sequentialGroup = sequentialGroup.addGroup(layout
-					.createParallelGroup().addComponent(fileLabel)
-					.addComponent(field).addComponent(button));
-		}
+		/**
+		 * TODO: Uncomment once I get back to ticket 55016874
+		 */
+//		for (final Entry<JTextField, JButton> fileField : fileFields.entrySet()) {
+//			final JTextField field = fileField.getKey();
+//			final JButton button = fileField.getValue();
+//
+//			parallelGroup = parallelGroup.addGroup(
+//					GroupLayout.Alignment.LEADING, layout
+//							.createSequentialGroup().addComponent(fileLabel)
+//							.addComponent(field).addComponent(button));
+//
+//			sequentialGroup = sequentialGroup.addGroup(layout
+//					.createParallelGroup().addComponent(fileLabel)
+//					.addComponent(field).addComponent(button));
+//		}
 
 		parallelGroup = parallelGroup.addGroup(GroupLayout.Alignment.TRAILING,
 				layout.createSequentialGroup().addComponent(sendButton)
