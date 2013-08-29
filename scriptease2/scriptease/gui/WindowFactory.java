@@ -355,36 +355,50 @@ public final class WindowFactory {
 	}
 
 	public void showCompileProblems(Collection<StoryProblem> storyProblems) {
-		JPanel panel = new JPanel();
+		final JPanel panel = new JPanel();
 
-		// Show only visible problems
-		Collection<StoryProblem> visibleProblems = new ArrayList<StoryProblem>();
+		final Collection<StoryProblem> visibleProblems;
+
+		visibleProblems = new ArrayList<StoryProblem>();
+
 		for (StoryProblem problem : storyProblems) {
+			// Show only visible problems
 			if (problem.shouldNotify())
 				visibleProblems.add(problem);
 		}
 
-		panel.setLayout(new GridLayout(visibleProblems.size() + 2, 1));
-		panel.add(new JLabel(
-				"Problems have been detected. In order to generate code the following problems must be resolved:\n"));
+		final int numberOfProblems = visibleProblems.size();
 
+		panel.setLayout(new GridLayout(numberOfProblems + 2, 1));
+
+		{
+			final String problem;
+			final String has;
+
+			if (numberOfProblems == 1) {
+				problem = " problem ";
+				has = "has ";
+			} else {
+				problem = " problems ";
+				has = "have ";
+			}
+
+			panel.add(new JLabel(numberOfProblems + problem + has
+					+ "been detected. The following" + problem
+					+ "must be resolved to generate code:"));
+		}
+
+		panel.add(new JPanel());
+
+		int problemCount = 1;
 		for (StoryProblem problem : visibleProblems) {
-			final StoryComponent component = problem.getComponent();
-			final String description = problem.getDescription();
+			final String problemText;
+			final String description;
 
-			JPanel problemPanel = new JPanel();
-			// if available, show the panel being changed, otherwise use the
-			// display text
-			StoryComponentPanel componentPanel = StoryComponentPanelFactory
-					.getInstance().buildStoryComponentPanel(component);
-			if (componentPanel != null) {
-				componentPanel.setEnabled(false);
-				problemPanel.add(componentPanel);
-				problemPanel.add(new JLabel(" : " + description));
-			} else
-				problemPanel.add(new JLabel(component.getDisplayText() + " : "
-						+ description));
-			panel.add(problemPanel);
+			problemText = "<html><b>Problem " + problemCount++ + ": </b>";
+			description = StringOp.makeXMLSafe(problem.getDescription());
+
+			panel.add(new JLabel(problemText + description));
 		}
 
 		JOptionPane.showMessageDialog(this.mainFrame, panel,
@@ -797,7 +811,7 @@ public final class WindowFactory {
 					final LibraryModel library = (LibraryModel) selectedItem;
 					MergeLibraryAction.getInstance().mergeLibrary(library);
 				}
-				
+
 				dialog.dispose();
 			}
 		});
