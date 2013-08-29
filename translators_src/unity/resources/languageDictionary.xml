@@ -703,5 +703,67 @@
 			<Line />
 			<Line />
 		</Format>
+		
+		<!-- Special format needed for awake functions -->
+		<Format id="UnityCauseAwake">
+				<Line>
+				<Literal>#pragma strict</Literal>
+			</Line>
+			<Line />
+			<Line>
+				<Literal>import System.Collections.Generic;</Literal>
+			</Line>
+			<Line />
+			<Line>
+				<Literal>// Function</Literal>
+			</Line>
+			<FormatRef ref="UnityCauseAwakeMain" />
+			<Line />
+			<Line>
+				<Literal>// Function Definitions</Literal>
+			</Line>
+			<!-- Function definitions last -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDefinition" />
+			</Series>
+			<Line />
+			<Line />
+		</Format>
+		
+		<Format id="UnityCauseAwakeMain">
+			<Line>
+			</Line>
+			<Line>
+				<Literal>function </Literal>
+				<Scope data="firstCause">
+					<Fragment data="slotConditional" />
+					<Literal>(</Literal>
+						<Series data="slotParameters" unique="true" separator=", ">
+						<!-- Parameters are just the type and the name -->
+							<FormatRef ref="variableWithType" />
+						</Series>	
+					<Literal>) {</Literal>
+				</Scope>
+			</Line>
+			<Indent>
+				<Series data="causes" unique="true">
+					<Line>
+						<Literal>SEVariable.PutGameObject("</Literal>
+							<Scope data="SUBJECT">
+                				<Fragment data="TEMPLATEID"/>
+              				</Scope>
+						<Literal>", this);</Literal>
+					</Line>
+					<FormatRef ref="variablesDeclaration" />
+					<Line>
+						<Literal>//Function Calls</Literal>
+					</Line>
+					<FormatRef ref="causeFunctionCall" />
+				</Series>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
 	</Formats>
 </LanguageDictionary>

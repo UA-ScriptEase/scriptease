@@ -1142,7 +1142,7 @@
       <Parameters/>
       <Implicits/>
     </Slot>
-    <Slot format="UnityCause">
+    <Slot format="UnityCauseAwake">
       <Name>Awake</Name>
       <Keyword>Awake</Keyword>
       <Condition>Awake</Condition>

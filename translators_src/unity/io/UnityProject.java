@@ -131,6 +131,13 @@ public final class UnityProject extends GameModule {
 
 		for (UnityFile scene : this.scenes) {
 			automaticHandlers.add(scene.getScriptEaseObject());
+			
+			for (UnityResource resource : scene.getResources()) {
+				if (resource.getType() == UnityType.GAMEOBJECT) {
+					automaticHandlers.add(resource);
+					System.out.println("RESOURCE" + resource.getName());
+				}
+			}
 		}
 
 		return automaticHandlers;
