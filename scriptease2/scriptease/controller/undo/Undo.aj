@@ -18,7 +18,7 @@ import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
-/*
+/**
  * This aspect inserts Undo-specific code into any model object that must
  * support undoable operations (called Undo-Active Objects). This includes
  * <code>StoryComponent</code>s, <code>PatternModel</code>s, and their
@@ -48,6 +48,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * 
  * 
  * @author remiller
+ * @author kschenk
  * @author jyuen
  */
 public aspect Undo {
