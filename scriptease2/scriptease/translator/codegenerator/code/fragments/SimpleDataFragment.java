@@ -3,7 +3,6 @@ package scriptease.translator.codegenerator.code.fragments;
 import java.util.regex.Pattern;
 
 import scriptease.controller.AbstractFragmentVisitor;
-import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.CodeGenerationConstants.DataType;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -74,81 +73,79 @@ public class SimpleDataFragment extends AbstractFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-		final String dataLabel = this.getDirectiveText();
-		String resolveString = "";
+		final String directiveText = this.getDirectiveText();
+
+		final DataType data;
+
 		try {
-			// IF+ELSE BLOCK (fragment data = <dataLabel>)
-			if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataType.NAME
-							.name()))
-				resolveString = context.getUniqueName(Pattern
-						.compile(this.legalRange));
-			else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataType.DISPLAYTEXT
-							.name())) {
-				resolveString = context.getDisplayText();
-			} else if (dataLabel
-					.equalsIgnoreCase(CodeGenerationConstants.DataType.TYPE
-							.name())) {
+			data = DataType.valueOf(directiveText.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			System.out.println("Couldn't find the value of : " + directiveText);
+			return null;
+		}
+
+		try {
+			switch (data) {
+			case NAME:
+				return context.getUniqueName(Pattern.compile(this.legalRange));
+			case DISPLAYTEXT:
+				return context.getDisplayText();
+			case TYPE:
 				try {
-					resolveString = context.getType();
+					return context.getType();
 				} catch (CodeGenerationException e) {
 					if (!this.defaultText.isEmpty())
 						return this.defaultText;
 					else
 						throw e;
 				}
-			} else if (dataLabel.equalsIgnoreCase(DataType.CODE.name())) {
-				resolveString = context.getCode();
-			} else if (dataLabel.equalsIgnoreCase(DataType.TEMPLATEID.name()))
-				resolveString = context.getTemplateID();
-			else if (dataLabel.equalsIgnoreCase(DataType.VALUE.name()))
-				resolveString = context.getValue();
-			else if (dataLabel.equalsIgnoreCase(DataType.CONDITION.name()))
-				resolveString = context.getCondition();
-			else if (dataLabel
-					.equalsIgnoreCase(DataType.CONTROLITFORMAT.name())) {
-				resolveString = context.getControlItFormat();
-			} else if (dataLabel.equalsIgnoreCase(DataType.CURRENTSTORYPOINT
-					.name()))
-				resolveString = context.getUnique32CharName();
-			else if (dataLabel.equalsIgnoreCase(DataType.FORMATTEDVALUE.name()))
-				resolveString = context.getFormattedValue();
-			else if (dataLabel.equalsIgnoreCase(DataType.INCLUDE.name()))
-				resolveString = context.getInclude();
-			else if (dataLabel.equalsIgnoreCase(DataType.SUBJECT.name()))
-				resolveString = context.getSubject().getBinding()
-						.getScriptValue();
-			else if (dataLabel
-					.equalsIgnoreCase(DataType.SLOTCONDITIONAL.name()))
-				resolveString = context.getSlotConditional();
-			else if (dataLabel.equalsIgnoreCase(DataType.FANIN.name()))
-				resolveString = context.getFanIn();
-			else if (dataLabel.equalsIgnoreCase(DataType.NOTE.name()))
-				resolveString = context.getDisplayText();
-			else if (dataLabel.equalsIgnoreCase(DataType.PARENTNAME.name()))
-				resolveString = context.getParentName();
-			else if (dataLabel.equalsIgnoreCase(DataType.UNIQUEID.name()))
-				resolveString = context.getUniqueID();
-			else if (dataLabel.equalsIgnoreCase(DataType.UNIQUE32CHARNAME
-					.name()))
-				resolveString = context.getUnique32CharName();
-			else if (dataLabel.equalsIgnoreCase(DataType.TEXT.name()))
-				resolveString = context.getText();
-			else if (dataLabel.equalsIgnoreCase(DataType.SPEAKER.name()))
-				resolveString = context.getSpeaker();
-			else if (dataLabel.equalsIgnoreCase(DataType.ENABLED.name()))
-				resolveString = context.getEnabled();
-			else
-				throw (new CodeGenerationException(
+			case CODE:
+				return context.getCode();
+			case TEMPLATEID:
+				return context.getTemplateID();
+			case VALUE:
+				return context.getValue();
+			case CONDITION:
+				return context.getCondition();
+			case CONTROLITFORMAT:
+				return context.getControlItFormat();
+			case CURRENTSTORYPOINT:
+				return context.getUnique32CharName();
+			case FORMATTEDVALUE:
+				return context.getFormattedValue();
+			case INCLUDE:
+				return context.getInclude();
+			case SUBJECT:
+				return context.getSubject().getBinding().getScriptValue();
+			case SLOTCONDITIONAL:
+				return context.getSlotConditional();
+			case FANIN:
+				return context.getFanIn();
+			case NOTE:
+				return context.getDisplayText();
+			case PARENTNAME:
+				return context.getParentName();
+			case UNIQUEID:
+				return context.getUniqueID();
+			case UNIQUE32CHARNAME:
+				return context.getUnique32CharName();
+			case TEXT:
+				return context.getText();
+			case SPEAKER:
+				return context.getSpeaker();
+			case ENABLED:
+				return context.getEnabled();
+			default:
+				new CodeGenerationException(
 						"Simple Data Fragment was unable to be resolved for data: "
-								+ dataLabel + ">"));
-
-			return resolveString;
+								+ directiveText + ">");
+			}
 		} catch (CodeGenerationException e) {
-			return "Error when inserting new simple fragment: " + dataLabel
+			return "Error when inserting new simple fragment: " + directiveText
 					+ " with message: " + e.getMessage();
 		}
+		return "Simple Data Fragment was unable to be resolved for data: "
+				+ directiveText + ">";
 	}
 
 	public final String getLegalRange() {
