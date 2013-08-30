@@ -556,13 +556,12 @@ public class DialogBuilder {
 
 		final String message;
 
-		title = "<h3>".concat(library.getTitle()).concat("</h3>");
-		author = "<h4>".concat(library.getAuthor()).concat("</h4>");
+		title = "<h3>" + library.getTitle() + "</h3>";
+		author = "<h4>" + library.getAuthor() + "</h4>";
 		information = library.getInformation();
 
-		message = "<html>".concat(title).concat(author).concat("<br>")
-				.concat(information).concat("<br><br><b>").concat(ADD_LIBRARY)
-				.concat("</b></html>");
+		message = "<html>" + title + author + "<br>" + information
+				+ "<br><br><b>" + ADD_LIBRARY + "</b></html>";
 
 		if (WindowFactory.getInstance().showYesNoConfirmDialog(message,
 				ADD_LIBRARY)) {
