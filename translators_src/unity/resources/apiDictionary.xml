@@ -1610,16 +1610,16 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; wakes up initialize the game object</Name>
+      <Name>On &lt;subject&gt; awake initialize the game object</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
       <Labels>
-        <Label>gameobjectautomatic</Label>
+        <Label>automatic</Label>
       </Labels>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; wakes up initialize the game object</Name>
+          <Name>On &lt;subject&gt;awake initialize the game object</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
@@ -1641,9 +1641,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <Line>
-              <Literal>HEY I WORK!</Literal>
-            </Line>
+           	<Line></Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -1736,7 +1734,7 @@
           <Enabled>true</Enabled>
           <Labels/>
           <Subject>subject</Subject>
-          <Slot>Awake</Slot>
+          <Slot>Start</Slot>
           <Id>8</Id>
           <Types>
             <Type>void</Type>
@@ -3535,7 +3533,7 @@
     </CauseIt>
     <CauseIt>
       <Name>After &lt;subject&gt; is created</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>

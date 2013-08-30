@@ -363,9 +363,10 @@ public final class StoryModel extends SEModel {
 							parameter.setBinding(resource);
 						}
 
-						automatics.add(copy);
+					 automatics.add(copy);
 					}
 				}
+				
 			}
 		}
 

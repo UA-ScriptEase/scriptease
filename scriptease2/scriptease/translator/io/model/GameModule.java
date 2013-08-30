@@ -34,6 +34,8 @@ import scriptease.translator.codegenerator.ScriptInfo;
  * @author kschenk
  */
 public abstract class GameModule {
+	public static final String AUTOMATIC = "automatic";
+	
 	/**
 	 * Reads the game data into memory.<br>
 	 * <br>

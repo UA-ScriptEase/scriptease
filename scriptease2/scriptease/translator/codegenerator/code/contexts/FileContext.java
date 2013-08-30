@@ -23,6 +23,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * @see Context
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class FileContext extends Context {
@@ -59,6 +60,11 @@ public class FileContext extends Context {
 			return this.includeFilesIterator.next();
 		else
 			return "ERROR while getting Include File in FileContext.java";
+	}
+
+	@Override
+	public String getSubjectTemplateID() {
+		return this.locationInfo.getSubject().getTemplateID();
 	}
 
 	@Override

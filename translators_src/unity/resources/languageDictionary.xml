@@ -320,7 +320,7 @@
 			</Series>
 			<Literal>)</Literal>
 		</Format>
-		<!-- Calls the function in the main code block-->
+		<!-- Calls the function in the main code block -->
 		<Format id="functionCall">
 			<!-- Code block context -->
 			<Scope data="mainCodeBlock">
@@ -397,7 +397,7 @@
 			<FormatRef ref="variablesDefinition" />
 			<FormatRef ref="storyComponentChildren" />
 		</Format>
-		
+
 		<!-- Format for delay it children -->
 		<Format id="delayItChildren">
 			<Scope data="Cause">
@@ -420,86 +420,86 @@
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
 			</Scope>
-            <Line>
-            	<Literal>GUI.BeginGroup(Rect(</Literal>
-            	<Scope data="argument" ref="x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="y">
-            		<Fragment data="value" />
-            	</Scope>	
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Width">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Height">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>));</Literal>
-            </Line>
-            <FormatRef ref="childrenWithoutImplicits"/>
-            <Line>
-			  <Literal>GUI.EndGroup();</Literal>            
-            </Line>
+			<Line>
+				<Literal>GUI.BeginGroup(Rect(</Literal>
+				<Scope data="argument" ref="x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Width">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Height">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>));</Literal>
+			</Line>
+			<FormatRef ref="childrenWithoutImplicits" />
+			<Line>
+				<Literal>GUI.EndGroup();</Literal>
+			</Line>
 		</Format>
-		
+
 		<!-- Format for Scroll View children -->
 		<Format id="ScrollViewChildren">
 			<Scope data="Cause">
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
 			</Scope>
-            <Line>
-            	<Literal>GUI.BeginScrollView(Rect(</Literal>
-            	<Scope data="argument" ref="x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="y">
-            		<Fragment data="value" />
-            	</Scope>	
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Width">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Height">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>), Vector2(</Literal>
-            	<Scope data="argument" ref="Position x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Position y">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>), Rect(</Literal>
-            	<Scope data="argument" ref="Content x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Content y">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Content Width">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Content Height">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>));</Literal>
-            </Line>
-            <FormatRef ref="childrenWithoutImplicits"/>
-            <Line>
-			  <Literal>GUI.EndScrollView();</Literal>            
-            </Line>
+			<Line>
+				<Literal>GUI.BeginScrollView(Rect(</Literal>
+				<Scope data="argument" ref="x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Width">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Height">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>), Vector2(</Literal>
+				<Scope data="argument" ref="Position x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Position y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>), Rect(</Literal>
+				<Scope data="argument" ref="Content x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Content y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Content Width">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Content Height">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>));</Literal>
+			</Line>
+			<FormatRef ref="childrenWithoutImplicits" />
+			<Line>
+				<Literal>GUI.EndScrollView();</Literal>
+			</Line>
 		</Format>
-		
+
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
@@ -528,7 +528,7 @@
 				<Literal>;</Literal>
 			</Line>
 		</Format>
-		
+
 		<!-- Format for the block controller -->
 		<Format id="block">
 			<Line>
@@ -630,10 +630,10 @@
 				<Scope data="firstCause">
 					<Fragment data="slotConditional" />
 					<Literal>(</Literal>
-						<Series data="slotParameters" unique="true" separator=", ">
+					<Series data="slotParameters" unique="true" separator=", ">
 						<!-- Parameters are just the type and the name -->
-							<FormatRef ref="variableWithType" />
-						</Series>	
+						<FormatRef ref="variableWithType" />
+					</Series>
 					<Literal>) {</Literal>
 				</Scope>
 			</Line>
@@ -680,7 +680,7 @@
 		</Format>
 
 		<Format id="UnityCause">
-				<Line>
+			<Line>
 				<Literal>#pragma strict</Literal>
 			</Line>
 			<Line />
@@ -703,10 +703,10 @@
 			<Line />
 			<Line />
 		</Format>
-		
+
 		<!-- Special format needed for awake functions -->
 		<Format id="UnityCauseAwake">
-				<Line>
+			<Line>
 				<Literal>#pragma strict</Literal>
 			</Line>
 			<Line />
@@ -729,31 +729,20 @@
 			<Line />
 			<Line />
 		</Format>
-		
+
 		<Format id="UnityCauseAwakeMain">
 			<Line>
+				<Literal>function Awake() {</Literal>
 			</Line>
 			<Line>
-				<Literal>function </Literal>
-				<Scope data="firstCause">
-					<Fragment data="slotConditional" />
-					<Literal>(</Literal>
-						<Series data="slotParameters" unique="true" separator=", ">
-						<!-- Parameters are just the type and the name -->
-							<FormatRef ref="variableWithType" />
-						</Series>	
-					<Literal>) {</Literal>
+				<Literal>SEVariable.PutGameObject("</Literal>
+				<Scope data="SUBJECTTEMPLATEID">
 				</Scope>
+				<Literal>", this);</Literal>
 			</Line>
 			<Indent>
 				<Series data="causes" unique="true">
-					<Line>
-						<Literal>SEVariable.PutGameObject("</Literal>
-							<Scope data="SUBJECT">
-                				<Fragment data="TEMPLATEID"/>
-              				</Scope>
-						<Literal>", this);</Literal>
-					</Line>
+					<Line></Line>
 					<FormatRef ref="variablesDeclaration" />
 					<Line>
 						<Literal>//Function Calls</Literal>

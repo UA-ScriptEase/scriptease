@@ -342,6 +342,11 @@ public abstract class Context {
 		return null;
 	}
 	
+	public String getSubjectTemplateID() {
+		unimplemented("getSubject");
+		return null;
+	}
+	
 	public KnowItBindingResource getSubjectResource() {
 		unimplemented("getSubjectResource");
 		return null;
