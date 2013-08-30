@@ -126,21 +126,27 @@ public final class UnityProject extends GameModule {
 	}
 
 	@Override
-	public Collection<Resource> getAutomaticHandlers() {
-		final Collection<Resource> automaticHandlers = new ArrayList<Resource>();
-
+	public Map<String, Collection<Resource>> getAutomaticHandlers() {
+		final Map<String, Collection<Resource>> automaticMap = new HashMap<String, Collection<Resource>>();
+		
+		final Collection<Resource> automaticScriptEaseObjects = new ArrayList<Resource>();
+		final Collection<Resource> automaticGameObjects = new ArrayList<Resource>();
+		
 		for (UnityFile scene : this.scenes) {
-			automaticHandlers.add(scene.getScriptEaseObject());
+			automaticScriptEaseObjects.add(scene.getScriptEaseObject());
+			automaticGameObjects.add(scene.getScriptEaseObject());
 			
 			for (UnityResource resource : scene.getResources()) {
 				if (resource.getType() == UnityType.GAMEOBJECT) {
-					automaticHandlers.add(resource);
-					System.out.println("RESOURCE" + resource.getName());
+					automaticGameObjects.add(resource);
 				}
 			}
 		}
 
-		return automaticHandlers;
+		automaticMap.put("automatic", automaticScriptEaseObjects);
+		automaticMap.put("gameobjectautomatic", automaticGameObjects);
+		
+		return automaticMap;
 	}
 
 	@Override

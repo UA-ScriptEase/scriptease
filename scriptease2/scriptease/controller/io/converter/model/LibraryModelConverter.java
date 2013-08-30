@@ -165,7 +165,7 @@ public class LibraryModelConverter implements Converter {
 		if (library.getTitle().contains("Path")) {
 			System.out.println(library.getTitle());
 		}
-		final Collection<CauseIt> automatics = library.getAutomatics();
+		final Collection<CauseIt> automatics = library.getAutomatics("automatic");
 
 		for (CauseIt cause : causes) {
 			if (automatics.contains(cause))
