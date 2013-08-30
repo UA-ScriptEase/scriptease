@@ -20,6 +20,7 @@ import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.ResourceTreeObserver;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.internationalization.Il8nResources;
@@ -171,8 +172,13 @@ public class ResourcePanel extends JPanel {
 				if (story != null) {
 					dialogueType = story.getModule().getDialogueType();
 					if (StringOp.exists(dialogueType)
-							&& type.equals(dialogueType))
+							&& type.equals(dialogueType)) {
+
+						UndoManager.getInstance().startUndoableAction(
+								"Create Dialogue Root");
 						story.createAndAddDialogueRoot();
+						UndoManager.getInstance().endUndoableAction();
+					}
 				}
 			}
 
@@ -187,8 +193,12 @@ public class ResourcePanel extends JPanel {
 
 				story = SEModelManager.getInstance().getActiveStoryModel();
 
-				if (story != null)
+				if (story != null) {
+					UndoManager.getInstance().startUndoableAction(
+							"Remove Dialogue Root");
 					story.removeDialogueRoot((DialogueLine) resource);
+					UndoManager.getInstance().endUndoableAction();
+				}
 			}
 		});
 	}

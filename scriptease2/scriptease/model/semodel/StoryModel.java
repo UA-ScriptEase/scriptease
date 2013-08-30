@@ -75,8 +75,6 @@ public final class StoryModel extends SEModel {
 		this.compatibleVersion = compatibleVersion;
 		this.optionalLibraries = optionalLibraries;
 		this.observerManager = new ObserverManager<StoryModelObserver>();
-
-		// TODO load dialogues here.
 		this.dialogueRoots = new ArrayList<DialogueLine>();
 	}
 
@@ -93,7 +91,7 @@ public final class StoryModel extends SEModel {
 	public DialogueLine createAndAddDialogueRoot() {
 		final DialogueLine newRoot = DialogueLine.createDialogueRoot(this);
 
-		this.dialogueRoots.add(newRoot);
+		this.addDialogueRoot(newRoot);
 
 		return newRoot;
 	}
@@ -108,8 +106,9 @@ public final class StoryModel extends SEModel {
 		return this.dialogueRoots.add(line);
 	}
 
-	public boolean addDialogueRoots(Collection<DialogueLine> lines) {
-		return this.dialogueRoots.addAll(lines);
+	public void addDialogueRoots(Collection<DialogueLine> lines) {
+		for (DialogueLine line : lines)
+			this.addDialogueRoot(line);
 	}
 
 	public boolean removeDialogueRoot(DialogueLine line) {
