@@ -3,7 +3,6 @@ package scriptease.translator.codegenerator.code.fragments;
 import java.util.regex.Pattern;
 
 import scriptease.controller.AbstractFragmentVisitor;
-import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.CodeGenerationConstants.DataType;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -74,11 +73,16 @@ public class SimpleDataFragment extends AbstractFragment {
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
-		final String dataLabel = this.getDirectiveText();
+		final String directiveText = this.getDirectiveText();
 
 		final DataType data;
 
-		data = DataType.valueOf(this.getDirectiveText().toUpperCase());
+		try {
+			data = DataType.valueOf(directiveText.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			System.out.println("Couldn't find the value of : " + directiveText);
+			return null;
+		}
 
 		try {
 			switch (data) {
@@ -134,14 +138,14 @@ public class SimpleDataFragment extends AbstractFragment {
 			default:
 				new CodeGenerationException(
 						"Simple Data Fragment was unable to be resolved for data: "
-								+ dataLabel + ">");
+								+ directiveText + ">");
 			}
 		} catch (CodeGenerationException e) {
-			return "Error when inserting new simple fragment: " + dataLabel
+			return "Error when inserting new simple fragment: " + directiveText
 					+ " with message: " + e.getMessage();
 		}
 		return "Simple Data Fragment was unable to be resolved for data: "
-				+ dataLabel + ">";
+				+ directiveText + ">";
 	}
 
 	public final String getLegalRange() {
