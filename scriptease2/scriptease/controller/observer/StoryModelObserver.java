@@ -1,5 +1,6 @@
 package scriptease.controller.observer;
 
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
@@ -9,11 +10,19 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * 
  */
 public interface StoryModelObserver {
-	
+
 	/**
 	 * Fired when a library is added to the story model.
+	 * 
 	 * @param library
 	 */
 	public void libraryAdded(LibraryModel library);
 
+	public void dialogueRootAdded(DialogueLine root);
+
+	public void dialogueRootRemoved(DialogueLine removed);
+
+	public void dialogueChildAdded(DialogueLine added, DialogueLine parent);
+
+	public void dialogueChildRemoved(DialogueLine removed, DialogueLine parent);
 }

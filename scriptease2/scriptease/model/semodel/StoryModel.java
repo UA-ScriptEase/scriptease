@@ -103,7 +103,13 @@ public final class StoryModel extends SEModel {
 	 * @return
 	 */
 	public boolean addDialogueRoot(DialogueLine line) {
-		return this.dialogueRoots.add(line);
+		final boolean added = this.dialogueRoots.add(line);
+
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueRootAdded(line);
+		}
+
+		return added;
 	}
 
 	public void addDialogueRoots(Collection<DialogueLine> lines) {
@@ -112,7 +118,26 @@ public final class StoryModel extends SEModel {
 	}
 
 	public boolean removeDialogueRoot(DialogueLine line) {
-		return this.dialogueRoots.remove(line);
+		final boolean removed = this.dialogueRoots.remove(line);
+
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueRootRemoved(line);
+		}
+
+		return removed;
+	}
+
+	public void notifyDialogueChildAdded(DialogueLine child, DialogueLine parent) {
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueChildAdded(child, parent);
+		}
+	}
+
+	public void notifyDialogueChildRemoved(DialogueLine child,
+			DialogueLine parent) {
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueChildRemoved(child, parent);
+		}
 	}
 
 	/**
@@ -232,6 +257,10 @@ public final class StoryModel extends SEModel {
 	 */
 	public void addStoryModelObserver(StoryModelObserver observer) {
 		this.observerManager.addObserver(this, observer);
+	}
+
+	public void addStoryModelObserver(Object object, StoryModelObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	@Override
