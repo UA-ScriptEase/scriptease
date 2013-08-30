@@ -115,11 +115,7 @@ public class UnityFile extends Resource {
 		this.unityResources = new ArrayList<UnityResource>();
 		this.types = types;
 		this.location = location;
-
-		if (!this.types.contains(UnityType.PREFAB.getName()))
-			this.filename = FileOp.getFileNameUpTo(location, UnityProject.ASSETS_FOLDER_NAME);
-		else
-			this.filename = FileOp.getFileNameUpTo(location, UnityProject.RESOURCE_FOLDER_NAME);
+		this.filename = FileOp.getFileNameUpTo(location, "Assets");
 	}
 
 	/**
