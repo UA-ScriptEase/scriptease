@@ -357,7 +357,7 @@ public final class ErfFile extends GameModule {
 
 	@SuppressWarnings("serial")
 	@Override
-	public Collection<Resource> getAutomaticHandlers() {
+	public Map<String, Collection<Resource>> getAutomaticHandlers() {
 		final Resource module;
 		final List<Resource> modules = this
 				.getResourcesOfType(GenericFileFormat.TYPE_MODULE);
@@ -367,9 +367,12 @@ public final class ErfFile extends GameModule {
 			throw new IllegalStateException("Cannot retrieve Module");
 		}
 
-		return new ArrayList<Resource>() {
+		final List<Resource> automatics = new ArrayList<Resource>();
+		automatics.add(module);
+		
+		return new HashMap<String, Collection<Resource>>() {
 			{
-				this.add(module);
+				this.put("automatic", automatics);
 			}
 		};
 	}

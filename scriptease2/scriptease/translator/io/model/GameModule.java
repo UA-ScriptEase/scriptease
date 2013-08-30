@@ -109,13 +109,14 @@ public abstract class GameModule {
 	public abstract Resource getInstanceForObjectIdentifier(String id);
 
 	/**
-	 * Retrieves the resources that will have automatics attached to them. Make
-	 * sure that these match the types for the parameters of the automatic
-	 * causes, or else exceptions will be thrown.
+	 * Retrieves a map of resources that will have automatics attached to them
+	 * with their corresponding automatic label. Make sure that these match the
+	 * types for the parameters of the automatic causes, or else exceptions will
+	 * be thrown.
 	 * 
 	 * @return
 	 */
-	public abstract Collection<Resource> getAutomaticHandlers();
+	public abstract Map<String, Collection<Resource>> getAutomaticHandlers();
 
 	/**
 	 * Gets the location of the GameModule.

@@ -58,7 +58,6 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public class LibraryModel extends SEModel implements StoryComponentObserver {
-	private static final String AUTOMATIC_LABEL = "automatic";
 	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
 
 	// Information about the library that we want the user to know about.
@@ -377,20 +376,24 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	/**
 	 * Retrieves the automatics causeIts
 	 * 
+	 * @param automaticLabel
+	 *            Retrieve the automatic causes with this label
+	 * 
 	 * @return
 	 */
-	public Collection<CauseIt> getAutomatics() {
+	public Collection<CauseIt> getAutomatics(String automaticLabel) {
 		final Collection<CauseIt> automatics = new ArrayList<CauseIt>();
 
 		for (StoryComponent cause : this.getCausesCategory().getChildren()) {
 			if (cause instanceof CauseIt) {
 				for (String label : cause.getLabels()) {
-					if (label.equalsIgnoreCase(AUTOMATIC_LABEL)) {
+					if (label.equalsIgnoreCase(automaticLabel)) {
 						automatics.add((CauseIt) cause);
 					}
 				}
 			}
 		}
+		
 		return automatics;
 	}
 

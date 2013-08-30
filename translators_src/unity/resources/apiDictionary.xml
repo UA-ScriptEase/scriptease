@@ -1610,6 +1610,42 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
+      <Name>When &lt;subject&gt; wakes up initialize the game object</Name>
+      <Visible>false</Visible>
+      <Enabled>true</Enabled>
+      <Labels>
+        <Label>gameobjectautomatic</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; wakes up initialize the game object</Name>
+          <Visible>true</Visible>
+          <Enabled>true</Enabled>
+          <Labels/>
+          <Subject>subject</Subject>
+          <Slot>Awake</Slot>
+          <Id>276</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Enabled>true</Enabled>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </CauseIt>
+    <CauseIt>
       <Name>When &lt;subject&gt;&apos;s GUI Updates show the Dialogue GUI</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
