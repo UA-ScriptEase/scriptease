@@ -1641,6 +1641,9 @@
             </KnowIt>
           </Parameters>
           <Code>
+            <Line>
+              <Literal>HEY I WORK!</Literal>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
