@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 
+import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.models.DialogueLineGraphModel;
@@ -108,6 +109,26 @@ public class SEGraphFactory {
 
 		graph.setNodeRenderer(new DialogueLineNodeRenderer(graph));
 		graph.setBackground(Color.WHITE);
+
+		story.addStoryModelObserver(new StoryModelAdapter() {
+			private void redrawGraph() {
+				graph.recalculateDepthMap();
+				graph.repaint();
+				graph.revalidate();
+			}
+
+			@Override
+			public void dialogueChildAdded(DialogueLine added,
+					DialogueLine parent) {
+				this.redrawGraph();
+			}
+
+			@Override
+			public void dialogueChildRemoved(DialogueLine removed,
+					DialogueLine parent) {
+				this.redrawGraph();
+			}
+		});
 
 		return graph;
 	}

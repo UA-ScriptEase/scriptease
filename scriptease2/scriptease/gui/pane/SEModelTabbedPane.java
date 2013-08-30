@@ -46,6 +46,7 @@ import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
+import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -412,20 +413,27 @@ class SEModelTabbedPane extends JTabbedPane {
 					@Override
 					public void resourceEditButtonClicked(Resource resource) {
 						if (resource instanceof DialogueLine) {
-							dialogueEditor
-									.setDialogueLine((DialogueLine) resource);
-							layout.show(topLevelPane, DIALOGUE_EDITOR);
-						}
-					}
-
-					@Override
-					public void resourceRemoveButtonClicked(Resource resource) {
-						if (dialogueEditor.getDialogueLine() == resource) {
-							layout.show(topLevelPane, STORY_EDITOR);
-							dialogueEditor.setDialogueLine(null);
+							if (dialogueEditor.getDialogueLine() == null) {
+								layout.show(topLevelPane, DIALOGUE_EDITOR);
+								dialogueEditor
+										.setDialogueLine((DialogueLine) resource);
+							} else {
+								layout.show(topLevelPane, STORY_EDITOR);
+								dialogueEditor.setDialogueLine(null);
+							}
 						}
 					}
 				});
+
+		model.addStoryModelObserver(new StoryModelAdapter() {
+			@Override
+			public void dialogueRootRemoved(DialogueLine removed) {
+				if (dialogueEditor.getDialogueLine() == removed) {
+					layout.show(topLevelPane, STORY_EDITOR);
+					dialogueEditor.setDialogueLine(null);
+				}
+			}
+		});
 
 		return topLevelPane;
 	}
@@ -662,7 +670,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 			if (index == -1)
 				return;
-			
+
 			rect = tabbedPane.getUI().getTabBounds(tabbedPane, index);
 			if (rect != null && rect.contains(e.getPoint())
 					&& e.getClickCount() == 2) {
