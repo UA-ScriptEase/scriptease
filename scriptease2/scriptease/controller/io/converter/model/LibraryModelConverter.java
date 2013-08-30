@@ -15,6 +15,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 
@@ -165,7 +166,8 @@ public class LibraryModelConverter implements Converter {
 		if (library.getTitle().contains("Path")) {
 			System.out.println(library.getTitle());
 		}
-		final Collection<CauseIt> automatics = library.getAutomatics("automatic");
+		final Collection<CauseIt> automatics = library
+				.getAutomatics(GameModule.AUTOMATIC);
 
 		for (CauseIt cause : causes) {
 			if (automatics.contains(cause))

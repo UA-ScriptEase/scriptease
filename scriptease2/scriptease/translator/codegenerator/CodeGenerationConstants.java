@@ -37,7 +37,8 @@ public interface CodeGenerationConstants {
 		SLOTPARAMETER,
 		SCRIPTIT,
 		START,
-		SUBJECT
+		SUBJECT, 
+		SUBJECTTEMPLATEID, 
 	}
 
 	// Used in SimpleDataFragment
