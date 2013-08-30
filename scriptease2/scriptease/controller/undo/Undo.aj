@@ -15,6 +15,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.EditableResource;
@@ -132,6 +134,11 @@ public aspect Undo {
 	 * undoable action. This also lets us undo more than one modification at a
 	 * time. Always remember to close your undoable action after all the
 	 * undoable things are done with.
+	 * 
+	 * 
+	 * Remember to test, test, test this so that nothing breaks. You may have to
+	 * start the undoable action at a higher or lower level in different
+	 * situations.
 	 */
 
 	/*
@@ -319,6 +326,15 @@ public aspect Undo {
 
 	public pointcut addingResourceChild():
 		within(EditableResource+) && execution(* addChild(Resource+));
+
+	public pointcut removingResourceChild():
+		within(EditableResource+) && execution(* removeChild(Resource+));
+
+	public pointcut addingDialogueRoot():
+		within(StoryModel+) && execution(* addDialogueRoot(DialogueLine+));
+
+	public pointcut removingDialogueRoot():
+		within(StoryModel+) && execution(* removeDialogueRoot(DialogueLine+));
 
 	/*
 	 * ====================== ADVICE ======================
@@ -942,4 +958,66 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
+	before(final EditableResource resource, final Resource child): removingResourceChild() && args(child) && this(resource) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				resource.removeChild(child);
+			}
+
+			@Override
+			public void undo() {
+				resource.addChild(child);
+			}
+
+			@Override
+			public String toString() {
+				return "removing" + child + " from " + resource;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final StoryModel model, final DialogueLine line): addingDialogueRoot() && args(line) && this(model) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				model.addDialogueRoot(line);
+			}
+
+			@Override
+			public void undo() {
+				model.removeDialogueRoot(line);
+			}
+
+			@Override
+			public String toString() {
+				return "adding" + line + " to " + model;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final StoryModel model, final DialogueLine line): removingDialogueRoot() && args(line) && this(model) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				model.removeDialogueRoot(line);
+			}
+
+			@Override
+			public void undo() {
+				model.addDialogueRoot(line);
+			}
+
+			@Override
+			public String toString() {
+				return "removing" + line + " from " + model;
+			}
+		};
+		this.addModification(mod);
+	}
 }
