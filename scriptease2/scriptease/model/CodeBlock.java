@@ -221,7 +221,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * amount that could be known simply because such an event occurred.<br>
 	 * <br>
 	 * Implicits are lazy-loaded because they actually originate from the Slot
-	 * definitions in {@link EventSlotManager}. They are not saved per code
+	 * definitions in the Library Model. They are not saved per code
 	 * block, since they're common amongst code blocks with the same slot. The
 	 * implicits cloned from <code>EventSlotManager</code> have their owner set
 	 * to this code block's Cause (as determined by {@link #getCause()}).

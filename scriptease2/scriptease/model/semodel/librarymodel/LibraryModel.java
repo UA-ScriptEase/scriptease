@@ -63,6 +63,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 	// Information about the library that we want the user to know about.
 	private String information;
+	private String defaultSlotFormat = "";
 
 	private final ObserverManager<LibraryObserver> observerManager;
 
@@ -71,7 +72,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final StoryAdapter categoryAdder;
 
 	private final DescribeItManager describeItManager;
-	private final EventSlotManager slotManager;
+	private final Collection<Slot> slots;
 	private final Map<String, GameType> gameTypes;
 	private final TypeConverter typeConverter;
 
@@ -149,7 +150,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.translator = translator;
 		this.information = information;
 		this.modelRoot = new StoryComponentContainer(title);
-		this.slotManager = new EventSlotManager();
+		this.slots = new ArrayList<Slot>();
 		this.describeItManager = new DescribeItManager();
 		this.includeFilePaths = new ArrayList<String>();
 
@@ -1072,13 +1073,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param defaultKeyword
 	 */
 	public void setSlotDefaultFormat(String defaultKeyword) {
-		this.slotManager.setDefaultFormatKeyword(defaultKeyword);
+		this.defaultSlotFormat = defaultKeyword;
 	}
 
 	@Override
 	public String getSlotDefaultFormat() {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		String format = this.slotManager.getDefaultFormatKeyword();
+		String format = this.defaultSlotFormat;
 
 		if (!StringOp.exists(format) && defaultLibrary != null
 				&& this != defaultLibrary) {
@@ -1121,7 +1122,12 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public Slot getSlot(String name) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		Slot slot = this.slotManager.getEventSlot(name);
+
+		Slot slot = null;
+		for (Slot savedSlot : this.slots) {
+			if (savedSlot.getKeyword().equals(name))
+				slot = savedSlot;
+		}
 
 		if (slot == null && defaultLibrary != null && this != defaultLibrary) {
 			slot = defaultLibrary.getSlot(name);
@@ -1137,11 +1143,22 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public Collection<Slot> getSlots() {
-		return this.slotManager.getEventSlots();
+		return new ArrayList<Slot>(this.slots);
 	}
 
+	/**
+	 * Adds a collection of slots.
+	 * 
+	 * @param slots
+	 */
 	public void addSlots(Collection<Slot> slots) {
-		this.slotManager.addEventSlots(slots, this);
+		for (Slot slot : slots) {
+			this.slots.add(slot);
+
+			for (KnowIt implicit : slot.getImplicits()) {
+				implicit.setLibrary(this);
+			}
+		}
 	}
 
 	public String getInformation() {
