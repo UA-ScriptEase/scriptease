@@ -75,8 +75,6 @@ public final class StoryModel extends SEModel {
 		this.compatibleVersion = compatibleVersion;
 		this.optionalLibraries = optionalLibraries;
 		this.observerManager = new ObserverManager<StoryModelObserver>();
-
-		// TODO load dialogues here.
 		this.dialogueRoots = new ArrayList<DialogueLine>();
 	}
 
@@ -93,7 +91,7 @@ public final class StoryModel extends SEModel {
 	public DialogueLine createAndAddDialogueRoot() {
 		final DialogueLine newRoot = DialogueLine.createDialogueRoot(this);
 
-		this.dialogueRoots.add(newRoot);
+		this.addDialogueRoot(newRoot);
 
 		return newRoot;
 	}
@@ -105,15 +103,41 @@ public final class StoryModel extends SEModel {
 	 * @return
 	 */
 	public boolean addDialogueRoot(DialogueLine line) {
-		return this.dialogueRoots.add(line);
+		final boolean added = this.dialogueRoots.add(line);
+
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueRootAdded(line);
+		}
+
+		return added;
 	}
 
-	public boolean addDialogueRoots(Collection<DialogueLine> lines) {
-		return this.dialogueRoots.addAll(lines);
+	public void addDialogueRoots(Collection<DialogueLine> lines) {
+		for (DialogueLine line : lines)
+			this.addDialogueRoot(line);
 	}
 
 	public boolean removeDialogueRoot(DialogueLine line) {
-		return this.dialogueRoots.remove(line);
+		final boolean removed = this.dialogueRoots.remove(line);
+
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueRootRemoved(line);
+		}
+
+		return removed;
+	}
+
+	public void notifyDialogueChildAdded(DialogueLine child, DialogueLine parent) {
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueChildAdded(child, parent);
+		}
+	}
+
+	public void notifyDialogueChildRemoved(DialogueLine child,
+			DialogueLine parent) {
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.dialogueChildRemoved(child, parent);
+		}
 	}
 
 	/**
@@ -233,6 +257,10 @@ public final class StoryModel extends SEModel {
 	 */
 	public void addStoryModelObserver(StoryModelObserver observer) {
 		this.observerManager.addObserver(this, observer);
+	}
+
+	public void addStoryModelObserver(Object object, StoryModelObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	@Override

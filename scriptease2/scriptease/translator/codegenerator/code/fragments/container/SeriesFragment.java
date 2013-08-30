@@ -188,9 +188,16 @@ public class SeriesFragment extends AbstractContainerFragment {
 	}
 
 	private Collection<? extends Object> getData(Context context) {
+		final String directiveText = this.getDirectiveText();
+
 		final SeriesType series;
 
-		series = SeriesType.valueOf(this.getDirectiveText().toUpperCase());
+		try {
+			series = SeriesType.valueOf(directiveText.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			System.out.println("Couldn't find the value of : " + directiveText);
+			return null;
+		}
 
 		switch (series) {
 		case INCLUDES:
