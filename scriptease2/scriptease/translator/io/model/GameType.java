@@ -49,7 +49,7 @@ public class GameType {
 	 * Builds a new Game Type that is completely empty.
 	 */
 	public GameType() {
-		this("", "", "", new ArrayList<AbstractFragment>(),
+		this("", "unknown", "", new ArrayList<AbstractFragment>(),
 				new ArrayList<String>(), "", "", new HashMap<String, String>(),
 				null, null);
 	}
