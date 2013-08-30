@@ -268,7 +268,7 @@ public final class StoryModel extends SEModel {
 		final Collection<GameType> keywords = new ArrayList<GameType>();
 
 		for (LibraryModel library : this.getLibraries()) {
-			keywords.addAll(library.getLibraryTypes());
+			keywords.addAll(library.getGameTypes());
 		}
 
 		return keywords;
