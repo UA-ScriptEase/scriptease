@@ -92,9 +92,11 @@ class SEModelTabbedPane extends JTabbedPane {
 		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
 		// Register a mouse listener for the tabs to listen for title changes
-		TabTitleEditListener titleListener = new TabTitleEditListener(this);
+		TabTitleChangeListener titleListener = new TabTitleChangeListener(this);
 		this.addMouseListener(titleListener);
 		this.addChangeListener(titleListener);
+		UndoManager.getInstance().addUndoManagerObserver(
+				SEModelManager.getInstance().getActiveModel(), titleListener);
 
 		SEModelManager.getInstance().addSEModelObserver(this,
 				new SEModelObserver() {
@@ -215,25 +217,6 @@ class SEModelTabbedPane extends JTabbedPane {
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
 
 		this.setFocusable(false);
-
-		UndoManager.getInstance().addUndoManagerObserver(model,
-				new UndoManagerObserver() {
-					@Override
-					public void stackChanged() {
-						final SEModelTabbedPane tabPanel = SEModelTabbedPane.this;
-						final int index = tabPanel
-								.indexOfComponent(tabContents);
-
-						if (index < 0)
-							return;
-
-						if (UndoManager.getInstance().isSaved(model)) {
-							tabPanel.setTitleAt(index, title);
-						} else {
-							tabPanel.setTitleAt(index, "*" + title);
-						}
-					}
-				});
 
 		this.setSelectedComponent(tabContents);
 	}
@@ -604,17 +587,19 @@ class SEModelTabbedPane extends JTabbedPane {
 
 	/**
 	 * Listens for double mouse clicks on tabs. Creates a textField over the tab
-	 * and allows the user to change the name of their story.
+	 * and allows the user to change the name of their story. Also listens to
+	 * other changes for the tab title - showing a * next to the title when the
+	 * model should be saved.
 	 * 
 	 * @author jyuen
 	 */
-	private class TabTitleEditListener extends MouseAdapter implements
-			ChangeListener {
+	private class TabTitleChangeListener extends MouseAdapter implements
+			ChangeListener, UndoManagerObserver {
 
 		private final JTextField editor;
 		private final JTabbedPane tabbedPane;
 
-		public TabTitleEditListener(final JTabbedPane tabbedPane) {
+		public TabTitleChangeListener(final JTabbedPane tabbedPane) {
 			this.tabbedPane = tabbedPane;
 			this.editor = new JTextField();
 
@@ -655,6 +640,28 @@ class SEModelTabbedPane extends JTabbedPane {
 		}
 
 		@Override
+		public void stackChanged() {
+			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
+			final SEModel model = SEModelTabbedPane.this.modelToComponent
+					.getKey(tab);
+
+			if (tab != null && model != null) {
+				if (UndoManager.getInstance().isSaved(model)) {
+					if (model.getTitle().charAt(0) == '*') {
+						model.setTitle(model.getTitle().substring(1));
+						tab.setName(model.getTitle().substring(1));
+					}
+				} else {
+					if (model.getTitle().charAt(0) != '*') {
+						model.setTitle("*" + model.getTitle());
+						tab.setName("*" + model.getTitle());
+					}
+				}
+				SEModelTabbedPane.this.repaint();
+			}
+		}
+
+		@Override
 		public void mouseClicked(MouseEvent e) {
 			final Rectangle rect;
 
@@ -662,7 +669,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 			if (index == -1)
 				return;
-			
+
 			rect = tabbedPane.getUI().getTabBounds(tabbedPane, index);
 			if (rect != null && rect.contains(e.getPoint())
 					&& e.getClickCount() == 2) {
@@ -679,6 +686,10 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		private void startEditing() {
 			editingIndex = tabbedPane.getSelectedIndex();
+
+			if (editingIndex < 0)
+				return;
+
 			tabComponent = tabbedPane.getTabComponentAt(editingIndex);
 			tabbedPane.setTabComponentAt(editingIndex, editor);
 			editor.setVisible(true);
@@ -687,7 +698,11 @@ class SEModelTabbedPane extends JTabbedPane {
 			final SEModel model = SEModelTabbedPane.this.modelToComponent
 					.getKey(tab);
 
-			editor.setText(model.getTitle());
+			if (model.getTitle().charAt(0) != '*')
+				editor.setText(model.getTitle());
+			else
+				editor.setText(model.getTitle().substring(1));
+
 			editor.selectAll();
 			editor.requestFocusInWindow();
 			length = editor.getText().length();
@@ -715,19 +730,14 @@ class SEModelTabbedPane extends JTabbedPane {
 				final SEModel model = SEModelTabbedPane.this.modelToComponent
 						.getKey(tab);
 
-				// Musn't use * - reserved for isSaved!
-				if ((!title.contains("*") && title.length() > 0)
-						|| (title.length() > 1 && title.charAt(0) == '*' && !title
-								.substring(1, title.length() - 1).contains("*"))) {
-					if (UndoManager.getInstance().isSaved(model)) {
-						tabbedPane.setTitleAt(editingIndex, title);
-					} else {
-						if (!tabbedPane.getTitleAt(0).contains("*"))
-							tabbedPane.setTitleAt(editingIndex, "*" + title);
-					}
-
-					if (tab != null && model != null) {
-						model.setTitle(title);
+				// Musn't use * as first char - reserved for isSaved!
+				if (title.length() > 0 && !(title.charAt(0) == '*')) {
+					if (model != null) {
+						if (UndoManager.getInstance().isSaved(model)) {
+							model.setTitle(title);
+						} else {
+							model.setTitle("*" + title);
+						}
 					}
 				}
 			}
