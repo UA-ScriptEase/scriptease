@@ -30,7 +30,7 @@ import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StoryComponentPanelJListObserver;
-import scriptease.controller.observer.StoryModelObserver;
+import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
@@ -158,7 +158,7 @@ public class LibraryPanel extends JTabbedPane {
 										libraryObserver);
 							}
 
-							story.addStoryModelObserver(new StoryModelObserver() {
+							story.addStoryModelObserver(new StoryModelAdapter() {
 								@Override
 								public void libraryAdded(LibraryModel library) {
 									LibraryPanel.this.updateLists();
