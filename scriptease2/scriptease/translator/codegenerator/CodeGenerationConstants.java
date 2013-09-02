@@ -38,7 +38,7 @@ public interface CodeGenerationConstants {
 		SCRIPTIT,
 		START,
 		SUBJECT, 
-		SUBJECTTEMPLATEID, 
+		TEMPLATEID, 
 	}
 
 	// Used in SimpleDataFragment

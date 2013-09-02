@@ -13,6 +13,7 @@ import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.StoryPoint;
@@ -342,11 +343,13 @@ public final class StoryModel extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			for (String automaticLabel : automaticHandlers.keySet()) {
 				for (Resource resource : automaticHandlers.get(automaticLabel)) {
+					
 					final Collection<String> resourceTypes = resource
 							.getTypes();
 
 					for (CauseIt automatic : library
 							.getAutomatics(automaticLabel)) {
+						
 						final CauseIt copy = automatic.clone();
 						final Collection<KnowIt> parameters = copy
 								.getParameters();
