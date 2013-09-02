@@ -10,7 +10,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
@@ -342,16 +341,6 @@ public abstract class Context {
 		return null;
 	}
 	
-	public String getSubjectTemplateID() {
-		unimplemented("getSubject");
-		return null;
-	}
-	
-	public KnowItBindingResource getSubjectResource() {
-		unimplemented("getSubjectResource");
-		return null;
-	}
-
 	public ScriptIt getScriptIt(String keyword) {
 		unimplemented("getScriptIt: " + keyword);
 		return null;

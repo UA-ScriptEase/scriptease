@@ -63,11 +63,6 @@ public class FileContext extends Context {
 	}
 
 	@Override
-	public String getSubjectTemplateID() {
-		return this.locationInfo.getSubject().getTemplateID();
-	}
-
-	@Override
 	public String toString() {
 		return "FileContext";
 	}

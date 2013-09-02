@@ -734,14 +734,15 @@
 			<Line>
 				<Literal>function Awake() {</Literal>
 			</Line>
-			<Line>
-				<Literal>SEVariable.PutGameObject("</Literal>
-				<Scope data="SUBJECTTEMPLATEID">
-				</Scope>
-				<Literal>", this);</Literal>
-			</Line>
 			<Indent>
 				<Series data="causes" unique="true">
+					<Line>
+						<Literal>SEVariable.PutGameObject("</Literal>
+						<Scope data="SUBJECT">
+						    <Fragment data="TEMPLATEID"/>
+						</Scope>
+						<Literal>", gameObject);</Literal>
+					</Line>
 					<Line></Line>
 					<FormatRef ref="variablesDeclaration" />
 					<Line>

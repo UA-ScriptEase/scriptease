@@ -1614,7 +1614,7 @@
       <Visible>false</Visible>
       <Enabled>true</Enabled>
       <Labels>
-        <Label>automatic</Label>
+        <Label>gameobjectautomatic</Label>
       </Labels>
       <Children/>
       <CodeBlocks>

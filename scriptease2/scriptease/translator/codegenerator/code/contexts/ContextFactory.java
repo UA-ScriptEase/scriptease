@@ -232,14 +232,6 @@ public class ContextFactory {
 		return this.activeContext;
 	}
 
-	/**
-	 * Creates a new Context based on the pastContext and the source
-	 * {@link StoryPoint}.
-	 * 
-	 * @param pastContext
-	 * @param source
-	 * @return
-	 */
 	private Context createContext(final Context pastContext,
 			final StoryPoint source) {
 		this.activeContext = new StoryPointContext(pastContext, source);
