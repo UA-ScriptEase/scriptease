@@ -290,14 +290,14 @@ public class SEGraphNodeRenderer<E> {
 				else
 					colour = ScriptEaseUI.COLOUR_GROUPABLE_NODE;
 
-				for (E n : this.graph.getNodes()) {
+				for (E currNode : this.graph.getNodes()) {
 					final JComponent nComponent;
-					nComponent = this.graph.nodesToComponents.getValue(n);
+					nComponent = this.graph.nodesToComponents.getValue(currNode);
 
-					if (this.graph.getGroupController().containsNode(n))
-						this.setComponentAppearance(nComponent, n, colour);
+					if (this.graph.getGroupController().containsNode(currNode))
+						this.setComponentAppearance(nComponent, currNode, colour);
 					else
-						this.setComponentAppearance(nComponent, n,
+						this.setComponentAppearance(nComponent, currNode,
 								ScriptEaseUI.COLOUR_NODE_DEFAULT);
 				}
 			} else {
