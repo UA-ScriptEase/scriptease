@@ -704,8 +704,8 @@
 			<Line />
 		</Format>
 
-		<!-- Special format needed for awake functions -->
-		<Format id="UnityCauseAwake">
+		<!-- Special format for ScriptEase game object awake functions -->
+		<Format id="ScriptEaseObjectAwakeCause">
 			<Line>
 				<Literal>#pragma strict</Literal>
 			</Line>
@@ -715,41 +715,147 @@
 			</Line>
 			<Line />
 			<Line>
-				<Literal>// Function</Literal>
+				<Literal>function Awake() {</Literal>
 			</Line>
-			<FormatRef ref="UnityCauseAwakeMain" />
+			<Indent>
+				<Line>
+					<Literal>SEVariable.PutGameObject("</Literal>
+					<Scope data="RESOURCE">
+						<Fragment data="TEMPLATEID" />
+					</Scope>
+					<Literal>", gameObject);</Literal>
+				</Line>
+			</Indent>
 			<Line />
+			<Scope data="start">
+				<Indent>
+					<Line>
+						<Literal>if(!SEStory.storyInitialized) {</Literal>
+					</Line>
+					<Indent>
+						<Line>
+							<Literal>SEStory.RegisterRoot(</Literal>
+							<Fragment data="formattedValue" />
+							<Literal>, </Literal>
+							<Fragment data="fanIn" />
+							<Literal>);</Literal>
+						</Line>
+						<Line>
+							<Literal>var parentName:String;</Literal>
+						</Line>
+						<Series data="orderedStoryPoints" unique="true">
+							<Line>
+								<Literal>parentName = </Literal>
+								<Fragment data="formattedValue" />
+								<Literal>;</Literal>
+							</Line>
+							<Series data="childrenNodes" unique="true">
+								<Line>
+									<Literal>SEStory.RegisterChild(parentName, </Literal>
+									<Fragment data="formattedValue" />
+									<Literal>, </Literal>
+									<Fragment data="fanIn" />
+									<Literal>);</Literal>
+								</Line>
+							</Series>
+						</Series>
+					</Indent>
+					<Line>
+						<Literal>}</Literal>
+					</Line>
+				</Indent>
+			</Scope>
+			<Line />
+			<Indent>
+				<Line>
+					<Literal>//Initialize the Dialogue system.</Literal>
+				</Line>
+				<Line>
+					<Literal>if(!SEDialogue.DialoguesInitialized){</Literal>
+				</Line>
+				<Indent>
+					<Series data="dialogueRoots" unique="true">
+						<Line>
+							<Literal>SEDialogue.RegisterRoot(&quot;</Literal>
+							<Fragment data="text" />
+							<Literal>&quot;, </Literal>
+							<Fragment data="formattedValue" />
+							<Literal>, </Literal>
+							<Fragment data="speaker" />
+							<Literal>, </Literal>
+							<Fragment data="enabled" />
+							<Literal>, </Literal>
+							<Scope data="image">
+								<Fragment data="formattedValue" />
+							</Scope>
+							<Literal>, </Literal>
+							<Scope data="audio">
+								<Fragment data="formattedValue" />
+							</Scope>
+							<Literal>);</Literal>
+						</Line>
+						<Line>
+							<Literal>var parentID:int;</Literal>
+						</Line>
+						<Series data="orderedDialogueLines" unique="true">
+							<Line>
+								<Literal>parentID = </Literal>
+								<Fragment data="formattedValue" />
+								<Literal>;</Literal>
+							</Line>
+							<Series data="childLines" unique="true">
+								<Line>
+									<Literal>SEDialogue.RegisterChild(parentID, &quot;</Literal>
+									<Fragment data="text" />
+									<Literal>&quot;, </Literal>
+									<Fragment data="formattedValue" />
+									<Literal>, </Literal>
+									<Fragment data="speaker" />
+									<Literal>, </Literal>
+									<Fragment data="enabled" />
+									<Literal>, </Literal>
+									<Scope data="image">
+										<Fragment data="formattedValue" />
+									</Scope>
+									<Literal>, </Literal>
+									<Scope data="audio">
+										<Fragment data="formattedValue" />
+									</Scope>
+									<Literal>);</Literal>
+								</Line>
+							</Series>
+						</Series>
+					</Series>
+				</Indent>
+				<Line>
+					<Literal>}</Literal>
+				</Line>
+			</Indent>
 			<Line>
-				<Literal>// Function Definitions</Literal>
+				<Literal>}</Literal>
 			</Line>
-			<!-- Function definitions last -->
-			<Series data="codeBlocks" unique="true">
-				<FormatRef ref="functionDefinition" />
-			</Series>
-			<Line />
-			<Line />
 		</Format>
 
-		<Format id="UnityCauseAwakeMain">
+		<!-- Special format needed for game object awake functions -->
+		<Format id="GameObjectAwakeCause">
+			<Line>
+				<Literal>#pragma strict</Literal>
+			</Line>
+			<Line />
+			<Line>
+				<Literal>import System.Collections.Generic;</Literal>
+			</Line>
 			<Line>
 				<Literal>function Awake() {</Literal>
 			</Line>
 			<Indent>
-				<Series data="causes" unique="true">
-					<Line>
-						<Literal>SEVariable.PutGameObject("</Literal>
-						<Scope data="SUBJECT">
-						    <Fragment data="TEMPLATEID"/>
-						</Scope>
-						<Literal>", gameObject);</Literal>
-					</Line>
-					<Line></Line>
-					<FormatRef ref="variablesDeclaration" />
-					<Line>
-						<Literal>//Function Calls</Literal>
-					</Line>
-					<FormatRef ref="causeFunctionCall" />
-				</Series>
+				<Line>
+					<Literal>SEVariable.PutGameObject("</Literal>
+					<Scope data="RESOURCE">
+						<Fragment data="TEMPLATEID" />
+					</Scope>
+					<Literal>", gameObject);</Literal>
+				</Line>
 			</Indent>
 			<Line>
 				<Literal>}</Literal>

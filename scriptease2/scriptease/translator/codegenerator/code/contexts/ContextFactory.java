@@ -27,6 +27,7 @@ import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.Kn
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
+import scriptease.translator.io.model.Resource;
 
 /**
  * ContextFactory generates a new context based on the current source. It also
@@ -79,6 +80,8 @@ public class ContextFactory {
 			created = this.createContext(context, (KnowItBinding) source);
 		} else if (source instanceof StoryPoint) {
 			created = this.createContext(context, (StoryPoint) source);
+		} else if (source instanceof Resource) {
+			created = this.createContext(context, (Resource) source);
 		}
 		// this should get checked last, otherwise the ones above can get caught
 		// by it because they're subclasses.
@@ -181,7 +184,7 @@ public class ContextFactory {
 				ContextFactory.this.activeContext = new ControlItContext(
 						pastContext, controlIt);
 			}
-			
+
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
 				ContextFactory.this.activeContext = new CauseItContext(
@@ -223,6 +226,13 @@ public class ContextFactory {
 			final CodeBlock source) {
 		this.activeContext = new CodeBlockContext(pastContext, source);
 
+		return this.activeContext;
+	}
+
+	private Context createContext(final Context pastContext,
+			final Resource source) {
+		this.activeContext = new ResourceContext(pastContext, source);
+		
 		return this.activeContext;
 	}
 

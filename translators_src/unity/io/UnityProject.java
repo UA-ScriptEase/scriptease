@@ -144,6 +144,8 @@ public final class UnityProject extends GameModule {
 			}
 		}
 
+		automaticGameObjects.removeAll(automaticScriptEaseObjects);
+
 		automaticMap.put(GameModule.AUTOMATIC, automaticScriptEaseObjects);
 		automaticMap.put(UnityProject.GAME_OBJECT_AUTOMATIC,
 				automaticGameObjects);
