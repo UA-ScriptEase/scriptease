@@ -28,6 +28,7 @@ import scriptease.util.GUIOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  * 
  * @param <E>
  */
@@ -284,7 +285,7 @@ public class SEGraphNodeRenderer<E> {
 			if (mode == Mode.GROUP) {
 				final Color colour;
 
-				if (this.graph.model.isGroup(this.graph.group))
+				if (this.graph.getGroupController().isGroup())
 					colour = ScriptEaseUI.COLOUR_GROUPABLE_END_NODE;
 				else
 					colour = ScriptEaseUI.COLOUR_GROUPABLE_NODE;
@@ -293,7 +294,7 @@ public class SEGraphNodeRenderer<E> {
 					final JComponent nComponent;
 					nComponent = this.graph.nodesToComponents.getValue(n);
 
-					if (this.graph.group.contains(n))
+					if (this.graph.getGroupController().containsNode(n))
 						this.setComponentAppearance(nComponent, n, colour);
 					else
 						this.setComponentAppearance(nComponent, n,
