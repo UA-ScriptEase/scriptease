@@ -165,6 +165,7 @@ public class SEGraph<E> extends JComponent {
 			public void modeChanged(Mode mode) {
 				SEGraph.this.setCursor(mode.getCursor());
 				SEGraph.this.getGroupController().resetGroup();
+				SEGraph.this.renderer.resetAppearances();
 			}
 		});
 	}
