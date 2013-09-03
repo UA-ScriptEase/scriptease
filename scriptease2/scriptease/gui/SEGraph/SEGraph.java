@@ -166,6 +166,7 @@ public class SEGraph<E> extends JComponent {
 				SEGraph.this.setCursor(mode.getCursor());
 				SEGraph.this.getGroupController().resetGroup();
 				SEGraph.this.renderer.resetAppearances();
+				SEGraph.this.setUI(SEGraph.this.new SEGraphArrowUI());
 			}
 		});
 	}
@@ -398,11 +399,6 @@ public class SEGraph<E> extends JComponent {
 			}
 
 			this.renderer.resetAppearances();
-
-			for (E node : this.selectedNodes) {
-				this.renderer.reconfigureAppearance(this
-						.getNodesToComponentsMap().getValue(node), node);
-			}
 
 			return true;
 		}
@@ -990,15 +986,20 @@ public class SEGraph<E> extends JComponent {
 
 						childSelected = selected.contains(child);
 
-						if (parentSelected && childSelected) {
-							lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;
-						} else if (parentSelected) {
-							lineColor = ScriptEaseUI.COLOUR_CHILD_NODE.darker();
-						} else if (childSelected) {
-							lineColor = ScriptEaseUI.COLOUR_PARENT_NODE
-									.darker();
-						} else
+						if (SEGraph.this.toolBar.getMode() == Mode.GROUP) {
 							lineColor = Color.LIGHT_GRAY;
+						} else {
+							if (parentSelected && childSelected) {
+								lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;
+							} else if (parentSelected) {
+								lineColor = ScriptEaseUI.COLOUR_CHILD_NODE
+										.darker();
+							} else if (childSelected) {
+								lineColor = ScriptEaseUI.COLOUR_PARENT_NODE
+										.darker();
+							} else
+								lineColor = Color.LIGHT_GRAY;
+						}
 
 						// Move the arrows up if there are more children and
 						// the previous level's offset is different.
