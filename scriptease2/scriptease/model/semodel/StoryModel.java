@@ -267,7 +267,7 @@ public final class StoryModel extends SEModel {
 		final Collection<GameType> keywords = new ArrayList<GameType>();
 
 		for (LibraryModel library : this.getLibraries()) {
-			keywords.addAll(library.getLibraryTypes());
+			keywords.addAll(library.getGameTypes());
 		}
 
 		return keywords;
@@ -278,6 +278,10 @@ public final class StoryModel extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			final GameType type = library.getType(keyword);
 
+			// TODO MAKE SURE ITS NOT DEFAULT TYPE
+			// HOW TO:
+			// Save static default type in GameType class
+			// check if it's not that.
 			if (type != null)
 				return type;
 		}

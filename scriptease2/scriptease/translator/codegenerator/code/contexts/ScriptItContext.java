@@ -192,8 +192,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return cause.getMainCodeBlock().getLibrary()
-				.getSlotParameters(currentSlot);
+		return cause.getMainCodeBlock().getLibrary().getSlot(currentSlot)
+				.getParameters();
 	}
 
 	/**
@@ -209,8 +209,8 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 			throw new NullPointerException("Encountered null slot in a Cause! "
 					+ "Call may be incorrect in Language Dictionary.");
 
-		return cause.getMainCodeBlock().getLibrary()
-				.getSlotCondition(currentSlot);
+		return cause.getMainCodeBlock().getLibrary().getSlot(currentSlot)
+				.getCondition();
 	};
 
 	@Override
