@@ -39,7 +39,7 @@ import scriptease.translator.io.model.Resource;
  * 
  * @author mfchurch
  * @author remiller
- * 
+ * @author jyuen
  */
 public class ContextFactory {
 	private static ContextFactory instance;
@@ -80,15 +80,15 @@ public class ContextFactory {
 			created = this.createContext(context, (KnowItBinding) source);
 		} else if (source instanceof StoryPoint) {
 			created = this.createContext(context, (StoryPoint) source);
+		// this should get checked last, otherwise the ones above can get caught
+		// by it because they're subclasses.
+		} else if (source instanceof StoryComponent) {
+			created = this.createContext(context, (StoryComponent) source);
+		} else if (source instanceof DialogueLine) {
+			created = this.createContext(context, (DialogueLine) source);
 		} else if (source instanceof Resource) {
 			created = this.createContext(context, (Resource) source);
 		}
-		// this should get checked last, otherwise the ones above can get caught
-		// by it because they're subclasses.
-		else if (source instanceof StoryComponent) {
-			created = this.createContext(context, (StoryComponent) source);
-		} else if (source instanceof DialogueLine)
-			created = this.createContext(context, (DialogueLine) source);
 		else {
 			throw new CodeGenerationException(
 					"Cannot Generate Context for Object: " + source);
