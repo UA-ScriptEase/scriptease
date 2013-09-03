@@ -5,12 +5,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * Model class for SEGraph. This stores and handles all of the nodes in the
@@ -282,152 +279,6 @@ public abstract class SEGraphModel<E> {
 		}
 
 		return descendants;
-	}
-
-	/**
-	 * Checks whether the node is a valid group start
-	 * 
-	 * @param node
-	 */
-	public boolean isValidGroupStart(E node) {
-		final Queue<E> nodes = new LinkedList<E>();
-
-		boolean notDone = true;
-		boolean result = false;
-
-		for (E child : this.getChildren(node)) {
-			nodes.add(child);
-		}
-
-		while (notDone && nodes.size() >= 1) {
-			final E currentNode = nodes.poll();
-			
-			Set<E> group = new HashSet<E>();
-
-			// Must always include start in set
-			group.add(node);
-			group = this.findGroupPaths(currentNode, group, null);
-
-			result = this.isGroup(group);
-
-			if (result) {
-				notDone = false;
-			} else {
-				for (E temp : this.getChildren(currentNode)) {
-					nodes.add(temp);
-				}
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * A nodes should be visited when: 1. All of it's children are visited. 2.
-	 * It's been used to find a path to the goal.
-	 * 
-	 * Retreat once we find a child that is either the end or part of the group.
-	 * Retreat when there are no children. When retreating, go back one, see if
-	 * there are other children to visit.
-	 * 
-	 * @param endNode
-	 * @param group
-	 * @return
-	 */
-	public Set<E> findGroupPaths(E endNode, Set<E> group, E startNode) {
-		final Stack<E> nodes = new Stack<E>();
-		final Set<E> visited = new HashSet<E>();
-
-		nodes.push(endNode);
-
-		boolean notDone = true;
-		boolean found = false;
-
-		while (!nodes.isEmpty() && notDone) {
-			E currentNode = nodes.peek();
-
-			boolean foundChildInGroup = false;
-			if (currentNode == startNode || group.contains(currentNode)
-					&& currentNode != startNode) {
-
-				// We found an end point, back up one
-
-				visited.add(currentNode);
-				nodes.pop();
-				group.add(currentNode);
-
-			} else if (this.getParents(currentNode).size() > 0) {
-				found = false;
-
-				for (E child : this.getParents(currentNode)) {
-					if (group.contains(child)) {
-						foundChildInGroup = true;
-					} else if (visited.contains(child)) {
-						// ignore
-					} else {
-						// not done yet add child
-						found = true;
-						nodes.push(child);
-					}
-
-					if (found)
-						break;
-				}
-
-				if (!found) {
-					// no children were found
-					final E node = nodes.pop();
-					visited.add(node);
-					// if one child is in group, add parent...
-					if (foundChildInGroup) {
-						group.add(node);
-					}
-				}
-
-			} else {
-				// no children, so back up one
-				visited.add(nodes.pop());
-			}
-		}
-
-		return group;
-	}
-
-	/**
-	 * Checks whether <code>nodes</code> is a valid group.
-	 * 
-	 * @param nodes
-	 * @return
-	 */
-	public boolean isGroup(Set<E> nodes) {
-		int numChild = 0;
-		int numParents = 0;
-		
-		// Can't group only one node.
-		if (nodes.size() <= 1)
-			return false;
-
-		for (E node : nodes) {
-			for (E child : this.getChildren(node)) {
-				if (!nodes.contains(child)) {
-					numChild++;
-					break;
-				}
-			}
-
-			for (E parent : this.getParents(node)) {
-				if (!nodes.contains(parent)) {
-					numParents++;
-					break;
-				}
-			}
-
-			if (numParents > 1 || numChild > 1) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	/**

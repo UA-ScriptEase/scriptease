@@ -16,13 +16,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -34,6 +30,7 @@ import scriptease.controller.observer.SEGraphToolBarObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraphToolBar.Mode;
+import scriptease.gui.SEGraph.controllers.GraphGroupController;
 import scriptease.gui.SEGraph.models.SEGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
@@ -89,6 +86,8 @@ public class SEGraph<E> extends JComponent {
 
 	private final SEGraphToolBar toolBar;
 
+	private GraphGroupController<E> groupController;
+
 	/**
 	 * Builds a new graph with the passed in model and single node selection
 	 * enabled.
@@ -125,6 +124,8 @@ public class SEGraph<E> extends JComponent {
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
 		this.observers = new ArrayList<SEGraphObserver<E>>();
+
+		this.groupController = new GraphGroupController<E>(this);
 
 		this.transferHandler = new SEGraphNodeTransferHandler<E>(this);
 
@@ -163,6 +164,7 @@ public class SEGraph<E> extends JComponent {
 			@Override
 			public void modeChanged(Mode mode) {
 				SEGraph.this.setCursor(mode.getCursor());
+				SEGraph.this.getGroupController().resetGroup();
 			}
 		});
 	}
@@ -664,6 +666,15 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Returns the {@link GraphGroupController} linked to the graph.
+	 * 
+	 * @return
+	 */
+	public GraphGroupController<E> getGroupController() {
+		return this.groupController;
+	}
+
+	/**
 	 * Returns a component for the passed in node. This method creates a
 	 * component for the node if none is found.
 	 * 
@@ -685,124 +696,6 @@ public class SEGraph<E> extends JComponent {
 			component = new JLabel(node.toString());
 		}
 		return component;
-	}
-
-	public Set<E> group = new HashSet<E>();
-	private E groupStartNode = null;
-
-	/**
-	 * Find children who are now all orphaned and remove them from the group.
-	 * 
-	 * @param node
-	 */
-	private void removeGroupOrphans(E node) {
-		final Queue<E> examine = new LinkedList<E>();
-		examine.add(node);
-
-		while (!examine.isEmpty()) {
-			final E currentNode = examine.poll();
-
-			for (E child : this.model.getChildren(currentNode)) {
-				boolean parentInGroup = false;
-
-				for (E parent : this.model.getParents(child)) {
-					if (group.contains(parent)) {
-						parentInGroup = true;
-					}
-				}
-
-				if (!parentInGroup) {
-					examine.add(child);
-					group.remove(child);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Adds the <code>node</code> to the possible group.
-	 * 
-	 * @param node
-	 * @return
-	 */
-	private void addNodeToGroup(E node) {
-		if (group.isEmpty()) {
-			if (SEGraph.this.model.isValidGroupStart(node)) {
-				this.groupStartNode = node;
-				this.group.add(node);
-			}
-		} else if (groupStartNode != null) {
-			// Check whether the node is already in the group
-			if (group.contains(node) && node != groupStartNode) {
-				group.remove(node);
-				this.removeGroupOrphans(node);
-
-			} else {
-				// Now we can start forming a group
-
-				// We don't want to add anything behind the start node.
-				if (!this.model.getParents(node).contains(groupStartNode)) {
-					// We need to find path back to start
-					final Set<E> tempGroup = new HashSet<E>();
-					final Queue<E> backQueue = new LinkedList<E>();
-					boolean foundStart = false;
-
-					// Must always include start in set
-					tempGroup.add(groupStartNode);
-					tempGroup.add(node);
-					backQueue.add(node);
-
-					while (!backQueue.isEmpty() && !foundStart) {
-						final E currNode = backQueue.poll();
-
-						for (E parent : this.getParents(currNode)) {
-							if (parent == groupStartNode) {
-								foundStart = true;
-							}
-
-							if (!tempGroup.contains(parent)) {
-								tempGroup.add(parent);
-
-								if (!backQueue.contains(parent)) {
-									backQueue.offer(parent);
-								}
-							}
-						}
-					}
-
-					if (foundStart) {
-						// There is at least once path from start to node, time
-						// to find all of them and add nodes
-						group = this.model.findGroupPaths(node, group,
-								this.groupStartNode);
-						group.add(node);
-					}
-
-				} else {
-					// Parent is already in graph, don't do extra work
-					group.add(node);
-				}
-
-			}
-		}
-
-		// TODO these two methods need to do something when I get back to groups
-		// if (this.model.isGroup(group)) {
-		// // TODO do something here later - like change all their colors
-		// for (E n : this.group) {
-		//
-		// }
-		// } else {
-		// // Let's do some repainting on the components.
-		// for (E groupableNode : this.group) {
-		// final JComponent component;
-		// component = this.nodesToComponents.getValue(groupableNode);
-		//
-		// // this.renderer.setComponentAppearance(component,
-		// // groupableNode, backgroundColour)
-		// }
-		// }
-
 	}
 
 	/**
@@ -1191,11 +1084,11 @@ public class SEGraph<E> extends JComponent {
 			if (mode == Mode.INSERT || mode == Mode.CONNECT
 					|| mode == Mode.DISCONNECT) {
 				graph.draggedFromNode = source;
-				SEGraph.this.group.clear();
+				SEGraph.this.groupController.resetGroup();
 			} else if (mode == Mode.GROUP) {
-				graph.addNodeToGroup(source);
+				SEGraph.this.groupController.addNodeToGroup(source);
 			} else {
-				SEGraph.this.group.clear();
+				SEGraph.this.groupController.resetGroup();
 			}
 		}
 
