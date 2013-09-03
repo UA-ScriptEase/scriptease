@@ -46,6 +46,15 @@ public class GameType {
 	private Map<String, String> escapes;
 
 	/**
+	 * Builds a new Game Type that is completely empty.
+	 */
+	public GameType() {
+		this("", "unknown", "", new ArrayList<AbstractFragment>(),
+				new ArrayList<String>(), "", "", new HashMap<String, String>(),
+				null, null);
+	}
+
+	/**
 	 * Build a new Game Type representation.
 	 * 
 	 * @param name

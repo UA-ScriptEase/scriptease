@@ -129,7 +129,7 @@ public class CodeBlockContext extends Context {
 			mainBlock = this.codeBlock.getCause().getMainCodeBlock();
 
 			this.parametersWithSlot.addAll(mainBlock.getLibrary()
-					.getSlotParameters(mainBlock.getSlot()));
+					.getSlot(mainBlock.getSlot()).getParameters());
 
 			this.parametersWithSlot.addAll(this.getParameters());
 		}
@@ -177,8 +177,8 @@ public class CodeBlockContext extends Context {
 		final Collection<KnowIt> parameters;
 
 		mainBlock = this.codeBlock.getCause().getMainCodeBlock();
-		parameters = mainBlock.getLibrary().getSlotParameters(
-				mainBlock.getSlot());
+		parameters = mainBlock.getLibrary().getSlot(mainBlock.getSlot())
+				.getParameters();
 
 		for (KnowIt parameter : parameters) {
 			if (parameter.getDisplayText().equalsIgnoreCase(keyword))
@@ -209,9 +209,10 @@ public class CodeBlockContext extends Context {
 
 		return this.identicalCauses;
 	}
-	
-	/** 
+
+	/**
 	 * Return the Story Component this <code>CodeBlock</code> is attached to
+	 * 
 	 * @return
 	 */
 	public StoryComponent getComponent() {
