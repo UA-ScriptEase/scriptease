@@ -141,7 +141,7 @@ public class SEGraphNodeRenderer<E> {
 	}
 
 	/**
-	 * Resets the appearance of all components to the default white colour.
+	 * Resets the appearance of all components to their default colours.
 	 */
 	public void resetAppearances() {
 		final E lastSelectedNode;
@@ -157,12 +157,17 @@ public class SEGraphNodeRenderer<E> {
 
 			final Color backgroundColour;
 
-			if (this.graph.getParents(lastSelectedNode).contains(key)) {
-				backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
-			} else if (this.graph.getChildren(lastSelectedNode).contains(key)) {
-				backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
-			} else {
+			if (this.graph.getToolBarMode() == Mode.GROUP) {
 				backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+			} else {
+				if (this.graph.getParents(lastSelectedNode).contains(key)) {
+					backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
+				} else if (this.graph.getChildren(lastSelectedNode).contains(
+						key)) {
+					backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+				} else {
+					backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+				}
 			}
 
 			this.setComponentAppearance(entry.getValue(), key, backgroundColour);
@@ -292,10 +297,12 @@ public class SEGraphNodeRenderer<E> {
 
 				for (E currNode : this.graph.getNodes()) {
 					final JComponent nComponent;
-					nComponent = this.graph.nodesToComponents.getValue(currNode);
+					nComponent = this.graph.nodesToComponents
+							.getValue(currNode);
 
 					if (this.graph.getGroupController().containsNode(currNode))
-						this.setComponentAppearance(nComponent, currNode, colour);
+						this.setComponentAppearance(nComponent, currNode,
+								colour);
 					else
 						this.setComponentAppearance(nComponent, currNode,
 								ScriptEaseUI.COLOUR_NODE_DEFAULT);
