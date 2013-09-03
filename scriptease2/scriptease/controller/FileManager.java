@@ -240,7 +240,7 @@ public final class FileManager {
 					library.setTitle(title.substring(1));
 				
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, title,
+						FileManager.SAVE_AS, library.getTitle(),
 						FileManager.LIBRARY_FILTER);
 
 				if (location == null) {
@@ -269,7 +269,7 @@ public final class FileManager {
 					storyModel.setTitle(title.substring(1));
 				
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, title,
+						FileManager.SAVE_AS, storyModel.getTitle(),
 						FileManager.STORY_FILTER);
 
 				// make sure the user didn't cancel/close window.
