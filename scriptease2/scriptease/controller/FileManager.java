@@ -264,8 +264,12 @@ public final class FileManager {
 			public void processStoryModel(StoryModel storyModel) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
+				String title = storyModel.getTitle();
+				if (title.length() > 0 && title.charAt(0) == '*')
+					title = title.substring(1);
+				
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, storyModel.getTitle(),
+						FileManager.SAVE_AS, title,
 						FileManager.STORY_FILTER);
 
 				// make sure the user didn't cancel/close window.
