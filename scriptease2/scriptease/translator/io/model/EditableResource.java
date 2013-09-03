@@ -27,7 +27,7 @@ public abstract class EditableResource extends Resource {
 	}
 
 	public EditableResource(String name, List<Resource> children) {
-		this.name = name;
+		this.name = name.replaceAll("\n", " ");
 		this.children = children;
 
 		this.observerManager = new ObserverManager<ResourceObserver>();
@@ -105,7 +105,7 @@ public abstract class EditableResource extends Resource {
 	 * @param name
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.replaceAll("\n", " ");
 		this.notifyNameChange();
 	}
 

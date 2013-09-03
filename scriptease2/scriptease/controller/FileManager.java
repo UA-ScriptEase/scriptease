@@ -235,8 +235,12 @@ public final class FileManager {
 			public void processLibraryModel(LibraryModel library) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
+				String title = library.getTitle();
+				if (title.length() > 0 && title.charAt(0) == '*')
+					title = title.substring(1);
+				
 				File location = windowManager.showFileChooser(
-						FileManager.SAVE_AS, library.getTitle(),
+						FileManager.SAVE_AS, title,
 						FileManager.LIBRARY_FILTER);
 
 				if (location == null) {
