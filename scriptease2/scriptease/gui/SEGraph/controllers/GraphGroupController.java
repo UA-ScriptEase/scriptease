@@ -143,8 +143,7 @@ public class GraphGroupController<E> {
 			}
 		}
 
-		// Remove nodes in the group from the graph and replace it with the
-		// group node.
+		// Remove nodes in the group from the graph 
 		for (E node : this.group) {
 			if (node != this.startNode) {
 				this.graph.model.removeNode(node);
