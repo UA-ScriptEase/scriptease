@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.Stack;
 
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.models.SEGraphModel;
 import scriptease.gui.SEGraph.models.StoryPointGraphModel;
 import scriptease.model.complex.StoryPoint;
 
@@ -159,7 +158,7 @@ public class GraphGroupController<E> {
 		final StoryPoint startStoryPointNode = (StoryPoint) this.startNode;
 
 		groupModel = new StoryPointGraphModel(this.cloneNodes(
-				startStoryPointNode.clone(), startStoryPointNode));
+				startStoryPointNode.shallowClone(), startStoryPointNode));
 
 		return groupModel;
 	}
@@ -185,7 +184,7 @@ public class GraphGroupController<E> {
 				}
 			}
 
-			final StoryPoint clonedNode = child.clone();
+			final StoryPoint clonedNode = child.shallowClone();
 			newNode.addSuccessor(clonedNode);
 			this.cloneNodes(clonedNode, child);
 		}
