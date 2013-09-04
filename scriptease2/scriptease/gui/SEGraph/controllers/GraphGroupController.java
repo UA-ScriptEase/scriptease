@@ -1,17 +1,23 @@
 package scriptease.gui.SEGraph.controllers;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.swing.JComponent;
-
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.models.SEGraphModel;
+import scriptease.gui.SEGraph.models.StoryPointGraphModel;
+import scriptease.model.complex.StoryPoint;
 
 /**
- * Handles all graph grouping functionalities.
+ * Handles all graph grouping functionalities. A graph group represents a set of
+ * nodes in a graph {@link SEGraph} that meet the the conditions to form a
+ * group. These conditions including having at max one exit and at minimum two
+ * nodes.
  * 
  * @author jyuen
  * @author neesha
@@ -23,11 +29,16 @@ public class GraphGroupController<E> {
 	private Set<E> group;
 	private E startNode;
 
+	private final Collection<SEGraph<E>> existingGroups;
+
 	public GraphGroupController(SEGraph<E> graph) {
 		this.graph = graph;
 
 		this.group = new HashSet<E>();
 		this.startNode = null;
+
+		// TODO : will want to read this from story file later.
+		this.existingGroups = new ArrayList<SEGraph<E>>();
 	}
 
 	/**
@@ -81,8 +92,8 @@ public class GraphGroupController<E> {
 					if (foundStart) {
 						// There is at least once path from start to node, time
 						// to find all of them and add nodes
-						group = this.findGroupPaths(node, group,
-								this.startNode);
+						group = this
+								.findGroupPaths(node, group, this.startNode);
 						group.add(node);
 					}
 
@@ -96,20 +107,90 @@ public class GraphGroupController<E> {
 
 		if (this.isGroup(group)) {
 			// TODO do something here later - like change all their colors
-			for (E n : this.group) {
+			formGroup();
+		}
+	}
 
-			}
-		} else {
-			// Let's do some repainting on the components.
-			for (E groupableNode : this.group) {
-				final JComponent component;
-				component = this.graph.nodesToComponents
-						.getValue(groupableNode);
+	/**
+	 * Forms the selected nodes into a group node.
+	 */
+	public void formGroup() {
+		// Make sure we even have a group.
+		if (!this.isGroup())
+			return;
 
-				// this.renderer.setComponentAppearance(component,
-				// groupableNode, backgroundColour)
+		// Not dealing with dialogue groups for now
+		if (!(this.startNode instanceof StoryPoint))
+			return;
+
+		final StoryPointGraphModel newGroupModel;
+
+		// Clone the group nodes
+		newGroupModel = this.cloneGroupModel();
+
+		E exitNode = null;
+		// Get the Exit node of the group
+		for (E node : this.group) {
+			if (!this.group.containsAll(this.graph.getChildren(node))) {
+				exitNode = node;
+				break;
 			}
 		}
+
+		// Connect the children of the exit node to the start node instead.
+		if (exitNode != null) {
+			for (E child : this.graph.getChildren(exitNode)) {
+				this.graph.model.connectNodes(child, this.startNode);
+			}
+		}
+
+		// Remove nodes in the group from the graph and replace it with the
+		// group node.
+		for (E node : this.group) {
+			if (node != this.startNode) {
+				this.graph.model.removeNode(node);
+			}
+		}
+	}
+
+	private StoryPointGraphModel cloneGroupModel() {
+		final StoryPointGraphModel groupModel;
+
+		final StoryPoint startStoryPointNode = (StoryPoint) this.startNode;
+
+		groupModel = new StoryPointGraphModel(this.cloneNodes(
+				startStoryPointNode.clone(), startStoryPointNode));
+
+		return groupModel;
+	}
+
+	private final Set<StoryPoint> clonedNodes = new HashSet<StoryPoint>();
+
+	private StoryPoint cloneNodes(StoryPoint newNode, StoryPoint node) {
+
+		clonedNodes.add(newNode);
+
+		outer: for (StoryPoint child : node.getSuccessors()) {
+
+			// Don't care about any nodes that aren't in the group.
+			if (!this.group.contains(child))
+				continue;
+
+			// If the node already exists in this new graph model, we don't need
+			// to reclone it.
+			for (StoryPoint existingNode : clonedNodes) {
+				if (existingNode.getUniqueID() == child.getUniqueID()) {
+					newNode.addSuccessor(existingNode);
+					continue outer;
+				}
+			}
+
+			final StoryPoint clonedNode = child.clone();
+			newNode.addSuccessor(clonedNode);
+			this.cloneNodes(clonedNode, child);
+		}
+
+		return newNode;
 	}
 
 	/**
@@ -118,7 +199,6 @@ public class GraphGroupController<E> {
 	public void resetGroup() {
 		this.group.clear();
 	}
-	
 
 	/**
 	 * Checks whether the current group is a valid group.
@@ -128,13 +208,32 @@ public class GraphGroupController<E> {
 	public boolean isGroup() {
 		return this.isGroup(this.group);
 	}
-	
+
 	/**
-	 * Checks whether the current group contains <code>node</code>
+	 * Checks whether the current group contains <code>node</code>.
+	 * 
 	 * @return
 	 */
 	public boolean containsNode(E node) {
 		return this.group.contains(node);
+	}
+
+	/**
+	 * Gets the current group being formed.
+	 * 
+	 * @return
+	 */
+	public Set<E> getCurrentGroup() {
+		return this.group;
+	}
+
+	/**
+	 * Gets the start node of the group being formed.
+	 * 
+	 * @return
+	 */
+	public E getStartNode() {
+		return this.startNode;
 	}
 
 	/**
@@ -237,7 +336,7 @@ public class GraphGroupController<E> {
 				for (E child : this.graph.model.getParents(currentNode)) {
 					if (group.contains(child)) {
 						foundChildInGroup = true;
-					} else if (!visited.contains(child)){
+					} else if (!visited.contains(child)) {
 						// not done yet add child
 						found = true;
 						nodes.push(child);
