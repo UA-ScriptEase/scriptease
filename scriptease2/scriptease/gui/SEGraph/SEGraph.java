@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -880,6 +881,7 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @author previous devs
 	 * @author kschenk
+	 * @author jyuen
 	 * 
 	 */
 	private class SEGraphArrowUI extends ComponentUI {
@@ -987,7 +989,20 @@ public class SEGraph<E> extends JComponent {
 						childSelected = selected.contains(child);
 
 						if (SEGraph.this.toolBar.getMode() == Mode.GROUP) {
-							lineColor = Color.LIGHT_GRAY;
+							final GraphGroupController<E> groupController = SEGraph.this
+									.getGroupController();
+
+							final Set<E> group = groupController
+									.getCurrentGroup();
+
+							if (group.contains(child) && group.contains(parent)
+									&& child != groupController.getStartNode()) {
+								if (SEGraph.this.getGroupController().isGroup())
+									lineColor = ScriptEaseUI.COLOUR_GROUPABLE_END_NODE;
+								else
+									lineColor = ScriptEaseUI.COLOUR_GROUPABLE_NODE;
+							} else
+								lineColor = Color.LIGHT_GRAY;
 						} else {
 							if (parentSelected && childSelected) {
 								lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;

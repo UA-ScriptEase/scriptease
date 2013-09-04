@@ -48,9 +48,9 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * only gets saved to the model, not written to any files. So it must get
 	 * generated whenever we create a new StoryPoint.
 	 */
-	private final int uniqueID;
-	private final Set<StoryPoint> successors;
-	private final Set<StoryPoint> parents;
+	private int uniqueID;
+	private Set<StoryPoint> successors;
+	private Set<StoryPoint> parents;
 
 	/**
 	 * Creates a new Story Point with the given name and a default fan-in value.
@@ -81,15 +81,28 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	@Override
-	public ComplexStoryComponent clone() {
-		/*
-		 * TODO We are not cloning Story Points properly! Add in when we
-		 * refactor to use constructors. This hasn't caused issues yet because
-		 * we never have to completely copy and paste story points.
-		 * 
-		 * Ticket: 13127149
-		 */
-		return super.clone();
+	public StoryPoint clone() {
+		final StoryPoint component = (StoryPoint) super.clone();
+
+		return component;
+	}
+
+	/**
+	 * Clones the current story point wit no successors and parents and retains
+	 * the existing unique id. Unless you plan on deleting the existing
+	 * StoryPoint, you should use the <code>clone</code> method or possibly run
+	 * into many issues.
+	 * 
+	 * @return
+	 */
+	public StoryPoint shallowClone() {
+		final StoryPoint component = this.clone();
+
+		component.successors = new HashSet<StoryPoint>();
+		component.parents = new HashSet<StoryPoint>();
+		component.uniqueID = this.uniqueID;
+
+		return component;
 	}
 
 	@Override
@@ -121,52 +134,6 @@ public class StoryPoint extends ComplexStoryComponent {
 
 		return accepted;
 	}
-
-	//
-	// @Override
-	// public boolean addStoryChildBefore(StoryComponent newChild,
-	// StoryComponent sibling) {
-	// final boolean accepted = super.addStoryChildBefore(newChild, sibling);
-	//
-	// final LibraryModel model;
-	//
-	// model = SEModelManager.getInstance().getActiveModel().getTranslator()
-	// .getLibrary();
-	//
-	// if (accepted && newChild instanceof CauseIt) {
-	// final CauseIt causeIt = (CauseIt) newChild;
-	//
-	// for (StoryComponent description : model.getDescriptionsCategory()
-	// .getChildren()) {
-	// if (description instanceof KnowIt
-	// && description.getDisplayText().contains("Is Active")) {
-	// final KnowIt knowIt = ((KnowIt) description).clone();
-	// final AskIt askIt = new AskIt();
-	//
-	// knowIt.getBinding().process(new BindingAdapter() {
-	// @Override
-	// public void processFunction(
-	// KnowItBindingFunction function) {
-	// for (KnowIt param : function.getValue()
-	// .getParameters()) {
-	// if (param.getTypes().contains(STORY_POINT_TYPE)) {
-	// param.setBinding(StoryPoint.this);
-	// }
-	// }
-	// }
-	// });
-	//
-	// causeIt.addStoryChild(knowIt);
-	// causeIt.addStoryChild(askIt);
-	// askIt.getCondition().setBinding(knowIt);
-	//
-	// break;
-	// }
-	// }
-	// }
-	//
-	// return accepted;
-	// }
 
 	/**
 	 * Only accepts Causes, not effects, as children.
@@ -377,7 +344,7 @@ public class StoryPoint extends ComplexStoryComponent {
 	public void setEnabled(Boolean isDisabled) {
 		// Do nothing - don't want to be able to disable story points
 	}
-	
+
 	/**
 	 * Returns a 32 character, lower case string that uses the unique id to
 	 * generate a unique name for the story point.
