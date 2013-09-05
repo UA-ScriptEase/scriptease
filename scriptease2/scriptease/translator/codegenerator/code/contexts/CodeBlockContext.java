@@ -12,7 +12,8 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
@@ -25,7 +26,7 @@ public class CodeBlockContext extends Context {
 	private CodeBlock codeBlock;
 
 	// Lazy loaded variables.
-	private Collection<ScriptIt> identicalCauses = null;
+	private Collection<CauseIt> identicalCauses = null;
 	private Collection<KnowIt> parameters = null;
 	private Collection<KnowIt> parametersWithSlot = null;
 	private Collection<KnowIt> variables = null;
@@ -189,18 +190,29 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public Collection<ScriptIt> getIdenticalCauses() {
+	public Collection<CauseIt> getIdenticalCauses() {
 		if (this.identicalCauses == null) {
 			final CauseIt causeIt;
 
 			causeIt = this.codeBlock.getCause();
-			this.identicalCauses = new ArrayList<ScriptIt>();
+			this.identicalCauses = new ArrayList<CauseIt>();
 
-			for (StoryPoint point : this.getStoryPoints()) {
-				for (StoryComponent child : point.getChildren()) {
-					if (child instanceof ScriptIt) {
+			for (StoryNode node : this.getStoryNodes()) {
+				for (StoryComponent child : node.getChildren()) {
+					if (child instanceof StoryPoint) {
+						for (StoryComponent storyPointChild : ((StoryPoint) child)
+								.getChildren()) {
+							if (storyPointChild instanceof CauseIt) {
+								if (causeIt
+										.isEquivalentToCause((CauseIt) storyPointChild))
+									this.identicalCauses
+											.add((CauseIt) storyPointChild);
+							}
+						}
+
+					} else if (child instanceof CauseIt) {
 						if (causeIt.isEquivalentToCause((CauseIt) child)) {
-							this.identicalCauses.add((ScriptIt) child);
+							this.identicalCauses.add((CauseIt) child);
 						}
 					}
 				}

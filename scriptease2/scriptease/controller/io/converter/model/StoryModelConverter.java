@@ -7,7 +7,7 @@ import java.util.Collection;
 import scriptease.ScriptEase;
 import scriptease.controller.io.XMLNode;
 import scriptease.gui.WindowFactory;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;

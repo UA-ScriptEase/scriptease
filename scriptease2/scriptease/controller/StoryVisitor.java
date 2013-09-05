@@ -10,7 +10,8 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryGroup;
+import scriptease.model.complex.storygraph.StoryPoint;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to
@@ -32,6 +33,8 @@ import scriptease.model.complex.StoryPoint;
  */
 public interface StoryVisitor {
 	/** COMPLEX TYPES **/
+	public void processStoryGroup(StoryGroup storyGroup);
+	
 	public void processStoryPoint(StoryPoint storyPoint);
 	
 	public void processScriptIt(ScriptIt scriptIt);

@@ -1,13 +1,7 @@
-package scriptease.model.complex;
+package scriptease.model.complex.storygraph;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import scriptease.controller.BindingAdapter;
@@ -19,6 +13,8 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.util.StringOp;
 
@@ -35,22 +31,13 @@ import scriptease.util.StringOp;
  * @author kschenk
  * @author jyuen
  */
-public class StoryPoint extends ComplexStoryComponent {
-	public static String STORY_POINT_TYPE = "storyPoint";
+public class StoryPoint extends StoryNode {
+	public static final String STORY_POINT_TYPE = "storyPoint";
 
 	private static final int DEFAULT_FAN_IN = 1;
 	private static final String NEW_STORY_POINT = "New Story Point";
-	private static int storyPointCounter = 1;
 
 	private int fanIn;
-	/**
-	 * StoryPoints must be unique. This uniqueID helps maintain uniqueness. It
-	 * only gets saved to the model, not written to any files. So it must get
-	 * generated whenever we create a new StoryPoint.
-	 */
-	private int uniqueID;
-	private Set<StoryPoint> successors;
-	private Set<StoryPoint> parents;
 
 	/**
 	 * Creates a new Story Point with the given name and a default fan-in value.
@@ -62,11 +49,9 @@ public class StoryPoint extends ComplexStoryComponent {
 	public StoryPoint(String name) {
 		super();
 		this.fanIn = DEFAULT_FAN_IN;
-		this.successors = new HashSet<StoryPoint>();
-		this.parents = new HashSet<StoryPoint>();
-		this.uniqueID = storyPointCounter;
-
-		StoryPoint.storyPointCounter++;
+		this.successors = new HashSet<StoryNode>();
+		this.parents = new HashSet<StoryNode>();
+		this.uniqueID = this.getNextStoryNodeCounter();
 
 		this.registerChildType(CauseIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -82,24 +67,23 @@ public class StoryPoint extends ComplexStoryComponent {
 
 	@Override
 	public StoryPoint clone() {
-		final StoryPoint component = (StoryPoint) super.clone();
-
-		return component;
+		return (StoryPoint) super.clone();
 	}
 
 	/**
-	 * Clones the current story point wit no successors and parents and retains
+	 * Clones the current story point with no successors and parents and retains
 	 * the existing unique id. Unless you plan on deleting the existing
 	 * StoryPoint, you should use the <code>clone</code> method or possibly run
 	 * into many issues.
 	 * 
 	 * @return
 	 */
-	public StoryPoint shallowClone() {
+	@Override
+	public StoryNode shallowClone() {
 		final StoryPoint component = this.clone();
 
-		component.successors = new HashSet<StoryPoint>();
-		component.parents = new HashSet<StoryPoint>();
+		component.successors = new HashSet<StoryNode>();
+		component.parents = new HashSet<StoryNode>();
 		component.uniqueID = this.uniqueID;
 
 		return component;
@@ -136,20 +120,6 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Only accepts Causes, not effects, as children.
-	 */
-	@Override
-	public boolean canAcceptChild(StoryComponent potentialChild) {
-		// Only accept causes, not effects
-		if (potentialChild instanceof CauseIt) {
-			return super.canAcceptChild(potentialChild);
-		} else if (potentialChild instanceof Note) {
-			return super.canAcceptChild(potentialChild);
-		}
-		return false;
-	}
-
-	/**
 	 * Returns the Fan In for the StoryPoint.
 	 * 
 	 * @return
@@ -181,29 +151,12 @@ public class StoryPoint extends ComplexStoryComponent {
 	}
 
 	/**
-	 * Gets the immediate successors of the StoryPoint.
-	 * 
-	 * @return
-	 */
-	public Collection<StoryPoint> getSuccessors() {
-		return this.successors;
-	}
-
-	/**
-	 * Gets the immediate parents of the StoryPoint.
-	 * 
-	 * @return
-	 */
-	public Collection<StoryPoint> getParents() {
-		return this.parents;
-	}
-
-	/**
 	 * Adds a successor to the StoryPoint.
 	 * 
 	 * @param successor
 	 */
-	public boolean addSuccessor(StoryPoint successor) {
+	@Override
+	public boolean addSuccessor(StoryNode successor) {
 		if (successor != this && !successor.getSuccessors().contains(this)) {
 			if (this.successors.add(successor)) {
 				successor.parents.add(this);
@@ -221,8 +174,9 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * 
 	 * @param successors
 	 */
-	public void addSuccessors(Collection<StoryPoint> successors) {
-		for (StoryPoint successor : successors) {
+	@Override
+	public void addSuccessors(Collection<StoryNode> successors) {
+		for (StoryNode successor : successors) {
 			if (successor != this) {
 				this.addSuccessor(successor);
 			}
@@ -234,7 +188,8 @@ public class StoryPoint extends ComplexStoryComponent {
 	 * 
 	 * @param successor
 	 */
-	public boolean removeSuccessor(StoryPoint successor) {
+	@Override
+	public boolean removeSuccessor(StoryNode successor) {
 		if (this.successors.remove(successor)) {
 			successor.parents.remove(this);
 
@@ -245,52 +200,11 @@ public class StoryPoint extends ComplexStoryComponent {
 		return false;
 	}
 
-	/**
-	 * Gets all descendants of the StoryPoint in an unordered set, including the
-	 * StoryPoint itself. That is, the successors, the successors of the
-	 * successors, etc. This is computationally expensive, and should thus be
-	 * used carefully. Try to cache the descendants somewhere if they need to be
-	 * accessed more than once. If order matters, use
-	 * {@link #getOrderedDescendants()}.
-	 * 
-	 * @see #getOrderedDescendants()
-	 * @return An unordered set of the story point's descendants.
-	 */
-	public Set<StoryPoint> getDescendants() {
-		return this.addDescendants(new HashSet<StoryPoint>());
-	}
-
-	/**
-	 * Gets all descendants of the StoryPoint, including the StoryPoint itself.
-	 * This is much slower than {@link #getDescendants()}, so it should be used
-	 * sparingly.
-	 * 
-	 * @see #getDescendants()
-	 * @return An ordered list of the story point's descendants.
-	 */
-	public List<StoryPoint> getOrderedDescendants() {
-		return this.addDescendants(new ArrayList<StoryPoint>());
-	}
-
-	/**
-	 * Adds the descendants to the passed in collection. You should use
-	 * {@link #getDescendants()} or {@link #getOrderedDescendants()} instead of
-	 * this method. Having this method separate lets us keep our descendant
-	 * collecting code in one method for different types of collections. It also
-	 * lets us avoid going through the graph multiple times in cases where we
-	 * branch around.
-	 * 
-	 * @see #getDescendants()
-	 * @see #getOrderedDescendants()
-	 * @param descendants
-	 *            The collection to add to and to return.
-	 * @return The same collection that was passed in, but with descendants
-	 *         added.
-	 */
-	private <E extends Collection<StoryPoint>> E addDescendants(E descendants) {
+	@Override
+	protected <E extends Collection<StoryNode>> E addDescendants(E descendants) {
 		descendants.add(this);
 
-		for (StoryPoint successor : this.getSuccessors()) {
+		for (StoryNode successor : this.getSuccessors()) {
 			/*
 			 * This check prevents us from going over paths twice, which saves a
 			 * ton of time in complex stories. Note that the contains
@@ -302,42 +216,6 @@ public class StoryPoint extends ComplexStoryComponent {
 		}
 
 		return descendants;
-	}
-
-	/**
-	 * Gets a mapping of the depth of each StoryPoint. The depth corresponds to
-	 * the longest path it will take to get to the Story Point. This is very
-	 * computationally expensive, so it should not be used too often.
-	 * 
-	 * @return
-	 */
-	public final Map<StoryPoint, Integer> createDepthMap() {
-		final Map<StoryPoint, Integer> depthMap = new IdentityHashMap<StoryPoint, Integer>();
-
-		// Goes through every child of the node
-		for (StoryPoint child : this.getSuccessors()) {
-			// Gets the depth map of every child
-			final Map<StoryPoint, Integer> childDepthMap = child
-					.createDepthMap();
-
-			for (Entry<StoryPoint, Integer> entry : childDepthMap.entrySet()) {
-				final StoryPoint childNode = entry.getKey();
-				final Integer depth = entry.getValue() + 1;
-
-				// If the node is already in the depthMap and the new depth is
-				// greater, use the greater depth value.
-				if (depthMap.containsKey(childNode)) {
-					if (depth > depthMap.get(childNode))
-						depthMap.put(childNode, depth);
-				} else
-					depthMap.put(childNode, depth);
-			}
-		}
-
-		if (!depthMap.containsKey(this))
-			depthMap.put(this, 0);
-
-		return depthMap;
 	}
 
 	@Override
@@ -376,23 +254,6 @@ public class StoryPoint extends ComplexStoryComponent {
 		name = StringOp.removeIllegalCharacters(name, regexPattern, false);
 
 		return name;
-	}
-
-	/**
-	 * Returns the unique ID. Unique IDs are generated on ScriptEase startup and
-	 * not saved to file, so remember not to implement code that requires unique
-	 * IDs to be persistent across different saves.
-	 * 
-	 * @return
-	 */
-	public Integer getUniqueID() {
-		return this.uniqueID;
-	}
-
-	@Override
-	public void revalidateKnowItBindings() {
-		for (StoryComponent child : this.getChildren())
-			child.revalidateKnowItBindings();
 	}
 
 	@Override

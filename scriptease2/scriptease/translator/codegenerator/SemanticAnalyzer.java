@@ -17,7 +17,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
 
@@ -46,16 +46,16 @@ public class SemanticAnalyzer extends StoryAdapter {
 	 * Creates a new instance that will recursively analyze the StoryComponent
 	 * tree.
 	 */
-	public SemanticAnalyzer(Collection<StoryPoint> storyPoints) {
+	public SemanticAnalyzer(Collection<StoryNode> storyNodes) {
 		this.problems = new ArrayList<StoryProblem>();
 		this.rules = new ArrayList<StoryRule>();
 
 		// Make sure all parameters are bound before generating code
 		this.rules.add(new ParameterBoundRule());
-		// Get all the StoryPoints in the model
-		for (StoryPoint storyPoint : storyPoints) {
-			// Process all the components from each StoryPoint
-			for (StoryComponent child : storyPoint.getChildren()) {
+		// Get all the StoryNodes in the model
+		for (StoryNode storyNode : storyNodes) {
+			// Process all the components from each StoryNode
+			for (StoryComponent child : storyNode.getChildren()) {
 				child.process(this);
 			}
 		}

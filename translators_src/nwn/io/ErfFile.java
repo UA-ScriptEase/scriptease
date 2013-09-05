@@ -27,7 +27,8 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -591,7 +592,7 @@ public final class ErfFile extends GameModule {
 		final long offsetToKeyList;
 		final long offsetToResourceList;
 
-		for (StoryPoint point : CodeGenerator.getInstance()
+		for (StoryNode point : CodeGenerator.getInstance()
 				.getGeneratingStoryPoints()) {
 			for (ScriptIt scriptIt : StoryComponentUtils
 					.getDescendantScriptIts(point)) {

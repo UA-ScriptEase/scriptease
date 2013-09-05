@@ -219,8 +219,12 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getImplicits();
 		case CHILDREN:
 			return context.getChildren();
+		case STORYNODES:
+			return context.getStoryNodes();
 		case STORYPOINTS:
 			return context.getStoryPoints();
+		case ORDEREDSTORYNODES:
+			return context.getOrderedStoryNodes();
 		case ORDEREDSTORYPOINTS:
 			return context.getOrderedStoryPoints();
 		case PARENTNODES:

@@ -12,7 +12,7 @@ import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
 
 /**
  * Tree which contains a root StoryComponentPanel, a StoryComponentPanelManager
@@ -22,12 +22,13 @@ import scriptease.model.complex.StoryPoint;
  * @author mfchurch
  * @author lari
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
-	private StoryPoint root;
+	private StoryNode root;
 	private Filter filterRule;
 
 	public StoryComponentPanelTree() {
@@ -40,7 +41,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 * @param settings
 	 */
-	public StoryComponentPanelTree(StoryPoint root) {
+	public StoryComponentPanelTree(StoryNode root) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -61,7 +62,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 *            The root StoryComponent for the tree.
 	 */
-	public void setRoot(StoryPoint root) {
+	public void setRoot(StoryNode root) {
 		this.root = root;
 
 		if (this.rootPanel != null)
@@ -84,7 +85,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * 
 	 * @return
 	 */
-	public StoryPoint getRoot() {
+	public StoryNode getRoot() {
 		return this.root;
 	}
 

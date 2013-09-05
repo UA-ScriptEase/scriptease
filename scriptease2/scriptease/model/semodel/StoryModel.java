@@ -15,7 +15,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
