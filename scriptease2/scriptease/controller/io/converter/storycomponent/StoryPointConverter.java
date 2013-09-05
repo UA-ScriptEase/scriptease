@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -49,10 +50,10 @@ public class StoryPointConverter extends ComplexStoryComponentConverter {
 			UnmarshallingContext context) {
 		final StoryPoint storyPoint = (StoryPoint) super.unmarshal(reader,
 				context);
-		final Set<StoryPoint> successors;
+		final Set<StoryNode> successors;
 
 		String fanIn = null;
-		successors = new HashSet<StoryPoint>();
+		successors = new HashSet<StoryNode>();
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
@@ -61,7 +62,7 @@ public class StoryPointConverter extends ComplexStoryComponentConverter {
 			if (nodeName.equals(TAG_FAN_IN)) {
 				fanIn = reader.getValue();
 			} else if (nodeName.equals(TAG_SUCCESSORS)) {
-				successors.addAll((Collection<StoryPoint>) context
+				successors.addAll((Collection<StoryNode>) context
 						.convertAnother(storyPoint, ArrayList.class));
 			}
 			reader.moveUp();

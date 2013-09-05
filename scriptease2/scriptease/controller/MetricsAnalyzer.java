@@ -25,7 +25,8 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -106,7 +107,7 @@ public class MetricsAnalyzer {
 		final String END_POINTS = "End Points";
 
 		final Map<String, Integer> metrics = new HashMap<String, Integer>();
-		final Map<StoryPoint, Integer> depthMap;
+		final Map<StoryNode, Integer> depthMap;
 
 		final int longestPathLength;
 		int endPoints = 0;
@@ -116,9 +117,9 @@ public class MetricsAnalyzer {
 
 		longestPathLength = Collections.max(depthMap.values()) + 1;
 
-		for (StoryPoint storypoint : depthMap.keySet()) {
-			if (storypoint.getSuccessors().isEmpty()) {
-				System.out.println(storypoint.getDisplayText());
+		for (StoryNode storyNode : depthMap.keySet()) {
+			if (storyNode.getSuccessors().isEmpty()) {
+				System.out.println(storyNode.getDisplayText());
 				endPoints++;
 			}
 		}
@@ -333,7 +334,7 @@ public class MetricsAnalyzer {
 
 					this.defaultProcessComplex(storyPoint);
 
-					for (StoryPoint successor : storyPoint.getSuccessors())
+					for (StoryNode successor : storyPoint.getSuccessors())
 						successor.process(this);
 				}
 			}

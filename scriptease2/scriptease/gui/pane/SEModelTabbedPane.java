@@ -59,7 +59,8 @@ import scriptease.gui.action.file.CloseModelAction;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -241,7 +242,7 @@ class SEModelTabbedPane extends JTabbedPane {
 		final DialogueEditorPanel dialogueEditor;
 		final JButton backToStory;
 
-		final SEGraph<StoryPoint> storyGraph;
+		final SEGraph<StoryNode> storyGraph;
 		final StoryComponentPanelTree storyComponentTree;
 		final StoryComponentObserver graphRedrawer;
 		final JPanel storyGraphPanel;
@@ -285,9 +286,9 @@ class SEModelTabbedPane extends JTabbedPane {
 
 					// Set root to start node if we remove the selected node.
 					if (event.getSource() == storyComponentTree.getRoot()) {
-						final Collection<StoryPoint> nodes;
+						final Collection<StoryNode> nodes;
 
-						nodes = new ArrayList<StoryPoint>();
+						nodes = new ArrayList<StoryNode>();
 
 						nodes.add(storyGraph.getStartNode());
 
@@ -302,7 +303,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		storyGraphScrollPane = new JScrollPane(storyGraph);
 
-		for (StoryPoint point : start.getDescendants()) {
+		for (StoryNode point : start.getDescendants()) {
 			point.addStoryComponentObserver(graphRedrawer);
 		}
 
@@ -310,10 +311,10 @@ class SEModelTabbedPane extends JTabbedPane {
 		SEModelTabbedPane.this.modelToComponent.put(model, topLevelPane);
 
 		// Set up the Story Graph
-		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
+		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
 
 			@Override
-			public void nodesSelected(final Collection<StoryPoint> nodes) {
+			public void nodesSelected(final Collection<StoryNode> nodes) {
 				SEModelManager.getInstance().getActiveModel()
 						.process(new ModelAdapter() {
 							@Override
@@ -325,15 +326,14 @@ class SEModelTabbedPane extends JTabbedPane {
 			}
 
 			@Override
-			public void nodeOverwritten(StoryPoint node) {
+			public void nodeOverwritten(StoryNode node) {
 				node.revalidateKnowItBindings();
 			}
 
 			@Override
-			public void nodeRemoved(StoryPoint removedNode) {
+			public void nodeRemoved(StoryNode removedNode) {
 				start.revalidateKnowItBindings();
 			}
-
 		});
 
 		start.addStoryComponentObserver(graphRedrawer);

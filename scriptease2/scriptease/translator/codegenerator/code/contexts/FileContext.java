@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import scriptease.model.CodeBlock;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
@@ -32,9 +32,9 @@ public class FileContext extends Context {
 	private Set<String> includeFiles;
 	private Iterator<String> includeFilesIterator;
 
-	public FileContext(StoryModel model, Collection<StoryPoint> storyPoints,
+	public FileContext(StoryModel model, Collection<StoryNode> storyNodes,
 			LocationInformation locationInfo) {
-		super(model, storyPoints, "", new CodeGenerationNamifier(model
+		super(model, storyNodes, "", new CodeGenerationNamifier(model
 				.getTranslator().getLanguageDictionary()));
 
 		this.setLocationInfo(locationInfo);

@@ -17,7 +17,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryPoint;
 
 /**
  * Checks if the parameters of the given source are bound (not

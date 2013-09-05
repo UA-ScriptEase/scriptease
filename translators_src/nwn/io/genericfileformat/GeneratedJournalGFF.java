@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryPoint;
 
 /**
  * We never want more than one Journal GFF in our erf file. This is its own

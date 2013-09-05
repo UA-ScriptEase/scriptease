@@ -15,7 +15,8 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -64,7 +65,7 @@ import scriptease.translator.io.model.Slot;
  */
 public class CodeGenerator {
 
-	private final Collection<StoryPoint> generatingStoryPoints;
+	private final Collection<StoryNode> generatingStoryNodes;
 
 	private final static CodeGenerator instance = new CodeGenerator();
 
@@ -88,19 +89,19 @@ public class CodeGenerator {
 
 	private CodeGenerator() {
 		// Privatized constructor
-		this.generatingStoryPoints = new HashSet<StoryPoint>();
+		this.generatingStoryNodes = new HashSet<StoryNode>();
 	}
 
 	/**
-	 * Returns the story points currently getting generated. This is faster than
+	 * Returns the story nodes currently getting generated. This is faster than
 	 * getting the descendants of the root. This should only be used while we're
 	 * actually generating code, since it won't reset until
 	 * {@link #generateCode(StoryModel, Collection)} is called.
 	 * 
 	 * @return
 	 */
-	public Collection<StoryPoint> getGeneratingStoryPoints() {
-		return this.generatingStoryPoints;
+	public Collection<StoryNode> getGeneratingStoryPoints() {
+		return this.generatingStoryNodes;
 	}
 
 	/**
@@ -128,10 +129,11 @@ public class CodeGenerator {
 		scriptInfos = new ArrayList<ScriptInfo>();
 		root = model.getRoot();
 
-		this.generatingStoryPoints.clear();
-		this.generatingStoryPoints.addAll(root.getDescendants());
+		this.generatingStoryNodes.clear();
+		this.generatingStoryNodes.addAll(root.getDescendants());
+		
 		// do the first pass (semantic analysis) for the given story
-		analyzer = new SemanticAnalyzer(this.generatingStoryPoints);
+		analyzer = new SemanticAnalyzer(this.generatingStoryNodes);
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
@@ -150,7 +152,7 @@ public class CodeGenerator {
 			// aggregate the scripts based on the storyPoints
 			scriptBuckets = module
 					.aggregateScripts(new ArrayList<StoryComponent>(
-							this.generatingStoryPoints));
+							this.generatingStoryNodes));
 
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
@@ -365,6 +367,6 @@ public class CodeGenerator {
 	 */
 	private Context buildFileContext(StoryModel model,
 			LocationInformation locationInfo) {
-		return new FileContext(model, this.generatingStoryPoints, locationInfo);
+		return new FileContext(model, this.generatingStoryNodes, locationInfo);
 	}
 }

@@ -9,6 +9,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.storygraph.StoryPoint;
 import sun.awt.util.IdentityArrayList;
 
 /**

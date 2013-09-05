@@ -5,7 +5,8 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -29,19 +30,19 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 	}
 
 	@Override
-	public Collection<StoryPoint> getStoryPointChildren() {
+	public Collection<StoryNode> getStoryPointChildren() {
 		return this.getComponent().getSuccessors();
 	}
 
 	@Override
-	public Collection<StoryPoint> getStoryPointParents() {
-		final Collection<StoryPoint> parents;
+	public Collection<StoryNode> getStoryPointParents() {
+		final Collection<StoryNode> parents;
 
-		parents = new ArrayList<StoryPoint>();
+		parents = new ArrayList<StoryNode>();
 
-		for (StoryPoint point : this.getStoryPoints()) {
-			if (point.getSuccessors().contains(this.getComponent())) {
-				parents.add(point);
+		for (StoryNode node : this.getStoryNodes()) {
+			if (node.getSuccessors().contains(this.getComponent())) {
+				parents.add(node);
 			}
 		}
 
@@ -78,8 +79,8 @@ public class StoryPointContext extends ComplexStoryComponentContext {
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
 
-		typeFormat = this.getTranslator().getLibrary().getTypeFormat(
-				StoryPoint.STORY_POINT_TYPE);
+		typeFormat = this.getTranslator().getLibrary()
+				.getTypeFormat(StoryPoint.STORY_POINT_TYPE);
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 

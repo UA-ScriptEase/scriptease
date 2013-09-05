@@ -9,8 +9,9 @@ import java.util.Set;
 import java.util.Stack;
 
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.models.StoryPointGraphModel;
-import scriptease.model.complex.StoryPoint;
+import scriptease.gui.SEGraph.models.StoryNodeGraphModel;
+import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.storygraph.StoryPoint;
 
 /**
  * Handles all graph grouping functionalities. A graph group represents a set of
@@ -122,7 +123,7 @@ public class GraphGroupController<E> {
 		if (!(this.startNode instanceof StoryPoint))
 			return;
 
-		final StoryPointGraphModel newGroupModel;
+		final StoryNodeGraphModel newGroupModel;
 
 		// Clone the group nodes
 		newGroupModel = this.cloneGroupModel();
@@ -151,24 +152,24 @@ public class GraphGroupController<E> {
 		}
 	}
 
-	private StoryPointGraphModel cloneGroupModel() {
-		final StoryPointGraphModel groupModel;
+	private StoryNodeGraphModel cloneGroupModel() {
+		final StoryNodeGraphModel groupModel;
 
-		final StoryPoint startStoryPointNode = (StoryPoint) this.startNode;
+		final StoryNode startStoryPointNode = (StoryNode) this.startNode;
 
-		groupModel = new StoryPointGraphModel(this.cloneNodes(
+		groupModel = new StoryNodeGraphModel(this.cloneNodes(
 				startStoryPointNode.shallowClone(), startStoryPointNode));
 
 		return groupModel;
 	}
 
-	private final Set<StoryPoint> clonedNodes = new HashSet<StoryPoint>();
+	private final Set<StoryNode> clonedNodes = new HashSet<StoryNode>();
 
-	private StoryPoint cloneNodes(StoryPoint newNode, StoryPoint node) {
+	private StoryNode cloneNodes(StoryNode newNode, StoryNode node) {
 
 		clonedNodes.add(newNode);
 
-		outer: for (StoryPoint child : node.getSuccessors()) {
+		outer: for (StoryNode child : node.getSuccessors()) {
 
 			// Don't care about any nodes that aren't in the group.
 			if (!this.group.contains(child))
@@ -176,14 +177,14 @@ public class GraphGroupController<E> {
 
 			// If the node already exists in this new graph model, we don't need
 			// to reclone it.
-			for (StoryPoint existingNode : clonedNodes) {
+			for (StoryNode existingNode : clonedNodes) {
 				if (existingNode.getUniqueID() == child.getUniqueID()) {
 					newNode.addSuccessor(existingNode);
 					continue outer;
 				}
 			}
 
-			final StoryPoint clonedNode = child.shallowClone();
+			final StoryNode clonedNode = child.shallowClone();
 			newNode.addSuccessor(clonedNode);
 			this.cloneNodes(clonedNode, child);
 		}

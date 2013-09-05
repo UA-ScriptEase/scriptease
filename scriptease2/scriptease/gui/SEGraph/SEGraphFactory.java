@@ -8,13 +8,13 @@ import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.models.DialogueLineGraphModel;
-import scriptease.gui.SEGraph.models.StoryPointGraphModel;
+import scriptease.gui.SEGraph.models.StoryNodeGraphModel;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
-import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
+import scriptease.gui.SEGraph.renderers.StoryNodeRenderer;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.storygraph.StoryNode;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 
@@ -24,6 +24,7 @@ import scriptease.model.semodel.dialogue.DialogueLine;
  * construction.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class SEGraphFactory {
@@ -74,20 +75,19 @@ public class SEGraphFactory {
 	}
 
 	/**
-	 * Builds a graph for story points that has draggable binding widgets and a
-	 * fan in spinner. The binding widgets can have their names edited.
+	 * Builds a graph for story nodes.
 	 * 
 	 * @param start
 	 * @return
 	 */
-	public static SEGraph<StoryPoint> buildStoryGraph(StoryPoint start) {
-		final SEGraph<StoryPoint> graph;
-		final StoryPointGraphModel storyGraphModel;
+	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start) {
+		final SEGraph<StoryNode> graph;
+		final StoryNodeGraphModel storyGraphModel;
 
-		storyGraphModel = new StoryPointGraphModel(start);
-		graph = new SEGraph<StoryPoint>(storyGraphModel);
+		storyGraphModel = new StoryNodeGraphModel(start);
+		graph = new SEGraph<StoryNode>(storyGraphModel);
 
-		graph.setNodeRenderer(new StoryPointNodeRenderer(graph));
+		graph.setNodeRenderer(new StoryNodeRenderer(graph));
 		graph.setBackground(Color.WHITE);
 
 		return graph;
