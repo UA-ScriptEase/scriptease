@@ -30,8 +30,8 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.storygraph.StoryNode;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.TranslatorManager;
 
 /**

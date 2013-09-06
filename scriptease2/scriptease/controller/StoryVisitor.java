@@ -10,8 +10,8 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.storygraph.StoryGroup;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to

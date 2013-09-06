@@ -10,8 +10,8 @@ import java.util.Stack;
 
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.models.StoryNodeGraphModel;
-import scriptease.model.complex.storygraph.StoryNode;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Handles all graph grouping functionalities. A graph group represents a set of

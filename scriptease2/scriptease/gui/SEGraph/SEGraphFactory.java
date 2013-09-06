@@ -14,7 +14,7 @@ import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.StoryNodeRenderer;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 

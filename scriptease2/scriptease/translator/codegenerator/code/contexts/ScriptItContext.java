@@ -9,7 +9,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**

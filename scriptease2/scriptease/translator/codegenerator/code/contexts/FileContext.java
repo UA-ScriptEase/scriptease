@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import scriptease.model.CodeBlock;
-import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;

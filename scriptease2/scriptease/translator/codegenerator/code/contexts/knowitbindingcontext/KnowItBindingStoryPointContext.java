@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
