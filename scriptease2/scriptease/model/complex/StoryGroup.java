@@ -2,7 +2,6 @@ package scriptease.model.complex;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import scriptease.controller.StoryVisitor;
 
@@ -19,24 +18,30 @@ public class StoryGroup extends StoryNode {
 
 	private static final String NEW_STORY_GROUP = "New Story Group";
 
-	private Set<StoryNode> storyNodes;
 	private StoryNode startNode;
 	private StoryNode exitNode;
 
-	public StoryGroup(String name, Set<StoryNode> storyNodes,
+	public StoryGroup(String name, StoryNode startNode, StoryNode exitNode) {
+		this(name, new HashSet<StoryNode>(), startNode, exitNode);
+	}
+
+	public StoryGroup(String name, Collection<StoryNode> storyNodes,
 			StoryNode startNode, StoryNode exitNode) {
 		super();
 
-		this.storyNodes = storyNodes;
 		this.startNode = startNode;
 		this.exitNode = exitNode;
+
+		for (StoryNode storyNode : storyNodes) {
+			this.addStoryChild(storyNode);
+		}
 
 		this.successors = new HashSet<StoryNode>();
 		this.parents = new HashSet<StoryNode>();
 		this.uniqueID = this.getNextStoryNodeCounter();
 
-		if (!this.storyNodes.contains(this.startNode)
-				|| !this.storyNodes.contains(this.exitNode))
+		if (!this.getChildren().contains(this.startNode)
+				|| !this.getChildren().contains(this.exitNode))
 			throw new IllegalStateException(
 					"The start node and the exit node must be a part of the story group!");
 
@@ -52,16 +57,20 @@ public class StoryGroup extends StoryNode {
 		this.setDisplayText(name);
 	}
 
-	public Set<StoryNode> getStoryNodes() {
-		return this.storyNodes;
-	}
-
 	public StoryNode getStartNode() {
 		return this.startNode;
 	}
 
 	public StoryNode getExitNode() {
 		return this.exitNode;
+	}
+
+	public void setStartNode(StoryNode startNode) {
+		this.startNode = startNode;
+	}
+
+	public void setExitNode(StoryNode exitNode) {
+		this.exitNode = exitNode;
 	}
 
 	@Override
@@ -104,8 +113,13 @@ public class StoryGroup extends StoryNode {
 	}
 
 	@Override
-	public StoryNode shallowClone() {
-		// TODO Auto-generated method stub
-		return null;
+	public StoryGroup shallowClone() {
+		final StoryGroup clone = this.clone();
+
+		clone.uniqueID = this.uniqueID;
+		clone.successors = new HashSet<StoryNode>();
+		clone.parents = new HashSet<StoryNode>();
+
+		return clone;
 	}
 }
