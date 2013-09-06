@@ -287,11 +287,8 @@ public final class StoryModel extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			final GameType type = library.getType(keyword);
 
-			// TODO MAKE SURE ITS NOT DEFAULT TYPE
-			// HOW TO:
-			// Save static default type in GameType class
-			// check if it's not that.
-			if (type != null)
+			if (type != null
+					&& !type.getKeyword().equals(GameType.DEFAULT_UNKNOWN_TYPE))
 				return type;
 		}
 
