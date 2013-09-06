@@ -10,6 +10,7 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
+import scriptease.translator.io.model.Resource;
 
 /**
  * FileContext is Context for a File object.
@@ -23,6 +24,7 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * @see Context
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class FileContext extends Context {
@@ -61,6 +63,11 @@ public class FileContext extends Context {
 			return "ERROR while getting Include File in FileContext.java";
 	}
 
+	@Override
+	public Resource getResource() {
+		return this.locationInfo.getSubject();
+	}
+	
 	@Override
 	public String toString() {
 		return "FileContext";

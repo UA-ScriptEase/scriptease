@@ -42,7 +42,8 @@ public class KnowItBindingAutomaticContext extends KnowItBindingContext {
 	public String getValue() {
 		final List<Resource> automatics = new ArrayList<Resource>();
 
-		automatics.addAll(this.getModel().getModule().getAutomaticHandlers());
+		automatics.addAll(this.getModel().getModule().getAutomaticHandlers()
+				.get("automatic"));
 
 		if (!automatics.isEmpty())
 			return automatics.get(0).getCodeText();

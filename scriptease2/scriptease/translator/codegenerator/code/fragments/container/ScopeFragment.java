@@ -82,6 +82,10 @@ public class ScopeFragment extends AbstractContainerFragment {
 		switch (scope) {
 		case SUBJECT:
 			return context.getSubject();
+		case RESOURCE:
+			return context.getResource();
+		case TEMPLATEID:
+			return context.getTemplateID();
 		case OWNER:
 			return context.getOwner();
 		case ARGUMENT:

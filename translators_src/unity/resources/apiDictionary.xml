@@ -1142,10 +1142,17 @@
       <Parameters/>
       <Implicits/>
     </Slot>
-    <Slot format="UnityCause">
+    <Slot format="ScriptEaseObjectAwakeCause">
       <Name>Awake</Name>
       <Keyword>Awake</Keyword>
       <Condition>Awake</Condition>
+      <Parameters/>
+      <Implicits/>
+    </Slot>
+    <Slot format="GameObjectAwakeCause">
+      <Name>GameObjectAwake</Name>
+      <Keyword>GameObjectAwake</Keyword>
+      <Condition>GameObjectAwake</Condition>
       <Parameters/>
       <Implicits/>
     </Slot>
@@ -1504,108 +1511,42 @@
               </Types>
             </KnowIt>
           </Parameters>
-          <Code>
-            <Scope data="start">
-              <Line>
-                <Literal>if(!SEStory.storyInitialized){</Literal>
-              </Line>
-              <Indent>
-                <Line>
-                  <Literal>SEStory.RegisterRoot(</Literal>
-                  <Fragment data="formattedValue"/>
-                  <Literal>, </Literal>
-                  <Fragment data="fanIn"/>
-                  <Literal>);</Literal>
-                </Line>
-                <Line>
-                  <Literal>var parentName:String;</Literal>
-                </Line>
-                <Series data="orderedStoryPoints" unique="true">
-                  <Line>
-                    <Literal>parentName = </Literal>
-                    <Fragment data="formattedValue"/>
-                    <Literal>;</Literal>
-                  </Line>
-                  <Series data="childrenNodes" unique="true">
-                    <Line>
-                      <Literal>SEStory.RegisterChild(parentName, </Literal>
-                      <Fragment data="formattedValue"/>
-                      <Literal>, </Literal>
-                      <Fragment data="fanIn"/>
-                      <Literal>);</Literal>
-                    </Line>
-                  </Series>
-                </Series>
-              </Indent>
-              <Line>
-                <Literal>}</Literal>
-              </Line>
-            </Scope>
-            <Line/>
-            <Line>
-              <Literal>//Initialize the Dialogue system.</Literal>
-            </Line>
-            <Line>
-              <Literal>if(!SEDialogue.DialoguesInitialized){</Literal>
-            </Line>
-            <Indent>
-              <Series data="dialogueRoots" unique="true">
-                <Line>
-                  <Literal>SEDialogue.RegisterRoot(&quot;</Literal>
-                  <Fragment data="text"/>
-                  <Literal>&quot;, </Literal>
-                  <Fragment data="formattedValue"/>
-                  <Literal>, </Literal>
-                  <Fragment data="speaker"/>
-                  <Literal>, </Literal>
-                  <Fragment data="enabled"/>
-                  <Literal>, </Literal>
-                  <Scope data="image">
-                    <Fragment data="formattedValue"/>
-                  </Scope>
-                  <Literal>, </Literal>
-                  <Scope data="audio">
-                    <Fragment data="formattedValue"/>
-                  </Scope>
-                  <Literal>);</Literal>
-                </Line>
-                <Line>
-                  <Literal>var parentID:int;</Literal>
-                </Line>
-                <Series data="orderedDialogueLines" unique="true">
-                  <Line>
-                    <Literal>parentID = </Literal>
-                    <Fragment data="formattedValue"/>
-                    <Literal>;</Literal>
-                  </Line>
-                  <Series data="childLines" unique="true">
-                    <Line>
-                      <Literal>SEDialogue.RegisterChild(parentID, &quot;</Literal>
-                      <Fragment data="text"/>
-                      <Literal>&quot;, </Literal>
-                      <Fragment data="formattedValue"/>
-                      <Literal>, </Literal>
-                      <Fragment data="speaker"/>
-                      <Literal>, </Literal>
-                      <Fragment data="enabled"/>
-                      <Literal>, </Literal>
-                      <Scope data="image">
-                        <Fragment data="formattedValue"/>
-                      </Scope>
-                      <Literal>, </Literal>
-                      <Scope data="audio">
-                        <Fragment data="formattedValue"/>
-                      </Scope>
-                      <Literal>);</Literal>
-                    </Line>
-                  </Series>
-                </Series>
-              </Series>
-            </Indent>
-            <Line>
-              <Literal>}</Literal>
-            </Line>
-          </Code>
+          <Code/>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </CauseIt>
+    <CauseIt>
+      <Name>On &lt;subject&gt; awake initialize the game object</Name>
+      <Visible>false</Visible>
+      <Enabled>true</Enabled>
+      <Labels>
+        <Label>gameobjectautomatic</Label>
+      </Labels>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>On &lt;subject&gt;awake initialize the game object</Name>
+          <Visible>true</Visible>
+          <Enabled>true</Enabled>
+          <Labels/>
+          <Subject>subject</Subject>
+          <Slot>GameObjectAwake</Slot>
+          <Id>276</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>subject</Name>
+              <Visible>true</Visible>
+              <Enabled>true</Enabled>
+              <Labels/>
+              <Types>
+                <Type>GameObject</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code/>
         </CodeBlockSource>
       </CodeBlocks>
     </CauseIt>
@@ -1697,7 +1638,7 @@
           <Enabled>true</Enabled>
           <Labels/>
           <Subject>subject</Subject>
-          <Slot>Awake</Slot>
+          <Slot>Start</Slot>
           <Id>8</Id>
           <Types>
             <Type>void</Type>
@@ -3496,7 +3437,7 @@
     </CauseIt>
     <CauseIt>
       <Name>After &lt;subject&gt; is created</Name>
-      <Visible>true</Visible>
+      <Visible>false</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>
