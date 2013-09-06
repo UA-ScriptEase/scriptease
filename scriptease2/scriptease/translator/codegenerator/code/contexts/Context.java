@@ -21,6 +21,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
+import scriptease.translator.io.model.Resource;
 
 /**
  * Context represents the object based context used in code generation. It
@@ -340,7 +341,7 @@ public abstract class Context {
 		unimplemented("getSubject");
 		return null;
 	}
-
+	
 	public ScriptIt getScriptIt(String keyword) {
 		unimplemented("getScriptIt: " + keyword);
 		return null;
@@ -514,6 +515,11 @@ public abstract class Context {
 
 	public KnowIt getImage() {
 		unimplemented("getImage");
+		return null;
+	}
+
+	public Resource getResource() {
+		unimplemented("getResource");
 		return null;
 	}
 }

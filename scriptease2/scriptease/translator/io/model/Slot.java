@@ -90,15 +90,14 @@ public class Slot {
 
 	/**
 	 * Gets a new list containing this slot's implicit KnowIts. This should not
-	 * be used except by EventSlotManager and SlotConverter. Use
-	 * {@link EventSlotManager#getImplicits(String) instead.}
+	 * be used except by the Library Model.
 	 * 
 	 * @return
 	 */
 	public Collection<KnowIt> getImplicits() {
 		return new ArrayList<KnowIt>(this.implicits);
 	}
-	
+
 	public void setImplicits(Collection<KnowIt> implicits) {
 		this.implicits = implicits;
 	}

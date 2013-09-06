@@ -55,6 +55,8 @@ public final class UnityProject extends GameModule {
 	public static final String RESOURCE_FOLDER_NAME = "Resources";
 	public static final String ASSETS_FOLDER_NAME = "Assets";
 
+	public static final String GAME_OBJECT_AUTOMATIC = "gameobjectautomatic";
+
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
 	private Map<String, File> guidsToMetaFiles;
@@ -126,14 +128,29 @@ public final class UnityProject extends GameModule {
 	}
 
 	@Override
-	public Collection<Resource> getAutomaticHandlers() {
-		final Collection<Resource> automaticHandlers = new ArrayList<Resource>();
+	public Map<String, Collection<Resource>> getAutomaticHandlers() {
+		final Map<String, Collection<Resource>> automaticMap = new HashMap<String, Collection<Resource>>();
+
+		final Collection<Resource> automaticScriptEaseObjects = new ArrayList<Resource>();
+		final Collection<Resource> automaticGameObjects = new ArrayList<Resource>();
 
 		for (UnityFile scene : this.scenes) {
-			automaticHandlers.add(scene.getScriptEaseObject());
+			automaticScriptEaseObjects.add(scene.getScriptEaseObject());
+
+			for (UnityResource resource : scene.getResources()) {
+				if (resource.getType() == UnityType.GAMEOBJECT) {
+					automaticGameObjects.add(resource);
+				}
+			}
 		}
 
-		return automaticHandlers;
+		automaticGameObjects.removeAll(automaticScriptEaseObjects);
+
+		automaticMap.put(GameModule.AUTOMATIC, automaticScriptEaseObjects);
+		automaticMap.put(UnityProject.GAME_OBJECT_AUTOMATIC,
+				automaticGameObjects);
+
+		return automaticMap;
 	}
 
 	@Override

@@ -66,7 +66,7 @@ public final class DialogueLine extends EditableResource {
 			int id, boolean enabled, KnowIt image, KnowIt audio,
 			List<Resource> children) {
 		super(dialogue, children);
-
+		
 		this.enabled = enabled;
 		this.speaker = speaker;
 		this.story = story;

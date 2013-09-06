@@ -320,7 +320,7 @@
 			</Series>
 			<Literal>)</Literal>
 		</Format>
-		<!-- Calls the function in the main code block-->
+		<!-- Calls the function in the main code block -->
 		<Format id="functionCall">
 			<!-- Code block context -->
 			<Scope data="mainCodeBlock">
@@ -397,7 +397,7 @@
 			<FormatRef ref="variablesDefinition" />
 			<FormatRef ref="storyComponentChildren" />
 		</Format>
-		
+
 		<!-- Format for delay it children -->
 		<Format id="delayItChildren">
 			<Scope data="Cause">
@@ -420,86 +420,86 @@
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
 			</Scope>
-            <Line>
-            	<Literal>GUI.BeginGroup(Rect(</Literal>
-            	<Scope data="argument" ref="x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="y">
-            		<Fragment data="value" />
-            	</Scope>	
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Width">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Height">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>));</Literal>
-            </Line>
-            <FormatRef ref="childrenWithoutImplicits"/>
-            <Line>
-			  <Literal>GUI.EndGroup();</Literal>            
-            </Line>
+			<Line>
+				<Literal>GUI.BeginGroup(Rect(</Literal>
+				<Scope data="argument" ref="x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Width">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Height">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>));</Literal>
+			</Line>
+			<FormatRef ref="childrenWithoutImplicits" />
+			<Line>
+				<Literal>GUI.EndGroup();</Literal>
+			</Line>
 		</Format>
-		
+
 		<!-- Format for Scroll View children -->
 		<Format id="ScrollViewChildren">
 			<Scope data="Cause">
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
 			</Scope>
-            <Line>
-            	<Literal>GUI.BeginScrollView(Rect(</Literal>
-            	<Scope data="argument" ref="x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="y">
-            		<Fragment data="value" />
-            	</Scope>	
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Width">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Height">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>), Vector2(</Literal>
-            	<Scope data="argument" ref="Position x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Position y">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>), Rect(</Literal>
-            	<Scope data="argument" ref="Content x">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Content y">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Content Width">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>, </Literal>
-            	<Scope data="argument" ref="Content Height">
-            		<Fragment data="value" />
-            	</Scope>
-            	<Literal>));</Literal>
-            </Line>
-            <FormatRef ref="childrenWithoutImplicits"/>
-            <Line>
-			  <Literal>GUI.EndScrollView();</Literal>            
-            </Line>
+			<Line>
+				<Literal>GUI.BeginScrollView(Rect(</Literal>
+				<Scope data="argument" ref="x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Width">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Height">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>), Vector2(</Literal>
+				<Scope data="argument" ref="Position x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Position y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>), Rect(</Literal>
+				<Scope data="argument" ref="Content x">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Content y">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Content Width">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>, </Literal>
+				<Scope data="argument" ref="Content Height">
+					<Fragment data="value" />
+				</Scope>
+				<Literal>));</Literal>
+			</Line>
+			<FormatRef ref="childrenWithoutImplicits" />
+			<Line>
+				<Literal>GUI.EndScrollView();</Literal>
+			</Line>
 		</Format>
-		
+
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
@@ -528,7 +528,7 @@
 				<Literal>;</Literal>
 			</Line>
 		</Format>
-		
+
 		<!-- Format for the block controller -->
 		<Format id="block">
 			<Line>
@@ -630,10 +630,10 @@
 				<Scope data="firstCause">
 					<Fragment data="slotConditional" />
 					<Literal>(</Literal>
-						<Series data="slotParameters" unique="true" separator=", ">
+					<Series data="slotParameters" unique="true" separator=", ">
 						<!-- Parameters are just the type and the name -->
-							<FormatRef ref="variableWithType" />
-						</Series>	
+						<FormatRef ref="variableWithType" />
+					</Series>
 					<Literal>) {</Literal>
 				</Scope>
 			</Line>
@@ -680,7 +680,7 @@
 		</Format>
 
 		<Format id="UnityCause">
-				<Line>
+			<Line>
 				<Literal>#pragma strict</Literal>
 			</Line>
 			<Line />
@@ -702,6 +702,164 @@
 			</Series>
 			<Line />
 			<Line />
+		</Format>
+
+		<!-- Special format for ScriptEase game object awake functions -->
+		<Format id="ScriptEaseObjectAwakeCause">
+			<Line>
+				<Literal>#pragma strict</Literal>
+			</Line>
+			<Line />
+			<Line>
+				<Literal>import System.Collections.Generic;</Literal>
+			</Line>
+			<Line />
+			<Line>
+				<Literal>function Awake() {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>SEVariable.PutGameObject("</Literal>
+					<Scope data="RESOURCE">
+						<Fragment data="TEMPLATEID" />
+					</Scope>
+					<Literal>", gameObject);</Literal>
+				</Line>
+			</Indent>
+			<Line />
+			<Scope data="start">
+				<Indent>
+					<Line>
+						<Literal>if(!SEStory.storyInitialized) {</Literal>
+					</Line>
+					<Indent>
+						<Line>
+							<Literal>SEStory.RegisterRoot(</Literal>
+							<Fragment data="formattedValue" />
+							<Literal>, </Literal>
+							<Fragment data="fanIn" />
+							<Literal>);</Literal>
+						</Line>
+						<Line>
+							<Literal>var parentName:String;</Literal>
+						</Line>
+						<Series data="orderedStoryPoints" unique="true">
+							<Line>
+								<Literal>parentName = </Literal>
+								<Fragment data="formattedValue" />
+								<Literal>;</Literal>
+							</Line>
+							<Series data="childrenNodes" unique="true">
+								<Line>
+									<Literal>SEStory.RegisterChild(parentName, </Literal>
+									<Fragment data="formattedValue" />
+									<Literal>, </Literal>
+									<Fragment data="fanIn" />
+									<Literal>);</Literal>
+								</Line>
+							</Series>
+						</Series>
+					</Indent>
+					<Line>
+						<Literal>}</Literal>
+					</Line>
+				</Indent>
+			</Scope>
+			<Line />
+			<Indent>
+				<Line>
+					<Literal>//Initialize the Dialogue system.</Literal>
+				</Line>
+				<Line>
+					<Literal>if(!SEDialogue.DialoguesInitialized){</Literal>
+				</Line>
+				<Indent>
+					<Series data="dialogueRoots" unique="true">
+						<Line>
+							<Literal>SEDialogue.RegisterRoot(&quot;</Literal>
+							<Fragment data="text" />
+							<Literal>&quot;, </Literal>
+							<Fragment data="formattedValue" />
+							<Literal>, </Literal>
+							<Fragment data="speaker" />
+							<Literal>, </Literal>
+							<Fragment data="enabled" />
+							<Literal>, </Literal>
+							<Scope data="image">
+								<Fragment data="formattedValue" />
+							</Scope>
+							<Literal>, </Literal>
+							<Scope data="audio">
+								<Fragment data="formattedValue" />
+							</Scope>
+							<Literal>);</Literal>
+						</Line>
+						<Line>
+							<Literal>var parentID:int;</Literal>
+						</Line>
+						<Series data="orderedDialogueLines" unique="true">
+							<Line>
+								<Literal>parentID = </Literal>
+								<Fragment data="formattedValue" />
+								<Literal>;</Literal>
+							</Line>
+							<Series data="childLines" unique="true">
+								<Line>
+									<Literal>SEDialogue.RegisterChild(parentID, &quot;</Literal>
+									<Fragment data="text" />
+									<Literal>&quot;, </Literal>
+									<Fragment data="formattedValue" />
+									<Literal>, </Literal>
+									<Fragment data="speaker" />
+									<Literal>, </Literal>
+									<Fragment data="enabled" />
+									<Literal>, </Literal>
+									<Scope data="image">
+										<Fragment data="formattedValue" />
+									</Scope>
+									<Literal>, </Literal>
+									<Scope data="audio">
+										<Fragment data="formattedValue" />
+									</Scope>
+									<Literal>);</Literal>
+								</Line>
+							</Series>
+						</Series>
+					</Series>
+				</Indent>
+				<Line>
+					<Literal>}</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+
+		<!-- Special format needed for game object awake functions -->
+		<Format id="GameObjectAwakeCause">
+			<Line>
+				<Literal>#pragma strict</Literal>
+			</Line>
+			<Line />
+			<Line>
+				<Literal>import System.Collections.Generic;</Literal>
+			</Line>
+			<Line>
+				<Literal>function Awake() {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>SEVariable.PutGameObject("</Literal>
+					<Scope data="RESOURCE">
+						<Fragment data="TEMPLATEID" />
+					</Scope>
+					<Literal>", gameObject);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
 		</Format>
 	</Formats>
 </LanguageDictionary>

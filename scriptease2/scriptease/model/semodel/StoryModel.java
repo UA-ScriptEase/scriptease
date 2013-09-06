@@ -15,7 +15,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -268,7 +267,7 @@ public final class StoryModel extends SEModel {
 		final Collection<GameType> keywords = new ArrayList<GameType>();
 
 		for (LibraryModel library : this.getLibraries()) {
-			keywords.addAll(library.getLibraryTypes());
+			keywords.addAll(library.getGameTypes());
 		}
 
 		return keywords;
@@ -279,6 +278,10 @@ public final class StoryModel extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			final GameType type = library.getType(keyword);
 
+			// TODO MAKE SURE ITS NOT DEFAULT TYPE
+			// HOW TO:
+			// Save static default type in GameType class
+			// check if it's not that.
 			if (type != null)
 				return type;
 		}
@@ -335,33 +338,41 @@ public final class StoryModel extends SEModel {
 	 */
 	public Collection<StoryComponent> generateAutomaticCauses() {
 		final Collection<StoryComponent> automatics;
-		final Collection<Resource> automaticHandlers;
+		final Map<String, Collection<Resource>> automaticHandlers;
 
 		automatics = new ArrayList<StoryComponent>();
 		automaticHandlers = this.module.getAutomaticHandlers();
 
 		for (LibraryModel library : this.getLibraries()) {
-			for (Resource resource : automaticHandlers) {
-				final Collection<String> resourceTypes = resource.getTypes();
+			for (String automaticLabel : automaticHandlers.keySet()) {
+				for (Resource resource : automaticHandlers.get(automaticLabel)) {
+					
+					final Collection<String> resourceTypes = resource
+							.getTypes();
 
-				for (CauseIt automatic : library.getAutomatics()) {
-					final ScriptIt copy = automatic.clone();
-					final Collection<KnowIt> parameters = copy.getParameters();
+					for (CauseIt automatic : library
+							.getAutomatics(automaticLabel)) {
+						
+						final CauseIt copy = automatic.clone();
+						final Collection<KnowIt> parameters = copy
+								.getParameters();
 
-					for (KnowIt parameter : parameters) {
-						final Collection<String> parameterTypes;
+						for (KnowIt parameter : parameters) {
+							final Collection<String> parameterTypes;
 
-						parameterTypes = parameter.getTypes();
+							parameterTypes = parameter.getTypes();
 
-						if (!parameterTypes.containsAll(resourceTypes))
-							throw new IllegalArgumentException(
-									"Found invalid types for automatics");
+							if (!parameterTypes.containsAll(resourceTypes))
+								throw new IllegalArgumentException(
+										"Found invalid types for automatics");
 
-						parameter.setBinding(resource);
+							parameter.setBinding(resource);
+						}
+
+					 automatics.add(copy);
 					}
-
-					automatics.add(copy);
 				}
+				
 			}
 		}
 

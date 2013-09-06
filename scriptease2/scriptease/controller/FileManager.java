@@ -235,6 +235,10 @@ public final class FileManager {
 			public void processLibraryModel(LibraryModel library) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
+				final String title = library.getTitle();
+				if (title.length() > 0 && title.charAt(0) == '*')
+					library.setTitle(title.substring(1));
+				
 				File location = windowManager.showFileChooser(
 						FileManager.SAVE_AS, library.getTitle(),
 						FileManager.LIBRARY_FILTER);
@@ -260,6 +264,10 @@ public final class FileManager {
 			public void processStoryModel(StoryModel storyModel) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
+				final String title = storyModel.getTitle();
+				if (title.length() > 0 && title.charAt(0) == '*')
+					storyModel.setTitle(title.substring(1));
+				
 				File location = windowManager.showFileChooser(
 						FileManager.SAVE_AS, storyModel.getTitle(),
 						FileManager.STORY_FILTER);
