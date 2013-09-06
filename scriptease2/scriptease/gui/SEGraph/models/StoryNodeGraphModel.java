@@ -3,8 +3,8 @@ package scriptease.gui.SEGraph.models;
 import java.util.Collection;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.storygraph.StoryNode;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * A graph model for Story Nodes.

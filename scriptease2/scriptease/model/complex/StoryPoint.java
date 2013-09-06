@@ -1,4 +1,4 @@
-package scriptease.model.complex.storygraph;
+package scriptease.model.complex;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,8 +13,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
-import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.util.StringOp;
 

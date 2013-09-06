@@ -1,4 +1,4 @@
-package scriptease.model.complex.storygraph;
+package scriptease.model.complex;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ComplexStoryComponent;
 
 /**
  * A story node represents a node in the story graph. A story node can either

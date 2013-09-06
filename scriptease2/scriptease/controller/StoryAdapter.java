@@ -11,8 +11,8 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.storygraph.StoryGroup;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Default implementation of StoryVisitor that does nothing. Ever. <br>

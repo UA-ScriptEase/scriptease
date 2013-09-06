@@ -12,7 +12,7 @@ import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.storygraph.StoryNode;
+import scriptease.model.complex.StoryNode;
 
 /**
  * Tree which contains a root StoryComponentPanel, a StoryComponentPanelManager

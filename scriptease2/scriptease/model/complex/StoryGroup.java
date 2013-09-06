@@ -1,11 +1,10 @@
-package scriptease.model.complex.storygraph;
+package scriptease.model.complex;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.controller.StoryVisitor;
-import scriptease.model.complex.ComplexStoryComponent;
 
 /**
  * A story group represents a collection of StoryNodes {@link StoryNode} using

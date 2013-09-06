@@ -16,7 +16,7 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Represents and performs a disable action on a story component. Disabling a

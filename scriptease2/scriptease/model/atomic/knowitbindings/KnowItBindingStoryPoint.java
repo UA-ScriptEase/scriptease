@@ -6,7 +6,7 @@ import java.util.List;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;

@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.storygraph.StoryNode;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**

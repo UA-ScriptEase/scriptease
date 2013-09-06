@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.storygraph.StoryNode;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;

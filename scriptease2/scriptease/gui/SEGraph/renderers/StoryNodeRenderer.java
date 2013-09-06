@@ -14,9 +14,9 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.model.complex.storygraph.StoryGroup;
-import scriptease.model.complex.storygraph.StoryNode;
-import scriptease.model.complex.storygraph.StoryPoint;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 
 /**
  * Special renderer for nodes representing StoryNodes {@link StoryNode}. Story
