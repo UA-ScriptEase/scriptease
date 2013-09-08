@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 
 /**
@@ -42,11 +44,39 @@ public abstract class StoryNode extends ComplexStoryComponent {
 	 */
 	public abstract StoryNode shallowClone();
 	
-	public abstract void addSuccessors(Collection<StoryNode> successors);
+	/**
+	 * Adds a successor to the StoryNode
+	 * 
+	 * @param successor
+	 */
+	public boolean addSuccessor(StoryNode successor) {
+		if (successor != this && !successor.getSuccessors().contains(this)) {
+			if (this.successors.add(successor)) {
+				successor.parents.add(this);
 
-	public abstract boolean addSuccessor(StoryNode successor);
+				this.notifyObservers(new StoryComponentEvent(successor,
+						StoryComponentChangeEnum.STORY_NODE_SUCCESSOR_ADDED));
+				return true;
+			}
+		}
+		return false;
+	}
 
-	public abstract boolean removeSuccessor(StoryNode successor);
+	/**
+	 * Removes a successor from the StoryMpde
+	 * 
+	 * @param successor
+	 */
+	public boolean removeSuccessor(StoryNode successor) {
+		if (this.successors.remove(successor)) {
+			successor.parents.remove(this);
+
+			this.notifyObservers(new StoryComponentEvent(successor,
+					StoryComponentChangeEnum.STORY_NODE_SUCCESSOR_REMOVED));
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Adds the descendants to the passed in collection. You should use
@@ -63,8 +93,22 @@ public abstract class StoryNode extends ComplexStoryComponent {
 	 * @return The same collection that was passed in, but with descendants
 	 *         added.
 	 */
-	protected abstract <E extends Collection<StoryNode>> E addDescendants(
-			E descendants);
+	protected <E extends Collection<StoryNode>> E addDescendants(E descendants) {
+		descendants.add(this);
+
+		for (StoryNode successor : this.getSuccessors()) {
+			/*
+			 * This check prevents us from going over paths twice, which saves a
+			 * ton of time in complex stories. Note that the contains
+			 * implementation in Sets is much faster, which is why
+			 * getDescendants is faster than getOrderedDescendants.
+			 */
+			if (!descendants.contains(successor))
+				successor.addDescendants(descendants);
+		}
+
+		return descendants;
+	}
 
 	/**
 	 * Gets all descendants of the StoryNode in an unordered set, including the
@@ -93,6 +137,19 @@ public abstract class StoryNode extends ComplexStoryComponent {
 		return this.addDescendants(new ArrayList<StoryNode>());
 	}
 
+	/**
+	 * Adds multiple successors to the StoryPoint.
+	 * 
+	 * @param successors
+	 */
+	public void addSuccessors(Collection<StoryNode> successors) {
+		for (StoryNode successor : successors) {
+			if (successor != this) {
+				this.addSuccessor(successor);
+			}
+		}
+	}
+	
 	/**
 	 * Gets a mapping of the depth of each StoryNode. The depth corresponds to
 	 * the longest path it will take to get to the Story Node at the highest

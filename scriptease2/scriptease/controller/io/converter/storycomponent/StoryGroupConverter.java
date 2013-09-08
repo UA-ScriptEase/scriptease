@@ -1,7 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
@@ -53,11 +52,10 @@ public class StoryGroupConverter extends StoryNodeConverter {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
 
-			// TODO STORYNODES
 			if (nodeName.equals(StoryGroupConverter.TAG_START_NODE)) {
-				//startNode = 
+				startNode = (StoryNode) context.convertAnother(storyGroup, StoryNode.class);
 			} else if (nodeName.equals(StoryGroupConverter.TAG_EXIT_NODE)) {
-				//startNode = 
+				exitNode = (StoryNode) context.convertAnother(storyGroup, StoryNode.class);
 			}
 
 			reader.moveUp();

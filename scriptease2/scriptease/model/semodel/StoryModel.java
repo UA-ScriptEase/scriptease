@@ -24,6 +24,8 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -404,10 +406,18 @@ public final class StoryModel extends SEModel {
 			}
 
 			@Override
+			public void processStoryGroup(StoryGroup storyGroup) {
+				this.defaultProcessComplex(storyGroup);
+
+				for (StoryNode successor : storyGroup.getSuccessors())
+					successor.process(this);
+			}
+			
+			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
 				this.defaultProcessComplex(storyPoint);
 
-				for (StoryPoint successor : storyPoint.getSuccessors())
+				for (StoryNode successor : storyPoint.getSuccessors())
 					successor.process(this);
 			}
 

@@ -1,6 +1,5 @@
 package scriptease.model.complex;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
@@ -146,79 +145,6 @@ public class StoryPoint extends StoryNode {
 	@Override
 	public String toString() {
 		return "StoryPoint (\"" + this.getDisplayText() + "\")";
-	}
-
-	/**
-	 * Adds a successor to the StoryPoint.
-	 * 
-	 * @param successor
-	 */
-	@Override
-	public boolean addSuccessor(StoryNode successor) {
-		if (successor != this && !successor.getSuccessors().contains(this)) {
-			if (this.successors.add(successor)) {
-				successor.parents.add(this);
-
-				this.notifyObservers(new StoryComponentEvent(successor,
-						StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED));
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Adds multiple successors to the StoryPoint.
-	 * 
-	 * @param successors
-	 */
-	@Override
-	public void addSuccessors(Collection<StoryNode> successors) {
-		for (StoryNode successor : successors) {
-			if (successor != this) {
-				this.addSuccessor(successor);
-			}
-		}
-	}
-
-	/**
-	 * Removes a successor from the StoryPoint.
-	 * 
-	 * @param successor
-	 */
-	@Override
-	public boolean removeSuccessor(StoryNode successor) {
-		if (this.successors.remove(successor)) {
-			successor.parents.remove(this);
-
-			this.notifyObservers(new StoryComponentEvent(successor,
-					StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED));
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	protected <E extends Collection<StoryNode>> E addDescendants(E descendants) {
-		descendants.add(this);
-
-		for (StoryNode successor : this.getSuccessors()) {
-			/*
-			 * This check prevents us from going over paths twice, which saves a
-			 * ton of time in complex stories. Note that the contains
-			 * implementation in Sets is much faster, which is why
-			 * getDescendants is faster than getOrderedDescendants.
-			 */
-			if (!descendants.contains(successor))
-				successor.addDescendants(descendants);
-		}
-
-		return descendants;
-	}
-
-	@Override
-	public void setEnabled(Boolean isDisabled) {
-		// Do nothing - don't want to be able to disable story points
 	}
 
 	/**
