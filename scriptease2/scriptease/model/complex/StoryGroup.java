@@ -89,30 +89,6 @@ public class StoryGroup extends StoryNode {
 	}
 
 	@Override
-	public void addSuccessors(Collection<StoryNode> successors) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean addSuccessor(StoryNode successor) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean removeSuccessor(StoryNode successor) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected <E extends Collection<StoryNode>> E addDescendants(E descendants) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public StoryGroup shallowClone() {
 		final StoryGroup clone = this.clone();
 

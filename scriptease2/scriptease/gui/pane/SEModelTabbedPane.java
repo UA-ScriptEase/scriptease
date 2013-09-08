@@ -269,7 +269,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 				type = event.getType();
 
-				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
+				if (type == StoryComponentChangeEnum.STORY_NODE_SUCCESSOR_ADDED) {
 					event.getSource().addStoryComponentObserver(this);
 					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
@@ -279,7 +279,7 @@ class SEModelTabbedPane extends JTabbedPane {
 					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
-				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+				} else if (type == StoryComponentChangeEnum.STORY_NODE_SUCCESSOR_REMOVED) {
 					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
