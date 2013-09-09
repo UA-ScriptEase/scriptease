@@ -200,8 +200,10 @@ public class SEGraphNodeRenderer<E> {
 		lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
 				innerBorder);
 
-		component.setBorder(lineSpaceBorder);
-		component.setBackground(backgroundColour);
+		if (component != null) {
+			component.setBorder(lineSpaceBorder);
+			component.setBackground(backgroundColour);
+		}
 	}
 
 	/**

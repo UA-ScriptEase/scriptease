@@ -50,8 +50,8 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 				@Override
 				public void componentChanged(StoryComponentEvent event) {
 					if (event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN) {
-						StoryNodeRenderer.this
-								.updateComponents(component, (StoryPoint) node);
+						StoryNodeRenderer.this.updateComponents(component,
+								(StoryPoint) node);
 					}
 				}
 			};
@@ -63,8 +63,9 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 			component.setLayout(new BoxLayout(component, BoxLayout.LINE_AXIS));
 			this.updateComponents(component, (StoryPoint) node);
-			
+
 		} else if (node instanceof StoryGroup) {
+			component.setLayout(new BoxLayout(component, BoxLayout.LINE_AXIS));
 			this.updateComponents(component, (StoryGroup) node);
 		}
 	}
@@ -78,8 +79,20 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 	 */
 	private void updateComponents(JComponent component, StoryGroup group) {
 		// TODO STORYNODES : draw the appearance here for a story group!
+		if (group != null) {
+			final int VERTICAL_MARGIN = 100;
+			final int HORIZONTAL_MARGIN = 100;
+
+			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+
+			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+
+			component.revalidate();
+		}
 	}
-	
+
 	/**
 	 * Updates the components in the passed in component to represent the passed
 	 * in storyPoint
@@ -99,15 +112,16 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 			final BindingWidget editableWidget;
 
-			editableWidget = ScriptWidgetFactory.buildBindingWidget(storyPoint, true);
+			editableWidget = ScriptWidgetFactory.buildBindingWidget(storyPoint,
+					true);
 
 			if (this.graph.getStartNode() != storyPoint) {
 				// If not start node, add a fan in spinner.
 				final JSpinner fanInSpinner;
 				final int SPACE_BETWEEN_COMPONENTS = 5;
 
-				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(storyPoint, storyPoint
-						.getParents().size());
+				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(
+						storyPoint, storyPoint.getParents().size());
 
 				fanInSpinner.setMaximumSize(fanInSpinner.getPreferredSize());
 

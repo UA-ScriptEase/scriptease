@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author mfchurch
  * @author kschenk
  */
-public class StoryPointConverter extends ComplexStoryComponentConverter {
+public class StoryPointConverter extends StoryNodeConverter {
 	// TODO See LibraryModelConverter class for an example of how to refactor
 	// this class. 
 	public static final String TAG_STORYPOINT = "StoryPoint";

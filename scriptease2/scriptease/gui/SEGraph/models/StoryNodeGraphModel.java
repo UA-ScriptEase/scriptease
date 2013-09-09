@@ -2,7 +2,6 @@ package scriptease.gui.SEGraph.models;
 
 import java.util.Collection;
 
-import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 
@@ -23,24 +22,23 @@ public class StoryNodeGraphModel extends SEGraphModel<StoryNode> {
 	}
 
 	@Override
-	public StoryPoint createNewNode() {
-		//TODO STORYNODES: 
+	public StoryNode createNewNode() {
 		return new StoryPoint("");
 	}
-
+	
 	@Override
 	public boolean overwriteNodeData(StoryNode existingNode, StoryNode node) {
 		if (existingNode == node)
 			return false;
 
-		existingNode.setDisplayText(node.getDisplayText());
-		existingNode.removeStoryChildren(existingNode.getChildren());
-
-		// TODO STORYNODES : will have to make this work for story groups
-		for (StoryComponent child : node.getChildren()) {
-			existingNode.addStoryChild(child.clone());
-		}
-
+		for (StoryNode parent : existingNode.getParents())
+			parent.addSuccessor(node);
+		
+		for (StoryNode child : existingNode.getSuccessors())
+			node.addSuccessor(child);
+		
+		this.removeNode(existingNode);
+	
 		return true;
 	}
 

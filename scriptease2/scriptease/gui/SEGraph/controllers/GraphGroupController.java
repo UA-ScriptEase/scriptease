@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.models.StoryNodeGraphModel;
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 
@@ -123,13 +125,51 @@ public class GraphGroupController<E> {
 		if (!(this.startNode instanceof StoryPoint))
 			return;
 
-		final StoryNodeGraphModel newGroupModel;
+		final StoryNodeGraphModel model = (StoryNodeGraphModel) this.graph.model;
 
-		// Clone the group nodes
-		newGroupModel = this.cloneGroupModel();
+		final StoryNode exitNode = (StoryNode) this.getExitNode();
+
+		final StoryNode startNode = (StoryNode) this.startNode;
+
+		final StoryGroup newGroup = new StoryGroup("some name", startNode, exitNode);
+
+		// Connect the parents of the start node to the new group node.
+		for (StoryNode parent : startNode.getParents()) {
+			parent.addSuccessor(newGroup);
+		}
+
+		// Connect the children of the exit node to the new group node.
+		if (exitNode != null) {
+			for (StoryNode child : model.getChildren(exitNode)) {
+				model.connectNodes(child, newGroup);
+			}
+		}
+
+
+		// Add clones of the story nodes to the group
+		for (StoryNode node : this.cloneGroupNodes()) {
+			newGroup.addStoryChild(node);
+		}
+
+		// Remove story nodes in the group from the graph
+		for (E node : this.group) {
+			this.graph.model.removeNode(node);
+		}
+	}
+
+	/**
+	 * Get the exit node of the current group. By default, the exit node is the
+	 * node that contains children not within the group. If no such node exists,
+	 * then the exit node is the first node encountered that is at the deepest
+	 * level in the graph.
+	 * 
+	 * @return
+	 */
+	private E getExitNode() {
+		if (!this.isGroup())
+			return null;
 
 		E exitNode = null;
-		// Get the Exit node of the group
 		for (E node : this.group) {
 			if (!this.group.containsAll(this.graph.getChildren(node))) {
 				exitNode = node;
@@ -137,35 +177,35 @@ public class GraphGroupController<E> {
 			}
 		}
 
-		// Connect the children of the exit node to the start node instead.
-		if (exitNode != null) {
-			for (E child : this.graph.getChildren(exitNode)) {
-				this.graph.model.connectNodes(child, this.startNode);
+		if (exitNode == null) {
+			final Map<E, Integer> depthMap = this.graph.model.getDepthMap();
+
+			int deepestLevel = -1;
+			for (E node : depthMap.keySet()) {
+				if (this.group.contains(node)) {
+					if (depthMap.get(node) > deepestLevel) {
+						exitNode = node;
+					}
+				}
 			}
 		}
 
-		// Remove nodes in the group from the graph 
-		for (E node : this.group) {
-			if (node != this.startNode) {
-				this.graph.model.removeNode(node);
-			}
-		}
+		return exitNode;
 	}
 
-	private StoryNodeGraphModel cloneGroupModel() {
-		final StoryNodeGraphModel groupModel;
+	private Set<StoryNode> cloneGroupNodes() {
+		final Set<StoryNode> clonedNodes = new HashSet<StoryNode>();
 
-		final StoryNode startStoryPointNode = (StoryNode) this.startNode;
+		final StoryNode groupStartNode = (StoryNode) this.startNode;
 
-		groupModel = new StoryNodeGraphModel(this.cloneNodes(
-				startStoryPointNode.shallowClone(), startStoryPointNode));
+		this.cloneNodes(groupStartNode.shallowClone(), groupStartNode,
+				clonedNodes);
 
-		return groupModel;
+		return clonedNodes;
 	}
 
-	private final Set<StoryNode> clonedNodes = new HashSet<StoryNode>();
-
-	private StoryNode cloneNodes(StoryNode newNode, StoryNode node) {
+	private StoryNode cloneNodes(StoryNode newNode, StoryNode node,
+			Set<StoryNode> clonedNodes) {
 
 		clonedNodes.add(newNode);
 
@@ -186,7 +226,7 @@ public class GraphGroupController<E> {
 
 			final StoryNode clonedNode = child.shallowClone();
 			newNode.addSuccessor(clonedNode);
-			this.cloneNodes(clonedNode, child);
+			this.cloneNodes(clonedNode, child, clonedNodes);
 		}
 
 		return newNode;

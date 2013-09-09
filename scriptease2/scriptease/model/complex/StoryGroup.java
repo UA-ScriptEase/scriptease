@@ -21,6 +21,10 @@ public class StoryGroup extends StoryNode {
 	private StoryNode startNode;
 	private StoryNode exitNode;
 
+	public StoryGroup() {
+		this(StoryGroup.NEW_STORY_GROUP, null, null);
+	}
+	 
 	public StoryGroup(String name, StoryNode startNode, StoryNode exitNode) {
 		this(name, new HashSet<StoryNode>(), startNode, exitNode);
 	}
@@ -39,11 +43,6 @@ public class StoryGroup extends StoryNode {
 		this.successors = new HashSet<StoryNode>();
 		this.parents = new HashSet<StoryNode>();
 		this.uniqueID = this.getNextStoryNodeCounter();
-
-		if (!this.getChildren().contains(this.startNode)
-				|| !this.getChildren().contains(this.exitNode))
-			throw new IllegalStateException(
-					"The start node and the exit node must be a part of the story group!");
 
 		this.registerChildType(StoryPoint.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
