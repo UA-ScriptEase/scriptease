@@ -33,16 +33,6 @@ public abstract class StoryNode extends ComplexStoryComponent {
 
 	protected Set<StoryNode> successors;
 	protected Set<StoryNode> parents;
-
-	/**
-	 * Clones the current story node with no successors and parents and retains
-	 * the existing unique id. Unless you plan on deleting the existing
-	 * StoryNode, you should use the <code>clone</code> method or possibly run
-	 * into many issues.
-	 * 
-	 * @return
-	 */
-	public abstract StoryNode shallowClone();
 	
 	/**
 	 * Adds a successor to the StoryNode

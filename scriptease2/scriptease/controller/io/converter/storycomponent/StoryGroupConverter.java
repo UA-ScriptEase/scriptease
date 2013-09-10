@@ -29,14 +29,14 @@ public class StoryGroupConverter extends StoryNodeConverter {
 		super.marshal(source, writer, context);
 
 		// start node
-		writer.startNode(StoryGroupConverter.TAG_START_NODE);
-		context.convertAnother(storyGroup.getStartNode());
-		writer.endNode();
-
-		// exit node
-		writer.startNode(StoryGroupConverter.TAG_EXIT_NODE);
-		context.convertAnother(storyGroup.getExitNode());
-		writer.endNode();
+//		writer.startNode(StoryGroupConverter.TAG_START_NODE);
+//		context.convertAnother(storyGroup.getStartNode());
+//		writer.endNode();
+//
+//		// exit node
+//		writer.startNode(StoryGroupConverter.TAG_EXIT_NODE);
+//		context.convertAnother(storyGroup.getExitNode());
+//		writer.endNode();
 	}
 
 	@Override
