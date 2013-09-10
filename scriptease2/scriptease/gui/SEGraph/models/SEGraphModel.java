@@ -190,20 +190,13 @@ public abstract class SEGraphModel<E> {
 		} else if (this.getDescendants(parent).contains(child)) {
 			connected = this.addChild(child, parent);
 		} else {
-			if (this.getDepthMap().get(parent) != null
-					&& this.getDepthMap().get(child) != null) {
-				final int childDepth = this.getDepthMap().get(child);
-				final int parentDepth = this.getDepthMap().get(parent);
+			final int childDepth = this.getDepthMap().get(child);
+			final int parentDepth = this.getDepthMap().get(parent);
 
-				if (childDepth >= parentDepth) {
-					connected = this.addChild(child, parent);
-				} else {
-					connected = false;
-				}
-				// Handles the case where we're adding to a node that isn't even
-				// a part of the graph yet.
-			} else {
+			if (childDepth >= parentDepth) {
 				connected = this.addChild(child, parent);
+			} else {
+				connected = false;
 			}
 		}
 
