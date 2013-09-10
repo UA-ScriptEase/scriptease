@@ -63,6 +63,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
@@ -525,6 +526,7 @@ public class FileIO {
 		stream.alias("ScriptIt", ScriptIt.class);
 		stream.alias("StoryGroup", StoryGroup.class);
 		stream.alias("StoryPoint", StoryPoint.class);
+		stream.alias("StoryNode", StoryNode.class);
 		stream.alias("Note", Note.class);
 		stream.alias("ControlIt", ControlIt.class);
 		stream.alias("CauseIt", CauseIt.class);

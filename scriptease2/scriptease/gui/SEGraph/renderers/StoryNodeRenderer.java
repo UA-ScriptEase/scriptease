@@ -81,10 +81,12 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		// TODO STORYNODES : draw the appearance here for a story group!
 		if (group != null) {
 			final int VERTICAL_MARGIN = 100;
-			final int HORIZONTAL_MARGIN = 100;
+			final int HORIZONTAL_MARGIN = 10;
 
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+
+			component.add(ScriptWidgetFactory.buildBindingWidget(group, true));
 
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));

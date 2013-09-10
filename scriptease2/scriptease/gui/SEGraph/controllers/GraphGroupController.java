@@ -108,7 +108,7 @@ public class GraphGroupController<E> {
 		}
 
 		if (this.isGroup(group)) {
-			// TODO do something here later - like change all their colors
+			// TODO do something here later - like allowing users to right click before forming the group instead of instantly forming it.
 			formGroup();
 		}
 	}
@@ -144,7 +144,6 @@ public class GraphGroupController<E> {
 				model.connectNodes(child, newGroup);
 			}
 		}
-
 
 		// Add clones of the story nodes to the group
 		for (StoryNode node : this.cloneGroupNodes()) {

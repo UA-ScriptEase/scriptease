@@ -43,7 +43,10 @@ import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -58,6 +61,7 @@ import scriptease.util.GUIOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public class ScriptWidgetFactory {
 	/**
@@ -138,7 +142,7 @@ public class ScriptWidgetFactory {
 	 * Builds a BindingWidget from the given StoryPoint.
 	 * 
 	 * @param component
-	 *            The story to build a binding widget for.
+	 *            The story point to build a binding widget for.
 	 * @param editable
 	 *            <code>true</code> means that the name is editable
 	 *            <code>false</code> otherwise.
@@ -150,10 +154,25 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a BindingWidget from the given StoryPoint.
+	 * Builds a BindingWidget from the given StoryGroup.
 	 * 
 	 * @param component
-	 *            The story to build a binding widget for.
+	 *            The story group to build a binding widget for.
+	 * @param editable
+	 *            <code>true</code> means that the name is editable
+	 *            <code>false</code> otherwise.
+	 * @return The binding widget for displaying the given StoryComponent
+	 */
+	public static BindingWidget buildBindingWidget(StoryGroup component,
+			boolean editable) {
+		return BindingWidgetBuilder.buildBindingWidget(component, editable);
+	}
+
+	/**
+	 * Builds a BindingWidget from the given KnowIt.
+	 * 
+	 * @param component
+	 *            The knowIt to build a binding widget for.
 	 * @param editable
 	 *            <code>true</code> means that the name is editable
 	 *            <code>false</code> otherwise.
@@ -258,6 +277,12 @@ public class ScriptWidgetFactory {
 		public void processStoryPoint(StoryPoint storyPoint) {
 			this.bindingWidget = new BindingWidget(new KnowItBindingStoryPoint(
 					storyPoint));
+		}
+
+		@Override
+		public void processStoryGroup(StoryGroup storyGroup) {
+			this.bindingWidget = new BindingWidget(new KnowItBindingStoryGroup(
+					storyGroup));
 		}
 	}
 
@@ -661,7 +686,7 @@ public class ScriptWidgetFactory {
 
 		final boolean resizing;
 
-		if (component instanceof StoryPoint)
+		if (component instanceof StoryNode)
 			resizing = false;
 		else
 			resizing = true;
@@ -766,7 +791,7 @@ public class ScriptWidgetFactory {
 			Comparable<?> max) {
 		SpinnerNumberModel model;
 		final JSpinner fanInSpinner;
-		
+
 		try {
 			model = new SpinnerNumberModel(storyPoint.getFanIn(), 1, max, 1);
 		} catch (Exception e) {
