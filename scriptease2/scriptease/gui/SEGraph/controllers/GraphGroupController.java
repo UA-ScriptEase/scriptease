@@ -10,10 +10,8 @@ import java.util.Set;
 import java.util.Stack;
 
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.models.StoryNodeGraphModel;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
-import scriptease.model.complex.StoryPoint;
 
 /**
  * Handles all graph grouping functionalities. A graph group represents a set of
@@ -124,10 +122,8 @@ public class GraphGroupController<E> {
 			return;
 
 		// Not dealing with dialogue groups for now
-		if (!(this.startNode instanceof StoryPoint))
+		if (!(this.startNode instanceof StoryNode))
 			return;
-
-		final StoryNodeGraphModel model = (StoryNodeGraphModel) this.graph.model;
 
 		final StoryNode exitNode = (StoryNode) this.getExitNode();
 
@@ -136,18 +132,22 @@ public class GraphGroupController<E> {
 		final StoryGroup newGroup = new StoryGroup(null,
 				(Set<StoryNode>) this.group, startNode, exitNode);
 
-		// Connect the parents of the start node to the new group node.
+		// Connect the children of the exit node to the new group node and
+		// remove the child from the exit node.
+		if (exitNode != null) {
+			for (StoryNode child : exitNode.getSuccessors()) {
+				if (!this.group.contains(child)) {
+					newGroup.addSuccessor(child);
+					exitNode.removeSuccessor(child);
+				}
+			}
+		}
+
+		// Connect the parents of the start node to the new group node. and
+		// remove this parent from the start node.
 		for (StoryNode parent : startNode.getParents()) {
 			parent.addSuccessor(newGroup);
 			parent.removeSuccessor(startNode);
-		}
-
-		// Connect the children of the exit node to the new group node.
-		if (exitNode != null) {
-			for (StoryNode child : model.getChildren(exitNode)) {
-				newGroup.addSuccessor(child);
-				model.removeChild(child, exitNode);
-			}
 		}
 	}
 
@@ -178,6 +178,7 @@ public class GraphGroupController<E> {
 			for (E node : depthMap.keySet()) {
 				if (this.group.contains(node)) {
 					if (depthMap.get(node) > deepestLevel) {
+						deepestLevel = depthMap.get(node);
 						exitNode = node;
 					}
 				}
@@ -186,7 +187,7 @@ public class GraphGroupController<E> {
 
 		return exitNode;
 	}
-	
+
 	/**
 	 * Clears the current group.
 	 */
