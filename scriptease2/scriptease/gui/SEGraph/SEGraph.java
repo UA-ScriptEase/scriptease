@@ -1118,18 +1118,28 @@ public class SEGraph<E> extends JComponent {
 			this.lastExitedNode = null;
 			this.lastEnteredNode = graph.nodesToComponents.getKey(entered);
 
-			if (this.lastEnteredNode == graph.getStartNode()) {
-				if (mode == Mode.DELETE) {
-					// Make the cursor appear unavailable for start node
-					// deletion
+			if (mode == Mode.GROUP) {
+				// Make the cursor appear unavailable for nodes that can't be a
+				// part of the current group.
+				if (!SEGraph.this.getGroupController().isNodeLegal(
+						this.lastEnteredNode)) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			} else if (graph.isReadOnly)
+			} else if (this.lastEnteredNode == graph.getStartNode()) {
+				if (mode == Mode.DELETE) {
+					// Make the cursor appear unavailable for start node
+					// deletion.
+					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
+				} else
+					entered.setCursor(null);
+			} else if (graph.isReadOnly) {
 				if (mode != Mode.SELECT) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
+			} else
+				entered.setCursor(null);
 		}
 
 		@Override
