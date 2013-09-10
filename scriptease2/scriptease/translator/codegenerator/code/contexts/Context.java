@@ -236,8 +236,8 @@ public abstract class Context {
 	 * @return
 	 */
 	public CauseIt getFirstCause() {
-		for (StoryNode point : this.storyNodes) {
-			for (StoryComponent child : point.getChildren()) {
+		for (StoryNode node : this.storyNodes) {
+			for (StoryComponent child : node.getChildren()) {
 				if (child instanceof StoryPoint) {
 					for (StoryComponent storyPointChild : ((StoryPoint) child)
 							.getChildren()) {

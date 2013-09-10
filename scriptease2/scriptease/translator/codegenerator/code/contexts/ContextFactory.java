@@ -11,6 +11,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
@@ -26,6 +27,7 @@ import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.Kn
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryGroupContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
 import scriptease.translator.io.model.Resource;
 
@@ -136,7 +138,12 @@ public class ContextFactory {
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				ContextFactory.this.activeContext = new KnowItBindingStoryPointContext(
 						pastContext, storyPoint);
-
+			}
+			
+			@Override
+			public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
+				ContextFactory.this.activeContext = new KnowItBindingStoryGroupContext(
+						pastContext, storyGroup);
 			}
 
 			@Override

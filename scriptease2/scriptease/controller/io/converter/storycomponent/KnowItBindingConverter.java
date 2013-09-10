@@ -13,8 +13,10 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.GameModule;
@@ -50,7 +52,7 @@ public class KnowItBindingConverter implements Converter {
 	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
 	private static final String ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR = "automatic";
 	private static final String ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR = "storyPoint";
-
+	private static final String ATTRIBUTE_VALUE_STORY_GROUP_FLAVOUR = "storyGroup";
 	/**
 	 * Can convert any subclass of KnowItBinding
 	 */
@@ -125,6 +127,12 @@ public class KnowItBindingConverter implements Converter {
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				KnowItBindingConverter.this.marshallStoryPointBinding(
 						storyPoint, writer, context);
+			}
+			
+			@Override
+			public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
+				KnowItBindingConverter.this.marshallStoryGroupBinding(
+						storyGroup, writer, context);
 			}
 		});
 	}
@@ -212,6 +220,23 @@ public class KnowItBindingConverter implements Converter {
 		context.convertAnother(value);
 		writer.endNode();
 	}
+	
+	/*
+	 * Converts a Story Group reference to XML
+	 */
+	private void marshallStoryGroupBinding(KnowItBindingStoryGroup binding,
+			HierarchicalStreamWriter writer, MarshallingContext context) {
+		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
+				ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR);
+
+		writer.startNode(StoryGroupConverter.TAG_STORYGROUP);
+		final StoryGroup value = binding.getValue();
+		if (value == null)
+			System.err.println("Bug track: Null value assigned to binding "
+					+ binding);
+		context.convertAnother(value);
+		writer.endNode();
+	}
 
 	// ====================== IN ======================
 
@@ -249,6 +274,8 @@ public class KnowItBindingConverter implements Converter {
 			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR))
 				binding = this.unmarshallStoryPointBinding(reader, context);
+			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_GROUP_FLAVOUR))
+				binding = this.unmarshallStoryGroupBinding(reader, context);
 			else
 				// VizziniAmazementException - remiller
 				throw new ConversionException("Inconceivable binding type: "
@@ -371,5 +398,18 @@ public class KnowItBindingConverter implements Converter {
 		reader.moveUp();
 
 		return new KnowItBindingStoryPoint(storyPoint);
+	}
+	
+	private KnowItBindingStoryGroup unmarshallStoryGroupBinding(
+			HierarchicalStreamReader reader, UnmarshallingContext context) {
+		final StoryGroup storyGroup;
+
+		// move down and read as a story point
+		reader.moveDown();
+		storyGroup = (StoryGroup) context.convertAnother(null,
+				StoryGroup.class);
+		reader.moveUp();
+
+		return new KnowItBindingStoryGroup(storyGroup);
 	}
 }

@@ -325,6 +325,16 @@
       <WidgetName>SP</WidgetName>
     </Type>
     <Type>
+      <Name>Story Group</Name>
+      <Keyword>storyGroup</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Fragment data="uniqueID"/>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>SG</WidgetName>
+    </Type>
+    <Type>
       <Name>Audio</Name>
       <Keyword>Audio</Keyword>
       <CodeSymbol>AudioClip</CodeSymbol>

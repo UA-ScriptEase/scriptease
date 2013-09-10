@@ -43,20 +43,20 @@ public abstract class StoryNodeConverter extends ComplexStoryComponentConverter 
 		
 		final Set<StoryNode> successors = new HashSet<StoryNode>();
 
-		while (reader.hasMoreChildren()) {
-			reader.moveDown();
-			
-			final String nodeName = reader.getNodeName();
-
-			if (nodeName.equals(TAG_SUCCESSORS)) {
+		reader.moveDown();
+		if (reader.hasMoreChildren()) {
+			if (!reader.getNodeName().equalsIgnoreCase(TAG_SUCCESSORS))
+				System.err.println("Expected successors list, but found "
+						+ reader.getNodeName());
+			else {
 				successors.addAll((Collection<StoryNode>) context
 						.convertAnother(storyNode, ArrayList.class));
 			}
-			reader.moveUp();
 		}
-
+		reader.moveUp();
+		
 		storyNode.addSuccessors(successors);
-
+		
 		return storyNode;
 	}
 }
