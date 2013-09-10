@@ -89,7 +89,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		return super.isLegal() && isLegal;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;

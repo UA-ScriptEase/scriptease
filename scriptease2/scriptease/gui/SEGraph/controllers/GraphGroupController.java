@@ -1,7 +1,5 @@
 package scriptease.gui.SEGraph.controllers;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -29,16 +27,35 @@ public class GraphGroupController<E> {
 	private Set<E> group;
 	private E startNode;
 
-	private final Collection<SEGraph<E>> existingGroups;
-
 	public GraphGroupController(SEGraph<E> graph) {
 		this.graph = graph;
 
 		this.group = new HashSet<E>();
 		this.startNode = null;
+	}
 
-		// TODO : will want to read this from story file later.
-		this.existingGroups = new ArrayList<SEGraph<E>>();
+	/**
+	 * Returns true if the provided node can legally be added to the current
+	 * group, false otherwise.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	public boolean isNodeLegal(E node) {
+		if (node == graph.getStartNode())
+			return false;
+
+		if (this.group.isEmpty()) {
+			if (this.isValidGroupStart(node))
+				return true;
+			else
+				return false;
+			// Don't want anything before the start node.
+		} else if (this.graph.model.getParents(node).contains(this.startNode)
+				|| this.startNode == node)
+			return true;
+
+		return false;
 	}
 
 	/**
@@ -51,7 +68,7 @@ public class GraphGroupController<E> {
 		if (this.group.isEmpty() && this.isValidGroupStart(node)) {
 			this.startNode = node;
 			this.group.add(node);
-		} else if (startNode != null) {
+		} else if (this.startNode != null) {
 			// Check whether the node is already in the group
 			if (group.contains(node) && node != startNode) {
 				group.remove(node);
@@ -60,7 +77,7 @@ public class GraphGroupController<E> {
 				// Now we can start forming a group
 
 				// We don't want to add anything behind the start node.
-				if (!this.graph.model.getParents(node).contains(startNode)) {
+				if (!this.graph.model.getParents(node).contains(this.startNode)) {
 					// We need to find path back to start
 					final Set<E> tempGroup = new HashSet<E>();
 					final Queue<E> backQueue = new LinkedList<E>();
@@ -106,9 +123,10 @@ public class GraphGroupController<E> {
 		}
 
 		if (this.isGroup(group)) {
-			// TODO do something here later - like allowing users to right click
-			// before forming the group instead of instantly forming it.
+			// TODO give the users the option to form a group instead of just
+			// forming it for them as soon as its avaliable.
 			formGroup();
+			resetGroup();
 		}
 	}
 
@@ -193,6 +211,7 @@ public class GraphGroupController<E> {
 	 */
 	public void resetGroup() {
 		this.group.clear();
+		this.startNode = null;
 	}
 
 	/**
@@ -236,8 +255,12 @@ public class GraphGroupController<E> {
 	 * 
 	 * @param node
 	 */
-	private boolean isValidGroupStart(E node) {
+	public boolean isValidGroupStart(E node) {
 		final Queue<E> nodes = new LinkedList<E>();
+
+		// If this is the graph start node, return false immediately.
+		if (node == this.graph.model.getStartNode())
+			return false;
 
 		for (E child : this.graph.model.getChildren(node)) {
 			nodes.add(child);
