@@ -108,7 +108,8 @@ public class GraphGroupController<E> {
 		}
 
 		if (this.isGroup(group)) {
-			// TODO do something here later - like allowing users to right click before forming the group instead of instantly forming it.
+			// TODO do something here later - like allowing users to right click
+			// before forming the group instead of instantly forming it.
 			formGroup();
 		}
 	}
@@ -116,6 +117,7 @@ public class GraphGroupController<E> {
 	/**
 	 * Forms the selected nodes into a group node.
 	 */
+	@SuppressWarnings("unchecked")
 	public void formGroup() {
 		// Make sure we even have a group.
 		if (!this.isGroup())
@@ -131,28 +133,21 @@ public class GraphGroupController<E> {
 
 		final StoryNode startNode = (StoryNode) this.startNode;
 
-		final StoryGroup newGroup = new StoryGroup("some name", startNode, exitNode);
+		final StoryGroup newGroup = new StoryGroup(null,
+				(Set<StoryNode>) this.group, startNode, exitNode);
 
 		// Connect the parents of the start node to the new group node.
 		for (StoryNode parent : startNode.getParents()) {
 			parent.addSuccessor(newGroup);
+			parent.removeSuccessor(startNode);
 		}
 
 		// Connect the children of the exit node to the new group node.
 		if (exitNode != null) {
 			for (StoryNode child : model.getChildren(exitNode)) {
-				model.connectNodes(child, newGroup);
+				newGroup.addSuccessor(child);
+				model.removeChild(child, exitNode);
 			}
-		}
-
-		// Add clones of the story nodes to the group
-		for (StoryNode node : this.cloneGroupNodes()) {
-			newGroup.addStoryChild(node);
-		}
-
-		// Remove story nodes in the group from the graph
-		for (E node : this.group) {
-			this.graph.model.removeNode(node);
 		}
 	}
 
@@ -191,46 +186,7 @@ public class GraphGroupController<E> {
 
 		return exitNode;
 	}
-
-	private Set<StoryNode> cloneGroupNodes() {
-		final Set<StoryNode> clonedNodes = new HashSet<StoryNode>();
-
-		final StoryNode groupStartNode = (StoryNode) this.startNode;
-
-		this.cloneNodes(groupStartNode.shallowClone(), groupStartNode,
-				clonedNodes);
-
-		return clonedNodes;
-	}
-
-	private StoryNode cloneNodes(StoryNode newNode, StoryNode node,
-			Set<StoryNode> clonedNodes) {
-
-		clonedNodes.add(newNode);
-
-		outer: for (StoryNode child : node.getSuccessors()) {
-
-			// Don't care about any nodes that aren't in the group.
-			if (!this.group.contains(child))
-				continue;
-
-			// If the node already exists in this new graph model, we don't need
-			// to reclone it.
-			for (StoryNode existingNode : clonedNodes) {
-				if (existingNode.getUniqueID() == child.getUniqueID()) {
-					newNode.addSuccessor(existingNode);
-					continue outer;
-				}
-			}
-
-			final StoryNode clonedNode = child.shallowClone();
-			newNode.addSuccessor(clonedNode);
-			this.cloneNodes(clonedNode, child, clonedNodes);
-		}
-
-		return newNode;
-	}
-
+	
 	/**
 	 * Clears the current group.
 	 */

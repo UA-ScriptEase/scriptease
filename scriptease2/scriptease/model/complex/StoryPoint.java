@@ -67,25 +67,6 @@ public class StoryPoint extends StoryNode {
 		return (StoryPoint) super.clone();
 	}
 
-	/**
-	 * Clones the current story point with no successors and parents and retains
-	 * the existing unique id. Unless you plan on deleting the existing
-	 * StoryPoint, you should use the <code>clone</code> method or possibly run
-	 * into many issues.
-	 * 
-	 * @return
-	 */
-	@Override
-	public StoryNode shallowClone() {
-		final StoryPoint component = this.clone();
-
-		component.successors = new HashSet<StoryNode>();
-		component.parents = new HashSet<StoryNode>();
-		component.uniqueID = this.uniqueID;
-
-		return component;
-	}
-
 	@Override
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {

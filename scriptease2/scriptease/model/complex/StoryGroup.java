@@ -33,6 +33,11 @@ public class StoryGroup extends StoryNode {
 			StoryNode startNode, StoryNode exitNode) {
 		super();
 
+		this.registerChildType(StoryPoint.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(StoryGroup.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+
 		this.startNode = startNode;
 		this.exitNode = exitNode;
 
@@ -44,12 +49,8 @@ public class StoryGroup extends StoryNode {
 		this.parents = new HashSet<StoryNode>();
 		this.uniqueID = this.getNextStoryNodeCounter();
 
-		this.registerChildType(StoryPoint.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(StoryGroup.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
-		if (name.equals("") || name == null) {
+		if (name == null || name.equals("")) {
 			name = StoryGroup.NEW_STORY_GROUP;
 		}
 
@@ -85,16 +86,5 @@ public class StoryGroup extends StoryNode {
 	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processStoryGroup(this);
-	}
-
-	@Override
-	public StoryGroup shallowClone() {
-		final StoryGroup clone = this.clone();
-
-		clone.uniqueID = this.uniqueID;
-		clone.successors = new HashSet<StoryNode>();
-		clone.parents = new HashSet<StoryNode>();
-
-		return clone;
 	}
 }
