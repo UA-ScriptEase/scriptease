@@ -23,6 +23,8 @@ public class StoryGroupConverter extends StoryNodeConverter {
 
 	public static final String TAG_START_NODE = "StartNode";
 	public static final String TAG_EXIT_NODE = "ExitNode";
+	
+	public static final String TAG_EXPANDED = "Expanded";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
@@ -39,6 +41,11 @@ public class StoryGroupConverter extends StoryNodeConverter {
 		writer.startNode(StoryGroupConverter.TAG_EXIT_NODE);
 		context.convertAnother(storyGroup.getExitNode());
 		writer.endNode();
+		
+		// expanded
+		writer.startNode(StoryGroupConverter.TAG_EXPANDED);
+		writer.setValue(storyGroup.isExpanded().toString());
+		writer.endNode();
 	}
 
 	@Override
@@ -50,6 +57,8 @@ public class StoryGroupConverter extends StoryNodeConverter {
 		StoryNode startNode = null;
 		StoryNode exitNode = null;
 
+		boolean expanded = false;
+		
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
@@ -58,6 +67,8 @@ public class StoryGroupConverter extends StoryNodeConverter {
 				startNode = (StoryNode) context.convertAnother(storyGroup, StoryNode.class);
 			} else if (nodeName.equals(StoryGroupConverter.TAG_EXIT_NODE)) {
 				exitNode = (StoryNode) context.convertAnother(storyGroup, StoryNode.class);
+			} else if (nodeName.equals(StoryGroupConverter.TAG_EXPANDED)) {
+				expanded = reader.getValue().equalsIgnoreCase("true");
 			}
 
 			reader.moveUp();
@@ -65,6 +76,7 @@ public class StoryGroupConverter extends StoryNodeConverter {
 
 		storyGroup.setStartNode(startNode);
 		storyGroup.setExitNode(exitNode);
+		storyGroup.setExpanded(expanded);
 		
 		return storyGroup;
 	}
