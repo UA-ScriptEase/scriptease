@@ -173,6 +173,8 @@ public class GraphGroupController<E> {
 			parent.addSuccessor(newGroup);
 			parent.removeSuccessor(startNode);
 		}
+		
+		this.graph.repaint();
 	}
 
 	/**

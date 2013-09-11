@@ -81,7 +81,6 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				
 			}
 		});
 

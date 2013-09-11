@@ -21,16 +21,19 @@ public class StoryGroup extends StoryNode {
 	private StoryNode startNode;
 	private StoryNode exitNode;
 
+	private boolean expanded;
+	
 	public StoryGroup() {
-		this(StoryGroup.NEW_STORY_GROUP, null, null);
-	}
-	 
-	public StoryGroup(String name, StoryNode startNode, StoryNode exitNode) {
-		this(name, new HashSet<StoryNode>(), startNode, exitNode);
+		this(StoryGroup.NEW_STORY_GROUP, new HashSet<StoryNode>(), null, null);
 	}
 
 	public StoryGroup(String name, Collection<StoryNode> storyNodes,
 			StoryNode startNode, StoryNode exitNode) {
+		this(name, storyNodes, startNode, exitNode, false);
+	}
+	
+	public StoryGroup(String name, Collection<StoryNode> storyNodes,
+			StoryNode startNode, StoryNode exitNode, boolean expanded) {
 		super();
 
 		this.registerChildType(StoryPoint.class,
@@ -40,6 +43,8 @@ public class StoryGroup extends StoryNode {
 
 		this.startNode = startNode;
 		this.exitNode = exitNode;
+		
+		this.expanded = expanded;
 
 		for (StoryNode storyNode : storyNodes) {
 			this.addStoryChild(storyNode);
@@ -72,6 +77,14 @@ public class StoryGroup extends StoryNode {
 		this.exitNode = exitNode;
 	}
 
+	public Boolean isExpanded() {
+		return this.expanded;
+	}
+	
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
+	}
+	
 	@Override
 	public StoryGroup clone() {
 		return (StoryGroup) super.clone();
