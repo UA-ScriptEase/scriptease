@@ -150,7 +150,7 @@ public class GraphGroupController<E> {
 		final StoryNode startNode = (StoryNode) this.startNode;
 
 		final StoryGroup newGroup = new StoryGroup(null,
-				(Set<StoryNode>) this.group, startNode, exitNode);
+				(Set<StoryNode>) this.group, startNode, exitNode,true);
 
 		final Collection<StoryNode> storyNodes = new ArrayList<StoryNode>();
 		

@@ -1,5 +1,7 @@
 package scriptease.gui.SEGraph.renderers;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -12,7 +14,9 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.component.BindingWidget;
+import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
@@ -77,22 +81,47 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 	 * @param component
 	 * @param storyGroup
 	 */
-	private void updateComponents(JComponent component, StoryGroup group) {
-		// TODO STORYNODES : draw the appearance for a story group here.
-		if (group != null) {
-			final int VERTICAL_MARGIN = 60;
-			final int HORIZONTAL_MARGIN = 20;
+	private void updateComponents(JComponent component, final StoryGroup group) {
+		if (group == null)
+			return;
 
+		component.removeAll();
+
+		final int VERTICAL_MARGIN = 60;
+		final int HORIZONTAL_MARGIN = 20;
+
+		final ExpansionButton expansionButton = new ExpansionButton(!group.isExpanded());
+
+		expansionButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				group.setExpanded(!group.isExpanded());
+			}
+		});
+
+		if (!group.isExpanded()) {
+			// Draw the group as a single node if it isn't expanded.
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
 			component.add(ScriptWidgetFactory.buildBindingWidget(group, true));
-
-			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
-			
-			component.revalidate();
+		} else {
+			// Draw the group as a subgraph.
+			final SEGraph<StoryNode> subGraph = SEGraphFactory
+					.buildStoryGraph(group.getStartNode());
+			component.add(subGraph);
 		}
+
+		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+
+		component.add(expansionButton);
+		
+		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+
+		component.revalidate();
 	}
 
 	/**
@@ -102,42 +131,43 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 	 * @param component
 	 * @param storyPoint
 	 */
-	private void updateComponents(JComponent component, StoryPoint storyPoint) {
+	private void updateComponents(JComponent component,
+			final StoryPoint storyPoint) {
+		if (storyPoint == null)
+			return;
+
 		component.removeAll();
 
-		if (storyPoint != null) {
-			final int VERTICAL_MARGIN = 40;
-			final int HORIZONTAL_MARGIN = 10;
+		final int VERTICAL_MARGIN = 40;
+		final int HORIZONTAL_MARGIN = 10;
 
-			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
-			final BindingWidget editableWidget;
+		final BindingWidget editableWidget;
 
-			editableWidget = ScriptWidgetFactory.buildBindingWidget(storyPoint,
-					true);
+		editableWidget = ScriptWidgetFactory.buildBindingWidget(storyPoint,
+				true);
 
-			if (this.graph.getStartNode() != storyPoint) {
-				// If not start node, add a fan in spinner.
-				final JSpinner fanInSpinner;
-				final int SPACE_BETWEEN_COMPONENTS = 5;
+		if (this.graph.getStartNode() != storyPoint) {
+			// If not start node, add a fan in spinner.
+			final JSpinner fanInSpinner;
+			final int SPACE_BETWEEN_COMPONENTS = 5;
 
-				fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(
-						storyPoint, storyPoint.getParents().size());
+			fanInSpinner = ScriptWidgetFactory.buildFanInSpinner(storyPoint,
+					storyPoint.getParents().size());
 
-				fanInSpinner.setMaximumSize(fanInSpinner.getPreferredSize());
+			fanInSpinner.setMaximumSize(fanInSpinner.getPreferredSize());
 
-				component.add(fanInSpinner);
-				component.add(Box
-						.createHorizontalStrut(SPACE_BETWEEN_COMPONENTS));
-			}
-
-			component.add(editableWidget);
-
-			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
-
-			component.revalidate();
+			component.add(fanInSpinner);
+			component.add(Box.createHorizontalStrut(SPACE_BETWEEN_COMPONENTS));
 		}
+
+		component.add(editableWidget);
+
+		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
+		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+
+		component.revalidate();
 	}
 }
