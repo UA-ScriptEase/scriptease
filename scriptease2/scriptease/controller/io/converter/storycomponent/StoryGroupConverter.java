@@ -3,7 +3,6 @@ package scriptease.controller.io.converter.storycomponent;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
-import scriptease.model.complex.StoryPoint;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -44,7 +43,7 @@ public class StoryGroupConverter extends StoryNodeConverter {
 			UnmarshallingContext context) {
 		final StoryGroup storyGroup = (StoryGroup) super.unmarshal(reader,
 				context);
-
+		
 		StoryNode startNode = null;
 		StoryNode exitNode = null;
 
@@ -70,12 +69,12 @@ public class StoryGroupConverter extends StoryNodeConverter {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
-		return type.equals(StoryPoint.class);
+		return type.equals(StoryGroup.class);
 	}
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		return new StoryPoint("");
+		return new StoryGroup();
 	}
 }
