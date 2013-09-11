@@ -285,7 +285,6 @@ public class StoryComponentPanel extends JPanel implements
 							label.repaint();
 						}
 					}
-
 				}
 			}
 		}

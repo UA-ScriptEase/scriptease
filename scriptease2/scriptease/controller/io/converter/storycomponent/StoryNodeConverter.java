@@ -2,11 +2,10 @@ package scriptease.controller.io.converter.storycomponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import scriptease.model.complex.StoryNode;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -18,9 +17,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public abstract class StoryNodeConverter extends ComplexStoryComponentConverter {
-	
+
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. 
+	// this class.
 	public static final String TAG_SUCCESSORS = "Successors";
 
 	@Override
@@ -38,10 +37,10 @@ public abstract class StoryNodeConverter extends ComplexStoryComponentConverter 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final StoryNode storyNode = (StoryNode) super.unmarshal(reader,
-				context);
-		
-		final Set<StoryNode> successors = new HashSet<StoryNode>();
+		final StoryNode storyNode = (StoryNode) super
+				.unmarshal(reader, context);
+
+		final Collection<StoryNode> successors = new ArrayList<StoryNode>();
 
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
@@ -49,14 +48,20 @@ public abstract class StoryNodeConverter extends ComplexStoryComponentConverter 
 				System.err.println("Expected successors list, but found "
 						+ reader.getNodeName());
 			else {
-				successors.addAll((Collection<StoryNode>) context
-						.convertAnother(storyNode, ArrayList.class));
+				try {
+					successors.addAll((Collection<StoryNode>) context
+							.convertAnother(storyNode, ArrayList.class));
+
+					storyNode.addSuccessors(successors);
+				} catch (ConversionException e) {
+					System.err.println("Problems converting story node "
+							+ storyNode.getDisplayText() + "'s successors: "
+							+ e);
+				}
 			}
 		}
 		reader.moveUp();
-		
-		storyNode.addSuccessors(successors);
-		
+
 		return storyNode;
 	}
 }

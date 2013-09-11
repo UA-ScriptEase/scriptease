@@ -16,6 +16,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class StoryGroupConverter extends StoryNodeConverter {
 
+	// TODO See LibraryModelConverter class for an example of how to refactor
+	// this class. 
+	
 	public static final String TAG_STORYGROUP = "StoryGroup";
 
 	public static final String TAG_START_NODE = "StartNode";

@@ -78,10 +78,10 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 	 * @param storyGroup
 	 */
 	private void updateComponents(JComponent component, StoryGroup group) {
-		// TODO STORYNODES : draw the appearance here for a story group!
+		// TODO STORYNODES : draw the appearance for a story group here.
 		if (group != null) {
 			final int VERTICAL_MARGIN = 100;
-			final int HORIZONTAL_MARGIN = 10;
+			final int HORIZONTAL_MARGIN = 20;
 
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
@@ -90,7 +90,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
-
+			
 			component.revalidate();
 		}
 	}
