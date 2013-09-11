@@ -55,7 +55,7 @@ public class StoryPoint extends StoryNode {
 		this.registerChildType(Note.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
-		if (name.equals("") || name == null) {
+		if (name == null || name.equals("")) {
 			name = NEW_STORY_POINT;
 		}
 

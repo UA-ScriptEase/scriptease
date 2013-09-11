@@ -1,5 +1,7 @@
 package scriptease.gui.SEGraph.controllers;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -51,7 +53,7 @@ public class GraphGroupController<E> {
 			else
 				return false;
 			// Don't want anything before the start node.
-		} else if (this.graph.model.getParents(node).contains(this.startNode)
+		} else if (this.graph.model.getAncestors(node).contains(this.startNode)
 				|| this.startNode == node)
 			return true;
 
@@ -150,10 +152,14 @@ public class GraphGroupController<E> {
 		final StoryGroup newGroup = new StoryGroup(null,
 				(Set<StoryNode>) this.group, startNode, exitNode);
 
+		final Collection<StoryNode> storyNodes = new ArrayList<StoryNode>();
+		
+		storyNodes.addAll(exitNode.getSuccessors());
+		
 		// Connect the children of the exit node to the new group node and
 		// remove the child from the exit node.
 		if (exitNode != null) {
-			for (StoryNode child : exitNode.getSuccessors()) {
+			for (StoryNode child : storyNodes) {
 				if (!this.group.contains(child)) {
 					newGroup.addSuccessor(child);
 					exitNode.removeSuccessor(child);

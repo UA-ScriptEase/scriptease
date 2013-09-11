@@ -49,7 +49,6 @@ public class StoryGroup extends StoryNode {
 		this.parents = new HashSet<StoryNode>();
 		this.uniqueID = this.getNextStoryNodeCounter();
 
-
 		if (name == null || name.equals("")) {
 			name = StoryGroup.NEW_STORY_GROUP;
 		}

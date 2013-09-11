@@ -241,17 +241,22 @@ public abstract class Context {
 				if (child instanceof StoryPoint) {
 					for (StoryComponent storyPointChild : ((StoryPoint) child)
 							.getChildren()) {
-						return this.getFirstValidCause(storyPointChild);
+						if (this.isCauseValid(storyPointChild)) {
+							return (CauseIt) storyPointChild;
+						}
 					}
-				} else
-					return this.getFirstValidCause(child);
+				} else {
+					if (this.isCauseValid(child)) {
+						return (CauseIt) child;
+					}
+				}
 			}
 		}
 
 		return null;
 	}
 
-	private CauseIt getFirstValidCause(StoryComponent component) {
+	private boolean isCauseValid(StoryComponent component) {
 		if (component instanceof CauseIt) {
 			final CauseIt causeIt = (CauseIt) component;
 
@@ -260,10 +265,10 @@ public abstract class Context {
 			codeBlocks = causeIt.getCodeBlocksForLocation(this.locationInfo);
 
 			if (!codeBlocks.isEmpty())
-				return causeIt;
+				return true;
 		}
 
-		return null;
+		return false;
 	}
 
 	/**
