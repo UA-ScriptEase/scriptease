@@ -11,6 +11,8 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -78,6 +80,7 @@ public class SEGraph<E> extends JComponent {
 
 	public final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
+
 	private final List<SEGraphObserver<E>> observers;
 	private final LinkedHashSet<E> selectedNodes;
 
@@ -1063,7 +1066,6 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @author kschenk
 	 * @author jyuen
-	 * 
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
 		private E lastEnteredNode = null;
@@ -1104,7 +1106,11 @@ public class SEGraph<E> extends JComponent {
 				graph.draggedFromNode = source;
 				SEGraph.this.groupController.resetGroup();
 			} else if (mode == Mode.GROUP) {
-				SEGraph.this.groupController.addNodeToGroup(source);
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					SEGraph.this.groupController.formGroup();
+				} else {
+					SEGraph.this.groupController.addNodeToGroup(source);
+				}
 			} else if (mode == Mode.UNGROUP) {
 				SEGraph.this.groupController.resetGroup();
 				if (source instanceof StoryGroup) {
