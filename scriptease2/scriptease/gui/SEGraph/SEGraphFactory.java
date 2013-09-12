@@ -75,20 +75,38 @@ public class SEGraphFactory {
 	}
 
 	/**
-	 * Builds a graph for story nodes.
+	 * Builds a graph for story nodes with default white background colour, and
+	 * read only mode to false.
 	 * 
 	 * @param start
 	 * @return
 	 */
 	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start) {
+		return SEGraphFactory.buildStoryGraph(start, Color.WHITE, false);
+	}
+
+	/**
+	 * Builds a graph for story nodes.
+	 * 
+	 * @param start
+	 *            The graph start story node.
+	 * @param bgColour
+	 *            The background colour of the graph.
+	 * @param readOnly
+	 *            Whether the graph is read only.
+	 * @return
+	 */
+	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start,
+			Color bgColour, boolean readOnly) {
 		final SEGraph<StoryNode> graph;
 		final StoryNodeGraphModel storyGraphModel;
 
 		storyGraphModel = new StoryNodeGraphModel(start);
-		graph = new SEGraph<StoryNode>(storyGraphModel);
+		graph = new SEGraph<StoryNode>(storyGraphModel,
+				SelectionMode.SELECT_NODE, readOnly);
 
 		graph.setNodeRenderer(new StoryNodeRenderer(graph));
-		graph.setBackground(Color.WHITE);
+		graph.setBackground(bgColour);
 
 		return graph;
 	}

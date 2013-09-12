@@ -20,6 +20,11 @@ import scriptease.util.GUIOp;
 public interface ScriptEaseUI {
 
 	/**
+	 * The colour (pale green) used to display graph group backgrounds.
+	 */
+	public static final Color COLOUR_GROUP_BACKGROUND = Color.WHITE;
+	
+	/**
 	 * The colour (green) used to display known object bindings.
 	 */
 	public static final Color COLOUR_KNOWN_OBJECT = new Color(20, 175, 0);

@@ -29,6 +29,7 @@ public class ExpansionButton extends JButton {
 
 		this.setMaximumSize(MAX_SIZE);
 		this.setPreferredSize(MAX_SIZE);
+		this.setMinimumSize(MAX_SIZE);
 		this.setFocusable(false);
 		this.setOpaque(true);
 		this.setCollapsed(isCollapsed);
