@@ -81,7 +81,8 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 	 * @param component
 	 * @param storyGroup
 	 */
-	private void updateComponents(JComponent component, final StoryGroup group) {
+	private void updateComponents(final JComponent component,
+			final StoryGroup group) {
 		if (group == null)
 			return;
 
@@ -90,13 +91,15 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		final int VERTICAL_MARGIN = 60;
 		final int HORIZONTAL_MARGIN = 20;
 
-		final ExpansionButton expansionButton = new ExpansionButton(!group.isExpanded());
+		final ExpansionButton expansionButton = new ExpansionButton(
+				!group.isExpanded());
 
 		expansionButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				group.setExpanded(!group.isExpanded());
+				StoryNodeRenderer.this.updateComponents(component, group);
 			}
 		});
 
@@ -117,10 +120,12 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
 		component.add(expansionButton);
-		
+
 		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
 		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
 
+		this.hoveredComponent = component;
+		this.reconfigureAppearance(component, group);
 		component.revalidate();
 	}
 
@@ -131,7 +136,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 	 * @param component
 	 * @param storyPoint
 	 */
-	private void updateComponents(JComponent component,
+	private void updateComponents(final JComponent component,
 			final StoryPoint storyPoint) {
 		if (storyPoint == null)
 			return;
