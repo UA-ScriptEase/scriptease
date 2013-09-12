@@ -36,7 +36,7 @@ public class SEGraphNodeRenderer<E> {
 	private final SEGraph<E> graph;
 
 	// This is such a weird hack. I apologize. - remiller
-	private JComponent hoveredComponent = null;
+	protected JComponent hoveredComponent = null;
 	private JComponent pressedComponent = null;
 
 	public SEGraphNodeRenderer(SEGraph<E> graph) {
