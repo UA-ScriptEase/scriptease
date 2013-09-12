@@ -293,6 +293,16 @@
       <WidgetName>SP</WidgetName>
     </Type>
     <Type>
+      <Name>Story Group</Name>
+      <Keyword>storyGroup</Keyword>
+      <CodeSymbol>String</CodeSymbol>
+      <Format>
+        <Fragment data="uniqueID"/>
+      </Format>
+      <LegalValues>[^\&quot;]*</LegalValues>
+      <WidgetName>SG</WidgetName>
+    </Type>
+    <Type>
       <Name>ModelType</Name>
       <Keyword>model_type</Keyword>
       <CodeSymbol>int</CodeSymbol>

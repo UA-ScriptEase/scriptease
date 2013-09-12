@@ -133,6 +133,37 @@ public class GraphGroupController<E> {
 	}
 
 	/**
+	 * Ungroups the passed in group node.
+	 * 
+	 * @param group
+	 */
+	public void unformGroup(StoryGroup group) {
+		final Collection<StoryNode> parents = new ArrayList<StoryNode>();
+		final Collection<StoryNode> successors = new ArrayList<StoryNode>();
+
+		final StoryNode startNode = group.getStartNode();
+		final StoryNode exitNode = group.getExitNode();
+
+		parents.addAll(group.getParents());
+		successors.addAll(group.getSuccessors());
+
+		for (StoryNode child : successors) {
+			exitNode.addSuccessor(child);
+			group.removeSuccessor(child);
+		}
+
+		for (StoryNode parent : parents) {
+			parent.addSuccessor(startNode);
+			parent.removeSuccessor(group);
+		}
+
+		group.removeStoryChildren(group.getChildren());
+
+		// Lets help garbage collection a little by setting the group to null
+		group = null;
+	}
+
+	/**
 	 * Forms the selected nodes into a group node.
 	 */
 	@SuppressWarnings("unchecked")
@@ -150,16 +181,14 @@ public class GraphGroupController<E> {
 		final StoryNode startNode = (StoryNode) this.startNode;
 
 		final StoryGroup newGroup = new StoryGroup(null,
-				(Set<StoryNode>) this.group, startNode, exitNode,true);
+				(Set<StoryNode>) this.group, startNode, exitNode, true);
 
-		final Collection<StoryNode> storyNodes = new ArrayList<StoryNode>();
-		
-		storyNodes.addAll(exitNode.getSuccessors());
-		
 		// Connect the children of the exit node to the new group node and
 		// remove the child from the exit node.
+		final Collection<StoryNode> children = new ArrayList<StoryNode>();
+		children.addAll(exitNode.getSuccessors());
 		if (exitNode != null) {
-			for (StoryNode child : storyNodes) {
+			for (StoryNode child : children) {
 				if (!this.group.contains(child)) {
 					newGroup.addSuccessor(child);
 					exitNode.removeSuccessor(child);
@@ -169,11 +198,13 @@ public class GraphGroupController<E> {
 
 		// Connect the parents of the start node to the new group node. and
 		// remove this parent from the start node.
-		for (StoryNode parent : startNode.getParents()) {
+		final Collection<StoryNode> parents = new ArrayList<StoryNode>();
+		parents.addAll(startNode.getParents());
+		for (StoryNode parent : parents) {
 			parent.addSuccessor(newGroup);
 			parent.removeSuccessor(startNode);
 		}
-		
+
 		this.graph.repaint();
 	}
 

@@ -36,6 +36,7 @@ import scriptease.gui.SEGraph.models.SEGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.complex.StoryGroup;
 import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
@@ -1104,6 +1105,12 @@ public class SEGraph<E> extends JComponent {
 				SEGraph.this.groupController.resetGroup();
 			} else if (mode == Mode.GROUP) {
 				SEGraph.this.groupController.addNodeToGroup(source);
+			} else if (mode == Mode.UNGROUP) {
+				SEGraph.this.groupController.resetGroup();
+				if (source instanceof StoryGroup) {
+					SEGraph.this.groupController
+							.unformGroup((StoryGroup) source);
+				}
 			} else {
 				SEGraph.this.groupController.resetGroup();
 			}
