@@ -8,6 +8,7 @@ import java.util.WeakHashMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JSpinner;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -106,8 +107,8 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 		if (!group.isExpanded()) {
 			// Draw the group as a single node if it isn't expanded.
-			component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-			component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
 
 			component.add(ScriptWidgetFactory.buildBindingWidget(group, true));
 		} else {
@@ -115,16 +116,28 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 			final SEGraph<StoryNode> subGraph = SEGraphFactory.buildStoryGraph(
 					group.getStartNode(), ScriptEaseUI.COLOUR_GROUP_BACKGROUND,
 					false);
+
 			component.add(subGraph);
 		}
 
-		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+				component);
 
 		component.add(expansionButton);
 
-		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+				component);
+
+		if (this.isStartNodeOfGroup(group)) {
+			component.add(new JLabel("IN"));
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
+		}
+		if (this.isExitNodeOfGroup(group)) {
+			component.add(new JLabel("OUT"));
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
+		}
 
 		this.hoveredComponent = component;
 		this.reconfigureAppearance(component, group);
@@ -148,8 +161,8 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		final int VERTICAL_MARGIN = 40;
 		final int HORIZONTAL_MARGIN = 10;
 
-		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+				component);
 
 		final BindingWidget editableWidget;
 
@@ -172,9 +185,62 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 		component.add(editableWidget);
 
-		component.add(Box.createVerticalStrut(VERTICAL_MARGIN));
-		component.add(Box.createHorizontalStrut(HORIZONTAL_MARGIN));
+		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+				component);
+
+		if (this.isStartNodeOfGroup(storyPoint)) {
+			component.add(new JLabel("IN"));
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
+		}
+		if (this.isExitNodeOfGroup(storyPoint)) {
+			component.add(new JLabel("OUT"));
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
+		}
 
 		component.revalidate();
+	}
+
+	/**
+	 * Returns true if the passed in StoryNode {@link StoryNode} is the start
+	 * node of a group.
+	 * 
+	 * @param storyNode
+	 * @return
+	 */
+	private boolean isStartNodeOfGroup(StoryNode storyNode) {
+		if (storyNode.getOwner() instanceof StoryGroup) {
+			final StoryGroup owner = (StoryGroup) storyNode.getOwner();
+			if (owner.getStartNode() == storyNode) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns true if the passed in StoryNode {@link StoryNode} is the exit
+	 * node of a group.
+	 * 
+	 * @param storyNode
+	 * @return
+	 */
+	private boolean isExitNodeOfGroup(StoryNode storyNode) {
+		if (storyNode.getOwner() instanceof StoryGroup) {
+			final StoryGroup owner = (StoryGroup) storyNode.getOwner();
+			if (owner.getExitNode() == storyNode) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void createBufferRectangle(int verticalMargin,
+			int horizontalMargin, JComponent component) {
+		component.add(Box.createVerticalStrut(verticalMargin));
+		component.add(Box.createHorizontalStrut(horizontalMargin));
 	}
 }
