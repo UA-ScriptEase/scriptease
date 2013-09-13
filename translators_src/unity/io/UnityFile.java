@@ -44,6 +44,7 @@ public class UnityFile extends Resource {
 	// There's no point of having multiple parsers unless we were reading in
 	// unity files multi-threaded, which we aren't, so we just use one.
 	private static final Yaml parser = new Yaml();
+	
 	static {
 		parser.setName("Unity Scene YAML Parser");
 	}
@@ -370,7 +371,8 @@ public class UnityFile extends Resource {
 
 				parser.dump(PropertyValue.convertToValueMap(resource
 						.getTopLevelPropertyMap()), writer);
-			}
+			} else
+				System.out.println("Wut" + data);
 		}
 		writer.close();
 	}
