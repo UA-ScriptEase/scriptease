@@ -766,6 +766,7 @@ public final class WindowFactory {
 	 * 
 	 * @param translator
 	 */
+	@SuppressWarnings("unchecked")
 	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
 		final String TITLE = "Library to Merge";
 
@@ -773,6 +774,7 @@ public final class WindowFactory {
 
 		final JPanel content;
 		final JLabel message;
+		@SuppressWarnings("rawtypes")
 		final JComboBox libraryChoice;
 		final JButton mergeButton;
 		final JButton cancelButton;

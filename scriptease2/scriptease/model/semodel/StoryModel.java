@@ -14,6 +14,7 @@ import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -54,6 +55,7 @@ public final class StoryModel extends SEModel {
 	private final Collection<LibraryModel> optionalLibraries;
 	private final ObserverManager<StoryModelObserver> observerManager;
 	private final Collection<DialogueLine> dialogueRoots;
+	private StoryComponentPanelTree storyComponentPanelTree;
 
 	private StoryPoint startPoint;
 
@@ -86,6 +88,7 @@ public final class StoryModel extends SEModel {
 		this.optionalLibraries = optionalLibraries;
 		this.observerManager = new ObserverManager<StoryModelObserver>();
 		this.dialogueRoots = new ArrayList<DialogueLine>();
+		this.storyComponentPanelTree = new StoryComponentPanelTree(this.startPoint);
 	}
 
 	public Collection<DialogueLine> getDialogueRoots() {
@@ -333,6 +336,10 @@ public final class StoryModel extends SEModel {
 		}
 
 		return includes;
+	}
+	
+	public StoryComponentPanelTree getStoryComponentPanelTree() {
+		return this.storyComponentPanelTree;
 	}
 
 	/**
