@@ -360,7 +360,7 @@ public class UnityFile extends Resource {
 		writer.write(unityFileHeader);
 
 		// Add an arbitrary number
-		for (Object data : this.unityResources) {
+		for (Object data : this.unityResources) { 
 			if (data instanceof UnityResource) {
 				final UnityResource resource = (UnityResource) data;
 
