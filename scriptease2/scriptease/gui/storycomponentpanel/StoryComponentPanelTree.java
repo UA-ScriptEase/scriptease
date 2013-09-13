@@ -12,6 +12,7 @@ import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 
 /**
@@ -64,6 +65,9 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		if (this.rootPanel != null)
 			this.selectionManager.cleanUpPanel(this.rootPanel);
 
+		// TODO : do something here with the group graph representation when i
+		// get to it.
+
 		this.rootPanel = StoryComponentPanelFactory.getInstance()
 				.buildStoryComponentPanel(storyNode);
 
@@ -73,7 +77,11 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		this.selectionManager.addPanel(this.rootPanel, false);
 
 		this.filterTree(this.rootPanel);
-		this.setViewportView(this.rootPanel);
+
+		if (storyNode instanceof StoryGroup)
+			this.setViewportView(((StoryGroup) storyNode).getSEGraph());
+		else
+			this.setViewportView(this.rootPanel);
 	}
 
 	/**

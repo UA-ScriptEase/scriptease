@@ -85,12 +85,12 @@ public class StoryGroup extends StoryNode {
 
 		this.seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
 
-			@Override
-			public void defaultHandler() {
-				StoryGroup.this.seGraph = SEGraphFactory.buildStoryGraph(
-						StoryGroup.this.startNode,
-						ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
-			}
+//			@Override
+//			public void defaultHandler() {
+//				StoryGroup.this.seGraph = SEGraphFactory.buildStoryGraph(
+//						StoryGroup.this.startNode,
+//						ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
+//			}
 
 			@Override
 			public void nodesSelected(final Collection<StoryNode> nodes) {
@@ -136,6 +136,24 @@ public class StoryGroup extends StoryNode {
 	 * @return
 	 */
 	public SEGraph<StoryNode> getSEGraph() {
+		this.seGraph = SEGraphFactory.buildStoryGraph(this.startNode,
+				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
+
+		this.seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
+
+			@Override
+			public void nodesSelected(final Collection<StoryNode> nodes) {
+				SEModelManager.getInstance().getActiveModel()
+						.process(new ModelAdapter() {
+							@Override
+							public void processStoryModel(StoryModel storyModel) {
+								storyModel.getStoryComponentPanelTree()
+										.setRoot(nodes.iterator().next());
+							}
+						});
+			}
+		});
+		
 		return this.seGraph;
 	}
 

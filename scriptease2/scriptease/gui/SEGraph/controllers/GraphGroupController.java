@@ -120,7 +120,6 @@ public class GraphGroupController<E> {
 					// Parent is already in graph, don't do extra work
 					group.add(node);
 				}
-
 			}
 		}
 	}
