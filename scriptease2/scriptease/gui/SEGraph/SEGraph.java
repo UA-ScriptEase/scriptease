@@ -632,6 +632,15 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Get the renderer for this graph.
+	 * 
+	 * @return
+	 */
+	public SEGraphNodeRenderer getRenderer() {
+		return this.renderer;
+	}
+
+	/**
 	 * Returns all node components in the graph.
 	 * 
 	 * @return
