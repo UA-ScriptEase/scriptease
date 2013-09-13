@@ -22,16 +22,30 @@ public class StoryGroup extends StoryNode {
 	private StoryNode exitNode;
 
 	private boolean expanded;
-	
+
 	public StoryGroup() {
-		this(StoryGroup.NEW_STORY_GROUP, new HashSet<StoryNode>(), null, null);
+		this(StoryGroup.NEW_STORY_GROUP, new HashSet<StoryNode>(), null, null,
+				false);
 	}
 
-	public StoryGroup(String name, Collection<StoryNode> storyNodes,
-			StoryNode startNode, StoryNode exitNode) {
-		this(name, storyNodes, startNode, exitNode, false);
-	}
-	
+	/**
+	 * Creates a new Story Group using the collection of StoryNodes
+	 * {@link StoryNode}. The startNode and exitNode should be a part of this
+	 * group or bad things will happen.
+	 * 
+	 * @param name
+	 *            The name of the story group.
+	 * @param storyNodes
+	 *            The nodes that this group comprises of.
+	 * @param startNode
+	 *            The node that gets attached to this groups parents if the
+	 *            group is ever ungrouped.
+	 * @param exitNode
+	 *            The node that gets attached to this groups successors if the
+	 *            group is ever ungrouped.
+	 * @param expanded
+	 *            Whether the group is currently expanded or collapsed.
+	 */
 	public StoryGroup(String name, Collection<StoryNode> storyNodes,
 			StoryNode startNode, StoryNode exitNode, boolean expanded) {
 		super();
@@ -41,9 +55,13 @@ public class StoryGroup extends StoryNode {
 		this.registerChildType(StoryGroup.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
+		if (!storyNodes.contains(startNode) || !storyNodes.contains(exitNode))
+			throw new IllegalStateException(
+					"The start node and exit node must be a part of the story group!");
+
 		this.startNode = startNode;
 		this.exitNode = exitNode;
-		
+
 		this.expanded = expanded;
 
 		for (StoryNode storyNode : storyNodes) {
@@ -61,30 +79,60 @@ public class StoryGroup extends StoryNode {
 		this.setDisplayText(name);
 	}
 
+	/**
+	 * Returns the start node of the group.
+	 * 
+	 * @return
+	 */
 	public StoryNode getStartNode() {
 		return this.startNode;
 	}
 
+	/**
+	 * Returns the exit node of the group.
+	 * 
+	 * @return
+	 */
 	public StoryNode getExitNode() {
 		return this.exitNode;
 	}
 
+	/**
+	 * Returns true if the group is expanded.
+	 * 
+	 * @return
+	 */
+	public Boolean isExpanded() {
+		return this.expanded;
+	}
+
+	/**
+	 * Sets the start node of the StoryGroup.
+	 * 
+	 * @param startNode
+	 */
 	public void setStartNode(StoryNode startNode) {
 		this.startNode = startNode;
 	}
 
+	/**
+	 * Sets the exit node of the StoryGroup.
+	 * 
+	 * @param exitNode
+	 */
 	public void setExitNode(StoryNode exitNode) {
 		this.exitNode = exitNode;
 	}
 
-	public Boolean isExpanded() {
-		return this.expanded;
-	}
-	
+	/**
+	 * Sets whether the StoryGroup is expanded.
+	 * 
+	 * @param expanded
+	 */
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 	}
-	
+
 	@Override
 	public StoryGroup clone() {
 		return (StoryGroup) super.clone();
