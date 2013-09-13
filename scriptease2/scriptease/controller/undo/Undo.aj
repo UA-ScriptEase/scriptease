@@ -13,6 +13,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
@@ -313,16 +314,16 @@ public aspect Undo {
 		within(ScriptIt+) && execution(* removeCodeBlock(CodeBlock+));
 
 	/**
-	 * Defines the Add Successor operation in StoryPoints.
+	 * Defines the Add Successor operation in StoryNodes
 	 */
 	public pointcut addingSuccessor():
-		within(StoryPoint+) && execution(* addSuccessor(StoryPoint+));
+		within(StoryNode+) && execution(* addSuccessor(StoryNode+));
 
 	/**
-	 * Defines the Remove Successor operation in StoryPoints.
+	 * Defines the Remove Successor operation in StoryNodes.
 	 */
 	public pointcut removingSuccessor():
-		within(StoryPoint+) && execution(* removeSuccessor(StoryPoint+));
+		within(StoryNode+) && execution(* removeSuccessor(StoryNode+));
 
 	public pointcut addingResourceChild():
 		within(EditableResource+) && execution(* addChild(Resource+));
@@ -895,43 +896,43 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
-	before(final StoryPoint storyPoint, final StoryPoint successor): addingSuccessor() && args(successor) && this(storyPoint) {
+	before(final StoryNode storyNode, final StoryNode successor): addingSuccessor() && args(successor) && this(storyNode) {
 		Modification mod = new Modification() {
 
 			@Override
 			public void redo() {
-				storyPoint.addSuccessor(successor);
+				storyNode.addSuccessor(successor);
 			}
 
 			@Override
 			public void undo() {
-				storyPoint.removeSuccessor(successor);
+				storyNode.removeSuccessor(successor);
 			}
 
 			@Override
 			public String toString() {
-				return "adding " + successor + " to " + storyPoint;
+				return "adding " + successor + " to " + storyNode;
 			}
 		};
 		this.addModification(mod);
 	}
 
-	before(final StoryPoint storyPoint, final StoryPoint successor): removingSuccessor() && args(successor) && this(storyPoint) {
+	before(final StoryNode storyNode, final StoryNode successor): removingSuccessor() && args(successor) && this(storyNode) {
 		Modification mod = new Modification() {
 
 			@Override
 			public void redo() {
-				storyPoint.removeSuccessor(successor);
+				storyNode.removeSuccessor(successor);
 			}
 
 			@Override
 			public void undo() {
-				storyPoint.addSuccessor(successor);
+				storyNode.addSuccessor(successor);
 			}
 
 			@Override
 			public String toString() {
-				return "removing " + successor + " to " + storyPoint;
+				return "removing " + successor + " to " + storyNode;
 			}
 		};
 		this.addModification(mod);

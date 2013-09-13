@@ -15,11 +15,9 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
@@ -113,11 +111,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 			component.add(ScriptWidgetFactory.buildBindingWidget(group, true));
 		} else {
 			// Draw the group as a subgraph.
-			final SEGraph<StoryNode> subGraph = SEGraphFactory.buildStoryGraph(
-					group.getStartNode(), ScriptEaseUI.COLOUR_GROUP_BACKGROUND,
-					false);
-
-			component.add(subGraph);
+			component.add(group.getSEGraph());
 		}
 
 		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
@@ -133,6 +127,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 					component);
 		}
+		
 		if (this.isExitNodeOfGroup(group)) {
 			component.add(new JLabel("OUT"));
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,

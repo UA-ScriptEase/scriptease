@@ -3,12 +3,22 @@ package scriptease.model.complex;
 import java.util.Collection;
 import java.util.HashSet;
 
+import scriptease.controller.ModelAdapter;
 import scriptease.controller.StoryVisitor;
+import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.SEGraph.SEGraphFactory;
+import scriptease.gui.SEGraph.observers.SEGraphAdapter;
+import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 
 /**
  * A story group represents a collection of StoryNodes {@link StoryNode} using
  * the Composite Design Pattern. In other words, a story group is a collection
  * of story points {@link StoryPoint} and/or other story groups.
+ * 
+ * A story group can be expanded or collapsed and contains a SEGraph
+ * {@link SEGraph} representation of itself.
  * 
  * @author jyuen
  */
@@ -23,6 +33,8 @@ public class StoryGroup extends StoryNode {
 
 	private boolean expanded;
 
+	private SEGraph<StoryNode> seGraph;
+
 	public StoryGroup() {
 		this(StoryGroup.NEW_STORY_GROUP, new HashSet<StoryNode>(), null, null,
 				false);
@@ -30,7 +42,7 @@ public class StoryGroup extends StoryNode {
 
 	/**
 	 * Creates a new Story Group using the collection of StoryNodes
-	 * {@link StoryNode}. The startNode and exitNode should be a part of this
+	 * {@link StoryNode}. The startNode and exitNode must be a part of this
 	 * group or bad things will happen.
 	 * 
 	 * @param name
@@ -55,10 +67,6 @@ public class StoryGroup extends StoryNode {
 		this.registerChildType(StoryGroup.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
-		if (!storyNodes.contains(startNode) || !storyNodes.contains(exitNode))
-			throw new IllegalStateException(
-					"The start node and exit node must be a part of the story group!");
-
 		this.startNode = startNode;
 		this.exitNode = exitNode;
 
@@ -71,6 +79,31 @@ public class StoryGroup extends StoryNode {
 		this.successors = new HashSet<StoryNode>();
 		this.parents = new HashSet<StoryNode>();
 		this.uniqueID = this.getNextStoryNodeCounter();
+
+		this.seGraph = SEGraphFactory.buildStoryGraph(this.startNode,
+				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
+
+		this.seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
+
+			@Override
+			public void defaultHandler() {
+				StoryGroup.this.seGraph = SEGraphFactory.buildStoryGraph(
+						StoryGroup.this.startNode,
+						ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
+			}
+
+			@Override
+			public void nodesSelected(final Collection<StoryNode> nodes) {
+				SEModelManager.getInstance().getActiveModel()
+						.process(new ModelAdapter() {
+							@Override
+							public void processStoryModel(StoryModel storyModel) {
+								storyModel.getStoryComponentPanelTree()
+										.setRoot(nodes.iterator().next());
+							}
+						});
+			}
+		});
 
 		if (name == null || name.equals("")) {
 			name = StoryGroup.NEW_STORY_GROUP;
@@ -95,6 +128,15 @@ public class StoryGroup extends StoryNode {
 	 */
 	public StoryNode getExitNode() {
 		return this.exitNode;
+	}
+
+	/**
+	 * Returns the SEGraph associated with this group.
+	 * 
+	 * @return
+	 */
+	public SEGraph<StoryNode> getSEGraph() {
+		return this.seGraph;
 	}
 
 	/**

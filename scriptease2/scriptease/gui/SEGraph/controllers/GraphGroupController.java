@@ -123,13 +123,6 @@ public class GraphGroupController<E> {
 
 			}
 		}
-
-//		if (this.isGroup(group)) {
-//			// TODO give the users the option to form a group instead of just
-//			// forming it for them as soon as its avaliable.
-//			formGroup();
-//			resetGroup();
-//		}
 	}
 
 	/**

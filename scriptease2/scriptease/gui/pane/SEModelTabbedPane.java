@@ -243,11 +243,13 @@ class SEModelTabbedPane extends JTabbedPane {
 		final JButton backToStory;
 
 		final SEGraph<StoryNode> storyGraph;
-		final StoryComponentPanelTree storyComponentTree;
 		final StoryComponentObserver graphRedrawer;
 		final JPanel storyGraphPanel;
 
 		final JScrollPane storyGraphScrollPane;
+
+		final StoryComponentPanelTree storyComponentTree = model
+				.getStoryComponentPanelTree();
 
 		layout = new CardLayout();
 		topLevelPane = new JPanel(layout);
@@ -261,7 +263,6 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		dialogueEditor = new DialogueEditorPanel(model, backToStory);
 
-		storyComponentTree = new StoryComponentPanelTree(start);
 		graphRedrawer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
@@ -296,9 +297,9 @@ class SEModelTabbedPane extends JTabbedPane {
 						storyComponentTree.setRoot(storyGraph.getStartNode());
 					}
 				}
-
 			}
 		};
+
 		storyGraphPanel = new JPanel();
 
 		storyGraphScrollPane = new JScrollPane(storyGraph);
@@ -315,6 +316,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 			@Override
 			public void nodesSelected(final Collection<StoryNode> nodes) {
+
 				SEModelManager.getInstance().getActiveModel()
 						.process(new ModelAdapter() {
 							@Override
