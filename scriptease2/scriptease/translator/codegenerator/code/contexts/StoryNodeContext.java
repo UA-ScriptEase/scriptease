@@ -1,8 +1,5 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import scriptease.model.complex.StoryNode;
 
 /**
@@ -22,30 +19,10 @@ public class StoryNodeContext extends ComplexStoryComponentContext {
 	public StoryNodeContext(Context other, StoryNode source) {
 		super(other, source);
 	}
-	
-	@Override
-	public Collection<StoryNode> getStoryPointParents() {
-		final Collection<StoryNode> parents;
 
-		parents = new ArrayList<StoryNode>();
-
-		for (StoryNode node : this.getStoryNodes()) {
-			if (node.getSuccessors().contains(this.getComponent())) {
-				parents.add(node);
-			}
-		}
-
-		return parents;
-	}
-	
 	@Override
 	public String getUniqueID() {
 		return this.getComponent().getUniqueID().toString();
-	}
-	
-	@Override
-	public Collection<StoryNode> getStoryPointChildren() {
-		return this.getComponent().getSuccessors();
 	}
 	
 	@Override

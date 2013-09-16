@@ -23,7 +23,7 @@ public class StoryGroupContext extends StoryNodeContext {
 	public StoryGroupContext(Context other, StoryPoint source) {
 		super(other, source);
 	}
-
+	
 	@Override
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
