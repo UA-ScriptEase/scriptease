@@ -347,13 +347,28 @@ public abstract class Context {
 		final Collection<StoryPoint> storyPoints = new ArrayList<StoryPoint>();
 
 		for (StoryNode storyNode : this.storyNodes) {
-			if (storyNode instanceof StoryPoint)
-				storyPoints.add((StoryPoint) storyNode);
-			else if (storyNode instanceof StoryGroup) {
-				for (StoryComponent child : storyNode.getChildren()) {
-					if (child instanceof StoryPoint)
-						storyPoints.add((StoryPoint) child);
-				}
+			storyPoints.addAll(this.getRecursiveStoryPoints(storyNode));
+		}
+
+		return storyPoints;
+	}
+
+	/**
+	 * Recursively gets the story points for the passed in story nodes. Does a
+	 * deep search within groups to find all the story points.
+	 * 
+	 * @param storyNode
+	 * @return
+	 */
+	private Collection<StoryPoint> getRecursiveStoryPoints(StoryNode storyNode) {
+		final Collection<StoryPoint> storyPoints = new ArrayList<StoryPoint>();
+
+		if (storyNode instanceof StoryPoint)
+			storyPoints.add((StoryPoint) storyNode);
+		else if (storyNode instanceof StoryGroup) {
+			for (StoryComponent child : storyNode.getChildren()) {
+				storyPoints.addAll(this
+						.getRecursiveStoryPoints((StoryNode) child));
 			}
 		}
 
@@ -381,9 +396,9 @@ public abstract class Context {
 	public Collection<? extends StoryPoint> getOrderedStoryPoints() {
 		final Collection<StoryNode> storyNodes = this.model.getRoot()
 				.getOrderedDescendants();
-		
+
 		final Collection<StoryPoint> storyPoints = new ArrayList<StoryPoint>();
-		
+
 		for (StoryNode storyNode : storyNodes) {
 			if (storyNode instanceof StoryPoint)
 				storyPoints.add((StoryPoint) storyNode);
@@ -412,7 +427,7 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	public Collection<StoryNode> getStoryPointChildren() {
+	public Collection<StoryPoint> getStoryPointChildren() {
 		this.unimplemented("getStoryPointChildren");
 		return null;
 	}
@@ -422,7 +437,7 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	public Collection<StoryNode> getStoryPointParents() {
+	public Collection<StoryPoint> getStoryPointParents() {
 		this.unimplemented("getStoryPointParents");
 		return null;
 	}
