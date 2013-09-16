@@ -33,8 +33,6 @@ public class StoryGroup extends StoryNode {
 
 	private boolean expanded;
 
-	private SEGraph<StoryNode> seGraph;
-
 	public StoryGroup() {
 		this(StoryGroup.NEW_STORY_GROUP, new HashSet<StoryNode>(), null, null,
 				false);
@@ -80,31 +78,6 @@ public class StoryGroup extends StoryNode {
 		this.parents = new HashSet<StoryNode>();
 		this.uniqueID = this.getNextStoryNodeCounter();
 
-		this.seGraph = SEGraphFactory.buildStoryGraph(this.startNode,
-				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
-
-		this.seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
-
-//			@Override
-//			public void defaultHandler() {
-//				StoryGroup.this.seGraph = SEGraphFactory.buildStoryGraph(
-//						StoryGroup.this.startNode,
-//						ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
-//			}
-
-			@Override
-			public void nodesSelected(final Collection<StoryNode> nodes) {
-				SEModelManager.getInstance().getActiveModel()
-						.process(new ModelAdapter() {
-							@Override
-							public void processStoryModel(StoryModel storyModel) {
-								storyModel.getStoryComponentPanelTree()
-										.setRoot(nodes.iterator().next());
-							}
-						});
-			}
-		});
-
 		if (name == null || name.equals("")) {
 			name = StoryGroup.NEW_STORY_GROUP;
 		}
@@ -136,10 +109,16 @@ public class StoryGroup extends StoryNode {
 	 * @return
 	 */
 	public SEGraph<StoryNode> getSEGraph() {
-		this.seGraph = SEGraphFactory.buildStoryGraph(this.startNode,
+		return this.buildSEGraph();
+	}
+	
+	private SEGraph<StoryNode> buildSEGraph() {
+		final SEGraph<StoryNode> seGraph;
+		
+		seGraph = SEGraphFactory.buildStoryGraph(this.startNode,
 				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
 
-		this.seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
+		seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
 
 			@Override
 			public void nodesSelected(final Collection<StoryNode> nodes) {
@@ -154,7 +133,7 @@ public class StoryGroup extends StoryNode {
 			}
 		});
 		
-		return this.seGraph;
+		return seGraph;
 	}
 
 	/**
