@@ -236,7 +236,7 @@ public interface ScriptEaseUI {
 	 * Cursor to represent select actions. 
 	 */
 	public static final Cursor CURSOR_SELECT= GUIOp.createCursor(
-			"select", new Point(15, 15));
+			"select", new Point(10, 10));
 
 	
 	/**
