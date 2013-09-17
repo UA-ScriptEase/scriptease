@@ -89,7 +89,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		component.removeAll();
 
 		final int VERTICAL_MARGIN = 60;
-		final int HORIZONTAL_MARGIN = 20;
+		final int HORIZONTAL_MARGIN = 12;
 
 		final ExpansionButton expansionButton = new ExpansionButton(
 				!group.isExpanded());
@@ -120,15 +120,22 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		} else {
 			// Draw the group as a subgraph.
 			component.add(group.getSEGraph());
+			
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN * 2,
+					component);
 		}
 
 		if (this.isStartNodeOfGroup(group)) {
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
 			component.add(new JLabel("IN"));
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 					component);
 		}
 		
 		if (this.isExitNodeOfGroup(group)) {
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
 			component.add(new JLabel("OUT"));
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 					component);

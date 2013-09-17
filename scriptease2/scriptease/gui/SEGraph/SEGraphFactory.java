@@ -82,7 +82,7 @@ public class SEGraphFactory {
 	 * @return
 	 */
 	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start) {
-		return SEGraphFactory.buildStoryGraph(start, Color.WHITE, false);
+		return SEGraphFactory.buildStoryGraph(start, Color.WHITE, false, false);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class SEGraphFactory {
 	 * @return
 	 */
 	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start,
-			Color bgColour, boolean readOnly) {
+			Color bgColour, boolean readOnly, boolean isGroupGraph) {
 		final SEGraph<StoryNode> graph;
 		final StoryNodeGraphModel storyGraphModel;
 
