@@ -34,8 +34,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		implements Converter {
 
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class. 
 
 	public static final String TAG_CODE_BLOCK_REF = "CodeBlockReference";
 

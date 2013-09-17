@@ -102,18 +102,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 				StoryNodeRenderer.this.updateComponents(component, group);
 			}
 		});
-
-		if (!group.isExpanded()) {
-			// Draw the group as a single node if it isn't expanded.
-			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
-					component);
-
-			component.add(ScriptWidgetFactory.buildBindingWidget(group, true));
-		} else {
-			// Draw the group as a subgraph.
-			component.add(group.getSEGraph());
-		}
-
+		
 		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 				component);
 
@@ -121,6 +110,17 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 				component);
+
+		if (!group.isExpanded()) {
+			// Draw the group as a single node if it isn't expanded.
+			component.add(ScriptWidgetFactory.buildBindingWidget(group, true));
+			
+			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+					component);
+		} else {
+			// Draw the group as a subgraph.
+			component.add(group.getSEGraph());
+		}
 
 		if (this.isStartNodeOfGroup(group)) {
 			component.add(new JLabel("IN"));

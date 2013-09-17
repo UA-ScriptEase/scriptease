@@ -24,3 +24,5 @@ public class IdentityArrayListConverter extends CollectionConverter {
 		return type.equals(IdentityArrayList.class);
 	}
 }
+
+

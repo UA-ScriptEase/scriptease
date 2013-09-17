@@ -239,7 +239,7 @@ public class SEGraphNodeRenderer<E> {
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			} else if (!graph.isReadOnly()
-					&& (mode == Mode.DELETE || mode == Mode.DISCONNECT || mode == Mode.UNGROUP)) {
+					&& (mode == Mode.DELETE || mode == Mode.DISCONNECT)) {
 				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);

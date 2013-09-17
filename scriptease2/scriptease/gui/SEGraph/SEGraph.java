@@ -630,16 +630,7 @@ public class SEGraph<E> extends JComponent {
 			}
 		}
 	}
-
-	/**
-	 * Get the renderer for this graph.
-	 * 
-	 * @return
-	 */
-	public SEGraphNodeRenderer getRenderer() {
-		return this.renderer;
-	}
-
+	
 	/**
 	 * Returns all node components in the graph.
 	 * 
@@ -1118,12 +1109,6 @@ public class SEGraph<E> extends JComponent {
 				} else {
 					SEGraph.this.groupController.addNodeToGroup(source);
 				}
-			} else if (mode == Mode.UNGROUP) {
-				SEGraph.this.groupController.resetGroup();
-				if (source instanceof StoryGroup) {
-					SEGraph.this.groupController
-							.unformGroup((StoryGroup) source);
-				}
 			} else {
 				SEGraph.this.groupController.resetGroup();
 			}
@@ -1146,12 +1131,14 @@ public class SEGraph<E> extends JComponent {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			} else if (this.lastEnteredNode == graph.getStartNode()) {
-				if (mode == Mode.DELETE) {
+			} else if (mode == Mode.DELETE) {
+				if (this.lastEnteredNode == graph.getStartNode())
 					// Make the cursor appear unavailable for start node
 					// deletion.
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
-				} else
+				else if (this.lastEnteredNode instanceof StoryGroup)
+					entered.setCursor(ScriptEaseUI.CURSOR_UNGROUP);
+				else
 					entered.setCursor(null);
 			} else if (graph.isReadOnly) {
 				if (mode != Mode.SELECT) {
@@ -1241,15 +1228,22 @@ public class SEGraph<E> extends JComponent {
 				graph.getNodesToComponentsMap().getValue(this.lastEnteredNode)
 						.requestFocusInWindow();
 			} else if (mode == Mode.DELETE) {
-				if (!UndoManager.getInstance().hasOpenUndoableAction())
-					UndoManager.getInstance().startUndoableAction(
-							"Remove " + node);
+				if (node instanceof StoryGroup) {
+					SEGraph.this.groupController.resetGroup();
+					if (node instanceof StoryGroup) {
+						SEGraph.this.groupController
+								.unformGroup((StoryGroup) node);
+					}
+				} else {
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().startUndoableAction(
+								"Remove " + node);
 
-				graph.removeNode(node);
-				graph.repaint();
+					graph.removeNode(node);
+					graph.repaint();
 
-				UndoManager.getInstance().endUndoableAction();
-
+					UndoManager.getInstance().endUndoableAction();
+				}
 			} else if (mode == Mode.CONNECT) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node
