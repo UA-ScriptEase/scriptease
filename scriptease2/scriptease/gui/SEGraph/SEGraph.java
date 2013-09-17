@@ -664,7 +664,7 @@ public class SEGraph<E> extends JComponent {
 	public SEGraphToolBar getToolBar() {
 		return this.toolBar;
 	}
-
+	
 	/**
 	 * Returns the {@link GraphGroupController} linked to the graph.
 	 * 
@@ -745,7 +745,7 @@ public class SEGraph<E> extends JComponent {
 					maxWidth = Math.max(maxWidth, size.width);
 				}
 
-				xSize += maxWidth + HORIZONTAL_GAP;
+				xSize += maxWidth + (HORIZONTAL_GAP - 13);
 				ySize = Math.max(ySize, yNodeSize);
 			}
 			return new Dimension(xSize, ySize);

@@ -1,7 +1,11 @@
 package scriptease.model.complex;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashSet;
+
+import javax.swing.JComponent;
 
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.StoryVisitor;
@@ -111,12 +115,12 @@ public class StoryGroup extends StoryNode {
 	public SEGraph<StoryNode> getSEGraph() {
 		return this.buildSEGraph();
 	}
-	
+
 	private SEGraph<StoryNode> buildSEGraph() {
 		final SEGraph<StoryNode> seGraph;
-		
+
 		seGraph = SEGraphFactory.buildStoryGraph(this.startNode,
-				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
+				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false, true);
 
 		seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
 
@@ -132,7 +136,16 @@ public class StoryGroup extends StoryNode {
 						});
 			}
 		});
-		
+
+		seGraph.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				final JComponent component = (JComponent) e.getSource();
+
+				component.setCursor(ScriptEaseUI.CURSOR_SELECT);
+			}
+		});
+
 		return seGraph;
 	}
 

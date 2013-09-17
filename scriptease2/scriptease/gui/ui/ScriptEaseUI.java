@@ -233,6 +233,13 @@ public interface ScriptEaseUI {
 			.get("Tree.collapsedIcon");
 
 	/**
+	 * Cursor to represent select actions. 
+	 */
+	public static final Cursor CURSOR_SELECT= GUIOp.createCursor(
+			"select", new Point(15, 15));
+
+	
+	/**
 	 * Cursor to represent unavailable actions. A circle with a line through it,
 	 * like in No Smoking or No Pie signs.
 	 */
