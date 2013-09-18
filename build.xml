@@ -249,7 +249,7 @@ Some important targets to read up on are:
 		<echo>Build number location is : ${buildNumberLocation}</echo>
 		<property name="jarVersion" value="${majorVersion}.${build.number}" />
 
-		<echo>Jar version is ${jarVersion}, (${gitHash})</echo>
+		<echo>Jar version is ${jarVersion}, (${git.hash})</echo>
 
 		<jar destFile="${jarDirectory}/${jarFile}">
 			<fileset dir="${buildDirectory}" />
@@ -328,7 +328,7 @@ Some important targets to read up on are:
 		<!-- read in the last used build number and increase it -->
 		<exec executable="sh" outputproperty="build.number" failonerror="true">
 			<arg value="-c" />
-			<arg value="cat ${buildNumberLocation} | grep &quot;&quot; | awk -F= '{print $2 + 1}'" />
+			<arg value="cat ${buildNumberLocation} | grep &quot;&quot; |  awk-F= '{print $2 + 1}'" />
 		</exec>
 		<!-- Save the new one to file. -->
 		<exec executable="sh" failonerror="true">
