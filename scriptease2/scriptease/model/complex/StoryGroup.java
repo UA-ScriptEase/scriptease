@@ -120,7 +120,7 @@ public class StoryGroup extends StoryNode {
 		final SEGraph<StoryNode> seGraph;
 
 		seGraph = SEGraphFactory.buildStoryGraph(this.startNode,
-				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false, true);
+				ScriptEaseUI.COLOUR_GROUP_BACKGROUND, false);
 
 		seGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
 

@@ -129,7 +129,7 @@ public class SEGraphToolBar extends JToolBar {
 		}
 	}
 
-	public SEGraphToolBar() {
+	public SEGraphToolBar(boolean disableGroupTool) {
 		super();
 		this.observers = new ObserverManager<SEGraphToolBarObserver>();
 
@@ -152,7 +152,9 @@ public class SEGraphToolBar extends JToolBar {
 		buttonGroup.add(this.deleteButton);
 		buttonGroup.add(this.connectButton);
 		buttonGroup.add(this.disconnectButton);
-		buttonGroup.add(this.groupButton);
+
+		if (!disableGroupTool)
+			buttonGroup.add(this.groupButton);
 
 		// Sorry about the bizarre loop, but that's the way these work :(
 		for (final Enumeration<AbstractButton> buttons = buttonGroup

@@ -99,7 +99,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The model used for the Graph.
 	 */
 	protected SEGraph(SEGraphModel<E> model) {
-		this(model, SelectionMode.SELECT_NODE, false);
+		this(model, SelectionMode.SELECT_NODE, false, true);
 	}
 
 	/**
@@ -115,13 +115,17 @@ public class SEGraph<E> extends JComponent {
 	 *            If the graph is read only, only selection will be allowed.
 	 */
 	protected SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
-			boolean isReadOnly) {
+			boolean isReadOnly, boolean disableGroupTool) {
 		this.selectionMode = selectionMode;
 		this.model = model;
 		this.selectionMode = selectionMode;
 		this.isReadOnly = isReadOnly;
 
-		this.toolBar = new SEGraphToolBar();
+		if (disableGroupTool)
+			this.toolBar = new SEGraphToolBar(true);
+		else
+			this.toolBar = new SEGraphToolBar(false);
+		
 		this.selectedNodes = new LinkedHashSet<E>();
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();

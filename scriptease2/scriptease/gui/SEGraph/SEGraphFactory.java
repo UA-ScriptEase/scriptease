@@ -45,7 +45,7 @@ public class SEGraphFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(start);
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, true);
+				SelectionMode.SELECT_PATH_FROM_START, true, true);
 
 		graph.setNodeRenderer(new DescribeItNodeRenderer(graph));
 		graph.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -67,7 +67,7 @@ public class SEGraphFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(start);
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, false);
+				SelectionMode.SELECT_PATH_FROM_START, false, true);
 
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
@@ -82,7 +82,7 @@ public class SEGraphFactory {
 	 * @return
 	 */
 	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start) {
-		return SEGraphFactory.buildStoryGraph(start, Color.WHITE, false, false);
+		return SEGraphFactory.buildStoryGraph(start, Color.WHITE, false);
 	}
 
 	/**
@@ -97,13 +97,13 @@ public class SEGraphFactory {
 	 * @return
 	 */
 	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start,
-			Color bgColour, boolean readOnly, boolean isGroupGraph) {
+			Color bgColour, boolean readOnly) {
 		final SEGraph<StoryNode> graph;
 		final StoryNodeGraphModel storyGraphModel;
 
 		storyGraphModel = new StoryNodeGraphModel(start);
 		graph = new SEGraph<StoryNode>(storyGraphModel,
-				SelectionMode.SELECT_NODE, readOnly);
+				SelectionMode.SELECT_NODE, readOnly, false);
 
 		graph.setNodeRenderer(new StoryNodeRenderer(graph));
 		graph.setBackground(bgColour);
