@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
@@ -130,6 +131,10 @@ public class GraphGroupController<E> {
 	 * @param group
 	 */
 	public void unformGroup(StoryGroup group) {
+		
+		if (!UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().startUndoableAction("UnGroup");
+		
 		final Collection<StoryNode> parents = new ArrayList<StoryNode>();
 		final Collection<StoryNode> successors = new ArrayList<StoryNode>();
 
@@ -153,13 +158,22 @@ public class GraphGroupController<E> {
 
 		// Lets help garbage collection a little by setting the group to null
 		group = null;
+		
+		if (UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().endUndoableAction();
 	}
 
 	/**
-	 * Forms the selected nodes into a group node.
+	 * Forms the passed in group nodes.
+	 * 
+	 * @param ungroup
 	 */
 	@SuppressWarnings("unchecked")
 	public void formGroup() {
+		
+		if (!UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().startUndoableAction("Group");
+
 		// Make sure we even have a group.
 		if (!this.isGroup())
 			return;
@@ -199,6 +213,9 @@ public class GraphGroupController<E> {
 
 		this.graph.repaint();
 		this.resetGroup();
+		
+		if (UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().endUndoableAction();
 	}
 
 	/**

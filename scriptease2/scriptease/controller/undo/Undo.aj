@@ -3,7 +3,6 @@ package scriptease.controller.undo;
 import java.util.Collection;
 
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.SEGraph.controllers.GraphGroupController;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -14,7 +13,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
@@ -350,18 +348,6 @@ public aspect Undo {
 	 */
 	public pointcut removingDialogueRoot():
 		within(StoryModel+) && execution(* removeDialogueRoot(DialogueLine+));
-
-	/**
-	 * Defines the Form Story Group operation in GraphGroupController.
-	 */
-	public pointcut formStoryGroup():
-		within(GraphGroupController+) && execution(* formGroup(StoryGroup+));
-
-	/**
-	 * Defines the Unform Story Group operation in GraphGroupController.
-	 */
-	public pointcut unformStoryGroup():
-		within(GraphGroupController+) && execution(* unformGroup(StoryGroup+));
 
 	/*
 	 * ====================== ADVICE ======================
@@ -1043,23 +1029,6 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "removing" + line + " from " + model;
-			}
-		};
-		this.addModification(mod);
-	}
-
-	before(final GraphGroupController groupController,
-			final StoryGroup group) : formStoryGroup() && args(group) && this(groupController) {
-		Modification mod = new Modification() {
-
-			@Override
-			public void redo() {
-				groupController.formGroup();
-			}
-
-			@Override
-			public void undo() {
-				groupController.unformGroup(group);
 			}
 		};
 		this.addModification(mod);
