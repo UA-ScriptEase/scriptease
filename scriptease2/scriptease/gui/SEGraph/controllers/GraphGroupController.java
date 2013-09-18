@@ -202,43 +202,6 @@ public class GraphGroupController<E> {
 	}
 
 	/**
-	 * Get the exit node of the current group. By default, the exit node is the
-	 * node that contains children not within the group. If no such node exists,
-	 * then the exit node is the first node encountered that is at the deepest
-	 * level in the graph.
-	 * 
-	 * @return
-	 */
-	private E getExitNode() {
-		if (!this.isGroup())
-			return null;
-
-		E exitNode = null;
-		for (E node : this.group) {
-			if (!this.group.containsAll(this.graph.getChildren(node))) {
-				exitNode = node;
-				break;
-			}
-		}
-
-		if (exitNode == null) {
-			final Map<E, Integer> depthMap = this.graph.model.getDepthMap();
-
-			int deepestLevel = -1;
-			for (E node : depthMap.keySet()) {
-				if (this.group.contains(node)) {
-					if (depthMap.get(node) > deepestLevel) {
-						deepestLevel = depthMap.get(node);
-						exitNode = node;
-					}
-				}
-			}
-		}
-
-		return exitNode;
-	}
-
-	/**
 	 * Clears the current group.
 	 */
 	public void resetGroup() {
@@ -450,5 +413,42 @@ public class GraphGroupController<E> {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get the exit node of the current group. By default, the exit node is the
+	 * node that contains children not within the group. If no such node exists,
+	 * then the exit node is the first node encountered that is at the deepest
+	 * level in the graph.
+	 * 
+	 * @return
+	 */
+	private E getExitNode() {
+		if (!this.isGroup())
+			return null;
+
+		E exitNode = null;
+		for (E node : this.group) {
+			if (!this.group.containsAll(this.graph.getChildren(node))) {
+				exitNode = node;
+				break;
+			}
+		}
+
+		if (exitNode == null) {
+			final Map<E, Integer> depthMap = this.graph.model.getDepthMap();
+
+			int deepestLevel = -1;
+			for (E node : depthMap.keySet()) {
+				if (this.group.contains(node)) {
+					if (depthMap.get(node) > deepestLevel) {
+						deepestLevel = depthMap.get(node);
+						exitNode = node;
+					}
+				}
+			}
+		}
+
+		return exitNode;
 	}
 }

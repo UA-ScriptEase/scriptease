@@ -3,9 +3,10 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -33,7 +34,6 @@ public abstract class StoryNodeConverter extends ComplexStoryComponentConverter 
 		writer.endNode();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
@@ -48,16 +48,26 @@ public abstract class StoryNodeConverter extends ComplexStoryComponentConverter 
 				System.err.println("Expected successors list, but found "
 						+ reader.getNodeName());
 			else {
-				try {
-					successors.addAll((Collection<StoryNode>) context
-							.convertAnother(storyNode, ArrayList.class));
+				while (reader.hasMoreChildren()) {
+					reader.moveDown();
+					final String nodeName = reader.getNodeName();
 
-					storyNode.addSuccessors(successors);
-				} catch (ConversionException e) {
-					System.err.println("Problems converting story node "
-							+ storyNode.getDisplayText() + "'s successors: "
-							+ e);
+					if (nodeName.equals(StoryPointConverter.TAG_STORYPOINT)) {
+						successors.add((StoryPoint) context.convertAnother(
+								storyNode, StoryPoint.class));
+					} else if (nodeName
+							.equals(StoryGroupConverter.TAG_STORYGROUP)) {
+						successors.add((StoryGroup) context.convertAnother(
+								storyNode, StoryGroup.class));
+					} else {
+						System.err
+								.println("Trying to read a non StoryGroup or non StoryPoint ("
+										+ reader.getNodeName()
+										+ ") successor from " + storyNode);
+					}
+					reader.moveUp();
 				}
+				storyNode.addSuccessors(successors);
 			}
 		}
 		reader.moveUp();
