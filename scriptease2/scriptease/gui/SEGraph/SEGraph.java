@@ -749,7 +749,7 @@ public class SEGraph<E> extends JComponent {
 					maxWidth = Math.max(maxWidth, size.width);
 				}
 
-				xSize += maxWidth + (HORIZONTAL_GAP - 13);
+				xSize += maxWidth + HORIZONTAL_GAP;
 				ySize = Math.max(ySize, yNodeSize);
 			}
 			return new Dimension(xSize, ySize);
