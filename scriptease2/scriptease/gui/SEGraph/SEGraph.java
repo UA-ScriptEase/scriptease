@@ -630,7 +630,7 @@ public class SEGraph<E> extends JComponent {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns all node components in the graph.
 	 * 
@@ -664,7 +664,7 @@ public class SEGraph<E> extends JComponent {
 	public SEGraphToolBar getToolBar() {
 		return this.toolBar;
 	}
-	
+
 	/**
 	 * Returns the {@link GraphGroupController} linked to the graph.
 	 * 
