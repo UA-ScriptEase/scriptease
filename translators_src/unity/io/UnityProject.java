@@ -59,7 +59,7 @@ public final class UnityProject extends GameModule {
 
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
-	private Map<String, File> guidsToMetaFiles;
+	private final Map<String, File> guidsToMetaFiles;
 
 	private File projectLocation;
 	// The nice thing about Unity is that it uses multiple files instead of one,
@@ -68,11 +68,11 @@ public final class UnityProject extends GameModule {
 	private File scripteaseGeneratedDirectory;
 	private File scripteaseCScriptDirectory;
 
-	private Collection<File> includeFiles;
-	private Collection<UnityFile> scenes;
-	private Collection<UnityFile> prefabs;
-	private Collection<Resource> resources;
-	private Collection<UnityScript> scripts;
+	private final Collection<File> includeFiles;
+	private final Collection<UnityFile> scenes;
+	private final Collection<UnityFile> prefabs;
+	private final Collection<Resource> resources;
+	private final Collection<UnityScript> scripts;
 
 	/**
 	 * Creates a new UnityProjects with no scenes or scripts added.
@@ -125,6 +125,16 @@ public final class UnityProject extends GameModule {
 		this.guidsToMetaFiles.put(id, file);
 
 		return id;
+	}
+
+	public boolean metaFileExists(String guid) {
+
+		final File metaFile = this.guidsToMetaFiles.get(guid);
+		
+		if(metaFile == null)
+			return false;
+		else
+			return metaFile.exists();
 	}
 
 	@Override
