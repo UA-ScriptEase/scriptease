@@ -1,18 +1,23 @@
 package scriptease.gui.pane;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -26,8 +31,10 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
-import scriptease.controller.MetricsAnalyzer;
+import scriptease.controller.StoryMetrics;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.semodel.ScriptEaseKeywords;
 
 @SuppressWarnings("serial")
 /**
@@ -39,39 +46,59 @@ import scriptease.gui.ui.ScriptEaseUI;
  */
 public class MetricsPanel extends JPanel {
 
-	private final MetricsAnalyzer metrics;
-
-	private static final String STORY_COMPONENT = "Story Component";
-	private static final String STORY_POINT = "Story Point";
-	private static final String COMPLEXITY = "Complexity";
-	private static final String COMPONENT_COUNT = "Component Count";
-	private static final String FAVOURITE = "Favourite";
-	private static final String FREQUENCY = "Frequency";
-	private static final String CAUSES = "Causes";
-	private static final String EFFECTS = "Effects";
-	private static final String DESCRIPTIONS = "Descriptions";
-	private static final String QUESTIONS = "Questions";
-	private static final String REPEATS = "Repeats";
-	private static final String DELAYS = "Delays";
+	private final StoryMetrics metrics;
 
 	/**
 	 * Creates a new MetricsPanel with the default tabs and histograms.
 	 */
-	public MetricsPanel() {
+	public MetricsPanel(final StoryMetrics metrics) {
 		final JTabbedPane tabs = new JTabbedPane();
 
-		this.metrics = MetricsAnalyzer.getInstance();
+		final String EXPORT = "Export All as CSV";
 
-		tabs.addTab(COMPONENT_COUNT, createNumComponentsPage());
-		tabs.addTab(FAVOURITE, createFavoriteCausesPage());
-		tabs.addTab(STORY_COMPONENT + " " + COMPLEXITY,
+		final int WIDTH = 800;
+		final int HEIGHT = 600;
+
+		final JPanel buttonsPanel;
+		final JButton exportButton = new JButton(EXPORT);
+
+		this.metrics = metrics;
+
+		tabs.addTab(ScriptEaseKeywords.COMPONENT_COUNT,
+				createNumComponentsPage());
+		tabs.addTab(ScriptEaseKeywords.FAVOURITE, createFavoriteCausesPage());
+		tabs.addTab(ScriptEaseKeywords.STORY_COMPONENT + " "
+				+ ScriptEaseKeywords.COMPLEXITY,
 				createStoryComponentComplexityPage());
-		tabs.addTab(STORY_POINT + " " + COMPLEXITY,
+		tabs.addTab(ScriptEaseKeywords.STORY_POINT + " "
+				+ ScriptEaseKeywords.COMPLEXITY,
 				createStoryPointComplexityPage());
 
 		tabs.setBorder(BorderFactory.createEmptyBorder());
 
 		add(tabs);
+
+		buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+		buttonsPanel.add(exportButton);
+
+		this.add(buttonsPanel);
+		this.setSize(WIDTH, HEIGHT);
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+		exportButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final File metricsFile;
+
+				metricsFile = WindowFactory.getInstance().showFileChooser(
+						"Save", "story_metrics.csv",
+						new FileNameExtensionFilter("csv", "csv"));
+
+				metrics.exportMetrics(metricsFile);
+			}
+		});
 	}
 
 	/**
@@ -87,14 +114,16 @@ public class MetricsPanel extends JPanel {
 		final ChartPanel pieChart;
 		final ChartManager chartManager;
 
-		values = metrics.getStoryPointComplexity();
+		values = metrics.calculateStoryPointComplexity();
 
 		// Create the Histogram
-		histogram = this.createHistogram("StoryPoint Complexity", "",
-				FREQUENCY, values, true);
+		histogram = this.createHistogram(ScriptEaseKeywords.STORY_POINT + " "
+				+ ScriptEaseKeywords.COMPLEXITY, "",
+				ScriptEaseKeywords.FREQUENCY, values, true);
 
 		// Create the Pie Chart
-		pieChart = this.createPieChart("StoryPoint Complexity", values);
+		pieChart = this.createPieChart(ScriptEaseKeywords.STORY_POINT + " "
+				+ ScriptEaseKeywords.COMPLEXITY, values);
 
 		chartManager = new ChartManager(histogram, pieChart);
 
@@ -118,11 +147,12 @@ public class MetricsPanel extends JPanel {
 		complexityValues = metrics.getStoryComponentComplexity();
 
 		// Create the Histogram
-		histogram = createHistogram("Average " + COMPLEXITY, "", FREQUENCY,
-				complexityValues, false);
+		histogram = createHistogram("Average " + ScriptEaseKeywords.COMPLEXITY,
+				"", ScriptEaseKeywords.FREQUENCY, complexityValues, false);
 
 		// Create the Pie Chart
-		pieChart = createPieChart("Average " + COMPLEXITY, complexityValues);
+		pieChart = createPieChart("Average " + ScriptEaseKeywords.COMPLEXITY,
+				complexityValues);
 
 		chartManager = new ChartManager(histogram, pieChart);
 
@@ -167,30 +197,39 @@ public class MetricsPanel extends JPanel {
 		delaysValues = metrics.getFavouriteDelays();
 
 		// Create the histograms
-		causesHistogram = createHistogram(FAVOURITE + " " + CAUSES, CAUSES,
-				FREQUENCY, causesValues, true);
-		effectsHistogram = createHistogram(FAVOURITE + " " + EFFECTS, EFFECTS,
-				FREQUENCY, effectsValues, true);
-		knowItsHistogram = createHistogram(FAVOURITE + " " + DESCRIPTIONS,
-				DESCRIPTIONS, FREQUENCY, knowItsValues, true);
-		askItsHistogram = createHistogram(FAVOURITE + " " + QUESTIONS,
-				QUESTIONS, FREQUENCY, askItsValues, true);
-		repeatsHistogram = createHistogram(FAVOURITE + " " + REPEATS, REPEATS,
-				FREQUENCY, repeatsValues, true);
-		delaysHistogram = createHistogram(FAVOURITE + " " + DELAYS, DELAYS,
-				FREQUENCY, delaysValues, true);
+		causesHistogram = createHistogram(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.CAUSES, ScriptEaseKeywords.CAUSES,
+				ScriptEaseKeywords.FREQUENCY, causesValues, true);
+		effectsHistogram = createHistogram(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.EFFECTS, ScriptEaseKeywords.EFFECTS,
+				ScriptEaseKeywords.FREQUENCY, effectsValues, true);
+		knowItsHistogram = createHistogram(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.DESCRIPTIONS,
+				ScriptEaseKeywords.DESCRIPTIONS, ScriptEaseKeywords.FREQUENCY,
+				knowItsValues, true);
+		askItsHistogram = createHistogram(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.QUESTIONS, ScriptEaseKeywords.QUESTIONS,
+				ScriptEaseKeywords.FREQUENCY, askItsValues, true);
+		repeatsHistogram = createHistogram(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.REPEATS, ScriptEaseKeywords.REPEATS,
+				ScriptEaseKeywords.FREQUENCY, repeatsValues, true);
+		delaysHistogram = createHistogram(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.DELAYS, ScriptEaseKeywords.DELAYS,
+				ScriptEaseKeywords.FREQUENCY, delaysValues, true);
 
 		// Create the pie charts
-		causesPieChart = createPieChart(FAVOURITE + " " + CAUSES, causesValues);
-		effectsPieChart = createPieChart(FAVOURITE + " " + EFFECTS,
-				effectsValues);
-		knowItsPieChart = createPieChart(FAVOURITE + " " + DESCRIPTIONS,
-				knowItsValues);
-		askItsPieChart = createPieChart(FAVOURITE + " " + QUESTIONS,
-				askItsValues);
-		repeatsPieChart = createPieChart(FAVOURITE + " " + REPEATS,
-				repeatsValues);
-		delaysPieChart = createPieChart(FAVOURITE + " " + DELAYS, delaysValues);
+		causesPieChart = createPieChart(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.CAUSES, causesValues);
+		effectsPieChart = createPieChart(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.EFFECTS, effectsValues);
+		knowItsPieChart = createPieChart(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.DESCRIPTIONS, knowItsValues);
+		askItsPieChart = createPieChart(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.QUESTIONS, askItsValues);
+		repeatsPieChart = createPieChart(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.REPEATS, repeatsValues);
+		delaysPieChart = createPieChart(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.DELAYS, delaysValues);
 
 		// Create chart managers
 		causesChartManager = new ChartManager(causesHistogram, causesPieChart);
@@ -203,12 +242,18 @@ public class MetricsPanel extends JPanel {
 				repeatsPieChart);
 		delaysChartManager = new ChartManager(delaysHistogram, delaysPieChart);
 
-		jTabbedPane.addTab(CAUSES, causesChartManager.getChartPanel());
-		jTabbedPane.addTab(EFFECTS, effectsChartManager.getChartPanel());
-		jTabbedPane.addTab(DESCRIPTIONS, knowItsChartManager.getChartPanel());
-		jTabbedPane.addTab(QUESTIONS, askItsChartManager.getChartPanel());
-		jTabbedPane.addTab(REPEATS, repeatsChartManager.getChartPanel());
-		jTabbedPane.addTab(DELAYS, delaysChartManager.getChartPanel());
+		jTabbedPane.addTab(ScriptEaseKeywords.CAUSES,
+				causesChartManager.getChartPanel());
+		jTabbedPane.addTab(ScriptEaseKeywords.EFFECTS,
+				effectsChartManager.getChartPanel());
+		jTabbedPane.addTab(ScriptEaseKeywords.DESCRIPTIONS,
+				knowItsChartManager.getChartPanel());
+		jTabbedPane.addTab(ScriptEaseKeywords.QUESTIONS,
+				askItsChartManager.getChartPanel());
+		jTabbedPane.addTab(ScriptEaseKeywords.REPEATS,
+				repeatsChartManager.getChartPanel());
+		jTabbedPane.addTab(ScriptEaseKeywords.DELAYS,
+				delaysChartManager.getChartPanel());
 
 		jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
 
@@ -227,14 +272,16 @@ public class MetricsPanel extends JPanel {
 		final ChartPanel pieChart;
 		final ChartManager chartManager;
 
-		generalValues = metrics.getNumStoryComponents();
+		generalValues = metrics.getNumberComponents();
 
 		// Create the histogram
-		histogram = createHistogram(COMPONENT_COUNT, STORY_COMPONENT,
-				FREQUENCY, generalValues, true);
+		histogram = createHistogram(ScriptEaseKeywords.COMPONENT_COUNT,
+				ScriptEaseKeywords.STORY_COMPONENT,
+				ScriptEaseKeywords.FREQUENCY, generalValues, true);
 
 		// Create the pie chart
-		pieChart = createPieChart(COMPONENT_COUNT, generalValues);
+		pieChart = createPieChart(ScriptEaseKeywords.COMPONENT_COUNT,
+				generalValues);
 
 		chartManager = new ChartManager(histogram, pieChart);
 
@@ -308,11 +355,13 @@ public class MetricsPanel extends JPanel {
 		final ChartPanel piePanel;
 		final JFreeChart pieChart;
 
+		final PiePlot plot;
+
 		pieChart = ChartFactory.createPieChart(title, processPieValues(values),
 				true, true, false);
 
 		// Don't show categories with 0 values.
-		PiePlot plot = (PiePlot) pieChart.getPlot();
+		plot = (PiePlot) pieChart.getPlot();
 		plot.setIgnoreZeroValues(true);
 
 		piePanel = new ChartPanel(pieChart);
@@ -362,16 +411,16 @@ public class MetricsPanel extends JPanel {
 	 * @author jyuen
 	 */
 	private class ChartManager {
-		final JSplitPane splitPanel;
+		private final JSplitPane splitPanel;
 
-		final JPanel buttonPanel;
+		private final JPanel buttonPanel;
 
-		final ButtonGroup buttonGroup;
-		final JRadioButton histogramButton;
-		final JRadioButton pieChartButton;
+		private final ButtonGroup buttonGroup;
+		private final JRadioButton histogramButton;
+		private final JRadioButton pieChartButton;
 
-		final ChartPanel histogramChart;
-		final ChartPanel pieChart;
+		private final ChartPanel histogramChart;
+		private final ChartPanel pieChart;
 
 		/**
 		 * Initialize the radio buttons and panels for the Charts.
@@ -391,8 +440,8 @@ public class MetricsPanel extends JPanel {
 
 			this.buttonGroup = new ButtonGroup();
 
-			setupPanel();
-			initializeButtonGroup();
+			this.setupPanel();
+			this.initializeButtonGroup();
 		}
 
 		/**
