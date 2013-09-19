@@ -127,14 +127,27 @@ public final class UnityProject extends GameModule {
 		return id;
 	}
 
+	/**
+	 * Checks if the meta file exists for a specific guid. If the guid is for a
+	 * ScriptEase generated script (UnityScript)'s metafile, we return true.
+	 * 
+	 * @param guid
+	 * @return
+	 */
 	public boolean metaFileExists(String guid) {
+		for (UnityScript script : this.scripts) {
+			// Check if the GUID is part of a ScriptEase generated script. If
+			// so, return true.
+			if (script.getGUID().equals(guid))
+				return true;
+		}
 
 		final File metaFile = this.guidsToMetaFiles.get(guid);
-		
-		if(metaFile == null)
+
+		if (metaFile == null)
 			return false;
-		else
-			return metaFile.exists();
+
+		return metaFile.exists();
 	}
 
 	@Override
