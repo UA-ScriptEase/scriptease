@@ -20,6 +20,8 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author mfchurch
  */
 public class GameType {
+	public static final String DEFAULT_UNKNOWN_TYPE = "unknown";
+	
 	public static final String DEFAULT_VOID_TYPE = "void";
 	public static final String DEFAULT_BOOL_TYPE = "question";
 	public static final String DEFAULT_LIST_WIDGET = "Li";
