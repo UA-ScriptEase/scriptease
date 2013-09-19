@@ -362,18 +362,6 @@ public class UnityFile extends Resource {
 		// Add an arbitrary number
 		for (UnityResource resource : this.unityResources) {
 			final UnityType type = resource.getType();
-
-			if (type == UnityType.MONOBEHAVIOUR) {
-				// TODO Check if it's attached to a script
-				// resource.getFirstOccuranceOfField(m_Script);
-				final PropertyValue field;
-
-				field = resource.getFirstOccuranceOfField(UnityField.M_SCRIPT
-						.getName());
-				
-				System.out.println(field);
-				
-			}
  
 			writer.write("--- !u!" + type.getID() + " &"
 					+ resource.getUniqueID() + "\n");
