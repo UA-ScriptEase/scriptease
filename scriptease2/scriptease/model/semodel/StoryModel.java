@@ -4,17 +4,26 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
+import scriptease.controller.BindingAdapter;
 import scriptease.controller.ModelVisitor;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -278,11 +287,8 @@ public final class StoryModel extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			final GameType type = library.getType(keyword);
 
-			// TODO MAKE SURE ITS NOT DEFAULT TYPE
-			// HOW TO:
-			// Save static default type in GameType class
-			// check if it's not that.
-			if (type != null)
+			if (type != null
+					&& !type.getKeyword().equals(GameType.DEFAULT_UNKNOWN_TYPE))
 				return type;
 		}
 
@@ -346,13 +352,17 @@ public final class StoryModel extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			for (String automaticLabel : automaticHandlers.keySet()) {
 				for (Resource resource : automaticHandlers.get(automaticLabel)) {
-					
+
+					if (automaticLabel.equals("gameobjectautomatic")
+							&& !getExistingResources().contains(resource))
+						continue;
+
 					final Collection<String> resourceTypes = resource
 							.getTypes();
 
 					for (CauseIt automatic : library
 							.getAutomatics(automaticLabel)) {
-						
+
 						final CauseIt copy = automatic.clone();
 						final Collection<KnowIt> parameters = copy
 								.getParameters();
@@ -369,14 +379,107 @@ public final class StoryModel extends SEModel {
 							parameter.setBinding(resource);
 						}
 
-					 automatics.add(copy);
+						automatics.add(copy);
 					}
 				}
-				
+
 			}
 		}
 
 		return automatics;
+	}
+
+	private Collection<Resource> getExistingResources() {
+		final Collection<Resource> resources = new HashSet<Resource>();
+
+		final StoryAdapter adapter;
+
+		adapter = new StoryAdapter() {
+
+			@Override
+			protected void defaultProcessComplex(ComplexStoryComponent complex) {
+				for (StoryComponent child : complex.getChildren()) {
+					child.process(this);
+				}
+			}
+
+			@Override
+			public void processStoryPoint(StoryPoint storyPoint) {
+				this.defaultProcessComplex(storyPoint);
+
+				for (StoryPoint successor : storyPoint.getSuccessors())
+					successor.process(this);
+			}
+
+			@Override
+			public void processControlIt(ControlIt controlIt) {
+				controlIt.processParameters(this);
+				this.defaultProcessComplex(controlIt);
+			}
+
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				causeIt.processSubjects(this);
+				causeIt.processParameters(this);
+				this.defaultProcessComplex(causeIt);
+			}
+
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				scriptIt.processParameters(this);
+				this.defaultProcessComplex(scriptIt);
+			}
+
+			@Override
+			public void processKnowIt(final KnowIt knowIt) {
+				knowIt.getBinding().process(new BindingAdapter() {
+
+					@Override
+					public void processReference(
+							KnowItBindingReference reference) {
+						reference.getValue().getBinding().process(this);
+					}
+
+					@Override
+					public void processFunction(KnowItBindingFunction function) {
+						function.getValue().process(new StoryAdapter() {
+
+							@Override
+							public void processScriptIt(ScriptIt scriptIt) {
+								for (KnowIt param : scriptIt.getParameters()) {
+									if (param.getBinding() instanceof KnowItBindingResource) {
+										final KnowItBindingResource resource = (KnowItBindingResource) param
+												.getBinding();
+
+										if (resource
+												.isIdentifiableGameConstant())
+											resources.add(resource
+													.getResource());
+									}
+								}
+							}
+						});
+					};
+
+					@Override
+					public void processResource(KnowItBindingResource resource) {
+						if (resource.isIdentifiableGameConstant())
+							resources.add(resource.getResource());
+					};
+
+				});
+			}
+
+			@Override
+			public void processAskIt(AskIt askIt) {
+				askIt.getCondition().process(this);
+				this.defaultProcessComplex(askIt);
+			}
+		};
+
+		SEModelManager.getInstance().getActiveRoot().process(adapter);
+
+		return resources;
 	}
 
 	@Override
