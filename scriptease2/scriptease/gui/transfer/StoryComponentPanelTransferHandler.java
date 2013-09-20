@@ -229,6 +229,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		if (this.hoveredPanel != null)
 			this.hoveredPanel.updatePanelBackgrounds();
+		
 		return false;
 	}
 
