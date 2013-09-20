@@ -57,6 +57,7 @@ import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.action.libraryeditor.MergeLibraryAction;
+import scriptease.gui.component.UserErrorPane;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
@@ -182,6 +183,25 @@ public final class WindowFactory {
 		frame.setVisible(true);
 		frame.setResizable(resizable);
 		frame.setLocationRelativeTo(null);
+	}
+
+	/**
+	 * Shows a user error box. This is different from a ScriptEase error. A user
+	 * error is something that the user tries to perform that is illegal in
+	 * ScriptEase. For example, dragging a effect into a StoryPoint component
+	 * panel.
+	 * 
+	 * @param message
+	 */
+	public void showUserErrorBox(String message) {
+		final UserErrorPane userErrorPane = new UserErrorPane(message);
+
+		WindowFactory.getInstance().getCurrentFrame()
+				.setGlassPane(userErrorPane);
+		
+
+		userErrorPane.setOpaque(false);
+		userErrorPane.setVisible(true);
 	}
 
 	/**
@@ -1104,19 +1124,20 @@ public final class WindowFactory {
 		/**
 		 * TODO: Uncomment once I get back to ticket 55016874
 		 */
-//		for (final Entry<JTextField, JButton> fileField : fileFields.entrySet()) {
-//			final JTextField field = fileField.getKey();
-//			final JButton button = fileField.getValue();
-//
-//			parallelGroup = parallelGroup.addGroup(
-//					GroupLayout.Alignment.LEADING, layout
-//							.createSequentialGroup().addComponent(fileLabel)
-//							.addComponent(field).addComponent(button));
-//
-//			sequentialGroup = sequentialGroup.addGroup(layout
-//					.createParallelGroup().addComponent(fileLabel)
-//					.addComponent(field).addComponent(button));
-//		}
+		// for (final Entry<JTextField, JButton> fileField :
+		// fileFields.entrySet()) {
+		// final JTextField field = fileField.getKey();
+		// final JButton button = fileField.getValue();
+		//
+		// parallelGroup = parallelGroup.addGroup(
+		// GroupLayout.Alignment.LEADING, layout
+		// .createSequentialGroup().addComponent(fileLabel)
+		// .addComponent(field).addComponent(button));
+		//
+		// sequentialGroup = sequentialGroup.addGroup(layout
+		// .createParallelGroup().addComponent(fileLabel)
+		// .addComponent(field).addComponent(button));
+		// }
 
 		parallelGroup = parallelGroup.addGroup(GroupLayout.Alignment.TRAILING,
 				layout.createSequentialGroup().addComponent(sendButton)
