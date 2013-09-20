@@ -362,7 +362,7 @@ public class ScriptWidgetFactory {
 		label = new JLabel(text == null ? "" : text);
 		fontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
 				ScriptEase.FONT_SIZE_KEY));
-		font = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize);
+		font = new Font(Font.SANS_SERIF, Font.ROMAN_BASELINE, fontSize);
 
 		label.setFont(font);
 		if (textColor != null)
@@ -539,6 +539,7 @@ public class ScriptWidgetFactory {
 		return spinner;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static JComponent buildComboEditor(final KnowIt knowIt,
 			final BindingWidget bindingWidget, final String bindingType) {
 		final Map<String, String> enumMap;
