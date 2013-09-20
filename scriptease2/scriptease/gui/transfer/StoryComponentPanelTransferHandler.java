@@ -37,6 +37,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -106,6 +107,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * selectedNodes is null since calling control-x without a selected node
 	 * will still fire this.
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	protected Transferable createTransferable(JComponent comp) {
 		final List<StoryComponent> data;
@@ -128,6 +130,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			}
 
 		} else if (comp instanceof JList) {
+			@SuppressWarnings("rawtypes")
 			final JList list = (JList) comp;
 			for (Object panelObject : list.getSelectedValues()) {
 				if (panelObject instanceof StoryComponentPanel) {
@@ -186,6 +189,15 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			final StoryComponentPanel acceptingPanel;
 			acceptingPanel = (StoryComponentPanel) supportComponent;
+
+			// The start story point can't be accepting any children.
+			if (acceptingPanel.getStoryComponent() instanceof StoryPoint) {
+				final StoryPoint storyPoint = (StoryPoint) acceptingPanel
+						.getStoryComponent();
+				
+				if (storyPoint == SEModelManager.getInstance().getActiveRoot())
+					return false;
+			}
 
 			if (acceptingPanel.isEditable()) {
 				return (this.canImportAsChild(support) || this
@@ -306,7 +318,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	public boolean importData(TransferSupport support) {
 		final Component supportComponent = support.getComponent();
 
-		// Safety check. This is more than likely being called twice with ever
+		// Safety check. This is more than likely being called twice with every
 		// transfer, but we don't want someone accidently calling importData
 		// without checking canImport first.
 		if (!this.canImport(support))

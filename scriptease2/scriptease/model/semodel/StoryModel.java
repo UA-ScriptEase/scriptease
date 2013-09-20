@@ -17,9 +17,11 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -81,14 +83,16 @@ public final class StoryModel extends SEModel {
 			Collection<LibraryModel> optionalLibraries) {
 		super(title, author);
 
-		this.startPoint = new StoryPoint("Start");
+		this.setRoot(new StoryPoint("Start"));
+
 		this.module = module;
 		this.translator = translator;
 		this.compatibleVersion = compatibleVersion;
 		this.optionalLibraries = optionalLibraries;
 		this.observerManager = new ObserverManager<StoryModelObserver>();
 		this.dialogueRoots = new ArrayList<DialogueLine>();
-		this.storyComponentPanelTree = new StoryComponentPanelTree(this.startPoint);
+		this.storyComponentPanelTree = new StoryComponentPanelTree(
+				this.startPoint);
 	}
 
 	public Collection<DialogueLine> getDialogueRoots() {
@@ -164,7 +168,13 @@ public final class StoryModel extends SEModel {
 			throw new IllegalArgumentException(
 					"Cannot give StoryModel a null tree root.");
 		this.startPoint = startPoint;
-		System.out.println(startPoint + " loaded in " + this);
+
+		// Remove all existing story children.
+		this.startPoint.removeStoryChildren(this.startPoint.getChildren());
+
+		this.startPoint
+				.addStoryChild(new Note(
+						"You can't put story components in here. Add a new story point instead!"));
 	}
 
 	public StoryPoint getRoot() {
@@ -337,16 +347,16 @@ public final class StoryModel extends SEModel {
 
 		return includes;
 	}
-	
+
 	public StoryComponentPanelTree getStoryComponentPanelTree() {
 		return this.storyComponentPanelTree;
 	}
 
 	/**
 	 * Generates a collection of story components that should be automatically
-	 * added to the model. This should likely only be called right before
-	 * writing the code. The automatics generated will have the proper bindings
-	 * on their parameters, and are ready to be written out.
+	 * added to the root of the model. This should likely only be called right
+	 * before writing the code. The automatics generated will have the proper
+	 * bindings on their parameters, and are ready to be written out.
 	 * 
 	 * @param model
 	 * @return
@@ -391,7 +401,46 @@ public final class StoryModel extends SEModel {
 						automatics.add(copy);
 					}
 				}
+			}
+		}
 
+		// Generate the auto - succeed for root story point.
+		final LibraryModel defaultLibrary = this.translator.getLibrary();
+
+		for (StoryComponent cause : defaultLibrary.getCausesCategory()
+				.getChildren()) {
+			if (cause.getDisplayText().toLowerCase().contains("is enabled")) {
+				final CauseIt storyPointEnabled;
+
+				storyPointEnabled = ((CauseIt) cause).clone();
+
+				storyPointEnabled.removeStoryChildren(storyPointEnabled
+						.getChildren());
+
+				for (KnowIt parameter : storyPointEnabled.getParameters())
+					parameter.setBinding(new KnowItBindingStoryPoint(
+							SEModelManager.getInstance().getActiveRoot()));
+
+				for (StoryComponent effect : defaultLibrary
+						.getEffectsCategory().getChildren()) {
+					if (effect.getDisplayText().toLowerCase()
+							.contains("succeed")) {
+						final ScriptIt succeedStoryPoint;
+
+						succeedStoryPoint = ((ScriptIt) effect).clone();
+
+						for (KnowIt parameter : succeedStoryPoint
+								.getParameters())
+							parameter.setBinding(new KnowItBindingStoryPoint(
+									SEModelManager.getInstance()
+											.getActiveRoot()));
+
+						storyPointEnabled.addStoryChild(succeedStoryPoint);
+					}
+				}
+
+				automatics.add(storyPointEnabled);
+				break;
 			}
 		}
 
@@ -419,7 +468,7 @@ public final class StoryModel extends SEModel {
 				for (StoryNode successor : storyGroup.getSuccessors())
 					successor.process(this);
 			}
-			
+
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
 				this.defaultProcessComplex(storyPoint);

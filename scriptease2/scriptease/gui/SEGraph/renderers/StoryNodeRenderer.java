@@ -21,6 +21,7 @@ import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * Special renderer for nodes representing StoryNodes {@link StoryNode}. Story
@@ -102,7 +103,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 				StoryNodeRenderer.this.updateComponents(component, group);
 			}
 		});
-		
+
 		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 				component);
 
@@ -114,13 +115,13 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		if (!group.isExpanded()) {
 			// Draw the group as a single node if it isn't expanded.
 			component.add(ScriptWidgetFactory.buildBindingWidget(group, true));
-			
+
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 					component);
 		} else {
 			// Draw the group as a subgraph.
 			component.add(group.getSEGraph());
-			
+
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN * 2,
 					component);
 		}
@@ -132,7 +133,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 					component);
 		}
-		
+
 		if (this.isExitNodeOfGroup(group)) {
 			this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 					component);
@@ -143,6 +144,27 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 		this.hoveredComponent = component;
 		this.reconfigureAppearance(component, group);
+		component.revalidate();
+	}
+
+	private void updateStoryRoot(final JComponent component,
+			final StoryPoint storyPoint) {
+		component.removeAll();
+
+		final int VERTICAL_MARGIN = 30;
+		final int HORIZONTAL_MARGIN = 10;
+
+		final BindingWidget widget;
+
+		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+				component);
+		
+		widget = ScriptWidgetFactory.buildBindingWidget(storyPoint, false);
+		component.add(widget);
+		
+		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+				component);
+
 		component.revalidate();
 	}
 
@@ -157,6 +179,11 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 			final StoryPoint storyPoint) {
 		if (storyPoint == null)
 			return;
+
+		if (storyPoint == SEModelManager.getInstance().getActiveRoot()) {
+			this.updateStoryRoot(component, storyPoint);
+			return;
+		}
 
 		component.removeAll();
 
