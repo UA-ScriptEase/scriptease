@@ -33,7 +33,7 @@ public abstract class StoryNode extends ComplexStoryComponent {
 
 	protected Set<StoryNode> successors;
 	protected Set<StoryNode> parents;
-	
+
 	/**
 	 * Adds a successor to the StoryNode
 	 * 
@@ -106,7 +106,8 @@ public abstract class StoryNode extends ComplexStoryComponent {
 	 * successors, etc. This is computationally expensive, and should thus be
 	 * used carefully. Try to cache the descendants somewhere if they need to be
 	 * accessed more than once. If order matters, use
-	 * {@link #getOrderedDescendants()}.
+	 * {@link #getOrderedDescendants()}. If you are trying to get all story
+	 * point descendants, use {@link #getStoryPointDescendants}.
 	 * 
 	 * @see #getOrderedDescendants()
 	 * @return An unordered set of the story node's descendants.
@@ -128,6 +129,27 @@ public abstract class StoryNode extends ComplexStoryComponent {
 	}
 
 	/**
+	 * Gets all descendants of the StoryNode that are StoryPoints. If a
+	 * StoryGroup descendant is encountered, all the StoryPoints in that group is
+	 * added instead.
+	 * 
+	 * @return
+	 */
+	public Set<StoryPoint> getStoryPointDescendants() {
+		final Set<StoryPoint> descendants = new HashSet<StoryPoint>();
+
+		for (StoryNode descendant : this.getDescendants()) {
+			if (descendant instanceof StoryPoint)
+				descendants.add((StoryPoint) descendant);
+			else if (descendant instanceof StoryGroup)
+				descendants.addAll(((StoryGroup) descendant)
+						.getAllStoryPoints());
+		}
+
+		return descendants;
+	}
+
+	/**
 	 * Adds multiple successors to the StoryPoint.
 	 * 
 	 * @param successors
@@ -139,7 +161,7 @@ public abstract class StoryNode extends ComplexStoryComponent {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets a mapping of the depth of each StoryNode. The depth corresponds to
 	 * the longest path it will take to get to the Story Node at the highest

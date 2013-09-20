@@ -15,7 +15,6 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.Translator;
@@ -65,7 +64,7 @@ import scriptease.translator.io.model.Slot;
  */
 public class CodeGenerator {
 
-	private final Collection<StoryNode> generatingStoryNodes;
+	private final Collection<StoryPoint> generatingStoryPoints;
 
 	private final static CodeGenerator instance = new CodeGenerator();
 
@@ -88,8 +87,7 @@ public class CodeGenerator {
 	}
 
 	private CodeGenerator() {
-		// Privatized constructor
-		this.generatingStoryNodes = new HashSet<StoryNode>();
+		this.generatingStoryPoints = new HashSet<StoryPoint>();
 	}
 
 	/**
@@ -100,8 +98,8 @@ public class CodeGenerator {
 	 * 
 	 * @return
 	 */
-	public Collection<StoryNode> getGeneratingStoryPoints() {
-		return this.generatingStoryNodes;
+	public Collection<StoryPoint> getGeneratingStoryPoints() {
+		return this.generatingStoryPoints;
 	}
 
 	/**
@@ -129,11 +127,11 @@ public class CodeGenerator {
 		scriptInfos = new ArrayList<ScriptInfo>();
 		root = model.getRoot();
 
-		this.generatingStoryNodes.clear();
-		this.generatingStoryNodes.addAll(root.getDescendants());
+		this.generatingStoryPoints.clear();
+		this.generatingStoryPoints.addAll(root.getStoryPointDescendants());
 		
 		// do the first pass (semantic analysis) for the given story
-		analyzer = new SemanticAnalyzer(this.generatingStoryNodes);
+		analyzer = new SemanticAnalyzer(this.generatingStoryPoints);
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
@@ -152,7 +150,7 @@ public class CodeGenerator {
 			// aggregate the scripts based on the storyPoints
 			scriptBuckets = module
 					.aggregateScripts(new ArrayList<StoryComponent>(
-							this.generatingStoryNodes));
+							this.generatingStoryPoints));
 
 			if (scriptBuckets.size() > 0) {
 				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
@@ -367,6 +365,6 @@ public class CodeGenerator {
 	 */
 	private Context buildFileContext(StoryModel model,
 			LocationInformation locationInfo) {
-		return new FileContext(model, this.generatingStoryNodes, locationInfo);
+		return new FileContext(model, this.generatingStoryPoints, locationInfo);
 	}
 }
