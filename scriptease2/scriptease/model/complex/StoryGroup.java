@@ -13,6 +13,7 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.StoryComponent;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 
@@ -105,6 +106,29 @@ public class StoryGroup extends StoryNode {
 	 */
 	public StoryNode getExitNode() {
 		return this.exitNode;
+	}
+
+	/**
+	 * Gets all the story points in this group and all subgroups.
+	 * 
+	 * @return
+	 */
+	public Collection<StoryPoint> getAllStoryPoints() {
+		return this.getAllStoryPoints(this);
+	}
+
+	private Collection<StoryPoint> getAllStoryPoints(StoryGroup group) {
+		final Collection<StoryPoint> storyPoints = new HashSet<StoryPoint>();
+
+		for (StoryComponent child : group.getChildren()) {
+			if (child instanceof StoryPoint) {
+				storyPoints.add((StoryPoint) child);
+			} else if (child instanceof StoryGroup) {
+				storyPoints.addAll(this.getAllStoryPoints((StoryGroup) child));
+			}
+		}
+
+		return storyPoints;
 	}
 
 	/**

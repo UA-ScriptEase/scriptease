@@ -53,7 +53,7 @@ public abstract class Context {
 
 	// This is a cached list of all story nodes. This prevents multiple
 	// expensive calls to StoryNode#getDescendants()
-	private final Collection<StoryNode> storyNodes;
+	private final Collection<StoryPoint> storyPoints;
 
 	/**
 	 * The collection of code blocks known by the Context. These are lazy
@@ -66,10 +66,10 @@ public abstract class Context {
 
 	private static final String UNIMPLEMENTED = "<unimplemented in context>";
 
-	public Context(StoryModel model, Collection<StoryNode> storyNodes,
+	public Context(StoryModel model, Collection<StoryPoint> storyPoints,
 			String indent, CodeGenerationNamifier existingNames) {
 		this.model = model;
-		this.storyNodes = storyNodes;
+		this.storyPoints = storyPoints;
 		this.indent = indent;
 		this.namifier = existingNames;
 	}
@@ -159,7 +159,7 @@ public abstract class Context {
 			this.codeBlocks = new ArrayList<CodeBlock>();
 
 			// for each story point
-			for (StoryNode point : this.storyNodes) {
+			for (StoryNode point : this.storyPoints) {
 				for (ScriptIt scriptIt : StoryComponentUtils
 						.getDescendantScriptIts(point)) {
 					final Collection<CodeBlock> codeBlocksForSlot;
@@ -236,7 +236,7 @@ public abstract class Context {
 	 * @return
 	 */
 	public CauseIt getFirstCause() {
-		for (StoryNode node : this.storyNodes) {
+		for (StoryNode node : this.storyPoints) {
 			for (StoryComponent child : node.getChildren()) {
 				if (child instanceof StoryPoint) {
 					for (StoryComponent storyPointChild : ((StoryPoint) child)
@@ -280,7 +280,7 @@ public abstract class Context {
 	public Collection<CauseIt> getCauses() {
 		final Collection<CauseIt> causes = new ArrayList<CauseIt>();
 
-		for (StoryNode point : this.storyNodes) {
+		for (StoryNode point : this.storyPoints) {
 			for (StoryComponent child : point.getChildren()) {
 				if (child instanceof StoryPoint) {
 					for (StoryComponent storyPointChild : ((StoryPoint) child)
@@ -339,14 +339,14 @@ public abstract class Context {
 		return causes;
 	}
 
-	public Collection<StoryNode> getStoryNodes() {
-		return this.storyNodes;
+	public Collection<StoryPoint> getStoryNodes() {
+		return this.storyPoints;
 	}
 
 	public Collection<StoryPoint> getStoryPoints() {
 		final Collection<StoryPoint> storyPoints = new ArrayList<StoryPoint>();
 
-		for (StoryNode storyNode : this.storyNodes) {
+		for (StoryNode storyNode : this.storyPoints) {
 			storyPoints.addAll(this.getRecursiveStoryPoints(storyNode));
 		}
 
