@@ -11,14 +11,22 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import scriptease.gui.WindowFactory;
+
+/**
+ * A UserErrorPane is JPanel that fades in and out displaying the provided error
+ * message.
+ * 
+ * @author jyuen
+ */
 @SuppressWarnings("serial")
 public class UserErrorPane extends JPanel {
 
 	private static final int DELAY = 50;
 	private static final float OPACITY_INCREMENTATION = 0.025f;
 
-	final String message;
-	final Point startPoint;
+	String message;
+	Point startPoint;
 
 	Timer timer;
 
@@ -37,6 +45,19 @@ public class UserErrorPane extends JPanel {
 		this.timer.start();
 	}
 
+	public void restart(String message) {
+		this.message = message;
+		this.startPoint = MouseInfo.getPointerInfo().getLocation();
+		this.opacity = 0.1f;
+
+		this.timer.stop();
+		
+		this.timer = new Timer(UserErrorPane.DELAY, new FadeInTimer());
+
+		this.timer.setRepeats(true);
+		this.timer.start();
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		final FontMetrics metrics = g.getFontMetrics(g.getFont());
@@ -46,7 +67,7 @@ public class UserErrorPane extends JPanel {
 
 		if (startPoint != null) {
 			g.setColor(new Color(1, 0, 0, opacity));
-			
+
 			g.fillRoundRect(startPoint.x, startPoint.y, WIDTH, HEIGHT, 0, 0);
 
 			g.setColor(new Color(1, 1, 1, opacity));

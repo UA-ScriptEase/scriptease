@@ -185,6 +185,8 @@ public final class WindowFactory {
 		frame.setLocationRelativeTo(null);
 	}
 
+	public static int count = 0;
+	
 	/**
 	 * Shows a user error box. This is different from a ScriptEase error. A user
 	 * error is something that the user tries to perform that is illegal in
@@ -194,14 +196,19 @@ public final class WindowFactory {
 	 * @param message
 	 */
 	public void showUserErrorBox(String message) {
-		final UserErrorPane userErrorPane = new UserErrorPane(message);
+		if (count == 0) {
+			final UserErrorPane userErrorPane = new UserErrorPane(message);
 
-		WindowFactory.getInstance().getCurrentFrame()
-				.setGlassPane(userErrorPane);
-		
+			WindowFactory.getInstance().getCurrentFrame()
+					.setGlassPane(userErrorPane);
 
-		userErrorPane.setOpaque(false);
-		userErrorPane.setVisible(true);
+			userErrorPane.setOpaque(false);
+			userErrorPane.setVisible(true);
+			count++;
+		} else {
+			((UserErrorPane) WindowFactory.getInstance().getCurrentFrame()
+					.getGlassPane()).restart(message);
+		}
 	}
 
 	/**
