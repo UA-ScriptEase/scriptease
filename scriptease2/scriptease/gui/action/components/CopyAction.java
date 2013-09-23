@@ -13,10 +13,8 @@ import javax.swing.TransferHandler;
 
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
-import scriptease.gui.WindowFactory;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.component.UserErrorPane;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 
@@ -94,14 +92,12 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 				TransferHandler.COPY);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
-
-		WindowFactory.getInstance().showUserErrorBox("This is a Test");
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			// Copies individual panels. This does copy multiple if multiple are

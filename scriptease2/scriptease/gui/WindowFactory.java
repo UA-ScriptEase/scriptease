@@ -57,7 +57,8 @@ import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.action.libraryeditor.MergeLibraryAction;
-import scriptease.gui.component.UserErrorPane;
+import scriptease.gui.component.UserInformationPane;
+import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
@@ -185,8 +186,8 @@ public final class WindowFactory {
 		frame.setLocationRelativeTo(null);
 	}
 
-	public static int count = 0;
-	
+	private static boolean errorBoxActivated = false;
+
 	/**
 	 * Shows a user error box. This is different from a ScriptEase error. A user
 	 * error is something that the user tries to perform that is illegal in
@@ -195,19 +196,20 @@ public final class WindowFactory {
 	 * 
 	 * @param message
 	 */
-	public void showUserErrorBox(String message) {
-		if (count == 0) {
-			final UserErrorPane userErrorPane = new UserErrorPane(message);
+	public void showUserInformationBox(String message, UserInformationType type) {
+		if (!errorBoxActivated) {
+			final UserInformationPane userErrorPane = new UserInformationPane(
+					message, type);
 
 			WindowFactory.getInstance().getCurrentFrame()
 					.setGlassPane(userErrorPane);
 
 			userErrorPane.setOpaque(false);
 			userErrorPane.setVisible(true);
-			count++;
+			errorBoxActivated = true;
 		} else {
-			((UserErrorPane) WindowFactory.getInstance().getCurrentFrame()
-					.getGlassPane()).restart(message);
+			((UserInformationPane) WindowFactory.getInstance()
+					.getCurrentFrame().getGlassPane()).restart(message, type);
 		}
 	}
 
@@ -801,7 +803,6 @@ public final class WindowFactory {
 
 		final JPanel content;
 		final JLabel message;
-		@SuppressWarnings("rawtypes")
 		final JComboBox libraryChoice;
 		final JButton mergeButton;
 		final JButton cancelButton;

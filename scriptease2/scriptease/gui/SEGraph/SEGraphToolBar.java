@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -18,9 +19,13 @@ import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.Timer;
+import javax.swing.event.MouseInputAdapter;
 
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEGraphToolBarObserver;
+import scriptease.gui.WindowFactory;
+import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.util.FileOp;
 import scriptease.util.GUIOp;
 
@@ -184,6 +189,54 @@ public class SEGraphToolBar extends JToolBar {
 				SEGraphToolBar.this.setMode(mode);
 			}
 		});
+
+		final Timer timer = new Timer(1500, new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (mode == Mode.SELECT) {
+				} else if (mode == Mode.INSERT) {
+					WindowFactory.getInstance().showUserInformationBox(
+							"Use the insert tool to insert a new story point.",
+							UserInformationType.INFO);
+				} else if (mode == Mode.DELETE) {
+					WindowFactory.getInstance().showUserInformationBox(
+							"Use the delete tool to delete story points / ungroup story groups.",
+							UserInformationType.INFO);
+				} else if (mode == Mode.CONNECT) {
+					WindowFactory.getInstance().showUserInformationBox(
+							"Use the connect tool to link story points together.",
+							UserInformationType.INFO);
+				} else if (mode == Mode.DISCONNECT) {
+					WindowFactory.getInstance().showUserInformationBox(
+							"Use the disconnect tool to unlink story points.",
+							UserInformationType.INFO);
+				} else if (mode == Mode.GROUP) {
+					WindowFactory.getInstance().showUserInformationBox(
+							"Use the group tool to group story points together.",
+							UserInformationType.INFO);
+				} else {
+					WindowFactory.getInstance().showUserInformationBox(
+							"Select a story node to show its contents.",
+							UserInformationType.INFO);
+				}
+			}
+		});
+		timer.setRepeats(false);
+		
+		button.addMouseListener(new MouseInputAdapter() {
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				timer.start();
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				timer.stop();
+			}
+		});
+
 		return button;
 	}
 
@@ -203,6 +256,7 @@ public class SEGraphToolBar extends JToolBar {
 			buttonModel = this.disconnectButton.getModel();
 		} else if (mode == Mode.GROUP) {
 			buttonModel = this.groupButton.getModel();
+
 		} else {
 			// Handle any strange behaviour by setting this to Select by
 			// default.
