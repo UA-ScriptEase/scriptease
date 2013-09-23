@@ -24,7 +24,9 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.component.BindingWidget;
+import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
@@ -151,9 +153,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * Scrolls the story component tree if we are hovering over one.
 	 */
 	private void scrollForMousePosition(Component component) {
-		/*
-		 * Scrolls the StoryComponentTree if we are hovering over one.
-		 */
 		Container parent = component.getParent();
 		while (parent != null) {
 			if (parent instanceof JSplitPane) {
@@ -194,9 +193,16 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (acceptingPanel.getStoryComponent() instanceof StoryPoint) {
 				final StoryPoint storyPoint = (StoryPoint) acceptingPanel
 						.getStoryComponent();
-				
-				if (storyPoint == SEModelManager.getInstance().getActiveRoot())
+
+				if (storyPoint == SEModelManager.getInstance().getActiveRoot()
+						|| storyPoint.getUniqueID() == 1) {
+					WindowFactory
+							.getInstance()
+							.showUserInformationBox(
+									"You can't drag components into the start story point.\n Create a new story point instead.",
+									UserInformationType.ERROR);
 					return false;
+				}
 			}
 
 			if (acceptingPanel.isEditable()) {
@@ -229,7 +235,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		if (this.hoveredPanel != null)
 			this.hoveredPanel.updatePanelBackgrounds();
-		
+
 		return false;
 	}
 

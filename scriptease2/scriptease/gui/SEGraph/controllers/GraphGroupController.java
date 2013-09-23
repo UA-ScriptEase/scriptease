@@ -10,7 +10,9 @@ import java.util.Set;
 import java.util.Stack;
 
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 
@@ -131,10 +133,10 @@ public class GraphGroupController<E> {
 	 * @param group
 	 */
 	public void unformGroup(StoryGroup group) {
-		
+
 		if (!UndoManager.getInstance().hasOpenUndoableAction())
 			UndoManager.getInstance().startUndoableAction("UnGroup");
-		
+
 		final Collection<StoryNode> parents = new ArrayList<StoryNode>();
 		final Collection<StoryNode> successors = new ArrayList<StoryNode>();
 
@@ -158,7 +160,7 @@ public class GraphGroupController<E> {
 
 		// Lets help garbage collection a little by setting the group to null
 		group = null;
-		
+
 		if (UndoManager.getInstance().hasOpenUndoableAction())
 			UndoManager.getInstance().endUndoableAction();
 	}
@@ -170,13 +172,19 @@ public class GraphGroupController<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void formGroup() {
-		
+
 		if (!UndoManager.getInstance().hasOpenUndoableAction())
 			UndoManager.getInstance().startUndoableAction("Group");
 
 		// Make sure we even have a group.
-		if (!this.isGroup())
+		if (!this.isGroup()) {
+			WindowFactory
+					.getInstance()
+					.showUserInformationBox(
+							"You can't form a group yet. All selected nodes must be green.",
+							UserInformationType.ERROR);
 			return;
+		}
 
 		// Not dealing with dialogue groups for now
 		if (!(this.startNode instanceof StoryNode))
@@ -213,7 +221,7 @@ public class GraphGroupController<E> {
 
 		this.graph.repaint();
 		this.resetGroup();
-		
+
 		if (UndoManager.getInstance().hasOpenUndoableAction())
 			UndoManager.getInstance().endUndoableAction();
 	}
@@ -271,8 +279,12 @@ public class GraphGroupController<E> {
 		final Queue<E> nodes = new LinkedList<E>();
 
 		// If this is the graph start node, return false immediately.
-		if (node == this.graph.model.getStartNode())
+		if (node == this.graph.model.getStartNode()) {
+			WindowFactory.getInstance().showUserInformationBox(
+					"The start node can't be part of a group.",
+					UserInformationType.ERROR);
 			return false;
+		}
 
 		for (E child : this.graph.model.getChildren(node)) {
 			nodes.add(child);
