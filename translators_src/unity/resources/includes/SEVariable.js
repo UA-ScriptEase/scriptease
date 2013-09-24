@@ -61,19 +61,3 @@ static function GetGameObject(key:String) : GameObject {
 static function GetBoolean(key:String) : boolean {
 	return booleanMap[key];
 }
-
-/**
- * Returns the SEPath attached to the object. Attaches an SEPath if none are
- * attached. This allows the experienced game developer to add an SEPath in the
- * editor but still make use of ScriptEase II.
- */
-static function GetPath(object:GameObject):SEPath {
-	var sePath:SEPath = object.GetComponent(SEPath);
-		
-	if(sePath == null) {
-		object.AddComponent(SEPath);
-		sePath = object.GetComponent(SEPath);
-	}
-	
-	return sePath;
-}

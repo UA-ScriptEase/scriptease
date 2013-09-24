@@ -5957,14 +5957,14 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;story point&gt; is enabled</Name>
+      <Name>When &lt;story point&gt; is activated</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;story point&gt; is enabled</Name>
+          <Name>When &lt;story point&gt; is activated</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>

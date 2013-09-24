@@ -409,7 +409,7 @@ public final class StoryModel extends SEModel {
 
 		for (StoryComponent cause : defaultLibrary.getCausesCategory()
 				.getChildren()) {
-			if (cause.getDisplayText().toLowerCase().contains("is enabled")) {
+			if (cause.getDisplayText().toLowerCase().contains("is activated")) {
 				final CauseIt storyPointEnabled;
 
 				storyPointEnabled = ((CauseIt) cause).clone();
