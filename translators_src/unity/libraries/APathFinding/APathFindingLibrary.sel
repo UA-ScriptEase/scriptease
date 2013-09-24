@@ -47,7 +47,7 @@ http://cs.ualberta.ca/~script">
                   </Types>
                   <Code>
                     <Line>
-                      <Literal>return SEVariable.GetPath(this.gameObject).target.gameObject;</Literal>
+                      <Literal>return SEPath.GetPath(this.gameObject).target.gameObject;</Literal>
                     </Line>
                   </Code>
                 </CodeBlockSource>
@@ -95,7 +95,7 @@ http://cs.ualberta.ca/~script">
           </Includes>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="subject">
                 <Fragment data="NAME"/>
               </Scope>
@@ -153,7 +153,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>var sePath : SEPath = SEVariable.GetPath(</Literal>
+              <Literal>var sePath : SEPath = SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -220,7 +220,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -278,7 +278,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -336,7 +336,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -394,7 +394,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -452,7 +452,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -510,7 +510,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -568,7 +568,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -626,7 +626,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -671,7 +671,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -712,7 +712,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -751,7 +751,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -792,7 +792,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -833,7 +833,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -874,7 +874,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -915,7 +915,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -956,7 +956,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -997,7 +997,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -1038,7 +1038,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -1079,7 +1079,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -1131,7 +1131,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>SEVariable.GetPath(</Literal>
+              <Literal>SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>
@@ -1176,7 +1176,7 @@ http://cs.ualberta.ca/~script">
           </Parameters>
           <Code>
             <Line>
-              <Literal>return SEVariable.GetPath(</Literal>
+              <Literal>return SEPath.GetPath(</Literal>
               <Scope data="ARGUMENT" ref="Object">
                 <Fragment data="NAME"/>
               </Scope>

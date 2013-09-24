@@ -355,6 +355,25 @@ public class UnityFile extends Resource {
 		final String unityFileHeader = "%YAML 1.1\n" + "%TAG !u! "
 				+ UnityProject.UNITY_TAG + "\n";
 
+		// Copy the existing scene file contents to a backup location first.
+		final File backupLocation;
+
+		backupLocation = new File(location.getParent() + "\\._"
+				+ FileOp.removeExtension(location.getName()) + "_backup.unity");
+
+		try {
+			FileOp.copyFile(location, backupLocation);
+		} catch (IOException e) {
+			Thread.currentThread()
+					.getUncaughtExceptionHandler()
+					.uncaughtException(
+							Thread.currentThread(),
+							new IOException(
+									"Exception when creating backup scene file at "
+											+ location + ": " + e));
+		}
+
+		// Actually write to the scene file now.
 		writer = new BufferedWriter(new FileWriter(location));
 
 		writer.write(unityFileHeader);

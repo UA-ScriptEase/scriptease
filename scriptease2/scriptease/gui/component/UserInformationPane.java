@@ -17,6 +17,9 @@ import javax.swing.Timer;
  * A UserErrorPane is a JPanel, best suited for use as a glass pane, that fades
  * in and out displaying the provided error message.
  * 
+ * Even though visually you will not see the fade in, I have left the code for
+ * it in incase we decide to change this in the future.
+ * 
  * @author jyuen
  */
 @SuppressWarnings("serial")
@@ -26,7 +29,7 @@ public class UserInformationPane extends JPanel {
 	private static final int READ_TIME = 4000;
 
 	private static final float OPACITY_INCREMENTATION = 0.025f;
-	private static final float START_OPACITY = 0.1f;
+	private static final float START_OPACITY = 0.7f;
 	private static final float FINAL_OPACITY = 0.8f;
 
 	/**
