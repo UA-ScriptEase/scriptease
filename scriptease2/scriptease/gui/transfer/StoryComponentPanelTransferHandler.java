@@ -109,7 +109,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * selectedNodes is null since calling control-x without a selected node
 	 * will still fire this.
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	protected Transferable createTransferable(JComponent comp) {
 		final List<StoryComponent> data;
@@ -132,7 +131,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			}
 
 		} else if (comp instanceof JList) {
-			@SuppressWarnings("rawtypes")
 			final JList list = (JList) comp;
 			for (Object panelObject : list.getSelectedValues()) {
 				if (panelObject instanceof StoryComponentPanel) {
@@ -228,10 +226,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				if (scriptIt instanceof CauseIt)
 					return false;
 
-				for (String type : scriptIt.getTypes()) {
-					if (!effectHolder.getAllowableTypes().contains(type))
-						return false;
-				}
+				// Make sure the types match
+				if (!scriptIt.getTypes().containsAll(
+						effectHolder.getAllowableTypes()))
+					return false;
+
 				return true;
 			}
 		}

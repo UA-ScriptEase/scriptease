@@ -58,7 +58,14 @@ public class EffectHolderPanel extends JPanel {
 	 * @param component
 	 */
 	public boolean setEffect(ScriptIt effect) {
+
+		// Don't want to be setting causes.
 		if (effect != null && (effect instanceof CauseIt))
+			return false;
+
+		// Make sure the types match
+		if (effect != null
+				&& !effect.getTypes().containsAll(this.allowableTypes))
 			return false;
 
 		/*
