@@ -194,8 +194,12 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				final StoryPoint storyPoint = (StoryPoint) acceptingPanel
 						.getStoryComponent();
 
-				if (storyPoint == SEModelManager.getInstance().getActiveRoot()
-						|| storyPoint.getUniqueID() == 1) {
+				final StoryPoint root = SEModelManager.getInstance()
+						.getActiveRoot();
+				if (root == null)
+					return false;
+
+				else if (storyPoint == root || storyPoint.getUniqueID() == 1) {
 					WindowFactory
 							.getInstance()
 							.showUserInformationBox(
