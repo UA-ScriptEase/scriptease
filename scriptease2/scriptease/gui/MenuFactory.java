@@ -54,7 +54,6 @@ import scriptease.gui.internationalization.Il8nResources;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -428,6 +427,8 @@ public class MenuFactory {
 					// add a action for this library to be removed.
 					removeLibrary.add(new RemoveLibraryFromStoryModelAction(
 							library));
+					if (!removeLibrary.isEnabled())
+						removeLibrary.setEnabled(true);
 				}
 
 				@Override
@@ -469,6 +470,8 @@ public class MenuFactory {
 
 								if (action.getLibrary() == library) {
 									removeLibrary.remove(item);
+									if (model.getOptionalLibraries().isEmpty())
+										removeLibrary.setEnabled(false);
 									break;
 								}
 							}
