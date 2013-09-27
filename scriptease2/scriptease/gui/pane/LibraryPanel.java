@@ -163,6 +163,11 @@ public class LibraryPanel extends JTabbedPane {
 								public void libraryAdded(LibraryModel library) {
 									LibraryPanel.this.updateLists();
 								}
+								
+								@Override
+								public void libraryRemoved(LibraryModel library) {
+									LibraryPanel.this.updateLists();
+								}
 							});
 						}
 					});

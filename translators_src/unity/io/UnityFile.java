@@ -359,7 +359,8 @@ public class UnityFile extends Resource {
 		final File backupLocation;
 
 		backupLocation = new File(location.getParent() + "\\._"
-				+ FileOp.removeExtension(location.getName()) + "_backup.unity");
+				+ FileOp.removeExtension(location.getName()) + "_backup."
+				+ FileOp.getExtension(location));
 
 		try {
 			FileOp.copyFile(location, backupLocation);
