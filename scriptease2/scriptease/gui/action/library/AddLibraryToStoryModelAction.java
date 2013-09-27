@@ -38,4 +38,8 @@ public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		DialogBuilder.getInstance().showAddLibraryInfoDialog(this.library);
 	}
+	
+	public LibraryModel getLibrary() {
+		return library;
+	}
 }
