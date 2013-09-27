@@ -795,7 +795,7 @@ public final class WindowFactory {
 	 * 
 	 * @param translator
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
 		final String TITLE = "Library to Merge";
 
@@ -894,6 +894,7 @@ public final class WindowFactory {
 	 * @param translator
 	 * @return
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JDialog buildLibraryEditorChoiceDialog(final Translator translator) {
 		final String TITLE = "Choose a Library";
 
@@ -1031,7 +1032,7 @@ public final class WindowFactory {
 		final JScrollPane areaScrollPane;
 		final JLabel emailLabel;
 		final JTextField emailField;
-		final JLabel fileLabel;
+		// final JLabel fileLabel;
 		final Map<JTextField, JButton> fileFields;
 		final GroupLayout layout;
 
@@ -1044,7 +1045,7 @@ public final class WindowFactory {
 		areaScrollPane = new JScrollPane(commentArea);
 		emailLabel = new JLabel("Email: ");
 		emailField = new JTextField();
-		fileLabel = new JLabel("Story Files(Optional): ");
+		// fileLabel = new JLabel("Story Files(Optional): ");
 		fileFields = new HashMap<JTextField, JButton>();
 
 		for (int i = 0; i < MAX_ATTACHMENTS; i++)
@@ -1359,6 +1360,7 @@ public final class WindowFactory {
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					bar.revalidate();
 				}
+				librarySplit.revalidate();
 			}
 		};
 
