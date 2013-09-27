@@ -117,8 +117,7 @@ public final class PanelFactory {
 				new SEModelObserver() {
 					@Override
 					public void modelChanged(SEModelEvent event) {
-						notePane.setVisible(event.getEventType() == SEModelEvent.Type.ACTIVATED
-								&& event.getPatternModel() instanceof StoryModel);
+						notePane.setVisible(event.getPatternModel() instanceof StoryModel);
 					}
 				});
 
