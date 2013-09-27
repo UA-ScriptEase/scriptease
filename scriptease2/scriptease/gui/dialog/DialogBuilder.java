@@ -582,7 +582,7 @@ public class DialogBuilder {
 
 		message = "<html>You are about to remove the library: <b>"
 				+ library.getTitle()
-				+ "</b>.<br><br><b>IMPORTANT:</b><br>Removing this library will remove all current story components that<br>are a part of it, including the ones being used in the story model.<br><br>Are you sure you want to proceed?";
+				+ "</b>.<br><br><b>IMPORTANT:</b><br>Removing this library WON'T affect story components that are currently<br>being used in the story model. You will have to remove them manually.<br><br>Are you sure you want to proceed?";
 
 		if (WindowFactory.getInstance().showYesNoConfirmDialog(message,
 				REMOVE_LIBRARY)) {
