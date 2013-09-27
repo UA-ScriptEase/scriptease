@@ -13,7 +13,6 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.StoryModelObserver;
-import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -166,6 +165,30 @@ public final class StoryModel extends SEModel {
 		return this.startPoint;
 	}
 
+	/**
+	 * Removes the provided library from this story model.
+	 * 
+	 * @param library
+	 */
+	public void removeLibrary(LibraryModel library) {
+		if (this.optionalLibraries.contains(library)) {
+			this.optionalLibraries.remove(library);
+			
+			for (StoryModelObserver observer : this.observerManager
+					.getObservers()) {
+				observer.libraryRemoved(library);
+			}
+		} else {
+			throw new IllegalStateException("Tried to remove library ("
+					+ library.getTitle() + ") but it isn't even added!");
+		}
+	}
+
+	/**
+	 * Adds the provided library to this story model.
+	 * 
+	 * @param library
+	 */
 	public void addLibrary(LibraryModel library) {
 		if (!this.optionalLibraries.contains(library)) {
 			this.optionalLibraries.add(library);
@@ -207,10 +230,8 @@ public final class StoryModel extends SEModel {
 				observer.libraryAdded(library);
 			}
 		} else
-			WindowFactory.getInstance().showWarningDialog(
-					"Library Already Exists",
-					"The Library, " + library.getTitle()
-							+ ", has already been added to the model.");
+			throw new IllegalStateException("Tried to add library ("
+					+ library.getTitle() + ") but it already exists.");
 	}
 
 	/**

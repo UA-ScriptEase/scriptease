@@ -543,8 +543,6 @@ public class DialogBuilder {
 
 	/**
 	 * Shows information about the library that is about to be added.
-	 * 
-	 * @return true If the user clicks accept, false if the user clicks cancel
 	 */
 	public void showAddLibraryInfoDialog(final LibraryModel library) {
 		final String ADD_LIBRARY = "Are you sure you want to add "
@@ -570,6 +568,29 @@ public class DialogBuilder {
 			model = (StoryModel) SEModelManager.getInstance().getActiveModel();
 
 			model.addLibrary(library);
+		}
+	}
+
+	/**
+	 * Warns the user that a library is about to be removed.
+	 */
+	public void showRemoveLibraryInfoDialog(final LibraryModel library) {
+		final String REMOVE_LIBRARY = "Are you sure you want to remove "
+				+ library.getTitle() + "?";
+
+		final String message;
+
+		message = "<html>You are about to remove the library: <b>"
+				+ library.getTitle()
+				+ "</b>.<br><br><b>IMPORTANT:</b><br>Removing this library will remove all current story components that<br>are a part of it, including the ones being used in the story model.<br><br>Are you sure you want to proceed?";
+
+		if (WindowFactory.getInstance().showYesNoConfirmDialog(message,
+				REMOVE_LIBRARY)) {
+			final StoryModel model;
+
+			model = (StoryModel) SEModelManager.getInstance().getActiveModel();
+
+			model.removeLibrary(library);
 		}
 	}
 

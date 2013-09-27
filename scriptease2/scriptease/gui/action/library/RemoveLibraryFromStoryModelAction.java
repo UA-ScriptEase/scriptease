@@ -3,6 +3,7 @@ package scriptease.gui.action.library;
 import java.awt.event.ActionEvent;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
+import scriptease.gui.dialog.DialogBuilder;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -37,7 +38,7 @@ public class RemoveLibraryFromStoryModelAction extends
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//DialogBuilder.getInstance().showAddLibraryInfoDialog(this.library);
+		DialogBuilder.getInstance().showRemoveLibraryInfoDialog(this.library);
 	}
 	
 	public LibraryModel getLibrary() {
