@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.JDialog;
@@ -46,6 +48,7 @@ import scriptease.gui.action.libraryeditor.OpenLibraryEditorAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.translator.TranslatorPreferencesAction;
+import scriptease.gui.action.tutorials.OpenTutorialAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
@@ -156,7 +159,7 @@ public class MenuFactory {
 			final JMenuItem newEffect;
 			final JMenuItem newDescription;
 			final JMenuItem mergeLibrary;
-			
+
 			newMenu = new JMenu(MenuFactory.NEW);
 			newCause = new JMenuItem(NewCauseAction.getInstance());
 			newEffect = new JMenuItem(NewEffectAction.getInstance());
@@ -302,18 +305,73 @@ public class MenuFactory {
 		return editMenu;
 	}
 
+	/**
+	 * Adds menus for each of the tutorial files. If the file is a directory,
+	 * the files within it are recursively added.
+	 * 
+	 * @param tutorials
+	 * @param parentMenu
+	 */
+	private static void addTutorialMenus(Collection<File> tutorials,
+			JMenu parentMenu) {
+
+		for (final File tutorial : tutorials) {
+			if (tutorial.isDirectory()) {
+				final JMenu tutorialMenu;
+				tutorialMenu = new JMenu(tutorial.getName());
+
+				final List<File> tuts = new ArrayList<File>();
+				for (File tut : tutorial.listFiles()) {
+					tuts.add(tut);
+				}
+				Collections.sort(tuts);
+				MenuFactory.addTutorialMenus(tuts, tutorialMenu);
+				parentMenu.add(tutorialMenu);
+			} else {
+				final JMenuItem tutorialItem;
+				tutorialItem = new JMenuItem(new OpenTutorialAction(tutorial));
+				parentMenu.add(tutorialItem);
+			}
+		}
+	}
+
 	private static JMenu buildHelpMenu() {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
+		final JMenuItem ScriptEaseIIItem;
+		final List<JMenuItem> translatorItems;
 		final JMenuItem sendFeedbackItem;
 		final JMenuItem sendBugReportItem;
 		final JMenuItem helpMenuItem;
 
+		ScriptEaseIIItem = new JMenuItem("ScriptEase II Help");
+		translatorItems = new ArrayList<JMenuItem>();
 		sendFeedbackItem = new JMenuItem("Send Feedback");
 		sendBugReportItem = new JMenuItem("Send Bug Report");
 		helpMenuItem = new JMenuItem(
 				Il8nResources.getString("About_ScriptEase"));
+
+		ScriptEaseIIItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+
+		for (Translator translator : TranslatorManager.getInstance()
+				.getTranslators()) {
+			final JMenu translatorItem;
+			final Collection<File> tutorials;
+
+			translatorItem = new JMenu(translator.getName());
+			tutorials = translator.getTutorials();
+
+			MenuFactory.addTutorialMenus(tutorials, translatorItem);
+
+			translatorItems.add(translatorItem);
+		}
 
 		sendFeedbackItem.addActionListener(new ActionListener() {
 			@Override
@@ -339,6 +397,15 @@ public class MenuFactory {
 		sendFeedbackItem.setMnemonic(KeyEvent.VK_F);
 		sendBugReportItem.setMnemonic(KeyEvent.VK_R);
 		helpMenuItem.setMnemonic(KeyEvent.VK_A);
+
+		// Add the menu items
+		menu.add(ScriptEaseIIItem);
+
+		for (JMenuItem translatorItem : translatorItems) {
+			menu.add(translatorItem);
+		}
+
+		menu.addSeparator();
 
 		menu.add(sendFeedbackItem);
 		menu.add(sendBugReportItem);

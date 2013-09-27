@@ -520,6 +520,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (this.hoveredPanel != null) {
 				this.hoveredPanel.updatePanelBackgrounds();
 			}
+			
 			// Close any open UndoableActions.
 			if (UndoManager.getInstance().hasOpenUndoableAction()) {
 				UndoManager.getInstance().endUndoableAction();
