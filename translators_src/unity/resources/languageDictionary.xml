@@ -55,7 +55,7 @@
 		<Word>throws</Word>
 		<Word>transient</Word>
 		<Word>true</Word>
-
+		<Word>this</Word>		
 
 		<!-- ECMAScipt Reserved Words -->
 		<Word>catch</Word>
@@ -204,7 +204,98 @@
 		<Word>Rigidbody</Word>
 		<Word>Animation</Word>
 		<Word>AudioSource</Word>
-		<Word>this</Word>
+		<Word>Component</Word>
+		<Word>Behaviour</Word>
+		<Word>ParticleAnimator</Word>
+		<Word>Camera</Word>
+		<Word>Material</Word>
+		<Word>MeshRenderer</Word>
+		<Word>Renderer</Word>				
+		<Word>ParticleRenderer</Word>
+		<Word>Texture</Word>
+		<Word>Texture2D</Word>
+		<Word>Scene</Word>				
+		<Word>MeshFilter</Word>		
+		<Word>OcclusionPortal</Word>
+		<Word>Mesh</Word>
+		<Word>Skybox</Word>
+		<Word>QualitySettings</Word>
+		<Word>Shader</Word>
+		<Word>TextAsset</Word>
+		<Word>Collider</Word>
+		<Word>Joint</Word>
+		<Word>HingeJoint</Word>
+		<Word>MeshCollider</Word>
+		<Word>BoxCollider</Word>
+		<Word>AnimationClip</Word>
+		<Word>ConstantForce</Word>
+		<Word>AudioListenerr</Word>
+		<Word>RenderTexture</Word>
+		<Word>ParticleEmitter</Word>
+		<Word>Cubemap</Word>
+		<Word>GUILayer</Word>
+		<Word>TrailRenderer</Word>
+		<Word>TextMesh</Word>
+		<Word>RenderSettings</Word>
+		<Word>Light</Word>
+		<Word>MonoBehaviour</Word>
+		<Word>MonoScript</Word>
+		<Word>Texture3D</Word>
+		<Word>Projector</Word>
+		<Word>LineRenderer</Word>
+		<Word>Flare</Word>
+		<Word>Halo</Word>
+		<Word>LensFlare</Word>
+		<Word>Font</Word>
+		<Word>PlayerSettings</Word>
+		<Word>GUITexture</Word>
+		<Word>GUIText</Word>
+		<Word>GUIElement</Word>
+		<Word>SphereCollider</Word>
+		<Word>CapsuleCollider</Word>
+		<Word>SkinnedMeshRenderer</Word>
+		<Word>FixedJoint</Word>		
+		<Word>AssetBundle</Word>
+		<Word>CharacterController</Word>
+		<Word>CharacterJoint</Word>
+		<Word>SpringJoint</Word>
+		<Word>WheelCollider</Word>
+		<Word>NetworkView</Word>
+		<Word>MovieTexture</Word>
+		<Word>ConfigurableJoint</Word>
+		<Word>TerrainCollider</Word>
+		<Word>TerrainData</Word>
+		<Word>LightmapSettings</Word>
+		<Word>WebCamTexture</Word>
+		<Word>EditorSettings</Word>
+		<Word>InteractiveCloth</Word>
+		<Word>ClothRenderer</Word>
+		<Word>SkinnedCloth</Word>
+		<Word>AudioReverbFilter</Word>
+		<Word>AudioHighPassFilter</Word>	
+		<Word>AudioChorusFilter</Word>
+		<Word>AudioReverbZone</Word>
+		<Word>AudioEchoFilter</Word>
+		<Word>AudioLowPassFilter</Word>
+		<Word>AudioDistortionFilter</Word>
+		<Word>Cloth</Word>
+		<Word>SubstanceArchive</Word>
+		<Word>ProceduralMaterial</Word>
+		<Word>ProceduralTexture</Word>
+		<Word>OffMeshLink</Word>
+		<Word>OcclusionArea</Word>
+		<Word>Tree</Word>
+		<Word>NavMesh</Word>
+		<Word>NavMeshAgent</Word>
+		<Word>ParticleSystem</Word>
+		<Word>ParticleSystemRenderer</Word>
+		<Word>LODGroup</Word>
+		<Word>LightProbeGroup</Word>
+		<Word>Prefab</Word>		
+		<Word>AssetImporter</Word>
+		<Word>AssetDatabase</Word>
+		<Word>TextureImporter</Word>
+		<Word>SubstanceImporter</Word>																													
 		<Word>GUI</Word>
 	</ReservedWords>
 	<Formats>
