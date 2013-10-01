@@ -267,7 +267,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		}
 	});
 
-	StoryComponentPanel acceptingPanel;
+	StoryComponentPanel acceptingPanel = null;
 
 	/**
 	 * The regular case where the item being imported is a valid child type of
@@ -277,10 +277,13 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * @return true if the component can be imported, false otherwise.
 	 */
 	private boolean canImportAsChild(TransferSupport support) {
-		this.hoverTimer.stop();
+		final StoryComponentPanel prevPanel = StoryComponentPanelTransferHandler.this.acceptingPanel;
 		
 		StoryComponentPanelTransferHandler.this.acceptingPanel = (StoryComponentPanel) support
 				.getComponent();
+		
+		if (prevPanel != StoryComponentPanelTransferHandler.this.acceptingPanel)
+			this.hoverTimer.stop();
 
 		final StoryComponent acceptingStoryComponent;
 		final Collection<StoryComponent> potentialChildren;
