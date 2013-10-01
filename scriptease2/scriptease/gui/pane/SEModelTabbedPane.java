@@ -59,6 +59,8 @@ import scriptease.gui.action.file.CloseModelAction;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.StoryComponent;
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
@@ -285,7 +287,8 @@ class SEModelTabbedPane extends JTabbedPane {
 					storyGraph.repaint();
 					storyGraph.revalidate();
 
-					// Set root to start node if we remove the selected node.
+					// Set root to start node if we remove the selected node, or
+					// the group node if it has become part of the group.
 					if (event.getSource() == storyComponentTree.getRoot()) {
 						final Collection<StoryNode> nodes;
 
@@ -294,7 +297,14 @@ class SEModelTabbedPane extends JTabbedPane {
 						nodes.add(storyGraph.getStartNode());
 
 						storyGraph.setSelectedNodes(nodes);
-						storyComponentTree.setRoot(storyGraph.getStartNode());
+
+						final StoryComponent owner = event.getSource().getOwner();
+						if (owner instanceof StoryGroup) {
+							storyComponentTree.setRoot((StoryGroup) owner);
+						} else {
+							storyComponentTree.setRoot(storyGraph
+									.getStartNode());
+						}
 					}
 				}
 			}
