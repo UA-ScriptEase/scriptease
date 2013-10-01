@@ -7,6 +7,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.StoryAdapter;
@@ -241,6 +244,31 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		return false;
 	}
 
+	final Timer hoverTimer = new Timer(500, new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (hoveredPanel != null
+					&& hoveredPanel.getSelectionManager() != null)
+
+				hoveredPanel.getSelectionManager().updatePanelBackgrounds();
+
+			hoveredPanel = acceptingPanel;
+
+			if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer
+					|| acceptingPanel.getStoryComponent() instanceof ControlIt
+					|| acceptingPanel.getStoryComponent() instanceof CauseIt)
+
+				setPanelAndChildrenBackground(Color.LIGHT_GRAY, acceptingPanel);
+			else
+				acceptingPanel.setBackground(Color.LIGHT_GRAY);
+
+			hoverTimer.stop();
+		}
+	});
+
+	StoryComponentPanel acceptingPanel;
+
 	/**
 	 * The regular case where the item being imported is a valid child type of
 	 * the accepting StoryComponent.
@@ -249,13 +277,17 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * @return true if the component can be imported, false otherwise.
 	 */
 	private boolean canImportAsChild(TransferSupport support) {
-		final StoryComponentPanel acceptingPanel;
+		this.hoverTimer.stop();
+		
+		StoryComponentPanelTransferHandler.this.acceptingPanel = (StoryComponentPanel) support
+				.getComponent();
+
 		final StoryComponent acceptingStoryComponent;
 		final Collection<StoryComponent> potentialChildren;
 
-		acceptingPanel = (StoryComponentPanel) support.getComponent();
-		acceptingStoryComponent = acceptingPanel.getStoryComponent();
 		potentialChildren = this.extractStoryComponents(support);
+		acceptingStoryComponent = StoryComponentPanelTransferHandler.this.acceptingPanel
+				.getStoryComponent();
 
 		if (potentialChildren != null) {
 
@@ -264,28 +296,16 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				if (this.canAcceptChildren(acceptingStoryComponent,
 						potentialChildren)) {
 
-					if (this.hoveredPanel != null
-							&& this.hoveredPanel.getSelectionManager() != null)
-
-						this.hoveredPanel.getSelectionManager()
-								.updatePanelBackgrounds();
-
-					if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer
-							|| acceptingPanel.getStoryComponent() instanceof ControlIt
-							|| acceptingPanel.getStoryComponent() instanceof CauseIt)
-
-						setPanelAndChildrenBackground(Color.LIGHT_GRAY,
-								acceptingPanel);
-					else
-						acceptingPanel.setBackground(Color.LIGHT_GRAY);
-
-					this.hoveredPanel = acceptingPanel;
+					if (!hoverTimer.isRunning()) {
+						this.hoverTimer.start();
+						this.hoverTimer.setRepeats(false);
+					}
 
 					return true;
 				}
 			}
 		}
-
+		
 		return false;
 	}
 
@@ -308,7 +328,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				this.hoveredPanel.getSelectionManager()
 						.updatePanelBackgrounds();
 
-			this.setPanelAndChildrenBackground(Color.GRAY, acceptingPanel);
+			StoryComponentPanelTransferHandler.this
+					.setPanelAndChildrenBackground(Color.GRAY, acceptingPanel);
 
 			this.hoveredPanel = acceptingPanel;
 
@@ -520,7 +541,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (this.hoveredPanel != null) {
 				this.hoveredPanel.updatePanelBackgrounds();
 			}
-			
+
 			// Close any open UndoableActions.
 			if (UndoManager.getInstance().hasOpenUndoableAction()) {
 				UndoManager.getInstance().endUndoableAction();

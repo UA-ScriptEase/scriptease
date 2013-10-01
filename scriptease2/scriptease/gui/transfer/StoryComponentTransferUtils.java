@@ -259,9 +259,8 @@ public class StoryComponentTransferUtils {
 		} else {
 			success = parent.addStoryChild(clone);
 		}
-		
-		clone.revalidateKnowItBindings();
 
+		clone.revalidateKnowItBindings();
 
 		if (!success)
 			throw new IllegalStateException("Was unable to add " + child
