@@ -25,6 +25,7 @@ import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.RecentFileObserver;
 import scriptease.controller.observer.StoryModelAdapter;
+import scriptease.gui.action.behavioureditor.OpenBehaviourEditorAction;
 import scriptease.gui.action.components.CopyAction;
 import scriptease.gui.action.components.CutAction;
 import scriptease.gui.action.components.DeleteAction;
@@ -98,6 +99,7 @@ public class MenuFactory {
 	private static final String FILE = Il8nResources.getString("File");
 	private static final String ADD = Il8nResources.getString("Add");
 	private static final String LIBRARY = "Library";
+	private static final String BEHAVIOUR = "Behaviour";
 	private static final String HELP = Il8nResources.getString("Help");
 	private static final String NEW = Il8nResources.getString("New");
 	private static final String DEBUG = "Debug";
@@ -120,9 +122,11 @@ public class MenuFactory {
 		bar.add(MenuFactory.buildFileMenu(model));
 		bar.add(MenuFactory.buildEditMenu());
 
-		if (TOOLS_MENU_ENABLED)
+		if (TOOLS_MENU_ENABLED) {
 			bar.add(MenuFactory.buildLibraryMenu());
-
+			bar.add(MenuFactory.buildBehaviourMenu());
+		}
+		
 		bar.add(MenuFactory.buildHelpMenu());
 		if (ScriptEase.DEBUG_MODE)
 			bar.add(MenuFactory.buildDebugMenu());
@@ -570,6 +574,30 @@ public class MenuFactory {
 		return menu;
 	}
 
+	/**
+	 * Builds the behaviour menu, with options to add and edit behaviours
+	 * 
+	 * @return
+	 */
+	private static JMenu buildBehaviourMenu() {
+		final JMenu menu = new JMenu(MenuFactory.BEHAVIOUR);
+
+		for (Translator translator : TranslatorManager.getInstance()
+				.getTranslators()) {
+			final OpenBehaviourEditorAction action;
+			final JMenuItem translatorItem;
+
+			action = new OpenBehaviourEditorAction(translator);
+			translatorItem = new JMenuItem(action);
+
+			menu.add(translatorItem);
+		}
+
+		menu.setMnemonic(KeyEvent.VK_L);
+
+		return menu;
+	}
+	
 	/**
 	 * Builds the story-editing menu. The Story menu contains menu items for
 	 * pattern creation operations like adding a new encounter instance, or

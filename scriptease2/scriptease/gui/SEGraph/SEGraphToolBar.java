@@ -1,6 +1,5 @@
 package scriptease.gui.SEGraph;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -150,7 +149,7 @@ public class SEGraphToolBar extends JToolBar {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setRollover(true);
 		this.setFloatable(false);
-		this.setBackground(Color.WHITE);
+		//this.setBackground(Color.WHITE);
 
 		buttonGroup.add(this.selectButton);
 		buttonGroup.add(this.insertButton);
@@ -197,27 +196,27 @@ public class SEGraphToolBar extends JToolBar {
 				if (mode == Mode.SELECT) {
 				} else if (mode == Mode.INSERT) {
 					WindowFactory.getInstance().showUserInformationBox(
-							"Use the insert tool to insert a new story point.",
+							"Use the insert tool to insert a new node.",
 							UserInformationType.INFO);
 				} else if (mode == Mode.DELETE) {
 					WindowFactory.getInstance().showUserInformationBox(
-							"Use the delete tool to delete story points / ungroup story groups.",
+							"Use the delete tool to delete nodes / ungroup story groups.",
 							UserInformationType.INFO);
 				} else if (mode == Mode.CONNECT) {
 					WindowFactory.getInstance().showUserInformationBox(
-							"Use the connect tool to link story points together.",
+							"Use the connect tool to link nodes together.",
 							UserInformationType.INFO);
 				} else if (mode == Mode.DISCONNECT) {
 					WindowFactory.getInstance().showUserInformationBox(
-							"Use the disconnect tool to unlink story points.",
+							"Use the disconnect tool to unlink nodes.",
 							UserInformationType.INFO);
 				} else if (mode == Mode.GROUP) {
 					WindowFactory.getInstance().showUserInformationBox(
-							"Use the group tool to group story points together.",
+							"Use the group tool to group nodes together.",
 							UserInformationType.INFO);
 				} else {
 					WindowFactory.getInstance().showUserInformationBox(
-							"Select a story node to show its contents.",
+							"Select a node.",
 							UserInformationType.INFO);
 				}
 			}

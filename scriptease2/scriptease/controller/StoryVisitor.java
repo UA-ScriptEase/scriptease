@@ -12,6 +12,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to
@@ -28,11 +29,14 @@ import scriptease.model.complex.StoryPoint;
  * @author jtduncan
  * @author friesen
  * @author remiller
+ * @author jyuen
  * 
  * @see StoryAdapter
  */
 public interface StoryVisitor {
 	/** COMPLEX TYPES **/
+	public void processBehaviour(Behaviour behaviour);
+	
 	public void processStoryGroup(StoryGroup storyGroup);
 	
 	public void processStoryPoint(StoryPoint storyPoint);

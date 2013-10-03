@@ -8,6 +8,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 
@@ -16,6 +17,7 @@ import scriptease.model.complex.StoryComponentContainer;
  * {@link Category} given in the constructor.
  * 
  * @author mfchurch
+ * @author jyuen
  */
 public class CategoryFilter extends StoryComponentFilter {
 	/**
@@ -24,7 +26,7 @@ public class CategoryFilter extends StoryComponentFilter {
 	 * @author remiller
 	 */
 	public enum Category {
-		EFFECTS, DESCRIPTIONS, CAUSES, CONTROLS, BLOCKS, NOTE;
+		EFFECTS, DESCRIPTIONS, BEHAVIOURS, CAUSES, CONTROLS, BLOCKS, NOTE;
 	}
 
 	private Category category;
@@ -78,6 +80,12 @@ public class CategoryFilter extends StoryComponentFilter {
 		public void processCauseIt(CauseIt causeIt) {
 			this.acceptable = CategoryFilter.this.category
 					.equals(Category.CAUSES);
+		}
+
+		@Override
+		public void processBehaviour(Behaviour behaviour) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.BEHAVIOURS);
 		}
 
 		@Override

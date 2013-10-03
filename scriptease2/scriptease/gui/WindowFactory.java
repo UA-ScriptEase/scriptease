@@ -994,6 +994,19 @@ public final class WindowFactory {
 	}
 
 	/**
+	 * Opens the Library Model that the user chooses from the libraries in the
+	 * translator.
+	 * 
+	 * @param translator
+	 * @return
+	 */
+	public JDialog buildBehaviourEditor(final Translator translator) {
+		//TODO Might not even need this if we use the library editor.
+		
+		return null;
+	}
+	
+	/**
 	 * Create a dialog with the provided panel.
 	 * 
 	 * @param title
@@ -1293,6 +1306,7 @@ public final class WindowFactory {
 		middlePane = new JPanel();
 
 		middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		middleSplit.setDividerLocation(320);
 		librarySplit = PanelFactory.getInstance().buildLibrarySplitPane();
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();
@@ -1360,7 +1374,6 @@ public final class WindowFactory {
 					// http://bugs.sun.com/view_bug.do?bug_id=4949810
 					bar.revalidate();
 				}
-				librarySplit.revalidate();
 			}
 		};
 

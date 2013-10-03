@@ -64,6 +64,7 @@ import scriptease.translator.io.model.GameType;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class LibraryPanel extends JTabbedPane {
@@ -98,6 +99,7 @@ public class LibraryPanel extends JTabbedPane {
 		final StoryComponentPanelJList causesList;
 		final StoryComponentPanelJList effectsList;
 		final StoryComponentPanelJList descriptionsList;
+		final StoryComponentPanelJList behavioursList;
 		final StoryComponentPanelJList controlsList;
 		final StoryComponentPanelJList blocksList;
 
@@ -108,6 +110,8 @@ public class LibraryPanel extends JTabbedPane {
 				Category.EFFECTS));
 		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.DESCRIPTIONS));
+		behavioursList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.BEHAVIOURS));
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
 		blocksList = new StoryComponentPanelJList(new CategoryFilter(
@@ -163,7 +167,7 @@ public class LibraryPanel extends JTabbedPane {
 								public void libraryAdded(LibraryModel library) {
 									LibraryPanel.this.updateLists();
 								}
-								
+
 								@Override
 								public void libraryRemoved(LibraryModel library) {
 									LibraryPanel.this.updateLists();
@@ -192,12 +196,14 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
 		this.storyComponentPanelJLists.add(descriptionsList);
+		this.storyComponentPanelJLists.add(behavioursList);
 		this.storyComponentPanelJLists.add(controlsList);
 		this.storyComponentPanelJLists.add(blocksList);
 
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
+		this.add("Behaviours", this.createTab(behavioursList));
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Blocks", this.createTab(blocksList));
 
@@ -207,6 +213,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(2, KeyEvent.VK_3);
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
+		this.setMnemonicAt(5, KeyEvent.VK_6);
 
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
