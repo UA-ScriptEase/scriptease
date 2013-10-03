@@ -43,11 +43,19 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.util.StringOp;
 
+/**
+ * LibraryEditorPanel is dependent on the component being edited in the Library
+ * editor. A specific panel is created for each type of component.
+ * 
+ * @author previous devs
+ * @author jyuen
+ */
 @SuppressWarnings("serial")
 public class LibraryEditorPanel extends JPanel implements
 		StoryComponentPanelJListObserver {
@@ -86,6 +94,126 @@ public class LibraryEditorPanel extends JPanel implements
 				};
 			}
 
+			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				//TODO fix this!!a
+//				LibraryEditorPanel.this.removeAll();
+//				LibraryEditorPanel.this.revalidate();
+//				LibraryEditorPanel.this.repaint();
+//
+//				final JPanel knowItPanel;
+//				final JPanel describeItEditingPanel;
+//
+//				final GroupLayout knowItPanelLayout;
+//				final TypeAction typeAction;
+//				final Runnable commitText;
+//
+//				final JButton typesButton;
+//				final JTextField nameField;
+//
+//				final JLabel nameLabel;
+//				final JLabel typesLabel;
+//
+//				final DescribeIt describeIt;
+//
+//				knowItPanel = new JPanel();
+//
+//				knowItPanelLayout = new GroupLayout(knowItPanel);
+//				typeAction = new TypeAction();
+//				typesButton = new JButton(typeAction);
+//
+//				describeIt = knowIt.getLibrary().getDescribeIt(knowIt);
+//
+//				nameField = new JTextField(describeIt.getName());
+//
+//				nameLabel = new JLabel("Name: ");
+//				typesLabel = new JLabel("Types: ");
+//
+//				commitText = new Runnable() {
+//					@Override
+//					public void run() {
+//						describeIt.setName(nameField.getText());
+//						knowIt.setDisplayText(nameField.getText());
+//					}
+//				};
+//
+//				describeItEditingPanel = LibraryEditorPanelFactory
+//						.getInstance().buildDescribeItEditingPanel(describeIt,
+//								knowIt);
+//
+//				knowItPanel.setLayout(knowItPanelLayout);
+//
+//				typesLabel.setFont(LibraryEditorPanelFactory.labelFont);
+//				nameLabel.setFont(LibraryEditorPanelFactory.labelFont);
+//
+//				typeAction.getTypeSelectionDialogBuilder().deselectAll();
+//				typeAction.getTypeSelectionDialogBuilder()
+//						.selectTypesByKeyword(knowIt.getTypes(), true);
+//
+//				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
+//						commitText, false, Color.white);
+//
+//				nameField.setHorizontalAlignment(JTextField.LEADING);
+//
+//				knowItPanel.setBorder(BorderFactory
+//						.createTitledBorder("DescribeIt"));
+//
+//				typeAction.setAction(new Runnable() {
+//					@Override
+//					public void run() {
+//						final Collection<String> types = typeAction
+//								.getTypeSelectionDialogBuilder()
+//								.getSelectedTypeKeywords();
+//
+//						// Important: DescribeIt types MUST be set first because
+//						// KnowIts notify observers when their's are changed,
+//						// throwing NullPointExceptions everywhere!
+//						describeIt.setTypes(types);
+//
+//						knowIt.setTypes(types);
+//					}
+//				});
+//
+//				knowItPanelLayout
+//						.setHorizontalGroup(knowItPanelLayout
+//								.createParallelGroup()
+//								.addGroup(
+//										knowItPanelLayout
+//												.createSequentialGroup()
+//												.addGroup(
+//														knowItPanelLayout
+//																.createParallelGroup()
+//																.addComponent(
+//																		nameLabel)
+//																.addComponent(
+//																		typesLabel))
+//												.addGroup(
+//														knowItPanelLayout
+//																.createParallelGroup()
+//																.addComponent(
+//																		nameField)
+//																.addComponent(
+//																		typesButton))));
+//
+//				knowItPanelLayout.setVerticalGroup(knowItPanelLayout
+//						.createSequentialGroup()
+//						.addGroup(
+//								knowItPanelLayout
+//										.createParallelGroup(
+//												GroupLayout.Alignment.BASELINE)
+//										.addComponent(nameLabel)
+//										.addComponent(nameField))
+//						.addGroup(
+//								knowItPanelLayout
+//										.createParallelGroup(
+//												GroupLayout.Alignment.BASELINE)
+//										.addComponent(typesLabel)
+//										.addComponent(typesButton)));
+//
+//				LibraryEditorPanel.this.add(knowItPanel);
+//				LibraryEditorPanel.this.add(describeItEditingPanel);
+			}
+			
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
 				// Causes and effects are processed as ScriptIts

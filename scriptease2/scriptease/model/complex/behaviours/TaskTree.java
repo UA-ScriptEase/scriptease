@@ -10,10 +10,13 @@ import scriptease.model.complex.ComplexStoryComponent;
 public abstract class TaskTree extends ComplexStoryComponent {
 
 	private Task startTask;
-	
+	private Task currentTask;
+
 	public TaskTree(String name, Task startTask) {
 		super(name);
-		this.setStartTask(startTask);
+
+		this.startTask = startTask;
+		this.currentTask = startTask;
 
 		this.registerChildType(Task.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -27,9 +30,25 @@ public abstract class TaskTree extends ComplexStoryComponent {
 	}
 
 	/**
-	 * @param startTask the startTask to set
+	 * @param startTask
+	 *            the startTask to set
 	 */
 	public void setStartTask(Task startTask) {
 		this.startTask = startTask;
+	}
+
+	/**
+	 * @return the currentTask
+	 */
+	public Task getCurrentTask() {
+		return currentTask;
+	}
+
+	/**
+	 * @param currentTask
+	 *            the currentTask to set
+	 */
+	public void setCurrentTask(Task currentTask) {
+		this.currentTask = currentTask;
 	}
 }

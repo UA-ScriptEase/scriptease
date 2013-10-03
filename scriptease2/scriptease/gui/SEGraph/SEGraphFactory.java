@@ -9,12 +9,15 @@ import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.models.DialogueLineGraphModel;
 import scriptease.gui.SEGraph.models.StoryNodeGraphModel;
+import scriptease.gui.SEGraph.models.TaskGraphModel;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.StoryNodeRenderer;
+import scriptease.gui.SEGraph.renderers.TaskNodeRenderer;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 
@@ -107,6 +110,26 @@ public class SEGraphFactory {
 
 		graph.setNodeRenderer(new StoryNodeRenderer(graph));
 		graph.setBackground(bgColour);
+
+		return graph;
+	}
+
+	/**
+	 * Builds a graph for tasks.
+	 * 
+	 * @param start
+	 *            The graph start task node.
+	 * @return
+	 */
+	public static SEGraph<Task> buildTaskGraph(Task start) {
+		final SEGraph<Task> graph;
+		final TaskGraphModel taskGraphModel;
+
+		taskGraphModel = new TaskGraphModel(start);
+		graph = new SEGraph<Task>(taskGraphModel,
+				SelectionMode.SELECT_PATH_FROM_START, false, true);
+		
+		graph.setNodeRenderer(new TaskNodeRenderer(graph));
 
 		return graph;
 	}

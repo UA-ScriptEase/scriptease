@@ -13,6 +13,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 
 /**
  * Default implementation of StoryVisitor that does nothing. Ever. <br>
@@ -39,6 +40,11 @@ public abstract class StoryAdapter implements StoryVisitor {
 	/*
 	 * ============ COMPLEX TYPES ============
 	 */
+	@Override
+	public void processBehaviour(Behaviour behaviour) {
+		this.defaultProcessComplex(behaviour);
+	}
+	
 	@Override
 	public void processStoryGroup(StoryGroup storyGroup) {
 		this.defaultProcessComplex(storyGroup);

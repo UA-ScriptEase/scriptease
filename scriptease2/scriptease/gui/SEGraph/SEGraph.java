@@ -87,7 +87,7 @@ public class SEGraph<E> extends JComponent {
 	private SelectionMode selectionMode;
 	private boolean isReadOnly;
 
-	private final SEGraphToolBar toolBar;
+	private SEGraphToolBar toolBar;
 
 	private GraphGroupController<E> groupController;
 
@@ -669,6 +669,10 @@ public class SEGraph<E> extends JComponent {
 		return this.toolBar;
 	}
 
+	public void setToolBar(SEGraphToolBar toolbar) {
+		this.toolBar = toolbar;
+	}
+	
 	/**
 	 * Returns the {@link GraphGroupController} linked to the graph.
 	 * 
