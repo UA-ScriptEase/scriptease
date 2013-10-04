@@ -65,9 +65,6 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 		if (this.rootPanel != null)
 			this.selectionManager.cleanUpPanel(this.rootPanel);
 
-		// TODO : do something here with the group graph representation when i
-		// get to it.
-
 		this.rootPanel = StoryComponentPanelFactory.getInstance()
 				.buildStoryComponentPanel(storyNode);
 

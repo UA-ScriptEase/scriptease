@@ -2,7 +2,11 @@ package scriptease.gui.libraryeditor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
@@ -13,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,7 +46,7 @@ import scriptease.util.StringOp;
  * the {@link #getInstance()} method to work with it.
  * 
  * @author kschenk
- * 
+ * @author jyuen
  */
 public class LibraryEditorPanelFactory {
 	private static LibraryEditorPanelFactory instance = new LibraryEditorPanelFactory();
@@ -85,10 +90,167 @@ public class LibraryEditorPanelFactory {
 	 * @param behaviour
 	 * @return
 	 */
-	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour) {
-		return null;
+	public JComponent buildBehaviourEditingPanel(final Behaviour behaviour) {
+
+		final JPanel behaviourPanel;
+		final JPanel effectsPanel;
+
+		final JPanel buttonsPanel;
+		final JButton independentButton;
+		final JButton collaborativeButton;
+
+
+		behaviourPanel = new JPanel();
+		behaviourPanel
+				.setLayout(new BoxLayout(behaviourPanel, BoxLayout.Y_AXIS));
+
+		// Create the effects panel
+		effectsPanel = new JPanel();
+		effectsPanel.setBackground(Color.WHITE);
+		
+		// Create buttons panel
+		buttonsPanel = new JPanel();
+		buttonsPanel.setBorder(BorderFactory
+				.createTitledBorder("Behaviour Type"));
+
+		independentButton = new JButton("Independent");
+		collaborativeButton = new JButton("Collaborative");
+
+		independentButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (Component component : behaviourPanel.getComponents()) {
+					if (component != buttonsPanel)
+						behaviourPanel.remove(component);
+				}
+
+				LibraryEditorPanelFactory.this
+						.buildIndependentBehaviourPanel(behaviourPanel);
+				
+				behaviourPanel.add(effectsPanel);
+			}
+		});
+
+		collaborativeButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (Component component : behaviourPanel.getComponents()) {
+					if (component != buttonsPanel)
+						behaviourPanel.remove(component);
+				}
+
+				LibraryEditorPanelFactory.this
+						.buildCollaborativeBehaviourPanel(behaviourPanel);
+				
+				behaviourPanel.add(effectsPanel);
+			}
+		});
+
+		buttonsPanel.add(independentButton);
+		buttonsPanel.add(collaborativeButton);
+
+		behaviourPanel.add(buttonsPanel);
+		
+		return behaviourPanel;
 	}
-	
+
+	private JPanel buildBehaviourGraphPanel(String graphName,
+			SEGraph<Task> graph) {
+		final JPanel graphPanel;
+
+		// Create the graph panel.
+		graphPanel = new JPanel();
+		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
+		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+		// graphPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		graphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
+
+		return graphPanel;
+	}
+
+	private JPanel buildBehaviourToolbarPanel(SEGraph<Task> graph) {
+		final JPanel toolbarPanel;
+
+		toolbarPanel = new JPanel();
+		toolbarPanel.setBorder(BorderFactory
+				.createTitledBorder("Graph Toolbar"));
+		toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		toolbarPanel.add(graph.getToolBar());
+		graph.getToolBar().setHorizontal();
+
+		return toolbarPanel;
+	}
+
+	private void buildCollaborativeBehaviourPanel(final JPanel behaviourPanel) {
+		final SEGraph<Task> graph;
+		final JButton addCollaboratorButton;
+
+		this.buildIndependentBehaviourPanel(behaviourPanel);
+
+		graph = SEGraphFactory.buildTaskGraph(new Task("new task"));
+		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
+
+		addCollaboratorButton = new JButton("Add Collaborator");
+
+		behaviourPanel.add(this.buildBehaviourGraphPanel("Reactive Graph",
+				graph));
+		behaviourPanel.add(addCollaboratorButton);
+
+		addCollaboratorButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final SEGraph<Task> graph;
+				final JButton removeButton;
+				final JPanel graphPanel;
+
+				graph = SEGraphFactory.buildTaskGraph(new Task("new task"));
+				graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
+
+				graphPanel = LibraryEditorPanelFactory.this
+						.buildBehaviourGraphPanel("Reactive Graph", graph);
+
+				behaviourPanel.add(graphPanel,
+						behaviourPanel.getComponentCount() - 2);
+
+				removeButton = new JButton("X");
+				removeButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						behaviourPanel.remove(graphPanel);
+						behaviourPanel.repaint();
+						behaviourPanel.revalidate();
+					}
+				});
+
+				graphPanel.add(removeButton);
+
+				behaviourPanel.repaint();
+				behaviourPanel.revalidate();
+			}
+		});
+
+		behaviourPanel.repaint();
+		behaviourPanel.revalidate();
+	}
+
+	private void buildIndependentBehaviourPanel(final JPanel behaviourPanel) {
+		final SEGraph<Task> graph;
+
+		graph = SEGraphFactory.buildTaskGraph(new Task("new task"));
+		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
+
+		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
+		behaviourPanel.add(this.buildBehaviourGraphPanel("Proactive Graph",
+				graph));
+		behaviourPanel.repaint();
+		behaviourPanel.revalidate();
+	}
+
 	/**
 	 * Builds a panel used to edit a KnowItBindingDescribeIt.
 	 * 
@@ -96,127 +258,85 @@ public class LibraryEditorPanelFactory {
 	 * @param knowIt
 	 * @return
 	 */
-	public JPanel buildDescribeItEditingPanel(final DescribeIt describeIt,
+	public JComponent buildDescribeItEditingPanel(final DescribeIt describeIt,
 			final KnowIt knowIt) {
-		final JPanel behaviourPanel;
-		
-		final JPanel buttonsPanel;
-		final JButton independentButton;
-		final JButton collaborativeButton;
+		return LibraryEditorPanelFactory.this.buildBehaviourEditingPanel(null);
 
-		final JPanel proactiveGraphPanel;
-		final SEGraph<Task> proactiveGraph;
-		
-		behaviourPanel = new JPanel();
-		behaviourPanel.setLayout(new BoxLayout(behaviourPanel, BoxLayout.Y_AXIS));
-		
-		// Create buttons panel
-		buttonsPanel = new JPanel();
-		buttonsPanel.setBorder(BorderFactory.createTitledBorder("Behaviour Type"));
-		
-		independentButton = new JButton("Independent");
-		collaborativeButton = new JButton("Collaborative");
-		
-		buttonsPanel.add(independentButton);
-		buttonsPanel.add(collaborativeButton);
-		
-		// Create proactive graph panel
-		proactiveGraphPanel = new JPanel();
-		proactiveGraphPanel.setBorder(BorderFactory.createTitledBorder("Proactive Graph"));
-		proactiveGraphPanel.setLayout(new BoxLayout(proactiveGraphPanel, BoxLayout.Y_AXIS));
-		
-		proactiveGraph = SEGraphFactory.buildTaskGraph(new Task("test"));
-		proactiveGraph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
-		
-		final SEGraph<Task> proactiveGraph2;
-		proactiveGraph2 = SEGraphFactory.buildTaskGraph(new Task("test"));
-		proactiveGraph2.setAlignmentY(JPanel.LEFT_ALIGNMENT);
-		proactiveGraph2.setToolBar(proactiveGraph.getToolBar());
-		
-		proactiveGraphPanel.add(proactiveGraph.getToolBar(), BorderLayout.NORTH);
-		proactiveGraphPanel.add(new JScrollPane(proactiveGraph), BorderLayout.CENTER);
-		proactiveGraphPanel.add(new JScrollPane(proactiveGraph2), BorderLayout.CENTER);
-		
-		// Add the panels on to the behaviour panel and return it!
-		behaviourPanel.add(buttonsPanel);
-		behaviourPanel.add(proactiveGraphPanel);
-		
-		return behaviourPanel;
-		
-//		final JPanel bindingPanel;
-//		final JPanel describeItGraphPanel;
-//
-//		final EffectHolderPanel effectHolder;
-//		final SetEffectObserver effectObserver;
-//		final SEGraph<DescribeItNode> graph;
-//
-//		bindingPanel = new JPanel();
-//		describeItGraphPanel = new JPanel();
-//
-//		effectHolder = new EffectHolderPanel(describeIt.getTypes());
-//
-//		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
-//				.getStartNode());
-//
-//		// Set the effectHolder to reflect the initial path of the describeIt
-//		// (since it doesn't throw a path selection even in SEGraph the
-//		// constructor)
-//		final ScriptIt initialScriptIt = describeIt.getScriptItForPath(graph
-//				.getSelectedNodes());
-//		effectHolder.setEffect(initialScriptIt);
-//
-//		effectObserver = new SetEffectObserver() {
-//			@Override
-//			public void effectChanged(ScriptIt newEffect) {
-//				// We need to make a copy or else the path is ALWAYS the current
-//				// selected nodes, which is not what we want at all.
-//				final Collection<DescribeItNode> selectedNodes;
-//
-//				selectedNodes = new ArrayList<DescribeItNode>(
-//						graph.getSelectedNodes());
-//
-//				describeIt.assignScriptItToPath(selectedNodes, newEffect);
-//
-//				final ScriptIt scriptItForPath = describeIt
-//						.getScriptItForPath(describeIt.getShortestPath());
-//				if (scriptItForPath != null) {
-//					knowIt.setBinding(scriptItForPath);
-//				} else {
-//					knowIt.clearBinding();
-//				}
-//
-//			}
-//		};
-//
-//		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
-//
-//			@Override
-//			public void nodesSelected(Collection<DescribeItNode> nodes) {
-//				final ScriptIt pathScriptIt;
-//				pathScriptIt = describeIt.getScriptItForPath(nodes);
-//
-//				effectHolder.removeSetEffectObserver(effectObserver);
-//				effectHolder.setEffect(pathScriptIt);
-//				effectHolder.addSetEffectObserver(effectObserver);
-//			}
-//		});
-//
-//		effectHolder.addSetEffectObserver(effectObserver);
-//
-//		// Set up the JPanel containing the graph
-//		describeItGraphPanel.setLayout(new BorderLayout());
-//		describeItGraphPanel.add(graph.getToolBar(), BorderLayout.WEST);
-//		describeItGraphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
-//
-//		bindingPanel
-//				.setLayout(new BoxLayout(bindingPanel, BoxLayout.PAGE_AXIS));
-//		bindingPanel.setBorder(BorderFactory
-//				.createTitledBorder("DescribeIt Binding"));
-//
-//		bindingPanel.add(effectHolder);
-//		bindingPanel.add(describeItGraphPanel);
-//
-//		return bindingPanel;
+		// final JPanel bindingPanel;
+		// final JPanel describeItGraphPanel;
+		//
+		// final EffectHolderPanel effectHolder;
+		// final SetEffectObserver effectObserver;
+		// final SEGraph<DescribeItNode> graph;
+		//
+		// bindingPanel = new JPanel();
+		// describeItGraphPanel = new JPanel();
+		//
+		// effectHolder = new EffectHolderPanel(describeIt.getTypes());
+		//
+		// graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
+		// .getStartNode());
+		//
+		// // Set the effectHolder to reflect the initial path of the describeIt
+		// // (since it doesn't throw a path selection even in SEGraph the
+		// // constructor)
+		// final ScriptIt initialScriptIt = describeIt.getScriptItForPath(graph
+		// .getSelectedNodes());
+		// effectHolder.setEffect(initialScriptIt);
+		//
+		// effectObserver = new SetEffectObserver() {
+		// @Override
+		// public void effectChanged(ScriptIt newEffect) {
+		// // We need to make a copy or else the path is ALWAYS the current
+		// // selected nodes, which is not what we want at all.
+		// final Collection<DescribeItNode> selectedNodes;
+		//
+		// selectedNodes = new ArrayList<DescribeItNode>(
+		// graph.getSelectedNodes());
+		//
+		// describeIt.assignScriptItToPath(selectedNodes, newEffect);
+		//
+		// final ScriptIt scriptItForPath = describeIt
+		// .getScriptItForPath(describeIt.getShortestPath());
+		// if (scriptItForPath != null) {
+		// knowIt.setBinding(scriptItForPath);
+		// } else {
+		// knowIt.clearBinding();
+		// }
+		//
+		// }
+		// };
+		//
+		// graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
+		//
+		// @Override
+		// public void nodesSelected(Collection<DescribeItNode> nodes) {
+		// final ScriptIt pathScriptIt;
+		// pathScriptIt = describeIt.getScriptItForPath(nodes);
+		//
+		// effectHolder.removeSetEffectObserver(effectObserver);
+		// effectHolder.setEffect(pathScriptIt);
+		// effectHolder.addSetEffectObserver(effectObserver);
+		// }
+		// });
+		//
+		// effectHolder.addSetEffectObserver(effectObserver);
+		//
+		// // Set up the JPanel containing the graph
+		// describeItGraphPanel.setLayout(new BorderLayout());
+		// describeItGraphPanel.add(graph.getToolBar(), BorderLayout.WEST);
+		// describeItGraphPanel.add(new JScrollPane(graph),
+		// BorderLayout.CENTER);
+		//
+		// bindingPanel
+		// .setLayout(new BoxLayout(bindingPanel, BoxLayout.PAGE_AXIS));
+		// bindingPanel.setBorder(BorderFactory
+		// .createTitledBorder("DescribeIt Binding"));
+		//
+		// bindingPanel.add(effectHolder);
+		// bindingPanel.add(describeItGraphPanel);
+		//
+		// return bindingPanel;
 	}
 
 	/**

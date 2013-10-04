@@ -48,7 +48,7 @@ public class SEGraphFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(start);
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, true, true);
+				SelectionMode.SELECT_PATH_FROM_START, true, true, false);
 
 		graph.setNodeRenderer(new DescribeItNodeRenderer(graph));
 		graph.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -70,7 +70,7 @@ public class SEGraphFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(start);
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, false, true);
+				SelectionMode.SELECT_PATH_FROM_START, false, true, false);
 
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
@@ -106,7 +106,7 @@ public class SEGraphFactory {
 
 		storyGraphModel = new StoryNodeGraphModel(start);
 		graph = new SEGraph<StoryNode>(storyGraphModel,
-				SelectionMode.SELECT_NODE, readOnly, false);
+				SelectionMode.SELECT_NODE, readOnly, false, false);
 
 		graph.setNodeRenderer(new StoryNodeRenderer(graph));
 		graph.setBackground(bgColour);
@@ -127,8 +127,8 @@ public class SEGraphFactory {
 
 		taskGraphModel = new TaskGraphModel(start);
 		graph = new SEGraph<Task>(taskGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, false, true);
-		
+				SelectionMode.SELECT_PATH_FROM_START, false, true, true);
+
 		graph.setNodeRenderer(new TaskNodeRenderer(graph));
 
 		return graph;

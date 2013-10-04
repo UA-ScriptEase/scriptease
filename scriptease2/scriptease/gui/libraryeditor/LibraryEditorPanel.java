@@ -17,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -287,7 +288,7 @@ public class LibraryEditorPanel extends JPanel implements
 				LibraryEditorPanel.this.repaint();
 
 				final JPanel knowItPanel;
-				final JPanel describeItEditingPanel;
+				final JComponent describeItEditingPanel;
 
 				final GroupLayout knowItPanelLayout;
 				final TypeAction typeAction;

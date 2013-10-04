@@ -21,6 +21,8 @@ public class Task extends ComplexStoryComponent {
 	private Set<Task> successors;
 	private Set<Task> parents;
 
+	private double chance;
+
 	/**
 	 * Constructor. Creates a new task with the given name
 	 * 
@@ -31,6 +33,7 @@ public class Task extends ComplexStoryComponent {
 
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();
+		this.chance = 100;
 
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -90,6 +93,21 @@ public class Task extends ComplexStoryComponent {
 	}
 
 	// ************* GETTERS AND SETTERS ********************//
+
+	/**
+	 * @return the chance
+	 */
+	public double getChance() {
+		return chance;
+	}
+
+	/**
+	 * @param chance
+	 *            the chance to set
+	 */
+	public void setChance(double chance) {
+		this.chance = chance;
+	}
 
 	/**
 	 * @return the successors
