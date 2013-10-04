@@ -123,10 +123,8 @@ public class SEGraph<E> extends JComponent {
 
 		if (isShared)
 			this.toolBar = SharedSEGraphToolBar.getInstance();
-		else if (disableGroupTool)
-			this.toolBar = new SEGraphToolBar();
-		else
-			this.toolBar = new SEGraphGroupToolBar();
+		else 
+			this.toolBar = new SEGraphToolBar(disableGroupTool);
 
 		this.selectedNodes = new LinkedHashSet<E>();
 		this.mousePosition = new Point();

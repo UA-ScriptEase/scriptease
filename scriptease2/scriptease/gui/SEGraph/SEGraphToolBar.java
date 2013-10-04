@@ -48,11 +48,12 @@ public class SEGraphToolBar extends JToolBar {
 	private final JToggleButton deleteButton;
 	private final JToggleButton connectButton;
 	private final JToggleButton disconnectButton;
+	private final JToggleButton groupButton;
 
-	protected final ButtonGroup buttonGroup;
-	protected ButtonModel buttonModel;
+	private final ButtonGroup buttonGroup;
+	private ButtonModel buttonModel;
 
-	protected Mode mode;
+	private Mode mode;
 
 	/**
 	 * The current mode of the toolbar.
@@ -136,7 +137,7 @@ public class SEGraphToolBar extends JToolBar {
 		}
 	}
 
-	public SEGraphToolBar() {
+	public SEGraphToolBar(boolean disableGroupTool) {
 		super();
 		this.observers = new ObserverManager<SEGraphToolBarObserver>();
 		this.buttonGroup = new ButtonGroup();
@@ -146,6 +147,7 @@ public class SEGraphToolBar extends JToolBar {
 		this.deleteButton = this.buildToggleButton(Mode.DELETE);
 		this.connectButton = this.buildToggleButton(Mode.CONNECT);
 		this.disconnectButton = this.buildToggleButton(Mode.DISCONNECT);
+		this.groupButton = this.buildToggleButton(Mode.GROUP);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setRollover(true);
@@ -157,6 +159,9 @@ public class SEGraphToolBar extends JToolBar {
 		buttonGroup.add(this.deleteButton);
 		buttonGroup.add(this.connectButton);
 		buttonGroup.add(this.disconnectButton);
+
+		if (!disableGroupTool)
+			buttonGroup.add(this.groupButton);
 
 		// Sorry about the bizarre loop, but that's the way these work :(
 		for (final Enumeration<AbstractButton> buttons = buttonGroup
@@ -220,6 +225,7 @@ public class SEGraphToolBar extends JToolBar {
 				}
 			}
 		});
+		
 		timer.setRepeats(false);
 
 		button.addMouseListener(new MouseInputAdapter() {
@@ -251,6 +257,8 @@ public class SEGraphToolBar extends JToolBar {
 			buttonModel = this.connectButton.getModel();
 		} else if (mode == Mode.DISCONNECT) {
 			buttonModel = this.disconnectButton.getModel();
+		} else if (mode == Mode.GROUP) {
+			buttonModel = this.groupButton.getModel();
 		} else {
 			// Handle any strange behaviour by setting this to Select by
 			// default.
@@ -268,7 +276,7 @@ public class SEGraphToolBar extends JToolBar {
 	public Mode getMode() {
 		return this.mode;
 	}
-	
+
 	/**
 	 * Changes the layout to a horizontal layout.
 	 */
