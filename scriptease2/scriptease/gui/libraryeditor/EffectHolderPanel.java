@@ -21,7 +21,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.util.GUIOp;
 
 /**
- * Creates a JPanel that allows Effect panels to be dragged into.
+ * Creates a JPanel that allows Effect panels to be dragged into for
+ * descriptions.
  * 
  * @author kschenk
  * 

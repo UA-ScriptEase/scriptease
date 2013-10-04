@@ -31,6 +31,7 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
+import scriptease.gui.libraryeditor.TaskEffectsPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -235,6 +236,18 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					return false;
 
 				return true;
+			}
+			
+		} else if (supportComponent instanceof TaskEffectsPanel) {
+			final StoryComponent component;
+			
+			component = this.extractStoryComponents(support).iterator().next();
+			
+			if (component instanceof ScriptIt) {
+				final ScriptIt scriptIt = (ScriptIt) component;
+				
+				if (!(scriptIt instanceof CauseIt))
+					return true;
 			}
 		}
 
@@ -455,6 +468,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				UndoManager.getInstance().endUndoableAction();
 
 			return true;
+			
 		} else if (supportComponent instanceof EffectHolderPanel) {
 			final StoryComponent component;
 			final EffectHolderPanel effectHolder;
@@ -462,10 +476,16 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			component = this.extractStoryComponents(support).iterator().next();
 			effectHolder = (EffectHolderPanel) supportComponent;
 
-			if (!(component instanceof ScriptIt))
-				return false;
-
 			return effectHolder.setEffect((ScriptIt) component);
+		
+		} else if (supportComponent instanceof TaskEffectsPanel) {
+			final StoryComponent component;
+			final TaskEffectsPanel effectsPanel;
+			
+			component = this.extractStoryComponents(support).iterator().next();
+			effectsPanel = (TaskEffectsPanel) supportComponent;
+			
+			return effectsPanel.addEffect((ScriptIt) component);
 		}
 
 		return false;
