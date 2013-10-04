@@ -99,7 +99,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The model used for the Graph.
 	 */
 	protected SEGraph(SEGraphModel<E> model) {
-		this(model, SelectionMode.SELECT_NODE, false, true);
+		this(model, SelectionMode.SELECT_NODE, false, true, false);
 	}
 
 	/**
@@ -115,17 +115,19 @@ public class SEGraph<E> extends JComponent {
 	 *            If the graph is read only, only selection will be allowed.
 	 */
 	protected SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
-			boolean isReadOnly, boolean disableGroupTool) {
+			boolean isReadOnly, boolean disableGroupTool, boolean isShared) {
 		this.selectionMode = selectionMode;
 		this.model = model;
 		this.selectionMode = selectionMode;
 		this.isReadOnly = isReadOnly;
 
-		if (disableGroupTool)
-			this.toolBar = new SEGraphToolBar(true);
+		if (isShared)
+			this.toolBar = SharedSEGraphToolBar.getInstance();
+		else if (disableGroupTool)
+			this.toolBar = new SEGraphToolBar();
 		else
-			this.toolBar = new SEGraphToolBar(false);
-		
+			this.toolBar = new SEGraphGroupToolBar();
+
 		this.selectedNodes = new LinkedHashSet<E>();
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
@@ -672,7 +674,7 @@ public class SEGraph<E> extends JComponent {
 	public void setToolBar(SEGraphToolBar toolbar) {
 		this.toolBar = toolbar;
 	}
-	
+
 	/**
 	 * Returns the {@link GraphGroupController} linked to the graph.
 	 * 
@@ -1215,22 +1217,25 @@ public class SEGraph<E> extends JComponent {
 			} else if (mode == Mode.INSERT) {
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
+						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 							UndoManager.getInstance().startUndoableAction(
 									"Add new node to " + node);
-						graph.addNewNodeTo(node);
 
-						UndoManager.getInstance().endUndoableAction();
+							graph.addNewNodeTo(node);
+
+							UndoManager.getInstance().endUndoableAction();
+						}
 					} else {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
+						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 							UndoManager.getInstance().startUndoableAction(
 									"Add " + node + " between "
 											+ this.lastEnteredNode + " and "
 											+ node);
 
-						graph.addNewNodeBetween(this.lastEnteredNode, node);
+							graph.addNewNodeBetween(this.lastEnteredNode, node);
 
-						UndoManager.getInstance().endUndoableAction();
+							UndoManager.getInstance().endUndoableAction();
+						}
 					}
 
 				graph.getNodesToComponentsMap().getValue(this.lastEnteredNode)

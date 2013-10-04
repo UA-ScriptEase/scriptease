@@ -219,6 +219,9 @@ public final class UndoManager {
 	 */
 	public void endUndoableAction() {
 		final History activeHistory = this.getActiveHistory();
+		
+		if (activeHistory == null) 
+			return;
 
 		String model = "";
 		if (activeHistory.getModel() != null)

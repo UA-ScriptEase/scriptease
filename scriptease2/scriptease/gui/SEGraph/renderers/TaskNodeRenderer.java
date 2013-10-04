@@ -4,7 +4,12 @@ import java.awt.Color;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
@@ -40,8 +45,29 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		if (task == null)
 			return;
 
-		final JTextField nameField = new JTextField(task.getDisplayText());
+		final JTextField nameField;
 
+		final JLabel percent;
+
+		final SpinnerNumberModel model;
+		final JSpinner spinner;
+		
+		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
+		spinner = new JSpinner(model);
+		
+		spinner.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				task.setChance((double) spinner.getValue());
+			}
+		});
+		
+		nameField = new JTextField(task.getDisplayText());
+		
+		percent = new JLabel(" %");
+		percent.setForeground(Color.WHITE);
+		
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
 				new Runnable() {
 			
@@ -55,5 +81,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 				}, true, Color.WHITE);
 
 		component.add(nameField);
+		component.add(spinner);
+		component.add(percent);
 	}
 }

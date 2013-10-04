@@ -40,6 +40,7 @@ import scriptease.util.GUIOp;
  */
 @SuppressWarnings("serial")
 public class SEGraphToolBar extends JToolBar {
+
 	private final ObserverManager<SEGraphToolBarObserver> observers;
 
 	private final JToggleButton selectButton;
@@ -47,9 +48,11 @@ public class SEGraphToolBar extends JToolBar {
 	private final JToggleButton deleteButton;
 	private final JToggleButton connectButton;
 	private final JToggleButton disconnectButton;
-	private final JToggleButton groupButton;
 
-	private Mode mode;
+	protected final ButtonGroup buttonGroup;
+	protected ButtonModel buttonModel;
+
+	protected Mode mode;
 
 	/**
 	 * The current mode of the toolbar.
@@ -133,32 +136,27 @@ public class SEGraphToolBar extends JToolBar {
 		}
 	}
 
-	public SEGraphToolBar(boolean disableGroupTool) {
+	public SEGraphToolBar() {
 		super();
 		this.observers = new ObserverManager<SEGraphToolBarObserver>();
-
-		final ButtonGroup buttonGroup = new ButtonGroup();
+		this.buttonGroup = new ButtonGroup();
 
 		this.selectButton = this.buildToggleButton(Mode.SELECT);
 		this.insertButton = this.buildToggleButton(Mode.INSERT);
 		this.deleteButton = this.buildToggleButton(Mode.DELETE);
 		this.connectButton = this.buildToggleButton(Mode.CONNECT);
 		this.disconnectButton = this.buildToggleButton(Mode.DISCONNECT);
-		this.groupButton = this.buildToggleButton(Mode.GROUP);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setRollover(true);
 		this.setFloatable(false);
-		//this.setBackground(Color.WHITE);
+		// this.setBackground(Color.WHITE);
 
 		buttonGroup.add(this.selectButton);
 		buttonGroup.add(this.insertButton);
 		buttonGroup.add(this.deleteButton);
 		buttonGroup.add(this.connectButton);
 		buttonGroup.add(this.disconnectButton);
-
-		if (!disableGroupTool)
-			buttonGroup.add(this.groupButton);
 
 		// Sorry about the bizarre loop, but that's the way these work :(
 		for (final Enumeration<AbstractButton> buttons = buttonGroup
@@ -175,7 +173,7 @@ public class SEGraphToolBar extends JToolBar {
 	 * @param mode
 	 * @return
 	 */
-	private JToggleButton buildToggleButton(final Mode mode) {
+	protected JToggleButton buildToggleButton(final Mode mode) {
 		final JToggleButton button = new JToggleButton();
 
 		button.setIcon(mode.getIcon());
@@ -199,9 +197,11 @@ public class SEGraphToolBar extends JToolBar {
 							"Use the insert tool to insert a new node.",
 							UserInformationType.INFO);
 				} else if (mode == Mode.DELETE) {
-					WindowFactory.getInstance().showUserInformationBox(
-							"Use the delete tool to delete nodes / ungroup story groups.",
-							UserInformationType.INFO);
+					WindowFactory
+							.getInstance()
+							.showUserInformationBox(
+									"Use the delete tool to delete nodes / ungroup story groups.",
+									UserInformationType.INFO);
 				} else if (mode == Mode.CONNECT) {
 					WindowFactory.getInstance().showUserInformationBox(
 							"Use the connect tool to link nodes together.",
@@ -216,15 +216,14 @@ public class SEGraphToolBar extends JToolBar {
 							UserInformationType.INFO);
 				} else {
 					WindowFactory.getInstance().showUserInformationBox(
-							"Select a node.",
-							UserInformationType.INFO);
+							"Select a node.", UserInformationType.INFO);
 				}
 			}
 		});
 		timer.setRepeats(false);
-		
+
 		button.addMouseListener(new MouseInputAdapter() {
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				timer.start();
@@ -242,7 +241,6 @@ public class SEGraphToolBar extends JToolBar {
 	public void setMode(Mode mode) {
 		this.mode = mode;
 
-		final ButtonModel buttonModel;
 		if (mode == Mode.SELECT) {
 			buttonModel = this.selectButton.getModel();
 		} else if (mode == Mode.INSERT) {
@@ -253,9 +251,6 @@ public class SEGraphToolBar extends JToolBar {
 			buttonModel = this.connectButton.getModel();
 		} else if (mode == Mode.DISCONNECT) {
 			buttonModel = this.disconnectButton.getModel();
-		} else if (mode == Mode.GROUP) {
-			buttonModel = this.groupButton.getModel();
-
 		} else {
 			// Handle any strange behaviour by setting this to Select by
 			// default.
@@ -273,6 +268,13 @@ public class SEGraphToolBar extends JToolBar {
 	public Mode getMode() {
 		return this.mode;
 	}
+	
+	/**
+	 * Changes the layout to a horizontal layout.
+	 */
+	public void setHorizontal() {
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+	}
 
 	/**
 	 * Adds a {@link SEGraphToolBarObserver} to the toolbar. This observer will
@@ -284,7 +286,7 @@ public class SEGraphToolBar extends JToolBar {
 		this.observers.addObserver(this, observer);
 	}
 
-	private void notifyModeSelection() {
+	protected void notifyModeSelection() {
 		for (SEGraphToolBarObserver observer : this.observers.getObservers()) {
 			observer.modeChanged(this.mode);
 		}
