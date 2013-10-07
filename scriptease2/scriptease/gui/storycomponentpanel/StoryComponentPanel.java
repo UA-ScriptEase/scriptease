@@ -27,6 +27,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.libraryeditor.TaskEffectsPanel;
 import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -309,6 +310,10 @@ public class StoryComponentPanel extends JPanel implements
 		final StoryComponentPanelTree parentTree = this.getParentTree();
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
+		else if (this.getParent() instanceof TaskEffectsPanel) {
+			return ((TaskEffectsPanel) this.getParent()).getPanelManager();
+		}
+			
 		return null;
 	}
 
@@ -473,12 +478,15 @@ public class StoryComponentPanel extends JPanel implements
 
 					if (manager != null)
 						manager.updatePanelBackgrounds();
-					else
+					else {
+						panel.setBackground(Color.WHITE);
+						
 						System.out
 								.println("Attempted to change UI of panel "
 										+ "with null selection manager for "
 										+ "StoryComponent "
 										+ panel.getStoryComponent());
+					}
 				}
 				e.consume();
 			}

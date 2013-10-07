@@ -12,6 +12,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
+import scriptease.gui.libraryeditor.TaskEffectsPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
@@ -73,20 +74,20 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 	 */
 	protected boolean isLegal() {
 		final Component focusOwner;
-		final boolean isLegal;
-
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
-		if (focusOwner instanceof StoryComponentPanel) {
-			isLegal = ((StoryComponentPanel) focusOwner).isRemovable();
+		if (focusOwner != null && focusOwner.getParent() instanceof TaskEffectsPanel) {
+			return ((StoryComponentPanel) focusOwner).isRemovable();
+		} else if (focusOwner instanceof StoryComponentPanel) {
+			return super.isLegal()
+					&& ((StoryComponentPanel) focusOwner).isRemovable();
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
-			isLegal = SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+			return super.isLegal()
+					&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
 		} else if (focusOwner instanceof SEGraph) {
-			isLegal = !((SEGraph<?>) focusOwner).isReadOnly();
+			return super.isLegal() && !((SEGraph<?>) focusOwner).isReadOnly();
 		} else
-			isLegal = false;
-
-		return super.isLegal() && isLegal;
+			return false;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
