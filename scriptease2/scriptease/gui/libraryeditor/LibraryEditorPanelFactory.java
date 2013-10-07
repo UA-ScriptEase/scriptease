@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
-import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -34,12 +32,10 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
-import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
-import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.Task;
@@ -94,7 +90,7 @@ public class LibraryEditorPanelFactory {
 	 * @param behaviour
 	 * @return
 	 */
-	public JComponent buildBehaviourEditingPanel(final Behaviour behaviour) {
+	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour) {
 
 		final JPanel behaviourPanel;
 		final TaskEffectsPanel effectsPanel;
@@ -188,7 +184,7 @@ public class LibraryEditorPanelFactory {
 	}
 
 	private void buildCollaborativeBehaviourPanel(final JPanel behaviourPanel,
-			final JPanel effectsPanel) {
+			final TaskEffectsPanel effectsPanel) {
 		final SEGraph<Task> graph;
 		final JButton addCollaboratorButton;
 
@@ -243,7 +239,7 @@ public class LibraryEditorPanelFactory {
 	}
 
 	private void buildIndependentBehaviourPanel(final JPanel behaviourPanel,
-			final JPanel effectsPanel) {
+			final TaskEffectsPanel effectsPanel) {
 		final SEGraph<Task> graph;
 
 		final Task startTask = new Task("new task");
@@ -256,7 +252,16 @@ public class LibraryEditorPanelFactory {
 
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
-
+				effectsPanel.removeAll();
+				
+				for (StoryComponent child : nodes.iterator().next().getChildren()) {
+					if (child instanceof ScriptIt) {
+						effectsPanel.addEffect((ScriptIt) child);
+					}
+				}
+				
+				effectsPanel.repaint();
+				effectsPanel.revalidate();
 			}
 
 			@Override

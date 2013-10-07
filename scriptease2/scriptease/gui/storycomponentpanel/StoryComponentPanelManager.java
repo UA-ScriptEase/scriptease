@@ -15,12 +15,14 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
+import scriptease.gui.libraryeditor.TaskEffectsPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
@@ -164,8 +166,15 @@ public class StoryComponentPanelManager {
 			if (panel.isRemovable()) {
 				final StoryComponent child = panel.getStoryComponent();
 				final StoryComponent owner = child.getOwner();
+
+				if (panel.getParent() instanceof TaskEffectsPanel) {
+					((TaskEffectsPanel) panel.getParent())
+							.removeEffect((ScriptIt) child);
+					this.setSelection(panel, false, false);
+				}
+
 				// if the owner is its parent, remove the child
-				if (owner instanceof ComplexStoryComponent
+				else if (owner instanceof ComplexStoryComponent
 						&& ((ComplexStoryComponent) owner).hasChild(child)) {
 					((ComplexStoryComponent) owner).removeStoryChild(child);
 					this.setSelection(panel, false, false);
