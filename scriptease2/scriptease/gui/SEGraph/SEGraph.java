@@ -409,6 +409,7 @@ public class SEGraph<E> extends JComponent {
 
 			return true;
 		}
+		
 		return false;
 	}
 

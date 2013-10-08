@@ -3,10 +3,12 @@ package scriptease.gui.libraryeditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.Transient;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,16 +86,17 @@ public class LibraryEditorPanelFactory {
 		return editorPanel;
 	}
 
+	// ******************* BEHAVIOUR EDITING PANEL ************************* //
+
 	/**
 	 * Builds a panel used to edit a behaviour.
 	 * 
 	 * @param behaviour
 	 * @return
 	 */
+	@SuppressWarnings("serial")
 	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour) {
-
 		final JPanel behaviourPanel;
-		final TaskEffectsPanel effectsPanel;
 
 		final JPanel buttonsPanel;
 		final JButton independentButton;
@@ -103,11 +106,32 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel
 				.setLayout(new BoxLayout(behaviourPanel, BoxLayout.Y_AXIS));
 
-		// Create the effects panel
-		effectsPanel = new TaskEffectsPanel(new Task("test"));
-
 		// Create buttons panel
-		buttonsPanel = new JPanel();
+		buttonsPanel = new JPanel() {
+			@Override
+			@Transient
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 70;
+				return dimension;
+			}
+			
+			@Override
+			@Transient
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 70;
+				return dimension;
+			}
+			
+			@Override
+			@Transient
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 70;
+				return dimension;
+			}
+		};;
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonsPanel.setBorder(BorderFactory
 				.createTitledBorder("Behaviour Type"));
@@ -123,10 +147,7 @@ public class LibraryEditorPanelFactory {
 						behaviourPanel.remove(component);
 				}
 
-				LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(
-						behaviourPanel, effectsPanel);
-
-				behaviourPanel.add(effectsPanel);
+				LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(behaviourPanel);
 			}
 		});
 
@@ -140,10 +161,7 @@ public class LibraryEditorPanelFactory {
 				}
 
 				LibraryEditorPanelFactory.this
-						.buildCollaborativeBehaviourPanel(behaviourPanel,
-								effectsPanel);
-
-				behaviourPanel.add(effectsPanel);
+						.buildCollaborativeBehaviourPanel(behaviourPanel);
 			}
 		});
 
@@ -169,30 +187,101 @@ public class LibraryEditorPanelFactory {
 		return graphPanel;
 	}
 
+	@SuppressWarnings("serial")
 	private JPanel buildBehaviourToolbarPanel(SEGraph<Task> graph) {
 		final JPanel toolbarPanel;
 
-		toolbarPanel = new JPanel();
+		toolbarPanel = new JPanel() {
+			@Override
+			@Transient
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 70;
+				return dimension;
+			}
+			
+			@Override
+			@Transient
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 70;
+				return dimension;
+			}
+			
+			@Override
+			@Transient
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 70;
+				return dimension;
+			}
+		};
+		
 		toolbarPanel.setBorder(BorderFactory
 				.createTitledBorder("Graph Toolbar"));
 		toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
+		
 		toolbarPanel.add(graph.getToolBar());
 		graph.getToolBar().setHorizontal();
 
 		return toolbarPanel;
 	}
-
-	private void buildCollaborativeBehaviourPanel(final JPanel behaviourPanel,
-			final TaskEffectsPanel effectsPanel) {
+	
+	private SEGraph<Task> buildBehaviourGraph(final JPanel behaviourPanel) {
 		final SEGraph<Task> graph;
+		final Task startTask;
+		
+		startTask = new Task("New Task");
+		
+		graph = SEGraphFactory.buildTaskGraph(startTask);
+		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
+		
+		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {
+
+			@Override
+			public void nodesSelected(final Collection<Task> nodes) {
+				final int numComponents = behaviourPanel.getComponents().length;
+				
+				if (behaviourPanel.getComponent(numComponents - 1) instanceof TaskEffectsPanel) {
+					behaviourPanel.remove(behaviourPanel.getComponents().length - 1);
+				}
+				final Task task = nodes.iterator().next();
+				behaviourPanel.add(new TaskEffectsPanel(task));
+				behaviourPanel.repaint();
+				behaviourPanel.revalidate();
+			}
+
+			@Override
+			public void nodeOverwritten(Task task) {
+				task.revalidateKnowItBindings();
+			}
+
+			@Override
+			public void nodeRemoved(Task task) {
+				task.revalidateKnowItBindings();
+			}
+		});
+		
+		return graph;
+	}
+
+	private void buildIndependentBehaviourPanel(final JPanel behaviourPanel) {
+		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviourPanel);
+		
+		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
+		behaviourPanel.add(this.buildBehaviourGraphPanel("Proactive Graph",
+				graph));
+		behaviourPanel.repaint();
+		behaviourPanel.revalidate();
+	}
+	
+	private void buildCollaborativeBehaviourPanel(final JPanel behaviourPanel) {
+		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviourPanel);
+
 		final JButton addCollaboratorButton;
 
-		this.buildIndependentBehaviourPanel(behaviourPanel, effectsPanel);
-
-		graph = SEGraphFactory.buildTaskGraph(new Task("new task"));
-		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
-
+		this.buildIndependentBehaviourPanel(behaviourPanel);
+		
 		addCollaboratorButton = new JButton("Add Collaborator");
 
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Reactive Graph",
@@ -238,50 +327,8 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.revalidate();
 	}
 
-	private void buildIndependentBehaviourPanel(final JPanel behaviourPanel,
-			final TaskEffectsPanel effectsPanel) {
-		final SEGraph<Task> graph;
-
-		final Task startTask = new Task("new task");
-		startTask.addStoryChild(new ScriptIt("SFSF"));
-
-		graph = SEGraphFactory.buildTaskGraph(startTask);
-		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
-
-		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {
-
-			@Override
-			public void nodesSelected(final Collection<Task> nodes) {
-				effectsPanel.removeAll();
-				
-				for (StoryComponent child : nodes.iterator().next().getChildren()) {
-					if (child instanceof ScriptIt) {
-						effectsPanel.addEffect((ScriptIt) child);
-					}
-				}
-				
-				effectsPanel.repaint();
-				effectsPanel.revalidate();
-			}
-
-			@Override
-			public void nodeOverwritten(Task task) {
-				task.revalidateKnowItBindings();
-			}
-
-			@Override
-			public void nodeRemoved(Task task) {
-				task.revalidateKnowItBindings();
-			}
-		});
-
-		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
-		behaviourPanel.add(this.buildBehaviourGraphPanel("Proactive Graph",
-				graph));
-		behaviourPanel.repaint();
-		behaviourPanel.revalidate();
-	}
-
+	// ******************* DESCRIPTION EDITING PANEL ************************* //
+	
 	/**
 	 * Builds a panel used to edit a KnowItBindingDescribeIt.
 	 * 
