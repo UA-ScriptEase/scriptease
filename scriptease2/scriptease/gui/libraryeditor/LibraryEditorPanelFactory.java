@@ -8,7 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.Transient;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -109,7 +108,6 @@ public class LibraryEditorPanelFactory {
 		// Create buttons panel
 		buttonsPanel = new JPanel() {
 			@Override
-			@Transient
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
 				dimension.height = 60;
@@ -117,7 +115,6 @@ public class LibraryEditorPanelFactory {
 			}
 			
 			@Override
-			@Transient
 			public Dimension getMaximumSize() {
 				final Dimension dimension = super.getMaximumSize();
 				dimension.height = 60;
@@ -125,7 +122,6 @@ public class LibraryEditorPanelFactory {
 			}
 			
 			@Override
-			@Transient
 			public Dimension getMinimumSize() {
 				final Dimension dimension = super.getMinimumSize();
 				dimension.height = 60;
@@ -194,7 +190,6 @@ public class LibraryEditorPanelFactory {
 
 		toolbarPanel = new JPanel() {
 			@Override
-			@Transient
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
 				dimension.height = 70;
@@ -202,7 +197,6 @@ public class LibraryEditorPanelFactory {
 			}
 			
 			@Override
-			@Transient
 			public Dimension getMaximumSize() {
 				final Dimension dimension = super.getMaximumSize();
 				dimension.height = 70;
@@ -210,7 +204,6 @@ public class LibraryEditorPanelFactory {
 			}
 			
 			@Override
-			@Transient
 			public Dimension getMinimumSize() {
 				final Dimension dimension = super.getMinimumSize();
 				dimension.height = 70;

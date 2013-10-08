@@ -55,13 +55,13 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
 		
-		spinner.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				task.setChance((double) spinner.getValue());
-			}
-		});
+//		spinner.addChangeListener(new ChangeListener() {
+//
+//			@Override
+//			public void stateChanged(ChangeEvent e) {
+//				task.setChance((double) spinner.getValue());
+//			}
+//		});
 		
 		nameField = new JTextField(task.getDisplayText());
 		
