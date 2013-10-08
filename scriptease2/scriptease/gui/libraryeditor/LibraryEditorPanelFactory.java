@@ -112,7 +112,7 @@ public class LibraryEditorPanelFactory {
 			@Transient
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 70;
+				dimension.height = 60;
 				return dimension;
 			}
 			
@@ -120,7 +120,7 @@ public class LibraryEditorPanelFactory {
 			@Transient
 			public Dimension getMaximumSize() {
 				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 70;
+				dimension.height = 60;
 				return dimension;
 			}
 			
@@ -128,10 +128,11 @@ public class LibraryEditorPanelFactory {
 			@Transient
 			public Dimension getMinimumSize() {
 				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 70;
+				dimension.height = 60;
 				return dimension;
 			}
 		};;
+		
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonsPanel.setBorder(BorderFactory
 				.createTitledBorder("Behaviour Type"));
