@@ -127,7 +127,7 @@ public class SEGraphFactory {
 
 		taskGraphModel = new TaskGraphModel(start);
 		graph = new SEGraph<Task>(taskGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, false, true, true);
+				SelectionMode.SELECT_NODE, false, true, true);
 
 		graph.setNodeRenderer(new TaskNodeRenderer(graph));
 

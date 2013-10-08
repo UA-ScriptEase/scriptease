@@ -2,9 +2,6 @@ package scriptease.gui.libraryeditor;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -27,7 +24,7 @@ import scriptease.model.complex.behaviours.Task;
 @SuppressWarnings("serial")
 public class TaskEffectsPanel extends JPanel {
 
-	private List<ScriptIt> effects;
+	private Task task;
 
 	private StoryComponentPanelManager panelManager;
 
@@ -40,11 +37,11 @@ public class TaskEffectsPanel extends JPanel {
 	public TaskEffectsPanel(Task task) {
 		super();
 
-		this.effects = new ArrayList<ScriptIt>();
+		this.task = task;
 		this.panelManager = new StoryComponentPanelManager();
 
 		for (StoryComponent child : task.getChildren()) {
-			this.effects.add((ScriptIt) child);
+			this.addEffect((ScriptIt) child);
 		}
 
 		this.setBackground(Color.WHITE);
@@ -52,21 +49,6 @@ public class TaskEffectsPanel extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
-	}
-
-	/**
-	 * Add all given effects to the panel.
-	 * 
-	 * @param effects
-	 * @return
-	 */
-	public boolean addAllEffects(Collection<ScriptIt> effects) {
-		for (ScriptIt effect : effects) {
-			if (!this.addEffect(effect))
-				return false;
-		}
-		
-		return true;
 	}
 
 	/**
@@ -79,12 +61,18 @@ public class TaskEffectsPanel extends JPanel {
 		if (effect != null && (effect instanceof CauseIt))
 			return false;
 
-		this.effects.add(effect);
-
+		final ScriptIt clone = effect.clone();
 		final StoryComponentPanel panel;
 
-		panel = StoryComponentPanelFactory.getInstance()
-				.buildStoryComponentPanel(effect);
+		if (!this.task.getChildren().contains(effect)) {
+			this.task.addStoryChild(clone);
+			panel = StoryComponentPanelFactory.getInstance()
+					.buildStoryComponentPanel(clone);
+		} else {
+			panel = StoryComponentPanelFactory.getInstance()
+					.buildStoryComponentPanel(effect);
+		}
+
 		panel.setBackground(Color.WHITE);
 		panel.setMaximumSize(panel.getPreferredSize());
 		panel.setSelectable(true);
@@ -107,7 +95,7 @@ public class TaskEffectsPanel extends JPanel {
 	 * @return
 	 */
 	public boolean removeEffect(ScriptIt effect) {
-		if (!this.effects.contains(effect))
+		if (!this.task.getChildren().contains(effect))
 			return false;
 
 		for (Component component : this.getComponents()) {
@@ -115,7 +103,7 @@ public class TaskEffectsPanel extends JPanel {
 				final StoryComponentPanel panel = (StoryComponentPanel) component;
 
 				if (panel.getStoryComponent() == effect) {
-					this.effects.remove(effect);
+					this.task.removeStoryChild(effect);
 					this.remove(component);
 					break;
 				}
@@ -123,15 +111,6 @@ public class TaskEffectsPanel extends JPanel {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Returns the effects inside the panel.
-	 * 
-	 * @return
-	 */
-	public List<ScriptIt> getEffects() {
-		return this.effects;
 	}
 
 	public StoryComponentPanelManager getPanelManager() {
