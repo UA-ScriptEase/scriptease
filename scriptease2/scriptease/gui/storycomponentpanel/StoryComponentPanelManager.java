@@ -25,6 +25,8 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.util.GUIOp;
 
 /**
@@ -168,8 +170,25 @@ public class StoryComponentPanelManager {
 				final StoryComponent owner = child.getOwner();
 
 				if (panel.getParent() instanceof TaskEffectsPanel) {
-					((TaskEffectsPanel) panel.getParent())
-							.removeEffect((ScriptIt) child);
+					final TaskEffectsPanel taskPanel = (TaskEffectsPanel) panel
+							.getParent();
+					final TaskEffectsPanel.TYPE type = taskPanel.getType();
+					final Task task = taskPanel.getTask();
+
+					taskPanel.removeEffect((ScriptIt) child);
+
+					if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
+						task.removeStoryChild(child);
+					} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT) {
+						final CollaborativeTask collabTask = (CollaborativeTask) task;
+						collabTask.getInitiatorEffectsContainer()
+								.removeStoryChild(child);
+					} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
+						final CollaborativeTask collabTask = (CollaborativeTask) task;
+						collabTask.getCollaboratorEffectsContainer()
+								.removeStoryChild(child);
+					}
+
 					this.setSelection(panel, false, false);
 				}
 

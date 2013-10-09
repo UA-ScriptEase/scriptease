@@ -94,12 +94,6 @@ public class LibraryEditorPanel extends JPanel implements
 					}
 				};
 			}
-
-			@Override
-			public void processBehaviour(Behaviour behaviour) {
-				//TODO add behaviour functionality
-
-			}
 			
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {

@@ -44,6 +44,8 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -238,16 +240,17 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 				return true;
 			}
-			
+
 		} else if (supportComponent instanceof TaskEffectsPanel) {
 			final StoryComponent component;
-			
+
 			component = this.extractStoryComponents(support).iterator().next();
-			
+
 			if (component instanceof ScriptIt) {
 				final ScriptIt scriptIt = (ScriptIt) component;
-				
-				if (!(scriptIt instanceof CauseIt))
+
+				if (!(scriptIt instanceof CauseIt)
+						&& scriptIt.getLabels().contains("TODO"))
 					return true;
 			}
 		}
@@ -292,10 +295,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 */
 	private boolean canImportAsChild(TransferSupport support) {
 		final StoryComponentPanel prevPanel = StoryComponentPanelTransferHandler.this.acceptingPanel;
-		
+
 		StoryComponentPanelTransferHandler.this.acceptingPanel = (StoryComponentPanel) support
 				.getComponent();
-		
+
 		if (prevPanel != StoryComponentPanelTransferHandler.this.acceptingPanel)
 			this.hoverTimer.stop();
 
@@ -322,7 +325,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -469,7 +472,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				UndoManager.getInstance().endUndoableAction();
 
 			return true;
-			
+
 		} else if (supportComponent instanceof EffectHolderPanel) {
 			final StoryComponent component;
 			final EffectHolderPanel effectHolder;
@@ -478,15 +481,32 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			effectHolder = (EffectHolderPanel) supportComponent;
 
 			return effectHolder.setEffect((ScriptIt) component);
-		
+
 		} else if (supportComponent instanceof TaskEffectsPanel) {
 			final StoryComponent component;
-			final TaskEffectsPanel effectsPanel;
-			
+			final TaskEffectsPanel taskPanel;
+			final TaskEffectsPanel.TYPE type;
+			final Task task;
+			final ScriptIt effect;
+
 			component = this.extractStoryComponents(support).iterator().next();
-			effectsPanel = (TaskEffectsPanel) supportComponent;
-			
-			return effectsPanel.addEffect((ScriptIt) component);
+			taskPanel = (TaskEffectsPanel) supportComponent;
+
+			type = taskPanel.getType();
+			task = taskPanel.getTask();
+			effect = ((ScriptIt) component).clone();
+
+			if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
+				task.addStoryChild(effect);
+			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT) {
+				((CollaborativeTask) task).getInitiatorEffectsContainer()
+						.addStoryChild(effect);
+			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
+				((CollaborativeTask) task).getCollaboratorEffectsContainer()
+						.addStoryChild(effect);
+			}
+
+			return taskPanel.addEffect(effect);
 		}
 
 		return false;
@@ -557,7 +577,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 							owner.addStoryChildBefore(clone, sibling);
 						}
-
 					}
 				}
 			}

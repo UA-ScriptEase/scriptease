@@ -15,6 +15,8 @@ import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 
 /**
@@ -25,9 +27,13 @@ import scriptease.model.complex.behaviours.Task;
 @SuppressWarnings("serial")
 public class TaskEffectsPanel extends JPanel {
 
-	private Task task;
+	private final Task task;
+	private final TaskEffectsPanel.TYPE type;
+	private final StoryComponentPanelManager panelManager;
 
-	private StoryComponentPanelManager panelManager;
+	public enum TYPE {
+		INDEPENDENT, COLLABORATIVE_INIT, COLLABORATIVE_REACT
+	}
 
 	/**
 	 * Creates a new TaskEffectsPanel
@@ -35,19 +41,41 @@ public class TaskEffectsPanel extends JPanel {
 	 * @param task
 	 *            the task to create the effect panel for.
 	 */
-	public TaskEffectsPanel(Task task) {
+	public TaskEffectsPanel(String name, Task task, TaskEffectsPanel.TYPE type) {
 		super();
 
+		this.type = type;
 		this.task = task;
 		this.panelManager = new StoryComponentPanelManager();
 
-		for (StoryComponent child : task.getChildren()) {
-			this.addEffect((ScriptIt) child);
+		if (type == TaskEffectsPanel.TYPE.INDEPENDENT
+				&& task instanceof IndependentTask) {
+			for (StoryComponent component : task.getChildren()) {
+				this.addEffect((ScriptIt) component);
+			}
+
+		} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT
+				&& task instanceof CollaborativeTask) {
+			final CollaborativeTask collabTask = (CollaborativeTask) task;
+
+			for (StoryComponent child : collabTask
+					.getInitiatorEffectsContainer().getChildren()) {
+				this.addEffect((ScriptIt) child);
+			}
+
+		} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT
+				&& task instanceof CollaborativeTask) {
+			final CollaborativeTask collabTask = (CollaborativeTask) task;
+
+			for (StoryComponent child : collabTask
+					.getCollaboratorEffectsContainer().getChildren()) {
+				this.addEffect((ScriptIt) child);
+			}
 		}
-		
+
 		this.setBackground(Color.WHITE);
-		this.setBorder(BorderFactory.createTitledBorder("Task Panel"));
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setBorder(BorderFactory.createTitledBorder(name));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
 	}
@@ -62,19 +90,11 @@ public class TaskEffectsPanel extends JPanel {
 		if (effect != null && (effect instanceof CauseIt))
 			return false;
 
-		final ScriptIt clone = effect.clone();
 		final StoryComponentPanel panel;
 
-		if (!this.task.getChildren().contains(effect)) {
-			this.task.addStoryChild(clone);
-			panel = StoryComponentPanelFactory.getInstance()
-					.buildStoryComponentPanel(clone);
-		} else {
-			panel = StoryComponentPanelFactory.getInstance()
-					.buildStoryComponentPanel(effect);
-		}
+		panel = StoryComponentPanelFactory.getInstance()
+				.buildStoryComponentPanel(effect);
 
-		panel.setBackground(Color.WHITE);
 		panel.setMaximumSize(panel.getPreferredSize());
 		panel.setSelectable(true);
 		panel.setRemovable(true);
@@ -96,15 +116,11 @@ public class TaskEffectsPanel extends JPanel {
 	 * @return
 	 */
 	public boolean removeEffect(ScriptIt effect) {
-		if (!this.task.getChildren().contains(effect))
-			return false;
-
 		for (Component component : this.getComponents()) {
 			if (component instanceof StoryComponentPanel) {
 				final StoryComponentPanel panel = (StoryComponentPanel) component;
 
 				if (panel.getStoryComponent() == effect) {
-					this.task.removeStoryChild(effect);
 					this.remove(component);
 					break;
 				}
@@ -114,20 +130,28 @@ public class TaskEffectsPanel extends JPanel {
 		return true;
 	}
 
+	/**
+	 * @return the type for this panel.
+	 */
+	public TaskEffectsPanel.TYPE getType() {
+		return this.type;
+	}
+	
+	/**
+	 * @return the task for this panel.
+	 */
+	public Task getTask() {
+		return this.task;
+	}
+
 	public StoryComponentPanelManager getPanelManager() {
 		return this.panelManager;
 	}
 
 	@Override
-	public Dimension getPreferredSize() {
-		final Dimension dimension = super.getPreferredSize();
-		dimension.height = 200;
-		return dimension;
-	}
-
-	@Override
 	public Dimension getMinimumSize() {
 		final Dimension dimension = super.getMinimumSize();
+		dimension.width = 500;
 		dimension.height = 200;
 		return dimension;
 	}
