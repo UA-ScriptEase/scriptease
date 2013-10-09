@@ -6,21 +6,76 @@ import scriptease.model.complex.ComplexStoryComponent;
  * A Behaviour represents a series of Tasks {@link Task}. A Behaviour can be
  * independent {@link IndependentBehaviour} or collaborative
  * {@link CollaborativeBehaviour}. An independent behaviour is one that is
- * executed by only one subject, while a collaborative behaviour has many
- * respondants to the subject in execution.
+ * executed by only one subject, while a collaborative behaviour has a
+ * respondant to the subject in execution.
  * 
  * For example, an independent behaviour could be a subject walking around
  * randomly by him/herself. A collaborative behaviour could be a tavern patron
- * interacting with the bartender to perform a order drink behaviour. The patron
- * should be able to have unlimited collaborators.
+ * interacting with the bartender to perform a order drink behaviour.
  * 
  * @author jyuen
  */
 public abstract class Behaviour extends ComplexStoryComponent {
 
-	public Behaviour(String name) {
+	private Task startTask;
+	private Type type;
+
+	public enum Type {
+		INDEPENDENT, COLLABORATIVE
+	}
+
+	/**
+	 * Behaviour prototype:
+	 * 
+	 * what the model looks like now :
+	 *   - two kinds of tasks: collaborative & independent, that know their own effects
+	 *   - a tool to build this behaviour
+	 * 
+	 * what we need:
+	 *   - a way to represent behaviours in the dictionary
+	 *   - a way to represent behaviours in JList
+	 * 
+	 */
+	public Behaviour(String name, Behaviour.Type type, Task startTask) {
 		super(name);
 
-		this.registerChildType(ProactiveTaskTree.class, 1);
+		this.startTask = startTask;
+
+		if (startTask instanceof IndependentTask)
+			this.type = Behaviour.Type.INDEPENDENT;
+		else if (startTask instanceof CollaborativeTask)
+			this.type = Behaviour.Type.COLLABORATIVE;
+	}
+
+	// ******************* GETTERS AND SETTERS **********************//
+
+	/**
+	 * @return the startTask
+	 */
+	public Task getStartTask() {
+		return startTask;
+	}
+
+	/**
+	 * @param startTask
+	 *            the startTask to set
+	 */
+	public void setStartTask(Task startTask) {
+		this.startTask = startTask;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public Type getType() {
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(Type type) {
+		this.type = type;
 	}
 }
