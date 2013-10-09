@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -13,8 +14,20 @@ import javax.swing.event.ChangeListener;
 
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 
+/**
+ * Special renderer for nodes representing Tasks {@link Task}. There are two
+ * types of tasks. The first of which are independent tasks. Independent tasks
+ * are rendered with a single text field, whereas collaborative tasks are
+ * rendered with two text fields - one to represent the initiator and the other
+ * to represent the collaborator.
+ * 
+ * @author jyuen
+ * 
+ */
 public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 	private SEGraph<Task> graph;
@@ -39,38 +52,48 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 	 * @param component
 	 * @param task
 	 */
-	private void updateComponents(final JComponent component,
-			final Task task) {
-		
+	private void updateComponents(final JComponent component, final Task task) {
 		if (task == null)
 			return;
 
+		if (task instanceof IndependentTask)
+			this.updateIndependentComponent(component, (IndependentTask) task);
+		else if (task instanceof CollaborativeTask)
+			this.updateCollaborativeComponent(component,
+					(CollaborativeTask) task);
+	}
+
+	private void updateIndependentComponent(final JComponent component,
+			final IndependentTask task) {
 		final JTextField nameField;
 
 		final JLabel percent;
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-		
+
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
-		
-//		spinner.addChangeListener(new ChangeListener() {
-//
-//			@Override
-//			public void stateChanged(ChangeEvent e) {
-//				task.setChance((double) spinner.getValue());
-//			}
-//		});
-		
+
+		spinner.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				final Object value = spinner.getValue();
+
+				if (value instanceof Double)
+					task.setChance((Double) spinner.getValue());
+			}
+		});
+
 		nameField = new JTextField(task.getDisplayText());
-		
+
 		percent = new JLabel(" %");
 		percent.setForeground(Color.WHITE);
-		
+
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
 				new Runnable() {
-			
+
 					@Override
 					public void run() {
 						task.setDisplayText(nameField.getText());
@@ -81,6 +104,72 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 				}, true, Color.WHITE);
 
 		component.add(nameField);
+		component.add(spinner);
+		component.add(percent);
+	}
+
+	private void updateCollaborativeComponent(final JComponent component,
+			final CollaborativeTask task) {
+
+		final JPanel namePanel;
+		final JTextField initiatorField;
+		final JTextField collaboratorField;
+
+		final JLabel percent;
+
+		final SpinnerNumberModel model;
+		final JSpinner spinner;
+
+		namePanel = new JPanel();
+		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
+		initiatorField = new JTextField(task.getInitiatorName());
+		collaboratorField = new JTextField(task.getCollaboratorName());
+
+		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
+		spinner = new JSpinner(model);
+
+		spinner.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				final Object value = spinner.getValue();
+
+				if (value instanceof Double)
+					task.setChance((Double) spinner.getValue());
+			}
+		});
+
+		percent = new JLabel(" %");
+		percent.setForeground(Color.WHITE);
+
+		WidgetDecorator.decorateJTextFieldForFocusEvents(initiatorField,
+				new Runnable() {
+
+					@Override
+					public void run() {
+						task.setInitiatorName(initiatorField.getText());
+
+						graph.revalidate();
+						graph.repaint();
+					}
+				}, true, Color.WHITE);
+
+		WidgetDecorator.decorateJTextFieldForFocusEvents(collaboratorField,
+				new Runnable() {
+
+					@Override
+					public void run() {
+						task.setCollaboratorName(collaboratorField.getText());
+
+						graph.revalidate();
+						graph.repaint();
+					}
+				}, true, Color.WHITE);
+
+		namePanel.add(initiatorField);
+		namePanel.add(collaboratorField);
+		
+		component.add(namePanel);
 		component.add(spinner);
 		component.add(percent);
 	}

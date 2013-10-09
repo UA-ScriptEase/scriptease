@@ -2,6 +2,7 @@ package scriptease.gui.libraryeditor;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -43,9 +44,9 @@ public class TaskEffectsPanel extends JPanel {
 		for (StoryComponent child : task.getChildren()) {
 			this.addEffect((ScriptIt) child);
 		}
-
+		
 		this.setBackground(Color.WHITE);
-		this.setBorder(BorderFactory.createTitledBorder("Effects Panel"));
+		this.setBorder(BorderFactory.createTitledBorder("Task Panel"));
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
@@ -115,5 +116,19 @@ public class TaskEffectsPanel extends JPanel {
 
 	public StoryComponentPanelManager getPanelManager() {
 		return this.panelManager;
+	}
+
+	@Override
+	public Dimension getPreferredSize() {
+		final Dimension dimension = super.getPreferredSize();
+		dimension.height = 200;
+		return dimension;
+	}
+
+	@Override
+	public Dimension getMinimumSize() {
+		final Dimension dimension = super.getMinimumSize();
+		dimension.height = 200;
+		return dimension;
 	}
 }
