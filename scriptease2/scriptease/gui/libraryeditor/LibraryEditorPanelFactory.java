@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
@@ -235,7 +237,7 @@ public class LibraryEditorPanelFactory {
 			startTask = new IndependentTask("");
 		else
 			startTask = new CollaborativeTask("", "");
-		
+
 		graph = SEGraphFactory.buildTaskGraph(startTask);
 		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
 
@@ -243,13 +245,61 @@ public class LibraryEditorPanelFactory {
 
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
-				final int numComponents = behaviourPanel.getComponents().length;
+				final JPanel effectsPanel = new JPanel();
 
-				if (behaviourPanel.getComponent(numComponents - 1) instanceof TaskEffectsPanel) {
-					behaviourPanel.remove(behaviourPanel.getComponents().length - 1);
+				effectsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+				// Remove the previous task's effects panel if there is one.
+				final Component lastComponent = behaviourPanel
+						.getComponent(behaviourPanel.getComponents().length - 1);
+
+				if (lastComponent instanceof JPanel) {
+					final JPanel panel = (JPanel) lastComponent;
+
+					if (panel.getComponentCount() > 0
+							&& panel.getComponent(0) instanceof TaskEffectsPanel) {
+						behaviourPanel.remove(lastComponent);
+					}
 				}
+
+				// Set up the effects panel for the task we selected.
 				final Task task = nodes.iterator().next();
-				behaviourPanel.add(new TaskEffectsPanel(task));
+
+				if (task instanceof IndependentTask) {
+					final Collection<ScriptIt> effects = new ArrayList<ScriptIt>();
+
+					for (StoryComponent child : task.getChildren())
+						effects.add((ScriptIt) child);
+
+					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
+							TaskEffectsPanel.TYPE.INDEPENDENT));
+
+				} else if (task instanceof CollaborativeTask) {
+					final Collection<ScriptIt> initiatorEffects = new ArrayList<ScriptIt>();
+					final Collection<ScriptIt> collaboratorEffects = new ArrayList<ScriptIt>();
+
+					final StoryComponentContainer initiatorContainer = (StoryComponentContainer) task
+							.getChildAt(0);
+					final StoryComponentContainer collaboratorContainer = (StoryComponentContainer) task
+							.getChildAt(1);
+
+					for (StoryComponent child : initiatorContainer
+							.getChildren())
+						initiatorEffects.add((ScriptIt) child);
+
+					for (StoryComponent child : collaboratorContainer
+							.getChildren())
+						collaboratorEffects.add((ScriptIt) child);
+
+					effectsPanel.add(new TaskEffectsPanel(
+							"Initiator Task Panel", task,
+							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT));
+					effectsPanel.add(new TaskEffectsPanel(
+							"Collaborator Task Panel", task,
+							TaskEffectsPanel.TYPE.COLLABORATIVE_REACT));
+				}
+
+				behaviourPanel.add(effectsPanel);
 				behaviourPanel.repaint();
 				behaviourPanel.revalidate();
 			}

@@ -47,6 +47,38 @@ public class CollaborativeTask extends Task {
 	}
 
 	/**
+	 * @return the initiatorEffectsContainer
+	 */
+	public StoryComponentContainer getInitiatorEffectsContainer() {
+		return initiatorEffectsContainer;
+	}
+
+	/**
+	 * @param initiatorEffectsContainer
+	 *            the initiatorEffectsContainer to set
+	 */
+	public void setInitiatorEffectsContainer(
+			StoryComponentContainer initiatorEffectsContainer) {
+		this.initiatorEffectsContainer = initiatorEffectsContainer;
+	}
+
+	/**
+	 * @return the collaboratorEffectsContainer
+	 */
+	public StoryComponentContainer getCollaboratorEffectsContainer() {
+		return collaboratorEffectsContainer;
+	}
+
+	/**
+	 * @param collaboratorEffectsContainer
+	 *            the collaboratorEffectsContainer to set
+	 */
+	public void setCollaboratorEffectsContainer(
+			StoryComponentContainer collaboratorEffectsContainer) {
+		this.collaboratorEffectsContainer = collaboratorEffectsContainer;
+	}
+
+	/**
 	 * Sets the initiators name
 	 * 
 	 * @param initiatorName
