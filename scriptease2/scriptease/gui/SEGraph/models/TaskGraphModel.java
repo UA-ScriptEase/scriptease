@@ -2,6 +2,8 @@ package scriptease.gui.SEGraph.models;
 
 import java.util.Collection;
 
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 
 /**
@@ -11,13 +13,19 @@ import scriptease.model.complex.behaviours.Task;
  */
 public class TaskGraphModel extends SEGraphModel<Task> {
 
+	final Task start;
+
 	public TaskGraphModel(Task start) {
 		super(start);
+		this.start = start;
 	}
 
 	@Override
 	public Task createNewNode() {
-		return new Task("");
+		if (start instanceof IndependentTask)
+			return new IndependentTask("");
+		else
+			return new CollaborativeTask("", "");
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ScriptIt;
 
 /**
  * A task is a series of effects. Each task has a probability of execution
@@ -16,27 +15,24 @@ import scriptease.model.complex.ScriptIt;
  * @author jyuen
  * 
  */
-public class Task extends ComplexStoryComponent {
+public abstract class Task extends ComplexStoryComponent {
 
 	private Set<Task> successors;
 	private Set<Task> parents;
-
+	
 	private double chance;
 
 	/**
-	 * Constructor. Creates a new task with the given name
+	 * Constructor. Creates a new task with the given name.
 	 * 
 	 * @param name
 	 */
-	public Task(String name) {
+	protected Task(String name) {
 		super(name);
 
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();
 		this.chance = 100;
-
-		this.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
 
 	/**
@@ -79,7 +75,7 @@ public class Task extends ComplexStoryComponent {
 
 		return false;
 	}
-
+	
 	@Override
 	public void process(StoryVisitor visitor) {
 		// TODO Auto-generated method stub

@@ -48,4 +48,8 @@ public interface ScriptEaseKeywords {
 	public static final String NOTES = "Notes";
 
 	public static final String STORY_POINT_COMPLEXITY = "Story Point Complexity";
+	
+	public static final String INDEPENDENT = "Independent";
+	
+	public static final String COLLABORATIVE = "Collaborative";
 }
