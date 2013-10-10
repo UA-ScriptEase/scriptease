@@ -68,7 +68,7 @@ public class TaskEffectsPanel extends JPanel {
 			final CollaborativeTask collabTask = (CollaborativeTask) task;
 
 			for (StoryComponent child : collabTask
-					.getCollaboratorEffectsContainer().getChildren()) {
+					.getResponderEffectsContainer().getChildren()) {
 				this.addEffect((ScriptIt) child);
 			}
 		}

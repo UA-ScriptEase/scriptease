@@ -1,5 +1,6 @@
 package scriptease.model.complex.behaviours;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +59,17 @@ public abstract class Task extends ComplexStoryComponent {
 
 		return true;
 	}
+	
+	/**
+	 * Adds a collection of successors to this task.
+	 * 
+	 * @param successors
+	 */
+	public void addSuccessors(Collection<Task> successors) {
+		for (Task successor : successors) {
+			this.addSuccessor(successor);
+		}
+	}
 
 	/**
 	 * Removes a successor from this task.
@@ -93,7 +105,7 @@ public abstract class Task extends ComplexStoryComponent {
 	/**
 	 * @return the chance
 	 */
-	public double getChance() {
+	public Double getChance() {
 		return chance;
 	}
 

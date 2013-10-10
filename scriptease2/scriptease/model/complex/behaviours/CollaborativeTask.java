@@ -14,36 +14,36 @@ import scriptease.model.complex.StoryComponentContainer;
 public class CollaborativeTask extends Task {
 
 	private StoryComponentContainer initiatorEffectsContainer;
-	private StoryComponentContainer collaboratorEffectsContainer;
+	private StoryComponentContainer responderEffectsContainer;
 
 	private String initiatorName;
-	private String collaboratorName;
+	private String responderName;
 
 	/**
 	 * Constructor to create a CollaborativeTask.
 	 * 
 	 * @param initiatorName
-	 * @param collaboratorName
+	 * @param responderName
 	 */
-	public CollaborativeTask(String initiatorName, String collaboratorName) {
-		super(initiatorName + ":" + collaboratorName);
+	public CollaborativeTask(String initiatorName, String responderName) {
+		super(initiatorName + ":" + responderName);
 
 		this.initiatorEffectsContainer = new StoryComponentContainer(
 				"Initiator Effects");
 		this.initiatorEffectsContainer.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
-		this.collaboratorEffectsContainer = new StoryComponentContainer(
+		this.responderEffectsContainer = new StoryComponentContainer(
 				"Collaborator Effects");
-		this.collaboratorEffectsContainer.registerChildType(ScriptIt.class,
+		this.responderEffectsContainer.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
 		this.initiatorName = initiatorName;
-		this.collaboratorName = collaboratorName;
+		this.responderName = responderName;
 
 		this.registerChildType(StoryComponentContainer.class, 2);
 		this.addStoryChild(initiatorEffectsContainer);
-		this.addStoryChild(collaboratorEffectsContainer);
+		this.addStoryChild(responderEffectsContainer);
 	}
 
 	/**
@@ -63,19 +63,19 @@ public class CollaborativeTask extends Task {
 	}
 
 	/**
-	 * @return the collaboratorEffectsContainer
+	 * @return the responderEffectsContainer
 	 */
-	public StoryComponentContainer getCollaboratorEffectsContainer() {
-		return collaboratorEffectsContainer;
+	public StoryComponentContainer getResponderEffectsContainer() {
+		return responderEffectsContainer;
 	}
 
 	/**
-	 * @param collaboratorEffectsContainer
-	 *            the collaboratorEffectsContainer to set
+	 * @param responderEffectsContainer
+	 *            the responderEffectsContainer to set
 	 */
-	public void setCollaboratorEffectsContainer(
-			StoryComponentContainer collaboratorEffectsContainer) {
-		this.collaboratorEffectsContainer = collaboratorEffectsContainer;
+	public void setResponderEffectsContainer(
+			StoryComponentContainer responderEffectsContainer) {
+		this.responderEffectsContainer = responderEffectsContainer;
 	}
 
 	/**
@@ -86,18 +86,18 @@ public class CollaborativeTask extends Task {
 	public void setInitiatorName(String initiatorName) {
 		this.initiatorName = initiatorName;
 
-		this.setDisplayText(this.initiatorName + ":" + this.collaboratorName);
+		this.setDisplayText(this.initiatorName + ":" + this.responderName);
 	}
 
 	/**
-	 * Sets the collaborators name
+	 * Sets the responders name
 	 * 
-	 * @param collaboratorName
+	 * @param responderName
 	 */
-	public void setCollaboratorName(String collaboratorName) {
-		this.collaboratorName = collaboratorName;
+	public void setResponderName(String responderName) {
+		this.responderName = responderName;
 
-		this.setDisplayText(this.initiatorName + ":" + this.collaboratorName);
+		this.setDisplayText(this.initiatorName + ":" + this.responderName);
 	}
 
 	/**
@@ -108,9 +108,9 @@ public class CollaborativeTask extends Task {
 	}
 
 	/**
-	 * @return The collaborators name
+	 * @return The responders name
 	 */
-	public String getCollaboratorName() {
-		return this.collaboratorName;
+	public String getResponderName() {
+		return this.responderName;
 	}
 }

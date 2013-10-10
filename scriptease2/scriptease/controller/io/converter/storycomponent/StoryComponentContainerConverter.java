@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  * allow anything as a child, and relies on the model to provide a properly
  * configured container. This means that whenever this converter produces a
  * container, that container's properties should be copied (if possible) into
- * the one that sohuld already exist within the model.
+ * the one that should already exist within the model.
  * 
  * @author remiller
  * 

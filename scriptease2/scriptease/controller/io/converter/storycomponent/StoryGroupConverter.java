@@ -59,7 +59,6 @@ public class StoryGroupConverter extends StoryNodeConverter {
 
 		boolean expanded = false;
 
-		try {
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
@@ -73,9 +72,6 @@ public class StoryGroupConverter extends StoryNodeConverter {
 			}
 
 			reader.moveUp();
-		}
-		} catch (Exception e) {
-			System.out.println("e");
 		}
 
 		storyGroup.setStartNode(startNode);

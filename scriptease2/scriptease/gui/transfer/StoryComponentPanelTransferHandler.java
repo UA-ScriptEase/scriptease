@@ -502,7 +502,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				((CollaborativeTask) task).getInitiatorEffectsContainer()
 						.addStoryChild(effect);
 			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
-				((CollaborativeTask) task).getCollaboratorEffectsContainer()
+				((CollaborativeTask) task).getResponderEffectsContainer()
 						.addStoryChild(effect);
 			}
 
