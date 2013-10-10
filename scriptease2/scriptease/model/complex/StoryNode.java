@@ -130,8 +130,8 @@ public abstract class StoryNode extends ComplexStoryComponent {
 
 	/**
 	 * Gets all descendants of the StoryNode that are StoryPoints. If a
-	 * StoryGroup descendant is encountered, all the StoryPoints in that group is
-	 * added instead.
+	 * StoryGroup descendant is encountered, all the StoryPoints in that group
+	 * is added instead.
 	 * 
 	 * @return
 	 */
@@ -156,9 +156,7 @@ public abstract class StoryNode extends ComplexStoryComponent {
 	 */
 	public void addSuccessors(Collection<StoryNode> successors) {
 		for (StoryNode successor : successors) {
-			if (successor != this) {
-				this.addSuccessor(successor);
-			}
+			this.addSuccessor(successor);
 		}
 	}
 

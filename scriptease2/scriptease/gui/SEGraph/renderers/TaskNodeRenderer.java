@@ -123,7 +123,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		namePanel = new JPanel();
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
 		initiatorField = new JTextField(task.getInitiatorName());
-		collaboratorField = new JTextField(task.getCollaboratorName());
+		collaboratorField = new JTextField(task.getResponderName());
 
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
@@ -159,7 +159,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 					@Override
 					public void run() {
-						task.setCollaboratorName(collaboratorField.getText());
+						task.setResponderName(collaboratorField.getText());
 
 						graph.revalidate();
 						graph.repaint();

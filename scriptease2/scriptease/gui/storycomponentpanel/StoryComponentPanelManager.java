@@ -185,7 +185,7 @@ public class StoryComponentPanelManager {
 								.removeStoryChild(child);
 					} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
-						collabTask.getCollaboratorEffectsContainer()
+						collabTask.getResponderEffectsContainer()
 								.removeStoryChild(child);
 					}
 
