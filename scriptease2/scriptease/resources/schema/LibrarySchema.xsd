@@ -34,7 +34,6 @@
 			<xsd:element name="Effects" type="EffectList_Type" />
 			<xsd:element name="DescribeIts" type="DescribeItList_Type" />
 			<xsd:element name="ControlIts" type="ControlItList_Type" />
-			<xsd:element name="Tasks" type="TaskList_Type" />
 			<xsd:element name="Behaviours" type="BehaviourList_Type" />
 			<xsd:element name="TypeConverters" type="TypeConverterList_Type" />
 		</xsd:sequence>
@@ -73,16 +72,6 @@
 	<xsd:complexType name="EffectList_Type">
 		<xsd:sequence>
 			<xsd:element name="ScriptIt" type="ScriptIt_Type"
-				maxOccurs="unbounded" minOccurs="0" />
-		</xsd:sequence>
-	</xsd:complexType>
-
-	<!-- Defines a list of Tasks (Task) -->
-	<xsd:complexType name="TaskList_Type">
-		<xsd:sequence>
-			<xsd:element name="IndependentTask" type="IndependentTask_Type"
-				maxOccurs="unbounded" minOccurs="0" />
-			<xsd:element name="CollaborativeTask" type="CollaborativeTask_Type"
 				maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -215,24 +204,6 @@
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Children" />
 			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
-		</xsd:sequence>
-		<xsd:attribute name="reference" type="xsd:string" use="optional" />
-	</xsd:complexType>
-
-	<!-- Defines a Independent Task -->
-	<xsd:complexType name="IndependentTask_Type">
-		<xsd:sequence minOccurs="0">
-			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:element name="Children" />
-		</xsd:sequence>
-		<xsd:attribute name="reference" type="xsd:string" use="optional" />
-	</xsd:complexType>
-
-	<!-- Defines a Collaborative Task -->
-	<xsd:complexType name="CollaborativeTask_Type">
-		<xsd:sequence minOccurs="0">
-			<xsd:group ref="StoryComponentDataGroup" />
-			<xsd:element name="Children" />
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>

@@ -34,7 +34,6 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.behaviours.Behaviour;
-import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.translator.Translator;
@@ -76,7 +75,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final DescribeItManager describeItManager;
 	private final Collection<Slot> slots;
 	private final Collection<GameType> gameTypes;
-	private final Collection<Task> tasks;
 	private final TypeConverter typeConverter;
 
 	private File location;
@@ -155,7 +153,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.modelRoot = new StoryComponentContainer(title);
 		this.slots = new ArrayList<Slot>();
 		this.gameTypes = new ArrayList<GameType>();
-		this.tasks = new ArrayList<Task>();
 		this.describeItManager = new DescribeItManager();
 		this.includeFilePaths = new ArrayList<String>();
 
@@ -878,15 +875,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		return this.describeItManager.findDescribeItWithScriptIt(scriptIt);
 	}
 
-	/**
-	 * Returns all of the {@link Task}s stored by the library.
-	 * 
-	 * @return
-	 */
-	public Collection<Task> getTasks() {
-		return new ArrayList<Task>(this.tasks);
-	}
-	
 	/**
 	 * Returns all of the {@link GameType}s stored by the Library.
 	 * 
