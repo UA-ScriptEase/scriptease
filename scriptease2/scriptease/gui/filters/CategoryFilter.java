@@ -24,6 +24,7 @@ public class CategoryFilter extends StoryComponentFilter {
 	 * Legal categories for the category filter.
 	 * 
 	 * @author remiller
+	 * @author jyuen
 	 */
 	public enum Category {
 		EFFECTS, DESCRIPTIONS, BEHAVIOURS, CAUSES, CONTROLS, BLOCKS, NOTE;

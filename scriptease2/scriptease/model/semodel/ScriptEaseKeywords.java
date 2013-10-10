@@ -34,6 +34,10 @@ public interface ScriptEaseKeywords {
 	public static final String DESCRIPTIONS = "Descriptions";
 
 	public static final String QUESTIONS = "Questions";
+	
+	public static final String CONTROLLERS = "Controllers";
+	
+	public static final String BEHAVIOURS = "Behaviours";
 
 	public static final String REPEATS = "Repeats";
 
@@ -44,6 +48,8 @@ public interface ScriptEaseKeywords {
 	public static final String GAME_OBJECTS = "Game Objects";
 	
 	public static final String IMPLICITS = "Implicits";
+	
+	public static final String NOTE = "Note";
 	
 	public static final String NOTES = "Notes";
 

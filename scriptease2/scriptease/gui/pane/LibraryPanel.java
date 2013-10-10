@@ -529,9 +529,12 @@ public class LibraryPanel extends JTabbedPane {
 					components = libraryModel.getDescriptionsCategory()
 							.getChildren();
 				} else if (index == 3) {
-					components = libraryModel.getControllersCategory()
+					components = libraryModel.getBehavioursCategory()
 							.getChildren();
 				} else if (index == 4) {
+					components = libraryModel.getControllersCategory()
+							.getChildren();
+				} else if (index == 5) {
 					components = libraryModel.getControllersCategory()
 							.getChildren();
 				} else {
