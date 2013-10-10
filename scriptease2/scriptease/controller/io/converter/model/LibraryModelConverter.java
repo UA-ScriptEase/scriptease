@@ -14,6 +14,8 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType;
@@ -69,7 +71,6 @@ public class LibraryModelConverter implements Converter {
 		XMLNode.TYPES.writeObject(writer, context, library.getGameTypes());
 		XMLNode.SLOTS.writeObject(writer, context, library.getSlots(),
 				XMLAttribute.DEFAULT_FORMAT, library.getSlotDefaultFormat());
-
 		XMLNode.CAUSES.writeObject(writer, context, causes);
 		XMLNode.EFFECTS.writeObject(writer, context, library
 				.getEffectsCategory().getChildren());
@@ -77,6 +78,9 @@ public class LibraryModelConverter implements Converter {
 				library.getDescribeIts());
 		XMLNode.CONTROLITS.writeObject(writer, context, library
 				.getControllersCategory().getChildren());
+		XMLNode.TASKS.writeObject(writer, context, library.getTasks());
+		XMLNode.BEHAVIOURS.writeObject(writer, context, library
+				.getBehavioursCategory().getChildren());
 		XMLNode.TYPECONVERTERS.writeObject(writer, context, library
 				.getTypeConverter().getConverterDoIts());
 
@@ -96,6 +100,8 @@ public class LibraryModelConverter implements Converter {
 		final Collection<ScriptIt> effects;
 		final Collection<DescribeIt> descriptions;
 		final Collection<ControlIt> controls;
+		final Collection<Task> tasks;
+		final Collection<Behaviour> behaviours;
 		final Collection<ScriptIt> typeConvertors;
 
 		System.out.println("Unmarshalling Library Model");
@@ -117,6 +123,9 @@ public class LibraryModelConverter implements Converter {
 				DescribeIt.class);
 		controls = XMLNode.CONTROLITS.readCollection(reader, context,
 				ControlIt.class);
+		tasks = XMLNode.TASKS.readCollection(reader, context, Task.class);
+		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
+				Behaviour.class);
 		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
 				ScriptIt.class);
 
@@ -146,6 +155,8 @@ public class LibraryModelConverter implements Converter {
 		}
 
 		library.addAll(controls);
+		
+		library.addAll(behaviours);
 
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
 

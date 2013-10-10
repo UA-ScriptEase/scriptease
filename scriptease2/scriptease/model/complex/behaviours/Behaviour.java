@@ -20,6 +20,8 @@ public abstract class Behaviour extends ComplexStoryComponent {
 	private Task startTask;
 	private Type type;
 
+	private int priority;
+	
 	public enum Type {
 		INDEPENDENT, COLLABORATIVE
 	}
@@ -36,10 +38,11 @@ public abstract class Behaviour extends ComplexStoryComponent {
 	 *   - a way to represent behaviours in JList
 	 * 
 	 */
-	public Behaviour(String name, Behaviour.Type type, Task startTask) {
+	public Behaviour(String name, Behaviour.Type type, Task startTask, int priority) {
 		super(name);
 
 		this.startTask = startTask;
+		this.priority = priority;
 
 		if (startTask instanceof IndependentTask)
 			this.type = Behaviour.Type.INDEPENDENT;
@@ -48,6 +51,20 @@ public abstract class Behaviour extends ComplexStoryComponent {
 	}
 
 	// ******************* GETTERS AND SETTERS **********************//
+
+	/**
+	 * @return the priority
+	 */
+	public int getPriority() {
+		return priority;
+	}
+
+	/**
+	 * @param priority the priority to set
+	 */
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
 
 	/**
 	 * @return the startTask
