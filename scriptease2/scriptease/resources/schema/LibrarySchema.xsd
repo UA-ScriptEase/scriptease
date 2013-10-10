@@ -23,8 +23,8 @@
 			<xsd:element name="IncludeFiles">
 				<xsd:complexType>
 					<xsd:sequence>
-						<xsd:element name="IncludeFile" type="xsd:string" maxOccurs="unbounded"
-							minOccurs="0" />
+						<xsd:element name="IncludeFile" type="xsd:string"
+							maxOccurs="unbounded" minOccurs="0" />
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
@@ -34,6 +34,8 @@
 			<xsd:element name="Effects" type="EffectList_Type" />
 			<xsd:element name="DescribeIts" type="DescribeItList_Type" />
 			<xsd:element name="ControlIts" type="ControlItList_Type" />
+			<xsd:element name="Tasks" type="TaskList_Type" />
+			<xsd:element name="Behaviours" type="BehaviourList_Type" />
 			<xsd:element name="TypeConverters" type="TypeConverterList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string" use="required" />
@@ -71,6 +73,24 @@
 	<xsd:complexType name="EffectList_Type">
 		<xsd:sequence>
 			<xsd:element name="ScriptIt" type="ScriptIt_Type"
+				maxOccurs="unbounded" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of Tasks (Task) -->
+	<xsd:complexType name="TaskList_Type">
+		<xsd:sequence>
+			<xsd:element name="IndependentTask" type="IndependentTask_Type"
+				maxOccurs="unbounded" minOccurs="0" />
+			<xsd:element name="CollaborativeTask" type="CollaborativeTask_Type"
+				maxOccurs="unbounded" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Defines a list of Behaviours (Behaviour) definitions -->
+	<xsd:complexType name="BehaviourList_Type">
+		<xsd:sequence>
+			<xsd:element name="Behaviour" type="Behaviour_Type"
 				maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -198,7 +218,41 @@
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
-	
+
+	<!-- Defines a Independent Task -->
+	<xsd:complexType name="IndependentTask_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Children" />
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- Defines a Collaborative Task -->
+	<xsd:complexType name="CollaborativeTask_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Children" />
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
+	<!-- Defines a Behaviour -->
+	<xsd:complexType name="Behaviour_Type">
+		<xsd:sequence minOccurs="0">
+			<xsd:group ref="StoryComponentDataGroup" />
+			<xsd:element name="Children" />
+		</xsd:sequence>
+		<xsd:attribute name="type" use="required">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="INDEPENDENT|COLLABORATIVE" />
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="reference" type="xsd:string" use="optional" />
+	</xsd:complexType>
+
 	<!-- Defines a ControlIt -->
 	<xsd:complexType name="ControlIt_Type">
 		<xsd:sequence minOccurs="0">
@@ -216,7 +270,7 @@
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 
-	<!-- Defines a StoryComponentContainer-->
+	<!-- Defines a StoryComponentContainer -->
 	<xsd:complexType name="StoryComponentList_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
@@ -224,14 +278,13 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<!-- Defines a StoryComponentContainer-->
+	<!-- Defines a StoryComponentContainer -->
 	<xsd:complexType name="StoryComponentContainer_Type">
 		<xsd:sequence minOccurs="0" maxOccurs="2">
 			<xsd:group ref="StoryComponentDataGroup" />
-			<!-- TODO Right now we can have anything in these.
-			It's kind of insecure, so change it to only accept
-			story components (will have to be a new type using
-			xsd:choice  -->
+			<!-- TODO Right now we can have anything in these. It's kind of insecure, 
+				so change it to only accept story components (will have to be a new type 
+				using xsd:choice -->
 			<xsd:element name="Children" />
 		</xsd:sequence>
 	</xsd:complexType>

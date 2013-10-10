@@ -118,7 +118,7 @@ public class TranslatorManager {
 						&& file.isFile();
 			}
 		};
-		
+
 		File[] contents;
 
 		// Search for "translator.ini" files in direct sub-directories of our
@@ -322,7 +322,7 @@ public class TranslatorManager {
 		}
 
 		return null;
-	} 
+	}
 
 	public void setActiveTranslator(Translator translator) {
 		if (this.activeTranslator == translator)
