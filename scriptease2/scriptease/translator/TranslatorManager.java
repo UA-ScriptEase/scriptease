@@ -118,6 +118,7 @@ public class TranslatorManager {
 						&& file.isFile();
 			}
 		};
+		
 		File[] contents;
 
 		// Search for "translator.ini" files in direct sub-directories of our

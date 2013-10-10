@@ -133,7 +133,6 @@ public class LibraryEditorPanelFactory {
 				return dimension;
 			}
 		};
-		;
 
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		buttonsPanel.setBorder(BorderFactory

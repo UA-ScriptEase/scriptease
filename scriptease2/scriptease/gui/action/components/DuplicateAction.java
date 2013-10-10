@@ -92,6 +92,7 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 		return activeModel != null && isLegal;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
