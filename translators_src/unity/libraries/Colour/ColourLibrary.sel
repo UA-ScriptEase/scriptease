@@ -983,5 +983,6 @@
     </DescribeIt>
   </DescribeIts>
   <ControlIts/>
+  <Behaviours/>
   <TypeConverters/>
 </LibraryModel>
