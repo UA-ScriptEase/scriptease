@@ -2,9 +2,7 @@ package scriptease.controller.io.converter.storycomponent.behaviour;
 
 import scriptease.controller.io.converter.storycomponent.ComplexStoryComponentConverter;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.behaviours.Behaviour;
-import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.Task;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
