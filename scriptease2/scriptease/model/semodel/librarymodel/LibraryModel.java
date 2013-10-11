@@ -156,7 +156,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.describeItManager = new DescribeItManager();
 		this.includeFilePaths = new ArrayList<String>();
 
-		Collection<StoryComponentContainer> categories = new ArrayList<StoryComponentContainer>();
+		final Collection<StoryComponentContainer> categories;
+		
+		categories = new ArrayList<StoryComponentContainer>();
 
 		this.buildCategories();
 

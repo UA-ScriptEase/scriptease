@@ -1,6 +1,7 @@
 package scriptease.model.complex.behaviours;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
@@ -103,13 +104,13 @@ public class Behaviour extends ComplexStoryComponent {
 
 	@Override
 	public void process(StoryVisitor visitor) {
-		// TODO Auto-generated method stub
-		
+		visitor.processBehaviour(this);		
 	}
 
 	@Override
 	public void revalidateKnowItBindings() {
-		// TODO Auto-generated method stub
-		
+		for (StoryComponent child : this.getChildren()) {
+			child.revalidateKnowItBindings();
+		}
 	}
 }

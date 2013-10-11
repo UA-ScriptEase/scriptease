@@ -57,12 +57,12 @@ public class NewEffectAction extends ActiveModelSensitiveAction {
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
 
-		newEffect = new ScriptIt("Do Something");
+		newEffect = new ScriptIt("New Effect");
 		codeBlockID = libraryModel.getNextCodeBlockID();
 		codeBlock = new CodeBlockSource(codeBlockID);
 
 		newEffect.addCodeBlock(codeBlock);
-		newEffect.setDisplayText("Do Something");
+		newEffect.setDisplayText("New Effect");
 		newEffect.setVisible(true);
 
 		libraryModel.add(newEffect);
