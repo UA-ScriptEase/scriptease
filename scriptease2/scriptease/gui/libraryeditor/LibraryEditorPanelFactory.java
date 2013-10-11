@@ -107,6 +107,7 @@ public class LibraryEditorPanelFactory {
 		final JPanel buttonsPanel;
 		final JButton independentButton;
 		final JButton collaborativeButton;
+		final JLabel warningLabel;
 
 		behaviourPanel = new JPanel();
 		behaviourPanel
@@ -142,6 +143,9 @@ public class LibraryEditorPanelFactory {
 
 		independentButton = new JButton("Independent");
 		collaborativeButton = new JButton("Collaborative");
+		warningLabel = new JLabel(
+				"Warning: By changing the behaviour type, you are removing any existing tasks.");
+		warningLabel.setForeground(Color.RED);
 
 		independentButton.addActionListener(new ActionListener() {
 			@Override
@@ -151,8 +155,9 @@ public class LibraryEditorPanelFactory {
 						behaviourPanel.remove(component);
 				}
 
-				LibraryEditorPanelFactory.this
-						.buildIndependentBehaviourPanel(behaviourPanel);
+				behaviour.setStartTask(null);
+				LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(
+						behaviour, behaviourPanel);
 			}
 		});
 
@@ -165,15 +170,27 @@ public class LibraryEditorPanelFactory {
 						behaviourPanel.remove(component);
 				}
 
+				behaviour.setStartTask(null);
 				LibraryEditorPanelFactory.this
-						.buildCollaborativeBehaviourPanel(behaviourPanel);
+						.buildCollaborativeBehaviourPanel(behaviour,
+								behaviourPanel);
 			}
 		});
 
 		buttonsPanel.add(independentButton);
 		buttonsPanel.add(collaborativeButton);
+		buttonsPanel.add(warningLabel);
 
 		behaviourPanel.add(buttonsPanel);
+
+		if (behaviour.getType() == Behaviour.Type.INDEPENDENT
+				|| behaviour.getType() == null) {
+			LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(
+					behaviour, behaviourPanel);
+		} else {
+			LibraryEditorPanelFactory.this.buildCollaborativeBehaviourPanel(
+					behaviour, behaviourPanel);
+		}
 
 		return behaviourPanel;
 	}
@@ -229,15 +246,23 @@ public class LibraryEditorPanelFactory {
 		return toolbarPanel;
 	}
 
-	private SEGraph<Task> buildBehaviourGraph(final JPanel behaviourPanel,
-			final String type) {
+	private SEGraph<Task> buildBehaviourGraph(final Behaviour behaviour,
+			final JPanel behaviourPanel, final String type) {
 		final SEGraph<Task> graph;
 		final Task startTask;
 
-		if (type == ScriptEaseKeywords.INDEPENDENT)
-			startTask = new IndependentTask("");
-		else
-			startTask = new CollaborativeTask("", "");
+		if (behaviour.getStartTask() != null) {
+			// If behaviour is defined, build its existing task graph
+			startTask = behaviour.getStartTask();
+		} else {
+			// Else create a new one.
+			if (type == ScriptEaseKeywords.INDEPENDENT)
+				startTask = new IndependentTask("");
+			else
+				startTask = new CollaborativeTask("", "");
+
+			behaviour.setStartTask(startTask);
+		}
 
 		graph = SEGraphFactory.buildTaskGraph(startTask);
 		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
@@ -319,9 +344,10 @@ public class LibraryEditorPanelFactory {
 		return graph;
 	}
 
-	private void buildIndependentBehaviourPanel(final JPanel behaviourPanel) {
-		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviourPanel,
-				ScriptEaseKeywords.INDEPENDENT);
+	private void buildIndependentBehaviourPanel(final Behaviour behaviour,
+			final JPanel behaviourPanel) {
+		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
+				behaviourPanel, ScriptEaseKeywords.INDEPENDENT);
 
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
@@ -330,9 +356,10 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.revalidate();
 	}
 
-	private void buildCollaborativeBehaviourPanel(final JPanel behaviourPanel) {
-		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviourPanel,
-				ScriptEaseKeywords.COLLABORATIVE);
+	private void buildCollaborativeBehaviourPanel(final Behaviour behaviour,
+			final JPanel behaviourPanel) {
+		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
+				behaviourPanel, ScriptEaseKeywords.COLLABORATIVE);
 
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
