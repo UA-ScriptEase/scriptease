@@ -1,5 +1,6 @@
 package scriptease.model.complex.behaviours;
 
+import scriptease.controller.StoryVisitor;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
@@ -15,7 +16,7 @@ import scriptease.model.complex.ComplexStoryComponent;
  * 
  * @author jyuen
  */
-public abstract class Behaviour extends ComplexStoryComponent {
+public class Behaviour extends ComplexStoryComponent {
 
 	private Task startTask;
 	private Type type;
@@ -26,6 +27,10 @@ public abstract class Behaviour extends ComplexStoryComponent {
 		INDEPENDENT, COLLABORATIVE
 	}
 
+	public Behaviour(String name) {
+		this(name, null, null, 0);
+	}
+	
 	/**
 	 * Behaviour prototype:
 	 * 
@@ -55,14 +60,14 @@ public abstract class Behaviour extends ComplexStoryComponent {
 	/**
 	 * @return the priority
 	 */
-	public int getPriority() {
+	public Integer getPriority() {
 		return priority;
 	}
 
 	/**
 	 * @param priority the priority to set
 	 */
-	public void setPriority(int priority) {
+	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
 
@@ -94,5 +99,17 @@ public abstract class Behaviour extends ComplexStoryComponent {
 	 */
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	@Override
+	public void process(StoryVisitor visitor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		// TODO Auto-generated method stub
+		
 	}
 }
