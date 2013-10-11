@@ -5,22 +5,28 @@ import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.Task;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * Reads and writes a Behaviour {@link Behaviour} from xml.
+ * 
+ * @author jyuen
+ */
 public class BehaviourConverter extends ComplexStoryComponentConverter {
 
 	public static final String TAG_BEHAVIOUR = "Behaviour";
-	
+
 	public static final String TAG_START_TASK = "StartTask";
 
 	// TODO consider making the type and priority a attribute.
 	public static final String TAG_TYPE = "Type";
 	public static final String TAG_PRIORITY = "Priority";
-	
+
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
@@ -46,47 +52,41 @@ public class BehaviourConverter extends ComplexStoryComponentConverter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final CollaborativeTask collaborativeTask = (CollaborativeTask) super
+		final Behaviour behaviour = (Behaviour) super
 				.unmarshal(reader, context);
 
 		Behaviour.Type type = null;
-		 priority = null;
-
-		StoryComponentContainer initiatorEffectsContainer = null;
-		StoryComponentContainer responderEffectsContainer = null;
+		Task startTask = null;
+		Integer priority = null;
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
 
-			if (nodeName.equals(TAG_INITIATOR)) {
-				initiatorName = reader.getValue();
-			} else if (nodeName.equals(TAG_RESPONDER)) {
-				responderName = reader.getValue();
-			} else if (nodeName.equals(TAG_INITIATOR_EFFECTS_CONTAINER)) {
-				initiatorEffectsContainer = (StoryComponentContainer) context
-						.convertAnother(collaborativeTask,
-								StoryComponentContainer.class);
-			} else if (nodeName.equals(TAG_RESPONDER_EFFECTS_CONTAINER)) {
-				responderEffectsContainer = (StoryComponentContainer) context
-						.convertAnother(collaborativeTask,
-								StoryComponentContainer.class);
+			if (nodeName.equals(TAG_TYPE)) {
+				if (reader.getValue().equals(
+						Behaviour.Type.INDEPENDENT.toString()))
+					type = Behaviour.Type.INDEPENDENT;
+				else if (reader.getValue().equals(
+						Behaviour.Type.COLLABORATIVE.toString()))
+					type = Behaviour.Type.COLLABORATIVE;
+			} else if (nodeName.equals(TAG_PRIORITY)) {
+				priority = new Integer(reader.getValue());
+			} else if (nodeName.equals(TAG_START_TASK)) {
+				startTask = (Task) context
+						.convertAnother(behaviour, Task.class);
 			}
 
 			reader.moveUp();
 		}
 
-		collaborativeTask.setInitiatorName(initiatorName);
-		collaborativeTask.setResponderName(responderName);
+		behaviour.setType(type);
+		behaviour.setPriority(priority);
+		behaviour.setStartTask(startTask);
 
-		collaborativeTask
-				.setInitiatorEffectsContainer(initiatorEffectsContainer);
-		collaborativeTask
-				.setResponderEffectsContainer(responderEffectsContainer);
-
-		return collaborativeTask;
+		return behaviour;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
