@@ -183,8 +183,7 @@ public class LibraryEditorPanelFactory {
 
 		behaviourPanel.add(buttonsPanel);
 
-		if (behaviour.getType() == Behaviour.Type.INDEPENDENT
-				|| behaviour.getType() == null) {
+		if (behaviour.getType() == Behaviour.Type.INDEPENDENT) {
 			LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(
 					behaviour, behaviourPanel);
 		} else {
@@ -217,21 +216,21 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 70;
+				dimension.height = 80;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMaximumSize() {
 				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 70;
+				dimension.height = 80;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMinimumSize() {
 				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 70;
+				dimension.height = 80;
 				return dimension;
 			}
 		};

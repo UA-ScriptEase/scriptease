@@ -45,6 +45,9 @@ import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.controller.io.converter.storycomponent.StoryComponentContainerConverter;
 import scriptease.controller.io.converter.storycomponent.StoryGroupConverter;
 import scriptease.controller.io.converter.storycomponent.StoryPointConverter;
+import scriptease.controller.io.converter.storycomponent.behaviour.BehaviourConverter;
+import scriptease.controller.io.converter.storycomponent.behaviour.CollaborativeTaskConverter;
+import scriptease.controller.io.converter.storycomponent.behaviour.IndependentTaskConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
@@ -64,6 +67,9 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
@@ -528,6 +534,9 @@ public class FileIO {
 		stream.alias("Note", Note.class);
 		stream.alias("ControlIt", ControlIt.class);
 		stream.alias("CauseIt", CauseIt.class);
+		stream.alias("Behaviour", Behaviour.class);
+		stream.alias("IndependentTask", IndependentTask.class);
+		stream.alias("CollaborativeTask", CollaborativeTask.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -562,6 +571,9 @@ public class FileIO {
 		stream.registerConverter(new DescribeItConverter());
 		stream.registerConverter(new DescribeItNodeConverter());
 		stream.registerConverter(new ControlItConverter());
+		stream.registerConverter(new BehaviourConverter());
+		stream.registerConverter(new IndependentTaskConverter());
+		stream.registerConverter(new CollaborativeTaskConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

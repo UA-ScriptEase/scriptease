@@ -29,7 +29,7 @@ public class Behaviour extends ComplexStoryComponent {
 	}
 
 	public Behaviour(String name) {
-		this(name, null, null, 0);
+		this(name, Type.INDEPENDENT, null, 0);
 	}
 	
 	/**
@@ -49,11 +49,7 @@ public class Behaviour extends ComplexStoryComponent {
 
 		this.startTask = startTask;
 		this.priority = priority;
-
-		if (startTask instanceof IndependentTask)
-			this.type = Behaviour.Type.INDEPENDENT;
-		else if (startTask instanceof CollaborativeTask)
-			this.type = Behaviour.Type.COLLABORATIVE;
+		this.type = type;
 	}
 
 	// ******************* GETTERS AND SETTERS **********************//
