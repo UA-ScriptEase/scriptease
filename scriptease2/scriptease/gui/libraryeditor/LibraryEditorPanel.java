@@ -54,7 +54,7 @@ import scriptease.util.StringOp;
  * LibraryEditorPanel is dependent on the component being edited in the Library
  * editor. A specific panel is created for each type of component.
  * 
- * @author previous devs
+ * @author mfchurch
  * @author jyuen
  */
 @SuppressWarnings("serial")
@@ -94,7 +94,7 @@ public class LibraryEditorPanel extends JPanel implements
 					}
 				};
 			}
-			
+
 			@Override
 			public void processScriptIt(final ScriptIt scriptIt) {
 				// Causes and effects are processed as ScriptIts
@@ -155,6 +155,16 @@ public class LibraryEditorPanel extends JPanel implements
 								setUpCodeBlockPanels(scriptIt,
 										codeBlockEditingPanel)));
 
+				LibraryEditorPanel.this.revalidate();
+			}
+
+			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				this.defaultProcess(behaviour);
+
+				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
+						.getInstance().buildBehaviourEditingPanel(behaviour));
+				
 				LibraryEditorPanel.this.revalidate();
 			}
 

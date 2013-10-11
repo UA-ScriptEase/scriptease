@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
+import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -38,6 +39,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.behaviours.Behaviour;
@@ -340,8 +342,7 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.revalidate();
 	}
 
-	// ******************* DESCRIPTION EDITING PANEL *************************
-	// //
+	// *************** DESCRIPTION EDITING PANEL *************************
 
 	/**
 	 * Builds a panel used to edit a KnowItBindingDescribeIt.
@@ -352,83 +353,81 @@ public class LibraryEditorPanelFactory {
 	 */
 	public JComponent buildDescribeItEditingPanel(final DescribeIt describeIt,
 			final KnowIt knowIt) {
-		return LibraryEditorPanelFactory.this.buildBehaviourEditingPanel(null);
 
-		// final JPanel bindingPanel;
-		// final JPanel describeItGraphPanel;
-		//
-		// final EffectHolderPanel effectHolder;
-		// final SetEffectObserver effectObserver;
-		// final SEGraph<DescribeItNode> graph;
-		//
-		// bindingPanel = new JPanel();
-		// describeItGraphPanel = new JPanel();
-		//
-		// effectHolder = new EffectHolderPanel(describeIt.getTypes());
-		//
-		// graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
-		// .getStartNode());
-		//
-		// // Set the effectHolder to reflect the initial path of the describeIt
-		// // (since it doesn't throw a path selection even in SEGraph the
-		// // constructor)
-		// final ScriptIt initialScriptIt = describeIt.getScriptItForPath(graph
-		// .getSelectedNodes());
-		// effectHolder.setEffect(initialScriptIt);
-		//
-		// effectObserver = new SetEffectObserver() {
-		// @Override
-		// public void effectChanged(ScriptIt newEffect) {
-		// // We need to make a copy or else the path is ALWAYS the current
-		// // selected nodes, which is not what we want at all.
-		// final Collection<DescribeItNode> selectedNodes;
-		//
-		// selectedNodes = new ArrayList<DescribeItNode>(
-		// graph.getSelectedNodes());
-		//
-		// describeIt.assignScriptItToPath(selectedNodes, newEffect);
-		//
-		// final ScriptIt scriptItForPath = describeIt
-		// .getScriptItForPath(describeIt.getShortestPath());
-		// if (scriptItForPath != null) {
-		// knowIt.setBinding(scriptItForPath);
-		// } else {
-		// knowIt.clearBinding();
-		// }
-		//
-		// }
-		// };
-		//
-		// graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
-		//
-		// @Override
-		// public void nodesSelected(Collection<DescribeItNode> nodes) {
-		// final ScriptIt pathScriptIt;
-		// pathScriptIt = describeIt.getScriptItForPath(nodes);
-		//
-		// effectHolder.removeSetEffectObserver(effectObserver);
-		// effectHolder.setEffect(pathScriptIt);
-		// effectHolder.addSetEffectObserver(effectObserver);
-		// }
-		// });
-		//
-		// effectHolder.addSetEffectObserver(effectObserver);
-		//
-		// // Set up the JPanel containing the graph
-		// describeItGraphPanel.setLayout(new BorderLayout());
-		// describeItGraphPanel.add(graph.getToolBar(), BorderLayout.WEST);
-		// describeItGraphPanel.add(new JScrollPane(graph),
-		// BorderLayout.CENTER);
-		//
-		// bindingPanel
-		// .setLayout(new BoxLayout(bindingPanel, BoxLayout.PAGE_AXIS));
-		// bindingPanel.setBorder(BorderFactory
-		// .createTitledBorder("DescribeIt Binding"));
-		//
-		// bindingPanel.add(effectHolder);
-		// bindingPanel.add(describeItGraphPanel);
-		//
-		// return bindingPanel;
+		final JPanel bindingPanel;
+		final JPanel describeItGraphPanel;
+
+		final EffectHolderPanel effectHolder;
+		final SetEffectObserver effectObserver;
+		final SEGraph<DescribeItNode> graph;
+
+		bindingPanel = new JPanel();
+		describeItGraphPanel = new JPanel();
+
+		effectHolder = new EffectHolderPanel(describeIt.getTypes());
+
+		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
+				.getStartNode());
+
+		// Set the effectHolder to reflect the initial path of the describeIt
+		// (since it doesn't throw a path selection even in SEGraph the
+		// constructor)
+		final ScriptIt initialScriptIt = describeIt.getScriptItForPath(graph
+				.getSelectedNodes());
+		effectHolder.setEffect(initialScriptIt);
+
+		effectObserver = new SetEffectObserver() {
+			@Override
+			public void effectChanged(ScriptIt newEffect) {
+				// We need to make a copy or else the path is ALWAYS the current
+				// selected nodes, which is not what we want at all.
+				final Collection<DescribeItNode> selectedNodes;
+
+				selectedNodes = new ArrayList<DescribeItNode>(
+						graph.getSelectedNodes());
+
+				describeIt.assignScriptItToPath(selectedNodes, newEffect);
+
+				final ScriptIt scriptItForPath = describeIt
+						.getScriptItForPath(describeIt.getShortestPath());
+				if (scriptItForPath != null) {
+					knowIt.setBinding(scriptItForPath);
+				} else {
+					knowIt.clearBinding();
+				}
+
+			}
+		};
+
+		graph.addSEGraphObserver(new SEGraphAdapter<DescribeItNode>() {
+
+			@Override
+			public void nodesSelected(Collection<DescribeItNode> nodes) {
+				final ScriptIt pathScriptIt;
+				pathScriptIt = describeIt.getScriptItForPath(nodes);
+
+				effectHolder.removeSetEffectObserver(effectObserver);
+				effectHolder.setEffect(pathScriptIt);
+				effectHolder.addSetEffectObserver(effectObserver);
+			}
+		});
+
+		effectHolder.addSetEffectObserver(effectObserver);
+
+		// Set up the JPanel containing the graph
+		describeItGraphPanel.setLayout(new BorderLayout());
+		describeItGraphPanel.add(graph.getToolBar(), BorderLayout.WEST);
+		describeItGraphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
+
+		bindingPanel
+				.setLayout(new BoxLayout(bindingPanel, BoxLayout.PAGE_AXIS));
+		bindingPanel.setBorder(BorderFactory
+				.createTitledBorder("DescribeIt Binding"));
+
+		bindingPanel.add(effectHolder);
+		bindingPanel.add(describeItGraphPanel);
+
+		return bindingPanel;
 	}
 
 	/**
