@@ -57,7 +57,6 @@ import scriptease.util.GUIOp;
  * CodeBlock.
  * 
  * @author kschenk
- * @author jyuen
  */
 @SuppressWarnings("serial")
 class ParameterPanel extends JPanel {
