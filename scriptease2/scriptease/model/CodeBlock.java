@@ -165,6 +165,10 @@ public abstract class CodeBlock extends StoryComponent implements
 	public boolean removeParameter(KnowIt parameter) {
 		return this.parameters.remove(parameter);
 	}
+	
+	public void clearParameters() {
+		this.parameters.clear();
+	}
 
 	/**
 	 * Sets the includes to the given include list.

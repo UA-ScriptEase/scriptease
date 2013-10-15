@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -157,8 +156,9 @@ public class LibraryEditorPanelFactory {
 						behaviourPanel.remove(component);
 				}
 
+				behaviour.setType(Behaviour.Type.INDEPENDENT);
 				behaviour.setStartTask(null);
-				behaviour.getMainCodeBlock().getParameters().clear();
+				behaviour.getMainCodeBlock().clearParameters();
 				LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(
 						behaviour, behaviourPanel);
 			}
@@ -173,8 +173,9 @@ public class LibraryEditorPanelFactory {
 						behaviourPanel.remove(component);
 				}
 
+				behaviour.setType(Behaviour.Type.COLLABORATIVE);
 				behaviour.setStartTask(null);
-				behaviour.getMainCodeBlock().getParameters().clear();
+				behaviour.getMainCodeBlock().clearParameters();
 				LibraryEditorPanelFactory.this
 						.buildCollaborativeBehaviourPanel(behaviour,
 								behaviourPanel);
@@ -347,7 +348,6 @@ public class LibraryEditorPanelFactory {
 		return graph;
 	}
 
-	@SuppressWarnings("serial")
 	private void buildIndependentBehaviourPanel(final Behaviour behaviour,
 			final JPanel behaviourPanel) {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
@@ -357,7 +357,8 @@ public class LibraryEditorPanelFactory {
 
 		initiatorParameterPanel.setBorder(BorderFactory
 				.createTitledBorder("Initiator"));
-		initiatorParameterPanel.setLayout(new BoxLayout(initiatorParameterPanel, BoxLayout.Y_AXIS));
+		initiatorParameterPanel.setLayout(new BoxLayout(
+				initiatorParameterPanel, BoxLayout.Y_AXIS));
 
 		final List<KnowIt> parameters = behaviour.getMainCodeBlock()
 				.getParameters();
@@ -370,10 +371,6 @@ public class LibraryEditorPanelFactory {
 		initiatorParameterPanel.add(this.buildParameterPanel(behaviour,
 				behaviour.getMainCodeBlock(), parameters.get(0)));
 
-		behaviour.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterObserver(
-						behaviour.getMainCodeBlock(), initiatorParameterPanel));
-
 		behaviourPanel.add(initiatorParameterPanel);
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
@@ -382,7 +379,6 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.revalidate();
 	}
 
-	@SuppressWarnings("serial")
 	private void buildCollaborativeBehaviourPanel(final Behaviour behaviour,
 			final JPanel behaviourPanel) {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
@@ -391,12 +387,14 @@ public class LibraryEditorPanelFactory {
 		final JPanel initiatorParameterPanel = new JPanel();
 		initiatorParameterPanel.setBorder(BorderFactory
 				.createTitledBorder("Initiator"));
-		initiatorParameterPanel.setLayout(new BoxLayout(initiatorParameterPanel, BoxLayout.Y_AXIS));
+		initiatorParameterPanel.setLayout(new BoxLayout(
+				initiatorParameterPanel, BoxLayout.Y_AXIS));
 
 		final JPanel responderParameterPanel = new JPanel();
 		responderParameterPanel.setBorder(BorderFactory
 				.createTitledBorder("Responder"));
-		responderParameterPanel.setLayout(new BoxLayout(responderParameterPanel, BoxLayout.Y_AXIS));
+		responderParameterPanel.setLayout(new BoxLayout(
+				responderParameterPanel, BoxLayout.Y_AXIS));
 
 		final List<KnowIt> parameters = behaviour.getMainCodeBlock()
 				.getParameters();
@@ -413,14 +411,6 @@ public class LibraryEditorPanelFactory {
 				behaviour.getMainCodeBlock(), parameters.get(0)));
 		responderParameterPanel.add(this.buildParameterPanel(behaviour,
 				behaviour.getMainCodeBlock(), parameters.get(1)));
-
-		behaviour.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterObserver(
-						behaviour.getMainCodeBlock(), initiatorParameterPanel));
-
-		behaviour.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterObserver(
-						behaviour.getMainCodeBlock(), responderParameterPanel));
 
 		behaviourPanel.add(initiatorParameterPanel);
 		behaviourPanel.add(responderParameterPanel);
