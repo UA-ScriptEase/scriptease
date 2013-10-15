@@ -3,6 +3,8 @@ package scriptease.controller.io.converter.storycomponent.behaviour;
 import scriptease.controller.io.converter.storycomponent.ComplexStoryComponentConverter;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -21,25 +23,22 @@ public class BehaviourConverter extends ComplexStoryComponentConverter {
 
 	public static final String TAG_START_TASK = "StartTask";
 
-	// TODO consider making the type and priority a attribute.
-	public static final String TAG_TYPE = "Type";
-	public static final String TAG_PRIORITY = "Priority";
+	public static final String ATTRIBUTE_TYPE = "type";
+	public static final String ATTRIBUTE_PRIORITY = "priority";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
 		final Behaviour behaviour = (Behaviour) source;
-		super.marshal(source, writer, context);
 
 		// type
-		writer.startNode(TAG_TYPE);
-		writer.setValue(behaviour.getType().toString());
-		writer.endNode();
+		writer.addAttribute(ATTRIBUTE_TYPE, behaviour.getType().toString());
 
 		// priority
-		writer.startNode(TAG_PRIORITY);
-		writer.setValue(behaviour.getPriority().toString());
-		writer.endNode();
+		writer.addAttribute(ATTRIBUTE_PRIORITY, behaviour.getPriority()
+				.toString());
+
+		super.marshal(source, writer, context);
 
 		// start task
 		writer.startNode(TAG_START_TASK);
@@ -50,36 +49,38 @@ public class BehaviourConverter extends ComplexStoryComponentConverter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+
+		String type = null;
+		String priority = null;
+		Task startTask = null;
+
+		type = reader.getAttribute(ATTRIBUTE_TYPE);
+		priority = reader.getAttribute(ATTRIBUTE_PRIORITY);
+
 		final Behaviour behaviour = (Behaviour) super
 				.unmarshal(reader, context);
-
-		Behaviour.Type type = null;
-		Task startTask = null;
-		Integer priority = null;
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
-
-			if (nodeName.equals(TAG_TYPE)) {
-				if (reader.getValue().equals(
-						Behaviour.Type.INDEPENDENT.toString()))
-					type = Behaviour.Type.INDEPENDENT;
-				else if (reader.getValue().equals(
-						Behaviour.Type.COLLABORATIVE.toString()))
-					type = Behaviour.Type.COLLABORATIVE;
-			} else if (nodeName.equals(TAG_PRIORITY)) {
-				priority = new Integer(reader.getValue());
-			} else if (nodeName.equals(TAG_START_TASK)) {
-				startTask = (Task) context
-						.convertAnother(behaviour, Task.class);
+			
+			if (nodeName.equals(TAG_START_TASK)) {
+				
+				if (type == Behaviour.Type.INDEPENDENT.toString()) {
+					startTask = (IndependentTask) context
+							.convertAnother(behaviour, IndependentTask.class);
+					
+				} else if (type == Behaviour.Type.COLLABORATIVE.toString()) {
+					startTask = (CollaborativeTask) context
+							.convertAnother(behaviour, CollaborativeTask.class);
+				}
 			}
 
 			reader.moveUp();
 		}
 
-		behaviour.setType(type);
-		behaviour.setPriority(priority);
+		behaviour.setType(Behaviour.Type.valueOf(type.toUpperCase()));
+		behaviour.setPriority(new Integer(priority));
 		behaviour.setStartTask(startTask);
 
 		return behaviour;
