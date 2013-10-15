@@ -8,6 +8,8 @@ import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
+import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -49,14 +51,19 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 		final LibraryModel libraryModel;
 
 		final Behaviour newBehaviour;
+		final int codeBlockID;
+		final CodeBlock codeBlock;
 
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
 
 		newBehaviour = new Behaviour("New Behaviour");
-		newBehaviour.setVisible(true);
-
+		codeBlockID = libraryModel.getNextCodeBlockID();
+		codeBlock = new CodeBlockSource(codeBlockID);
+		
+		newBehaviour.addCodeBlock(codeBlock);
 		newBehaviour.setDisplayText("New Behaviour");
+		newBehaviour.setVisible(true);
 		
 		libraryModel.add(newBehaviour);
 		LibraryPanel.getInstance().navigateToComponent(newBehaviour);

@@ -8,9 +8,9 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
-import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.behaviours.Behaviour;
 
 /**
  * Category Filter filters elements based on if they match the acceptable

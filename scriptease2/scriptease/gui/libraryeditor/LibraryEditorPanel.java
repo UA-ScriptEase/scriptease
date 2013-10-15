@@ -161,7 +161,7 @@ public class LibraryEditorPanel extends JPanel implements
 			@Override
 			public void processBehaviour(Behaviour behaviour) {
 				this.defaultProcess(behaviour);
-
+				
 				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
 						.getInstance().buildBehaviourEditingPanel(behaviour));
 				

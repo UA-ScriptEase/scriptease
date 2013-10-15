@@ -14,6 +14,8 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 
 /**
  * Default implementation of StoryVisitor that does nothing. Ever. <br>
@@ -43,6 +45,16 @@ public abstract class StoryAdapter implements StoryVisitor {
 	@Override
 	public void processBehaviour(Behaviour behaviour) {
 		this.defaultProcessComplex(behaviour);
+	}
+	
+	@Override
+	public void processIndependentTask(IndependentTask task) {
+		this.defaultProcessComplex(task);
+	}
+	
+	@Override
+	public void processCollaborativeTask(CollaborativeTask task) {
+		this.defaultProcessComplex(task);
 	}
 	
 	@Override

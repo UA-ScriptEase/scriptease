@@ -66,5 +66,4 @@ public interface StoryVisitor {
 	public void processCodeBlockReference(CodeBlockReference codeBlockReference);
 
 	public void processNote(Note note);
-	
 }

@@ -2,14 +2,13 @@ package scriptease.model.complex.behaviours;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
 
 /**
  * A Behaviour represents a series of Tasks {@link Task}. A Behaviour can be
- * independent {@link IndependentBehaviour} or collaborative
- * {@link CollaborativeBehaviour}. An independent behaviour is one that is
- * executed by only one subject, while a collaborative behaviour has a
- * respondant to the subject in execution.
+ * independent or collaborative, as defined by its tasks. An independent
+ * behaviour is one that is executed by only one subject, while a collaborative
+ * behaviour has a respondant to the subject in execution.
  * 
  * For example, an independent behaviour could be a subject walking around
  * randomly by him/herself. A collaborative behaviour could be a tavern patron
@@ -17,13 +16,13 @@ import scriptease.model.complex.ComplexStoryComponent;
  * 
  * @author jyuen
  */
-public class Behaviour extends ComplexStoryComponent {
+public class Behaviour extends ScriptIt {
 
 	private Task startTask;
 	private Type type;
 
 	private int priority;
-	
+
 	public enum Type {
 		INDEPENDENT, COLLABORATIVE
 	}
@@ -31,20 +30,22 @@ public class Behaviour extends ComplexStoryComponent {
 	public Behaviour(String name) {
 		this(name, Type.INDEPENDENT, null, 0);
 	}
-	
+
 	/**
-	 * Behaviour prototype:
+	 * Creates a new behaviour.
 	 * 
-	 * what the model looks like now :
-	 *   - two kinds of tasks: collaborative & independent, that know their own effects
-	 *   - a tool to build this behaviour
-	 * 
-	 * what we need:
-	 *   - a way to represent behaviours in the dictionary
-	 *   - a way to represent behaviours in JList
-	 * 
+	 * @param name
+	 *            the name for the behaviour
+	 * @param type
+	 *            the type of the behaviour - Independent or Collaborative
+	 * @param startTask
+	 *            the start task for this behaviour
+	 * @param priority
+	 *            the priority of this behaviour - higher priority means higher
+	 *            order of execution.
 	 */
-	public Behaviour(String name, Behaviour.Type type, Task startTask, int priority) {
+	public Behaviour(String name, Behaviour.Type type, Task startTask,
+			int priority) {
 		super(name);
 
 		this.startTask = startTask;
@@ -62,7 +63,8 @@ public class Behaviour extends ComplexStoryComponent {
 	}
 
 	/**
-	 * @param priority the priority to set
+	 * @param priority
+	 *            the priority to set
 	 */
 	public void setPriority(Integer priority) {
 		this.priority = priority;
@@ -100,7 +102,7 @@ public class Behaviour extends ComplexStoryComponent {
 
 	@Override
 	public void process(StoryVisitor visitor) {
-		visitor.processBehaviour(this);		
+		visitor.processBehaviour(this);
 	}
 
 	@Override
