@@ -13,6 +13,8 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to
@@ -36,6 +38,10 @@ import scriptease.model.complex.behaviours.Behaviour;
 public interface StoryVisitor {
 	/** COMPLEX TYPES **/
 	public void processBehaviour(Behaviour behaviour);
+	
+	public void processIndependentTask(IndependentTask task);
+	
+	public void processCollaborativeTask(CollaborativeTask task);
 	
 	public void processStoryGroup(StoryGroup storyGroup);
 	
