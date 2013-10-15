@@ -1,5 +1,7 @@
 package scriptease.model.complex.behaviours;
 
+import scriptease.controller.StoryVisitor;
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -112,5 +114,17 @@ public class CollaborativeTask extends Task {
 	 */
 	public String getResponderName() {
 		return this.responderName;
+	}
+
+	@Override
+	public void process(StoryVisitor visitor) {
+		visitor.processCollaborativeTask(this);
+	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		for (StoryComponent child : this.getChildren()) {
+			child.revalidateKnowItBindings();
+		}
 	}
 }

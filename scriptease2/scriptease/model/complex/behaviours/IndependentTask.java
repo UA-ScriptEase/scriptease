@@ -1,5 +1,7 @@
 package scriptease.model.complex.behaviours;
 
+import scriptease.controller.StoryVisitor;
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
@@ -21,5 +23,17 @@ public class IndependentTask extends Task {
 		
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+	}
+
+	@Override
+	public void process(StoryVisitor visitor) {
+		visitor.processIndependentTask(this);
+	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		for (StoryComponent child : this.getChildren()) {
+			child.revalidateKnowItBindings();
+		}
 	}
 }

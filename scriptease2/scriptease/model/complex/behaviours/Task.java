@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -88,18 +87,6 @@ public abstract class Task extends ComplexStoryComponent {
 		return false;
 	}
 	
-	@Override
-	public void process(StoryVisitor visitor) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void revalidateKnowItBindings() {
-		// TODO Auto-generated method stub
-
-	}
-
 	// ************* GETTERS AND SETTERS ********************//
 
 	/**
