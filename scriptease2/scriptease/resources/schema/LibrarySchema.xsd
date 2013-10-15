@@ -213,6 +213,7 @@
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Children" />
+			<xsd:element name="StartTask" />
 		</xsd:sequence>
 		<xsd:attribute name="type" use="required">
 			<xsd:simpleType>
@@ -221,6 +222,7 @@
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>
+		<xsd:attribute name="priority" type="xsd:string" use="required" />
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 

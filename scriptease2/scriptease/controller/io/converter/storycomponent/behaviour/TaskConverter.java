@@ -1,11 +1,9 @@
 package scriptease.controller.io.converter.storycomponent.behaviour;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import scriptease.controller.io.converter.storycomponent.ComplexStoryComponentConverter;
-import scriptease.model.complex.StoryGroup;
-import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
@@ -46,51 +44,49 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 			UnmarshallingContext context) {
 		final Task task = (Task) super.unmarshal(reader, context);
 
-		final Collection<Task> successors = new ArrayList<Task>();
+		final Set<Task> successors = new HashSet<Task>();
+		String chance = null;
 
-		reader.moveDown();
-		
-		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_CHANCE))
-				System.err.println("Expected " + TAG_CHANCE + " but found " + reader.getNodeName());
-			else {
-				final String chance = reader.getValue();
+		while (reader.hasMoreChildren()) {
+			reader.moveDown();
+
+			if (reader.getNodeName().equalsIgnoreCase(TAG_CHANCE)) {
+				chance = reader.getValue();
 				
-				task.setChance(new Double(chance));
-			}
-		}
-		
-		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_SUCCESSORS))
-				System.err.println("Expected successors list, but found "
-						+ reader.getNodeName());
-			else {
+			} else if (reader.getNodeName().equalsIgnoreCase(TAG_SUCCESSORS)) {
+				
 				while (reader.hasMoreChildren()) {
 					reader.moveDown();
 					final String nodeName = reader.getNodeName();
-					
-					if (nodeName.equals(IndependentTaskConverter.TAG_INDEPENDENT_TASK)) {
-						successors.add((IndependentTask) context.convertAnother(
-								task, StoryPoint.class));
+
+					if (nodeName
+							.equals(IndependentTaskConverter.TAG_INDEPENDENT_TASK)) {
+						successors.add((IndependentTask) context
+								.convertAnother(task, IndependentTask.class));
 					} else if (nodeName
 							.equals(CollaborativeTaskConverter.TAG_COLLABORATIVE_TASK)) {
-						successors.add((CollaborativeTask) context.convertAnother(
-								task, StoryGroup.class));
+						successors.add((CollaborativeTask) context
+								.convertAnother(task, CollaborativeTask.class));
 					} else {
-						System.err
-								.println("Trying to read a non Task ("
-										+ reader.getNodeName()
-										+ ") successor from " + task);
+						System.err.println("Trying to read a non Task ("
+								+ reader.getNodeName() + ") successor from "
+								+ task);
 					}
 					reader.moveUp();
 				}
-				
-				task.addSuccessors(successors);
-			}
-		}
-		
-		reader.moveUp();
 
+			} else {
+				System.err
+						.println("Expected " + TAG_CHANCE + " or "
+								+ TAG_SUCCESSORS + " but found "
+								+ reader.getNodeName());
+			}
+
+			reader.moveUp();
+		}
+
+		task.setChance(Double.parseDouble(chance));
+		task.setSuccessors(successors);
 		return task;
 	}
 }

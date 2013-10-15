@@ -125,7 +125,7 @@ public class MenuFactory {
 
 		if (TOOLS_MENU_ENABLED) {
 			bar.add(MenuFactory.buildLibraryMenu());
-			bar.add(MenuFactory.buildBehaviourMenu());
+			//bar.add(MenuFactory.buildBehaviourMenu());
 		}
 		
 		bar.add(MenuFactory.buildHelpMenu());
