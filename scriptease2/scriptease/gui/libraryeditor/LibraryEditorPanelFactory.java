@@ -145,7 +145,7 @@ public class LibraryEditorPanelFactory {
 		independentButton = new JButton("Independent");
 		collaborativeButton = new JButton("Collaborative");
 		warningLabel = new JLabel(
-				"Warning: By changing the behaviour type, you are removing any existing tasks.");
+				"Warning: By changing the behaviour type, you are removing any existing behaviour owner(s) and tasks.");
 		warningLabel.setForeground(Color.RED);
 
 		independentButton.addActionListener(new ActionListener() {
@@ -365,11 +365,14 @@ public class LibraryEditorPanelFactory {
 
 		if (parameters.isEmpty()) {
 			final KnowIt initiator = new KnowIt();
-			parameters.add(initiator);
+			behaviour.getMainCodeBlock().addParameter(initiator);
 		}
 
-		initiatorParameterPanel.add(this.buildParameterPanel(behaviour,
-				behaviour.getMainCodeBlock(), parameters.get(0)));
+		final JPanel parameterPanel = this.buildParameterPanel(behaviour,
+				behaviour.getMainCodeBlock(), behaviour.getMainCodeBlock()
+						.getParameters().get(0), false);
+
+		initiatorParameterPanel.add(parameterPanel);
 
 		behaviourPanel.add(initiatorParameterPanel);
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
@@ -396,21 +399,20 @@ public class LibraryEditorPanelFactory {
 		responderParameterPanel.setLayout(new BoxLayout(
 				responderParameterPanel, BoxLayout.Y_AXIS));
 
-		final List<KnowIt> parameters = behaviour.getMainCodeBlock()
-				.getParameters();
-
-		if (parameters.isEmpty()) {
+		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
-			final KnowIt collaborator = new KnowIt();
+			final KnowIt responder = new KnowIt();
 
-			parameters.add(initiator);
-			parameters.add(collaborator);
+			behaviour.getMainCodeBlock().addParameter(initiator);
+			behaviour.getMainCodeBlock().addParameter(responder);
 		}
 
 		initiatorParameterPanel.add(this.buildParameterPanel(behaviour,
-				behaviour.getMainCodeBlock(), parameters.get(0)));
+				behaviour.getMainCodeBlock(), behaviour.getMainCodeBlock()
+						.getParameters().get(0)), false);
 		responderParameterPanel.add(this.buildParameterPanel(behaviour,
-				behaviour.getMainCodeBlock(), parameters.get(1)));
+				behaviour.getMainCodeBlock(), behaviour.getMainCodeBlock()
+						.getParameters().get(1)), false);
 
 		behaviourPanel.add(initiatorParameterPanel);
 		behaviourPanel.add(responderParameterPanel);
@@ -759,5 +761,18 @@ public class LibraryEditorPanelFactory {
 			KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
 	}
-
+	
+	/**
+	 * Builds a parameter panel.
+	 * 
+	 * @param scriptIt
+	 * @param codeBlock
+	 * @param knowIt
+	 * @param removable
+	 * @return
+	 */
+	public JPanel buildParameterPanel(ScriptIt scriptIt, CodeBlock codeBlock,
+			KnowIt knowIt, boolean removable) {
+		return new ParameterPanel(scriptIt, codeBlock, knowIt, removable);
+	}
 }
