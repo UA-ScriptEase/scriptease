@@ -51,20 +51,22 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 		scriptIt = (ScriptIt) super.unmarshal(reader, context);
 
-		while (reader.hasMoreChildren()) {
-			reader.moveDown();
-			final Collection<CodeBlock> codeBlocks;
+		reader.moveDown();
+		if (reader.hasMoreChildren()) {
+			if (reader.getNodeName().equalsIgnoreCase(TAG_CODEBLOCKS)) {
+				final Collection<CodeBlock> codeBlocks;
 
-			codeBlocks = ((Collection<CodeBlock>) context.convertAnother(
-					scriptIt, ArrayList.class));
+				codeBlocks = ((Collection<CodeBlock>) context.convertAnother(
+						scriptIt, ArrayList.class));
 
-			if (codeBlocks.isEmpty())
-				throw new IllegalStateException(
-						"Unable to read CodeBlocks for " + scriptIt);
-
-			scriptIt.setCodeBlocks(codeBlocks);
-			reader.moveUp();
+				if (codeBlocks.isEmpty())
+					throw new IllegalStateException(
+							"Unable to read CodeBlocks for " + scriptIt);
+				
+				scriptIt.setCodeBlocks(codeBlocks);
+			}
 		}
+		reader.moveUp();
 
 		return scriptIt;
 	}
