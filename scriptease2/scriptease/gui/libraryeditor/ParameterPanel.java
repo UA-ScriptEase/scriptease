@@ -64,11 +64,14 @@ class ParameterPanel extends JPanel {
 
 	/**
 	 * Creates a new ParameterComponent with the passed in KnowIt parameter.
-	 * 
-	 * @param knowIt
 	 */
 	protected ParameterPanel(final ScriptIt scriptIt,
 			final CodeBlock codeBlock, final KnowIt knowIt) {
+		this(scriptIt, codeBlock, knowIt, true);
+	}
+	
+	protected ParameterPanel(final ScriptIt scriptIt,
+			final CodeBlock codeBlock, final KnowIt knowIt, boolean removable) {
 		super();
 		this.knowIt = knowIt;
 
@@ -181,7 +184,7 @@ class ParameterPanel extends JPanel {
 			}
 		});
 
-		if (!this.isSubjectInCause(scriptIt, codeBlock)) {
+		if (!this.isSubjectInCause(scriptIt, codeBlock) && removable) {
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -221,7 +224,7 @@ class ParameterPanel extends JPanel {
 				.addComponent(deleteButton).addComponent(defaultTypeBoxPanel)
 				.addComponent(bindingPanel));
 	}
-
+	
 	/**
 	 * Builds a TextField used to edit the name of the KnowIt.
 	 * 
