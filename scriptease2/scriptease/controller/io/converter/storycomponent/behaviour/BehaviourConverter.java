@@ -1,6 +1,6 @@
 package scriptease.controller.io.converter.storycomponent.behaviour;
 
-import scriptease.controller.io.converter.storycomponent.ComplexStoryComponentConverter;
+import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author jyuen
  */
-public class BehaviourConverter extends ComplexStoryComponentConverter {
+public class BehaviourConverter extends ScriptItConverter {
 
 	public static final String TAG_BEHAVIOUR = "Behaviour";
 
