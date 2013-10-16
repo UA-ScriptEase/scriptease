@@ -359,12 +359,15 @@ public class LibraryEditorPanelFactory {
 		initiatorParameterPanel.setLayout(new BoxLayout(
 				initiatorParameterPanel, BoxLayout.Y_AXIS));
 
-		behaviour.setDisplayText("<Creature>'s New Behaviour");
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
+
+			behaviour.setDisplayText("Initiate <Creature>'s New Behaviour");
+			
 			initiator.setDisplayText("Creature");
 			initiator.addType("creature");
+			
 			behaviour.getMainCodeBlock().addParameter(initiator);
 		}
 
@@ -399,11 +402,12 @@ public class LibraryEditorPanelFactory {
 		responderParameterPanel.setLayout(new BoxLayout(
 				responderParameterPanel, BoxLayout.Y_AXIS));
 
-		behaviour.setDisplayText("<Initiator> and <Responder>'s New Behaviour");
-
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 			final KnowIt responder = new KnowIt();
+
+			behaviour
+					.setDisplayText("Initiate <Initiator> and <Responder>'s New Behaviour");
 
 			initiator.setDisplayText("Initiator");
 			initiator.addType("creature");

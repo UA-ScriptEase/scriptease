@@ -66,11 +66,11 @@ public class BehaviourConverter extends ScriptItConverter {
 			
 			if (nodeName.equals(TAG_START_TASK)) {
 				
-				if (type == Behaviour.Type.INDEPENDENT.toString()) {
+				if (type.equals(Behaviour.Type.INDEPENDENT.toString())) {
 					startTask = (IndependentTask) context
 							.convertAnother(behaviour, IndependentTask.class);
 					
-				} else if (type == Behaviour.Type.COLLABORATIVE.toString()) {
+				} else if (type.equals(Behaviour.Type.COLLABORATIVE.toString())) {
 					startTask = (CollaborativeTask) context
 							.convertAnother(behaviour, CollaborativeTask.class);
 				}
