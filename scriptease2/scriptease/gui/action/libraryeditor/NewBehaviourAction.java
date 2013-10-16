@@ -62,7 +62,6 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 		codeBlock = new CodeBlockSource(codeBlockID);
 		
 		newBehaviour.addCodeBlock(codeBlock);
-		newBehaviour.setDisplayText("New Behaviour");
 		newBehaviour.setVisible(true);
 		
 		libraryModel.add(newBehaviour);

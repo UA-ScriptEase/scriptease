@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -360,11 +359,12 @@ public class LibraryEditorPanelFactory {
 		initiatorParameterPanel.setLayout(new BoxLayout(
 				initiatorParameterPanel, BoxLayout.Y_AXIS));
 
-		final List<KnowIt> parameters = behaviour.getMainCodeBlock()
-				.getParameters();
+		behaviour.setDisplayText("<Creature>'s New Behaviour");
 
-		if (parameters.isEmpty()) {
+		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
+			initiator.setDisplayText("Creature");
+			initiator.addType("creature");
 			behaviour.getMainCodeBlock().addParameter(initiator);
 		}
 
@@ -399,20 +399,32 @@ public class LibraryEditorPanelFactory {
 		responderParameterPanel.setLayout(new BoxLayout(
 				responderParameterPanel, BoxLayout.Y_AXIS));
 
+		behaviour.setDisplayText("<Initiator> and <Responder>'s New Behaviour");
+
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 			final KnowIt responder = new KnowIt();
+
+			initiator.setDisplayText("Initiator");
+			initiator.addType("creature");
+
+			responder.setDisplayText("Responder");
+			responder.addType("creature");
 
 			behaviour.getMainCodeBlock().addParameter(initiator);
 			behaviour.getMainCodeBlock().addParameter(responder);
 		}
 
-		initiatorParameterPanel.add(this.buildParameterPanel(behaviour,
-				behaviour.getMainCodeBlock(), behaviour.getMainCodeBlock()
-						.getParameters().get(0)), false);
-		responderParameterPanel.add(this.buildParameterPanel(behaviour,
-				behaviour.getMainCodeBlock(), behaviour.getMainCodeBlock()
-						.getParameters().get(1)), false);
+		initiatorParameterPanel.add(
+				this.buildParameterPanel(behaviour,
+						behaviour.getMainCodeBlock(), behaviour
+								.getMainCodeBlock().getParameters().get(0)),
+				false);
+		responderParameterPanel.add(
+				this.buildParameterPanel(behaviour,
+						behaviour.getMainCodeBlock(), behaviour
+								.getMainCodeBlock().getParameters().get(1)),
+				false);
 
 		behaviourPanel.add(initiatorParameterPanel);
 		behaviourPanel.add(responderParameterPanel);
@@ -761,7 +773,7 @@ public class LibraryEditorPanelFactory {
 			KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
 	}
-	
+
 	/**
 	 * Builds a parameter panel.
 	 * 
