@@ -213,6 +213,7 @@
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Children" />
+			<xsd:element name="CodeBlocks" type="CodeBlockList_Type" />
 			<xsd:element name="StartTask" />
 		</xsd:sequence>
 		<xsd:attribute name="type" use="required">
