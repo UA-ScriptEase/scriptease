@@ -181,12 +181,10 @@ public class StoryComponentPanelManager {
 						task.removeStoryChild(child);
 					} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
-						collabTask.getInitiatorEffectsContainer()
-								.removeStoryChild(child);
+						collabTask.getInitiatorEffects().remove(child);
 					} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
-						collabTask.getResponderEffectsContainer()
-								.removeStoryChild(child);
+						collabTask.getResponderEffects().remove(child);
 					}
 
 					this.setSelection(panel, false, false);

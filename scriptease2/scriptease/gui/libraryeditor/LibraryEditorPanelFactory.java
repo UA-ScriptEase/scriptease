@@ -41,7 +41,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
@@ -295,31 +294,10 @@ public class LibraryEditorPanelFactory {
 				final Task task = nodes.iterator().next();
 
 				if (task instanceof IndependentTask) {
-					final Collection<ScriptIt> effects = new ArrayList<ScriptIt>();
-
-					for (StoryComponent child : task.getChildren())
-						effects.add((ScriptIt) child);
-
 					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
 							TaskEffectsPanel.TYPE.INDEPENDENT));
 
 				} else if (task instanceof CollaborativeTask) {
-					final Collection<ScriptIt> initiatorEffects = new ArrayList<ScriptIt>();
-					final Collection<ScriptIt> collaboratorEffects = new ArrayList<ScriptIt>();
-
-					final StoryComponentContainer initiatorContainer = (StoryComponentContainer) task
-							.getChildAt(0);
-					final StoryComponentContainer collaboratorContainer = (StoryComponentContainer) task
-							.getChildAt(1);
-
-					for (StoryComponent child : initiatorContainer
-							.getChildren())
-						initiatorEffects.add((ScriptIt) child);
-
-					for (StoryComponent child : collaboratorContainer
-							.getChildren())
-						collaboratorEffects.add((ScriptIt) child);
-
 					effectsPanel.add(new TaskEffectsPanel(
 							"Initiator Task Panel", task,
 							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT));
@@ -359,15 +337,14 @@ public class LibraryEditorPanelFactory {
 		initiatorParameterPanel.setLayout(new BoxLayout(
 				initiatorParameterPanel, BoxLayout.Y_AXIS));
 
-
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 
 			behaviour.setDisplayText("Initiate <Creature>'s New Behaviour");
-			
+
 			initiator.setDisplayText("Creature");
 			initiator.addType("creature");
-			
+
 			behaviour.getMainCodeBlock().addParameter(initiator);
 		}
 

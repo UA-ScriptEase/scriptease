@@ -45,6 +45,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -497,13 +498,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			effect = ((ScriptIt) component);
 
 			if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
-				task.addStoryChild(effect);
+				((IndependentTask) task).getEffects().add(effect);
 			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT) {
-				((CollaborativeTask) task).getInitiatorEffectsContainer()
-						.addStoryChild(effect);
+				((CollaborativeTask) task).getInitiatorEffects().add(effect);
 			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
-				((CollaborativeTask) task).getResponderEffectsContainer()
-						.addStoryChild(effect);
+				((CollaborativeTask) task).getResponderEffects().add(effect);
 			}
 
 			return taskPanel.addEffect(effect);

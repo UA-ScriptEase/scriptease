@@ -1,11 +1,13 @@
 package scriptease.model.complex.behaviours;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
@@ -33,12 +35,17 @@ public abstract class Task extends ComplexStoryComponent {
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();
 		this.chance = 100;
+		
+		// Tasks don't need to have childrens - yet.
+		this.registerChildTypes(
+				new ArrayList<Class<? extends StoryComponent>>(), 0);
 	}
 
 	/**
 	 * Adds a successor to this task.
 	 * 
 	 * @param successor
+	 * 
 	 */
 	public boolean addSuccessor(Task successor) {
 
