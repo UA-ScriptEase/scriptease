@@ -12,7 +12,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
-import scriptease.model.StoryComponent;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.CollaborativeTask;
@@ -50,26 +49,26 @@ public class TaskEffectsPanel extends JPanel {
 
 		if (type == TaskEffectsPanel.TYPE.INDEPENDENT
 				&& task instanceof IndependentTask) {
-			for (StoryComponent component : task.getChildren()) {
-				this.addEffect((ScriptIt) component);
+			final IndependentTask independentTask = (IndependentTask) task;
+
+			for (ScriptIt child : independentTask.getEffects()) {
+				this.addEffect(child);
 			}
 
 		} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT
 				&& task instanceof CollaborativeTask) {
 			final CollaborativeTask collabTask = (CollaborativeTask) task;
 
-			for (StoryComponent child : collabTask
-					.getInitiatorEffectsContainer().getChildren()) {
-				this.addEffect((ScriptIt) child);
+			for (ScriptIt child : collabTask.getInitiatorEffects()) {
+				this.addEffect(child);
 			}
 
 		} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT
 				&& task instanceof CollaborativeTask) {
 			final CollaborativeTask collabTask = (CollaborativeTask) task;
 
-			for (StoryComponent child : collabTask
-					.getResponderEffectsContainer().getChildren()) {
-				this.addEffect((ScriptIt) child);
+			for (ScriptIt child : collabTask.getResponderEffects()) {
+				this.addEffect(child);
 			}
 		}
 
@@ -136,7 +135,7 @@ public class TaskEffectsPanel extends JPanel {
 	public TaskEffectsPanel.TYPE getType() {
 		return this.type;
 	}
-	
+
 	/**
 	 * @return the task for this panel.
 	 */

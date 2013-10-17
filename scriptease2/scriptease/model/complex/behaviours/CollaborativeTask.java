@@ -1,10 +1,11 @@
 package scriptease.model.complex.behaviours;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * A collaborative task is a subclass of Task with a initiator subject and a
@@ -15,8 +16,8 @@ import scriptease.model.complex.StoryComponentContainer;
  */
 public class CollaborativeTask extends Task {
 
-	private StoryComponentContainer initiatorEffectsContainer;
-	private StoryComponentContainer responderEffectsContainer;
+	private List<ScriptIt> initiatorEffects;
+	private List<ScriptIt> responderEffects;
 
 	private String initiatorName;
 	private String responderName;
@@ -30,54 +31,41 @@ public class CollaborativeTask extends Task {
 	public CollaborativeTask(String initiatorName, String responderName) {
 		super(initiatorName + ":" + responderName);
 
-		this.initiatorEffectsContainer = new StoryComponentContainer(
-				"Initiator Effects");
-		this.initiatorEffectsContainer.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-
-		this.responderEffectsContainer = new StoryComponentContainer(
-				"Collaborator Effects");
-		this.responderEffectsContainer.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		initiatorEffects = new ArrayList<ScriptIt>();
+		responderEffects = new ArrayList<ScriptIt>();
 
 		this.initiatorName = initiatorName;
 		this.responderName = responderName;
-
-		this.registerChildType(StoryComponentContainer.class, 2);
-		this.addStoryChild(initiatorEffectsContainer);
-		this.addStoryChild(responderEffectsContainer);
 	}
 
 	/**
-	 * @return the initiatorEffectsContainer
+	 * @return the initiatorEffects
 	 */
-	public StoryComponentContainer getInitiatorEffectsContainer() {
-		return initiatorEffectsContainer;
+	public List<ScriptIt> getInitiatorEffects() {
+		return this.initiatorEffects;
 	}
 
 	/**
-	 * @param initiatorEffectsContainer
-	 *            the initiatorEffectsContainer to set
+	 * @param initiatorEffects
+	 *            the initiatorEffects to set
 	 */
-	public void setInitiatorEffectsContainer(
-			StoryComponentContainer initiatorEffectsContainer) {
-		this.initiatorEffectsContainer = initiatorEffectsContainer;
+	public void setInitiatorEffects(List<ScriptIt> initiatorEffects) {
+		this.initiatorEffects = initiatorEffects;
 	}
 
 	/**
 	 * @return the responderEffectsContainer
 	 */
-	public StoryComponentContainer getResponderEffectsContainer() {
-		return responderEffectsContainer;
+	public List<ScriptIt> getResponderEffects() {
+		return this.responderEffects;
 	}
 
 	/**
 	 * @param responderEffectsContainer
 	 *            the responderEffectsContainer to set
 	 */
-	public void setResponderEffectsContainer(
-			StoryComponentContainer responderEffectsContainer) {
-		this.responderEffectsContainer = responderEffectsContainer;
+	public void setResponderEffects(List<ScriptIt> responderEffects) {
+		this.responderEffects = responderEffects;
 	}
 
 	/**

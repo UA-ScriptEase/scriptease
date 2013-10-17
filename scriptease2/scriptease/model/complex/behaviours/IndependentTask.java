@@ -1,5 +1,8 @@
 package scriptease.model.complex.behaviours;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -13,6 +16,8 @@ import scriptease.model.complex.ScriptIt;
  */
 public class IndependentTask extends Task {
 
+	private List<ScriptIt> effects;
+	
 	/**
 	 * Constructor. Creates a new independent task with the given name
 	 * 
@@ -20,6 +25,8 @@ public class IndependentTask extends Task {
 	 */
 	public IndependentTask(String name) {
 		super(name);
+		
+		this.effects = new ArrayList<ScriptIt>();
 		
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -35,5 +42,13 @@ public class IndependentTask extends Task {
 		for (StoryComponent child : this.getChildren()) {
 			child.revalidateKnowItBindings();
 		}
+	}
+
+	public List<ScriptIt> getEffects() {
+		return effects;
+	}
+	
+	public void setEffects(List<ScriptIt> effects) {
+		this.effects = effects;
 	}
 }

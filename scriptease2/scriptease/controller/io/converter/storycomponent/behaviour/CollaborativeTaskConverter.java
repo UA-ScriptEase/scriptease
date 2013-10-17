@@ -1,7 +1,13 @@
 package scriptease.controller.io.converter.storycomponent.behaviour;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -21,8 +27,8 @@ public class CollaborativeTaskConverter extends TaskConverter {
 	public static final String TAG_INITIATOR = "Initiator";
 	public static final String TAG_RESPONDER = "Responder";
 
-	public static final String TAG_INITIATOR_EFFECTS_CONTAINER = "InitiatorEffectsContainer";
-	public static final String TAG_RESPONDER_EFFECTS_CONTAINER = "ResponderEffectsContainer";
+	public static final String TAG_INITIATOR_EFFECTS = "InitiatorEffects";
+	public static final String TAG_RESPONDER_EFFECTS = "ResponderEffects";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
@@ -41,16 +47,17 @@ public class CollaborativeTaskConverter extends TaskConverter {
 		writer.endNode();
 
 		// initiator effects container
-		writer.startNode(TAG_INITIATOR_EFFECTS_CONTAINER);
-		context.convertAnother(collaborativeTask.getInitiatorEffectsContainer());
+		writer.startNode(TAG_INITIATOR_EFFECTS);
+		context.convertAnother(collaborativeTask.getInitiatorEffects());
 		writer.endNode();
 
 		// responder effects container
-		writer.startNode(TAG_RESPONDER_EFFECTS_CONTAINER);
-		context.convertAnother(collaborativeTask.getResponderEffectsContainer());
+		writer.startNode(TAG_RESPONDER_EFFECTS);
+		context.convertAnother(collaborativeTask.getResponderEffects());
 		writer.endNode();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
@@ -60,8 +67,8 @@ public class CollaborativeTaskConverter extends TaskConverter {
 		String initiatorName = null;
 		String responderName = null;
 
-		StoryComponentContainer initiatorEffectsContainer = null;
-		StoryComponentContainer responderEffectsContainer = null;
+		List<ScriptIt> initiatorEffects = null;
+		List<ScriptIt> responderEffects = null;
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
@@ -71,14 +78,15 @@ public class CollaborativeTaskConverter extends TaskConverter {
 				initiatorName = reader.getValue();
 			} else if (nodeName.equals(TAG_RESPONDER)) {
 				responderName = reader.getValue();
-			} else if (nodeName.equals(TAG_INITIATOR_EFFECTS_CONTAINER)) {
-				initiatorEffectsContainer = (StoryComponentContainer) context
-						.convertAnother(collaborativeTask,
-								StoryComponentContainer.class);
-			} else if (nodeName.equals(TAG_RESPONDER_EFFECTS_CONTAINER)) {
-				responderEffectsContainer = (StoryComponentContainer) context
-						.convertAnother(collaborativeTask,
-								StoryComponentContainer.class);
+			} else if (nodeName.equals(TAG_INITIATOR_EFFECTS)) {
+
+				initiatorEffects = (List<ScriptIt>) context.convertAnother(
+						collaborativeTask, ArrayList.class);
+
+			} else if (nodeName.equals(TAG_RESPONDER_EFFECTS)) {
+
+				responderEffects = (List<ScriptIt>) context.convertAnother(
+						collaborativeTask, ArrayList.class);
 			}
 
 			reader.moveUp();
@@ -87,10 +95,8 @@ public class CollaborativeTaskConverter extends TaskConverter {
 		collaborativeTask.setInitiatorName(initiatorName);
 		collaborativeTask.setResponderName(responderName);
 
-		collaborativeTask
-				.setInitiatorEffectsContainer(initiatorEffectsContainer);
-		collaborativeTask
-				.setResponderEffectsContainer(responderEffectsContainer);
+		collaborativeTask.setInitiatorEffects(initiatorEffects);
+		collaborativeTask.setResponderEffects(responderEffects);
 
 		return collaborativeTask;
 	}
