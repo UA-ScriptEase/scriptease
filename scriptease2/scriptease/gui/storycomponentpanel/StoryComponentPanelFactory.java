@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.SEModelEvent;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
@@ -36,6 +37,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -428,7 +430,7 @@ public class StoryComponentPanelFactory {
 			}
 
 			@Override
-			public void processBehaviour(Behaviour behaviour) {
+			public void processBehaviour(final Behaviour behaviour) {
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
 
@@ -439,13 +441,15 @@ public class StoryComponentPanelFactory {
 				mainPanel.add(Box.createHorizontalStrut(3));
 				modificationButton = ComponentFactory.buildEditButton();
 				mainPanel.add(modificationButton);
-				
+
 				// Add a listener for the modification button
 				modificationButton.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						
+						SEModelManager.getInstance().notifyChange(
+								SEModelManager.getInstance().getActiveModel(),
+								SEModelEvent.Type.BEHAVIOUR_EDITED);
 					}
 				});
 
