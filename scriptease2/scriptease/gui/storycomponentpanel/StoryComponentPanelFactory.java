@@ -9,12 +9,14 @@ import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.pane.DescribeItPanel;
@@ -33,6 +35,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -425,6 +428,34 @@ public class StoryComponentPanelFactory {
 			}
 
 			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
+				parseDisplayText(mainPanel, behaviour, true);
+
+				// Add a modification button
+				final JButton modificationButton;
+				mainPanel.add(Box.createHorizontalStrut(3));
+				modificationButton = ComponentFactory.buildEditButton();
+				mainPanel.add(modificationButton);
+				
+				// Add a listener for the modification button
+				modificationButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+					}
+				});
+
+				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+
+				// Add the children panels
+				addChildrenPanels(behaviour, panel);
+			}
+
+			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
 
@@ -484,8 +515,8 @@ public class StoryComponentPanelFactory {
 														ScriptWidgetFactory.LABEL_TEXT_COLOUR,
 														bgColor);
 										mainPanel.add(label, 0);
-										mainPanel.add(Box
-												.createHorizontalStrut(5), 1);
+										mainPanel.add(
+												Box.createHorizontalStrut(5), 1);
 									}
 								}
 

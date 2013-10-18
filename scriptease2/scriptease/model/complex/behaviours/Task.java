@@ -21,7 +21,7 @@ public abstract class Task extends ComplexStoryComponent {
 
 	private Set<Task> successors;
 	private Set<Task> parents;
-	
+
 	private double chance;
 
 	/**
@@ -35,7 +35,7 @@ public abstract class Task extends ComplexStoryComponent {
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();
 		this.chance = 100;
-		
+
 		// Tasks don't need to have childrens - yet.
 		this.registerChildTypes(
 				new ArrayList<Class<? extends StoryComponent>>(), 0);
@@ -65,7 +65,7 @@ public abstract class Task extends ComplexStoryComponent {
 
 		return true;
 	}
-	
+
 	/**
 	 * Adds a collection of successors to this task.
 	 * 
@@ -93,7 +93,7 @@ public abstract class Task extends ComplexStoryComponent {
 
 		return false;
 	}
-	
+
 	// ************* GETTERS AND SETTERS ********************//
 
 	/**
@@ -139,5 +139,27 @@ public abstract class Task extends ComplexStoryComponent {
 	 */
 	public void setParents(Set<Task> parents) {
 		this.parents = parents;
+	}
+
+	@Override
+	public Task clone() {
+		final Task component = (Task) super.clone();
+
+		component.chance = this.chance;
+
+		component.successors = new HashSet<Task>(this.successors.size());
+		component.parents = new HashSet<Task>(this.parents.size());
+
+		// clone the successors
+		for (Task task : this.successors) {
+			component.successors.add(task.clone());
+		}
+
+		// clone the parents
+		for (Task task : this.parents) {
+			component.parents.add(task.clone());
+		}
+
+		return component;
 	}
 }

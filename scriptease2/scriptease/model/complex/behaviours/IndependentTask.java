@@ -51,4 +51,19 @@ public class IndependentTask extends Task {
 	public void setEffects(List<ScriptIt> effects) {
 		this.effects = effects;
 	}
+	
+	@Override
+	public IndependentTask clone() {
+		final IndependentTask component = (IndependentTask) super.clone();
+
+		component.effects = new ArrayList<ScriptIt>(
+				this.effects.size());
+
+		// clone the effects
+		for (ScriptIt effect : this.effects) {
+			component.effects.add(effect.clone());
+		}
+
+		return component;
+	}
 }

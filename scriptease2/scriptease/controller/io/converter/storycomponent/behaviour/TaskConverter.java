@@ -47,14 +47,24 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 		final Set<Task> successors = new HashSet<Task>();
 		String chance = null;
 
-		while (reader.hasMoreChildren()) {
+		if (reader.hasMoreChildren()) {
 			reader.moveDown();
 
 			if (reader.getNodeName().equalsIgnoreCase(TAG_CHANCE)) {
 				chance = reader.getValue();
-				
-			} else if (reader.getNodeName().equalsIgnoreCase(TAG_SUCCESSORS)) {
-				
+			} else {
+				System.err.println("Expected " + TAG_CHANCE + " but found "
+						+ reader.getNodeName());
+			}
+
+			reader.moveUp();
+		}
+
+		if (reader.hasMoreChildren()) {
+			reader.moveDown();
+			
+			if (reader.getNodeName().equalsIgnoreCase(TAG_SUCCESSORS)) {
+
 				while (reader.hasMoreChildren()) {
 					reader.moveDown();
 					final String nodeName = reader.getNodeName();
@@ -76,10 +86,8 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 				}
 
 			} else {
-				System.err
-						.println("Expected " + TAG_CHANCE + " or "
-								+ TAG_SUCCESSORS + " but found "
-								+ reader.getNodeName());
+				System.err.println("Expected " + TAG_SUCCESSORS + " but found "
+						+ reader.getNodeName());
 			}
 
 			reader.moveUp();

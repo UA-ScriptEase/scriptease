@@ -157,7 +157,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.includeFilePaths = new ArrayList<String>();
 
 		final Collection<StoryComponentContainer> categories;
-		
+
 		categories = new ArrayList<StoryComponentContainer>();
 
 		this.buildCategories();
@@ -529,6 +529,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					scriptIt.removeStoryComponentObserver(LibraryModel.this);
 
 			}
+
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
 				final boolean success = LibraryModel.this.causesCategory
@@ -743,6 +744,22 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			super.processScriptIt(scriptIt);
 
 			for (CodeBlock block : scriptIt.getCodeBlocks()) {
+				if (block.getId() == this.targetId
+						&& block instanceof CodeBlockSource) {
+					this.found = (CodeBlockSource) block;
+					return;
+				}
+			}
+		}
+
+		@Override
+		public void processBehaviour(Behaviour behaviour) {
+			if (this.found != null)
+				return;
+
+			super.processBehaviour(behaviour);
+
+			for (CodeBlock block : behaviour.getCodeBlocks()) {
 				if (block.getId() == this.targetId
 						&& block instanceof CodeBlockSource) {
 					this.found = (CodeBlockSource) block;

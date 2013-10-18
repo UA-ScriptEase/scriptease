@@ -105,6 +105,31 @@ public class CollaborativeTask extends Task {
 	}
 
 	@Override
+	public CollaborativeTask clone() {
+		final CollaborativeTask component = (CollaborativeTask) super.clone();
+
+		component.initiatorName = this.initiatorName;
+		component.responderName = this.responderName;
+
+		component.initiatorEffects = new ArrayList<ScriptIt>(
+				this.initiatorEffects.size());
+		component.responderEffects = new ArrayList<ScriptIt>(
+				this.responderEffects.size());
+
+		// clone the initiator effects
+		for (ScriptIt effect : this.initiatorEffects) {
+			component.initiatorEffects.add(effect.clone());
+		}
+
+		// clone the collaborator effects
+		for (ScriptIt effect : this.responderEffects) {
+			component.responderEffects.add(effect.clone());
+		}
+
+		return component;
+	}
+
+	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processCollaborativeTask(this);
 	}

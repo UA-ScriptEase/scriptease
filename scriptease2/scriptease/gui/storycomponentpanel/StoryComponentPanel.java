@@ -56,7 +56,7 @@ public class StoryComponentPanel extends JPanel implements
 	private boolean removable;
 
 	private ExpansionButton expansionButton;
-
+	
 	public StoryComponentPanel(StoryComponent component) {
 		// State of Panel
 		this.setOpaque(true);

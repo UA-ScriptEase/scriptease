@@ -1,13 +1,10 @@
 package scriptease.controller.io.converter.storycomponent.behaviour;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
