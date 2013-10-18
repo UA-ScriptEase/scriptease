@@ -30,6 +30,17 @@ public class Behaviour extends ScriptIt {
 	public Behaviour(String name) {
 		this(name, Type.INDEPENDENT, null, 0);
 	}
+	
+	@Override
+	public Behaviour clone() {
+		final Behaviour component = (Behaviour) super.clone();
+
+		component.type = this.type;
+		component.priority = this.priority;
+		component.startTask = this.startTask.clone();
+		
+		return component;
+	}
 
 	/**
 	 * Creates a new behaviour.

@@ -9,6 +9,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.behaviours.Behaviour;
 import sun.awt.util.IdentityArrayList;
 
 /**
@@ -55,6 +56,7 @@ public class ControlIt extends ScriptIt {
 		this.registerChildType(StoryComponentContainer.class, max);
 		this.registerChildType(Note.class, max);
 		this.registerChildType(ControlIt.class, max);
+		this.registerChildType(Behaviour.class, max);
 		this.registerChildType(AskIt.class, max);
 	}
 
@@ -141,7 +143,7 @@ public class ControlIt extends ScriptIt {
 				final StoryComponent owner = complex.getOwner();
 
 				if (owner != null && owner instanceof ComplexStoryComponent
-						//&& !(owner instanceof CauseIt)
+				// && !(owner instanceof CauseIt)
 						&& !(owner instanceof StoryPoint)) {
 					owner.process(this);
 				}

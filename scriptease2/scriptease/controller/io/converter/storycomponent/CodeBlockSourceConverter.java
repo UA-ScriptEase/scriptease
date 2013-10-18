@@ -27,8 +27,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class CodeBlockSourceConverter extends StoryComponentConverter {
 
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class. 
 	public static final String TAG_CODE_BLOCK_SOURCE = "CodeBlockSource";
 
 	private static final String TAG_SUBJECT = "Subject";
