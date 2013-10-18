@@ -237,11 +237,16 @@ class SEModelTabbedPane extends JTabbedPane {
 			final StoryPoint start) {
 		final String STORY_EDITOR = "Story Editor";
 		final String DIALOGUE_EDITOR = "Dialogue Editor";
+		final String BEHAVIOUR_EDITOR = "Behaviour Editor";
+
 		final CardLayout layout;
 		final JPanel topLevelPane;
 		final JSplitPane storyPanel;
 		final JToolBar graphToolBar;
+
 		final DialogueEditorPanel dialogueEditor;
+		final BehaviourEditorPanel behaviourEditor;
+
 		final JButton backToStory;
 
 		final SEGraph<StoryNode> storyGraph;
@@ -264,6 +269,7 @@ class SEModelTabbedPane extends JTabbedPane {
 				"<html><center>Back<br>to<br>Story</center></html>");
 
 		dialogueEditor = new DialogueEditorPanel(model, backToStory);
+		behaviourEditor = new BehaviourEditorPanel(model, backToStory);
 
 		graphRedrawer = new StoryComponentObserver() {
 			@Override
@@ -298,7 +304,8 @@ class SEModelTabbedPane extends JTabbedPane {
 
 						storyGraph.setSelectedNodes(nodes);
 
-						final StoryComponent owner = event.getSource().getOwner();
+						final StoryComponent owner = event.getSource()
+								.getOwner();
 						if (owner instanceof StoryGroup) {
 							storyComponentTree.setRoot((StoryGroup) owner);
 						} else {
@@ -394,6 +401,15 @@ class SEModelTabbedPane extends JTabbedPane {
 		topLevelPane.setOpaque(true);
 		topLevelPane.add(storyPanel, STORY_EDITOR);
 		topLevelPane.add(dialogueEditor, DIALOGUE_EDITOR);
+		topLevelPane.add(behaviourEditor, BEHAVIOUR_EDITOR);
+
+		SEModelManager.getInstance().addSEModelObserver(this,
+				new SEModelObserver() {
+
+					public void modelChanged(SEModelEvent event) {
+						layout.show(topLevelPane, BEHAVIOUR_EDITOR);
+					}
+				});
 
 		backToStory.addActionListener(new ActionListener() {
 			@Override
@@ -428,6 +444,7 @@ class SEModelTabbedPane extends JTabbedPane {
 					dialogueEditor.setDialogueLine(null);
 				}
 			}
+
 		});
 
 		return topLevelPane;

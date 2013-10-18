@@ -19,7 +19,7 @@ public final class SEModelEvent {
 	private final Type eventType;
 
 	public static enum Type {
-		ACTIVATED, ADDED, REMOVED, TITLECHANGED;
+		ACTIVATED, ADDED, REMOVED, TITLECHANGED, BEHAVIOUR_EDITED;
 	}
 
 	/**
