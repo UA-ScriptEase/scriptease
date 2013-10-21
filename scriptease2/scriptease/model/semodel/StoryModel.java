@@ -29,6 +29,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
@@ -156,6 +157,12 @@ public final class StoryModel extends SEModel {
 		}
 	}
 
+	public void notifyBehaviourEdited(Behaviour behaviour) {
+		for (StoryModelObserver observer : this.observerManager.getObservers()) {
+			observer.behaviourEdited(behaviour);
+		}
+	}
+	
 	/**
 	 * Sets the root of the model to the passed in {@link StoryPoint}. This is a
 	 * simple setter method that does not fire off any observers.
