@@ -5,7 +5,6 @@ import java.util.List;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
 /**
@@ -27,9 +26,6 @@ public class IndependentTask extends Task {
 		super(name);
 		
 		this.effects = new ArrayList<ScriptIt>();
-		
-		this.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
 
 	@Override

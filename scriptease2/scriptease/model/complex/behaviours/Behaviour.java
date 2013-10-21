@@ -31,17 +31,6 @@ public class Behaviour extends ScriptIt {
 		this(name, Type.INDEPENDENT, null, 0);
 	}
 	
-	@Override
-	public Behaviour clone() {
-		final Behaviour component = (Behaviour) super.clone();
-
-		component.type = this.type;
-		component.priority = this.priority;
-		component.startTask = this.startTask.clone();
-		
-		return component;
-	}
-
 	/**
 	 * Creates a new behaviour.
 	 * 
@@ -111,6 +100,17 @@ public class Behaviour extends ScriptIt {
 		this.type = type;
 	}
 
+	@Override
+	public Behaviour clone() {
+		final Behaviour component = (Behaviour) super.clone();
+
+		component.type = this.type;
+		component.priority = this.priority;
+		component.startTask = this.startTask.clone();
+		
+		return component;
+	}
+	
 	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processBehaviour(this);
