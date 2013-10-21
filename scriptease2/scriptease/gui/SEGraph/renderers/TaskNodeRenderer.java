@@ -74,15 +74,13 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
+		spinner.setValue(task.getChance());
 
 		spinner.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				final Object value = spinner.getValue();
-
-				if (value instanceof Double)
-					task.setChance((Double) spinner.getValue());
+				task.setChance((Double) spinner.getValue());
 			}
 		});
 
@@ -103,6 +101,10 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 					}
 				}, true, Color.WHITE);
 
+		if (graph.isReadOnly()) {
+			nameField.setEditable(false);
+		}
+
 		component.add(nameField);
 		component.add(spinner);
 		component.add(percent);
@@ -113,7 +115,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		final JPanel namePanel;
 		final JTextField initiatorField;
-		final JTextField collaboratorField;
+		final JTextField reactorField;
 
 		final JLabel percent;
 
@@ -123,19 +125,17 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		namePanel = new JPanel();
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
 		initiatorField = new JTextField(task.getInitiatorName());
-		collaboratorField = new JTextField(task.getResponderName());
+		reactorField = new JTextField(task.getResponderName());
 
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
+		spinner.setValue(task.getChance());
 
 		spinner.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				final Object value = spinner.getValue();
-
-				if (value instanceof Double)
-					task.setChance((Double) spinner.getValue());
+				task.setChance((Double) spinner.getValue());
 			}
 		});
 
@@ -154,21 +154,26 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 					}
 				}, true, Color.WHITE);
 
-		WidgetDecorator.decorateJTextFieldForFocusEvents(collaboratorField,
+		WidgetDecorator.decorateJTextFieldForFocusEvents(reactorField,
 				new Runnable() {
 
 					@Override
 					public void run() {
-						task.setResponderName(collaboratorField.getText());
+						task.setResponderName(reactorField.getText());
 
 						graph.revalidate();
 						graph.repaint();
 					}
 				}, true, Color.WHITE);
 
+		if (graph.isReadOnly()) {
+			initiatorField.setEditable(false);
+			reactorField.setEditable(false);
+		}
+
 		namePanel.add(initiatorField);
-		namePanel.add(collaboratorField);
-		
+		namePanel.add(reactorField);
+
 		component.add(namePanel);
 		component.add(spinner);
 		component.add(percent);

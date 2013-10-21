@@ -121,13 +121,13 @@ public class SEGraphFactory {
 	 *            The graph start task node.
 	 * @return
 	 */
-	public static SEGraph<Task> buildTaskGraph(Task start) {
+	public static SEGraph<Task> buildTaskGraph(Task start, boolean readOnly) {
 		final SEGraph<Task> graph;
 		final TaskGraphModel taskGraphModel;
 
 		taskGraphModel = new TaskGraphModel(start);
 		graph = new SEGraph<Task>(taskGraphModel,
-				SelectionMode.SELECT_NODE, false, true, true);
+				SelectionMode.SELECT_NODE, readOnly, true, true);
 
 		graph.setNodeRenderer(new TaskNodeRenderer(graph));
 

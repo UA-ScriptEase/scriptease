@@ -266,7 +266,7 @@ public class LibraryEditorPanelFactory {
 			behaviour.setStartTask(startTask);
 		}
 
-		graph = SEGraphFactory.buildTaskGraph(startTask);
+		graph = SEGraphFactory.buildTaskGraph(startTask, false);
 		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
 
 		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {

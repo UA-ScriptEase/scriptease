@@ -270,7 +270,7 @@ class SEModelTabbedPane extends JTabbedPane {
 				"<html><center>Back<br>to<br>Story</center></html>");
 
 		dialogueEditor = new DialogueEditorPanel(model, backToStory);
-		behaviourEditor = new BehaviourEditorPanel(model, backToStory);
+		behaviourEditor = new BehaviourEditorPanel(backToStory);
 
 		graphRedrawer = new StoryComponentObserver() {
 			@Override

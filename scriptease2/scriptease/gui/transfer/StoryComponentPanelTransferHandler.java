@@ -243,6 +243,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			}
 
 		} else if (supportComponent instanceof TaskEffectsPanel) {
+			final TaskEffectsPanel taskPanel = (TaskEffectsPanel) supportComponent;
+			
+			if (!taskPanel.isEditable())
+				return false;
+			
 			final StoryComponent component;
 
 			component = this.extractStoryComponents(support).iterator().next();

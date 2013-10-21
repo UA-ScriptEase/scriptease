@@ -172,9 +172,13 @@ public class StoryComponentPanelManager {
 				if (panel.getParent() instanceof TaskEffectsPanel) {
 					final TaskEffectsPanel taskPanel = (TaskEffectsPanel) panel
 							.getParent();
+					
+					if (!taskPanel.isEditable())
+						return;
+						
 					final TaskEffectsPanel.TYPE type = taskPanel.getType();
 					final Task task = taskPanel.getTask();
-
+					
 					taskPanel.removeEffect((ScriptIt) child);
 
 					if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
