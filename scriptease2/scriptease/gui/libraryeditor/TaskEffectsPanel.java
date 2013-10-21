@@ -29,6 +29,7 @@ public class TaskEffectsPanel extends JPanel {
 	private final Task task;
 	private final TaskEffectsPanel.TYPE type;
 	private final StoryComponentPanelManager panelManager;
+	private final boolean editable;
 
 	public enum TYPE {
 		INDEPENDENT, COLLABORATIVE_INIT, COLLABORATIVE_REACT
@@ -40,11 +41,12 @@ public class TaskEffectsPanel extends JPanel {
 	 * @param task
 	 *            the task to create the effect panel for.
 	 */
-	public TaskEffectsPanel(String name, Task task, TaskEffectsPanel.TYPE type) {
+	public TaskEffectsPanel(String name, Task task, TaskEffectsPanel.TYPE type, boolean editable) {
 		super();
 
 		this.type = type;
 		this.task = task;
+		this.editable = editable;
 		this.panelManager = new StoryComponentPanelManager();
 
 		if (type == TaskEffectsPanel.TYPE.INDEPENDENT
@@ -85,6 +87,9 @@ public class TaskEffectsPanel extends JPanel {
 	 * @param component
 	 */
 	public boolean addEffect(ScriptIt effect) {
+//		if (!editable)
+//			return false;
+		
 		// Don't want to be setting causes.
 		if (effect != null && (effect instanceof CauseIt))
 			return false;
@@ -115,6 +120,9 @@ public class TaskEffectsPanel extends JPanel {
 	 * @return
 	 */
 	public boolean removeEffect(ScriptIt effect) {
+		if (!editable)
+			return false;
+		
 		for (Component component : this.getComponents()) {
 			if (component instanceof StoryComponentPanel) {
 				final StoryComponentPanel panel = (StoryComponentPanel) component;

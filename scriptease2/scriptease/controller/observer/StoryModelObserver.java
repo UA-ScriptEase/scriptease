@@ -1,5 +1,6 @@
 package scriptease.controller.observer;
 
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
@@ -53,4 +54,11 @@ public interface StoryModelObserver {
 	 * @param library
 	 */
 	public void dialogueChildRemoved(DialogueLine removed, DialogueLine parent);
+	
+	/**
+	 * Fired when the behaviour is edited in the story model.
+	 * 
+	 * @param behaviour
+	 */
+	public void behaviourEdited(Behaviour behaviour);
 }

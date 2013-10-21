@@ -295,15 +295,15 @@ public class LibraryEditorPanelFactory {
 
 				if (task instanceof IndependentTask) {
 					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
-							TaskEffectsPanel.TYPE.INDEPENDENT));
+							TaskEffectsPanel.TYPE.INDEPENDENT, true));
 
 				} else if (task instanceof CollaborativeTask) {
 					effectsPanel.add(new TaskEffectsPanel(
 							"Initiator Task Panel", task,
-							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT));
+							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT, true));
 					effectsPanel.add(new TaskEffectsPanel(
 							"Collaborator Task Panel", task,
-							TaskEffectsPanel.TYPE.COLLABORATIVE_REACT));
+							TaskEffectsPanel.TYPE.COLLABORATIVE_REACT, true));
 				}
 
 				behaviourPanel.add(effectsPanel);

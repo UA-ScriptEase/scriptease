@@ -63,6 +63,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -403,14 +404,6 @@ class SEModelTabbedPane extends JTabbedPane {
 		topLevelPane.add(dialogueEditor, DIALOGUE_EDITOR);
 		topLevelPane.add(behaviourEditor, BEHAVIOUR_EDITOR);
 
-		SEModelManager.getInstance().addSEModelObserver(this,
-				new SEModelObserver() {
-
-					public void modelChanged(SEModelEvent event) {
-						layout.show(topLevelPane, BEHAVIOUR_EDITOR);
-					}
-				});
-
 		backToStory.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -445,6 +438,13 @@ class SEModelTabbedPane extends JTabbedPane {
 				}
 			}
 
+			@Override
+			public void behaviourEdited(Behaviour behaviour) {
+				if (behaviour != null) {
+					layout.show(topLevelPane, BEHAVIOUR_EDITOR);
+					behaviourEditor.setBehaviour(behaviour);
+				}
+			}
 		});
 
 		return topLevelPane;

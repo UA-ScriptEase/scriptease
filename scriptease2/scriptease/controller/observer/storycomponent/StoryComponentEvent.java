@@ -63,7 +63,6 @@ public final class StoryComponentEvent {
 		STORY_NODE_SUCCESSOR_REMOVED, 
 		TASK_SUCCESSOR_ADDED,
 		TASK_SUCCESSOR_REMOVED,
-		BEHAVIOUR_EDITED
 	}
 
 	@Override
