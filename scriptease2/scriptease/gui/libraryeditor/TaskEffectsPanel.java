@@ -41,7 +41,8 @@ public class TaskEffectsPanel extends JPanel {
 	 * @param task
 	 *            the task to create the effect panel for.
 	 */
-	public TaskEffectsPanel(String name, Task task, TaskEffectsPanel.TYPE type, boolean editable) {
+	public TaskEffectsPanel(String name, Task task, TaskEffectsPanel.TYPE type,
+			boolean editable) {
 		super();
 
 		this.type = type;
@@ -87,9 +88,6 @@ public class TaskEffectsPanel extends JPanel {
 	 * @param component
 	 */
 	public boolean addEffect(ScriptIt effect) {
-//		if (!editable)
-//			return false;
-		
 		// Don't want to be setting causes.
 		if (effect != null && (effect instanceof CauseIt))
 			return false;
@@ -120,9 +118,6 @@ public class TaskEffectsPanel extends JPanel {
 	 * @return
 	 */
 	public boolean removeEffect(ScriptIt effect) {
-		if (!editable)
-			return false;
-		
 		for (Component component : this.getComponents()) {
 			if (component instanceof StoryComponentPanel) {
 				final StoryComponentPanel panel = (StoryComponentPanel) component;
@@ -149,6 +144,13 @@ public class TaskEffectsPanel extends JPanel {
 	 */
 	public Task getTask() {
 		return this.task;
+	}
+
+	/**
+	 * @return whether the task panel is editable.
+	 */
+	public boolean isEditable() {
+		return this.editable;
 	}
 
 	public StoryComponentPanelManager getPanelManager() {
