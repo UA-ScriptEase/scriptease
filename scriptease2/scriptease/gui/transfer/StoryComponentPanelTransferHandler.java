@@ -27,9 +27,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.WindowFactory;
 import scriptease.gui.component.BindingWidget;
-import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
@@ -192,21 +190,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			// The start story point can't be accepting any children.
 			if (acceptingPanel.getStoryComponent() instanceof StoryPoint) {
-				final StoryPoint storyPoint = (StoryPoint) acceptingPanel
-						.getStoryComponent();
-
 				if (SEModelManager.getInstance().getActiveStoryModel() == null)
 					return false;
-
-				else if (storyPoint == SEModelManager.getInstance()
-						.getActiveRoot() || storyPoint.getUniqueID() == 1) {
-					WindowFactory
-							.getInstance()
-							.showUserInformationBox(
-									"You can't drag components into the start story point.\n Create a new story point instead.",
-									UserInformationType.ERROR);
-					return false;
-				}
 			}
 
 			if (acceptingPanel.isEditable()) {
