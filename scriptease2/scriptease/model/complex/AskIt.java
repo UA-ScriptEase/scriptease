@@ -66,7 +66,7 @@ public final class AskIt extends ComplexStoryComponent {
 	 * 
 	 */
 	public AskIt() {
-		super("<Question");
+		super("<Question>");
 
 		final List<Class<? extends StoryComponent>> ifElseValidTypes;
 
@@ -77,7 +77,7 @@ public final class AskIt extends ComplexStoryComponent {
 		// AskIts can have two children of type StoryComponentContainer. These
 		// function as containers for the If/Else blocks
 		this.registerChildType(StoryComponentContainer.class, 2);
-
+		
 		// Define the valid types for the two sub-groups
 		ifElseValidTypes.add(AskIt.class);
 		ifElseValidTypes.add(ScriptIt.class);
@@ -94,6 +94,8 @@ public final class AskIt extends ComplexStoryComponent {
 
 		this.addStoryChild(this.ifBlock);
 		this.addStoryChild(this.elseBlock);
+		
+		this.setDisplayText("<Question>");
 	}
 
 	/* ================== IMPORTANT CODE ================== */

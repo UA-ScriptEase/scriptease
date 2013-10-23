@@ -7,6 +7,7 @@ import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -98,6 +99,12 @@ public class CategoryFilter extends StoryComponentFilter {
 			else
 				this.acceptable = CategoryFilter.this.category
 						.equals(Category.CONTROLS);
+		}
+
+		@Override
+		public void processPickIt(PickIt pickIt) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.CONTROLS);
 		}
 
 		@Override
