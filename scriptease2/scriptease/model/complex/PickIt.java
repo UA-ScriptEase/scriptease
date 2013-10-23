@@ -1,7 +1,8 @@
 package scriptease.model.complex;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
@@ -21,7 +22,10 @@ import scriptease.model.StoryComponent;
  */
 public class PickIt extends ComplexStoryComponent {
 
-	private Collection<StoryComponentContainer> choices;
+	/**
+	 * A WeakHashMap for the choices and their probabilities.
+	 */
+	private Map<StoryComponentContainer, Integer> choices;
 
 	/**
 	 * Builds a new PickIt.
@@ -29,18 +33,20 @@ public class PickIt extends ComplexStoryComponent {
 	public PickIt() {
 		super("<Pick>");
 
+		this.setDisplayText("Pick");
+
+		this.registerChildType(StoryComponentContainer.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+
 		final StoryComponentContainer choiceOne;
 		final StoryComponentContainer choiceTwo;
 
 		choiceOne = new StoryComponentContainer("Choice 1");
 		choiceTwo = new StoryComponentContainer("Choice 2");
 
-		this.choices = new ArrayList<StoryComponentContainer>();
-		this.choices.add(choiceOne);
-		this.choices.add(choiceTwo);
-
-		this.registerChildType(StoryComponentContainer.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.choices = new WeakHashMap<StoryComponentContainer, Integer>();
+		this.choices.put(choiceOne, 50);
+		this.choices.put(choiceTwo, 50);
 
 		this.addStoryChild(choiceOne);
 		this.addStoryChild(choiceTwo);
@@ -51,7 +57,7 @@ public class PickIt extends ComplexStoryComponent {
 	 * 
 	 * @return
 	 */
-	public Collection<StoryComponentContainer> getChoices() {
+	public Map<StoryComponentContainer, Integer> getChoices() {
 		return this.choices;
 	}
 
@@ -64,10 +70,11 @@ public class PickIt extends ComplexStoryComponent {
 	public PickIt clone() {
 		final PickIt clone = (PickIt) super.clone();
 
-		clone.choices = new ArrayList<StoryComponentContainer>();
+		clone.choices = new WeakHashMap<StoryComponentContainer, Integer>();
 
-		for (StoryComponentContainer choice : this.choices) {
-			clone.choices.add(choice.clone());
+		for (Entry<StoryComponentContainer, Integer> entry : this.choices
+				.entrySet()) {
+			clone.choices.put(entry.getKey().clone(), entry.getValue());
 		}
 
 		return clone;

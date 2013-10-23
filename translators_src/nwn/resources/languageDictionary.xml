@@ -202,6 +202,7 @@
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
 				<FormatRef data="askIt" ref="askItConditional" />
+				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="controlIt" ref="controlItCall" />
 			</Series>
@@ -327,6 +328,11 @@
 			<Line>
 				<Literal>}</Literal>
 			</Line>
+		</Format>
+		
+		<!-- Format for pickits -->
+		<Format id="pickItConditional">
+			<!-- TODO -->
 		</Format>
 
 		<!-- Format for the main method in normal script files -->
