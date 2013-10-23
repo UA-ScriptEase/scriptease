@@ -66,14 +66,13 @@ public final class AskIt extends ComplexStoryComponent {
 	 * 
 	 */
 	public AskIt() {
-		super("<No Name>");
+		super("<Question");
 
 		final List<Class<? extends StoryComponent>> ifElseValidTypes;
 
 		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
 
 		this.setCondition(new KnowIt("Question", GameType.DEFAULT_BOOL_TYPE));
-		this.setDisplayText("<Question>");
 
 		// AskIts can have two children of type StoryComponentContainer. These
 		// function as containers for the If/Else blocks

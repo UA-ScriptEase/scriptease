@@ -9,6 +9,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
@@ -88,6 +89,11 @@ public abstract class StoryAdapter implements StoryVisitor {
 	@Override
 	public void processAskIt(AskIt questionIt) {
 		this.defaultProcessComplex(questionIt);
+	}
+	
+	@Override
+	public void processPickIt(PickIt pickIt) {
+		this.defaultProcessComplex(pickIt);
 	}
 
 	/*

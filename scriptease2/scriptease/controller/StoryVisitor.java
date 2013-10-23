@@ -8,6 +8,7 @@ import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
@@ -53,6 +54,8 @@ public interface StoryVisitor {
 			StoryComponentContainer storyComponentContainer);
 
 	public void processAskIt(AskIt askIt);
+	
+	public void processPickIt(PickIt pickIt);
 	
 	public void processControlIt(ControlIt controlIt);
 	

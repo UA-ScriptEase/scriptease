@@ -45,6 +45,11 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		}
 	}
+	
+	@Override
+	public StoryComponentContainer clone() {
+		return (StoryComponentContainer) super.clone();
+	}
 
 	@Override
 	public void process(StoryVisitor visitor) {
