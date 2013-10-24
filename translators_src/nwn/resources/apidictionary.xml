@@ -17217,7 +17217,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetCameraFacing(</Literal>
+              <Literal>AssignCommand(GetFirstPC(), SetCameraFacing(</Literal>
               <Scope data="argument" ref="Direction">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -17233,7 +17233,7 @@
               <Scope data="argument" ref="Transition Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -17301,7 +17301,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>SetCameraFacing(</Literal>
+              <Literal>AssignCommand(GetFirstPC(), SetCameraFacing(</Literal>
               <Scope data="argument" ref="Direction">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
@@ -17317,7 +17317,7 @@
               <Scope data="argument" ref="Transition Type">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>));</Literal>
             </Line>
           </Code>
         </CodeBlockSource>

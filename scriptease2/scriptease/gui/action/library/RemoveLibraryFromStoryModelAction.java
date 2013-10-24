@@ -10,16 +10,18 @@ import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
- * Adds a library to an open {@link StoryModel}.
+ * Removes a library from an open {@link StoryModel}
  * 
- * @author kschenk
  * @author jyuen
+ * 
  */
 @SuppressWarnings("serial")
-public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
+public class RemoveLibraryFromStoryModelAction extends
+		ActiveModelSensitiveAction {
+
 	private final LibraryModel library;
 
-	public AddLibraryToStoryModelAction(LibraryModel library) {
+	public RemoveLibraryFromStoryModelAction(LibraryModel library) {
 		super(library.getTitle());
 
 		this.setEnabled(true);
@@ -36,7 +38,7 @@ public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		DialogBuilder.getInstance().showAddLibraryInfoDialog(this.library);
+		DialogBuilder.getInstance().showRemoveLibraryInfoDialog(this.library);
 	}
 	
 	public LibraryModel getLibrary() {
