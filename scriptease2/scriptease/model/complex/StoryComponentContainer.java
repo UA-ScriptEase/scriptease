@@ -34,18 +34,22 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 	public StoryComponentContainer(String displayName) {
 		this.setDisplayText(displayName);
 	}
-	
+
 	public StoryComponentContainer(
 			Collection<Class<? extends StoryComponent>> validTypes) {
+		this("", validTypes);
+	}
 
-		this("");
-		
+	public StoryComponentContainer(String displayName,
+			Collection<Class<? extends StoryComponent>> validTypes) {
+		this(displayName);
+
 		for (Class<? extends StoryComponent> validType : validTypes) {
 			registerChildType(validType,
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		}
 	}
-	
+
 	@Override
 	public StoryComponentContainer clone() {
 		return (StoryComponentContainer) super.clone();

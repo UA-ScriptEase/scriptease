@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.JPanel;
 
 import scriptease.model.StoryComponent;
@@ -24,6 +25,7 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	public static final String MAIN = "Main";
 	public static final String CHILD = "Child";
 	public static final String BUTTON = "Button";
+	public static final String TEXTFIELD = "TextField";
 
 	private boolean showChildren = true;
 
@@ -35,11 +37,13 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	private final int BOTTOM_GAP = 1;
 	private final int MAIN_INDENT = 5;
 	private final int BUTTON_GAP = 3;
+	private final int TEXTFIELD_GAP = 3;
 
 	// We keep handles to parent and children
 	private JPanel mainPanel;
 	private List<StoryComponentPanel> children = new ArrayList<StoryComponentPanel>();
 	private JButton button;
+	private JTextField textField;
 
 	public JPanel getMainPanel() {
 		return this.mainPanel;
@@ -61,6 +65,9 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 			this.children.add(index, childPanel);
 		} else if (BUTTON.equals(name) && comp instanceof JButton) {
 			this.button = (JButton) comp;
+		} else if (TEXTFIELD.equals(name)
+				&& comp instanceof JTextField) {
+			this.textField = (JTextField) comp;
 		} else {
 			throw new IllegalArgumentException(
 					"Cannot add to StoryComponentPanelLayoutManager: unknown combination of constraint "
@@ -103,27 +110,35 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 		// Determine if the expansion button is needed
 		int widestWidth = 0;
 		int sumHeight = 0;
+
 		if ((this.mainPanel != null) && this.mainPanel.isVisible()) {
 			final Dimension mainPanelSize = this.mainPanel.getPreferredSize();
 			final int mainPanelWidth = mainPanelSize.width;
 			final int mainPanelHeight = mainPanelSize.height;
 
 			final int width = mainPanelWidth + this.MAIN_INDENT;
+
+			widestWidth = width;
+			sumHeight += mainPanelHeight + this.TOP_GAP;
+
 			if (this.button != null && this.button.isVisible()) {
 				final Dimension buttonPreferredSize;
 
 				buttonPreferredSize = this.button.getPreferredSize();
 
-				widestWidth = width + buttonPreferredSize.width
-						+ this.BUTTON_GAP;
-				sumHeight += Math.max(mainPanelHeight + this.TOP_GAP,
-						buttonPreferredSize.height / 2 + this.TOP_GAP
-								+ mainPanelHeight / 2);
-			} else {
-				widestWidth = width;
-				sumHeight += mainPanelHeight + this.TOP_GAP;
+				widestWidth += buttonPreferredSize.width + this.BUTTON_GAP;
+			}
+
+			if (this.textField != null && this.textField.isVisible()) {
+				final Dimension textFieldPreferredSize;
+
+				textFieldPreferredSize = this.textField.getPreferredSize();
+
+				widestWidth += textFieldPreferredSize.width * 5
+						+ this.TEXTFIELD_GAP;
 			}
 		}
+
 		if (this.showChildren) {
 			if (!this.children.isEmpty())
 				sumHeight += this.PARENT_CHILD_GAP;
@@ -136,6 +151,7 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 				}
 			}
 		}
+
 		sumHeight += this.BOTTOM_GAP;
 
 		final Insets insets = container.getInsets();
@@ -167,7 +183,10 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 
 			final int parentHeight = mainPanelHeight + this.TOP_GAP;
 			final int vertIndent = north + this.TOP_GAP;
+
 			int horIndent = west + this.MAIN_INDENT;
+			sumHeight += parentHeight;
+
 			if (this.button != null && this.button.isVisible()) {
 				final Dimension buttonSize = this.button.getPreferredSize();
 				final int buttonWidth = buttonSize.width;
@@ -176,10 +195,21 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 				this.button.setBounds(horIndent, vertIndent + mainPanelHeight
 						/ 2 - buttonHeight / 2, buttonWidth, buttonHeight);
 				horIndent += buttonWidth + this.BUTTON_GAP;
-				sumHeight += Math.max(parentHeight, vertIndent
-						+ mainPanelHeight / 2 + buttonHeight / 2);
-			} else
-				sumHeight += parentHeight;
+			}
+
+			if (this.textField != null && this.textField.isVisible()) {
+				final Dimension textFieldSize = this.textField
+						.getPreferredSize();
+				final int textFieldWidth = textFieldSize.width * 5;
+				final int textFieldHeight = textFieldSize.height;
+
+				this.textField.setBounds(horIndent, vertIndent
+						+ mainPanelHeight / 2 - textFieldHeight / 2,
+						textFieldWidth, textFieldHeight);
+
+				horIndent += textFieldWidth + this.TEXTFIELD_GAP;
+			}
+
 			this.mainPanel.setBounds(horIndent, vertIndent, mainPanelWidth,
 					mainPanelHeight);
 		}

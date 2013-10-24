@@ -1,11 +1,15 @@
 package scriptease.model.complex;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 
 /**
  * A PickIt represents a ComplexStoryComponent {@link ComplexStoryComponent}
@@ -27,22 +31,39 @@ public class PickIt extends ComplexStoryComponent {
 	 */
 	private Map<StoryComponentContainer, Integer> choices;
 
+	private int choiceCounter;
+
 	/**
 	 * Builds a new PickIt.
 	 */
 	public PickIt() {
 		super("<Pick>");
 
+		final List<Class<? extends StoryComponent>> choiceValidTypes;
+
+		final StoryComponentContainer choiceOne;
+		final StoryComponentContainer choiceTwo;
+
+		choiceValidTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		this.choiceCounter = 2;
+
 		this.setDisplayText("Pick");
 
 		this.registerChildType(StoryComponentContainer.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 
-		final StoryComponentContainer choiceOne;
-		final StoryComponentContainer choiceTwo;
+		// Define the valid types for the choices
+		choiceValidTypes.add(AskIt.class);
+		choiceValidTypes.add(ScriptIt.class);
+		choiceValidTypes.add(KnowIt.class);
+		choiceValidTypes.add(StoryComponentContainer.class);
+		choiceValidTypes.add(Note.class);
+		choiceValidTypes.add(ControlIt.class);
+		choiceValidTypes.add(PickIt.class);
 
-		choiceOne = new StoryComponentContainer("Choice 1");
-		choiceTwo = new StoryComponentContainer("Choice 2");
+		choiceOne = new StoryComponentContainer("Choice 1", choiceValidTypes);
+		choiceTwo = new StoryComponentContainer("Choice 2", choiceValidTypes);
 
 		this.choices = new WeakHashMap<StoryComponentContainer, Integer>();
 		this.choices.put(choiceOne, 50);
@@ -52,6 +73,27 @@ public class PickIt extends ComplexStoryComponent {
 		this.addStoryChild(choiceTwo);
 	}
 
+	public void addChoice(int probability) {
+		final List<Class<? extends StoryComponent>> choiceValidTypes;
+		final StoryComponentContainer choice;
+
+		choiceValidTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		choiceValidTypes.add(AskIt.class);
+		choiceValidTypes.add(ScriptIt.class);
+		choiceValidTypes.add(KnowIt.class);
+		choiceValidTypes.add(StoryComponentContainer.class);
+		choiceValidTypes.add(Note.class);
+		choiceValidTypes.add(ControlIt.class);
+		choiceValidTypes.add(PickIt.class);
+
+		choice = new StoryComponentContainer("Choice " + choiceCounter++,
+				choiceValidTypes);
+
+		this.choices.put(choice, probability);
+		this.addStoryChild(choice);
+	}
+
 	/**
 	 * Get the choices for this PickIt
 	 * 
@@ -59,6 +101,15 @@ public class PickIt extends ComplexStoryComponent {
 	 */
 	public Map<StoryComponentContainer, Integer> getChoices() {
 		return this.choices;
+	}
+
+	/**
+	 * Set the choices for this PickIt
+	 * 
+	 * @param choices
+	 */
+	public void setChoices(Map<StoryComponentContainer, Integer> choices) {
+		this.choices = choices;
 	}
 
 	@Override

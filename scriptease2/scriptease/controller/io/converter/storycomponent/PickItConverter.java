@@ -1,14 +1,13 @@
 package scriptease.controller.io.converter.storycomponent;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.WeakHashMap;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryGroup;
-import scriptease.model.complex.StoryPoint;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -49,36 +48,21 @@ public class PickItConverter extends ComplexStoryComponentConverter {
 
 		final Map<StoryComponentContainer, Integer> choices = new WeakHashMap<StoryComponentContainer, Integer>();
 
-		reader.moveDown();
-		
-		if (reader.hasMoreChildren()) {
-//			if (!reader.getNodeName().equalsIgnoreCase(TAG_CHOICES))
-//				System.err.println("Expected choices list, but found "
-//						+ reader.getNodeName());
-//			else {
-//				while (reader.hasMoreChildren()) {
-//					reader.moveDown();
-//					final String nodeName = reader.getNodeName();
+		while (reader.hasMoreChildren()) {
+			reader.moveDown();
+			final String nodeName = reader.getNodeName();
 //
-//					if (nodeName.equals(StoryPointConverter.TAG_STORYPOINT)) {
-//						successors.add((StoryPoint) context.convertAnother(
-//								storyNode, StoryPoint.class));
-//					} else if (nodeName
-//							.equals(StoryGroupConverter.TAG_STORYGROUP)) {
-//						successors.add((StoryGroup) context.convertAnother(
-//								storyNode, StoryGroup.class));
-//					} else {
-//						System.err
-//								.println("Trying to read a non StoryGroup or non StoryPoint ("
-//										+ reader.getNodeName()
-//										+ ") successor from " + storyNode);
-//					}
-//					reader.moveUp();
-//				}
-//				storyNode.addSuccessors(successors);
+//			if (nodeName.equals(PickItConverter.TAG_CHOICES)) {
+//				choices.put((Entry<StoryComponentContainer, Integer>) context
+//						.convertAnother(pickIt, Entry.class));
+//			} else {
+//				System.err.println("Trying to read a (" + reader.getNodeName()
+//						+ ") successor from " + storyNode);
 //			}
+			reader.moveUp();
 		}
-		reader.moveUp();
+
+		pickIt.setChoices(choices);
 
 		return pickIt;
 	}

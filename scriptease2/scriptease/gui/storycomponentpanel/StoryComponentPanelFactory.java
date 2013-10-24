@@ -2,6 +2,7 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
@@ -33,7 +35,9 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
@@ -466,16 +470,45 @@ public class StoryComponentPanelFactory {
 			}
 
 			@Override
+			public void processPickIt(final PickIt pickIt) {
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
+				parseDisplayText(mainPanel, pickIt, true);
+
+				// Add a addition button
+				final JButton additionButton;
+				mainPanel.add(Box.createHorizontalStrut(3));
+				additionButton = ComponentFactory.buildAddButton();
+				mainPanel.add(additionButton);
+
+				// Add a listener for the modification button
+				additionButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						pickIt.addChoice(50);
+					}
+				});
+
+				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+
+				// Add the children panels
+				addChildrenPanels(pickIt, panel);
+			}
+
+			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
-
-				if (complex instanceof ScriptIt) {
-					if (complex instanceof CauseIt
-							|| complex instanceof ControlIt) {
-						addExpansionButton(complex, panel);
-					}
-				} else
+				if (!(complex instanceof ScriptIt)
+						|| complex instanceof CauseIt
+						|| complex instanceof ControlIt)
 					addExpansionButton(complex, panel);
+
+				// Add probability box if it is a children of PickIt
+				if (complex.getOwner() instanceof PickIt) {
+					addProbabilityBox(complex, panel);
+				}
 
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
@@ -619,6 +652,47 @@ public class StoryComponentPanelFactory {
 				}
 			}
 
+			private void addProbabilityBox(final ComplexStoryComponent complex,
+					final StoryComponentPanel panel) {
+				if (!(complex.getOwner() instanceof PickIt)
+						&& !(complex instanceof StoryComponentContainer))
+					return;
+
+				final PickIt owner = (PickIt) complex.getOwner();
+
+				final JTextField probabilityField;
+
+				probabilityField = ComponentFactory.buildNumberTextField();
+
+				probabilityField.setMaximumSize(new Dimension(5, 20));
+				probabilityField.setMinimumSize(new Dimension(5, 20));
+				probabilityField.setPreferredSize(new Dimension(5, 20));
+
+//				probabilityField.setText(Integer.toString(owner.getChoices()
+//						.get(complex)));
+
+				// probabilityField
+				// .addPropertyChangeListener(new PropertyChangeListener() {
+				//
+				// @Override
+				// public void propertyChange(PropertyChangeEvent event) {
+				// final String text = event.getNewValue() != null ? event
+				// .getNewValue().toString() : "";
+				//
+				// if (!text.equals(""))
+				// owner.getChoices().put(
+				// (StoryComponentContainer) complex,
+				// Integer.parseInt(text));
+				// else
+				// owner.getChoices().put(
+				// (StoryComponentContainer) complex,
+				// 0);
+				// }
+				// });
+
+				panel.add(probabilityField,
+						StoryComponentPanelLayoutManager.TEXTFIELD);
+			}
 		};
 	}
 }
