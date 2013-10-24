@@ -780,7 +780,7 @@ public class ScriptWidgetFactory {
 	public static ExpansionButton buildExpansionButton(Boolean collapsed) {
 		return new ExpansionButton(collapsed);
 	}
-
+	
 	/**
 	 * Builds a JSpinner to represent and edit the given fanIn.
 	 * 

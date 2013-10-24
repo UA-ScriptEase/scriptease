@@ -85,7 +85,8 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(StoryComponentContainer.class);
 		ifElseValidTypes.add(Note.class);
 		ifElseValidTypes.add(ControlIt.class);
-
+		ifElseValidTypes.add(PickIt.class);
+		
 		// now we can Initialize the StoryComponentContainer
 		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);
 		this.ifBlock.setDisplayText("Yes:");

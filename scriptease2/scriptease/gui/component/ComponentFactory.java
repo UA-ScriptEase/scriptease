@@ -17,6 +17,10 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
 
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -269,5 +273,27 @@ public final class ComponentFactory {
 		};
 
 		return field;
+	}
+
+	@SuppressWarnings("serial")
+	public static JTextField buildNumberTextField() {
+		return new JTextField() {
+
+			@Override
+			protected Document createDefaultModel() {
+				return new PlainDocument() {
+
+					@Override
+					public void insertString(int offs, String str,
+							AttributeSet a) throws BadLocationException {
+						if (str == null)
+							return;
+						else if (str.matches("\\d+"))
+							super.insertString(offs, str, a);
+					}
+				};
+
+			}
+		};
 	}
 }

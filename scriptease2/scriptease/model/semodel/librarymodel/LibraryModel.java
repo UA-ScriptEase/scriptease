@@ -31,6 +31,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.behaviours.Behaviour;
@@ -93,6 +94,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
 		{
 			this.add(new AskIt());
+			this.add(new PickIt());
 			this.add(new Note());
 		}
 	};
@@ -171,6 +173,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 		this.getRoot().registerChildType(StoryComponentContainer.class,
 				categories.size());
+		
 		for (StoryComponentContainer category : categories) {
 			this.getRoot().addStoryChild(category);
 		}
@@ -212,6 +215,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 						.addStoryChild(askIt);
 				if (success)
 					askIt.addStoryComponentObserver(this.model);
+			}
+			
+			@Override
+			public void processPickIt(PickIt pickIt) {
+				final boolean success = this.model.controllersCategory
+						.addStoryChild(pickIt);
+				if (success)
+					pickIt.addStoryComponentObserver(this.model);
 			}
 
 			@Override
@@ -288,6 +299,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.controllersCategory.registerChildType(AskIt.class, max);
 		this.controllersCategory.registerChildType(KnowIt.class, max);
 		this.controllersCategory.registerChildType(ControlIt.class, max);
+		this.controllersCategory.registerChildType(PickIt.class, max);
 		this.noteContainer.registerChildType(Note.class, 1);
 	}
 
