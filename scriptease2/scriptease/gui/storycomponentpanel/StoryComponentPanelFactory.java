@@ -164,6 +164,33 @@ public class StoryComponentPanelFactory {
 	}
 
 	/**
+	 * Reconstructs the StoryComponentPanel display names
+	 * 
+	 * @param panel
+	 */
+	public void rebuildDisplayName(StoryComponentPanel panel) {
+		final JPanel mainPanel = panel.getLayout().getMainPanel();
+		final Component[] children = mainPanel.getComponents();
+
+		// Remove all existing display names
+		for (Component child : children) {
+			if (child instanceof JLabel) {
+				final JLabel label = (JLabel) child;
+
+				// Terrible way to identify display names but it's the only way
+				// to
+				// distinguish them from other JLabels right now
+				if (label.getForeground() == Color.BLACK) {
+					mainPanel.remove(child);
+				}
+			}
+		}
+
+		mainPanel.add(ScriptWidgetFactory.buildLabel(panel.getStoryComponent()
+				.getDisplayText(), Color.BLACK));
+	}
+
+	/**
 	 * Reconstruct the StoryComponentPanel with the given child added
 	 * 
 	 * @param panel
@@ -525,7 +552,6 @@ public class StoryComponentPanelFactory {
 				// Add a label for the complex story component
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 
-
 				// Add the children panels
 				addChildrenPanels(complex, panel);
 			}
@@ -679,8 +705,9 @@ public class StoryComponentPanelFactory {
 						owner.removeChoice((StoryComponentContainer) complex);
 					}
 				});
-				
-				panel.add(removeButton, StoryComponentPanelLayoutManager.REMOVE_BUTTON);
+
+				panel.add(removeButton,
+						StoryComponentPanelLayoutManager.REMOVE_BUTTON);
 			}
 
 			private void addProbabilityBox(final ComplexStoryComponent complex,
