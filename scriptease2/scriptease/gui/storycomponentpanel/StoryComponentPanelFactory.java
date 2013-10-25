@@ -510,6 +510,13 @@ public class StoryComponentPanelFactory {
 					addProbabilityBox(complex, panel);
 				}
 
+				// Add a minus button if it is a children of PickIt
+				if (complex.getOwner() instanceof PickIt
+						&& !complex.getDisplayText().equals(PickIt.CHOICE_ONE)
+						&& !complex.getDisplayText().equals(PickIt.CHOICE_TWO)) {
+					addRemoveButton(complex, panel);
+				}
+
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
 
@@ -517,6 +524,7 @@ public class StoryComponentPanelFactory {
 
 				// Add a label for the complex story component
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+
 
 				// Add the children panels
 				addChildrenPanels(complex, panel);
@@ -648,8 +656,31 @@ public class StoryComponentPanelFactory {
 
 					panel.setExpansionButton(expansionButton);
 					panel.add(expansionButton,
-							StoryComponentPanelLayoutManager.BUTTON);
+							StoryComponentPanelLayoutManager.EXPANSION_BUTTON);
 				}
+			}
+
+			private void addRemoveButton(final ComplexStoryComponent complex,
+					final StoryComponentPanel panel) {
+				if (!(complex.getOwner() instanceof PickIt)
+						&& !(complex instanceof StoryComponentContainer))
+					return;
+
+				final PickIt owner = (PickIt) complex.getOwner();
+
+				final JButton removeButton;
+
+				removeButton = ComponentFactory.buildRemoveButton();
+
+				removeButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						owner.removeChoice((StoryComponentContainer) complex);
+					}
+				});
+				
+				panel.add(removeButton, StoryComponentPanelLayoutManager.REMOVE_BUTTON);
 			}
 
 			private void addProbabilityBox(final ComplexStoryComponent complex,
@@ -668,8 +699,8 @@ public class StoryComponentPanelFactory {
 				probabilityField.setMinimumSize(new Dimension(5, 20));
 				probabilityField.setPreferredSize(new Dimension(5, 20));
 
-//				probabilityField.setText(Integer.toString(owner.getChoices()
-//						.get(complex)));
+				// probabilityField.setText(Integer.toString(owner.getChoices()
+				// .get(complex)));
 
 				// probabilityField
 				// .addPropertyChangeListener(new PropertyChangeListener() {

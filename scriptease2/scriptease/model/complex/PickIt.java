@@ -1,10 +1,11 @@
 package scriptease.model.complex;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.WeakHashMap;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
@@ -25,6 +26,9 @@ import scriptease.model.atomic.Note;
  * 
  */
 public class PickIt extends ComplexStoryComponent {
+
+	public static final String CHOICE_ONE = "Choice 1";
+	public static final String CHOICE_TWO = "Choice 2";
 
 	/**
 	 * A WeakHashMap for the choices and their probabilities.
@@ -62,10 +66,10 @@ public class PickIt extends ComplexStoryComponent {
 		choiceValidTypes.add(ControlIt.class);
 		choiceValidTypes.add(PickIt.class);
 
-		choiceOne = new StoryComponentContainer("Choice 1", choiceValidTypes);
-		choiceTwo = new StoryComponentContainer("Choice 2", choiceValidTypes);
+		choiceOne = new StoryComponentContainer(CHOICE_ONE, choiceValidTypes);
+		choiceTwo = new StoryComponentContainer(CHOICE_TWO, choiceValidTypes);
 
-		this.choices = new WeakHashMap<StoryComponentContainer, Integer>();
+		this.choices = new LinkedHashMap<StoryComponentContainer, Integer>();
 		this.choices.put(choiceOne, 50);
 		this.choices.put(choiceTwo, 50);
 
@@ -87,11 +91,26 @@ public class PickIt extends ComplexStoryComponent {
 		choiceValidTypes.add(ControlIt.class);
 		choiceValidTypes.add(PickIt.class);
 
-		choice = new StoryComponentContainer("Choice " + choiceCounter++,
+		choice = new StoryComponentContainer("Choice " + ++choiceCounter,
 				choiceValidTypes);
 
 		this.choices.put(choice, probability);
 		this.addStoryChild(choice);
+	}
+
+	public boolean removeChoice(StoryComponentContainer choice) {
+		if (this.choices.remove(choice) != null) {
+			this.removeStoryChild(choice);
+
+			// this.choiceCounter = 0;
+			// for (StoryComponentContainer key : this.choices.keySet()) {
+			// key.setDisplayText("Choice " + ++choiceCounter);
+			// }
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -121,11 +140,26 @@ public class PickIt extends ComplexStoryComponent {
 	public PickIt clone() {
 		final PickIt clone = (PickIt) super.clone();
 
-		clone.choices = new WeakHashMap<StoryComponentContainer, Integer>();
+		final Collection<StoryComponent> children = clone.getChildren();
+
+		clone.choices = new LinkedHashMap<StoryComponentContainer, Integer>();
+		clone.choiceCounter = this.choiceCounter;
 
 		for (Entry<StoryComponentContainer, Integer> entry : this.choices
 				.entrySet()) {
-			clone.choices.put(entry.getKey().clone(), entry.getValue());
+
+			for (StoryComponent child : children) {
+
+				if (child instanceof StoryComponentContainer
+						&& child.getDisplayText().equals(
+								entry.getKey().getDisplayText())) {
+
+					clone.choices.put((StoryComponentContainer) child,
+							entry.getValue());
+
+					break;
+				}
+			}
 		}
 
 		return clone;
