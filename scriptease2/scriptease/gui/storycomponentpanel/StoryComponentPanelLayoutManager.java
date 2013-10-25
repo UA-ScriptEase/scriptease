@@ -9,22 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JTextField;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
 /**
+ * Provides the layout for StoryComponentPanels {@link StoryComponentPanels}
+ * 
+ * TODO this class needs to be refactored.
  * 
  * @author mfchurch
+ * @author jyuen
  */
 public class StoryComponentPanelLayoutManager implements LayoutManager {
 	// these are the constraints possible with the
 	// StoryComponentPanelLayoutManager
 	public static final String MAIN = "Main";
 	public static final String CHILD = "Child";
-	public static final String BUTTON = "Button";
+	public static final String EXPANSION_BUTTON = "Expansion Button";
+	public static final String REMOVE_BUTTON = "Remove Button";
 	public static final String TEXTFIELD = "TextField";
 
 	private boolean showChildren = true;
@@ -36,14 +41,16 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	private final int TOP_GAP = 1;
 	private final int BOTTOM_GAP = 1;
 	private final int MAIN_INDENT = 5;
-	private final int BUTTON_GAP = 3;
+	private final int EXPANSION_BUTTON_GAP = 3;
 	private final int TEXTFIELD_GAP = 3;
+	private final int REMOVE_BUTTON_GAP = 3;
 
 	// We keep handles to parent and children
 	private JPanel mainPanel;
 	private List<StoryComponentPanel> children = new ArrayList<StoryComponentPanel>();
-	private JButton button;
+	private JButton expandButton;
 	private JTextField textField;
+	private JButton removeButton;
 
 	public JPanel getMainPanel() {
 		return this.mainPanel;
@@ -63,11 +70,12 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 					.getOwner();
 			int index = parent.getChildIndex(child);
 			this.children.add(index, childPanel);
-		} else if (BUTTON.equals(name) && comp instanceof JButton) {
-			this.button = (JButton) comp;
-		} else if (TEXTFIELD.equals(name)
-				&& comp instanceof JTextField) {
+		} else if (EXPANSION_BUTTON.equals(name) && comp instanceof JButton) {
+			this.expandButton = (JButton) comp;
+		} else if (TEXTFIELD.equals(name) && comp instanceof JTextField) {
 			this.textField = (JTextField) comp;
+		} else if (REMOVE_BUTTON.equals(name) && comp instanceof JButton) {
+			this.removeButton = (JButton) removeButton;
 		} else {
 			throw new IllegalArgumentException(
 					"Cannot add to StoryComponentPanelLayoutManager: unknown combination of constraint "
@@ -121,12 +129,13 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 			widestWidth = width;
 			sumHeight += mainPanelHeight + this.TOP_GAP;
 
-			if (this.button != null && this.button.isVisible()) {
+			if (this.expandButton != null && this.expandButton.isVisible()) {
 				final Dimension buttonPreferredSize;
 
-				buttonPreferredSize = this.button.getPreferredSize();
+				buttonPreferredSize = this.expandButton.getPreferredSize();
 
-				widestWidth += buttonPreferredSize.width + this.BUTTON_GAP;
+				widestWidth += buttonPreferredSize.width
+						+ this.EXPANSION_BUTTON_GAP;
 			}
 
 			if (this.textField != null && this.textField.isVisible()) {
@@ -136,6 +145,16 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 
 				widestWidth += textFieldPreferredSize.width * 5
 						+ this.TEXTFIELD_GAP;
+			}
+
+			if (this.removeButton != null && this.removeButton.isVisible()) {
+				final Dimension removeButtonPreferredSize;
+
+				removeButtonPreferredSize = this.removeButton
+						.getPreferredSize();
+
+				widestWidth += removeButtonPreferredSize.width
+						+ this.REMOVE_BUTTON_GAP;
 			}
 		}
 
@@ -187,14 +206,16 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 			int horIndent = west + this.MAIN_INDENT;
 			sumHeight += parentHeight;
 
-			if (this.button != null && this.button.isVisible()) {
-				final Dimension buttonSize = this.button.getPreferredSize();
+			if (this.expandButton != null && this.expandButton.isVisible()) {
+				final Dimension buttonSize = this.expandButton
+						.getPreferredSize();
 				final int buttonWidth = buttonSize.width;
 				final int buttonHeight = buttonSize.height;
 
-				this.button.setBounds(horIndent, vertIndent + mainPanelHeight
-						/ 2 - buttonHeight / 2, buttonWidth, buttonHeight);
-				horIndent += buttonWidth + this.BUTTON_GAP;
+				this.expandButton.setBounds(horIndent, vertIndent
+						+ mainPanelHeight / 2 - buttonHeight / 2, buttonWidth,
+						buttonHeight);
+				horIndent += buttonWidth + this.EXPANSION_BUTTON_GAP;
 			}
 
 			if (this.textField != null && this.textField.isVisible()) {
@@ -208,6 +229,19 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 						textFieldWidth, textFieldHeight);
 
 				horIndent += textFieldWidth + this.TEXTFIELD_GAP;
+			}
+
+			if (this.removeButton != null && this.removeButton.isVisible()) {
+				final Dimension removeButtonSize = this.removeButton
+						.getPreferredSize();
+				final int removeButtonWidth = removeButtonSize.width;
+				final int removeButtonHeight = removeButtonSize.height;
+
+				this.removeButton.setBounds(horIndent, vertIndent
+						+ mainPanelHeight / 2 - removeButtonHeight / 2,
+						removeButtonWidth, removeButtonHeight);
+
+				horIndent += removeButtonWidth + this.REMOVE_BUTTON_GAP;
 			}
 
 			this.mainPanel.setBounds(horIndent, vertIndent, mainPanelWidth,
