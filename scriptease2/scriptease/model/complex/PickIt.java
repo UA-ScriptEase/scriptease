@@ -114,6 +114,21 @@ public class PickIt extends ComplexStoryComponent {
 	}
 
 	/**
+	 * @return the choiceCounter
+	 */
+	public int getChoiceCounter() {
+		return choiceCounter;
+	}
+
+	/**
+	 * @param choiceCounter
+	 *            the choiceCounter to set
+	 */
+	public void setChoiceCounter(int choiceCounter) {
+		this.choiceCounter = choiceCounter;
+	}
+
+	/**
 	 * Get the choices for this PickIt
 	 * 
 	 * @return

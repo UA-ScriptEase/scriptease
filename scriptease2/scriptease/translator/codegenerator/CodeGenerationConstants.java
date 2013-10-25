@@ -81,7 +81,8 @@ public interface CodeGenerationConstants {
 		KNOWIT,
 		NOTE,
 		SCRIPTIT,
-		CONTROLIT
+		CONTROLIT,
+		PICKIT
 	}
 
 	// Used in SeriesFragment
