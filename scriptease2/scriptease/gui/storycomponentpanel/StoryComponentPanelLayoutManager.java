@@ -29,7 +29,6 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	public static final String MAIN = "Main";
 	public static final String CHILD = "Child";
 	public static final String EXPANSION_BUTTON = "Expansion Button";
-	public static final String REMOVE_BUTTON = "Remove Button";
 	public static final String TEXTFIELD = "TextField";
 
 	private boolean showChildren = true;
@@ -43,14 +42,12 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 	private final int MAIN_INDENT = 5;
 	private final int EXPANSION_BUTTON_GAP = 3;
 	private final int TEXTFIELD_GAP = 3;
-	private final int REMOVE_BUTTON_GAP = 3;
 
 	// We keep handles to parent and children
 	private JPanel mainPanel;
 	private List<StoryComponentPanel> children = new ArrayList<StoryComponentPanel>();
 	private JButton expandButton;
 	private JTextField textField;
-	private JButton removeButton;
 
 	public JPanel getMainPanel() {
 		return this.mainPanel;
@@ -74,8 +71,6 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 			this.expandButton = (JButton) comp;
 		} else if (TEXTFIELD.equals(name) && comp instanceof JTextField) {
 			this.textField = (JTextField) comp;
-		} else if (REMOVE_BUTTON.equals(name) && comp instanceof JButton) {
-			this.removeButton = (JButton) removeButton;
 		} else {
 			throw new IllegalArgumentException(
 					"Cannot add to StoryComponentPanelLayoutManager: unknown combination of constraint "
@@ -145,16 +140,6 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 
 				widestWidth += textFieldPreferredSize.width * 5
 						+ this.TEXTFIELD_GAP;
-			}
-
-			if (this.removeButton != null && this.removeButton.isVisible()) {
-				final Dimension removeButtonPreferredSize;
-
-				removeButtonPreferredSize = this.removeButton
-						.getPreferredSize();
-
-				widestWidth += removeButtonPreferredSize.width
-						+ this.REMOVE_BUTTON_GAP;
 			}
 		}
 
@@ -229,19 +214,6 @@ public class StoryComponentPanelLayoutManager implements LayoutManager {
 						textFieldWidth, textFieldHeight);
 
 				horIndent += textFieldWidth + this.TEXTFIELD_GAP;
-			}
-
-			if (this.removeButton != null && this.removeButton.isVisible()) {
-				final Dimension removeButtonSize = this.removeButton
-						.getPreferredSize();
-				final int removeButtonWidth = removeButtonSize.width;
-				final int removeButtonHeight = removeButtonSize.height;
-
-				this.removeButton.setBounds(horIndent, vertIndent
-						+ mainPanelHeight / 2 - removeButtonHeight / 2,
-						removeButtonWidth, removeButtonHeight);
-
-				horIndent += removeButtonWidth + this.REMOVE_BUTTON_GAP;
 			}
 
 			this.mainPanel.setBounds(horIndent, vertIndent, mainPanelWidth,

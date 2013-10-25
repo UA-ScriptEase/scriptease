@@ -41,6 +41,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
@@ -193,10 +194,13 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (supportComponent instanceof StoryComponentPanel) {
 
 			final StoryComponentPanel acceptingPanel;
+			final StoryComponent component;
+
 			acceptingPanel = (StoryComponentPanel) supportComponent;
+			component = acceptingPanel.getStoryComponent();
 
 			// The start story point can't be accepting any children.
-			if (acceptingPanel.getStoryComponent() instanceof StoryPoint) {
+			if (component instanceof StoryPoint) {
 				final StoryPoint storyPoint = (StoryPoint) acceptingPanel
 						.getStoryComponent();
 
@@ -212,6 +216,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 									UserInformationType.ERROR);
 					return false;
 				}
+			} else if (component.getOwner() instanceof PickIt) {
+				return false;
 			}
 
 			if (acceptingPanel.isEditable()) {
@@ -244,10 +250,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		} else if (supportComponent instanceof TaskEffectsPanel) {
 			final TaskEffectsPanel taskPanel = (TaskEffectsPanel) supportComponent;
-			
+
 			if (!taskPanel.isEditable())
 				return false;
-			
+
 			final StoryComponent component;
 
 			component = this.extractStoryComponents(support).iterator().next();
@@ -629,6 +635,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						&& ((ComplexStoryComponent) potentialParent)
 								.canAcceptChild(child);
 			}
+
+			if (potentialParent instanceof PickIt
+					&& child.getOwner() instanceof PickIt)
+				acceptable = false;
 
 			if (!acceptable)
 				break;
