@@ -135,6 +135,8 @@ public class SimpleDataFragment extends AbstractFragment {
 				return context.getSpeaker();
 			case ENABLED:
 				return context.getEnabled();
+			case NUMCHOICES:
+				return context.getNumChoices();
 			default:
 				new CodeGenerationException(
 						"Simple Data Fragment was unable to be resolved for data: "

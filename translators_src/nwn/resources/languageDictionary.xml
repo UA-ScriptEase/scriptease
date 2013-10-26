@@ -53,9 +53,6 @@
 		</Format>
 		<!-- Declares all variables in the series -->
 		<Format id="variablesDeclaration">
-			<Line>
-				<Literal>// Variables Declaration</Literal>
-			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDeclaration" />
 			</Series>
@@ -70,9 +67,6 @@
 			</Line>
 		</Format>
 		<Format id="variablesDefinition">
-			<Line>
-				<Literal>// Variables Definition</Literal>
-			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
 			</Series>
@@ -298,11 +292,8 @@
 			</Line>
 		</Format>
 
-		<!-- Format for askits -->
+		<!-- Format for askIts -->
 		<Format id="askItConditional">
-			<Line>
-				<Literal></Literal>			
-			</Line>
 			<Line>
 				<Literal>if(</Literal>
 				<Fragment data="condition" />
@@ -325,36 +316,24 @@
 				<Literal>}</Literal>
 			</Line>
 		</Format>
-		
-		<!-- Format for pickits -->
+
+		<!-- Format for pickIts -->
 		<Format id="pickItConditional">
 			<Line>
-				<Literal>//Condition Variables</Literal>
+				<Literal>int random = Random(</Literal>
+				<Fragment data="numChoices" />
+				<Literal>);</Literal>
 			</Line>
-			<Series data="variables">
-				<FormatRef ref="variableDefinition" />
-			</Series>
-			<Line />
+			<Line/>
 			<Line>
-				<Literal>if(</Literal>
-				<Fragment data="condition" />
-				<Literal>){</Literal>
-			</Line>
-			<Indent>
-				<Scope data="ifChild">
-					<FormatRef ref="childrenWithoutImplicits" />
-				</Scope>
-			</Indent>
-			<Line>
-				<Literal>} else {</Literal>
-			</Line>
-			<Indent>
-				<Scope data="elseChild">
-					<FormatRef ref="childrenWithoutImplicits" />
-				</Scope>
-			</Indent>
-			<Line>
-				<Literal>}</Literal>
+				<Series data="choices" unique="true">
+					<Literal>if (random == </Literal>
+					<Fragment data="childNumber" />
+					<Literal>) {</Literal>
+						<Scope data=""
+					<Literal>}</Literal>
+					<Line/>
+				</Series>
 			</Line>
 		</Format>
 

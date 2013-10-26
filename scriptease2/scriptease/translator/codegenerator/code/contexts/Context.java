@@ -627,4 +627,9 @@ public abstract class Context {
 		unimplemented("getResource");
 		return null;
 	}
+
+	public String getNumChoices() {
+		unimplemented("getNumChoices");
+		return null;
+	}
 }

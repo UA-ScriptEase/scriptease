@@ -11,6 +11,8 @@ import scriptease.model.complex.PickIt;
  */
 public class PickItContext extends StoryComponentContext {
 
+	final PickIt pickIt;
+	
 	/**
 	 * Creates a new PickItContext with the source PickIt based on the context
 	 * passed in.
@@ -20,10 +22,17 @@ public class PickItContext extends StoryComponentContext {
 	 */
 	public PickItContext(Context other, PickIt source) {
 		super(other, source);
+		
+		this.pickIt = source;
 	}
 
 	@Override
 	public PickIt getComponent() {
 		return (PickIt) super.getComponent();
+	}
+	
+	@Override
+	public String getNumChoices() {
+		return Integer.toString(pickIt.getChildCount());
 	}
 }
