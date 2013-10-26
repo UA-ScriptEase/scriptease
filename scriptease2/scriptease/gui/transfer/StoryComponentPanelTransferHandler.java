@@ -38,6 +38,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
@@ -636,8 +637,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 								.canAcceptChild(child);
 			}
 
-			if (potentialParent instanceof PickIt
-					&& child.getOwner() instanceof PickIt)
+			if (child.getOwner() instanceof PickIt
+					|| child.getOwner() instanceof AskIt)
 				acceptable = false;
 
 			if (!acceptable)

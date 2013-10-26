@@ -207,16 +207,17 @@ public class ContextFactory {
 
 			/* ATOMIC TYPES */
 			@Override
+			public void processPickIt(PickIt pickIt) {
+				ContextFactory.this.activeContext = new PickItContext(
+						pastContext, pickIt);
+			}
+
+			@Override
 			public void processAskIt(AskIt questionIt) {
 				ContextFactory.this.activeContext = new AskItContext(
 						pastContext, questionIt);
 			}
 
-			@Override
-			public void processPickIt(PickIt pickIt) {
-				ContextFactory.this.activeContext = new PickItContext(
-						pastContext, pickIt);
-			}
 			
 			@Override
 			public void processKnowIt(KnowIt knowIt) {

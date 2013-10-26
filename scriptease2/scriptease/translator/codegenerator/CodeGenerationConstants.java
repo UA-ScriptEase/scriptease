@@ -65,7 +65,8 @@ public interface CodeGenerationConstants {
 		UNIQUE32CHARNAME,
 		DISPLAYTEXT,
 		VALUE,
-		CURRENTSTORYPOINT
+		CURRENTSTORYPOINT, 
+		NUMCHOICES
 	}
 
 	// Used in SeriesFragment
