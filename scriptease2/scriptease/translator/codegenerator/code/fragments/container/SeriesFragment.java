@@ -202,7 +202,6 @@ public class SeriesFragment extends AbstractContainerFragment {
 		switch (series) {
 		case INCLUDES:
 			return context.getIncludeFiles();
-
 		case CODEBLOCKS:
 			return context.getCodeBlocks();
 		case CAUSES:
@@ -239,6 +238,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getOrderedDialogueLines();
 		case CHILDLINES:
 			return context.getChildLines();
+		case CHOICES:
+			return context.getChoices();
 		default:
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "

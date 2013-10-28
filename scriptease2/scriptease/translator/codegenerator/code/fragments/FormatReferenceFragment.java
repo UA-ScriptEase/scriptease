@@ -8,6 +8,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -102,6 +103,11 @@ public class FormatReferenceFragment extends AbstractFragment {
 		@Override
 		public void processAskIt(AskIt questionIt) {
 			this.typeMatches = this.type == FormatReferenceType.ASKIT;
+		}
+		
+		@Override
+		public void processPickIt(PickIt pickIt) {
+			this.typeMatches = this.type == FormatReferenceType.PICKIT;
 		}
 
 		@Override

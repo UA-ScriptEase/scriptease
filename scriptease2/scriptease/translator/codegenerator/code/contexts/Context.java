@@ -628,8 +628,28 @@ public abstract class Context {
 		return null;
 	}
 
-	public String getNumChoices() {
+	public String getTotalChoiceProbability() {
 		unimplemented("getNumChoices");
+		return null;
+	}
+
+	public Collection<StoryComponent> getChoices() {
+		unimplemented("getChoices");
+		return null;
+	}
+
+	public String getChoiceProbabilityLowerBound() {
+		unimplemented("getChoiceProbabilityLowerBound");
+		return null;
+	}
+
+	public String getChoiceProbabilityUpperBound() {
+		unimplemented("getChoiceProbabilityUpperBound");
+		return null;
+	}
+	
+	public String getIndex() {
+		unimplemented("getIndex");
 		return null;
 	}
 }
