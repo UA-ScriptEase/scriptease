@@ -478,6 +478,7 @@
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
 				<FormatRef data="askIt" ref="askItConditional" />
+				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="controlIt" ref="controlItCall" />
 			</Series>

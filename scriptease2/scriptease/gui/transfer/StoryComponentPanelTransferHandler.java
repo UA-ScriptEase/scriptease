@@ -217,8 +217,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 									UserInformationType.ERROR);
 					return false;
 				}
-			} else if (component.getOwner() instanceof PickIt) {
-				return false;
 			}
 
 			if (acceptingPanel.isEditable()) {

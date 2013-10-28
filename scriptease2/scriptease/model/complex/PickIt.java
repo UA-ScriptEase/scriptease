@@ -103,8 +103,14 @@ public class PickIt extends ComplexStoryComponent {
 			this.removeStoryChild(choice);
 
 			this.choiceCounter = 0;
-			for (StoryComponentContainer key : this.choices.keySet()) {
-				key.setDisplayText("Choice " + ++choiceCounter);
+			// for (StoryComponentContainer key : this.choices.keySet()) {
+			// key.setDisplayText("Choice " + ++choiceCounter);
+			// }
+
+			for (StoryComponent child : this.getChildren()) {
+				final int newIndex = this.getChildIndex(child) + 1;
+				child.setDisplayText("Choice " + newIndex);
+				choiceCounter++;
 			}
 
 			return true;

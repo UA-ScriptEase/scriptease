@@ -1,5 +1,8 @@
 package scriptease.translator.codegenerator.code.contexts;
 
+import java.util.Collection;
+
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.PickIt;
 
 /**
@@ -12,7 +15,7 @@ import scriptease.model.complex.PickIt;
 public class PickItContext extends StoryComponentContext {
 
 	final PickIt pickIt;
-	
+
 	/**
 	 * Creates a new PickItContext with the source PickIt based on the context
 	 * passed in.
@@ -22,7 +25,7 @@ public class PickItContext extends StoryComponentContext {
 	 */
 	public PickItContext(Context other, PickIt source) {
 		super(other, source);
-		
+
 		this.pickIt = source;
 	}
 
@@ -30,9 +33,20 @@ public class PickItContext extends StoryComponentContext {
 	public PickIt getComponent() {
 		return (PickIt) super.getComponent();
 	}
-	
+
 	@Override
-	public String getNumChoices() {
-		return Integer.toString(pickIt.getChildCount());
+	public String getTotalChoiceProbability() {
+		int totalProbability = 0;
+		
+		for (Integer choiceProbability : pickIt.getChoices().values()) {
+			totalProbability += choiceProbability;
+		}
+		
+		return Integer.toString(totalProbability);
+	}
+
+	@Override
+	public Collection<StoryComponent> getChoices() {
+		return pickIt.getChildren();
 	}
 }
