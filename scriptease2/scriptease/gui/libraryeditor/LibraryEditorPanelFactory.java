@@ -302,7 +302,7 @@ public class LibraryEditorPanelFactory {
 							"Initiator Task Panel", task,
 							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT, true));
 					effectsPanel.add(new TaskEffectsPanel(
-							"Collaborator Task Panel", task,
+							"Responder Task Panel", task,
 							TaskEffectsPanel.TYPE.COLLABORATIVE_REACT, true));
 				}
 
@@ -330,13 +330,6 @@ public class LibraryEditorPanelFactory {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
 				behaviourPanel, ScriptEaseKeywords.INDEPENDENT);
 
-		final JPanel initiatorParameterPanel = new JPanel();
-
-		initiatorParameterPanel.setBorder(BorderFactory
-				.createTitledBorder("Initiator"));
-		initiatorParameterPanel.setLayout(new BoxLayout(
-				initiatorParameterPanel, BoxLayout.Y_AXIS));
-
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 
@@ -348,13 +341,7 @@ public class LibraryEditorPanelFactory {
 			behaviour.getMainCodeBlock().addParameter(initiator);
 		}
 
-		final JPanel parameterPanel = this.buildParameterPanel(behaviour,
-				behaviour.getMainCodeBlock(), behaviour.getMainCodeBlock()
-						.getParameters().get(0), false);
-
-		initiatorParameterPanel.add(parameterPanel);
-
-		behaviourPanel.add(initiatorParameterPanel);
+		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph));
@@ -415,6 +402,96 @@ public class LibraryEditorPanelFactory {
 
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
+	}
+	
+	@SuppressWarnings("serial")
+	private JPanel buildIndependentBehaviourNamePanel(final Behaviour behaviour) {
+		final JPanel namePanel;
+
+		final JLabel initiateLabel;
+		final JLabel aposLabel;
+
+		final JTextField initiatorField;
+		final JTextField behaviourNameField;
+
+		namePanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+		};
+		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
+
+		initiateLabel = new JLabel("Initiate ");
+		initiateLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		aposLabel = new JLabel("'s ");
+		aposLabel.setFont(LibraryEditorPanelFactory.labelFont);
+
+		final String paramName = behaviour.getMainCodeBlock().getParameters()
+				.get(0).getDisplayText();
+		initiatorField = new JTextField(paramName, 10);
+
+		final String displayText = behaviour.getDisplayText();
+		final String name = displayText
+				.substring(displayText.indexOf("\'") + 2);
+		behaviourNameField = new JTextField(name);
+
+		// Add listeners for the text fields
+		initiatorField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String oldParamName = behaviour.getMainCodeBlock()
+						.getParameters().get(0).getDisplayText();
+
+				behaviour.getMainCodeBlock().getParameters().get(0)
+						.setDisplayText(initiatorField.getText());
+
+				behaviour.notifyObservers(new StoryComponentEvent(behaviour,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
+
+				behaviour.setDisplayText(behaviour.getDisplayText().replace(
+						"<" + oldParamName + ">",
+						"<" + initiatorField.getText() + ">"));
+			}
+		});
+
+		behaviourNameField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String displayText = behaviour.getDisplayText();
+				final String nameSoFar = displayText.substring(0,
+						displayText.indexOf("\'") + 3);
+
+				behaviour.setDisplayText(nameSoFar
+						+ behaviourNameField.getText());
+			}
+		});
+
+		namePanel.add(initiateLabel);
+		namePanel.add(initiatorField);
+		namePanel.add(aposLabel);
+		namePanel.add(behaviourNameField);
+
+		return namePanel;
 	}
 
 	// *************** DESCRIPTION EDITING PANEL *************************
