@@ -354,18 +354,6 @@ public class LibraryEditorPanelFactory {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
 				behaviourPanel, ScriptEaseKeywords.COLLABORATIVE);
 
-		final JPanel initiatorParameterPanel = new JPanel();
-		initiatorParameterPanel.setBorder(BorderFactory
-				.createTitledBorder("Initiator"));
-		initiatorParameterPanel.setLayout(new BoxLayout(
-				initiatorParameterPanel, BoxLayout.Y_AXIS));
-
-		final JPanel responderParameterPanel = new JPanel();
-		responderParameterPanel.setBorder(BorderFactory
-				.createTitledBorder("Responder"));
-		responderParameterPanel.setLayout(new BoxLayout(
-				responderParameterPanel, BoxLayout.Y_AXIS));
-
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 			final KnowIt responder = new KnowIt();
@@ -383,19 +371,8 @@ public class LibraryEditorPanelFactory {
 			behaviour.getMainCodeBlock().addParameter(responder);
 		}
 
-		initiatorParameterPanel.add(
-				this.buildParameterPanel(behaviour,
-						behaviour.getMainCodeBlock(), behaviour
-								.getMainCodeBlock().getParameters().get(0)),
-				false);
-		responderParameterPanel.add(
-				this.buildParameterPanel(behaviour,
-						behaviour.getMainCodeBlock(), behaviour
-								.getMainCodeBlock().getParameters().get(1)),
-				false);
-
-		behaviourPanel.add(initiatorParameterPanel);
-		behaviourPanel.add(responderParameterPanel);
+		behaviourPanel
+				.add(this.buildCollaborativeBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
 				graph));
@@ -403,7 +380,141 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
 	}
-	
+
+	@SuppressWarnings("serial")
+	private JPanel buildCollaborativeBehaviourNamePanel(
+			final Behaviour behaviour) {
+		final JPanel namePanel;
+
+		final JLabel initiateLabel;
+		final JLabel andLabel;
+		final JLabel aposLabel;
+
+		final JTextField initiatorField;
+		final JTextField reactorField;
+		final JTextField behaviourNameField;
+
+		namePanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+		};
+		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
+
+		initiateLabel = new JLabel("Initiate ");
+		initiateLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		andLabel = new JLabel(" and ");
+		andLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		aposLabel = new JLabel("'s ");
+		aposLabel.setFont(LibraryEditorPanelFactory.labelFont);
+
+		final String initiatorParamName = behaviour.getMainCodeBlock()
+				.getParameters().get(0).getDisplayText();
+		initiatorField = new JTextField(initiatorParamName, 10);
+
+		final String reactorParamName = behaviour.getMainCodeBlock()
+				.getParameters().get(1).getDisplayText();
+		reactorField = new JTextField(reactorParamName, 10);
+
+		final String displayText = behaviour.getDisplayText();
+		final String name = displayText
+				.substring(displayText.indexOf("\'") + 2);
+		behaviourNameField = new JTextField(name, 20);
+
+		// Add listeners for the text fields
+		initiatorField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String oldParamName = behaviour.getMainCodeBlock()
+						.getParameters().get(0).getDisplayText();
+
+				if (initiatorField.getText().contains("\'")
+						|| initiatorField.getText().contains("<")
+						|| initiatorField.getText().contains(">"))
+					return;
+
+				behaviour.getMainCodeBlock().getParameters().get(0)
+						.setDisplayText(initiatorField.getText());
+
+				behaviour.notifyObservers(new StoryComponentEvent(behaviour,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
+
+				behaviour.setDisplayText(behaviour.getDisplayText().replace(
+						"<" + oldParamName + ">",
+						"<" + initiatorField.getText() + ">"));
+			}
+		});
+
+		reactorField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String oldParamName = behaviour.getMainCodeBlock()
+						.getParameters().get(1).getDisplayText();
+
+				if (reactorField.getText().contains("\'")
+						|| reactorField.getText().contains("<")
+						|| reactorField.getText().contains(">"))
+					return;
+
+				behaviour.getMainCodeBlock().getParameters().get(1)
+						.setDisplayText(reactorField.getText());
+
+				behaviour.notifyObservers(new StoryComponentEvent(behaviour,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
+
+				behaviour.setDisplayText(behaviour.getDisplayText().replace(
+						"<" + oldParamName + ">",
+						"<" + reactorField.getText() + ">"));
+			}
+		});
+
+		behaviourNameField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String displayText = behaviour.getDisplayText();
+				final String nameSoFar = displayText.substring(0,
+						displayText.indexOf("\'") + 3);
+
+				if (behaviourNameField.getText().contains("<")
+						|| behaviourNameField.getText().contains(">"))
+					return;
+
+				behaviour.setDisplayText(nameSoFar
+						+ behaviourNameField.getText());
+			}
+		});
+
+		namePanel.add(initiateLabel);
+		namePanel.add(initiatorField);
+		namePanel.add(andLabel);
+		namePanel.add(reactorField);
+		namePanel.add(aposLabel);
+		namePanel.add(behaviourNameField);
+
+		return namePanel;
+	}
+
 	@SuppressWarnings("serial")
 	private JPanel buildIndependentBehaviourNamePanel(final Behaviour behaviour) {
 		final JPanel namePanel;
@@ -451,7 +562,7 @@ public class LibraryEditorPanelFactory {
 		final String displayText = behaviour.getDisplayText();
 		final String name = displayText
 				.substring(displayText.indexOf("\'") + 2);
-		behaviourNameField = new JTextField(name);
+		behaviourNameField = new JTextField(name, 20);
 
 		// Add listeners for the text fields
 		initiatorField.addActionListener(new ActionListener() {
@@ -460,6 +571,11 @@ public class LibraryEditorPanelFactory {
 			public void actionPerformed(ActionEvent e) {
 				final String oldParamName = behaviour.getMainCodeBlock()
 						.getParameters().get(0).getDisplayText();
+
+				if (initiatorField.getText().contains("\'")
+						|| initiatorField.getText().contains("<")
+						|| initiatorField.getText().contains(">"))
+					return;
 
 				behaviour.getMainCodeBlock().getParameters().get(0)
 						.setDisplayText(initiatorField.getText());
@@ -480,6 +596,10 @@ public class LibraryEditorPanelFactory {
 				final String displayText = behaviour.getDisplayText();
 				final String nameSoFar = displayText.substring(0,
 						displayText.indexOf("\'") + 3);
+
+				if (behaviourNameField.getText().contains("<")
+						|| behaviourNameField.getText().contains(">"))
+					return;
 
 				behaviour.setDisplayText(nameSoFar
 						+ behaviourNameField.getText());
