@@ -27,14 +27,14 @@ public class Behaviour extends ScriptIt {
 		INDEPENDENT, COLLABORATIVE
 	}
 
-	public Behaviour(String name) {
-		this(name, Type.INDEPENDENT, null, 0);
+	public Behaviour(String displayText) {
+		this(displayText, Type.INDEPENDENT, null, 0);
 	}
 	
 	/**
 	 * Creates a new behaviour.
 	 * 
-	 * @param name
+	 * @param displayText
 	 *            the name for the behaviour
 	 * @param type
 	 *            the type of the behaviour - Independent or Collaborative
@@ -44,9 +44,9 @@ public class Behaviour extends ScriptIt {
 	 *            the priority of this behaviour - higher priority means higher
 	 *            order of execution.
 	 */
-	public Behaviour(String name, Behaviour.Type type, Task startTask,
+	public Behaviour(String displayText, Behaviour.Type type, Task startTask,
 			int priority) {
-		super(name);
+		super(displayText);
 
 		this.startTask = startTask;
 		this.priority = priority;

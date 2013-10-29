@@ -160,11 +160,18 @@ public class LibraryEditorPanel extends JPanel implements
 
 			@Override
 			public void processBehaviour(Behaviour behaviour) {
-				this.defaultProcess(behaviour);
-				
+				// this.defaultProcess(behaviour);
+				LibraryEditorPanel.this.removeAll();
+
+				LibraryEditorListenerFactory.getInstance()
+						.refreshCodeBlockComponentObserverList();
+				FormatFragmentSelectionManager.getInstance().setFormatFragment(
+						null, null);
+
 				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
 						.getInstance().buildBehaviourEditingPanel(behaviour));
-				
+
+				LibraryEditorPanel.this.repaint();
 				LibraryEditorPanel.this.revalidate();
 			}
 
