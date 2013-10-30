@@ -377,11 +377,14 @@ public final class StoryModel extends SEModel {
 				for (Resource resource : automaticHandlers.get(automaticLabel)) {
 
 					if (automaticLabel.equals("gameobjectautomatic")
-							&& !getExistingResources().contains(resource))
+							&& !this.getBoundResources().contains(resource))
+						// gameobjectautomatic only adds the automatic if
+						// we are using the resource somewhere in the model.
 						continue;
 
-					final Collection<String> resourceTypes = resource
-							.getTypes();
+					final Collection<String> resourceTypes;
+
+					resourceTypes = resource.getTypes();
 
 					for (CauseIt automatic : library
 							.getAutomatics(automaticLabel)) {
@@ -412,7 +415,12 @@ public final class StoryModel extends SEModel {
 		return automatics;
 	}
 
-	private Collection<Resource> getExistingResources() {
+	/**
+	 * Finds all resources that are bound to know its
+	 * 
+	 * @return
+	 */
+	private Collection<Resource> getBoundResources() {
 		final Collection<Resource> resources = new HashSet<Resource>();
 
 		final StoryAdapter adapter;
