@@ -324,8 +324,6 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 		
-		graph.setSelectedNode(graph.getStartNode());
-
 		return graph;
 	}
 
@@ -357,6 +355,9 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph));
+		
+		graph.setSelectedNode(graph.getStartNode());
+		
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
 	}
@@ -396,6 +397,8 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
 				graph));
 
+		graph.setSelectedNode(graph.getStartNode());
+		
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
 	}
@@ -410,7 +413,7 @@ public class LibraryEditorPanelFactory {
 
 		final JTextField actionField;
 		final JTextField priorityField;
-
+		
 		namePanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
