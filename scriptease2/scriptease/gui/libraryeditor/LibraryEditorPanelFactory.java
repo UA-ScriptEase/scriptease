@@ -333,9 +333,9 @@ public class LibraryEditorPanelFactory {
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 
-			behaviour.setDisplayText("Initiate <Creature>'s New Behaviour");
+			behaviour.setDisplayText("<Initiator> does action with priority <Priority>");
 
-			initiator.setDisplayText("Creature");
+			initiator.setDisplayText("Initiator");
 			initiator.addType("creature");
 
 			behaviour.getMainCodeBlock().addParameter(initiator);
@@ -357,9 +357,10 @@ public class LibraryEditorPanelFactory {
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 			final KnowIt responder = new KnowIt();
+			final KnowIt priority = new KnowIt();
 
 			behaviour
-					.setDisplayText("Initiate <Initiator> and <Responder>'s New Behaviour");
+					.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");
 
 			initiator.setDisplayText("Initiator");
 			initiator.addType("creature");
@@ -367,6 +368,8 @@ public class LibraryEditorPanelFactory {
 			responder.setDisplayText("Responder");
 			responder.addType("creature");
 
+			//priority.setDisplayText(")
+			
 			behaviour.getMainCodeBlock().addParameter(initiator);
 			behaviour.getMainCodeBlock().addParameter(responder);
 		}
@@ -519,9 +522,10 @@ public class LibraryEditorPanelFactory {
 	private JPanel buildIndependentBehaviourNamePanel(final Behaviour behaviour) {
 		final JPanel namePanel;
 
-		final JLabel initiateLabel;
-		final JLabel aposLabel;
-
+		final JLabel initiatorLabel;
+		final JLabel responderLabel;
+		final JLabel priorityLabel;
+		
 		final JTextField initiatorField;
 		final JTextField behaviourNameField;
 
@@ -550,10 +554,10 @@ public class LibraryEditorPanelFactory {
 		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
 
-		initiateLabel = new JLabel("Initiate ");
-		initiateLabel.setFont(LibraryEditorPanelFactory.labelFont);
-		aposLabel = new JLabel("'s ");
-		aposLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		initiatorLabel = new JLabel("Initiator ");
+		initiatorLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		responderLabel = new JLabel("Responder");
+		//aposLabel.setFont(LibraryEditorPanelFactory.labelFont);
 
 		final String paramName = behaviour.getMainCodeBlock().getParameters()
 				.get(0).getDisplayText();
@@ -606,9 +610,9 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 
-		namePanel.add(initiateLabel);
+		//namePanel.add(initiateLabel);
 		namePanel.add(initiatorField);
-		namePanel.add(aposLabel);
+		//namePanel.add(aposLabel);
 		namePanel.add(behaviourNameField);
 
 		return namePanel;
