@@ -526,6 +526,12 @@ public class ScriptWidgetFactory {
 						spinner.setValue(newBinding);
 						spinner.addChangeListener(changeListener);
 					}
+
+					spinner.getEditor().revalidate();
+					spinner.getEditor().repaint();
+					
+					spinner.revalidate();
+					spinner.repaint();
 				}
 			}
 		};
@@ -730,6 +736,8 @@ public class ScriptWidgetFactory {
 					bindingWidget.setBinding(knowIt.getBinding());
 
 					GUIOp.resizeJTextField(valueEditor);
+					valueEditor.revalidate();
+					valueEditor.repaint();
 				}
 			}
 		};
