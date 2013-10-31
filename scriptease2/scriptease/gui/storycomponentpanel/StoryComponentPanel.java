@@ -3,6 +3,7 @@ package scriptease.gui.storycomponentpanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -81,7 +82,6 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				
 			}
 		});
 
@@ -285,7 +285,6 @@ public class StoryComponentPanel extends JPanel implements
 							label.repaint();
 						}
 					}
-
 				}
 			}
 		}
@@ -369,6 +368,8 @@ public class StoryComponentPanel extends JPanel implements
 			private Color previousColor = StoryComponentPanel.this
 					.getBackground();
 
+			private Point dragStart;
+			
 			/**
 			 * Toggle a drag event manually
 			 */
@@ -378,7 +379,7 @@ public class StoryComponentPanel extends JPanel implements
 
 				selectionManager = panel.getSelectionManager();
 
-				if (selectionManager != null) {
+				if (selectionManager != null && e.getPoint().distance(dragStart) > 20) {
 					final boolean clearSelection;
 
 					clearSelection = !(selectionManager.getSelectedPanels()
@@ -422,6 +423,8 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				dragStart = e.getPoint();
+				
 				e.consume();
 			}
 
@@ -454,6 +457,7 @@ public class StoryComponentPanel extends JPanel implements
 				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
 					hoverTimer.restart();
 				}
+				
 
 				e.consume();
 			}
