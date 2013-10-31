@@ -15,7 +15,8 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
- * Inserts a new Behaviour into the Library.
+ * Inserts a new Behaviour into the Library. Each Behaviour codeblock has a slot
+ * that defines implicits for the Initiator and Responder.
  * 
  * @author jyuen
  */
@@ -51,19 +52,23 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 		final LibraryModel libraryModel;
 
 		final Behaviour newBehaviour;
-		final int codeBlockID;
 		final CodeBlock codeBlock;
-
+		final int codeBlockID;
+		final String slot;
+		
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
 
 		newBehaviour = new Behaviour("New Behaviour");
 		codeBlockID = libraryModel.getNextCodeBlockID();
-		codeBlock = new CodeBlockSource(codeBlockID);
+		slot = "onBehaviour";
 		
+		codeBlock = new CodeBlockSource(codeBlockID);
+		codeBlock.setSlot(slot);
+
 		newBehaviour.addCodeBlock(codeBlock);
 		newBehaviour.setVisible(true);
-		
+
 		libraryModel.add(newBehaviour);
 		LibraryPanel.getInstance().navigateToComponent(newBehaviour);
 	}

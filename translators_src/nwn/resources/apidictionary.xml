@@ -3985,6 +3985,77 @@
       </Implicits>
     </Slot>
     <Slot>
+      <Name>onBehaviour</Name>
+      <Keyword>onBehaviour</Keyword>
+      <Parameters/>
+      <Implicits>
+        <KnowIt>
+          <Name>Behaviour Initiator</Name>
+          <Visible>true</Visible>
+          <Enabled>true</Enabled>
+          <Labels/>
+          <Types>
+            <Type>creature</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Behaviour Initiator</Name>
+              <Visible>true</Visible>
+              <Enabled>true</Enabled>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Behaviour Initiator</Name>
+                  <Visible>true</Visible>
+                  <Enabled>true</Enabled>
+                  <Labels/>
+                  <Id>449</Id>
+                  <Types>
+                    <Type>creature</Type>
+                  </Types>
+                  <Code>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+        <KnowIt>
+          <Name>Behaviour Responder</Name>
+          <Visible>true</Visible>
+          <Enabled>true</Enabled>
+          <Labels/>
+          <Types>
+            <Type>creature</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Behaviour Responder</Name>
+              <Visible>true</Visible>
+              <Enabled>true</Enabled>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Behaviour Responder</Name>
+                  <Visible>true</Visible>
+                  <Enabled>true</Enabled>
+                  <Labels/>
+                  <Id>450</Id>
+                  <Types>
+                    <Type>creature</Type>
+                  </Types>
+                  <Code>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
+    </Slot>
+    <Slot>
       <Name>OnRested</Name>
       <Keyword>ScriptRested</Keyword>
       <Parameters/>
