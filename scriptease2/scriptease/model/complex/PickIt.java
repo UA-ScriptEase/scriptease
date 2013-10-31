@@ -11,6 +11,7 @@ import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.behaviours.Behaviour;
 
 /**
  * A PickIt represents a ComplexStoryComponent {@link ComplexStoryComponent}
@@ -64,6 +65,7 @@ public class PickIt extends ComplexStoryComponent {
 		choiceValidTypes.add(StoryComponentContainer.class);
 		choiceValidTypes.add(Note.class);
 		choiceValidTypes.add(ControlIt.class);
+		choiceValidTypes.add(Behaviour.class);
 		choiceValidTypes.add(PickIt.class);
 
 		choiceOne = new StoryComponentContainer(CHOICE_ONE, choiceValidTypes);
@@ -90,6 +92,7 @@ public class PickIt extends ComplexStoryComponent {
 		choiceValidTypes.add(Note.class);
 		choiceValidTypes.add(ControlIt.class);
 		choiceValidTypes.add(PickIt.class);
+		choiceValidTypes.add(Behaviour.class);
 
 		choice = new StoryComponentContainer("Choice " + ++choiceCounter,
 				choiceValidTypes);
