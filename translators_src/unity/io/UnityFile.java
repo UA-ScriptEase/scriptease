@@ -329,10 +329,10 @@ public class UnityFile extends Resource {
 	 * not initialize children or owner of the new resource. This is primarily
 	 * used to add script objects.
 	 * 
-	 * @param object
+	 * @param resource
 	 */
-	public void addResource(UnityResource object) {
-		this.unityResources.add(object);
+	public void addResource(UnityResource resource) {
+		this.unityResources.add(resource);
 	}
 
 	/**
@@ -360,18 +360,15 @@ public class UnityFile extends Resource {
 		writer.write(unityFileHeader);
 
 		// Add an arbitrary number
-		for (Object data : this.unityResources) {
-			if (data instanceof UnityResource) {
-				final UnityResource resource = (UnityResource) data;
+		for (UnityResource resource : this.unityResources) {
+			final UnityType type = resource.getType();
+ 
+			writer.write("--- !u!" + type.getID() + " &"
+					+ resource.getUniqueID() + "\n");
 
-				final String number = "" + resource.getType().getID();
+			parser.dump(PropertyValue.convertToValueMap(resource
+					.getTopLevelPropertyMap()), writer);
 
-				writer.write("--- !u!" + number + " &" + resource.getUniqueID()
-						+ "\n");
-
-				parser.dump(PropertyValue.convertToValueMap(resource
-						.getTopLevelPropertyMap()), writer);
-			}
 		}
 		writer.close();
 	}

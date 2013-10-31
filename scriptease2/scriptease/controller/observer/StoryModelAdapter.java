@@ -3,6 +3,12 @@ package scriptease.controller.observer;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
+/**
+ * Adapter for StoryModelObserver
+ * 
+ * @author kschenk
+ * @author jyuen
+ */
 public abstract class StoryModelAdapter implements StoryModelObserver {
 	@Override
 	public void dialogueRootAdded(DialogueLine root) {
@@ -16,6 +22,10 @@ public abstract class StoryModelAdapter implements StoryModelObserver {
 	public void libraryAdded(LibraryModel library) {
 	}
 
+	@Override
+	public void libraryRemoved(LibraryModel library) {
+	}
+	
 	@Override
 	public void dialogueChildAdded(DialogueLine added, DialogueLine parent) {
 	}
