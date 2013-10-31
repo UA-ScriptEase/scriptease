@@ -389,6 +389,19 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Sets the current selected node.
+	 * 
+	 * @return
+	 */
+	public boolean setSelectedNode(E node) {
+		final Collection<E> nodes = new ArrayList<E>();
+
+		nodes.add(node);
+
+		return this.setSelectedNodes(nodes);
+	}
+	
+	/**
 	 * Sets the current selected nodes. Fires a
 	 * {@link SEGraphObserver#nodesSelected(Collection)} event if the selection
 	 * was successful.

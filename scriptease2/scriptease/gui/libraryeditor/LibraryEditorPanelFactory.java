@@ -35,6 +35,7 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -46,6 +47,7 @@ import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.ScriptEaseKeywords;
+import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.StringOp;
 
 /**
@@ -298,12 +300,12 @@ public class LibraryEditorPanelFactory {
 							TaskEffectsPanel.TYPE.INDEPENDENT, true));
 
 				} else if (task instanceof CollaborativeTask) {
-					effectsPanel.add(new TaskEffectsPanel(
-							"Initiator Task Panel", task,
-							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT, true));
-					effectsPanel.add(new TaskEffectsPanel(
-							"Responder Task Panel", task,
-							TaskEffectsPanel.TYPE.COLLABORATIVE_REACT, true));
+					effectsPanel.add(new TaskEffectsPanel("Initiator Task",
+							task, TaskEffectsPanel.TYPE.COLLABORATIVE_INIT,
+							true));
+					effectsPanel.add(new TaskEffectsPanel("Responder Task",
+							task, TaskEffectsPanel.TYPE.COLLABORATIVE_REACT,
+							true));
 				}
 
 				behaviourPanel.add(effectsPanel);
@@ -321,6 +323,8 @@ public class LibraryEditorPanelFactory {
 				task.revalidateKnowItBindings();
 			}
 		});
+		
+		graph.setSelectedNode(graph.getStartNode());
 
 		return graph;
 	}
@@ -332,13 +336,21 @@ public class LibraryEditorPanelFactory {
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
+			final KnowIt priority = new KnowIt();
 
-			behaviour.setDisplayText("<Initiator> does action with priority <Priority>");
+			behaviour
+					.setDisplayText("<Initiator> does action with priority <Priority>");
 
 			initiator.setDisplayText("Initiator");
 			initiator.addType("creature");
 
+			priority.setDisplayText("Priority");
+			priority.addType("float");
+			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
+					.toString(behaviour.getPriority())));
+
 			behaviour.getMainCodeBlock().addParameter(initiator);
+			behaviour.getMainCodeBlock().addParameter(priority);
 		}
 
 		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
@@ -368,10 +380,14 @@ public class LibraryEditorPanelFactory {
 			responder.setDisplayText("Responder");
 			responder.addType("creature");
 
-			//priority.setDisplayText(")
-			
+			priority.setDisplayText("Priority");
+			priority.addType("float");
+			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
+					.toString(behaviour.getPriority())));
+
 			behaviour.getMainCodeBlock().addParameter(initiator);
 			behaviour.getMainCodeBlock().addParameter(responder);
+			behaviour.getMainCodeBlock().addParameter(priority);
 		}
 
 		behaviourPanel
@@ -389,145 +405,11 @@ public class LibraryEditorPanelFactory {
 			final Behaviour behaviour) {
 		final JPanel namePanel;
 
-		final JLabel initiateLabel;
-		final JLabel andLabel;
-		final JLabel aposLabel;
-
-		final JTextField initiatorField;
-		final JTextField reactorField;
-		final JTextField behaviourNameField;
-
-		namePanel = new JPanel() {
-			@Override
-			public Dimension getPreferredSize() {
-				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 60;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMaximumSize() {
-				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 60;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMinimumSize() {
-				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 60;
-				return dimension;
-			}
-		};
-		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
-
-		initiateLabel = new JLabel("Initiate ");
-		initiateLabel.setFont(LibraryEditorPanelFactory.labelFont);
-		andLabel = new JLabel(" and ");
-		andLabel.setFont(LibraryEditorPanelFactory.labelFont);
-		aposLabel = new JLabel("'s ");
-		aposLabel.setFont(LibraryEditorPanelFactory.labelFont);
-
-		final String initiatorParamName = behaviour.getMainCodeBlock()
-				.getParameters().get(0).getDisplayText();
-		initiatorField = new JTextField(initiatorParamName, 10);
-
-		final String reactorParamName = behaviour.getMainCodeBlock()
-				.getParameters().get(1).getDisplayText();
-		reactorField = new JTextField(reactorParamName, 10);
-
-		final String displayText = behaviour.getDisplayText();
-		final String name = displayText
-				.substring(displayText.indexOf("\'") + 2);
-		behaviourNameField = new JTextField(name, 20);
-
-		// Add listeners for the text fields
-		initiatorField.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final String oldParamName = behaviour.getMainCodeBlock()
-						.getParameters().get(0).getDisplayText();
-
-				if (initiatorField.getText().contains("\'")
-						|| initiatorField.getText().contains("<")
-						|| initiatorField.getText().contains(">"))
-					return;
-
-				behaviour.getMainCodeBlock().getParameters().get(0)
-						.setDisplayText(initiatorField.getText());
-
-				behaviour.notifyObservers(new StoryComponentEvent(behaviour,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
-
-				behaviour.setDisplayText(behaviour.getDisplayText().replace(
-						"<" + oldParamName + ">",
-						"<" + initiatorField.getText() + ">"));
-			}
-		});
-
-		reactorField.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final String oldParamName = behaviour.getMainCodeBlock()
-						.getParameters().get(1).getDisplayText();
-
-				if (reactorField.getText().contains("\'")
-						|| reactorField.getText().contains("<")
-						|| reactorField.getText().contains(">"))
-					return;
-
-				behaviour.getMainCodeBlock().getParameters().get(1)
-						.setDisplayText(reactorField.getText());
-
-				behaviour.notifyObservers(new StoryComponentEvent(behaviour,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
-
-				behaviour.setDisplayText(behaviour.getDisplayText().replace(
-						"<" + oldParamName + ">",
-						"<" + reactorField.getText() + ">"));
-			}
-		});
-
-		behaviourNameField.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final String displayText = behaviour.getDisplayText();
-				final String nameSoFar = displayText.substring(0,
-						displayText.indexOf("\'") + 3);
-
-				if (behaviourNameField.getText().contains("<")
-						|| behaviourNameField.getText().contains(">"))
-					return;
-
-				behaviour.setDisplayText(nameSoFar
-						+ behaviourNameField.getText());
-			}
-		});
-
-		namePanel.add(initiateLabel);
-		namePanel.add(initiatorField);
-		namePanel.add(andLabel);
-		namePanel.add(reactorField);
-		namePanel.add(aposLabel);
-		namePanel.add(behaviourNameField);
-
-		return namePanel;
-	}
-
-	@SuppressWarnings("serial")
-	private JPanel buildIndependentBehaviourNamePanel(final Behaviour behaviour) {
-		final JPanel namePanel;
-
 		final JLabel initiatorLabel;
-		final JLabel responderLabel;
 		final JLabel priorityLabel;
-		
-		final JTextField initiatorField;
-		final JTextField behaviourNameField;
+
+		final JTextField actionField;
+		final JTextField priorityField;
 
 		namePanel = new JPanel() {
 			@Override
@@ -556,64 +438,160 @@ public class LibraryEditorPanelFactory {
 
 		initiatorLabel = new JLabel("Initiator ");
 		initiatorLabel.setFont(LibraryEditorPanelFactory.labelFont);
-		responderLabel = new JLabel("Responder");
-		//aposLabel.setFont(LibraryEditorPanelFactory.labelFont);
-
-		final String paramName = behaviour.getMainCodeBlock().getParameters()
-				.get(0).getDisplayText();
-		initiatorField = new JTextField(paramName, 10);
+		priorityLabel = new JLabel(" Responder with priority ");
+		priorityLabel.setFont(LibraryEditorPanelFactory.labelFont);
 
 		final String displayText = behaviour.getDisplayText();
-		final String name = displayText
-				.substring(displayText.indexOf("\'") + 2);
-		behaviourNameField = new JTextField(name, 20);
+
+		final String actionName = displayText.substring(
+				displayText.indexOf("<") + 12,
+				displayText.indexOf(" <Responder>"));
+		actionField = new JTextField(actionName, 15);
+
+		final String priority = Integer.toString(behaviour.getPriority());
+		priorityField = ComponentFactory.buildNumberTextField();
+		priorityField.setText(priority);
+		priorityField.setColumns(5);
 
 		// Add listeners for the text fields
-		initiatorField.addActionListener(new ActionListener() {
+		actionField.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final String oldParamName = behaviour.getMainCodeBlock()
-						.getParameters().get(0).getDisplayText();
+				final String oldDisplayText = behaviour.getDisplayText();
 
-				if (initiatorField.getText().contains("\'")
-						|| initiatorField.getText().contains("<")
-						|| initiatorField.getText().contains(">"))
+				final String oldActionName = oldDisplayText.substring(
+						oldDisplayText.indexOf("<") + 12,
+						oldDisplayText.indexOf(" <Responder>"));
+
+				if (actionField.getText().contains("<")
+						|| actionField.getText().contains(">"))
 					return;
-
-				behaviour.getMainCodeBlock().getParameters().get(0)
-						.setDisplayText(initiatorField.getText());
-
-				behaviour.notifyObservers(new StoryComponentEvent(behaviour,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
 
 				behaviour.setDisplayText(behaviour.getDisplayText().replace(
-						"<" + oldParamName + ">",
-						"<" + initiatorField.getText() + ">"));
+						oldActionName, actionField.getText()));
 			}
 		});
 
-		behaviourNameField.addActionListener(new ActionListener() {
+		priorityField.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final String displayText = behaviour.getDisplayText();
-				final String nameSoFar = displayText.substring(0,
-						displayText.indexOf("\'") + 3);
+				final KnowIt priorityKnowIt = behaviour.getMainCodeBlock()
+						.getParameters().get(2);
+				final String priority = priorityField.getText();
 
-				if (behaviourNameField.getText().contains("<")
-						|| behaviourNameField.getText().contains(">"))
-					return;
+				behaviour.setPriority(Integer.parseInt(priority));
 
-				behaviour.setDisplayText(nameSoFar
-						+ behaviourNameField.getText());
+				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
+						.getTypes(), priority));
+
+				priorityKnowIt.revalidateKnowItBindings();
 			}
 		});
 
-		//namePanel.add(initiateLabel);
-		namePanel.add(initiatorField);
-		//namePanel.add(aposLabel);
-		namePanel.add(behaviourNameField);
+		namePanel.add(initiatorLabel);
+		namePanel.add(actionField);
+		namePanel.add(priorityLabel);
+		namePanel.add(priorityField);
+
+		return namePanel;
+	}
+
+	@SuppressWarnings("serial")
+	private JPanel buildIndependentBehaviourNamePanel(final Behaviour behaviour) {
+		final JPanel namePanel;
+
+		final JLabel initiatorLabel;
+		final JLabel priorityLabel;
+
+		final JTextField actionField;
+		final JTextField priorityField;
+
+		namePanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+		};
+		
+		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
+
+		initiatorLabel = new JLabel("Initiator ");
+		initiatorLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		priorityLabel = new JLabel(" with priority ");
+		priorityLabel.setFont(LibraryEditorPanelFactory.labelFont);
+
+		final String displayText = behaviour.getDisplayText();
+
+		final String actionName = displayText.substring(
+				displayText.indexOf("<") + 12,
+				displayText.indexOf(" with priority"));
+		actionField = new JTextField(actionName, 15);
+
+		final String priority = Integer.toString(behaviour.getPriority());
+		priorityField = ComponentFactory.buildNumberTextField();
+		priorityField.setText(priority);
+		priorityField.setColumns(5);
+
+		// Add listeners for the text fields
+		actionField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String oldDisplayText = behaviour.getDisplayText();
+
+				final String oldActionName = oldDisplayText.substring(
+						oldDisplayText.indexOf("<") + 12,
+						oldDisplayText.indexOf(" with priority"));
+
+				if (actionField.getText().contains("<")
+						|| actionField.getText().contains(">"))
+					return;
+
+				behaviour.setDisplayText(behaviour.getDisplayText().replace(
+						oldActionName, actionField.getText()));
+			}
+		});
+
+		priorityField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final KnowIt priorityKnowIt = behaviour.getMainCodeBlock()
+						.getParameters().get(1);
+				final String priority = priorityField.getText();
+
+				behaviour.setPriority(Integer.parseInt(priority));
+
+				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
+						.getTypes(), priority));
+
+				priorityKnowIt.revalidateKnowItBindings();
+			}
+		});
+
+		namePanel.add(initiatorLabel);
+		namePanel.add(actionField);
+		namePanel.add(priorityLabel);
+		namePanel.add(priorityField);
 
 		return namePanel;
 	}
