@@ -76,7 +76,8 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		final Component focusOwner;
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
-		if (focusOwner != null && focusOwner.getParent() instanceof TaskEffectsPanel) {
+		if (focusOwner != null
+				&& focusOwner.getParent() instanceof TaskEffectsPanel) {
 			return ((StoryComponentPanel) focusOwner).isRemovable();
 		} else if (focusOwner instanceof StoryComponentPanel) {
 			return super.isLegal()
@@ -90,7 +91,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			return false;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;

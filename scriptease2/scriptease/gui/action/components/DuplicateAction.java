@@ -55,7 +55,7 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 		this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 				KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK));
-		
+
 		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
 
 			@Override
@@ -92,7 +92,6 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 		return activeModel != null && isLegal;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
