@@ -539,7 +539,6 @@ public class ScriptWidgetFactory {
 		return spinner;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static JComponent buildComboEditor(final KnowIt knowIt,
 			final BindingWidget bindingWidget, final String bindingType) {
 		final Map<String, String> enumMap;

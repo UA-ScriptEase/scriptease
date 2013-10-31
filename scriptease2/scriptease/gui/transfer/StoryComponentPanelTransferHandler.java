@@ -116,7 +116,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * selectedNodes is null since calling control-x without a selected node
 	 * will still fire this.
 	 */
-	@SuppressWarnings({ "rawtypes", "deprecation" })
 	@Override
 	protected Transferable createTransferable(JComponent comp) {
 		final List<StoryComponent> data;
@@ -244,10 +243,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 		} else if (supportComponent instanceof TaskEffectsPanel) {
 			final TaskEffectsPanel taskPanel = (TaskEffectsPanel) supportComponent;
-			
+
 			if (!taskPanel.isEditable())
 				return false;
-			
+
 			final StoryComponent component;
 
 			component = this.extractStoryComponents(support).iterator().next();

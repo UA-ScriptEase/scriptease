@@ -150,28 +150,17 @@ public class LibraryEditorListenerFactory {
 		subjectBoxObserver = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
-				final StoryComponent component;
-				final StoryVisitor storyVisitor;
+				final StoryComponentChangeEnum type = event.getType();
 
-				type = event.getType();
-				component = event.getSource();
-				storyVisitor = new StoryAdapter() {
-					@Override
-					public void processScriptIt(ScriptIt scriptIt) {
-						if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
-							String implicits = "";
+				if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
+					String implicits = "";
 
-							for (KnowIt implicit : codeBlock.getImplicits())
-								implicits += "[" + implicit.getDisplayText()
-										+ "] ";
+					for (KnowIt implicit : codeBlock.getImplicits())
+						implicits += "[" + implicit.getDisplayText() + "] ";
 
-							implicitsLabel.setText(implicits.trim());
-							implicitsLabel.revalidate();
-						}
-					}
-				};
-				component.process(storyVisitor);
+					implicitsLabel.setText(implicits.trim());
+					implicitsLabel.revalidate();
+				}
 			}
 		};
 		this.codeBlockComponentObservers.add(subjectBoxObserver);
