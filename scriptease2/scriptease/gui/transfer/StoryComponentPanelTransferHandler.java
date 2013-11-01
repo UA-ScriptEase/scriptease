@@ -505,7 +505,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			type = taskPanel.getType();
 			task = taskPanel.getTask();
-			effect = (ScriptIt) component;
+			effect = ((ScriptIt) component).clone();
 
 			if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
 				((IndependentTask) task).getEffects().add(effect);

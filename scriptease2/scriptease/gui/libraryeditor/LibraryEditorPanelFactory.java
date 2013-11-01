@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -331,7 +333,7 @@ public class LibraryEditorPanelFactory {
 	}
 
 	@SuppressWarnings("serial")
-	private JPanel buildBehaviourImplicitPanel(KnowIt implicit) {
+	private JPanel buildBehaviourImplicitPanel(List<KnowIt> implicitList) {
 		final JPanel implicitPanel;
 
 		implicitPanel = new JPanel() {
@@ -357,12 +359,14 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		implicitPanel.setBorder(BorderFactory
-				.createTitledBorder("Implicits"));
+		implicitPanel.setBorder(BorderFactory.createTitledBorder("Implicits"));
 		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(implicit, false));
-		
+		for (KnowIt implicit : implicitList) {
+			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(implicit,
+					false));
+		}
+
 		return implicitPanel;
 	}
 
@@ -370,8 +374,13 @@ public class LibraryEditorPanelFactory {
 			final JPanel behaviourPanel) {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
 				behaviourPanel, ScriptEaseKeywords.INDEPENDENT);
+
+		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
+
 		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
 				.next();
+
+		implicitList.add(initiatorImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
@@ -396,7 +405,7 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph));
-		behaviourPanel.add(this.buildBehaviourImplicitPanel(initiatorImplicit));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
 
 		graph.setSelectedNode(graph.getStartNode());
 
@@ -408,6 +417,16 @@ public class LibraryEditorPanelFactory {
 			final JPanel behaviourPanel) {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
 				behaviourPanel, ScriptEaseKeywords.COLLABORATIVE);
+
+		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
+
+		final Iterator<KnowIt> iterator = behaviour.getImplicits().iterator();
+
+		final KnowIt initiatorImplicit = iterator.next();
+		final KnowIt responderImplicit = iterator.next();
+
+		implicitList.add(initiatorImplicit);
+		implicitList.add(responderImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
@@ -438,6 +457,7 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
 				graph));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
 
 		graph.setSelectedNode(graph.getStartNode());
 
