@@ -131,14 +131,30 @@ public class ListOp {
 				return object;
 		return null;
 	}
-	
+
 	public static <T> ArrayList<T> createList(T... contents) {
 		final ArrayList<T> list = new ArrayList<T>();
-		
-		for(T content : contents) {
+
+		for (T content : contents) {
 			list.add(content);
 		}
-		
+
 		return list;
+	}
+
+	/**
+	 * Returns the first item in the list. If there are no items, this returns
+	 * null.
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getFirst(Collection<T> collection) {
+		if (collection.isEmpty()) {
+			return null;
+		}
+
+		return (T) collection.toArray()[0];
 	}
 }
