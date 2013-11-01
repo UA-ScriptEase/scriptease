@@ -202,12 +202,35 @@ public class LibraryEditorPanelFactory {
 		return behaviourPanel;
 	}
 
+	@SuppressWarnings("serial")
 	private JPanel buildBehaviourGraphPanel(String graphName,
 			SEGraph<Task> graph) {
 		final JPanel graphPanel;
 
 		// Create the graph panel.
-		graphPanel = new JPanel();
+		graphPanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 180;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 180;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 180;
+				return dimension;
+			}
+		};
+		
 		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 
@@ -272,6 +295,7 @@ public class LibraryEditorPanelFactory {
 		}
 
 		graph = SEGraphFactory.buildTaskGraph(startTask, false);
+
 		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
 
 		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {
@@ -340,21 +364,21 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 80;
+				dimension.height = 60;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMaximumSize() {
 				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 80;
+				dimension.height = 60;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMinimumSize() {
 				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 80;
+				dimension.height = 60;
 				return dimension;
 			}
 		};

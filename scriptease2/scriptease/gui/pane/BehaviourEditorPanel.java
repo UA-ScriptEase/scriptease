@@ -2,6 +2,7 @@ package scriptease.gui.pane;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.Collection;
 
@@ -15,6 +16,7 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.libraryeditor.TaskEffectsPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
@@ -79,21 +81,66 @@ public class BehaviourEditorPanel extends JPanel {
 	 * drop in game objects.
 	 */
 	private void createLayout() {
-		this.layoutPanel.removeAll();
+		final JPanel namePanel;
+		final JPanel graphPanel;
 
-		final SEGraph<Task> graphPanel;
-
-		graphPanel = this.buildBehaviourGraph();
-
-		this.layoutPanel.add(graphPanel);
-
-		this.repaint();
-		this.revalidate();
-	}
-
-	private SEGraph<Task> buildBehaviourGraph() {
 		final SEGraph<Task> graph;
 		final Task startTask;
+		
+		this.layoutPanel.removeAll();
+
+		// create the name panel.
+		namePanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 70;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 70;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 70;
+				return dimension;
+			}
+		};
+		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour"));
+		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		// Create the graph panel.
+		graphPanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 180;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 180;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 180;
+				return dimension;
+			}
+		};
+		graphPanel.setBorder(BorderFactory
+				.createTitledBorder("Behaviour Tasks Graph"));
+		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 
 		startTask = behaviour.getStartTask();
 
@@ -105,34 +152,36 @@ public class BehaviourEditorPanel extends JPanel {
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
 				final JPanel effectsPanel = new JPanel();
-
-				effectsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+				
+				final FlowLayout layout = new FlowLayout(FlowLayout.LEADING);
+				layout.setAlignOnBaseline(true);
+				
+				effectsPanel.setLayout(layout);
 
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = layoutPanel
 						.getComponent(layoutPanel.getComponents().length - 1);
 
-				if (lastComponent instanceof JPanel) {
-					final JPanel panel = (JPanel) lastComponent;
-
-					if (panel.getComponentCount() > 0
-							&& panel.getComponent(0) instanceof TaskEffectsPanel) {
-						layoutPanel.remove(lastComponent);
-					}
+				if (lastComponent instanceof JPanel
+						&& layoutPanel.getComponents().length > 2) {
+					layoutPanel.remove(lastComponent);
 				}
 
 				// Set up the effects panel for the task we selected.
 				final Task task = nodes.iterator().next();
 
 				if (task instanceof IndependentTask) {
-					layoutPanel.add(new TaskEffectsPanel("Task Panel", task,
+
+					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
 							TaskEffectsPanel.TYPE.INDEPENDENT, false));
 
 				} else if (task instanceof CollaborativeTask) {
-					layoutPanel.add(new TaskEffectsPanel(
+
+					effectsPanel.add(new TaskEffectsPanel(
 							"Initiator Task Panel", task,
 							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT, false));
-					layoutPanel.add(new TaskEffectsPanel("Reactor Task Panel",
+
+					effectsPanel.add(new TaskEffectsPanel("Reactor Task Panel",
 							task, TaskEffectsPanel.TYPE.COLLABORATIVE_REACT,
 							false));
 				}
@@ -153,6 +202,15 @@ public class BehaviourEditorPanel extends JPanel {
 			}
 		});
 
-		return graph;
+		namePanel.add(StoryComponentPanelFactory.getInstance().buildStoryComponentPanel(behaviour));
+		graphPanel.add(graph);
+
+		this.layoutPanel.add(namePanel);
+		this.layoutPanel.add(graphPanel);
+
+		graph.setSelectedNode(startTask);
+
+		this.repaint();
+		this.revalidate();
 	}
 }
