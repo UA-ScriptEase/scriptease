@@ -35,6 +35,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
 /**
@@ -413,6 +414,12 @@ public class CodeBlockPanel extends JPanel {
 		return includesField;
 	}
 
+	/**
+	 * Combo box used to set the subject of a code block.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
 	private class SubjectComboBox extends JComboBox {
 		private boolean backgroundUpdate;
 
@@ -492,6 +499,15 @@ public class CodeBlockPanel extends JPanel {
 
 		public SlotComboBox(final CodeBlock codeBlock) {
 			this.backgroundUpdate = false;
+			final Runnable buildItems;
+			
+			buildItems = new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					
+				}
+			};
 			this.buildItems(codeBlock);
 
 			this.addActionListener(new ActionListener() {
@@ -499,7 +515,12 @@ public class CodeBlockPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					if (!backgroundUpdate) {
 						final String currentlySelected = (String) getSelectedItem();
-						final String currentSlot = codeBlock.getSlot();
+
+						final String currentSlot;
+						if (codeBlock.hasSlot())
+							currentSlot = codeBlock.getSlot();
+						else
+							currentSlot = "";
 
 						if (!currentSlot.equals(currentlySelected)) {
 							if (!UndoManager.getInstance()
@@ -546,7 +567,11 @@ public class CodeBlockPanel extends JPanel {
 				for (String slot : slots) {
 					this.addItem(slot);
 				}
-				this.setSelectedItem(codeBlock.getSlot());
+
+				if (codeBlock.hasSlot())
+					this.setSelectedItem(codeBlock.getSlot());
+				else
+					this.setSelectedItem(ListOp.getFirst(slots));
 			}
 		}
 	}
