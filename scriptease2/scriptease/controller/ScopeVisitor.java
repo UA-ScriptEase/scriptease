@@ -105,7 +105,7 @@ public class ScopeVisitor extends StoryAdapter {
 
 		this.scope.addAll(this.getPriorKnowIts(component));
 	}
-
+	
 	@Override
 	public void processAskIt(AskIt askIt) {
 		this.defaultProcess(askIt);
@@ -113,7 +113,7 @@ public class ScopeVisitor extends StoryAdapter {
 		if (askIt != this.targetComponent)
 			this.scope.add(askIt.getCondition());
 	}
-
+	
 	@Override
 	public void processKnowIt(KnowIt knowIt) {
 		this.defaultProcess(knowIt);

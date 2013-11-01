@@ -36,6 +36,7 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.component.ComponentFactory;
+import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -296,10 +297,12 @@ public class LibraryEditorPanelFactory {
 				final Task task = nodes.iterator().next();
 
 				if (task instanceof IndependentTask) {
+
 					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
 							TaskEffectsPanel.TYPE.INDEPENDENT, true));
 
 				} else if (task instanceof CollaborativeTask) {
+
 					effectsPanel.add(new TaskEffectsPanel("Initiator Task",
 							task, TaskEffectsPanel.TYPE.COLLABORATIVE_INIT,
 							true));
@@ -323,14 +326,52 @@ public class LibraryEditorPanelFactory {
 				task.revalidateKnowItBindings();
 			}
 		});
-		
+
 		return graph;
+	}
+
+	@SuppressWarnings("serial")
+	private JPanel buildBehaviourImplicitPanel(KnowIt implicit) {
+		final JPanel implicitPanel;
+
+		implicitPanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 80;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 80;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 80;
+				return dimension;
+			}
+		};
+
+		implicitPanel.setBorder(BorderFactory
+				.createTitledBorder("Implicits"));
+		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(implicit, false));
+		
+		return implicitPanel;
 	}
 
 	private void buildIndependentBehaviourPanel(final Behaviour behaviour,
 			final JPanel behaviourPanel) {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
 				behaviourPanel, ScriptEaseKeywords.INDEPENDENT);
+		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
+				.next();
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
@@ -355,9 +396,10 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph));
-		
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(initiatorImplicit));
+
 		graph.setSelectedNode(graph.getStartNode());
-		
+
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
 	}
@@ -398,7 +440,7 @@ public class LibraryEditorPanelFactory {
 				graph));
 
 		graph.setSelectedNode(graph.getStartNode());
-		
+
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
 	}
@@ -413,7 +455,7 @@ public class LibraryEditorPanelFactory {
 
 		final JTextField actionField;
 		final JTextField priorityField;
-		
+
 		namePanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
@@ -533,7 +575,7 @@ public class LibraryEditorPanelFactory {
 				return dimension;
 			}
 		};
-		
+
 		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
 

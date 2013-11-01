@@ -125,14 +125,14 @@ public class BehaviourEditorPanel extends JPanel {
 				final Task task = nodes.iterator().next();
 
 				if (task instanceof IndependentTask) {
-					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
+					layoutPanel.add(new TaskEffectsPanel("Task Panel", task,
 							TaskEffectsPanel.TYPE.INDEPENDENT, false));
 
 				} else if (task instanceof CollaborativeTask) {
-					effectsPanel.add(new TaskEffectsPanel(
+					layoutPanel.add(new TaskEffectsPanel(
 							"Initiator Task Panel", task,
 							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT, false));
-					effectsPanel.add(new TaskEffectsPanel("Reactor Task Panel",
+					layoutPanel.add(new TaskEffectsPanel("Reactor Task Panel",
 							task, TaskEffectsPanel.TYPE.COLLABORATIVE_REACT,
 							false));
 				}
