@@ -212,7 +212,7 @@ public class CodeBlockPanel extends JPanel {
 
 		if (scriptIt instanceof CauseIt) {
 			subjectBox = new JComboBox();
-			slotBox = new SlotComboBox(codeBlock);
+			slotBox = this.buildSlotComboBox(codeBlock);
 
 			deleteCodeBlockButton.setVisible(false);
 			subjectLabel.setVisible(false);
@@ -237,7 +237,7 @@ public class CodeBlockPanel extends JPanel {
 
 			if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
 				subjectBox = new SubjectComboBox(codeBlock);
-				slotBox = new SlotComboBox(codeBlock);
+				slotBox = this.buildSlotComboBox(codeBlock);
 
 				subjectBox.addActionListener(new ActionListener() {
 					@Override
@@ -492,88 +492,82 @@ public class CodeBlockPanel extends JPanel {
 	 * @author kschenk
 	 * 
 	 */
-	private class SlotComboBox extends JComboBox {
-		// Set to true if we're updating from the model instead of the view,
-		// such as when doing an undo or redo.
-		private boolean backgroundUpdate;
+	private JComboBox buildSlotComboBox(final CodeBlock codeBlock) {
+		final Runnable buildItems;
+		final JComboBox slotBox;
+		final ActionListener listener;
 
-		public SlotComboBox(final CodeBlock codeBlock) {
-			this.backgroundUpdate = false;
-			final Runnable buildItems;
-			
-			buildItems = new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					
-				}
-			};
-			this.buildItems(codeBlock);
+		slotBox = new JComboBox();
 
-			this.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (!backgroundUpdate) {
-						final String currentlySelected = (String) getSelectedItem();
+		listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String currentSelected;
+				final String currentSlot;
 
-						final String currentSlot;
-						if (codeBlock.hasSlot())
-							currentSlot = codeBlock.getSlot();
-						else
-							currentSlot = "";
-
-						if (!currentSlot.equals(currentlySelected)) {
-							if (!UndoManager.getInstance()
-									.hasOpenUndoableAction()) {
-								UndoManager.getInstance().startUndoableAction(
-										"Setting CodeBlock slot to "
-												+ currentlySelected);
-							}
-							codeBlock.setSlot(currentlySelected);
-							UndoManager.getInstance().endUndoableAction();
-						}
-					}
-				}
-			});
-
-			codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
-				@Override
-				public void componentChanged(StoryComponentEvent event) {
-					backgroundUpdate = true;
-
-					switch (event.getType()) {
-					case CODE_BLOCK_SLOT_SET:
-					case CODE_BLOCK_SUBJECT_SET:
-					case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
-						// TODO Doesn't fire on change parameter type
-						buildItems(codeBlock);
-						revalidate();
-					default:
-						break;
-					}
-
-					backgroundUpdate = false;
-				}
-			});
-		}
-
-		private void buildItems(CodeBlock codeBlock) {
-			this.removeAllItems();
-			if (codeBlock.hasSubject()) {
-				final Collection<String> slots;
-
-				slots = getCommonSlotsForTypes(codeBlock.getSubject());
-
-				for (String slot : slots) {
-					this.addItem(slot);
-				}
+				currentSelected = (String) slotBox.getSelectedItem();
 
 				if (codeBlock.hasSlot())
-					this.setSelectedItem(codeBlock.getSlot());
+					currentSlot = codeBlock.getSlot();
 				else
-					this.setSelectedItem(ListOp.getFirst(slots));
+					currentSlot = "";
+
+				if (!currentSlot.equals(currentSelected)) {
+					// TODO Undo doesn't actually undo.
+					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+						UndoManager.getInstance().startUndoableAction(
+								"Setting CodeBlock slot to " + currentSelected);
+					}
+					codeBlock.setSlot(currentSelected);
+					UndoManager.getInstance().endUndoableAction();
+				}
 			}
-		}
+		};
+
+		buildItems = new Runnable() {
+			@Override
+			public void run() {
+				slotBox.removeActionListener(listener);
+				slotBox.removeAllItems();
+
+				if (codeBlock.hasSubject()) {
+					final Collection<String> slots;
+
+					slots = getCommonSlotsForTypes(codeBlock.getSubject());
+
+					for (String slot : slots) {
+						slotBox.addItem(slot);
+					}
+
+					if (codeBlock.hasSlot())
+						slotBox.setSelectedItem(codeBlock.getSlot());
+					else
+						slotBox.setSelectedItem(ListOp.getFirst(slots));
+				}
+
+				slotBox.addActionListener(listener);
+			}
+		};
+
+		buildItems.run();
+
+		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				switch (event.getType()) {
+				case CODE_BLOCK_SLOT_SET:
+				case CODE_BLOCK_SUBJECT_SET:
+				case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
+					// TODO Doesn't fire on change parameter type
+					buildItems.run();
+					slotBox.revalidate();
+				default:
+					break;
+				}
+			}
+		});
+
+		return slotBox;
 	}
 
 	/**
