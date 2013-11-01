@@ -21,7 +21,6 @@ import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
@@ -236,22 +235,8 @@ public class CodeBlockPanel extends JPanel {
 			});
 
 			if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
-				subjectBox = new SubjectComboBox(codeBlock);
+				subjectBox = this.buildSubjectComboBox(codeBlock);
 				slotBox = this.buildSlotComboBox(codeBlock);
-
-				subjectBox.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						final String subjectName;
-						subjectName = (String) subjectBox.getSelectedItem();
-
-						codeBlock.setSubject(subjectName);
-
-						scriptIt.notifyObservers(new StoryComponentEvent(
-								scriptIt,
-								StoryComponentChangeEnum.CODE_BLOCK_SUBJECT_SET));
-					}
-				});
 			} else {
 				subjectBox = new JComboBox();
 				slotBox = new JComboBox();
@@ -260,6 +245,7 @@ public class CodeBlockPanel extends JPanel {
 				subjectLabel.setVisible(false);
 				subjectBox.setVisible(false);
 
+				deleteCodeBlockButton.setVisible(false);
 				slotLabel.setVisible(false);
 				slotBox.setVisible(false);
 				implicitsLabel.setVisible(false);
@@ -417,72 +403,83 @@ public class CodeBlockPanel extends JPanel {
 	/**
 	 * Combo box used to set the subject of a code block.
 	 * 
-	 * @author kschenk
+	 * @return
 	 * 
 	 */
-	private class SubjectComboBox extends JComboBox {
-		private boolean backgroundUpdate;
+	private JComboBox buildSubjectComboBox(final CodeBlock codeBlock) {
+		// TODO Should be disabled if there are no valid parameters.
+		final JComboBox subjectBox = new JComboBox();
+		final Runnable buildItems;
+		final ActionListener listener;
 
-		public SubjectComboBox(final CodeBlock codeBlock) {
-			this.backgroundUpdate = false;
-			this.buildItems(codeBlock);
+		listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String currentSelected;
+				final String currentSubject;
 
-			this.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (!backgroundUpdate) {
-						final String currentlySelected = (String) getSelectedItem();
-						final String currentSubject = codeBlock
-								.getSubjectName();
+				currentSelected = (String) subjectBox.getSelectedItem();
+				currentSubject = codeBlock.getSubjectName();
 
-						if (!currentSubject.equals(currentlySelected)) {
-							if (!UndoManager.getInstance()
-									.hasOpenUndoableAction()) {
-								UndoManager.getInstance().startUndoableAction(
-										"Setting CodeBlock subject to "
-												+ currentlySelected);
-							}
-							codeBlock.setSubject(currentlySelected);
-							UndoManager.getInstance().endUndoableAction();
+				if (!currentSubject.equals(currentSelected)) {
+					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+						UndoManager.getInstance().startUndoableAction(
+								"Setting CodeBlock subject to "
+										+ currentSelected);
+					}
+					codeBlock.setSubject(currentSelected);
+
+					if (UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().endUndoableAction();
+				}
+			}
+		};
+
+		buildItems = new Runnable() {
+			@Override
+			public void run() {
+				subjectBox.removeActionListener(listener);
+				subjectBox.removeAllItems();
+				final ScriptIt scriptIt = codeBlock.getOwner();
+
+				if (scriptIt != null) {
+					subjectBox.addItem(null);
+					final Collection<KnowIt> parameters = scriptIt
+							.getParameters();
+					for (KnowIt parameter : parameters) {
+						final Collection<String> slots = getCommonSlotsForTypes(parameter);
+
+						if (!slots.isEmpty())
+							subjectBox.addItem(parameter.getDisplayText());
+					}
+					subjectBox.setSelectedItem(codeBlock.getSubjectName());
+				}
+
+				subjectBox.addActionListener(listener);
+			}
+		};
+
+		buildItems.run();
+
+		codeBlock.addStoryComponentObserver(subjectBox,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						switch (event.getType()) {
+						case CODE_BLOCK_SUBJECT_SET:
+						case CHANGE_PARAMETER_LIST_ADD:
+						case CHANGE_PARAMETER_LIST_REMOVE:
+						case CHANGE_PARAMETER_NAME_SET:
+						case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
+							buildItems.run();
+							subjectBox.revalidate();
+						default:
+							break;
 						}
 					}
-				}
-			});
-			codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
-				@Override
-				public void componentChanged(StoryComponentEvent event) {
-					backgroundUpdate = true;
-					switch (event.getType()) {
-					case CODE_BLOCK_SUBJECT_SET:
-					case CHANGE_PARAMETER_LIST_ADD:
-					case CHANGE_PARAMETER_LIST_REMOVE:
-					case CHANGE_PARAMETER_NAME_SET:
-					case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
-						buildItems(codeBlock);
-						revalidate();
-					default:
-						break;
-					}
-					backgroundUpdate = false;
-				}
-			});
-		}
+				});
 
-		private void buildItems(CodeBlock codeBlock) {
-			this.removeAllItems();
-			final ScriptIt scriptIt = codeBlock.getOwner();
-			if (scriptIt != null) {
-				final Collection<KnowIt> parameters = scriptIt.getParameters();
-				for (KnowIt parameter : parameters) {
-					final Collection<String> slots = getCommonSlotsForTypes(parameter);
-
-					if (!slots.isEmpty())
-						this.addItem(parameter.getDisplayText());
-				}
-				// this.addItem(null);
-				this.setSelectedItem(codeBlock.getSubjectName());
-			}
-		}
+		return subjectBox;
 	}
 
 	/**
@@ -493,11 +490,10 @@ public class CodeBlockPanel extends JPanel {
 	 * 
 	 */
 	private JComboBox buildSlotComboBox(final CodeBlock codeBlock) {
+		// TODO Should be disabled if there are no valid subjects
+		final JComboBox slotBox = new JComboBox();
 		final Runnable buildItems;
-		final JComboBox slotBox;
 		final ActionListener listener;
-
-		slotBox = new JComboBox();
 
 		listener = new ActionListener() {
 			@Override
@@ -551,21 +547,22 @@ public class CodeBlockPanel extends JPanel {
 
 		buildItems.run();
 
-		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				switch (event.getType()) {
-				case CODE_BLOCK_SLOT_SET:
-				case CODE_BLOCK_SUBJECT_SET:
-				case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
-					// TODO Doesn't fire on change parameter type
-					buildItems.run();
-					slotBox.revalidate();
-				default:
-					break;
-				}
-			}
-		});
+		codeBlock.addStoryComponentObserver(slotBox,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						switch (event.getType()) {
+						case CODE_BLOCK_SLOT_SET:
+						case CODE_BLOCK_SUBJECT_SET:
+						case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
+							// TODO Doesn't fire on change parameter type
+							buildItems.run();
+							slotBox.revalidate();
+						default:
+							break;
+						}
+					}
+				});
 
 		return slotBox;
 	}
