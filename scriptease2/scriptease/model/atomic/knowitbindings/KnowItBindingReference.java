@@ -106,6 +106,9 @@ public class KnowItBindingReference extends KnowItBinding {
 
 				final KnowIt thisValue = this.getValue();
 
+				if (thisValue.getDisplayText().contains("Behaviour Initiator"))
+					return true;
+				
 				for (KnowIt scope : ScopeVisitor.getScope(knowIt))
 					// We can't use equals() because it's not the exact knowit.
 					if (scope == thisValue)

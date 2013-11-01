@@ -1,10 +1,10 @@
 package scriptease.gui.libraryeditor;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -43,8 +43,6 @@ public class TaskEffectsPanel extends JPanel {
 	 */
 	public TaskEffectsPanel(String name, Task task, TaskEffectsPanel.TYPE type,
 			boolean editable) {
-		super();
-
 		this.type = type;
 		this.task = task;
 		this.editable = editable;
@@ -75,7 +73,6 @@ public class TaskEffectsPanel extends JPanel {
 			}
 		}
 
-		this.setBackground(Color.WHITE);
 		this.setBorder(BorderFactory.createTitledBorder(name));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setTransferHandler(StoryComponentPanelTransferHandler
@@ -97,13 +94,14 @@ public class TaskEffectsPanel extends JPanel {
 		panel = StoryComponentPanelFactory.getInstance()
 				.buildStoryComponentPanel(effect);
 
-		panel.setMaximumSize(panel.getPreferredSize());
+		//panel.setMaximumSize(panel.getPreferredSize());
 		panel.setSelectable(true);
 		panel.setRemovable(true);
 
 		this.panelManager.addPanel(panel, false);
 
 		this.add(panel);
+		this.add(Box.createVerticalStrut(5));
 
 		this.repaint();
 		this.revalidate();
@@ -118,13 +116,22 @@ public class TaskEffectsPanel extends JPanel {
 	 * @return
 	 */
 	public boolean removeEffect(ScriptIt effect) {
+		// hack to remove the vertical strut since JPanel can't get indexes of
+		// components
+		boolean removeNextComponent = false;
+
 		for (Component component : this.getComponents()) {
+			if (removeNextComponent) {
+				this.remove(component);
+				break;
+			}
+			
 			if (component instanceof StoryComponentPanel) {
 				final StoryComponentPanel panel = (StoryComponentPanel) component;
 
 				if (panel.getStoryComponent() == effect) {
 					this.remove(component);
-					break;
+					removeNextComponent = true;
 				}
 			}
 		}

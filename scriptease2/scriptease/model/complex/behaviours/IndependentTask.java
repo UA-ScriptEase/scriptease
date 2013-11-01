@@ -48,6 +48,10 @@ public class IndependentTask extends Task {
 		this.effects = effects;
 	}
 	
+	public List<ScriptIt> effects() {
+		return this.effects;
+	}
+	
 	@Override
 	public IndependentTask clone() {
 		final IndependentTask component = (IndependentTask) super.clone();
