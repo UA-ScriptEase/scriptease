@@ -303,8 +303,10 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
 				final JPanel effectsPanel = new JPanel();
+				final FlowLayout layout = new FlowLayout(FlowLayout.LEADING);
+				layout.setAlignOnBaseline(true);
 
-				effectsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+				effectsPanel.setLayout(layout);
 
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = behaviourPanel
