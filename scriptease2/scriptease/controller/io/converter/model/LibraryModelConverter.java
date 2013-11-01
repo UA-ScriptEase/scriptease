@@ -34,6 +34,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public class LibraryModelConverter implements Converter {
+	public static LibraryModel currentLibrary = null;
+
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -120,10 +122,6 @@ public class LibraryModelConverter implements Converter {
 				DescribeIt.class);
 		controls = XMLNode.CONTROLITS.readCollection(reader, context,
 				ControlIt.class);
-		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
-				Behaviour.class);
-		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
-				ScriptIt.class);
 
 		// Construct the library
 		library.setIncludeFilePaths(includeFilePaths);
@@ -151,11 +149,24 @@ public class LibraryModelConverter implements Converter {
 		}
 
 		library.addAll(controls);
+		
+		this.addDefaultCauseChildren(library, causes);
+		
+		// Behaviours rely on the current library being set, so we need to load
+		// them after assigning the library to the static variable.
+		currentLibrary = library;
+		
+		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
+				Behaviour.class);
+		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
+				ScriptIt.class);
+
 		library.addAll(behaviours);
 
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
 
-		this.addDefaultCauseChildren(library, causes);
+		// reset these to free memory
+		currentLibrary = null;
 
 		return library;
 	}
