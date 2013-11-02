@@ -258,17 +258,18 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			component = this.extractStoryComponents(support).iterator().next();
 
-			if (component instanceof ScriptIt) {
+			if (component instanceof AskIt
+					|| component instanceof PickIt
+					|| component instanceof ControlIt
+					|| component instanceof KnowIt)
+				return true;
+			else if (component instanceof ScriptIt) {
 				final ScriptIt scriptIt = (ScriptIt) component;
 
 				if (!(scriptIt instanceof CauseIt)
 						&& scriptIt.getLabels().contains("TODO"))
 					return true;
-			} else if (component instanceof AskIt
-					|| component instanceof PickIt
-					|| component instanceof ControlIt
-					|| component instanceof KnowIt)
-				return true;
+			}
 		}
 
 		if (this.hoveredPanel != null)
