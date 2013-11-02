@@ -1,10 +1,12 @@
 package scriptease.model.complex.behaviours;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 
 /**
@@ -15,8 +17,6 @@ import scriptease.model.complex.ScriptIt;
  */
 public class IndependentTask extends Task {
 
-	private List<ScriptIt> effects;
-	
 	/**
 	 * Constructor. Creates a new independent task with the given name
 	 * 
@@ -24,8 +24,17 @@ public class IndependentTask extends Task {
 	 */
 	public IndependentTask(String name) {
 		super(name);
-		
-		this.effects = new ArrayList<ScriptIt>();
+
+		this.registerChildType(KnowIt.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(AskIt.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(ScriptIt.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(ControlIt.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(PickIt.class,
+				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
 
 	@Override
@@ -40,29 +49,9 @@ public class IndependentTask extends Task {
 		}
 	}
 
-	public List<ScriptIt> getEffects() {
-		return effects;
-	}
-	
-	public void setEffects(List<ScriptIt> effects) {
-		this.effects = effects;
-	}
-	
-	public List<ScriptIt> effects() {
-		return this.effects;
-	}
-	
 	@Override
 	public IndependentTask clone() {
 		final IndependentTask component = (IndependentTask) super.clone();
-
-		component.effects = new ArrayList<ScriptIt>(
-				this.effects.size());
-
-		// clone the effects
-		for (ScriptIt effect : this.effects) {
-			component.effects.add(effect.clone());
-		}
 
 		return component;
 	}

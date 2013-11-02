@@ -335,7 +335,7 @@ public class LibraryEditorPanelFactory {
 							task, TaskPanel.TYPE.COLLABORATIVE_INIT,
 							true));
 					effectsPanel.add(new TaskPanel("Responder Task",
-							task, TaskPanel.TYPE.COLLABORATIVE_REACT,
+							task, TaskPanel.TYPE.COLLABORATIVE_RESPOND,
 							true));
 				}
 

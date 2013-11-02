@@ -5,22 +5,27 @@ import java.util.List;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * A collaborative task is a subclass of Task with a initiator subject and a
- * collaborator subject.
+ * responder subject.
  * 
  * @author jyuen
- * 
  */
 public class CollaborativeTask extends Task {
 
-	private List<ScriptIt> initiatorEffects;
-	private List<ScriptIt> responderEffects;
-
 	private String initiatorName;
 	private String responderName;
+
+	private StoryComponentContainer initiatorContainer;
+	private StoryComponentContainer responderContainer;
 
 	/**
 	 * Constructor to create a CollaborativeTask.
@@ -31,41 +36,58 @@ public class CollaborativeTask extends Task {
 	public CollaborativeTask(String initiatorName, String responderName) {
 		super(initiatorName + ":" + responderName);
 
-		initiatorEffects = new ArrayList<ScriptIt>();
-		responderEffects = new ArrayList<ScriptIt>();
+		final List<Class<? extends StoryComponent>> taskContainerTypes;
 
 		this.initiatorName = initiatorName;
 		this.responderName = responderName;
+
+		// Register the initiator and responder task containers.
+		this.registerChildType(StoryComponentContainer.class, 2);
+
+		taskContainerTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		// Define the valid types for the two sub-containers
+		taskContainerTypes.add(ScriptIt.class);
+		taskContainerTypes.add(KnowIt.class);
+		taskContainerTypes.add(Note.class);
+		taskContainerTypes.add(ControlIt.class);
+		taskContainerTypes.add(PickIt.class);
+		taskContainerTypes.add(AskIt.class);
+
+		initiatorContainer = new StoryComponentContainer(taskContainerTypes);
+		initiatorContainer.setDisplayText("Initiator:");
+		responderContainer = new StoryComponentContainer(taskContainerTypes);
+		responderContainer.setDisplayText("Responder:");
 	}
 
 	/**
-	 * @return the initiatorEffects
+	 * @return the initiatorContainer
 	 */
-	public List<ScriptIt> getInitiatorEffects() {
-		return this.initiatorEffects;
+	public StoryComponentContainer getInitiatorContainer() {
+		return initiatorContainer;
 	}
 
 	/**
-	 * @param initiatorEffects
-	 *            the initiatorEffects to set
+	 * @param initiatorContainer
+	 *            the initiatorContainer to set
 	 */
-	public void setInitiatorEffects(List<ScriptIt> initiatorEffects) {
-		this.initiatorEffects = initiatorEffects;
+	public void setInitiatorContainer(StoryComponentContainer initiatorContainer) {
+		this.initiatorContainer = initiatorContainer;
 	}
 
 	/**
-	 * @return the responderEffectsContainer
+	 * @return the responderContainer
 	 */
-	public List<ScriptIt> getResponderEffects() {
-		return this.responderEffects;
+	public StoryComponentContainer getResponderContainer() {
+		return responderContainer;
 	}
 
 	/**
-	 * @param responderEffectsContainer
-	 *            the responderEffectsContainer to set
+	 * @param responderContainer
+	 *            the responderContainer to set
 	 */
-	public void setResponderEffects(List<ScriptIt> responderEffects) {
-		this.responderEffects = responderEffects;
+	public void setResponderContainer(StoryComponentContainer responderContainer) {
+		this.responderContainer = responderContainer;
 	}
 
 	/**
@@ -110,21 +132,6 @@ public class CollaborativeTask extends Task {
 
 		component.initiatorName = this.initiatorName;
 		component.responderName = this.responderName;
-
-		component.initiatorEffects = new ArrayList<ScriptIt>(
-				this.initiatorEffects.size());
-		component.responderEffects = new ArrayList<ScriptIt>(
-				this.responderEffects.size());
-
-		// clone the initiator effects
-		for (ScriptIt effect : this.initiatorEffects) {
-			component.initiatorEffects.add(effect.clone());
-		}
-
-		// clone the collaborator effects
-		for (ScriptIt effect : this.responderEffects) {
-			component.responderEffects.add(effect.clone());
-		}
 
 		return component;
 	}

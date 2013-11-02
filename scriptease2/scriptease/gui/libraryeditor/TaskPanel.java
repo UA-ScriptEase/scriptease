@@ -12,8 +12,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
-import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ScriptIt;
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
@@ -32,7 +31,7 @@ public class TaskPanel extends JPanel {
 	private final boolean editable;
 
 	public enum TYPE {
-		INDEPENDENT, COLLABORATIVE_INIT, COLLABORATIVE_REACT
+		INDEPENDENT, COLLABORATIVE_INIT, COLLABORATIVE_RESPOND
 	}
 
 	/**
@@ -52,24 +51,24 @@ public class TaskPanel extends JPanel {
 				&& task instanceof IndependentTask) {
 			final IndependentTask independentTask = (IndependentTask) task;
 
-			for (ScriptIt child : independentTask.getEffects()) {
-				this.addEffect(child);
+			for (StoryComponent child : independentTask.getChildren()) {
+				this.addComponent(child);
 			}
 
 		} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT
 				&& task instanceof CollaborativeTask) {
 			final CollaborativeTask collabTask = (CollaborativeTask) task;
 
-			for (ScriptIt child : collabTask.getInitiatorEffects()) {
-				this.addEffect(child);
+			for (StoryComponent child : collabTask.getInitiatorContainer().getChildren()) {
+				this.addComponent(child);
 			}
 
-		} else if (type == TaskPanel.TYPE.COLLABORATIVE_REACT
+		} else if (type == TaskPanel.TYPE.COLLABORATIVE_RESPOND
 				&& task instanceof CollaborativeTask) {
 			final CollaborativeTask collabTask = (CollaborativeTask) task;
 
-			for (ScriptIt child : collabTask.getResponderEffects()) {
-				this.addEffect(child);
+			for (StoryComponent child : collabTask.getResponderContainer().getChildren()) {
+				this.addComponent(child);
 			}
 		}
 
@@ -80,21 +79,16 @@ public class TaskPanel extends JPanel {
 	}
 
 	/**
-	 * Adds a effect to the panel;
+	 * Adds a component to the panel;
 	 * 
 	 * @param component
 	 */
-	public boolean addEffect(ScriptIt effect) {
-		// Don't want to be setting causes.
-		if (effect != null && (effect instanceof CauseIt))
-			return false;
-
+	public boolean addComponent(StoryComponent component) {
 		final StoryComponentPanel panel;
 
 		panel = StoryComponentPanelFactory.getInstance()
-				.buildStoryComponentPanel(effect);
+				.buildStoryComponentPanel(component);
 
-		//panel.setMaximumSize(panel.getPreferredSize());
 		panel.setSelectable(true);
 		panel.setRemovable(true);
 
@@ -110,27 +104,27 @@ public class TaskPanel extends JPanel {
 	}
 
 	/**
-	 * Removes a effect from the panel
+	 * Removes a component from the panel
 	 * 
-	 * @param effect
+	 * @param component
 	 * @return
 	 */
-	public boolean removeEffect(ScriptIt effect) {
+	public boolean removeComponent(StoryComponent component) {
 		// hack to remove the vertical strut since JPanel can't get indexes of
 		// components
 		boolean removeNextComponent = false;
 
-		for (Component component : this.getComponents()) {
+		for (Component comp : this.getComponents()) {
 			if (removeNextComponent) {
-				this.remove(component);
+				this.remove(comp);
 				break;
 			}
 			
-			if (component instanceof StoryComponentPanel) {
-				final StoryComponentPanel panel = (StoryComponentPanel) component;
+			if (comp instanceof StoryComponentPanel) {
+				final StoryComponentPanel panel = (StoryComponentPanel) comp;
 
-				if (panel.getStoryComponent() == effect) {
-					this.remove(component);
+				if (panel.getStoryComponent() == component) {
+					this.remove(comp);
 					removeNextComponent = true;
 				}
 			}

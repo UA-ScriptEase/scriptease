@@ -198,7 +198,7 @@ public class BehaviourEditorPanel extends JPanel {
 							TaskPanel.TYPE.COLLABORATIVE_INIT, false));
 
 					effectsPanel.add(new TaskPanel("Reactor Task Panel",
-							task, TaskPanel.TYPE.COLLABORATIVE_REACT,
+							task, TaskPanel.TYPE.COLLABORATIVE_RESPOND,
 							false));
 				}
 

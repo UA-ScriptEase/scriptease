@@ -22,7 +22,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.CollaborativeTask;
@@ -171,26 +170,27 @@ public class StoryComponentPanelManager {
 				final StoryComponent owner = child.getOwner();
 
 				if (panel.getParent() instanceof TaskPanel) {
-					final TaskPanel taskPanel = (TaskPanel) panel
-							.getParent();
-					
+					final TaskPanel taskPanel = (TaskPanel) panel.getParent();
+
 					if (!taskPanel.isEditable())
 						return;
-						
+
 					final TaskPanel.TYPE type = taskPanel.getType();
 					final Task task = taskPanel.getTask();
-					
-					taskPanel.removeEffect((ScriptIt) child);
+
+					taskPanel.removeComponent(child);
 
 					if (type == TaskPanel.TYPE.INDEPENDENT) {
 						final IndependentTask independentTask = (IndependentTask) task;
-						independentTask.getEffects().remove(child);
+						independentTask.removeStoryChild(child);
 					} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
-						collabTask.getInitiatorEffects().remove(child);
-					} else if (type == TaskPanel.TYPE.COLLABORATIVE_REACT) {
+						collabTask.getInitiatorContainer().removeStoryChild(
+								child);
+					} else if (type == TaskPanel.TYPE.COLLABORATIVE_RESPOND) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
-						collabTask.getResponderEffects().remove(child);
+						collabTask.getResponderContainer().removeStoryChild(
+								child);
 					}
 
 					this.setSelection(panel, false, false);
