@@ -19,7 +19,7 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.gui.libraryeditor.TaskEffectsPanel;
+import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
@@ -188,17 +188,17 @@ public class BehaviourEditorPanel extends JPanel {
 
 				if (task instanceof IndependentTask) {
 
-					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
-							TaskEffectsPanel.TYPE.INDEPENDENT, false));
+					effectsPanel.add(new TaskPanel("Task Panel", task,
+							TaskPanel.TYPE.INDEPENDENT, false));
 
 				} else if (task instanceof CollaborativeTask) {
 
-					effectsPanel.add(new TaskEffectsPanel(
+					effectsPanel.add(new TaskPanel(
 							"Initiator Task Panel", task,
-							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT, false));
+							TaskPanel.TYPE.COLLABORATIVE_INIT, false));
 
-					effectsPanel.add(new TaskEffectsPanel("Reactor Task Panel",
-							task, TaskEffectsPanel.TYPE.COLLABORATIVE_REACT,
+					effectsPanel.add(new TaskPanel("Reactor Task Panel",
+							task, TaskPanel.TYPE.COLLABORATIVE_REACT,
 							false));
 				}
 
