@@ -24,10 +24,10 @@ import scriptease.model.complex.behaviours.Task;
  * @author jyuen
  */
 @SuppressWarnings("serial")
-public class TaskEffectsPanel extends JPanel {
+public class TaskPanel extends JPanel {
 
 	private final Task task;
-	private final TaskEffectsPanel.TYPE type;
+	private final TaskPanel.TYPE type;
 	private final StoryComponentPanelManager panelManager;
 	private final boolean editable;
 
@@ -41,14 +41,14 @@ public class TaskEffectsPanel extends JPanel {
 	 * @param task
 	 *            the task to create the effect panel for.
 	 */
-	public TaskEffectsPanel(String name, Task task, TaskEffectsPanel.TYPE type,
+	public TaskPanel(String name, Task task, TaskPanel.TYPE type,
 			boolean editable) {
 		this.type = type;
 		this.task = task;
 		this.editable = editable;
 		this.panelManager = new StoryComponentPanelManager();
 
-		if (type == TaskEffectsPanel.TYPE.INDEPENDENT
+		if (type == TaskPanel.TYPE.INDEPENDENT
 				&& task instanceof IndependentTask) {
 			final IndependentTask independentTask = (IndependentTask) task;
 
@@ -56,7 +56,7 @@ public class TaskEffectsPanel extends JPanel {
 				this.addEffect(child);
 			}
 
-		} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT
+		} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT
 				&& task instanceof CollaborativeTask) {
 			final CollaborativeTask collabTask = (CollaborativeTask) task;
 
@@ -64,7 +64,7 @@ public class TaskEffectsPanel extends JPanel {
 				this.addEffect(child);
 			}
 
-		} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT
+		} else if (type == TaskPanel.TYPE.COLLABORATIVE_REACT
 				&& task instanceof CollaborativeTask) {
 			final CollaborativeTask collabTask = (CollaborativeTask) task;
 
@@ -142,7 +142,7 @@ public class TaskEffectsPanel extends JPanel {
 	/**
 	 * @return the type for this panel.
 	 */
-	public TaskEffectsPanel.TYPE getType() {
+	public TaskPanel.TYPE getType() {
 		return this.type;
 	}
 

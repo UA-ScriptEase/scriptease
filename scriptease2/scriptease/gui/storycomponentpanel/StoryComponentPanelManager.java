@@ -15,7 +15,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
-import scriptease.gui.libraryeditor.TaskEffectsPanel;
+import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.AskIt;
@@ -170,25 +170,25 @@ public class StoryComponentPanelManager {
 				final StoryComponent child = panel.getStoryComponent();
 				final StoryComponent owner = child.getOwner();
 
-				if (panel.getParent() instanceof TaskEffectsPanel) {
-					final TaskEffectsPanel taskPanel = (TaskEffectsPanel) panel
+				if (panel.getParent() instanceof TaskPanel) {
+					final TaskPanel taskPanel = (TaskPanel) panel
 							.getParent();
 					
 					if (!taskPanel.isEditable())
 						return;
 						
-					final TaskEffectsPanel.TYPE type = taskPanel.getType();
+					final TaskPanel.TYPE type = taskPanel.getType();
 					final Task task = taskPanel.getTask();
 					
 					taskPanel.removeEffect((ScriptIt) child);
 
-					if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
+					if (type == TaskPanel.TYPE.INDEPENDENT) {
 						final IndependentTask independentTask = (IndependentTask) task;
 						independentTask.getEffects().remove(child);
-					} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT) {
+					} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
 						collabTask.getInitiatorEffects().remove(child);
-					} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
+					} else if (type == TaskPanel.TYPE.COLLABORATIVE_REACT) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
 						collabTask.getResponderEffects().remove(child);
 					}

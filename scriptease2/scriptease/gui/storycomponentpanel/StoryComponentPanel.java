@@ -27,7 +27,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.gui.libraryeditor.TaskEffectsPanel;
+import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.pane.BehaviourEditorPanel;
 import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -313,8 +313,8 @@ public class StoryComponentPanel extends JPanel implements
 		final StoryComponentPanelTree parentTree = this.getParentTree();
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
-		else if (this.getParent() instanceof TaskEffectsPanel) {
-			return ((TaskEffectsPanel) this.getParent()).getPanelManager();
+		else if (this.getParent() instanceof TaskPanel) {
+			return ((TaskPanel) this.getParent()).getPanelManager();
 		} else if (this.getParent().getParent().getParent() instanceof BehaviourEditorPanel) {
 			return ((BehaviourEditorPanel) this.getParent().getParent()
 					.getParent()).getPanelManager();

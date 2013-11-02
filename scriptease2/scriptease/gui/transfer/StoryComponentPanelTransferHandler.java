@@ -31,7 +31,7 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
-import scriptease.gui.libraryeditor.TaskEffectsPanel;
+import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -247,8 +247,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				return true;
 			}
 
-		} else if (supportComponent instanceof TaskEffectsPanel) {
-			final TaskEffectsPanel taskPanel = (TaskEffectsPanel) supportComponent;
+		} else if (supportComponent instanceof TaskPanel) {
+			final TaskPanel taskPanel = (TaskPanel) supportComponent;
 
 			if (!taskPanel.isEditable())
 				return false;
@@ -493,25 +493,25 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			return effectHolder.setEffect((ScriptIt) component);
 
-		} else if (supportComponent instanceof TaskEffectsPanel) {
+		} else if (supportComponent instanceof TaskPanel) {
 			final StoryComponent component;
-			final TaskEffectsPanel taskPanel;
-			final TaskEffectsPanel.TYPE type;
+			final TaskPanel taskPanel;
+			final TaskPanel.TYPE type;
 			final Task task;
 			final ScriptIt effect;
 
 			component = this.extractStoryComponents(support).iterator().next();
-			taskPanel = (TaskEffectsPanel) supportComponent;
+			taskPanel = (TaskPanel) supportComponent;
 
 			type = taskPanel.getType();
 			task = taskPanel.getTask();
 			effect = ((ScriptIt) component).clone();
 
-			if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
+			if (type == TaskPanel.TYPE.INDEPENDENT) {
 				((IndependentTask) task).getEffects().add(effect);
-			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT) {
+			} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT) {
 				((CollaborativeTask) task).getInitiatorEffects().add(effect);
-			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
+			} else if (type == TaskPanel.TYPE.COLLABORATIVE_REACT) {
 				((CollaborativeTask) task).getResponderEffects().add(effect);
 			}
 

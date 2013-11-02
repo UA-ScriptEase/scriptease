@@ -316,7 +316,7 @@ public class LibraryEditorPanelFactory {
 					final JPanel panel = (JPanel) lastComponent;
 
 					if (panel.getComponentCount() > 0
-							&& panel.getComponent(0) instanceof TaskEffectsPanel) {
+							&& panel.getComponent(0) instanceof TaskPanel) {
 						behaviourPanel.remove(lastComponent);
 					}
 				}
@@ -326,16 +326,16 @@ public class LibraryEditorPanelFactory {
 
 				if (task instanceof IndependentTask) {
 
-					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
-							TaskEffectsPanel.TYPE.INDEPENDENT, true));
+					effectsPanel.add(new TaskPanel("Task Panel", task,
+							TaskPanel.TYPE.INDEPENDENT, true));
 
 				} else if (task instanceof CollaborativeTask) {
 
-					effectsPanel.add(new TaskEffectsPanel("Initiator Task",
-							task, TaskEffectsPanel.TYPE.COLLABORATIVE_INIT,
+					effectsPanel.add(new TaskPanel("Initiator Task",
+							task, TaskPanel.TYPE.COLLABORATIVE_INIT,
 							true));
-					effectsPanel.add(new TaskEffectsPanel("Responder Task",
-							task, TaskEffectsPanel.TYPE.COLLABORATIVE_REACT,
+					effectsPanel.add(new TaskPanel("Responder Task",
+							task, TaskPanel.TYPE.COLLABORATIVE_REACT,
 							true));
 				}
 

@@ -12,7 +12,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.libraryeditor.TaskEffectsPanel;
+import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
@@ -76,7 +76,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 		final Component focusOwner;
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
-		if (focusOwner != null && focusOwner.getParent() instanceof TaskEffectsPanel) {
+		if (focusOwner != null && focusOwner.getParent() instanceof TaskPanel) {
 			return ((StoryComponentPanel) focusOwner).isRemovable();
 		} else if (focusOwner instanceof StoryComponentPanel) {
 			return super.isLegal()
