@@ -63,8 +63,6 @@ public class StoryComponentPanel extends JPanel implements
 		this.setOpaque(true);
 		this.component = component;
 		this.editable = true;
-		this.selectable = true;
-		this.removable = true;
 
 		if (this.component == null)
 			return;

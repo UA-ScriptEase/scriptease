@@ -1,13 +1,17 @@
 package scriptease.model.complex.behaviours;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * A independent task is a subclass of Task with only one subject.
@@ -17,6 +21,8 @@ import scriptease.model.complex.ScriptIt;
  */
 public class IndependentTask extends Task {
 
+	private StoryComponentContainer initiatorContainer;
+
 	/**
 	 * Constructor. Creates a new independent task with the given name
 	 * 
@@ -25,18 +31,40 @@ public class IndependentTask extends Task {
 	public IndependentTask(String name) {
 		super(name);
 
-		this.registerChildType(KnowIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(AskIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(ScriptIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(ControlIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(PickIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		
-		this.setDisplayText("SOME ETGHISGSIG");
+		final List<Class<? extends StoryComponent>> taskContainerTypes;
+
+		// Register the initiator and responder task containers.
+		this.registerChildType(StoryComponentContainer.class, 1);
+
+		taskContainerTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		// Define the valid types for the two sub-containers
+		taskContainerTypes.add(ScriptIt.class);
+		taskContainerTypes.add(KnowIt.class);
+		taskContainerTypes.add(Note.class);
+		taskContainerTypes.add(ControlIt.class);
+		taskContainerTypes.add(PickIt.class);
+		taskContainerTypes.add(AskIt.class);
+
+		initiatorContainer = new StoryComponentContainer(taskContainerTypes);
+		initiatorContainer.setDisplayText("Initiator:");
+
+		this.addStoryChild(initiatorContainer);
+	}
+
+	/**
+	 * @return the initiatorContainer
+	 */
+	public StoryComponentContainer getInitiatorContainer() {
+		return initiatorContainer;
+	}
+
+	/**
+	 * @param initiatorContainer
+	 *            the initiatorContainer to set
+	 */
+	public void setInitiatorContainer(StoryComponentContainer initiatorContainer) {
+		this.initiatorContainer = initiatorContainer;
 	}
 
 	@Override

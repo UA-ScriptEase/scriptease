@@ -182,7 +182,8 @@ public class StoryComponentPanelManager {
 
 					if (type == TaskPanel.TYPE.INDEPENDENT) {
 						final IndependentTask independentTask = (IndependentTask) task;
-						independentTask.removeStoryChild(child);
+						independentTask.getInitiatorContainer()
+								.removeStoryChild(child);
 					} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT) {
 						final CollaborativeTask collabTask = (CollaborativeTask) task;
 						collabTask.getInitiatorContainer().removeStoryChild(
