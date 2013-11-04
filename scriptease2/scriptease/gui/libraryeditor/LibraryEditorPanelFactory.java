@@ -39,6 +39,8 @@ import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -230,7 +232,7 @@ public class LibraryEditorPanelFactory {
 				return dimension;
 			}
 		};
-		
+
 		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 
@@ -326,17 +328,21 @@ public class LibraryEditorPanelFactory {
 
 				if (task instanceof IndependentTask) {
 
-					effectsPanel.add(new TaskPanel("Task Panel", task,
-							TaskPanel.TYPE.INDEPENDENT, true));
+//					effectsPanel.add(new TaskPanel("Task Panel", task,
+//							TaskPanel.TYPE.INDEPENDENT, true));
+					StoryComponentPanel taskPanel = StoryComponentPanelFactory.getInstance()
+							.buildStoryComponentPanel(task);
+					
+					effectsPanel.add(taskPanel);
+					
+					effectsPanel.setBackground(Color.WHITE);
 
 				} else if (task instanceof CollaborativeTask) {
 
-					effectsPanel.add(new TaskPanel("Initiator Task",
-							task, TaskPanel.TYPE.COLLABORATIVE_INIT,
-							true));
-					effectsPanel.add(new TaskPanel("Responder Task",
-							task, TaskPanel.TYPE.COLLABORATIVE_RESPOND,
-							true));
+					effectsPanel.add(new TaskPanel("Initiator Task", task,
+							TaskPanel.TYPE.COLLABORATIVE_INIT, true));
+					effectsPanel.add(new TaskPanel("Responder Task", task,
+							TaskPanel.TYPE.COLLABORATIVE_RESPOND, true));
 				}
 
 				behaviourPanel.add(effectsPanel);
