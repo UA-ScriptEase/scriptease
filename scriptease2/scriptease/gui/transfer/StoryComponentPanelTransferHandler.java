@@ -31,13 +31,11 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
-import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
@@ -47,9 +45,6 @@ import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.complex.behaviours.CollaborativeTask;
-import scriptease.model.complex.behaviours.IndependentTask;
-import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -246,30 +241,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 				return true;
 			}
-
-		} else if (supportComponent instanceof TaskPanel) {
-			final TaskPanel taskPanel = (TaskPanel) supportComponent;
-
-			if (!taskPanel.isEditable())
-				return false;
-
-			final StoryComponent component;
-
-			component = this.extractStoryComponents(support).iterator().next();
-
-			if (component instanceof AskIt || component instanceof PickIt
-					|| component instanceof ControlIt
-					|| component instanceof KnowIt)
-				return true;
-			else if (component instanceof ScriptIt) {
-				final ScriptIt scriptIt = (ScriptIt) component;
-
-				if (!(scriptIt instanceof CauseIt)
-						&& scriptIt.getLabels().contains("TODO"))
-					return true;
-			}
-		}
-
+		} 
+		
 		if (this.hoveredPanel != null)
 			this.hoveredPanel.updatePanelBackgrounds();
 
@@ -496,34 +469,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			effectHolder = (EffectHolderPanel) supportComponent;
 
 			return effectHolder.setEffect((ScriptIt) component);
-
-		} else if (supportComponent instanceof TaskPanel) {
-			final StoryComponent component;
-			final TaskPanel taskPanel;
-			final TaskPanel.TYPE type;
-			final Task task;
-			final StoryComponent storyComponent;
-
-			component = this.extractStoryComponents(support).iterator().next();
-			taskPanel = (TaskPanel) supportComponent;
-
-			type = taskPanel.getType();
-			task = taskPanel.getTask();
-			storyComponent = component.clone();
-
-			if (type == TaskPanel.TYPE.INDEPENDENT) {
-				((IndependentTask) task).getInitiatorContainer().addStoryChild(
-						storyComponent);
-			} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT) {
-				((CollaborativeTask) task).getInitiatorContainer()
-						.addStoryChild(storyComponent);
-			} else if (type == TaskPanel.TYPE.COLLABORATIVE_RESPOND) {
-				((CollaborativeTask) task).getResponderContainer()
-						.addStoryChild(storyComponent);
-			}
-
-			return taskPanel.addComponent(storyComponent);
-		}
+		} 
 
 		return false;
 	}

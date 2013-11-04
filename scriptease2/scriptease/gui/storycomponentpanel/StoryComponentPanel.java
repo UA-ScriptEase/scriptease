@@ -56,8 +56,6 @@ public class StoryComponentPanel extends JPanel implements
 
 	private ExpansionButton expansionButton;
 
-	private StoryComponentPanelManager selectionManager;
-
 	public StoryComponentPanel(StoryComponent component) {
 		// State of Panel
 		this.setOpaque(true);
@@ -89,9 +87,6 @@ public class StoryComponentPanel extends JPanel implements
 		});
 
 		this.setVisible(component.isVisible());
-
-		if (this.getSelectionManager() == null)
-			this.selectionManager = new StoryComponentPanelManager();
 	}
 
 	@Override
@@ -315,29 +310,9 @@ public class StoryComponentPanel extends JPanel implements
 	 */
 	public StoryComponentPanelManager getSelectionManager() {
 		final StoryComponentPanelTree parentTree = this.getParentTree();
-		final StoryComponentPanelManager parentManager = this.getPanelManager();
 
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
-		else if (this.selectionManager != null)
-			return this.selectionManager;
-		else if (parentManager != null)
-			return parentManager;
-
-		return null;
-	}
-
-	private StoryComponentPanelManager getPanelManager() {
-		StoryComponentPanel parent = this.getParentStoryComponentPanel();
-
-		while (parent != null) {
-			StoryComponentPanelManager selectionManager = parent
-					.getSelectionManager();
-
-			if (selectionManager != null) {
-				return selectionManager;
-			}
-		}
 
 		return null;
 	}

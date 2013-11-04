@@ -15,7 +15,6 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
-import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.AskIt;
@@ -24,9 +23,6 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.complex.behaviours.CollaborativeTask;
-import scriptease.model.complex.behaviours.IndependentTask;
-import scriptease.model.complex.behaviours.Task;
 import scriptease.util.GUIOp;
 
 /**
@@ -169,36 +165,8 @@ public class StoryComponentPanelManager {
 				final StoryComponent child = panel.getStoryComponent();
 				final StoryComponent owner = child.getOwner();
 
-				if (panel.getParent() instanceof TaskPanel) {
-					final TaskPanel taskPanel = (TaskPanel) panel.getParent();
-
-					if (!taskPanel.isEditable())
-						return;
-
-					final TaskPanel.TYPE type = taskPanel.getType();
-					final Task task = taskPanel.getTask();
-
-					taskPanel.removeComponent(child);
-
-					if (type == TaskPanel.TYPE.INDEPENDENT) {
-						final IndependentTask independentTask = (IndependentTask) task;
-						independentTask.getInitiatorContainer()
-								.removeStoryChild(child);
-					} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT) {
-						final CollaborativeTask collabTask = (CollaborativeTask) task;
-						collabTask.getInitiatorContainer().removeStoryChild(
-								child);
-					} else if (type == TaskPanel.TYPE.COLLABORATIVE_RESPOND) {
-						final CollaborativeTask collabTask = (CollaborativeTask) task;
-						collabTask.getResponderContainer().removeStoryChild(
-								child);
-					}
-
-					this.setSelection(panel, false, false);
-				}
-
 				// if the owner is its parent, remove the child
-				else if (owner instanceof ComplexStoryComponent
+				if (owner instanceof ComplexStoryComponent
 						&& ((ComplexStoryComponent) owner).hasChild(child)) {
 					((ComplexStoryComponent) owner).removeStoryChild(child);
 					this.setSelection(panel, false, false);

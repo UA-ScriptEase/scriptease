@@ -19,10 +19,10 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.gui.libraryeditor.TaskPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
@@ -167,12 +167,12 @@ public class BehaviourEditorPanel extends JPanel {
 
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
-				final JPanel effectsPanel = new JPanel();
+				final JPanel taskPanel = new JPanel();
 
 				final FlowLayout layout = new FlowLayout(FlowLayout.LEADING);
 				layout.setAlignOnBaseline(true);
 
-				effectsPanel.setLayout(layout);
+				taskPanel.setLayout(layout);
 
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = layoutPanel
@@ -185,24 +185,54 @@ public class BehaviourEditorPanel extends JPanel {
 
 				// Set up the effects panel for the task we selected.
 				final Task task = nodes.iterator().next();
-
+				
 				if (task instanceof IndependentTask) {
+					
+					final StoryComponentPanelTree storyComponentPanelTree;
 
-					effectsPanel.add(new TaskPanel("Task Panel", task,
-							TaskPanel.TYPE.INDEPENDENT, false));
+					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((IndependentTask) task)
+											.getInitiatorContainer());
+
+					storyComponentPanelTree = new StoryComponentPanelTree(
+							initiatorTaskPanel);
+
+					storyComponentPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+					
+					taskPanel.add(initiatorTaskPanel);
 
 				} else if (task instanceof CollaborativeTask) {
 
-					effectsPanel.add(new TaskPanel(
-							"Initiator Task Panel", task,
-							TaskPanel.TYPE.COLLABORATIVE_INIT, false));
+					final StoryComponentPanelTree initiatorPanelTree;
+					final StoryComponentPanelTree responderPanelTree;
 
-					effectsPanel.add(new TaskPanel("Reactor Task Panel",
-							task, TaskPanel.TYPE.COLLABORATIVE_RESPOND,
-							false));
+					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((CollaborativeTask) task)
+											.getInitiatorContainer());
+
+					StoryComponentPanel responderTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((CollaborativeTask) task)
+											.getResponderContainer());
+
+					initiatorPanelTree = new StoryComponentPanelTree(
+							initiatorTaskPanel);
+					responderPanelTree = new StoryComponentPanelTree(
+							responderTaskPanel);
+
+					initiatorPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+					responderPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+
+					taskPanel.add(initiatorPanelTree);
+					taskPanel.add(responderPanelTree);
 				}
 
-				layoutPanel.add(effectsPanel);
+				layoutPanel.add(taskPanel);
 				layoutPanel.repaint();
 				layoutPanel.revalidate();
 			}

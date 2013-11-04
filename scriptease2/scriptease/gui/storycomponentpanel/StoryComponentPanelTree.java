@@ -33,6 +33,32 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private Filter filterRule;
 
 	/**
+	 * Sets up a StoryComponentPanelTree with the provided root
+	 * StoryComponentPanel
+	 * 
+	 * @param rootPanel
+	 */
+	public StoryComponentPanelTree(StoryComponentPanel rootPanel) {
+		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		this.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+		this.rootPanel = rootPanel;
+		this.selectionManager = new StoryComponentPanelManager();
+
+		this.rootPanel.updateComplexSettings();
+
+		this.selectionManager.clearSelection();
+		this.selectionManager.addPanel(this.rootPanel, false);
+
+		this.filterTree(this.rootPanel);
+		
+		this.setViewportView(this.rootPanel);
+	}
+
+	/**
 	 * Sets up a Story Component Panel Tree with the provided root component.
 	 * 
 	 * @param root
