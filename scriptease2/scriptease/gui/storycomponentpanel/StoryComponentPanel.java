@@ -27,8 +27,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.gui.libraryeditor.TaskPanel;
-import scriptease.gui.pane.BehaviourEditorPanel;
 import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -58,10 +56,15 @@ public class StoryComponentPanel extends JPanel implements
 
 	private ExpansionButton expansionButton;
 
+	private StoryComponentPanelManager selectionManager;
+
 	public StoryComponentPanel(StoryComponent component) {
 		// State of Panel
 		this.setOpaque(true);
 		this.component = component;
+		this.editable = true;
+		this.selectable = true;
+		this.removable = true;
 
 		if (this.component == null)
 			return;
@@ -88,6 +91,9 @@ public class StoryComponentPanel extends JPanel implements
 		});
 
 		this.setVisible(component.isVisible());
+
+		if (this.getSelectionManager() == null)
+			this.selectionManager = new StoryComponentPanelManager();
 	}
 
 	@Override
@@ -311,13 +317,28 @@ public class StoryComponentPanel extends JPanel implements
 	 */
 	public StoryComponentPanelManager getSelectionManager() {
 		final StoryComponentPanelTree parentTree = this.getParentTree();
+		final StoryComponentPanelManager parentManager = this.getPanelManager();
+
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
-		else if (this.getParent() instanceof TaskPanel) {
-			return ((TaskPanel) this.getParent()).getPanelManager();
-		} else if (this.getParent().getParent().getParent() instanceof BehaviourEditorPanel) {
-			return ((BehaviourEditorPanel) this.getParent().getParent()
-					.getParent()).getPanelManager();
+		else if (this.selectionManager != null)
+			return this.selectionManager;
+		else if (parentManager != null)
+			return parentManager;
+
+		return null;
+	}
+
+	private StoryComponentPanelManager getPanelManager() {
+		StoryComponentPanel parent = this.getParentStoryComponentPanel();
+
+		while (parent != null) {
+			StoryComponentPanelManager selectionManager = parent
+					.getSelectionManager();
+
+			if (selectionManager != null) {
+				return selectionManager;
+			}
 		}
 
 		return null;

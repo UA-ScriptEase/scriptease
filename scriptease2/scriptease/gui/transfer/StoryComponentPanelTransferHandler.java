@@ -258,8 +258,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			component = this.extractStoryComponents(support).iterator().next();
 
-			if (component instanceof AskIt
-					|| component instanceof PickIt
+			if (component instanceof AskIt || component instanceof PickIt
 					|| component instanceof ControlIt
 					|| component instanceof KnowIt)
 				return true;
@@ -516,9 +515,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (type == TaskPanel.TYPE.INDEPENDENT) {
 				((IndependentTask) task).addStoryChild(storyComponent);
 			} else if (type == TaskPanel.TYPE.COLLABORATIVE_INIT) {
-				((CollaborativeTask) task).getInitiatorContainer().addStoryChild(storyComponent);
+				((CollaborativeTask) task).getInitiatorContainer()
+						.addStoryChild(storyComponent);
 			} else if (type == TaskPanel.TYPE.COLLABORATIVE_RESPOND) {
-				((CollaborativeTask) task).getResponderContainer().addStoryChild(storyComponent);
+				((CollaborativeTask) task).getResponderContainer()
+						.addStoryChild(storyComponent);
 			}
 
 			return taskPanel.addComponent(storyComponent);

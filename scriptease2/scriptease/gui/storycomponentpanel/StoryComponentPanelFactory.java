@@ -214,10 +214,7 @@ public class StoryComponentPanelFactory {
 						index);
 
 				// Update the settings of the child panel to match the parents
-				StoryComponentPanelTree parentTree = panel.getParentTree();
-				if (parentTree != null) {
-					childPanel.updateComplexSettings();
-				}
+				childPanel.updateComplexSettings();
 
 				boolean select = false;
 				// if the parent is selected, select the child as well

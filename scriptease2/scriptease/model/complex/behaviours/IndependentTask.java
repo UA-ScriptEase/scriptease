@@ -35,6 +35,8 @@ public class IndependentTask extends Task {
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.registerChildType(PickIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		
+		this.setDisplayText("SOME ETGHISGSIG");
 	}
 
 	@Override
