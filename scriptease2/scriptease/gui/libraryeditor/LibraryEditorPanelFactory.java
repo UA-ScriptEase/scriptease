@@ -309,6 +309,9 @@ public class LibraryEditorPanelFactory {
 				layout.setAlignOnBaseline(true);
 
 				effectsPanel.setLayout(layout);
+				effectsPanel.setBorder(BorderFactory
+						.createTitledBorder("Task Panel"));
+				effectsPanel.setBackground(Color.WHITE);
 
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = behaviourPanel
@@ -328,21 +331,27 @@ public class LibraryEditorPanelFactory {
 
 				if (task instanceof IndependentTask) {
 
-//					effectsPanel.add(new TaskPanel("Task Panel", task,
-//							TaskPanel.TYPE.INDEPENDENT, true));
-					StoryComponentPanel taskPanel = StoryComponentPanelFactory.getInstance()
-							.buildStoryComponentPanel(task);
-					
+					StoryComponentPanel taskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((IndependentTask) task)
+											.getInitiatorContainer());
+
 					effectsPanel.add(taskPanel);
-					
-					effectsPanel.setBackground(Color.WHITE);
 
 				} else if (task instanceof CollaborativeTask) {
 
-					effectsPanel.add(new TaskPanel("Initiator Task", task,
-							TaskPanel.TYPE.COLLABORATIVE_INIT, true));
-					effectsPanel.add(new TaskPanel("Responder Task", task,
-							TaskPanel.TYPE.COLLABORATIVE_RESPOND, true));
+					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((CollaborativeTask) task)
+											.getInitiatorContainer());
+					
+					StoryComponentPanel responderTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((CollaborativeTask) task)
+											.getResponderContainer());
+
+					effectsPanel.add(initiatorTaskPanel);
+					effectsPanel.add(responderTaskPanel);
 				}
 
 				behaviourPanel.add(effectsPanel);

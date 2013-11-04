@@ -58,6 +58,9 @@ public class CollaborativeTask extends Task {
 		initiatorContainer.setDisplayText("Initiator:");
 		responderContainer = new StoryComponentContainer(taskContainerTypes);
 		responderContainer.setDisplayText("Responder:");
+		
+		this.addStoryChild(initiatorContainer);
+		this.addStoryChild(responderContainer);
 	}
 
 	/**
