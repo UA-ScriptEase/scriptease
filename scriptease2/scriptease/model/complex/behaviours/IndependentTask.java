@@ -69,6 +69,19 @@ public class IndependentTask extends Task {
 	}
 
 	@Override
+	public boolean addStoryChildBefore(StoryComponent newChild,
+			StoryComponent sibling) {
+		boolean success = super.addStoryChildBefore(newChild, sibling);
+
+		if (success) {
+			if (this.getChildren().iterator().next() == newChild)
+				this.setInitiatorContainer((StoryComponentContainer) newChild);
+		}
+		
+		return success;
+	}
+
+	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processIndependentTask(this);
 	}
