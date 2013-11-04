@@ -31,7 +31,7 @@ public class IndependentTaskConverter extends TaskConverter {
 
 		return independentTask;
 	}
-
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {

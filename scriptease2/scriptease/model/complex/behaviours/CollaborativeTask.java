@@ -58,7 +58,7 @@ public class CollaborativeTask extends Task {
 		initiatorContainer.setDisplayText("Initiator:");
 		responderContainer = new StoryComponentContainer(taskContainerTypes);
 		responderContainer.setDisplayText("Responder:");
-		
+
 		this.addStoryChild(initiatorContainer);
 		this.addStoryChild(responderContainer);
 	}
@@ -137,6 +137,19 @@ public class CollaborativeTask extends Task {
 		component.responderName = this.responderName;
 
 		return component;
+	}
+
+	@Override
+	public boolean addStoryChildBefore(StoryComponent newChild,
+			StoryComponent sibling) {
+		boolean success = super.addStoryChildBefore(newChild, sibling);
+		if (success) {
+			if (this.getChildren().iterator().next() == newChild)
+				this.setInitiatorContainer((StoryComponentContainer) newChild);
+			else
+				this.setResponderContainer((StoryComponentContainer) newChild);
+		}
+		return success;
 	}
 
 	@Override
