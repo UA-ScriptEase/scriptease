@@ -41,6 +41,7 @@ import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -304,14 +305,13 @@ public class LibraryEditorPanelFactory {
 
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
-				final JPanel effectsPanel = new JPanel();
+				final JPanel taskPanel = new JPanel();
 				final FlowLayout layout = new FlowLayout(FlowLayout.LEADING);
 				layout.setAlignOnBaseline(true);
 
-				effectsPanel.setLayout(layout);
-				effectsPanel.setBorder(BorderFactory
+				taskPanel.setLayout(layout);
+				taskPanel.setBorder(BorderFactory
 						.createTitledBorder("Task Panel"));
-				effectsPanel.setBackground(Color.WHITE);
 
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = behaviourPanel
@@ -321,7 +321,7 @@ public class LibraryEditorPanelFactory {
 					final JPanel panel = (JPanel) lastComponent;
 
 					if (panel.getComponentCount() > 0
-							&& panel.getComponent(0) instanceof TaskPanel) {
+							&& panel.getComponent(0) instanceof JScrollPane) {
 						behaviourPanel.remove(lastComponent);
 					}
 				}
@@ -331,30 +331,51 @@ public class LibraryEditorPanelFactory {
 
 				if (task instanceof IndependentTask) {
 
-					StoryComponentPanel taskPanel = StoryComponentPanelFactory
+					final StoryComponentPanelTree storyComponentPanelTree;
+
+					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
 							.getInstance().buildStoryComponentPanel(
 									((IndependentTask) task)
 											.getInitiatorContainer());
 
-					effectsPanel.add(taskPanel);
+					storyComponentPanelTree = new StoryComponentPanelTree(
+							initiatorTaskPanel);
+
+					storyComponentPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+
+					taskPanel.add(storyComponentPanelTree);
 
 				} else if (task instanceof CollaborativeTask) {
+
+					final StoryComponentPanelTree initiatorPanelTree;
+					final StoryComponentPanelTree responderPanelTree;
 
 					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
 							.getInstance().buildStoryComponentPanel(
 									((CollaborativeTask) task)
 											.getInitiatorContainer());
-					
+
 					StoryComponentPanel responderTaskPanel = StoryComponentPanelFactory
 							.getInstance().buildStoryComponentPanel(
 									((CollaborativeTask) task)
 											.getResponderContainer());
 
-					effectsPanel.add(initiatorTaskPanel);
-					effectsPanel.add(responderTaskPanel);
+					initiatorPanelTree = new StoryComponentPanelTree(
+							initiatorTaskPanel);
+					responderPanelTree = new StoryComponentPanelTree(
+							responderTaskPanel);
+
+					initiatorPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+					responderPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+
+					taskPanel.add(initiatorPanelTree);
+					taskPanel.add(responderPanelTree);
 				}
 
-				behaviourPanel.add(effectsPanel);
+				behaviourPanel.add(taskPanel);
 				behaviourPanel.repaint();
 				behaviourPanel.revalidate();
 			}
@@ -421,6 +442,8 @@ public class LibraryEditorPanelFactory {
 		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
 				.next();
 
+		graph.setBorder(BorderFactory.createEmptyBorder());
+
 		implicitList.add(initiatorImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
@@ -465,6 +488,8 @@ public class LibraryEditorPanelFactory {
 
 		final KnowIt initiatorImplicit = iterator.next();
 		final KnowIt responderImplicit = iterator.next();
+
+		graph.setBorder(BorderFactory.createEmptyBorder());
 
 		implicitList.add(initiatorImplicit);
 		implicitList.add(responderImplicit);

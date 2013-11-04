@@ -47,6 +47,7 @@ public class IndependentTask extends Task {
 		taskContainerTypes.add(AskIt.class);
 
 		initiatorContainer = new StoryComponentContainer(taskContainerTypes);
+
 		initiatorContainer.setDisplayText("Initiator:");
 
 		this.addStoryChild(initiatorContainer);
