@@ -489,7 +489,7 @@ public class StoryComponentPanelFactory {
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 
 				// Add the children panels
-				addChildrenPanels(behaviour, panel);
+				// addChildrenPanels(behaviour, panel);
 			}
 
 			@Override

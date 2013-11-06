@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.behaviours.Task;
 
 /**
  * This class is a structural asset that simply allows for the model to group
@@ -50,22 +49,7 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		}
 	}
-
-	@Override
-	public boolean canAcceptChild(StoryComponent potentialChild) {
-		if (!(this.getOwner() instanceof Task))
-			return super.canAcceptChild(potentialChild);
-
-		// Special case for containers of Tasks. Task containers can only accept
-		// TODO effects
-		if (potentialChild instanceof ScriptIt
-				&& !(potentialChild instanceof ControlIt))
-			return super.canAcceptChild(potentialChild)
-					&& potentialChild.getLabels().contains("TODO");
-
-		return super.canAcceptChild(potentialChild);
-	}
-
+	
 	@Override
 	public StoryComponentContainer clone() {
 		return (StoryComponentContainer) super.clone();

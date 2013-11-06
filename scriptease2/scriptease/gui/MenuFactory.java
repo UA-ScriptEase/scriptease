@@ -48,6 +48,7 @@ import scriptease.gui.action.libraryeditor.NewBehaviourAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
+import scriptease.gui.action.libraryeditor.NewFunctionAction;
 import scriptease.gui.action.libraryeditor.OpenLibraryEditorAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
@@ -166,6 +167,7 @@ public class MenuFactory {
 			final JMenuItem newEffect;
 			final JMenuItem newDescription;
 			final JMenuItem newBehaviour;
+			final JMenuItem newFunction;
 			final JMenuItem mergeLibrary;
 
 			newMenu = new JMenu(MenuFactory.NEW);
@@ -173,6 +175,7 @@ public class MenuFactory {
 			newEffect = new JMenuItem(NewEffectAction.getInstance());
 			newDescription = new JMenuItem(NewDescriptionAction.getInstance());
 			newBehaviour = new JMenuItem(NewBehaviourAction.getInstance());
+			newFunction = new JMenuItem(NewFunctionAction.getInstance());
 			mergeLibrary = new JMenuItem(MergeLibraryAction.getInstance());
 
 			newMenu.add(NewStoryModelAction.getInstance());
@@ -181,6 +184,7 @@ public class MenuFactory {
 			newMenu.add(newEffect);
 			newMenu.add(newDescription);
 			newMenu.add(newBehaviour);
+			newMenu.add(newFunction);
 			newMenu.addSeparator();
 			newMenu.add(mergeLibrary);
 

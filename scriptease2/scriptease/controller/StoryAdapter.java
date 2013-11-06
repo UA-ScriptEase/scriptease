@@ -9,6 +9,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -44,8 +45,13 @@ public abstract class StoryAdapter implements StoryVisitor {
 	 * ============ COMPLEX TYPES ============
 	 */
 	@Override
+	public void processFunctionIt(FunctionIt functionIt) {
+		this.defaultProcessComplex(functionIt);
+	}
+	
+	@Override
 	public void processBehaviour(Behaviour behaviour) {
-		this.defaultProcessComplex(behaviour);
+		this.processScriptIt(behaviour);
 	}
 	
 	@Override

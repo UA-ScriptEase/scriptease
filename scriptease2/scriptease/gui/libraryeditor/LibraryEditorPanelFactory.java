@@ -47,6 +47,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
@@ -99,6 +100,15 @@ public class LibraryEditorPanelFactory {
 		return editorPanel;
 	}
 
+	// ******************* FUNCTIONIT EDITING PANEL ************************* //
+	public JPanel buildFunctionItEditingPanel(final FunctionIt functionIt) {
+		final JPanel functionPanel;
+
+		functionPanel = new JPanel();
+		
+		return functionPanel;
+	}
+	
 	// ******************* BEHAVIOUR EDITING PANEL ************************* //
 
 	/**
