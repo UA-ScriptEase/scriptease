@@ -13,7 +13,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author jyuen
  */
-public class FunctionItConverter extends ComplexStoryComponentConverter {
+public class FunctionItConverter extends ScriptItConverter {
 
 	@SuppressWarnings("rawtypes")
 	@Override

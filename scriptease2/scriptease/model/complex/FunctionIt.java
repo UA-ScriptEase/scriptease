@@ -9,7 +9,7 @@ import scriptease.model.atomic.KnowIt;
  * 
  * @author jyuen
  */
-public class FunctionIt extends ComplexStoryComponent {
+public class FunctionIt extends ScriptIt {
 
 	/**
 	 * Constructor. Creates a new FunctionIt with the given name
