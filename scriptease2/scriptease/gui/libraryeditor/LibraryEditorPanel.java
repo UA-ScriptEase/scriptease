@@ -36,8 +36,8 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
- * LibraryEditorPanel is dependent on the component being edited in the Library
- * editor. A specific panel is created for each type of component.
+ * Creates a Panel dependent on the component being edited in the Library
+ * editor.
  * 
  * @author mfchurch
  * @author jyuen
@@ -49,6 +49,7 @@ public class LibraryEditorPanel extends JPanel implements
 
 	public LibraryEditorPanel() {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
 		LibraryPanel.getInstance().addStoryComponentPanelJListObserver(this);
 
 		/*
@@ -302,6 +303,10 @@ public class LibraryEditorPanel extends JPanel implements
 
 			@Override
 			public void defaultProcess(StoryComponent component) {
+				/*
+				 * defaultProcess adds a name, type, and visibility fields to
+				 * the specified component panel.
+				 */
 				LibraryEditorListenerFactory.getInstance()
 						.refreshCodeBlockComponentObserverList();
 				FormatFragmentSelectionManager.getInstance().setFormatFragment(
@@ -318,16 +323,12 @@ public class LibraryEditorPanel extends JPanel implements
 		};
 	}
 
-	private void clearPanel() {
-		this.removeAll();
-		this.revalidate();
-		this.repaint();
-	}
-
 	@Override
 	public void componentSelected(StoryComponent component) {
 		if (component == null) {
-			this.clearPanel();
+			this.removeAll();
+			this.revalidate();
+			this.repaint();
 		} else {
 			component.process(this.panelBuilder);
 		}

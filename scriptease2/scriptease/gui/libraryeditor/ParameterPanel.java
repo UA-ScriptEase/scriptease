@@ -65,13 +65,9 @@ class ParameterPanel extends JPanel {
 	/**
 	 * Creates a new ParameterComponent with the passed in KnowIt parameter.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected ParameterPanel(final ScriptIt scriptIt,
 			final CodeBlock codeBlock, final KnowIt knowIt) {
-		this(scriptIt, codeBlock, knowIt, true);
-	}
-	
-	protected ParameterPanel(final ScriptIt scriptIt,
-			final CodeBlock codeBlock, final KnowIt knowIt, boolean removable) {
 		super();
 		this.knowIt = knowIt;
 
@@ -184,7 +180,7 @@ class ParameterPanel extends JPanel {
 			}
 		});
 
-		if (!this.isSubjectInCause(scriptIt, codeBlock) && removable) {
+		if (!this.isSubjectInCause(scriptIt, codeBlock)) {
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -209,7 +205,7 @@ class ParameterPanel extends JPanel {
 		typesPanel.setBorder(new TitledBorder("Types"));
 		nameFieldPanel.setBorder(new TitledBorder("Name"));
 		defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
-		bindingPanel.setBorder(new TitledBorder("Default Binding"));
+		bindingPanel.setBorder(new TitledBorder("Default Value"));
 
 		groupLayout.setAutoCreateGaps(true);
 		groupLayout.setAutoCreateContainerGaps(true);
@@ -224,7 +220,7 @@ class ParameterPanel extends JPanel {
 				.addComponent(deleteButton).addComponent(defaultTypeBoxPanel)
 				.addComponent(bindingPanel));
 	}
-	
+
 	/**
 	 * Builds a TextField used to edit the name of the KnowIt.
 	 * 
@@ -296,6 +292,7 @@ class ParameterPanel extends JPanel {
 	 * 
 	 * @param bindingConstantComponent
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void updateBindingConstantComponent(
 			JComponent bindingConstantComponent) {
 		final JTextField inactiveTextField;
