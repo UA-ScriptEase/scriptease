@@ -8,7 +8,10 @@ import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
+import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
@@ -49,6 +52,8 @@ public class NewFunctionAction extends ActiveModelSensitiveAction {
 		final LibraryModel libraryModel;
 
 		final FunctionIt newFunctionIt;
+		final CodeBlock codeBlock;
+		final int codeBlockID;
 		
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
@@ -57,6 +62,12 @@ public class NewFunctionAction extends ActiveModelSensitiveAction {
 		newFunctionIt.setVisible(true);
 		newFunctionIt.setDisplayText("New Function");
 
+		codeBlockID = libraryModel.getNextCodeBlockID();
+
+		codeBlock = new CodeBlockSource(codeBlockID);
+		
+		newFunctionIt.addCodeBlock(codeBlock);
+		
 		libraryModel.add(newFunctionIt);
 		LibraryPanel.getInstance().navigateToComponent(newFunctionIt);
 	}

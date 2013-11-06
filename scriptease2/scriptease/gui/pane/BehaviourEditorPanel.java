@@ -99,7 +99,10 @@ public class BehaviourEditorPanel extends JPanel {
 		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
 		final Iterator<KnowIt> iterator = behaviour.getImplicits().iterator();
 
-		while (iterator.hasNext()) {
+		if (behaviour.getType() == Behaviour.Type.INDEPENDENT) {
+			implicitList.add(iterator.next());
+		} else {
+			implicitList.add(iterator.next());
 			implicitList.add(iterator.next());
 		}
 		
