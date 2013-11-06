@@ -201,7 +201,7 @@ public class BehaviourEditorPanel extends JPanel {
 					storyComponentPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
 					
-					taskPanel.add(initiatorTaskPanel);
+					taskPanel.add(storyComponentPanelTree);
 
 				} else if (task instanceof CollaborativeTask) {
 

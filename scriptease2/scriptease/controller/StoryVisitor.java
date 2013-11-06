@@ -8,6 +8,7 @@ import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -38,6 +39,8 @@ import scriptease.model.complex.behaviours.IndependentTask;
  */
 public interface StoryVisitor {
 	/** COMPLEX TYPES **/
+	public void processFunctionIt(FunctionIt functionIt);
+	
 	public void processBehaviour(Behaviour behaviour);
 	
 	public void processIndependentTask(IndependentTask task);

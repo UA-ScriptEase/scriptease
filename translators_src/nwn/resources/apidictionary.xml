@@ -4014,7 +4014,8 @@
                   <Types>
                     <Type>creature</Type>
                   </Types>
-                  <Code/>
+                  <Code>
+                  </Code>
                 </CodeBlockSource>
               </CodeBlocks>
             </ScriptIt>
