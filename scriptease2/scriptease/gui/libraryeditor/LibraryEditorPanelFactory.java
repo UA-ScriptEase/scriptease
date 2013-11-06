@@ -1129,20 +1129,6 @@ public class LibraryEditorPanelFactory {
 	}
 
 	/**
-	 * Builds a parameter panel.
-	 * 
-	 * @param scriptIt
-	 * @param codeBlock
-	 * @param knowIt
-	 * @param removable
-	 * @return
-	 */
-	public JPanel buildParameterPanel(ScriptIt scriptIt, CodeBlock codeBlock,
-			KnowIt knowIt, boolean removable) {
-		return new ParameterPanel(scriptIt, codeBlock, knowIt, removable);
-	}
-
-	/**
 	 * Builds a codeblock panel
 	 * 
 	 * @param codeBlock
@@ -1206,7 +1192,7 @@ public class LibraryEditorPanelFactory {
 			implicitsLabelLabel = new JLabel("Implicits: ");
 			includesLabel = new JLabel("Includes: ");
 			typesLabel = new JLabel("Types: ");
-			parametersLabel = new JLabel("Parameters: ");
+			parametersLabel = new JLabel("Options: ");
 			codeLabel = new JLabel("Code: ");
 			implicitsLabel = new JLabel();
 
