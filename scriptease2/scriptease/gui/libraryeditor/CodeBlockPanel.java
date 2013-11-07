@@ -13,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -58,21 +59,21 @@ public class CodeBlockPanel extends JPanel {
 	 * @return
 	 */
 	public CodeBlockPanel(final CodeBlock codeBlock, final ScriptIt scriptIt) {
-		final JLabel subjectLabel;
-		final JLabel slotLabel;
-		final JLabel implicitsLabelLabel;
-		final JLabel includesLabel;
-		final JLabel typesLabel;
-		final JLabel parametersLabel;
-		final JLabel codeLabel;
+		final JLabel subjectLabel = new JLabel("Subject: ");
+		final JLabel slotLabel = new JLabel("Slot: ");
+		final JLabel implicitsLabelLabel = new JLabel("Implicits: ");
+		final JLabel includesLabel = new JLabel("Includes: ");
+		final JLabel typesLabel = new JLabel("Types: ");
+		final JLabel parametersLabel = new JLabel("Parameters: ");
+		final JLabel codeLabel = new JLabel("Code: ");
 
 		final JPanel parameterPanel;
 		final JScrollPane parameterScrollPane;
 
-		final JTextField includesField;
-		final JComboBox subjectBox;
-		final JComboBox slotBox;
-		final JLabel implicitsLabel;
+		final JComponent includesField;
+		final JComponent subjectBox;
+		final JComponent slotBox;
+		final JLabel implicitsListLabel;
 		final CodeEditorPanel codePanel;
 
 		final JButton deleteCodeBlockButton;
@@ -84,23 +85,14 @@ public class CodeBlockPanel extends JPanel {
 
 		final TypeAction typeAction;
 
-		final List<KnowIt> parameters;
+		final List<String> types;
 
-		subjectLabel = new JLabel("Subject: ");
-		slotLabel = new JLabel("Slot: ");
-		implicitsLabelLabel = new JLabel("Implicits: ");
-		includesLabel = new JLabel("Includes: ");
-		typesLabel = new JLabel("Types: ");
-		parametersLabel = new JLabel("Parameters: ");
-		codeLabel = new JLabel("Code: ");
-		implicitsLabel = new JLabel();
+		implicitsListLabel = new JLabel();
 
 		parameterPanel = new JPanel();
 		parameterScrollPane = new JScrollPane(parameterPanel);
 
 		typeAction = new TypeAction();
-		includesField = this.buildIncludesField(codeBlock);
-
 		codePanel = new CodeEditorPanel(codeBlock);
 
 		deleteCodeBlockButton = new JButton("Delete CodeBlock");
@@ -112,7 +104,7 @@ public class CodeBlockPanel extends JPanel {
 				Integer.parseInt(ScriptEase.getInstance().getPreference(
 						ScriptEase.FONT_SIZE_KEY)) + 1);
 
-		parameters = codeBlock.getParameters();
+		types = new ArrayList<String>(codeBlock.getTypes());
 
 		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
 			@Override
@@ -153,31 +145,53 @@ public class CodeBlockPanel extends JPanel {
 		parametersLabel.setFont(labelFont);
 		codeLabel.setFont(labelFont);
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildCodeBlockComponentObserver(
-						deleteCodeBlockButton));
+		scriptIt.addStoryComponentObserver(this, new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				switch (event.getType()) {
+				case CHANGE_PARAMETER_LIST_ADD:
+					// Add a parameter panel if a parameter is added to scriptit
+					final List<KnowIt> knowIts;
+					final KnowIt knowItToAdd;
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance()
-				.buildParameterObserver(codeBlock, parameterPanel));
+					knowIts = codeBlock.getParameters();
+					knowItToAdd = knowIts.get(knowIts.size() - 1);
+					parameterPanel.add(LibraryEditorPanelFactory.getInstance()
+							.buildParameterPanel(scriptIt, codeBlock,
+									knowItToAdd));
 
-		scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildSlotObserver(codeBlock, implicitsLabel));
+					parameterPanel.repaint();
+					parameterPanel.revalidate();
+					break;
+				case CHANGE_PARAMETER_LIST_REMOVE:
+					// Rebuild parameter panels when a panel is removed
+					parameterPanel.removeAll();
+					for (KnowIt knowIt : codeBlock.getParameters()) {
+						parameterPanel.add(LibraryEditorPanelFactory
+								.getInstance().buildParameterPanel(scriptIt,
+										codeBlock, knowIt));
+					}
 
-		implicitsLabel.setForeground(Color.DARK_GRAY);
+					parameterPanel.repaint();
+					parameterPanel.revalidate();
+					break;
+				case CODE_BLOCK_SLOT_SET:
+					// Rebuild implicits label when slot is set
+					implicitsListLabel.setText(buildImplicitList(codeBlock));
+					implicitsListLabel.revalidate();
+					break;
+				default:
+					break;
+				}
+			}
+		});
 
-		final ArrayList<String> types = new ArrayList<String>(
-				codeBlock.getTypes());
+		implicitsListLabel.setForeground(Color.DARK_GRAY);
+		implicitsListLabel.setText(this.buildImplicitList(codeBlock));
+
 		typeAction.getTypeSelectionDialogBuilder().deselectAll();
 		typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(types,
 				true);
-
-		String implicits = "";
-
-		for (KnowIt implicit : codeBlock.getImplicits())
-			implicits += "[" + implicit.getDisplayText() + "] ";
-
-		implicitsLabel.setText(implicits.trim());
 
 		typeAction.setAction(new Runnable() {
 			@Override
@@ -210,54 +224,46 @@ public class CodeBlockPanel extends JPanel {
 		});
 
 		if (scriptIt instanceof CauseIt) {
-			subjectBox = new JComboBox();
+			subjectBox = this.buildInvisible();
+			includesField = this.buildIncludesField(codeBlock);
 			slotBox = this.buildSlotComboBox(codeBlock);
 
 			deleteCodeBlockButton.setVisible(false);
 			subjectLabel.setVisible(false);
-			subjectBox.setVisible(false);
 		} else {
-			implicitsLabel.setVisible(false);
+			implicitsListLabel.setVisible(false);
 			implicitsLabelLabel.setVisible(false);
 			includesLabel.setVisible(false);
+			includesField = this.buildInvisible();
 			includesField.setVisible(false);
 
-			deleteCodeBlockButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Removing CodeBlock to "
-										+ scriptIt.getDisplayText());
-					scriptIt.removeCodeBlock(codeBlock);
-					UndoManager.getInstance().endUndoableAction();
-				}
-			});
+			if (scriptIt.getMainCodeBlock().equals(codeBlock)) {
+				subjectBox = this.buildInvisible();
+				slotBox = this.buildInvisible();
 
-			if (!scriptIt.getMainCodeBlock().equals(codeBlock)) {
-				subjectBox = this.buildSubjectComboBox(codeBlock);
-				slotBox = this.buildSlotComboBox(codeBlock);
-			} else {
-				subjectBox = new JComboBox();
-				slotBox = new JComboBox();
-
-				// TODO These shouldn't be hidden here!
 				subjectLabel.setVisible(false);
-				subjectBox.setVisible(false);
 
 				deleteCodeBlockButton.setVisible(false);
 				slotLabel.setVisible(false);
-				slotBox.setVisible(false);
-				implicitsLabel.setVisible(false);
-				implicitsLabelLabel.setVisible(false);
-			}
+			} else {
+				subjectBox = this.buildSubjectComboBox(codeBlock);
+				slotBox = this.buildSlotComboBox(codeBlock);
 
-			if (scriptIt.getCodeBlocks().size() < 2) {
-				deleteCodeBlockButton.setEnabled(false);
+				deleteCodeBlockButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (!UndoManager.getInstance().hasOpenUndoableAction())
+							UndoManager.getInstance().startUndoableAction(
+									"Removing CodeBlock to "
+											+ scriptIt.getDisplayText());
+						scriptIt.removeCodeBlock(codeBlock);
+						UndoManager.getInstance().endUndoableAction();
+					}
+				});
 			}
 		}
 
-		for (KnowIt parameter : parameters) {
+		for (KnowIt parameter : codeBlock.getParameters()) {
 			parameterPanel.add(LibraryEditorPanelFactory.getInstance()
 					.buildParameterPanel(scriptIt, codeBlock, parameter));
 		}
@@ -280,7 +286,7 @@ public class CodeBlockPanel extends JPanel {
 								.addComponent(deleteCodeBlockButton,
 										GroupLayout.Alignment.TRAILING)
 								.addComponent(subjectBox).addComponent(slotBox)
-								.addComponent(implicitsLabel)
+								.addComponent(implicitsListLabel)
 								.addComponent(includesField)
 								.addComponent(typesButton)
 								.addComponent(parameterScrollPane)
@@ -305,7 +311,7 @@ public class CodeBlockPanel extends JPanel {
 								.createParallelGroup(
 										GroupLayout.Alignment.BASELINE)
 								.addComponent(implicitsLabelLabel)
-								.addComponent(implicitsLabel))
+								.addComponent(implicitsListLabel))
 				.addGroup(
 						codeBlockEditorLayout
 								.createParallelGroup(
@@ -384,20 +390,35 @@ public class CodeBlockPanel extends JPanel {
 				updateIncludes, false, Color.WHITE);
 		includesField.setHorizontalAlignment(JTextField.LEFT);
 
-		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponent source = event.getSource();
+		codeBlock.addStoryComponentObserver(includesField,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						final StoryComponent source = event.getSource();
 
-				if (source == codeBlock) {
-					includesField.setText(StringOp.getCollectionAsString(
-							codeBlock.getIncludes(), ", "));
-					includesField.revalidate();
-				}
-			}
-		});
+						if (source == codeBlock) {
+							includesField.setText(StringOp
+									.getCollectionAsString(
+											codeBlock.getIncludes(), ", "));
+							includesField.revalidate();
+						}
+					}
+				});
 
 		return includesField;
+	}
+
+	/**
+	 * Builds an invisible JPanel.
+	 * 
+	 * @return
+	 */
+	private JComponent buildInvisible() {
+		final JComponent invisible = new JPanel();
+
+		invisible.setVisible(false);
+
+		return invisible;
 	}
 
 	/**
@@ -480,6 +501,22 @@ public class CodeBlockPanel extends JPanel {
 				});
 
 		return subjectBox;
+	}
+
+	/**
+	 * Builds a list of implicits for the implicit label.
+	 * 
+	 * @param codeBlock
+	 * @return
+	 */
+	private String buildImplicitList(CodeBlock codeBlock) {
+		String implicits = "";
+
+		for (KnowIt implicit : codeBlock.getImplicits())
+			implicits += "[" + implicit.getDisplayText() + "] ";
+
+		return implicits.trim();
+
 	}
 
 	/**

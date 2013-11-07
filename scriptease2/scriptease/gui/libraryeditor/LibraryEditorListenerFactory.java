@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
@@ -22,6 +19,9 @@ import scriptease.model.complex.ScriptIt;
 
 /**
  * Factory for listeners for the Story Component Builder.
+ * 
+ * TODO This class is AWFUL and should be destroyed
+ * 
  * 
  * @author kschenk
  * 
@@ -70,149 +70,6 @@ public class LibraryEditorListenerFactory {
 		};
 
 		return this.storyComponentObserver;
-	}
-
-	/**
-	 * Creates an observer for the parameter panel.
-	 * 
-	 * @param scriptIt
-	 * @param codeBlock
-	 * @param parameterPanel
-	 * @return
-	 */
-	protected StoryComponentObserver buildParameterObserver(
-			final CodeBlock codeBlock, final JPanel parameterPanel) {
-		final StoryComponentObserver parameterPanelObserver;
-
-		parameterPanelObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
-				final StoryComponent component;
-				final StoryVisitor storyVisitor;
-
-				type = event.getType();
-				component = event.getSource();
-
-				storyVisitor = new StoryAdapter() {
-					@Override
-					public void processScriptIt(ScriptIt scriptIt) {
-						switch (type) {
-						case CHANGE_PARAMETER_LIST_ADD:
-							final List<KnowIt> knowIts;
-							final KnowIt knowItToAdd;
-
-							knowIts = codeBlock.getParameters();
-							knowItToAdd = knowIts.get(knowIts.size() - 1);
-							parameterPanel.add(LibraryEditorPanelFactory
-									.getInstance().buildParameterPanel(
-											scriptIt, codeBlock, knowItToAdd));
-
-							parameterPanel.repaint();
-							parameterPanel.revalidate();
-							break;
-						case CHANGE_PARAMETER_LIST_REMOVE:
-							parameterPanel.removeAll();
-							for (KnowIt knowIt : codeBlock.getParameters()) {
-								parameterPanel.add(LibraryEditorPanelFactory
-										.getInstance().buildParameterPanel(
-												scriptIt, codeBlock, knowIt));
-							}
-
-							parameterPanel.repaint();
-							parameterPanel.revalidate();
-							break;
-						default:
-							break;
-						}
-					}
-				};
-				component.process(storyVisitor);
-			}
-		};
-		this.codeBlockComponentObservers.add(parameterPanelObserver);
-
-		return parameterPanelObserver;
-	}
-
-	/**
-	 * Observer that observes the slot box and adjusts the implicits label
-	 * accordingly.
-	 * 
-	 * @param codeBlock
-	 * @param implicitsLabel
-	 * @return
-	 */
-	protected StoryComponentObserver buildSlotObserver(
-			final CodeBlock codeBlock, final JLabel implicitsLabel) {
-		final StoryComponentObserver subjectBoxObserver;
-
-		subjectBoxObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type = event.getType();
-
-				if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
-					String implicits = "";
-
-					for (KnowIt implicit : codeBlock.getImplicits())
-						implicits += "[" + implicit.getDisplayText() + "] ";
-
-					implicitsLabel.setText(implicits.trim());
-					implicitsLabel.revalidate();
-				}
-			}
-		};
-		this.codeBlockComponentObservers.add(subjectBoxObserver);
-
-		return subjectBoxObserver;
-	}
-
-	/**
-	 * Builds an observer for the code block component that sees changes to the
-	 * model.
-	 * 
-	 * @param scriptIt
-	 * @param deleteCodeBlockButton
-	 * @param codeBlockComponent
-	 * @return
-	 */
-	protected StoryComponentObserver buildCodeBlockComponentObserver(
-			final JButton deleteCodeBlockButton) {
-		final StoryComponentObserver codeBlockObserver;
-
-		codeBlockObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				final StoryComponentChangeEnum type;
-				final StoryComponent component;
-				final StoryVisitor storyVisitor;
-
-				type = event.getType();
-				component = event.getSource();
-				storyVisitor = new StoryAdapter() {
-					@Override
-					public void processScriptIt(ScriptIt scriptIt) {
-						switch (type) {
-						case CHANGE_CODEBLOCK_ADDED:
-						case CHANGE_CODEBLOCK_REMOVED:
-							if (scriptIt.getCodeBlocks().size() > 1)
-								deleteCodeBlockButton.setEnabled(true);
-							else
-								deleteCodeBlockButton.setEnabled(false);
-							break;
-						default:
-							break;
-						}
-					}
-				};
-
-				component.process(storyVisitor);
-			}
-		};
-		this.codeBlockComponentObservers.add(codeBlockObserver);
-
-		return codeBlockObserver;
 	}
 
 	/**
