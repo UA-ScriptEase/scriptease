@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.StoryComponentPanelJListObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
@@ -57,26 +59,20 @@ public class LibraryEditorPanel extends JPanel implements
 		this.panelBuilder = new StoryAdapter() {
 			private final LibraryEditorPanel pane = LibraryEditorPanel.this;
 
-			private Runnable setUpCodeBlockPanels(final ScriptIt scriptIt,
+			private void setUpCodeBlockPanels(final ScriptIt scriptIt,
 					final JPanel editingPanel) {
-				return new Runnable() {
-					@Override
-					public void run() {
-						final Collection<CodeBlock> codeBlocks;
-						codeBlocks = scriptIt.getCodeBlocks();
+				final Collection<CodeBlock> codeBlocks;
+				codeBlocks = scriptIt.getCodeBlocks();
 
-						editingPanel.removeAll();
-						FormatFragmentSelectionManager.getInstance()
-								.setFormatFragment(null, null);
+				editingPanel.removeAll();
+				FormatFragmentSelectionManager.getInstance().setFormatFragment(
+						null, null);
 
-						for (CodeBlock codeBlock : codeBlocks) {
-							editingPanel.add(new CodeBlockPanel(codeBlock,
-									scriptIt));
-						}
+				for (CodeBlock codeBlock : codeBlocks) {
+					editingPanel.add(new CodeBlockPanel(codeBlock, scriptIt));
+				}
 
-						editingPanel.revalidate();
-					}
-				};
+				editingPanel.revalidate();
 			}
 
 			@Override
@@ -131,13 +127,23 @@ public class LibraryEditorPanel extends JPanel implements
 
 				this.pane.add(codeBlockEditingPanel);
 
-				this.setUpCodeBlockPanels(scriptIt, codeBlockEditingPanel)
-						.run();
+				this.setUpCodeBlockPanels(scriptIt, codeBlockEditingPanel);
 
-				scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-						.getInstance().buildScriptItEditorObserver(
-								setUpCodeBlockPanels(scriptIt,
-										codeBlockEditingPanel)));
+				scriptIt.addStoryComponentObserver(this,
+						new StoryComponentObserver() {
+							@Override
+							public void componentChanged(
+									StoryComponentEvent event) {
+								switch (event.getType()) {
+								case CHANGE_CODEBLOCK_ADDED:
+								case CHANGE_CODEBLOCK_REMOVED:
+									setUpCodeBlockPanels(scriptIt,
+											codeBlockEditingPanel);
+								default:
+									break;
+								}
+							}
+						});
 
 				this.pane.revalidate();
 			}
@@ -282,8 +288,6 @@ public class LibraryEditorPanel extends JPanel implements
 
 			@Override
 			public void defaultProcess(StoryComponent component) {
-				LibraryEditorListenerFactory.getInstance()
-						.refreshCodeBlockComponentObserverList();
 				FormatFragmentSelectionManager.getInstance().setFormatFragment(
 						null, null);
 
