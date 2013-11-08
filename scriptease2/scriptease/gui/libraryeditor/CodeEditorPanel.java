@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -223,8 +222,11 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		objectContainerPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				final AbstractFragment selectedFragment = CodeEditorPanel.this.panelToFragmentMap
+				final AbstractFragment selectedFragment;
+
+				selectedFragment = CodeEditorPanel.this.panelToFragmentMap
 						.get(objectContainerPanel);
+
 				FormatFragmentSelectionManager.getInstance().setFormatFragment(
 						selectedFragment, CodeEditorPanel.this.codeBlock);
 				updatePanelSelectionHighlight(selectedFragment);
@@ -757,17 +759,17 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 	}
 
 	private void updatePanelSelectionHighlight(final AbstractFragment fragment) {
-
-		final Set<Entry<JPanel, AbstractFragment>> entrySet = this.panelToFragmentMap
-				.entrySet();
-		for (Entry<JPanel, AbstractFragment> entry : entrySet) {
+		for (Entry<JPanel, AbstractFragment> entry : this.panelToFragmentMap
+				.entrySet()) {
 			final JPanel panel = entry.getKey();
 			final AbstractFragment value = entry.getValue();
+
 			if ((fragment != null) && (value.equals(fragment))) {
 				highlightPanel(panel, value);
 			} else {
 				panel.setBackground(ScriptEaseUI.FRAGMENT_DEFAULT_COLOR);
 			}
+
 			panel.revalidate();
 			panel.repaint();
 		}
@@ -833,7 +835,8 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 			Collection<AbstractFragment> codeFragments) {
 
 		for (AbstractFragment codeFragment : codeFragments) {
-			JPanel fragmentPanel = new JPanel();
+			final JPanel fragmentPanel;
+
 			if (codeFragment instanceof LineFragment) {
 				final JLabel lineLabel;
 
@@ -888,12 +891,6 @@ public class CodeEditorPanel extends JPanel implements StoryComponentObserver {
 		}
 	}
 
-	/*
-	 * TODO Add more things here instead of up there. This gets fired when a
-	 * fragment is added.
-	 * 
-	 * Ticket: 48088867
-	 */
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
 		fillCodeEditorPanel();

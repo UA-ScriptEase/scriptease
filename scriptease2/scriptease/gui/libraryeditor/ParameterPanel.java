@@ -69,7 +69,7 @@ class ParameterPanel extends JPanel {
 			final CodeBlock codeBlock, final KnowIt knowIt) {
 		this(scriptIt, codeBlock, knowIt, true);
 	}
-	
+
 	protected ParameterPanel(final ScriptIt scriptIt,
 			final CodeBlock codeBlock, final KnowIt knowIt, boolean removable) {
 		super();
@@ -135,22 +135,25 @@ class ParameterPanel extends JPanel {
 
 		updateBindingConstantComponent(bindingConstantComponent);
 
-		// Set up listeners
-		knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterTypeObserver(knowIt,
-						defaultTypeBox));
-
-		knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterDefaultTypeObserver());
-
 		typeAction.setAction(new Runnable() {
 			@Override
 			public void run() {
 				knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
 						.getSelectedTypeKeywords());
 
-				knowIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPES_SET));
+				final String initialDefaultType;
+				initialDefaultType = (String) defaultTypeBox.getSelectedItem();
+
+				defaultTypeBox.removeAllItems();
+
+				for (String type : knowIt.getTypes()) {
+					defaultTypeBox.addItem(scriptIt.getLibrary()
+							.getTypeDisplayText(type) + " - " + type);
+				}
+
+				defaultTypeBox.setSelectedItem(initialDefaultType);
+
+				defaultTypeBox.revalidate();
 			}
 		});
 
@@ -177,9 +180,6 @@ class ParameterPanel extends JPanel {
 					}
 					knowIt.setTypes(newTypeList);
 					updateBindingConstantComponent(bindingConstantComponent);
-					scriptIt.notifyObservers(new StoryComponentEvent(
-							scriptIt,
-							StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET));
 				}
 			}
 		});
@@ -224,7 +224,7 @@ class ParameterPanel extends JPanel {
 				.addComponent(deleteButton).addComponent(defaultTypeBoxPanel)
 				.addComponent(bindingPanel));
 	}
-	
+
 	/**
 	 * Builds a TextField used to edit the name of the KnowIt.
 	 * 

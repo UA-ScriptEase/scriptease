@@ -491,7 +491,6 @@ public class CodeBlockPanel extends JPanel {
 						case CHANGE_PARAMETER_LIST_ADD:
 						case CHANGE_PARAMETER_LIST_REMOVE:
 						case CHANGE_PARAMETER_NAME_SET:
-						case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
 							buildItems.run();
 							subjectBox.revalidate();
 						default:
@@ -591,8 +590,6 @@ public class CodeBlockPanel extends JPanel {
 						switch (event.getType()) {
 						case CODE_BLOCK_SLOT_SET:
 						case CODE_BLOCK_SUBJECT_SET:
-						case CHANGE_PARAMETER_DEFAULT_TYPE_SET:
-							// TODO Doesn't fire on change parameter type
 							buildItems.run();
 							slotBox.revalidate();
 						default:
