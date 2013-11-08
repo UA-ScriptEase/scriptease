@@ -2,7 +2,7 @@ package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.Collection;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 
@@ -138,7 +138,7 @@ public abstract class AbstractFragment implements Cloneable {
 
 	/**
 	 * This is a double-dispatch hook for the
-	 * {@link scriptease.controller.AbstractFragmentVisitor} family of
+	 * {@link scriptease.controller.FragmentVisitor} family of
 	 * controllers. <code>visitor</code> implements each of: process[X] where
 	 * [X] is each of the leaf members of the <code>AbstractFragment</code>
 	 * family. <BR>
@@ -152,5 +152,5 @@ public abstract class AbstractFragment implements Cloneable {
 	 *            The <code>AbstractFragmentVisitor</code> that will process
 	 *            this AbstractFragment.
 	 */
-	public abstract void process(AbstractFragmentVisitor visitor);
+	public abstract void process(FragmentVisitor visitor);
 }
