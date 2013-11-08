@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.AbstractFragmentAdapter;
+import scriptease.controller.FragmentAdapter;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
@@ -208,7 +208,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 			final Collection<AbstractFragment> fragments = codeBlock.getCode();
 			for (AbstractFragment codeFrag : fragments) {
-				codeFrag.process(new AbstractFragmentAdapter() {
+				codeFrag.process(new FragmentAdapter() {
 
 					@Override
 					protected void defaultProcess(AbstractFragment fragment) {

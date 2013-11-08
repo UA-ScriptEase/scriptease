@@ -23,6 +23,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
+import scriptease.gui.libraryeditor.codeblocks.CodeBlockPanel;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;

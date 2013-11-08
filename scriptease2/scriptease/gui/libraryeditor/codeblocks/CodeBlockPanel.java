@@ -1,4 +1,4 @@
-package scriptease.gui.libraryeditor;
+package scriptease.gui.libraryeditor.codeblocks;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,6 +28,7 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.dialog.TypeDialogBuilder;
+import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;

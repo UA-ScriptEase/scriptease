@@ -2,7 +2,7 @@ package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.List;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
@@ -130,7 +130,7 @@ public class FormatReferenceFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void process(AbstractFragmentVisitor visitor) {
+	public void process(FragmentVisitor visitor) {
 		visitor.processFormatReferenceFragment(this);
 	}
 }
