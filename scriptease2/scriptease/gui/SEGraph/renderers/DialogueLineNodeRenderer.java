@@ -79,7 +79,7 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 						graph.revalidate();
 						graph.repaint();
 					}
-				}, true, Color.WHITE);
+				});
 
 		component.add(dialogueField);
 	}

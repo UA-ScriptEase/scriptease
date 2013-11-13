@@ -547,7 +547,7 @@ public class LibraryEditorPanelFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
-				false, Color.white);
+				false);
 
 		nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -607,7 +607,7 @@ public class LibraryEditorPanelFactory {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(labelField,
-				commitText, false, Color.white);
+				commitText, false);
 
 		labelField.setToolTipText(labelToolTip);
 

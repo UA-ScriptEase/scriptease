@@ -62,14 +62,9 @@ public class LibraryEditorPanel extends JPanel implements
 
 			private void setUpCodeBlockPanels(final ScriptIt scriptIt,
 					final JPanel editingPanel) {
-				final Collection<CodeBlock> codeBlocks;
-				codeBlocks = scriptIt.getCodeBlocks();
-
 				editingPanel.removeAll();
-				FormatFragmentSelectionManager.getInstance().setFormatFragment(
-						null, null);
 
-				for (CodeBlock codeBlock : codeBlocks) {
+				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 					editingPanel.add(new CodeBlockPanel(codeBlock, scriptIt));
 				}
 
@@ -216,7 +211,7 @@ public class LibraryEditorPanel extends JPanel implements
 						.selectTypesByKeyword(knowIt.getTypes(), true);
 
 				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
-						commitText, false, Color.white);
+						commitText, false);
 
 				nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -289,9 +284,6 @@ public class LibraryEditorPanel extends JPanel implements
 
 			@Override
 			public void defaultProcess(StoryComponent component) {
-				FormatFragmentSelectionManager.getInstance().setFormatFragment(
-						null, null);
-
 				this.pane.removeAll();
 
 				this.pane.add(LibraryEditorPanelFactory.getInstance()
