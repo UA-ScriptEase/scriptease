@@ -1,9 +1,12 @@
 package scriptease.translator.codegenerator.code.fragments;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.code.contexts.Context;
+import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 
 /**
@@ -137,11 +140,62 @@ public abstract class AbstractFragment implements Cloneable {
 	}
 
 	/**
+	 * Clones and returns the given codeFragments in a List
+	 * 
+	 * @param codeFragments
+	 * @return
+	 */
+	public static final List<AbstractFragment> cloneFragments(
+			final Collection<AbstractFragment> codeFragments) {
+		final ArrayList<AbstractFragment> fragments;
+
+		fragments = new ArrayList<AbstractFragment>(codeFragments.size());
+
+		for (AbstractFragment fragment : codeFragments) {
+			fragments.add(fragment.clone());
+		}
+		return fragments;
+	}
+
+	/**
+	 * Takes the Collection of clonedFragments and returns the one equal to the
+	 * currently selected fragment. Returns null if a fragment equal to the
+	 * selectedFragment cannot be found in the given clonedFragments
+	 * 
+	 * @param clonedFragments
+	 * @return
+	 */
+	public static final AbstractFragment getClonedSelectedFragment(
+			final AbstractFragment selectedFragment,
+			final Collection<AbstractFragment> clonedFragments) {
+		AbstractFragment clonedSelectedFragment = null;
+
+		if (selectedFragment != null) {
+			for (AbstractFragment fragment : clonedFragments) {
+				if (fragment.equals(selectedFragment)) {
+					clonedSelectedFragment = fragment;
+					break;
+				} else if (fragment instanceof AbstractContainerFragment) {
+					final AbstractFragment clonedSubFragment;
+					clonedSubFragment = getClonedSelectedFragment(
+							selectedFragment,
+							((AbstractContainerFragment) fragment)
+									.getSubFragments());
+					if (clonedSubFragment != null) {
+						clonedSelectedFragment = clonedSubFragment;
+						break;
+					}
+				}
+			}
+		}
+		return clonedSelectedFragment;
+	}
+
+	/**
 	 * This is a double-dispatch hook for the
-	 * {@link scriptease.controller.FragmentVisitor} family of
-	 * controllers. <code>visitor</code> implements each of: process[X] where
-	 * [X] is each of the leaf members of the <code>AbstractFragment</code>
-	 * family. <BR>
+	 * {@link scriptease.controller.FragmentVisitor} family of controllers.
+	 * <code>visitor</code> implements each of: process[X] where [X] is each of
+	 * the leaf members of the <code>AbstractFragment</code> family. <BR>
 	 * <BR>
 	 * To Use: Pass in a valid AbstractFragmentVisitor to this method. The
 	 * implementing atom of this method will dispatch the appropriate

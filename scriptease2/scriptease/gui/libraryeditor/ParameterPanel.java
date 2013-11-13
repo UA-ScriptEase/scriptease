@@ -270,7 +270,7 @@ class ParameterPanel extends JPanel {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
-				false, Color.white);
+				false);
 
 		return nameField;
 	}

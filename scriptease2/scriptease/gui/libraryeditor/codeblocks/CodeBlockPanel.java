@@ -1,8 +1,10 @@
 package scriptease.gui.libraryeditor.codeblocks;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
@@ -25,6 +28,15 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
+import scriptease.gui.action.libraryeditor.codeeditor.InsertIndentAction;
+import scriptease.gui.action.libraryeditor.codeeditor.InsertLineAction;
+import scriptease.gui.action.libraryeditor.codeeditor.InsertLiteralAction;
+import scriptease.gui.action.libraryeditor.codeeditor.InsertReferenceAction;
+import scriptease.gui.action.libraryeditor.codeeditor.InsertScopeAction;
+import scriptease.gui.action.libraryeditor.codeeditor.InsertSeriesAction;
+import scriptease.gui.action.libraryeditor.codeeditor.InsertSimpleAction;
+import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentDownAction;
+import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentUpAction;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.dialog.TypeDialogBuilder;
@@ -75,7 +87,7 @@ public class CodeBlockPanel extends JPanel {
 		final JComponent subjectBox;
 		final JComponent slotBox;
 		final JLabel implicitsListLabel;
-		final CodeEditorPanel codePanel;
+		final JPanel codePanel;
 
 		final JButton deleteCodeBlockButton;
 		final JButton addParameterButton;
@@ -94,7 +106,7 @@ public class CodeBlockPanel extends JPanel {
 		parameterScrollPane = new JScrollPane(parameterPanel);
 
 		typeAction = new TypeAction();
-		codePanel = new CodeEditorPanel(codeBlock);
+		codePanel = this.buildCodeEditor(codeBlock);
 
 		deleteCodeBlockButton = new JButton("Delete CodeBlock");
 		addParameterButton = ComponentFactory.buildAddButton();
@@ -388,7 +400,7 @@ public class CodeBlockPanel extends JPanel {
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(includesField,
-				updateIncludes, false, Color.WHITE);
+				updateIncludes, false);
 		includesField.setHorizontalAlignment(JTextField.LEFT);
 
 		codeBlock.addStoryComponentObserver(includesField,
@@ -420,6 +432,55 @@ public class CodeBlockPanel extends JPanel {
 		invisible.setVisible(false);
 
 		return invisible;
+	}
+
+	/**
+	 * Builds the panel we use to edit code.
+	 * 
+	 * @param codeBlock
+	 * @return
+	 */
+	private JPanel buildCodeEditor(CodeBlock codeBlock) {
+		final JPanel codeEditor = new JPanel();
+		final JToolBar toolbar;
+		final CodeFragmentPanel codePanel;
+		final JScrollPane codeEditorScrollPane;
+
+		toolbar = new JToolBar("Code Editor ToolBar");
+		codePanel = new CodeFragmentPanel(codeBlock, null);
+		codeEditorScrollPane = new JScrollPane(codePanel);
+
+		toolbar.setFloatable(false);
+
+		toolbar.add(new JButton(InsertLineAction.getInstance()));
+		toolbar.add(new JButton(InsertIndentAction.getInstance()));
+		toolbar.add(new JButton(InsertScopeAction.getInstance()));
+		toolbar.add(new JButton(InsertSeriesAction.getInstance()));
+		toolbar.add(new JButton(InsertSimpleAction.getInstance()));
+		toolbar.add(new JButton(InsertLiteralAction.getInstance()));
+		toolbar.add(new JButton(InsertReferenceAction.getInstance()));
+		toolbar.add(new JButton(MoveFragmentUpAction.getInstance()));
+		toolbar.add(new JButton(MoveFragmentDownAction.getInstance()));
+
+		codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		codeEditorScrollPane.setPreferredSize(new Dimension(400, 400));
+
+		codeEditor.setLayout(new BorderLayout());
+		codeEditor.add(toolbar, BorderLayout.PAGE_START);
+		codeEditor.add(codeEditorScrollPane, BorderLayout.CENTER);
+
+		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				final Rectangle visible = codeEditorScrollPane.getVisibleRect();
+
+				codePanel.redraw();
+
+				codeEditorScrollPane.scrollRectToVisible(visible);
+			}
+		});
+
+		return codeEditor;
 	}
 
 	/**
