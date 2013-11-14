@@ -1,5 +1,6 @@
 package scriptease.gui.SEGraph;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -152,7 +153,7 @@ public class SEGraphToolBar extends JToolBar {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setRollover(true);
 		this.setFloatable(false);
-		// this.setBackground(Color.WHITE);
+		this.setBackground(Color.WHITE);
 
 		buttonGroup.add(this.selectButton);
 		buttonGroup.add(this.insertButton);

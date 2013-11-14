@@ -693,5 +693,4 @@ public class CodeBlockPanel extends JPanel {
 		}
 		return slots;
 	}
-
 }
