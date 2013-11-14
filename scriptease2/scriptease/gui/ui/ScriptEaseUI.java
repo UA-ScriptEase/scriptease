@@ -23,7 +23,7 @@ public interface ScriptEaseUI {
 	 * The colour (pale green) used to display graph group backgrounds.
 	 */
 	public static final Color COLOUR_GROUP_BACKGROUND = Color.WHITE;
-	
+
 	/**
 	 * The colour (green) used to display known object bindings.
 	 */
@@ -112,60 +112,16 @@ public interface ScriptEaseUI {
 	 */
 	public static final Color COLOUR_GROUPABLE_NODE = new Color(162, 240, 250);
 
-	/**
-	 * The colour (White) used by Fragments by default Story Component Builder.
-	 */
-	public static final Color FRAGMENT_DEFAULT_COLOR = Color.white;
-	/**
-	 * The colour (Grey) used for the code editor in Story Component Builder.
-	 */
-	public static final Color CODE_EDITOR_COLOR = Color.GRAY;
-
-	/**
-	 * The colour (Light Grey) used for Line Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color LINE_FRAGMENT_COLOR = Color.LIGHT_GRAY;
-
-	/**
-	 * The colour (Light Grey) used for the Indent Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color INDENT_FRAGMENT_COLOR = Color.LIGHT_GRAY;
-
-	/**
-	 * The colour (Dark Green) used for the Scope Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color SCOPE_FRAGMENT_COLOR = GUIOp.scaleColour(
-			Color.GREEN, 0.5);
-
-	/**
-	 * The colour (Dark Orange) used for the Series Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color SERIES_FRAGMENT_COLOR = new Color(250, 165, 17)
-			.darker();
-
-	/**
-	 * The colour (Blue) used for the Simple Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color SIMPLE_FRAGMENT_COLOR = Color.BLUE;
-
-	/**
-	 * The colour (Gray) used for the Literal Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color LITERAL_FRAGMENT_COLOR = Color.GRAY;
-
-	/**
-	 * The colour (Purple) used for the Reference Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color REFERENCE_FRAGMENT_COLOR = GUIOp.scaleColour(
-			Color.magenta, 0.7);
-
+	public static final Color BUTTON_ORANGE = new Color(199, 78, 44);
+	public static final Color BUTTON_GREEN = new Color(5, 142, 5);
+	public static final Color BUTTON_BURGUNDY = new Color(160, 26, 59);
+	public static final Color BUTTON_TEAL = new Color(5, 142, 158);
+	public static final Color BUTTON_YELLOW = new Color(234, 160, 31);
+	public static final Color BUTTON_BLUE = new Color(50, 131, 224);
+	public static final Color BUTTON_PURPLE = new Color(91, 61, 173);
+	public static final Color BUTTON_BLACK = new Color(68, 68, 68);
+	
+	public static final Color BUTTON_RED = new Color(255, 69, 40);
 	/**
 	 * The text colour (Dark Grey) we use for Notes.
 	 */
@@ -175,7 +131,7 @@ public interface ScriptEaseUI {
 	 * The color used for the background of the text field for Notes.
 	 */
 	public static final Color COLOUR_NOTE_TEXT_BG = new Color(255, 252, 161);
-	
+
 	/**
 	 * The colour (Bright Pink) used for disabled components.
 	 */
@@ -233,12 +189,11 @@ public interface ScriptEaseUI {
 			.get("Tree.collapsedIcon");
 
 	/**
-	 * Cursor to represent select actions. 
+	 * Cursor to represent select actions.
 	 */
-	public static final Cursor CURSOR_SELECT= GUIOp.createCursor(
-			"select", new Point(10, 10));
+	public static final Cursor CURSOR_SELECT = GUIOp.createCursor("select",
+			new Point(10, 10));
 
-	
 	/**
 	 * Cursor to represent unavailable actions. A circle with a line through it,
 	 * like in No Smoking or No Pie signs.

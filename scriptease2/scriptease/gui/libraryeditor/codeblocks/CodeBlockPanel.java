@@ -20,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
@@ -41,6 +40,7 @@ import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -52,6 +52,7 @@ import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
 /**
+ * A panel used to edit code blocks.
  * 
  * @author mfchurch
  * @author jyuen
@@ -138,6 +139,7 @@ public class CodeBlockPanel extends JPanel {
 		// Set up the layout
 		this.setLayout(codeBlockEditorLayout);
 		this.setBorder(new TitledBorder("Code Block #" + codeBlock.getId()));
+		this.setBackground(Color.WHITE);
 
 		codeBlockEditorLayout.setAutoCreateGaps(true);
 		codeBlockEditorLayout.setAutoCreateContainerGaps(true);
@@ -145,6 +147,7 @@ public class CodeBlockPanel extends JPanel {
 
 		parameterPanel.setLayout(new BoxLayout(parameterPanel,
 				BoxLayout.PAGE_AXIS));
+		parameterPanel.setBackground(Color.WHITE);
 
 		parameterScrollPane.setPreferredSize(new Dimension(400, 250));
 		parameterScrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -436,33 +439,43 @@ public class CodeBlockPanel extends JPanel {
 	 */
 	private JPanel buildCodeEditor(CodeBlock codeBlock) {
 		final JPanel codeEditor = new JPanel();
-		final JToolBar toolbar;
+		final JPanel buttons;
 		final CodeFragmentPanel codePanel;
 		final JScrollPane codeEditorScrollPane;
 
-		toolbar = new JToolBar("Code Editor ToolBar");
+		buttons = new JPanel();
 		codePanel = new CodeFragmentPanel(codeBlock, null);
 		codeEditorScrollPane = new JScrollPane(codePanel);
 
-		toolbar.setFloatable(false);
-
-		toolbar.add(new JButton(InsertLineAction.getInstance()));
-		toolbar.add(new JButton(InsertIndentAction.getInstance()));
-		toolbar.add(new JButton(InsertScopeAction.getInstance()));
-		toolbar.add(new JButton(InsertSeriesAction.getInstance()));
-		toolbar.add(new JButton(InsertSimpleAction.getInstance()));
-		toolbar.add(new JButton(InsertLiteralAction.getInstance()));
-		toolbar.add(new JButton(InsertReferenceAction.getInstance()));
-		toolbar.add(new JButton(MoveFragmentUpAction.getInstance()));
-		toolbar.add(new JButton(MoveFragmentDownAction.getInstance()));
+		buttons.add(ComponentFactory.buildFlatButton(
+				InsertLineAction.getInstance(), ScriptEaseUI.BUTTON_BURGUNDY));
+		buttons.add(ComponentFactory.buildFlatButton(
+				InsertIndentAction.getInstance(), ScriptEaseUI.BUTTON_ORANGE));
+		buttons.add(ComponentFactory.buildFlatButton(
+				InsertScopeAction.getInstance(), ScriptEaseUI.BUTTON_YELLOW));
+		buttons.add(ComponentFactory.buildFlatButton(
+				InsertSeriesAction.getInstance(), ScriptEaseUI.BUTTON_GREEN));
+		buttons.add(ComponentFactory.buildFlatButton(
+				InsertSimpleAction.getInstance(), ScriptEaseUI.BUTTON_BLUE));
+		buttons.add(ComponentFactory.buildFlatButton(
+				InsertLiteralAction.getInstance(), ScriptEaseUI.BUTTON_TEAL));
+		buttons.add(ComponentFactory.buildFlatButton(
+				InsertReferenceAction.getInstance(), ScriptEaseUI.BUTTON_PURPLE));
+		buttons.add(ComponentFactory.buildFlatButton(MoveFragmentUpAction
+				.getInstance()));
+		buttons.add(ComponentFactory.buildFlatButton(MoveFragmentDownAction
+				.getInstance()));
+		
+		buttons.setOpaque(false);
 
 		codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		codeEditorScrollPane.setPreferredSize(new Dimension(400, 400));
 
 		codeEditor.setLayout(new BorderLayout());
-		codeEditor.add(toolbar, BorderLayout.PAGE_START);
+		codeEditor.add(buttons, BorderLayout.PAGE_START);
 		codeEditor.add(codeEditorScrollPane, BorderLayout.CENTER);
-
+		codeEditor.setOpaque(false);
+		
 		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
@@ -484,7 +497,6 @@ public class CodeBlockPanel extends JPanel {
 	 * 
 	 */
 	private JComboBox buildSubjectComboBox(final CodeBlock codeBlock) {
-		// TODO Should be disabled if there are no valid parameters.
 		final JComboBox subjectBox = new JComboBox();
 		final Runnable buildItems;
 		final ActionListener listener;
@@ -584,7 +596,6 @@ public class CodeBlockPanel extends JPanel {
 	 * 
 	 */
 	private JComboBox buildSlotComboBox(final CodeBlock codeBlock) {
-		// TODO Should be disabled if there are no valid subjects
 		final JComboBox slotBox = new JComboBox();
 		final Runnable buildItems;
 		final ActionListener listener;
@@ -603,13 +614,7 @@ public class CodeBlockPanel extends JPanel {
 					currentSlot = "";
 
 				if (!currentSlot.equals(currentSelected)) {
-					// TODO Undo doesn't actually undo.
-					if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-						UndoManager.getInstance().startUndoableAction(
-								"Setting CodeBlock slot to " + currentSelected);
-					}
 					codeBlock.setSlot(currentSelected);
-					UndoManager.getInstance().endUndoableAction();
 				}
 			}
 		};
@@ -617,10 +622,13 @@ public class CodeBlockPanel extends JPanel {
 		buildItems = new Runnable() {
 			@Override
 			public void run() {
+				final boolean subjectExists = codeBlock.hasSubject();
+
 				slotBox.removeActionListener(listener);
 				slotBox.removeAllItems();
+				slotBox.setEnabled(subjectExists);
 
-				if (codeBlock.hasSubject()) {
+				if (subjectExists) {
 					final Collection<String> slots;
 
 					slots = getCommonSlotsForTypes(codeBlock.getSubject());
