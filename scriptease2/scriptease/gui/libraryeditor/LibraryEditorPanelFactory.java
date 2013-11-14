@@ -108,55 +108,19 @@ public class LibraryEditorPanelFactory {
 	}
 
 	// ******************* FUNCTIONIT EDITING PANEL ************************* //
+	
 	public JPanel buildFunctionItEditingPanel(final FunctionIt functionIt) {
 		final JPanel functionPanel;
-
-		final JScrollPane parameterScrollPane;
-		final JPanel parameterPanel;
-		final JButton addParameterButton;
 
 		functionPanel = new JPanel();
 		functionPanel.setLayout(new BoxLayout(functionPanel, BoxLayout.Y_AXIS));
 
-		parameterPanel = new JPanel();
-		parameterScrollPane = new JScrollPane(parameterPanel);
-		addParameterButton = ComponentFactory.buildAddButton();
-
-		parameterPanel.setLayout(new BoxLayout(parameterPanel,
-				BoxLayout.PAGE_AXIS));
-		parameterScrollPane.setPreferredSize(new Dimension(400, 250));
-		parameterScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-		addParameterButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				final KnowIt knowIt = new KnowIt();
-				knowIt.setLibrary(functionIt.getMainCodeBlock().getLibrary());
-
-				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-					UndoManager.getInstance().startUndoableAction(
-							"Add parameter " + knowIt + " to "
-									+ functionIt.getMainCodeBlock());
-					functionIt.getMainCodeBlock().addParameter(knowIt);
-					UndoManager.getInstance().endUndoableAction();
-				}
-			}
-		});
-
-		functionIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterObserver(
-						functionIt.getMainCodeBlock(), parameterPanel));
-
-		for (KnowIt parameter : functionIt.getMainCodeBlock().getParameters()) {
-			parameterPanel.add(this.buildParameterPanel(functionIt,
-					functionIt.getMainCodeBlock(), parameter));
-		}
-
 		final StoryComponentPanel panel = StoryComponentPanelFactory
 				.getInstance().buildStoryComponentPanel(functionIt);
 
-		functionPanel.add(parameterScrollPane);
+		functionPanel.add(this.buildDescriptorPanel(functionIt));
+		functionPanel.add(this.buildCodeBlockPanel(
+				functionIt.getMainCodeBlock(), functionIt));
 		functionPanel.add(new StoryComponentPanelTree(panel));
 
 		return functionPanel;
@@ -1137,7 +1101,12 @@ public class LibraryEditorPanelFactory {
 	 */
 	public CodeBlockPanel buildCodeBlockPanel(CodeBlock codeBlock,
 			ScriptIt scriptIt) {
-		return new CodeBlockPanel(codeBlock, scriptIt);
+		return this.buildCodeBlockPanel(codeBlock, scriptIt, true, true);
+	}
+
+	public CodeBlockPanel buildCodeBlockPanel(CodeBlock codeBlock,
+			ScriptIt scriptIt, boolean typeVisible, boolean codeVisible) {
+		return new CodeBlockPanel(codeBlock, scriptIt, typeVisible, codeVisible);
 	}
 
 	/**
@@ -1157,7 +1126,9 @@ public class LibraryEditorPanelFactory {
 		private CodeBlock codeBlock;
 
 		@SuppressWarnings("rawtypes")
-		public CodeBlockPanel(final CodeBlock codeBlock, final ScriptIt scriptIt) {
+		public CodeBlockPanel(final CodeBlock codeBlock,
+				final ScriptIt scriptIt, boolean typeVisible,
+				boolean codeVisible) {
 			final JLabel subjectLabel;
 			final JLabel slotLabel;
 			final JLabel implicitsLabelLabel;
