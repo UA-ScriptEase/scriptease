@@ -112,8 +112,10 @@ public class LibraryEditorPanelFactory {
 				.getInstance().buildStoryComponentPanel(functionIt);
 
 		functionPanel.add(this.buildDescriptorPanel(functionIt));
+		
 		//functionPanel.add(this.buildCodeBlockPanel(
 		//		functionIt.getMainCodeBlock(), functionIt));
+		
 		functionPanel.add(new StoryComponentPanelTree(panel));
 
 		return functionPanel;

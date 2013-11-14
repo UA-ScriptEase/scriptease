@@ -99,7 +99,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The model used for the Graph.
 	 */
 	protected SEGraph(SEGraphModel<E> model) {
-		this(model, SelectionMode.SELECT_NODE, false, true, false);
+		this(model, SelectionMode.SELECT_NODE, false, true);
 	}
 
 	/**
@@ -115,16 +115,13 @@ public class SEGraph<E> extends JComponent {
 	 *            If the graph is read only, only selection will be allowed.
 	 */
 	protected SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
-			boolean isReadOnly, boolean disableGroupTool, boolean isShared) {
+			boolean isReadOnly, boolean disableGroupTool) {
 		this.selectionMode = selectionMode;
 		this.model = model;
 		this.selectionMode = selectionMode;
 		this.isReadOnly = isReadOnly;
 
-		if (isShared)
-			this.toolBar = SharedSEGraphToolBar.getInstance();
-		else 
-			this.toolBar = new SEGraphToolBar(disableGroupTool);
+		this.toolBar = new SEGraphToolBar(disableGroupTool);
 
 		this.selectedNodes = new LinkedHashSet<E>();
 		this.mousePosition = new Point();
@@ -400,7 +397,7 @@ public class SEGraph<E> extends JComponent {
 
 		return this.setSelectedNodes(nodes);
 	}
-	
+
 	/**
 	 * Sets the current selected nodes. Fires a
 	 * {@link SEGraphObserver#nodesSelected(Collection)} event if the selection
@@ -422,7 +419,7 @@ public class SEGraph<E> extends JComponent {
 
 			return true;
 		}
-		
+
 		return false;
 	}
 
