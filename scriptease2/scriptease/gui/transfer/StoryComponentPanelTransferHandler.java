@@ -241,10 +241,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 				return true;
 			}
-		} 
-		
-		if (this.hoveredPanel != null)
-			this.hoveredPanel.updatePanelBackgrounds();
+
+			if (this.hoveredPanel != null)
+				this.hoveredPanel.updatePanelBackgrounds();
+		}
 
 		return false;
 	}
@@ -469,7 +469,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			effectHolder = (EffectHolderPanel) supportComponent;
 
 			return effectHolder.setEffect((ScriptIt) component);
-		} 
+		}
 
 		return false;
 	}

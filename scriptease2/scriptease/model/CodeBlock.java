@@ -165,7 +165,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	public boolean removeParameter(KnowIt parameter) {
 		return this.parameters.remove(parameter);
 	}
-	
+
 	public void clearParameters() {
 		this.parameters.clear();
 	}
@@ -283,10 +283,10 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @return The concrete subject KnowIt.
 	 */
 	public KnowIt getSubject() {
-		final CauseIt cause = this.getCause();
 		final KnowIt subject;
 
 		if (!this.hasSubject()) {
+			final CauseIt cause = this.getCause();
 			final CodeBlock parentBlock = cause.getMainCodeBlock();
 			subject = parentBlock.getSubject();
 		} else {

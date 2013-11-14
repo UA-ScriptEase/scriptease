@@ -3,6 +3,8 @@ package scriptease.gui.action.components;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
@@ -12,14 +14,18 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
+import scriptease.gui.libraryeditor.codeblocks.CodeFragmentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
+import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
 
 /**
  * Represents and performs the Delete command, as well as encapsulates its
@@ -83,11 +89,48 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 					&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
 		} else if (focusOwner instanceof SEGraph) {
 			return super.isLegal() && !((SEGraph<?>) focusOwner).isReadOnly();
+		} else if (focusOwner instanceof CodeFragmentPanel) {
+			return super.isLegal()
+					&& ((CodeFragmentPanel) focusOwner).getFragment() != null;
 		} else
 			return false;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	/**
+	 * Delete the selected FormatFragment in the list of FormatFragments after
+	 * the other specified line fragment. This gets called recursively until the
+	 * selected fragment is found. To start at the top, pass in "null" as the
+	 * parent fragment.
+	 * 
+	 * @param topLevelFormatFragments
+	 * @param selected
+	 * @param parent
+	 * @return
+	 */
+	private void deleteFragment(
+			final List<AbstractFragment> topLevelFormatFragments,
+			final AbstractFragment selected,
+			final AbstractContainerFragment parent) {
+
+		if (topLevelFormatFragments.remove(selected)) {
+			if (parent != null)
+				parent.setSubFragments(topLevelFormatFragments);
+
+		} else {
+			for (AbstractFragment fragment : topLevelFormatFragments) {
+				if (fragment instanceof AbstractContainerFragment) {
+					final AbstractContainerFragment container;
+
+					container = (AbstractContainerFragment) fragment;
+
+					this.deleteFragment(new ArrayList<AbstractFragment>(
+							container.getSubFragments()), selected, container);
+				}
+			}
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
@@ -160,6 +203,29 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			}
 
 			UndoManager.getInstance().endUndoableAction();
+		} else if (focusOwner instanceof CodeFragmentPanel) {
+			final CodeFragmentPanel panel = (CodeFragmentPanel) focusOwner;
+			final CodeBlock codeBlock = panel.getCodeBlock();
+
+			if (codeBlock != null) {
+				final List<AbstractFragment> fragments;
+				final AbstractFragment selectedFragment;
+
+				fragments = AbstractFragment
+						.cloneFragments(codeBlock.getCode());
+				selectedFragment = AbstractFragment.getClonedSelectedFragment(
+						panel.getFragment(), fragments);
+
+				if (selectedFragment != null) {
+					this.deleteFragment(fragments, selectedFragment, null);
+
+					UndoManager.getInstance().startUndoableAction(
+							"Setting CodeBlock " + codeBlock + " code to "
+									+ fragments);
+					codeBlock.setCode(fragments);
+					UndoManager.getInstance().endUndoableAction();
+				}
+			}
 		}
 
 		// Reset the focus after we delete something.

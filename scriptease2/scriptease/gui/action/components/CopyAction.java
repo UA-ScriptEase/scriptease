@@ -92,7 +92,7 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 				TransferHandler.COPY);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
