@@ -147,7 +147,12 @@ public class LibraryEditorPanel extends JPanel implements
 
 			@Override
 			public void processFunctionIt(FunctionIt functionIt) {
-				this.defaultProcess(functionIt);
+				LibraryEditorPanel.this.removeAll();
+
+				LibraryEditorListenerFactory.getInstance()
+						.refreshCodeBlockComponentObserverList();
+				FormatFragmentSelectionManager.getInstance().setFormatFragment(
+						null, null);
 
 				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
 						.getInstance().buildFunctionItEditingPanel(functionIt));
