@@ -13,6 +13,7 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -101,6 +102,7 @@ public class LibraryModelConverter implements Converter {
 		final Collection<DescribeIt> descriptions;
 		final Collection<ControlIt> controls;
 		final Collection<Behaviour> behaviours;
+		final Collection<FunctionIt> functions;
 		final Collection<ScriptIt> typeConvertors;
 
 		System.out.println("Unmarshalling Library Model");
@@ -149,19 +151,24 @@ public class LibraryModelConverter implements Converter {
 		}
 
 		library.addAll(controls);
-		
+
 		this.addDefaultCauseChildren(library, causes);
-		
+
 		// Behaviours rely on the current library being set, so we need to load
 		// them after assigning the library to the static variable.
 		currentLibrary = library;
-		
+
 		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
 				Behaviour.class);
+
+		functions = XMLNode.FUNCTIONITS.readCollection(reader, context,
+				FunctionIt.class);
+
 		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
 				ScriptIt.class);
 
 		library.addAll(behaviours);
+		library.addAll(functions);
 
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
 

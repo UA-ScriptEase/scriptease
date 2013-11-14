@@ -45,6 +45,10 @@ public enum XMLNode {
 	
 	BEHAVIOURS("Behaviours", BEHAVIOUR),
 	
+	FUNCTIONIT("FunctionIt"),
+	
+	FUNCTIONITS("FunctionIts", FUNCTIONIT),
+	
 	DIALOGUE_LINE("DialogueLine"),
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),

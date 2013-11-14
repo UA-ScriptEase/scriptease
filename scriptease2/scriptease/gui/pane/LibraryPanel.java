@@ -219,6 +219,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
 		this.setMnemonicAt(5, KeyEvent.VK_6);
+		this.setMnemonicAt(6, KeyEvent.VK_7);
 
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
@@ -541,6 +542,9 @@ public class LibraryPanel extends JTabbedPane {
 							.getChildren();
 				} else if (index == 5) {
 					components = libraryModel.getControllersCategory()
+							.getChildren();
+				} else if (index == 6) {
+					components = libraryModel.getFunctionsCategory()
 							.getChildren();
 				} else {
 					throw new IllegalArgumentException(

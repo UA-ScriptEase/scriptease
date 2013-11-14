@@ -38,6 +38,8 @@ public interface ScriptEaseKeywords {
 	public static final String CONTROLLERS = "Controllers";
 	
 	public static final String BEHAVIOURS = "Behaviours";
+	
+	public static final String FUNCTIONS = "Functions";
 
 	public static final String REPEATS = "Repeats";
 
