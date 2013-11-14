@@ -3,14 +3,18 @@ package scriptease.gui.component;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -269,5 +273,93 @@ public final class ComponentFactory {
 		};
 
 		return field;
+	}
+
+	private enum ButtonState {
+		NEUTRAL, CLICK, HOVER
+	}
+
+	public static JButton buildFlatButton(Action action) {
+		return ComponentFactory.buildFlatButton(action, ScriptEaseUI.BUTTON_BLACK);
+	}
+
+	public static JButton buildFlatButton(Color color) {
+		return ComponentFactory.buildFlatButton(null, color);
+	}
+
+	@SuppressWarnings("serial")
+	public static JButton buildFlatButton(Action action, final Color color) {
+		final JButton button = new JButton() {
+			private ButtonState state;
+			private ButtonState previousState;
+
+			{
+				this.state = ButtonState.NEUTRAL;
+
+				this.addMouseListener(new MouseAdapter() {
+					public void mouseEntered(MouseEvent e) {
+						if (state == ButtonState.NEUTRAL)
+							changeState(ButtonState.HOVER);
+					};
+
+					public void mouseExited(MouseEvent e) {
+						if (state == ButtonState.HOVER)
+							changeState(ButtonState.NEUTRAL);
+					};
+
+					public void mousePressed(MouseEvent e) {
+						changeState(ButtonState.CLICK);
+
+					};
+
+					public void mouseReleased(MouseEvent e) {
+						if (previousState == ButtonState.HOVER)
+							changeState(ButtonState.HOVER);
+						else
+							changeState(ButtonState.NEUTRAL);
+					};
+				});
+			}
+
+			private void changeState(ButtonState state) {
+				this.previousState = this.state;
+				this.state = state;
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				final Color fillColor;
+
+				if (this.isEnabled())
+					switch (this.state) {
+					case CLICK:
+						fillColor = GUIOp.scaleWhite(color, 1.8);
+						break;
+					case HOVER:
+						fillColor = GUIOp.scaleWhite(color, 1.6);
+						break;
+					default:
+						fillColor = color;
+						break;
+					}
+				else
+					fillColor = Color.LIGHT_GRAY;
+
+				g.setColor(fillColor);
+				g.fillRect(0, 0, getSize().width, getSize().height);
+
+				super.paintComponent(g);
+			}
+		};
+
+		button.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		button.setForeground(Color.white);
+
+		button.setContentAreaFilled(false);
+
+		if (action != null)
+			button.setAction(action);
+
+		return button;
 	}
 }
