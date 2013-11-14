@@ -99,7 +99,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 						graph.revalidate();
 						graph.repaint();
 					}
-				}, true, Color.WHITE);
+				});
 
 		if (graph.isReadOnly()) {
 			nameField.setEditable(false);
@@ -152,7 +152,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 						graph.revalidate();
 						graph.repaint();
 					}
-				}, true, Color.WHITE);
+				});
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(reactorField,
 				new Runnable() {
@@ -164,7 +164,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 						graph.revalidate();
 						graph.repaint();
 					}
-				}, true, Color.WHITE);
+				});
 
 		if (graph.isReadOnly()) {
 			initiatorField.setEditable(false);

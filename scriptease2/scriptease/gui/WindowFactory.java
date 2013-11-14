@@ -795,7 +795,6 @@ public final class WindowFactory {
 	 * 
 	 * @param translator
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
 		final String TITLE = "Library to Merge";
 
@@ -894,7 +893,6 @@ public final class WindowFactory {
 	 * @param translator
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JDialog buildLibraryEditorChoiceDialog(final Translator translator) {
 		final String TITLE = "Choose a Library";
 
@@ -1001,11 +999,11 @@ public final class WindowFactory {
 	 * @return
 	 */
 	public JDialog buildBehaviourEditor(final Translator translator) {
-		//TODO Might not even need this if we use the library editor.
-		
+		// TODO Might not even need this if we use the library editor.
+
 		return null;
 	}
-	
+
 	/**
 	 * Create a dialog with the provided panel.
 	 * 

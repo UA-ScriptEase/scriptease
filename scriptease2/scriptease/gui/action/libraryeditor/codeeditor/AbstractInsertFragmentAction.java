@@ -1,12 +1,16 @@
 package scriptease.gui.action.libraryeditor.codeeditor;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
+import scriptease.gui.SEFocusManager;
+import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.libraryeditor.codeblocks.CodeFragmentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
@@ -21,29 +25,40 @@ import sun.awt.util.IdentityArrayList;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractInsertFragmentAction extends
-		AbstractFragmentAction {
+		ActiveTranslatorSensitiveAction {
 
 	protected AbstractInsertFragmentAction(String name) {
 		super(name);
 		this.putValue(SHORT_DESCRIPTION, name);
+
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				AbstractInsertFragmentAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				AbstractInsertFragmentAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	/**
 	 * Inserts a new FormatFragment into a Container Fragment.
 	 * 
-	 * @param containerFragment
+	 * @param container
 	 * @return
 	 */
 	private void insertFragmentIntoContainerFragment(
-			final AbstractContainerFragment containerFragment) {
-		final ArrayList<AbstractFragment> subFragments;
+			AbstractContainerFragment container) {
+		final ArrayList<AbstractFragment> fragments;
 
-		subFragments = new ArrayList<AbstractFragment>();
+		fragments = new ArrayList<AbstractFragment>(container.getSubFragments());
 
-		subFragments.addAll(containerFragment.getSubFragments());
-		subFragments.add(this.newFragment());
-
-		containerFragment.setSubFragments(subFragments);
+		fragments.add(this.newFragment());
+		container.setSubFragments(fragments);
 	}
 
 	/**
@@ -108,30 +123,41 @@ public abstract class AbstractInsertFragmentAction extends
 	protected abstract AbstractFragment newFragment();
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		final CodeBlock codeBlock = FormatFragmentSelectionManager
-				.getInstance().getCodeBlock();
-		if (codeBlock != null) {
-			final List<AbstractFragment> fragments = cloneFragments(codeBlock
-					.getCode());
-			final AbstractFragment selectedFragment = getClonedSelectedFragment(
-					FormatFragmentSelectionManager.getInstance()
-							.getFormatFragment(), fragments);
+	protected boolean isLegal() {
+		final Component focusOwner = SEFocusManager.getInstance().getFocus();
 
-			if (selectedFragment != null) {
-				if (selectedFragment instanceof AbstractContainerFragment) {
-					this.insertFragmentIntoContainerFragment((AbstractContainerFragment) selectedFragment);
-				} else {
-					this.insertFragmentAfterFragment(fragments,
-							selectedFragment, null);
-				}
+		return super.isLegal() && focusOwner instanceof CodeFragmentPanel
+				&& ((CodeFragmentPanel) focusOwner).getCodeBlock() != null;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		final CodeFragmentPanel panel;
+		final CodeBlock codeBlock;
+		final List<AbstractFragment> fragments;
+		final AbstractFragment selectedFragment;
+
+		panel = (CodeFragmentPanel) SEFocusManager.getInstance().getFocus();
+		codeBlock = panel.getCodeBlock();
+
+		fragments = AbstractFragment.cloneFragments(codeBlock.getCode());
+		selectedFragment = AbstractFragment.getClonedSelectedFragment(
+				panel.getFragment(), fragments);
+
+		if (selectedFragment != null) {
+			if (selectedFragment instanceof AbstractContainerFragment) {
+				this.insertFragmentIntoContainerFragment((AbstractContainerFragment) selectedFragment);
 			} else {
-				this.insertFragmentAtEnd(fragments);
+				this.insertFragmentAfterFragment(fragments, selectedFragment,
+						null);
 			}
-			UndoManager.getInstance().startUndoableAction(
-					"Setting CodeBlock " + codeBlock + " code to " + fragments);
-			codeBlock.setCode(fragments);
-			UndoManager.getInstance().endUndoableAction();
+		} else {
+			this.insertFragmentAtEnd(fragments);
 		}
+
+		UndoManager.getInstance().startUndoableAction(
+				"Setting CodeBlock " + codeBlock + " code to " + fragments);
+		codeBlock.setCode(fragments);
+		UndoManager.getInstance().endUndoableAction();
 	}
 }

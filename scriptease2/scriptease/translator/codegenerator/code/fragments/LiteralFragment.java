@@ -1,6 +1,6 @@
 package scriptease.translator.codegenerator.code.fragments;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
@@ -43,7 +43,7 @@ public class LiteralFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void process(AbstractFragmentVisitor visitor) {
+	public void process(FragmentVisitor visitor) {
 		visitor.processLiteralFragment(this);
 	}
 }

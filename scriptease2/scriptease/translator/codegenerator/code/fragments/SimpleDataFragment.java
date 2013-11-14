@@ -2,7 +2,7 @@ package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.regex.Pattern;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.CodeGenerationConstants.DataType;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -204,7 +204,7 @@ public class SimpleDataFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void process(AbstractFragmentVisitor visitor) {
+	public void process(FragmentVisitor visitor) {
 		visitor.processSimpleDataFragment(this);
 	}
 }

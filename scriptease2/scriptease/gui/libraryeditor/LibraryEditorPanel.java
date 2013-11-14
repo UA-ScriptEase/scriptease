@@ -1,6 +1,5 @@
 package scriptease.gui.libraryeditor;
 
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,9 +17,12 @@ import javax.swing.JTextField;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.StoryComponentPanelJListObserver;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
+import scriptease.gui.libraryeditor.codeblocks.CodeBlockPanel;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
@@ -53,33 +55,21 @@ public class LibraryEditorPanel extends JPanel implements
 		LibraryPanel.getInstance().addStoryComponentPanelJListObserver(this);
 
 		/*
-		 * Create an AbstractNoOpStoryVisitor which calls an update on the
-		 * editorPanel. This is used as a sort of Command Pattern with
-		 * UIListenerFactory.
+		 * Create a Story Adapter which calls an update on the editorPanel. This
+		 * is used as a sort of Command Pattern with UIListenerFactory.
 		 */
-		panelBuilder = new StoryAdapter() {
+		this.panelBuilder = new StoryAdapter() {
+			private final LibraryEditorPanel pane = LibraryEditorPanel.this;
 
-			private Runnable setUpCodeBlockPanels(final ScriptIt scriptIt,
+			private void setUpCodeBlockPanels(final ScriptIt scriptIt,
 					final JPanel editingPanel) {
-				return new Runnable() {
-					@Override
-					public void run() {
-						final Collection<CodeBlock> codeBlocks;
-						codeBlocks = scriptIt.getCodeBlocks();
+				editingPanel.removeAll();
 
-						editingPanel.removeAll();
-						FormatFragmentSelectionManager.getInstance()
-								.setFormatFragment(null, null);
+				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
+					editingPanel.add(new CodeBlockPanel(codeBlock, scriptIt));
+				}
 
-						for (CodeBlock codeBlock : codeBlocks) {
-							editingPanel.add(LibraryEditorPanelFactory
-									.getInstance().buildCodeBlockPanel(
-											codeBlock, scriptIt));
-						}
-
-						editingPanel.revalidate();
-					}
-				};
+				editingPanel.revalidate();
 			}
 
 			@Override
@@ -129,30 +119,35 @@ public class LibraryEditorPanel extends JPanel implements
 						}
 					});
 					scriptItControlPanel.add(addCodeBlockButton);
-					LibraryEditorPanel.this.add(scriptItControlPanel);
+					this.pane.add(scriptItControlPanel);
 				}
 
-				LibraryEditorPanel.this.add(codeBlockEditingPanel);
+				this.pane.add(codeBlockEditingPanel);
 
-				this.setUpCodeBlockPanels(scriptIt, codeBlockEditingPanel)
-						.run();
+				this.setUpCodeBlockPanels(scriptIt, codeBlockEditingPanel);
 
-				scriptIt.addStoryComponentObserver(LibraryEditorListenerFactory
-						.getInstance().buildScriptItEditorObserver(
-								setUpCodeBlockPanels(scriptIt,
-										codeBlockEditingPanel)));
+				scriptIt.addStoryComponentObserver(this,
+						new StoryComponentObserver() {
+							@Override
+							public void componentChanged(
+									StoryComponentEvent event) {
+								switch (event.getType()) {
+								case CHANGE_CODEBLOCK_ADDED:
+								case CHANGE_CODEBLOCK_REMOVED:
+									setUpCodeBlockPanels(scriptIt,
+											codeBlockEditingPanel);
+								default:
+									break;
+								}
+							}
+						});
 
-				LibraryEditorPanel.this.revalidate();
+				this.pane.revalidate();
 			}
 
 			@Override
 			public void processFunctionIt(FunctionIt functionIt) {
 				LibraryEditorPanel.this.removeAll();
-
-				LibraryEditorListenerFactory.getInstance()
-						.refreshCodeBlockComponentObserverList();
-				FormatFragmentSelectionManager.getInstance().setFormatFragment(
-						null, null);
 
 				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
 						.getInstance().buildFunctionItEditingPanel(functionIt));
@@ -164,11 +159,6 @@ public class LibraryEditorPanel extends JPanel implements
 			@Override
 			public void processBehaviour(Behaviour behaviour) {
 				LibraryEditorPanel.this.removeAll();
-
-				LibraryEditorListenerFactory.getInstance()
-						.refreshCodeBlockComponentObserverList();
-				FormatFragmentSelectionManager.getInstance().setFormatFragment(
-						null, null);
 
 				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
 						.getInstance().buildBehaviourEditingPanel(behaviour));
@@ -182,9 +172,7 @@ public class LibraryEditorPanel extends JPanel implements
 			 */
 			@Override
 			public void processKnowIt(final KnowIt knowIt) {
-				LibraryEditorPanel.this.removeAll();
-				LibraryEditorPanel.this.revalidate();
-				LibraryEditorPanel.this.repaint();
+				this.pane.removeAll();
 
 				final JPanel knowItPanel;
 				final JComponent describeItEditingPanel;
@@ -236,7 +224,7 @@ public class LibraryEditorPanel extends JPanel implements
 						.selectTypesByKeyword(knowIt.getTypes(), true);
 
 				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
-						commitText, false, Color.white);
+						commitText, false);
 
 				nameField.setHorizontalAlignment(JTextField.LEADING);
 
@@ -295,8 +283,9 @@ public class LibraryEditorPanel extends JPanel implements
 										.addComponent(typesLabel)
 										.addComponent(typesButton)));
 
-				LibraryEditorPanel.this.add(knowItPanel);
-				LibraryEditorPanel.this.add(describeItEditingPanel);
+				this.pane.add(knowItPanel);
+				this.pane.add(describeItEditingPanel);
+				this.pane.revalidate();
 			}
 
 			// We may want to implement these later, so their default methods
@@ -308,22 +297,12 @@ public class LibraryEditorPanel extends JPanel implements
 
 			@Override
 			public void defaultProcess(StoryComponent component) {
-				/*
-				 * defaultProcess adds a name, type, and visibility fields to
-				 * the specified component panel.
-				 */
-				LibraryEditorListenerFactory.getInstance()
-						.refreshCodeBlockComponentObserverList();
-				FormatFragmentSelectionManager.getInstance().setFormatFragment(
-						null, null);
+				this.pane.removeAll();
 
-				LibraryEditorPanel.this.removeAll();
+				this.pane.add(LibraryEditorPanelFactory.getInstance()
+						.buildDescriptorPanel(component));
 
-				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
-						.getInstance().buildDescriptorPanel(component));
-
-				LibraryEditorPanel.this.revalidate();
-				LibraryEditorPanel.this.repaint();
+				this.pane.revalidate();
 			}
 		};
 	}
@@ -333,7 +312,6 @@ public class LibraryEditorPanel extends JPanel implements
 		if (component == null) {
 			this.removeAll();
 			this.revalidate();
-			this.repaint();
 		} else {
 			component.process(this.panelBuilder);
 		}

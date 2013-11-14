@@ -2,7 +2,7 @@ package scriptease.translator.codegenerator.code.fragments.container;
 
 import java.util.List;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -37,7 +37,7 @@ public class FormatDefinitionFragment extends AbstractContainerFragment {
 	}
 
 	@Override
-	public void process(AbstractFragmentVisitor visitor) {
+	public void process(FragmentVisitor visitor) {
 		visitor.processFormatDefinitionFragment(this);
 	}
 }
