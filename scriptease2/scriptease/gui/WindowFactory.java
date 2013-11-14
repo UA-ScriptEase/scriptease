@@ -945,7 +945,7 @@ public final class WindowFactory {
 					SEModelManager.getInstance().addAndActivate(
 							(LibraryModel) selectedItem);
 					dialog.dispose();
-				}
+				} 
 			}
 		});
 
