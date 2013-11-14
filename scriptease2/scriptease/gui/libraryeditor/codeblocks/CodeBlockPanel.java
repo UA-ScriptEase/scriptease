@@ -158,23 +158,29 @@ public class CodeBlockPanel extends JPanel {
 		parametersLabel.setFont(labelFont);
 		codeLabel.setFont(labelFont);
 
-		scriptIt.addStoryComponentObserver(this, new StoryComponentObserver() {
+		codeBlock.addStoryComponentObserver(this, new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				switch (event.getType()) {
 				case CHANGE_PARAMETER_LIST_ADD:
 					// Add a parameter panel if a parameter is added to scriptit
 					final List<KnowIt> knowIts;
-					final KnowIt knowItToAdd;
+					final int size;
 
 					knowIts = codeBlock.getParameters();
-					knowItToAdd = knowIts.get(knowIts.size() - 1);
-					parameterPanel.add(LibraryEditorPanelFactory.getInstance()
-							.buildParameterPanel(scriptIt, codeBlock,
-									knowItToAdd));
+					size = knowIts.size();
 
-					parameterPanel.repaint();
-					parameterPanel.revalidate();
+					if (size > 0) {
+						final KnowIt knowItToAdd;
+
+						knowItToAdd = knowIts.get(size - 1);
+						parameterPanel.add(LibraryEditorPanelFactory
+								.getInstance().buildParameterPanel(scriptIt,
+										codeBlock, knowItToAdd));
+
+						parameterPanel.repaint();
+						parameterPanel.revalidate();
+					}
 					break;
 				case CHANGE_PARAMETER_LIST_REMOVE:
 					// Rebuild parameter panels when a panel is removed
@@ -384,18 +390,6 @@ public class CodeBlockPanel extends JPanel {
 				for (String label : labelArray) {
 					labels.add(label.trim());
 				}
-
-				if (!labels.equals(codeBlock.getIncludes())) {
-					// mfchurch TODO method type erasure problem with
-					// AspectJ
-					// if
-					// (!UndoManager.getInstance().hasOpenUndoableAction())
-					// UndoManager.getInstance().startUndoableAction(
-					// "Setting Codeblock Includes to " + labels);
-					codeBlock.setIncludes(labels);
-					// UndoManager.getInstance().endUndoableAction();
-				}
-
 			}
 		};
 
@@ -535,6 +529,8 @@ public class CodeBlockPanel extends JPanel {
 						if (!slots.isEmpty())
 							subjectBox.addItem(parameter.getDisplayText());
 					}
+
+					subjectBox.setEnabled(subjectBox.getItemCount() > 1);
 					subjectBox.setSelectedItem(codeBlock.getSubjectName());
 				}
 
