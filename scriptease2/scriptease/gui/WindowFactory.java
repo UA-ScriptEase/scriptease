@@ -1410,7 +1410,7 @@ public final class WindowFactory {
 
 		frame.getContentPane().add(content);
 
-		middlePane.setBackground(ScriptEaseUI.PRIMARY_UI);
+		middlePane.setBackground(ScriptEaseUI.SECONDARY_UI);
 
 		SwingUtilities.invokeLater(yetAnotherSwingHack);
 

@@ -31,7 +31,6 @@ import scriptease.controller.FileManager;
 import scriptease.controller.exceptionhandler.ScriptEaseExceptionHandler;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.internationalization.Il8nResources;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.FileOp;
 

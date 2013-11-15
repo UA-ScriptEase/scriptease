@@ -129,6 +129,7 @@ class SEModelTabbedPane extends JTabbedPane {
 					}
 				});
 		this.setUI(ComponentFactory.buildFlatTabUI());
+		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 	}
 
 	/**
@@ -369,7 +370,7 @@ class SEModelTabbedPane extends JTabbedPane {
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
 		storyGraphPanel.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
+				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
 
 		graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
 				Color.LIGHT_GRAY));
@@ -379,21 +380,22 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
 		storyComponentTree.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
+				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
 
 		// Set up the split pane
-		storyPanel.setBorder(null);
+		storyPanel.setBorder(BorderFactory.createEmptyBorder());
 		storyPanel.setOpaque(true);
 		storyPanel.setTopComponent(storyGraphPanel);
 		storyPanel.setBottomComponent(storyComponentTree);
 
 		WidgetDecorator.setSimpleDivider(storyPanel);
 
-		topLevelPane.setBorder(null);
+		topLevelPane.setBorder(BorderFactory.createEmptyBorder());
 		topLevelPane.setOpaque(true);
 		topLevelPane.add(storyPanel, STORY_EDITOR);
 		topLevelPane.add(dialogueEditor, DIALOGUE_EDITOR);
 		topLevelPane.add(behaviourEditor, BEHAVIOUR_EDITOR);
+		topLevelPane.setBackground(ScriptEaseUI.SECONDARY_UI);
 
 		backToStory.addActionListener(new ActionListener() {
 			@Override
