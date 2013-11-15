@@ -24,7 +24,6 @@ import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
-import scriptease.controller.observer.CodeBlockPanelEvent;
 import scriptease.controller.observer.CodeBlockPanelObserver;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -189,6 +188,7 @@ public class CodeBlockPanel extends JPanel {
 
 					parameterPanel.repaint();
 					parameterPanel.revalidate();
+					notifyChange();
 					break;
 				case CHANGE_PARAMETER_LIST_REMOVE:
 					// Rebuild parameter panels when a panel is removed
@@ -201,6 +201,7 @@ public class CodeBlockPanel extends JPanel {
 
 					parameterPanel.repaint();
 					parameterPanel.revalidate();
+					notifyChange();
 					break;
 				case CODE_BLOCK_SLOT_SET:
 					// Rebuild implicits label when slot is set
@@ -245,8 +246,6 @@ public class CodeBlockPanel extends JPanel {
 					UndoManager.getInstance().startUndoableAction(
 							"Add parameter " + knowIt + " to " + codeBlock);
 					codeBlock.addParameter(knowIt);
-
-					notifyChange(knowIt);
 
 					UndoManager.getInstance().endUndoableAction();
 				}
@@ -756,12 +755,12 @@ public class CodeBlockPanel extends JPanel {
 	}
 
 	/**
-	 * Notifies that a parameter has been changed.
+	 * Notifies that the codeblock panel has changed.
 	 */
-	private void notifyChange(KnowIt parameter) {
+	private void notifyChange() {
 		for (CodeBlockPanelObserver observer : this.observerManager
 				.getObservers()) {
-			observer.codeBlockPanelChanged(parameter);
+			observer.codeBlockPanelChanged();
 		}
 	}
 }
