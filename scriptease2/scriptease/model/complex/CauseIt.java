@@ -35,7 +35,9 @@ public class CauseIt extends ScriptIt {
 		validTypes.add(Note.class);
 		validTypes.add(ControlIt.class);
 		validTypes.add(Behaviour.class);
-
+		validTypes.add(PickIt.class);
+		validTypes.add(FunctionIt.class);
+		
 		this.registerChildTypes(validTypes, MAX_NUM_OF_ONE_TYPE);
 	}
 

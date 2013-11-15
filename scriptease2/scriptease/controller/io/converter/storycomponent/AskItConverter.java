@@ -18,8 +18,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class AskItConverter extends ComplexStoryComponentConverter {
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class. 
 	private static final String TAG_CONDITION = "Condition";
 	private static final String TAG_KNOWIT = "KnowIt";
 

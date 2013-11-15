@@ -526,6 +526,12 @@ public class ScriptWidgetFactory {
 						spinner.setValue(newBinding);
 						spinner.addChangeListener(changeListener);
 					}
+
+					spinner.getEditor().revalidate();
+					spinner.getEditor().repaint();
+					
+					spinner.revalidate();
+					spinner.repaint();
 				}
 			}
 		};
@@ -729,6 +735,8 @@ public class ScriptWidgetFactory {
 					bindingWidget.setBinding(knowIt.getBinding());
 
 					GUIOp.resizeJTextField(valueEditor);
+					valueEditor.revalidate();
+					valueEditor.repaint();
 				}
 			}
 		};
@@ -779,7 +787,7 @@ public class ScriptWidgetFactory {
 	public static ExpansionButton buildExpansionButton(Boolean collapsed) {
 		return new ExpansionButton(collapsed);
 	}
-
+	
 	/**
 	 * Builds a JSpinner to represent and edit the given fanIn.
 	 * 

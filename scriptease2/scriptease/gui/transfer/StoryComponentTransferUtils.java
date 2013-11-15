@@ -21,6 +21,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
@@ -95,6 +96,7 @@ public class StoryComponentTransferUtils {
 					if (component instanceof ScriptIt
 							|| component instanceof KnowIt
 							|| component instanceof AskIt
+							|| component instanceof PickIt
 							|| component instanceof ControlIt
 							|| component instanceof Note) {
 

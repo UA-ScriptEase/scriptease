@@ -54,8 +54,9 @@ import scriptease.util.StringOp;
 /**
  * A panel used to edit code blocks.
  * 
+ * CodeBlockPanel creates the code block section as seen in the library editor.
+ * 
  * @author mfchurch
- * @author jyuen
  * @author kschenk
  * 
  */
@@ -696,5 +697,4 @@ public class CodeBlockPanel extends JPanel {
 		}
 		return slots;
 	}
-
 }

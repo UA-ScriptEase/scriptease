@@ -38,6 +38,7 @@ import scriptease.controller.io.converter.storycomponent.CauseItConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockReferenceConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.storycomponent.ControlItConverter;
+import scriptease.controller.io.converter.storycomponent.FunctionItConverter;
 import scriptease.controller.io.converter.storycomponent.KnowItBindingConverter;
 import scriptease.controller.io.converter.storycomponent.KnowItConverter;
 import scriptease.controller.io.converter.storycomponent.NoteConverter;
@@ -64,6 +65,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -514,18 +516,6 @@ public class FileIO {
 		stream.alias("Binding", KnowItBinding.class);
 		stream.alias("Value", String.class);
 		stream.alias("DialogueLine", DialogueLine.class);
-
-		// Language Dictionary Fragments
-		stream.alias("LibraryModel", LibraryModel.class);
-		stream.alias("LanguageDictionary", LanguageDictionary.class);
-		stream.alias("Format", FormatDefinitionFragment.class);
-		stream.alias("Indent", IndentFragment.class);
-		stream.alias("Line", LineFragment.class);
-		stream.alias("Literal", LiteralFragment.class);
-		stream.alias("FormatRef", FormatReferenceFragment.class);
-		stream.alias("Scope", ScopeFragment.class);
-		stream.alias("Series", SeriesFragment.class);
-		stream.alias("Fragment", SimpleDataFragment.class);
 		stream.alias("DescribeIt", DescribeIt.class);
 		stream.alias("DescribeItNode", DescribeItNode.class);
 		stream.alias("CodeBlock", CodeBlock.class);
@@ -540,6 +530,19 @@ public class FileIO {
 		stream.alias("Behaviour", Behaviour.class);
 		stream.alias("IndependentTask", IndependentTask.class);
 		stream.alias("CollaborativeTask", CollaborativeTask.class);
+		stream.alias("FunctionIt", FunctionIt.class);
+
+		// Language Dictionary Fragments
+		stream.alias("LibraryModel", LibraryModel.class);
+		stream.alias("LanguageDictionary", LanguageDictionary.class);
+		stream.alias("Format", FormatDefinitionFragment.class);
+		stream.alias("Indent", IndentFragment.class);
+		stream.alias("Line", LineFragment.class);
+		stream.alias("Literal", LiteralFragment.class);
+		stream.alias("FormatRef", FormatReferenceFragment.class);
+		stream.alias("Scope", ScopeFragment.class);
+		stream.alias("Series", SeriesFragment.class);
+		stream.alias("Fragment", SimpleDataFragment.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -578,6 +581,7 @@ public class FileIO {
 		stream.registerConverter(new BehaviourConverter());
 		stream.registerConverter(new IndependentTaskConverter());
 		stream.registerConverter(new CollaborativeTaskConverter());
+		stream.registerConverter(new FunctionItConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

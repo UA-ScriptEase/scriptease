@@ -95,8 +95,6 @@ public class KnowItConverter extends StoryComponentConverter {
 					binding = (KnowItBinding) context.convertAnother(knowIt,
 							KnowItBinding.class);
 				} catch (ConversionException e) {
-					// TODO #55240202 This shouldn't even be happening. Find out
-					// what's up and fix it. Consult ticket for more info.
 					e.printStackTrace();
 					WindowFactory
 							.getInstance()

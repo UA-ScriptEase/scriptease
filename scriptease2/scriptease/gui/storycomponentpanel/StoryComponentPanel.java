@@ -27,7 +27,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
-import scriptease.gui.libraryeditor.TaskEffectsPanel;
 import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -56,11 +55,12 @@ public class StoryComponentPanel extends JPanel implements
 	private boolean removable;
 
 	private ExpansionButton expansionButton;
-	
+
 	public StoryComponentPanel(StoryComponent component) {
 		// State of Panel
 		this.setOpaque(true);
 		this.component = component;
+		this.editable = true;
 
 		if (this.component == null)
 			return;
@@ -245,6 +245,8 @@ public class StoryComponentPanel extends JPanel implements
 			this.setVisible(component.isVisible());
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_LABELS_CHANGED)) {
 			StoryComponentPanelFactory.getInstance().rebuildLabels(this);
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_TEXT_NAME)) {
+			StoryComponentPanelFactory.getInstance().rebuildDisplayName(this);
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
 
 			// Change the font color to orange if disabled
@@ -308,12 +310,10 @@ public class StoryComponentPanel extends JPanel implements
 	 */
 	public StoryComponentPanelManager getSelectionManager() {
 		final StoryComponentPanelTree parentTree = this.getParentTree();
+
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
-		else if (this.getParent() instanceof TaskEffectsPanel) {
-			return ((TaskEffectsPanel) this.getParent()).getPanelManager();
-		}
-			
+
 		return null;
 	}
 
@@ -374,7 +374,7 @@ public class StoryComponentPanel extends JPanel implements
 					.getBackground();
 
 			private Point dragStart;
-			
+
 			/**
 			 * Toggle a drag event manually
 			 */
@@ -384,7 +384,8 @@ public class StoryComponentPanel extends JPanel implements
 
 				selectionManager = panel.getSelectionManager();
 
-				if (selectionManager != null && e.getPoint().distance(dragStart) > 20) {
+				if (selectionManager != null
+						&& e.getPoint().distance(dragStart) > 20) {
 					final boolean clearSelection;
 
 					clearSelection = !(selectionManager.getSelectedPanels()
@@ -429,7 +430,7 @@ public class StoryComponentPanel extends JPanel implements
 			@Override
 			public void mousePressed(MouseEvent e) {
 				dragStart = e.getPoint();
-				
+
 				e.consume();
 			}
 
@@ -462,7 +463,6 @@ public class StoryComponentPanel extends JPanel implements
 				if (!(panel.getStoryComponent() instanceof StoryPoint)) {
 					hoverTimer.restart();
 				}
-				
 
 				e.consume();
 			}
@@ -480,7 +480,7 @@ public class StoryComponentPanel extends JPanel implements
 						manager.updatePanelBackgrounds();
 					else {
 						panel.setBackground(Color.WHITE);
-						
+
 						System.out
 								.println("Attempted to change UI of panel "
 										+ "with null selection manager for "
