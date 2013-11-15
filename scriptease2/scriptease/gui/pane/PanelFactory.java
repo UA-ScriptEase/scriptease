@@ -1,5 +1,6 @@
 package scriptease.gui.pane;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -7,7 +8,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import scriptease.controller.observer.SEModelEvent;
@@ -75,6 +75,8 @@ public final class PanelFactory {
 
 		libraryPanel.add(this.buildNotePane());
 
+		libraryPanel.setBackground(ScriptEaseUI.SECONDARY_UI);
+
 		librarySplitPane.setBottomComponent(resourcePanel);
 		librarySplitPane.setTopComponent(libraryPanel);
 
@@ -91,22 +93,27 @@ public final class PanelFactory {
 	 * 
 	 * @return
 	 */
-	private JScrollPane buildNotePane() {
-		final int HEIGHT_OF_NOTE = 40;
+	private JPanel buildNotePane() {
+		final int HEIGHT_OF_NOTE = 32;
 		final Dimension notePaneSize = new Dimension(0, HEIGHT_OF_NOTE);
 
 		final StoryComponentPanelJList noteList;
-		final JScrollPane notePane;
+		final JPanel notePane;
 
 		noteList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.NOTE));
-		notePane = new JScrollPane(noteList);
+				Category.NOTE), false);
+		notePane = new JPanel();
 
-		notePane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		notePane.setLayout(new BorderLayout());
+		notePane.add(noteList, BorderLayout.CENTER);
+
 		notePane.setPreferredSize(notePaneSize);
 		notePane.setMinimumSize(notePaneSize);
 		notePane.setMaximumSize(new Dimension(ScriptEaseUI.MAX_SCREEN_WIDTH,
 				HEIGHT_OF_NOTE));
+
+		notePane.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,
+				ScriptEaseUI.BUTTON_BLACK));
 
 		noteList.addStoryComponents(LibraryModel.getCommonLibrary()
 				.getNoteContainer().getChildren());
@@ -192,6 +199,7 @@ public final class PanelFactory {
 		statusPanel.add(currentTranslatorNameLabel);
 
 		statusPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		statusPanel.setBackground(ScriptEaseUI.SECONDARY_UI);
 
 		return statusPanel;
 	}
