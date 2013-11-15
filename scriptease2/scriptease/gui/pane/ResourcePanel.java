@@ -2,17 +2,13 @@ package scriptease.gui.pane;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -23,7 +19,6 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
-import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -69,7 +64,7 @@ public class ResourcePanel extends JPanel {
 		searchFilterPane = new JPanel();
 
 		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
-				"Game Objects", "");
+				"Search Resources", "");
 
 		typeFilter = new TypeAction();
 
@@ -83,12 +78,7 @@ public class ResourcePanel extends JPanel {
 		treeScrollPane.setBackground(Color.WHITE);
 		treeScrollPane.getVerticalScrollBar().setUnitIncrement(
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
-
-		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
-				.createLineBorder(Color.gray), Il8nResources
-				.getString("Search_Filter_"),
-				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
-						"SansSerif", Font.PLAIN, 12), Color.black));
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 		typeFilter.setAction(new Runnable() {
 			@Override
@@ -100,15 +90,17 @@ public class ResourcePanel extends JPanel {
 
 		// Sets up the type filter.
 		searchFilterPane.add(searchField);
-		searchFilterPane.add(new JButton(typeFilter));
+		searchFilterPane.add(ComponentFactory.buildFlatButton(typeFilter));
 		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
 				BoxLayout.LINE_AXIS));
+		searchFilterPane.setOpaque(false);
 
 		// FilterPane Layout
 		filterPane.setLayout(new BoxLayout(filterPane, BoxLayout.Y_AXIS));
 		filterPane.add(searchFilterPane);
 		filterPane.setMaximumSize(new Dimension(ScriptEaseUI.MAX_SCREEN_WIDTH,
 				50));
+		filterPane.setBackground(Color.WHITE);
 
 		this.setPreferredSize(new Dimension(
 				this.resources.getPreferredSize().width, 0));
@@ -116,8 +108,9 @@ public class ResourcePanel extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
 		this.add(filterPane);
-		this.add(Box.createVerticalStrut(5));
 		this.add(treeScrollPane);
+		this.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,
+				ScriptEaseUI.BUTTON_BLACK));
 
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override

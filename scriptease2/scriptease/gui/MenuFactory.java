@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -57,6 +58,7 @@ import scriptease.gui.action.tutorials.OpenTutorialAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -121,18 +123,25 @@ public class MenuFactory {
 	public static JMenuBar createMainMenuBar(SEModel model) {
 		final JMenuBar bar = new JMenuBar();
 
+		bar.setBackground(ScriptEaseUI.SECONDARY_UI);
+		
+		bar.setBorder(BorderFactory.createEmptyBorder());
+
 		bar.add(MenuFactory.buildFileMenu(model));
 		bar.add(MenuFactory.buildEditMenu());
 
 		if (TOOLS_MENU_ENABLED) {
 			bar.add(MenuFactory.buildLibraryMenu());
-			//bar.add(MenuFactory.buildBehaviourMenu());
+			// bar.add(MenuFactory.buildBehaviourMenu());
 		}
-		
+
 		bar.add(MenuFactory.buildHelpMenu());
 		if (ScriptEase.DEBUG_MODE)
 			bar.add(MenuFactory.buildDebugMenu());
 
+		for (Component component : bar.getComponents()) {
+			component.setBackground(ScriptEaseUI.SECONDARY_UI);
+		}
 		return bar;
 	}
 
@@ -605,7 +614,7 @@ public class MenuFactory {
 
 		return menu;
 	}
-	
+
 	/**
 	 * Builds the story-editing menu. The Story menu contains menu items for
 	 * pattern creation operations like adding a new encounter instance, or

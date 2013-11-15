@@ -12,6 +12,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -67,6 +68,12 @@ public class ParameterBoundRule extends StoryAdapter implements StoryRule {
 			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				function.getValue().process(ParameterBoundRule.this);
+			}
+
+			@Override
+			public void processUninitialized(
+					KnowItBindingUninitialized uninitialized) {
+				uninitialized.getValue().process(ParameterBoundRule.this);
 			}
 
 			@Override

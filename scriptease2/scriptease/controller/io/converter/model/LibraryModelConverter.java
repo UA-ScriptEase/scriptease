@@ -82,6 +82,8 @@ public class LibraryModelConverter implements Converter {
 				.getControllersCategory().getChildren());
 		XMLNode.BEHAVIOURS.writeObject(writer, context, library
 				.getBehavioursCategory().getChildren());
+		XMLNode.FUNCTIONITS.writeObject(writer, context, library
+				.getFunctionsCategory().getChildren());
 		XMLNode.TYPECONVERTERS.writeObject(writer, context, library
 				.getTypeConverter().getConverterDoIts());
 

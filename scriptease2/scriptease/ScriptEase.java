@@ -1,5 +1,7 @@
 package scriptease;
 
+import java.awt.Color;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -277,6 +279,16 @@ public final class ScriptEase implements Runnable {
 
 		// now we can configure
 		this.chooseLookAndFeel();
+
+		this.setUIConstants();
+	}
+
+	private void setUIConstants() {
+		UIManager.getDefaults().put("TabbedPane.contentBorderInsets",
+				new Insets(0, 0, 0, 0));
+		UIManager.getDefaults().put("TabbedPane.tabsOverlapBorder", true);
+		UIManager.put("ProgressBar.selectionForeground", Color.black);
+		UIManager.put("ProgressBar.selectionBackground", Color.black);
 	}
 
 	private void checkDebugging() {

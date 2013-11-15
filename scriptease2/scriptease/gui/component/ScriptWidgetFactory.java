@@ -41,10 +41,12 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
@@ -269,8 +271,12 @@ public class ScriptWidgetFactory {
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
-			this.bindingWidget = new BindingWidget(new KnowItBindingReference(
-					knowIt));
+			if (knowIt.getBinding() instanceof KnowItBindingNull)
+				this.bindingWidget = new BindingWidget(
+						new KnowItBindingUninitialized(knowIt));
+			else
+				this.bindingWidget = new BindingWidget(
+						new KnowItBindingReference(knowIt));
 		}
 
 		@Override
@@ -529,7 +535,7 @@ public class ScriptWidgetFactory {
 
 					spinner.getEditor().revalidate();
 					spinner.getEditor().repaint();
-					
+
 					spinner.revalidate();
 					spinner.repaint();
 				}
@@ -787,7 +793,7 @@ public class ScriptWidgetFactory {
 	public static ExpansionButton buildExpansionButton(Boolean collapsed) {
 		return new ExpansionButton(collapsed);
 	}
-	
+
 	/**
 	 * Builds a JSpinner to represent and edit the given fanIn.
 	 * 
