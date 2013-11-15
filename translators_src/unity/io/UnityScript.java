@@ -175,6 +175,10 @@ public class UnityScript {
 			this.mComponentList.remove(toBeRemoved);
 		}
 	}
+	
+	public String getGUID() {
+		return this.guid;
+	}
 
 	/**
 	 * Writes the script file and meta file to the passed in directory.

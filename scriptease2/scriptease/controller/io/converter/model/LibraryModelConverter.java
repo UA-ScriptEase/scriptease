@@ -13,6 +13,7 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -34,6 +35,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public class LibraryModelConverter implements Converter {
+	public static LibraryModel currentLibrary = null;
+
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -99,6 +102,7 @@ public class LibraryModelConverter implements Converter {
 		final Collection<DescribeIt> descriptions;
 		final Collection<ControlIt> controls;
 		final Collection<Behaviour> behaviours;
+		final Collection<FunctionIt> functions;
 		final Collection<ScriptIt> typeConvertors;
 
 		System.out.println("Unmarshalling Library Model");
@@ -120,10 +124,6 @@ public class LibraryModelConverter implements Converter {
 				DescribeIt.class);
 		controls = XMLNode.CONTROLITS.readCollection(reader, context,
 				ControlIt.class);
-		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
-				Behaviour.class);
-		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
-				ScriptIt.class);
 
 		// Construct the library
 		library.setIncludeFilePaths(includeFilePaths);
@@ -151,11 +151,29 @@ public class LibraryModelConverter implements Converter {
 		}
 
 		library.addAll(controls);
+
+		this.addDefaultCauseChildren(library, causes);
+
+		// Behaviours rely on the current library being set, so we need to load
+		// them after assigning the library to the static variable.
+		currentLibrary = library;
+
+		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
+				Behaviour.class);
+
+		functions = XMLNode.FUNCTIONITS.readCollection(reader, context,
+				FunctionIt.class);
+
+		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
+				ScriptIt.class);
+
 		library.addAll(behaviours);
+		library.addAll(functions);
 
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
 
-		this.addDefaultCauseChildren(library, causes);
+		// reset these to free memory
+		currentLibrary = null;
 
 		return library;
 	}

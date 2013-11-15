@@ -18,14 +18,16 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.Task;
 
 /**
  * Checks if the parameters of the given source are bound (not
  * KnowItBindingNull);
  * 
  * @author mfchurch
+ * @author kschenk
  * @author jyuen
- * 
  */
 public class ParameterBoundRule extends StoryAdapter implements StoryRule {
 	private Collection<StoryProblem> problems;
@@ -88,26 +90,40 @@ public class ParameterBoundRule extends StoryAdapter implements StoryRule {
 	 * @param component
 	 */
 	private void addProblem(final KnowIt component) {
-		String description = "Slot \"" + component.getDisplayText() + "\" is empty";
+		String description = "Slot \"" + component.getDisplayText()
+				+ "\" is empty";
 
 		StoryComponent owner = component.getOwner();
 
 		while (owner != null) {
 			if (owner instanceof CauseIt) {
+				description += " in the \"" + owner.getDisplayText()
+						+ "\" cause";
+
+				final StoryComponent causeOwner = owner.getOwner();
+
+				if (causeOwner instanceof StoryPoint) {
+					description += " in the \"" + causeOwner.getDisplayText()
+							+ "\" story point";
+				}
+				break;
+			} else if (owner instanceof Task) {
+				description += " in the \"" + owner.getDisplayText()
+						+ "\" task";
+
+				final StoryComponent taskOwner = owner.getOwner();
+
+				if (taskOwner instanceof Behaviour) {
+					description += " in the \"" + taskOwner.getDisplayText()
+							+ "\" behaviour";
+				}
 				break;
 			} else
 				owner = owner.getOwner();
 		}
 
 		if (owner != null) {
-			description += " in the \"" + owner.getDisplayText() + "\" cause";
 
-			final StoryComponent causeOwner = owner.getOwner();
-
-			if (causeOwner instanceof StoryPoint) {
-				description += " in the \"" + causeOwner.getDisplayText()
-						+ "\" story point";
-			}
 		}
 
 		description += ".";

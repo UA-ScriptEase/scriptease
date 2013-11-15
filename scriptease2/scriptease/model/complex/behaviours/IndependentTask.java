@@ -5,7 +5,13 @@ import java.util.List;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
+import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 
 /**
  * A independent task is a subclass of Task with only one subject.
@@ -15,8 +21,8 @@ import scriptease.model.complex.ScriptIt;
  */
 public class IndependentTask extends Task {
 
-	private List<ScriptIt> effects;
-	
+	private StoryComponentContainer initiatorContainer;
+
 	/**
 	 * Constructor. Creates a new independent task with the given name
 	 * 
@@ -24,8 +30,55 @@ public class IndependentTask extends Task {
 	 */
 	public IndependentTask(String name) {
 		super(name);
+
+		final List<Class<? extends StoryComponent>> taskContainerTypes;
+
+		// Register the initiator and responder task containers.
+		this.registerChildType(StoryComponentContainer.class, 1);
+
+		taskContainerTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		// Define the valid types for the two sub-containers
+		taskContainerTypes.add(ScriptIt.class);
+		taskContainerTypes.add(KnowIt.class);
+		taskContainerTypes.add(Note.class);
+		taskContainerTypes.add(ControlIt.class);
+		taskContainerTypes.add(PickIt.class);
+		taskContainerTypes.add(AskIt.class);
+
+		initiatorContainer = new StoryComponentContainer(taskContainerTypes);
+
+		initiatorContainer.setDisplayText("Initiator:");
+
+		this.addStoryChild(initiatorContainer);
+	}
+
+	/**
+	 * @return the initiatorContainer
+	 */
+	public StoryComponentContainer getInitiatorContainer() {
+		return initiatorContainer;
+	}
+
+	/**
+	 * @param initiatorContainer
+	 *            the initiatorContainer to set
+	 */
+	public void setInitiatorContainer(StoryComponentContainer initiatorContainer) {
+		this.initiatorContainer = initiatorContainer;
+	}
+
+	@Override
+	public boolean addStoryChildBefore(StoryComponent newChild,
+			StoryComponent sibling) {
+		boolean success = super.addStoryChildBefore(newChild, sibling);
+
+		if (success) {
+			if (this.getChildren().iterator().next() == newChild)
+				this.setInitiatorContainer((StoryComponentContainer) newChild);
+		}
 		
-		this.effects = new ArrayList<ScriptIt>();
+		return success;
 	}
 
 	@Override
@@ -40,25 +93,9 @@ public class IndependentTask extends Task {
 		}
 	}
 
-	public List<ScriptIt> getEffects() {
-		return effects;
-	}
-	
-	public void setEffects(List<ScriptIt> effects) {
-		this.effects = effects;
-	}
-	
 	@Override
 	public IndependentTask clone() {
 		final IndependentTask component = (IndependentTask) super.clone();
-
-		component.effects = new ArrayList<ScriptIt>(
-				this.effects.size());
-
-		// clone the effects
-		for (ScriptIt effect : this.effects) {
-			component.effects.add(effect.clone());
-		}
 
 		return component;
 	}

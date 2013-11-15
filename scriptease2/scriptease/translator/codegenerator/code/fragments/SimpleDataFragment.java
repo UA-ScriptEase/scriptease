@@ -135,6 +135,14 @@ public class SimpleDataFragment extends AbstractFragment {
 				return context.getSpeaker();
 			case ENABLED:
 				return context.getEnabled();
+			case TOTALCHOICEPROBABILITY:
+				return context.getTotalChoiceProbability();
+			case CHOICEPROBABILITYLOWERBOUND:
+				return context.getChoiceProbabilityLowerBound();
+			case CHOICEPROBABILITYUPPERBOUND:
+				return context.getChoiceProbabilityUpperBound();
+			case INDEX:
+				return context.getIndex();
 			default:
 				new CodeGenerationException(
 						"Simple Data Fragment was unable to be resolved for data: "

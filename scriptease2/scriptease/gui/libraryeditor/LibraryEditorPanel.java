@@ -31,14 +31,15 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
- * LibraryEditorPanel is dependent on the component being edited in the Library
- * editor. A specific panel is created for each type of component.
+ * Creates a Panel dependent on the component being edited in the Library
+ * editor.
  * 
  * @author mfchurch
  * @author jyuen
@@ -50,6 +51,7 @@ public class LibraryEditorPanel extends JPanel implements
 
 	public LibraryEditorPanel() {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
 		LibraryPanel.getInstance().addStoryComponentPanelJListObserver(this);
 
 		/*
@@ -144,13 +146,25 @@ public class LibraryEditorPanel extends JPanel implements
 			}
 
 			@Override
+			public void processFunctionIt(FunctionIt functionIt) {
+				LibraryEditorPanel.this.removeAll();
+
+				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
+						.getInstance().buildFunctionItEditingPanel(functionIt));
+
+				LibraryEditorPanel.this.repaint();
+				LibraryEditorPanel.this.revalidate();
+			}
+
+			@Override
 			public void processBehaviour(Behaviour behaviour) {
-				this.defaultProcess(behaviour);
+				LibraryEditorPanel.this.removeAll();
 
-				this.pane.add(LibraryEditorPanelFactory.getInstance()
-						.buildBehaviourEditingPanel(behaviour));
+				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
+						.getInstance().buildBehaviourEditingPanel(behaviour));
 
-				this.pane.revalidate();
+				LibraryEditorPanel.this.repaint();
+				LibraryEditorPanel.this.revalidate();
 			}
 
 			/**

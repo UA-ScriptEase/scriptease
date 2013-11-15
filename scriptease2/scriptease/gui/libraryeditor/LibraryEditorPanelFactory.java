@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -35,17 +37,24 @@ import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
+import scriptease.gui.component.ComponentFactory;
+import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.ScriptEaseKeywords;
+import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.StringOp;
 
 /**
@@ -89,6 +98,27 @@ public class LibraryEditorPanelFactory {
 		editorPanel = new LibraryEditorPanel();
 
 		return editorPanel;
+	}
+
+	// ******************* FUNCTIONIT EDITING PANEL ************************* //
+	
+	public JPanel buildFunctionItEditingPanel(final FunctionIt functionIt) {
+		final JPanel functionPanel;
+
+		functionPanel = new JPanel();
+		functionPanel.setLayout(new BoxLayout(functionPanel, BoxLayout.Y_AXIS));
+
+		final StoryComponentPanel panel = StoryComponentPanelFactory
+				.getInstance().buildStoryComponentPanel(functionIt);
+
+		functionPanel.add(this.buildDescriptorPanel(functionIt));
+		
+		//functionPanel.add(this.buildCodeBlockPanel(
+		//		functionIt.getMainCodeBlock(), functionIt));
+		
+		functionPanel.add(new StoryComponentPanelTree(panel));
+
+		return functionPanel;
 	}
 
 	// ******************* BEHAVIOUR EDITING PANEL ************************* //
@@ -197,12 +227,35 @@ public class LibraryEditorPanelFactory {
 		return behaviourPanel;
 	}
 
+	@SuppressWarnings("serial")
 	private JPanel buildBehaviourGraphPanel(String graphName,
 			SEGraph<Task> graph) {
 		final JPanel graphPanel;
 
 		// Create the graph panel.
-		graphPanel = new JPanel();
+		graphPanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 180;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 180;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 180;
+				return dimension;
+			}
+		};
+
 		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 
@@ -267,15 +320,20 @@ public class LibraryEditorPanelFactory {
 		}
 
 		graph = SEGraphFactory.buildTaskGraph(startTask, false);
+
 		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
 
 		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {
 
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
-				final JPanel effectsPanel = new JPanel();
+				final JPanel taskPanel = new JPanel();
+				final FlowLayout layout = new FlowLayout(FlowLayout.LEADING);
+				layout.setAlignOnBaseline(true);
 
-				effectsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+				taskPanel.setLayout(layout);
+				taskPanel.setBorder(BorderFactory
+						.createTitledBorder("Task Panel"));
 
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = behaviourPanel
@@ -285,7 +343,7 @@ public class LibraryEditorPanelFactory {
 					final JPanel panel = (JPanel) lastComponent;
 
 					if (panel.getComponentCount() > 0
-							&& panel.getComponent(0) instanceof TaskEffectsPanel) {
+							&& panel.getComponent(0) instanceof JScrollPane) {
 						behaviourPanel.remove(lastComponent);
 					}
 				}
@@ -294,19 +352,52 @@ public class LibraryEditorPanelFactory {
 				final Task task = nodes.iterator().next();
 
 				if (task instanceof IndependentTask) {
-					effectsPanel.add(new TaskEffectsPanel("Task Panel", task,
-							TaskEffectsPanel.TYPE.INDEPENDENT, true));
+
+					final StoryComponentPanelTree storyComponentPanelTree;
+
+					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((IndependentTask) task)
+											.getInitiatorContainer());
+
+					storyComponentPanelTree = new StoryComponentPanelTree(
+							initiatorTaskPanel);
+
+					storyComponentPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+
+					taskPanel.add(storyComponentPanelTree);
 
 				} else if (task instanceof CollaborativeTask) {
-					effectsPanel.add(new TaskEffectsPanel(
-							"Initiator Task Panel", task,
-							TaskEffectsPanel.TYPE.COLLABORATIVE_INIT, true));
-					effectsPanel.add(new TaskEffectsPanel(
-							"Collaborator Task Panel", task,
-							TaskEffectsPanel.TYPE.COLLABORATIVE_REACT, true));
+
+					final StoryComponentPanelTree initiatorPanelTree;
+					final StoryComponentPanelTree responderPanelTree;
+
+					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((CollaborativeTask) task)
+											.getInitiatorContainer());
+
+					StoryComponentPanel responderTaskPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(
+									((CollaborativeTask) task)
+											.getResponderContainer());
+
+					initiatorPanelTree = new StoryComponentPanelTree(
+							initiatorTaskPanel);
+					responderPanelTree = new StoryComponentPanelTree(
+							responderTaskPanel);
+
+					initiatorPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+					responderPanelTree.setBorder(BorderFactory
+							.createEmptyBorder());
+
+					taskPanel.add(initiatorPanelTree);
+					taskPanel.add(responderPanelTree);
 				}
 
-				behaviourPanel.add(effectsPanel);
+				behaviourPanel.add(taskPanel);
 				behaviourPanel.repaint();
 				behaviourPanel.revalidate();
 			}
@@ -325,39 +416,85 @@ public class LibraryEditorPanelFactory {
 		return graph;
 	}
 
+	@SuppressWarnings("serial")
+	private JPanel buildBehaviourImplicitPanel(List<KnowIt> implicitList) {
+		final JPanel implicitPanel;
+
+		implicitPanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+		};
+
+		implicitPanel.setBorder(BorderFactory.createTitledBorder("Implicits"));
+		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		for (KnowIt implicit : implicitList) {
+			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(implicit,
+					false));
+		}
+
+		return implicitPanel;
+	}
+
 	private void buildIndependentBehaviourPanel(final Behaviour behaviour,
 			final JPanel behaviourPanel) {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
 				behaviourPanel, ScriptEaseKeywords.INDEPENDENT);
 
-		final JPanel initiatorParameterPanel = new JPanel();
+		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
 
-		initiatorParameterPanel.setBorder(BorderFactory
-				.createTitledBorder("Initiator"));
-		initiatorParameterPanel.setLayout(new BoxLayout(
-				initiatorParameterPanel, BoxLayout.Y_AXIS));
+		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
+				.next();
+
+		graph.setBorder(BorderFactory.createEmptyBorder());
+
+		implicitList.add(initiatorImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
+			final KnowIt priority = new KnowIt();
 
-			behaviour.setDisplayText("Initiate <Creature>'s New Behaviour");
+			behaviour
+					.setDisplayText("<Initiator> does action with priority <Priority>");
 
-			initiator.setDisplayText("Creature");
+			initiator.setDisplayText("Initiator");
 			initiator.addType("creature");
 
+			priority.setDisplayText("Priority");
+			priority.addType("float");
+			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
+					.toString(behaviour.getPriority())));
+
 			behaviour.getMainCodeBlock().addParameter(initiator);
+			behaviour.getMainCodeBlock().addParameter(priority);
 		}
 
-		final JPanel parameterPanel = this.buildParameterPanel(behaviour,
-				behaviour.getMainCodeBlock(), behaviour.getMainCodeBlock()
-						.getParameters().get(0), false);
-
-		initiatorParameterPanel.add(parameterPanel);
-
-		behaviourPanel.add(initiatorParameterPanel);
+		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
+
+		graph.setSelectedNode(graph.getStartNode());
+
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
 	}
@@ -367,24 +504,25 @@ public class LibraryEditorPanelFactory {
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
 				behaviourPanel, ScriptEaseKeywords.COLLABORATIVE);
 
-		final JPanel initiatorParameterPanel = new JPanel();
-		initiatorParameterPanel.setBorder(BorderFactory
-				.createTitledBorder("Initiator"));
-		initiatorParameterPanel.setLayout(new BoxLayout(
-				initiatorParameterPanel, BoxLayout.Y_AXIS));
+		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
 
-		final JPanel responderParameterPanel = new JPanel();
-		responderParameterPanel.setBorder(BorderFactory
-				.createTitledBorder("Responder"));
-		responderParameterPanel.setLayout(new BoxLayout(
-				responderParameterPanel, BoxLayout.Y_AXIS));
+		final Iterator<KnowIt> iterator = behaviour.getImplicits().iterator();
+
+		final KnowIt initiatorImplicit = iterator.next();
+		final KnowIt responderImplicit = iterator.next();
+
+		graph.setBorder(BorderFactory.createEmptyBorder());
+
+		implicitList.add(initiatorImplicit);
+		implicitList.add(responderImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
 			final KnowIt initiator = new KnowIt();
 			final KnowIt responder = new KnowIt();
+			final KnowIt priority = new KnowIt();
 
 			behaviour
-					.setDisplayText("Initiate <Initiator> and <Responder>'s New Behaviour");
+					.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");
 
 			initiator.setDisplayText("Initiator");
 			initiator.addType("creature");
@@ -392,29 +530,223 @@ public class LibraryEditorPanelFactory {
 			responder.setDisplayText("Responder");
 			responder.addType("creature");
 
+			priority.setDisplayText("Priority");
+			priority.addType("float");
+			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
+					.toString(behaviour.getPriority())));
+
 			behaviour.getMainCodeBlock().addParameter(initiator);
 			behaviour.getMainCodeBlock().addParameter(responder);
+			behaviour.getMainCodeBlock().addParameter(priority);
 		}
 
-		initiatorParameterPanel.add(
-				this.buildParameterPanel(behaviour,
-						behaviour.getMainCodeBlock(), behaviour
-								.getMainCodeBlock().getParameters().get(0)),
-				false);
-		responderParameterPanel.add(
-				this.buildParameterPanel(behaviour,
-						behaviour.getMainCodeBlock(), behaviour
-								.getMainCodeBlock().getParameters().get(1)),
-				false);
-
-		behaviourPanel.add(initiatorParameterPanel);
-		behaviourPanel.add(responderParameterPanel);
+		behaviourPanel
+				.add(this.buildCollaborativeBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
 				graph));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
+
+		graph.setSelectedNode(graph.getStartNode());
 
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
+	}
+
+	@SuppressWarnings("serial")
+	private JPanel buildCollaborativeBehaviourNamePanel(
+			final Behaviour behaviour) {
+		final JPanel namePanel;
+
+		final JLabel initiatorLabel;
+		final JLabel priorityLabel;
+
+		final JTextField actionField;
+		final JTextField priorityField;
+
+		namePanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+		};
+		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
+
+		initiatorLabel = new JLabel("Initiator ");
+		initiatorLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		priorityLabel = new JLabel(" Responder with priority ");
+		priorityLabel.setFont(LibraryEditorPanelFactory.labelFont);
+
+		final String displayText = behaviour.getDisplayText();
+
+		final String actionName = displayText.substring(
+				displayText.indexOf("<") + 12,
+				displayText.indexOf(" <Responder>"));
+		actionField = new JTextField(actionName, 15);
+
+		final String priority = Integer.toString(behaviour.getPriority());
+		priorityField = ComponentFactory.buildNumberTextField();
+		priorityField.setText(priority);
+		priorityField.setColumns(5);
+
+		// Add listeners for the text fields
+		actionField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String oldDisplayText = behaviour.getDisplayText();
+
+				final String oldActionName = oldDisplayText.substring(
+						oldDisplayText.indexOf("<") + 12,
+						oldDisplayText.indexOf(" <Responder>"));
+
+				if (actionField.getText().contains("<")
+						|| actionField.getText().contains(">"))
+					return;
+
+				behaviour.setDisplayText(behaviour.getDisplayText().replace(
+						oldActionName, actionField.getText()));
+			}
+		});
+
+		priorityField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final KnowIt priorityKnowIt = behaviour.getMainCodeBlock()
+						.getParameters().get(2);
+				final String priority = priorityField.getText();
+
+				behaviour.setPriority(Integer.parseInt(priority));
+
+				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
+						.getTypes(), priority));
+
+				priorityKnowIt.revalidateKnowItBindings();
+			}
+		});
+
+		namePanel.add(initiatorLabel);
+		namePanel.add(actionField);
+		namePanel.add(priorityLabel);
+		namePanel.add(priorityField);
+
+		return namePanel;
+	}
+
+	@SuppressWarnings("serial")
+	private JPanel buildIndependentBehaviourNamePanel(final Behaviour behaviour) {
+		final JPanel namePanel;
+
+		final JLabel initiatorLabel;
+		final JLabel priorityLabel;
+
+		final JTextField actionField;
+		final JTextField priorityField;
+
+		namePanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 60;
+				return dimension;
+			}
+		};
+
+		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
+
+		initiatorLabel = new JLabel("Initiator ");
+		initiatorLabel.setFont(LibraryEditorPanelFactory.labelFont);
+		priorityLabel = new JLabel(" with priority ");
+		priorityLabel.setFont(LibraryEditorPanelFactory.labelFont);
+
+		final String displayText = behaviour.getDisplayText();
+
+		final String actionName = displayText.substring(
+				displayText.indexOf("<") + 12,
+				displayText.indexOf(" with priority"));
+		actionField = new JTextField(actionName, 15);
+
+		final String priority = Integer.toString(behaviour.getPriority());
+		priorityField = ComponentFactory.buildNumberTextField();
+		priorityField.setText(priority);
+		priorityField.setColumns(5);
+
+		// Add listeners for the text fields
+		actionField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String oldDisplayText = behaviour.getDisplayText();
+
+				final String oldActionName = oldDisplayText.substring(
+						oldDisplayText.indexOf("<") + 12,
+						oldDisplayText.indexOf(" with priority"));
+
+				if (actionField.getText().contains("<")
+						|| actionField.getText().contains(">"))
+					return;
+
+				behaviour.setDisplayText(behaviour.getDisplayText().replace(
+						oldActionName, actionField.getText()));
+			}
+		});
+
+		priorityField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final KnowIt priorityKnowIt = behaviour.getMainCodeBlock()
+						.getParameters().get(1);
+				final String priority = priorityField.getText();
+
+				behaviour.setPriority(Integer.parseInt(priority));
+
+				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
+						.getTypes(), priority));
+
+				priorityKnowIt.revalidateKnowItBindings();
+			}
+		});
+
+		namePanel.add(initiatorLabel);
+		namePanel.add(actionField);
+		namePanel.add(priorityLabel);
+		namePanel.add(priorityField);
+
+		return namePanel;
 	}
 
 	// *************** DESCRIPTION EDITING PANEL *************************
@@ -753,19 +1085,5 @@ public class LibraryEditorPanelFactory {
 	public JPanel buildParameterPanel(ScriptIt scriptIt, CodeBlock codeBlock,
 			KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
-	}
-
-	/**
-	 * Builds a parameter panel.
-	 * 
-	 * @param scriptIt
-	 * @param codeBlock
-	 * @param knowIt
-	 * @param removable
-	 * @return
-	 */
-	public JPanel buildParameterPanel(ScriptIt scriptIt, CodeBlock codeBlock,
-			KnowIt knowIt, boolean removable) {
-		return new ParameterPanel(scriptIt, codeBlock, knowIt, removable);
 	}
 }

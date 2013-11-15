@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.PickIt;
 
 /**
  * StoryComponentContext is Context for a StoryComponent. Story Component
@@ -94,5 +96,62 @@ public class StoryComponentContext extends Context {
 	public Collection<KnowIt> getVariables() {
 		// We return nothing by default, such as for notes.
 		return new ArrayList<KnowIt>();
+	}
+
+	@Override
+	public String getIndex() {
+		final StoryComponent owner;
+
+		owner = this.component.getOwner();
+
+		if (owner instanceof ComplexStoryComponent) {
+			final int index;
+
+			index = ((ComplexStoryComponent) owner)
+					.getChildIndex(this.component);
+
+			return Integer.toString(index);
+		}
+
+		return "";
+	}
+
+	@Override
+	public String getChoiceProbabilityLowerBound() {
+		int lowerBound = 0;
+
+		final StoryComponent owner = this.component.getOwner();
+
+		if (owner instanceof PickIt) {
+			final PickIt pickIt = (PickIt) owner;
+
+			// Loop through every child before this one and add up their
+			// probabilities.
+			for (StoryComponent child : pickIt.getChildren()) {
+				if (child == this.component)
+					break;
+
+				lowerBound += pickIt.getChoices().get(child);
+			}
+		}
+
+		return Integer.toString(lowerBound);
+	}
+
+	@Override
+	public String getChoiceProbabilityUpperBound() {
+		final int lowerBound = Integer.parseInt(this
+				.getChoiceProbabilityLowerBound());
+
+		final StoryComponent owner = this.component.getOwner();
+
+		if (owner instanceof PickIt) {
+			final PickIt pickIt = (PickIt) owner;
+
+			return Integer.toString(pickIt.getChoices().get(this.component)
+					+ lowerBound);
+		}
+
+		return Integer.toString(lowerBound);
 	}
 }

@@ -184,7 +184,7 @@ class ParameterPanel extends JPanel {
 			}
 		});
 
-		if (!this.isSubjectInCause(scriptIt, codeBlock) && removable) {
+		if (!this.isSubjectInCause(scriptIt, codeBlock)) {
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -209,7 +209,7 @@ class ParameterPanel extends JPanel {
 		typesPanel.setBorder(new TitledBorder("Types"));
 		nameFieldPanel.setBorder(new TitledBorder("Name"));
 		defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
-		bindingPanel.setBorder(new TitledBorder("Default Binding"));
+		bindingPanel.setBorder(new TitledBorder("Default Value"));
 
 		groupLayout.setAutoCreateGaps(true);
 		groupLayout.setAutoCreateContainerGaps(true);
@@ -296,6 +296,7 @@ class ParameterPanel extends JPanel {
 	 * 
 	 * @param bindingConstantComponent
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void updateBindingConstantComponent(
 			JComponent bindingConstantComponent) {
 		final JTextField inactiveTextField;

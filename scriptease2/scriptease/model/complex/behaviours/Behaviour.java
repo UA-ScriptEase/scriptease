@@ -2,6 +2,7 @@ package scriptease.model.complex.behaviours;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 
 /**
@@ -27,14 +28,14 @@ public class Behaviour extends ScriptIt {
 		INDEPENDENT, COLLABORATIVE
 	}
 
-	public Behaviour(String name) {
-		this(name, Type.INDEPENDENT, null, 0);
+	public Behaviour(String displayText) {
+		this(displayText, Type.INDEPENDENT, 0);
 	}
-	
+
 	/**
 	 * Creates a new behaviour.
 	 * 
-	 * @param name
+	 * @param displayText
 	 *            the name for the behaviour
 	 * @param type
 	 *            the type of the behaviour - Independent or Collaborative
@@ -44,13 +45,23 @@ public class Behaviour extends ScriptIt {
 	 *            the priority of this behaviour - higher priority means higher
 	 *            order of execution.
 	 */
-	public Behaviour(String name, Behaviour.Type type, Task startTask,
-			int priority) {
-		super(name);
+	public Behaviour(String displayText, Behaviour.Type type, int priority) {
+		super(displayText);
 
-		this.startTask = startTask;
 		this.priority = priority;
 		this.type = type;
+
+		if (type == Type.INDEPENDENT) {
+			this.startTask = new IndependentTask("");
+			this.registerChildType(IndependentTask.class,
+					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		} else {
+			this.startTask = new CollaborativeTask("", "");
+			this.registerChildType(CollaborativeTask.class,
+					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+		}
+
+		this.addStoryChild(startTask);
 	}
 
 	// ******************* GETTERS AND SETTERS **********************//
@@ -82,7 +93,13 @@ public class Behaviour extends ScriptIt {
 	 *            the startTask to set
 	 */
 	public void setStartTask(Task startTask) {
+		// remove old start task child
+		this.removeStoryChild(this.startTask);
+
 		this.startTask = startTask;
+		
+		if (startTask != null)
+			this.addStoryChild(startTask);
 	}
 
 	/**
@@ -107,10 +124,10 @@ public class Behaviour extends ScriptIt {
 		component.type = this.type;
 		component.priority = this.priority;
 		component.startTask = this.startTask.clone();
-		
+
 		return component;
 	}
-	
+
 	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processBehaviour(this);

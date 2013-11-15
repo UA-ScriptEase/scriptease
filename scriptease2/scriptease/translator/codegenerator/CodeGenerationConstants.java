@@ -65,7 +65,11 @@ public interface CodeGenerationConstants {
 		UNIQUE32CHARNAME,
 		DISPLAYTEXT,
 		VALUE,
-		CURRENTSTORYPOINT
+		CURRENTSTORYPOINT, 
+		TOTALCHOICEPROBABILITY, 
+		INDEX, 
+		CHOICEPROBABILITYLOWERBOUND, 
+		CHOICEPROBABILITYUPPERBOUND
 	}
 
 	// Used in SeriesFragment
@@ -81,7 +85,8 @@ public interface CodeGenerationConstants {
 		KNOWIT,
 		NOTE,
 		SCRIPTIT,
-		CONTROLIT
+		CONTROLIT,
+		PICKIT
 	}
 
 	// Used in SeriesFragment
@@ -105,6 +110,7 @@ public interface CodeGenerationConstants {
 		ORDEREDSTORYPOINTS, 
 		STORYNODES, 
 		STORYPOINTS, 
-		ORDEREDSTORYNODES
+		ORDEREDSTORYNODES, 
+		CHOICES
 	}
 }

@@ -478,6 +478,7 @@
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
 				<FormatRef data="askIt" ref="askItConditional" />
+				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="controlIt" ref="controlItCall" />
 			</Series>
@@ -671,6 +672,34 @@
 			<Line>
 				<Literal>}</Literal>
 			</Line>
+		</Format>
+		
+		<!-- Format for pickIts -->
+		<Format id="pickItConditional">
+			
+			<Line>
+				<Literal>// PickIt Choices</Literal>
+			</Line>
+			<Line>
+				<Literal>int random = Random.Range(0, </Literal>
+				<Fragment data="totalChoiceProbability" />
+				<Literal>);</Literal>
+			</Line>
+			<Series data="choices" unique="true">
+				<Line>
+					<Literal>if (random &gt;= </Literal>
+					<Fragment data="choiceProbabilityLowerBound" />
+					<Literal> &amp;&amp; random &lt; </Literal>
+					<Fragment data="choiceProbabilityUpperBound" />		
+					<Literal>) {</Literal>
+				</Line>
+				<Indent>
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Indent>
+				<Line>
+					<Literal>}</Literal>
+				</Line>
+			</Series>
 		</Format>
 
 		<!-- Format for the main method in normal script files -->

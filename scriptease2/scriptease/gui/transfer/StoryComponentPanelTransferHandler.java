@@ -31,22 +31,20 @@ import scriptease.gui.WindowFactory;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
-import scriptease.gui.libraryeditor.TaskEffectsPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.complex.behaviours.CollaborativeTask;
-import scriptease.model.complex.behaviours.IndependentTask;
-import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -192,10 +190,13 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (supportComponent instanceof StoryComponentPanel) {
 
 			final StoryComponentPanel acceptingPanel;
+			final StoryComponent component;
+
 			acceptingPanel = (StoryComponentPanel) supportComponent;
+			component = acceptingPanel.getStoryComponent();
 
 			// The start story point can't be accepting any children.
-			if (acceptingPanel.getStoryComponent() instanceof StoryPoint) {
+			if (component instanceof StoryPoint) {
 				final StoryPoint storyPoint = (StoryPoint) acceptingPanel
 						.getStoryComponent();
 
@@ -241,27 +242,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				return true;
 			}
 
-		} else if (supportComponent instanceof TaskEffectsPanel) {
-			final TaskEffectsPanel taskPanel = (TaskEffectsPanel) supportComponent;
-
-			if (!taskPanel.isEditable())
-				return false;
-
-			final StoryComponent component;
-
-			component = this.extractStoryComponents(support).iterator().next();
-
-			if (component instanceof ScriptIt) {
-				final ScriptIt scriptIt = (ScriptIt) component;
-
-				if (!(scriptIt instanceof CauseIt)
-						&& scriptIt.getLabels().contains("TODO"))
-					return true;
-			}
+			if (this.hoveredPanel != null)
+				this.hoveredPanel.updatePanelBackgrounds();
 		}
-
-		if (this.hoveredPanel != null)
-			this.hoveredPanel.updatePanelBackgrounds();
 
 		return false;
 	}
@@ -486,30 +469,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			effectHolder = (EffectHolderPanel) supportComponent;
 
 			return effectHolder.setEffect((ScriptIt) component);
-
-		} else if (supportComponent instanceof TaskEffectsPanel) {
-			final StoryComponent component;
-			final TaskEffectsPanel taskPanel;
-			final TaskEffectsPanel.TYPE type;
-			final Task task;
-			final ScriptIt effect;
-
-			component = this.extractStoryComponents(support).iterator().next();
-			taskPanel = (TaskEffectsPanel) supportComponent;
-
-			type = taskPanel.getType();
-			task = taskPanel.getTask();
-			effect = (ScriptIt) component;
-
-			if (type == TaskEffectsPanel.TYPE.INDEPENDENT) {
-				((IndependentTask) task).getEffects().add(effect);
-			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_INIT) {
-				((CollaborativeTask) task).getInitiatorEffects().add(effect);
-			} else if (type == TaskEffectsPanel.TYPE.COLLABORATIVE_REACT) {
-				((CollaborativeTask) task).getResponderEffects().add(effect);
-			}
-
-			return taskPanel.addEffect(effect);
 		}
 
 		return false;
@@ -628,6 +587,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						&& ((ComplexStoryComponent) potentialParent)
 								.canAcceptChild(child);
 			}
+
+			if (child.getOwner() instanceof PickIt
+					|| child.getOwner() instanceof AskIt)
+				acceptable = false;
 
 			if (!acceptable)
 				break;

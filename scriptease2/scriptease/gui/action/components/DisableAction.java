@@ -114,7 +114,7 @@ public class DisableAction extends ActiveModelSensitiveAction {
 			owner.setEnabled(true);
 			owner = owner.getOwner();
 		}
-
+		
 		componentPanel.repaint();
 	}
 

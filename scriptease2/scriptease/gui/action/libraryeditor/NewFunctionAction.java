@@ -10,34 +10,34 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
- * Inserts a new Behaviour into the Library. Each Behaviour codeblock has a slot
- * that defines implicits for the Initiator and Responder.
+ * Inserts a new FunctionIt into the Library. 
  * 
  * @author jyuen
  */
 @SuppressWarnings("serial")
-public class NewBehaviourAction extends ActiveModelSensitiveAction {
-	private static final String NEW_BEHAVIOUR_NAME = "Behaviour";
+public class NewFunctionAction extends ActiveModelSensitiveAction {
+	private static final String NEW_FUNCTION_NAME = "Function";
 
-	private static final NewBehaviourAction instance = new NewBehaviourAction();
+	private static final NewFunctionAction instance = new NewFunctionAction();
 
-	public static final NewBehaviourAction getInstance() {
-		return NewBehaviourAction.instance;
+	public static final NewFunctionAction getInstance() {
+		return NewFunctionAction.instance;
 	}
 
-	private NewBehaviourAction() {
-		super(NewBehaviourAction.NEW_BEHAVIOUR_NAME);
+	private NewFunctionAction() {
+		super(NewFunctionAction.NEW_FUNCTION_NAME);
 
 		this.putValue(Action.SHORT_DESCRIPTION,
-				NewBehaviourAction.NEW_BEHAVIOUR_NAME);
+				NewFunctionAction.NEW_FUNCTION_NAME);
 		this.putValue(
 				Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK
+				KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK
 						+ ActionEvent.SHIFT_MASK));
 	}
 
@@ -51,25 +51,24 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		final LibraryModel libraryModel;
 
-		final Behaviour newBehaviour;
+		final FunctionIt newFunctionIt;
 		final CodeBlock codeBlock;
 		final int codeBlockID;
-		final String slot;
 		
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
 
-		newBehaviour = new Behaviour("New Behaviour");
+		newFunctionIt = new FunctionIt("New Function");
+		newFunctionIt.setVisible(true);
+		newFunctionIt.setDisplayText("New Function");
+
 		codeBlockID = libraryModel.getNextCodeBlockID();
-		slot = "onBehaviour";
-		
+
 		codeBlock = new CodeBlockSource(codeBlockID);
-		codeBlock.setSlot(slot);
-
-		newBehaviour.addCodeBlock(codeBlock);
-		newBehaviour.setVisible(true);
-
-		libraryModel.add(newBehaviour);
-		LibraryPanel.getInstance().navigateToComponent(newBehaviour);
+		
+		newFunctionIt.addCodeBlock(codeBlock);
+		
+		libraryModel.add(newFunctionIt);
+		LibraryPanel.getInstance().navigateToComponent(newFunctionIt);
 	}
 }
