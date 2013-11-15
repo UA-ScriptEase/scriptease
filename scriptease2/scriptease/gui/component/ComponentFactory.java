@@ -292,7 +292,6 @@ public final class ComponentFactory {
 							super.insertString(offs, str, a);
 					}
 				};
-
 			}
 		};
 	}

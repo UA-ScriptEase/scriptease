@@ -35,6 +35,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -487,11 +488,8 @@ public class StoryComponentPanelFactory {
 				});
 
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
-
-				// Add the children panels
-				// addChildrenPanels(behaviour, panel);
 			}
-
+		
 			@Override
 			public void processPickIt(final PickIt pickIt) {
 				final JPanel mainPanel;
@@ -525,7 +523,8 @@ public class StoryComponentPanelFactory {
 				// Add an expansion button
 				if (!(complex instanceof ScriptIt)
 						|| complex instanceof CauseIt
-						|| complex instanceof ControlIt)
+						|| complex instanceof ControlIt
+						|| complex instanceof FunctionIt)
 					addExpansionButton(complex, panel);
 
 				// Add probability box if it is a children of PickIt

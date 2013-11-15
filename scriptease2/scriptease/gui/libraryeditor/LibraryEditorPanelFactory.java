@@ -28,7 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
-import scriptease.controller.observer.CodeBlockPanelEvent.Type;
 import scriptease.controller.observer.CodeBlockPanelObserver;
 import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -128,7 +127,7 @@ public class LibraryEditorPanelFactory {
 
 			// Rebuilds the implicit panel when a parameter has changed
 			@Override
-			public void codeBlockPanelChanged(KnowIt parameter) {
+			public void codeBlockPanelChanged() {
 				functionPanel.remove(2);
 				functionPanel.add(buildFunctionItImplicitPanel(functionIt), 2);
 			}
