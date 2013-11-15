@@ -24,6 +24,9 @@ import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
+import scriptease.controller.observer.CodeBlockPanelEvent;
+import scriptease.controller.observer.CodeBlockPanelObserver;
+import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
@@ -57,10 +60,13 @@ import scriptease.util.StringOp;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  * 
  */
 @SuppressWarnings("serial")
 public class CodeBlockPanel extends JPanel {
+
+	private final ObserverManager<CodeBlockPanelObserver> observerManager;
 
 	/**
 	 * Sets up a JPanel used to edit CodeBlocks. This shows the id, slot,
@@ -73,6 +79,11 @@ public class CodeBlockPanel extends JPanel {
 	 * @return
 	 */
 	public CodeBlockPanel(final CodeBlock codeBlock, final ScriptIt scriptIt) {
+		this(codeBlock, scriptIt, false);
+	}
+
+	public CodeBlockPanel(final CodeBlock codeBlock, final ScriptIt scriptIt,
+			boolean onlyParamVisible) {
 		final JLabel subjectLabel = new JLabel("Subject: ");
 		final JLabel slotLabel = new JLabel("Slot: ");
 		final JLabel implicitsLabelLabel = new JLabel("Implicits: ");
@@ -100,6 +111,8 @@ public class CodeBlockPanel extends JPanel {
 		final TypeAction typeAction;
 
 		final List<String> types;
+
+		this.observerManager = new ObserverManager<CodeBlockPanelObserver>();
 
 		implicitsListLabel = new JLabel();
 
@@ -232,6 +245,9 @@ public class CodeBlockPanel extends JPanel {
 					UndoManager.getInstance().startUndoableAction(
 							"Add parameter " + knowIt + " to " + codeBlock);
 					codeBlock.addParameter(knowIt);
+
+					notifyChange(knowIt);
+
 					UndoManager.getInstance().endUndoableAction();
 				}
 			}
@@ -282,79 +298,116 @@ public class CodeBlockPanel extends JPanel {
 					.buildParameterPanel(scriptIt, codeBlock, parameter));
 		}
 
-		codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
-				.createSequentialGroup()
-				.addGroup(
-						codeBlockEditorLayout.createParallelGroup()
-								.addComponent(subjectLabel)
-								.addComponent(slotLabel)
-								.addComponent(implicitsLabelLabel)
-								.addComponent(includesLabel)
-								.addComponent(typesLabel)
-								.addComponent(parametersLabel)
-								.addComponent(addParameterButton)
-								.addComponent(codeLabel))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup()
-								.addComponent(deleteCodeBlockButton,
-										GroupLayout.Alignment.TRAILING)
-								.addComponent(subjectBox).addComponent(slotBox)
-								.addComponent(implicitsListLabel)
-								.addComponent(includesField)
-								.addComponent(typesButton)
-								.addComponent(parameterScrollPane)
-								.addComponent(codePanel)));
+		if (!onlyParamVisible) {
+			codeBlockEditorLayout.setHorizontalGroup(codeBlockEditorLayout
+					.createSequentialGroup()
+					.addGroup(
+							codeBlockEditorLayout.createParallelGroup()
+									.addComponent(subjectLabel)
+									.addComponent(slotLabel)
+									.addComponent(implicitsLabelLabel)
+									.addComponent(includesLabel)
+									.addComponent(typesLabel)
+									.addComponent(parametersLabel)
+									.addComponent(addParameterButton)
+									.addComponent(codeLabel))
+					.addGroup(
+							codeBlockEditorLayout
+									.createParallelGroup()
+									.addComponent(deleteCodeBlockButton,
+											GroupLayout.Alignment.TRAILING)
+									.addComponent(subjectBox)
+									.addComponent(slotBox)
+									.addComponent(implicitsListLabel)
+									.addComponent(includesField)
+									.addComponent(typesButton)
+									.addComponent(parameterScrollPane)
+									.addComponent(codePanel)));
 
-		codeBlockEditorLayout.setVerticalGroup(codeBlockEditorLayout
-				.createSequentialGroup()
-				.addComponent(deleteCodeBlockButton)
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(subjectLabel)
-								.addComponent(subjectBox))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(slotLabel).addComponent(slotBox))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(implicitsLabelLabel)
-								.addComponent(implicitsListLabel))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(includesLabel)
-								.addComponent(includesField))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(typesLabel)
-								.addComponent(typesButton))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addGroup(
-										codeBlockEditorLayout
-												.createSequentialGroup()
-												.addComponent(parametersLabel)
-												.addComponent(
-														addParameterButton))
-								.addComponent(parameterScrollPane))
-				.addGroup(
-						codeBlockEditorLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(codeLabel)
-								.addComponent(codePanel)));
+			codeBlockEditorLayout
+					.setVerticalGroup(codeBlockEditorLayout
+							.createSequentialGroup()
+							.addComponent(deleteCodeBlockButton)
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(subjectLabel)
+											.addComponent(subjectBox))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(slotLabel)
+											.addComponent(slotBox))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(implicitsLabelLabel)
+											.addComponent(implicitsListLabel))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(includesLabel)
+											.addComponent(includesField))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(typesLabel)
+											.addComponent(typesButton))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addGroup(
+													codeBlockEditorLayout
+															.createSequentialGroup()
+															.addComponent(
+																	parametersLabel)
+															.addComponent(
+																	addParameterButton))
+											.addComponent(parameterScrollPane))
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addComponent(codeLabel)
+											.addComponent(codePanel)));
+		} else {
+			codeBlockEditorLayout
+					.setHorizontalGroup(codeBlockEditorLayout
+							.createSequentialGroup()
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup()
+											.addComponent(parametersLabel)
+											.addComponent(addParameterButton)
+											.addGroup(
+													codeBlockEditorLayout
+															.createParallelGroup()
+															.addComponent(
+																	parameterScrollPane))));
+
+			codeBlockEditorLayout
+					.setVerticalGroup(codeBlockEditorLayout
+							.createSequentialGroup()
+							.addGroup(
+									codeBlockEditorLayout
+											.createParallelGroup(
+													GroupLayout.Alignment.BASELINE)
+											.addGroup(
+													codeBlockEditorLayout
+															.createSequentialGroup()
+															.addComponent(
+																	parametersLabel)
+															.addComponent(
+																	addParameterButton)
+															.addComponent(
+																	parameterScrollPane))));
+		}
 	}
 
 	/**
@@ -692,5 +745,23 @@ public class CodeBlockPanel extends JPanel {
 			slots.addAll(otherSlots);
 		}
 		return slots;
+	}
+
+	public void addListener(CodeBlockPanelObserver observer) {
+		this.observerManager.addObserver(this, observer);
+	}
+
+	public void removeListener(CodeBlockPanelObserver observer) {
+		this.observerManager.removeObserver(observer);
+	}
+
+	/**
+	 * Notifies that a parameter has been changed.
+	 */
+	private void notifyChange(KnowIt parameter) {
+		for (CodeBlockPanelObserver observer : this.observerManager
+				.getObservers()) {
+			observer.codeBlockPanelChanged(parameter);
+		}
 	}
 }

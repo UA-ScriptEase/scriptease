@@ -28,6 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
+import scriptease.controller.observer.CodeBlockPanelEvent.Type;
+import scriptease.controller.observer.CodeBlockPanelObserver;
 import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -39,6 +41,7 @@ import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.libraryeditor.codeblocks.CodeBlockPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
@@ -101,24 +104,75 @@ public class LibraryEditorPanelFactory {
 	}
 
 	// ******************* FUNCTIONIT EDITING PANEL ************************* //
-	
+
 	public JPanel buildFunctionItEditingPanel(final FunctionIt functionIt) {
 		final JPanel functionPanel;
+		final StoryComponentPanel transferPanel;
+		final CodeBlockPanel codeBlockPanel;
 
 		functionPanel = new JPanel();
 		functionPanel.setLayout(new BoxLayout(functionPanel, BoxLayout.Y_AXIS));
 
-		final StoryComponentPanel panel = StoryComponentPanelFactory
-				.getInstance().buildStoryComponentPanel(functionIt);
+		transferPanel = StoryComponentPanelFactory.getInstance()
+				.buildStoryComponentPanel(functionIt);
+
+		codeBlockPanel = new CodeBlockPanel(functionIt.getMainCodeBlock(),
+				functionIt, true);
 
 		functionPanel.add(this.buildDescriptorPanel(functionIt));
-		
-		//functionPanel.add(this.buildCodeBlockPanel(
-		//		functionIt.getMainCodeBlock(), functionIt));
-		
-		functionPanel.add(new StoryComponentPanelTree(panel));
+		functionPanel.add(codeBlockPanel);
+		functionPanel.add(this.buildFunctionItImplicitPanel(functionIt));
+		functionPanel.add(new StoryComponentPanelTree(transferPanel));
+
+		codeBlockPanel.addListener(new CodeBlockPanelObserver() {
+
+			// Rebuilds the implicit panel when a parameter has changed
+			@Override
+			public void codeBlockPanelChanged(KnowIt parameter) {
+				functionPanel.remove(2);
+				functionPanel.add(buildFunctionItImplicitPanel(functionIt), 2);
+			}
+		});
 
 		return functionPanel;
+	}
+
+	private JPanel buildFunctionItImplicitPanel(final FunctionIt functionIt) {
+		final JPanel implicitPanel;
+
+		implicitPanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				final Dimension dimension = super.getPreferredSize();
+				dimension.height = 40;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMaximumSize() {
+				final Dimension dimension = super.getMaximumSize();
+				dimension.height = 40;
+				return dimension;
+			}
+
+			@Override
+			public Dimension getMinimumSize() {
+				final Dimension dimension = super.getMinimumSize();
+				dimension.height = 40;
+				return dimension;
+			}
+		};
+
+		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		final CodeBlock codeBlock = functionIt.getMainCodeBlock();
+
+		for (KnowIt parameter : codeBlock.getParameters()) {
+			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,
+					false));
+		}
+
+		return implicitPanel;
 	}
 
 	// ******************* BEHAVIOUR EDITING PANEL ************************* //
