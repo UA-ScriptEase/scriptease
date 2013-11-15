@@ -11,6 +11,8 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -24,12 +26,13 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-import javax.swing.text.View;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+import javax.swing.text.View;
 
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -270,6 +273,8 @@ public final class ComponentFactory {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
+				final Color borderColor;
+
 				if (this.drawLabel) {
 					final int x;
 					final int y;
@@ -279,8 +284,6 @@ public final class ComponentFactory {
 
 					g.drawImage(background, x, y, this);
 				}
-
-				final Color borderColor;
 
 				if (this.isEnabled()) {
 					borderColor = ScriptEaseUI.BUTTON_BLACK;
@@ -296,6 +299,11 @@ public final class ComponentFactory {
 		return field;
 	}
 
+	/**
+	 * Builds a textfield that can only accept numbers.
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("serial")
 	public static JTextField buildNumberTextField() {
 		return new JTextField() {
@@ -318,7 +326,7 @@ public final class ComponentFactory {
 	}
 
 	private enum ButtonState {
-		NEUTRAL, CLICK, HOVER
+		NEUTRAL, CLICK, HOVER, TOGGLED
 	}
 
 	public static JButton buildFlatButton(Action action) {
@@ -406,6 +414,94 @@ public final class ComponentFactory {
 		return button;
 	}
 
+	@SuppressWarnings("serial")
+	public static JToggleButton buildFlatToggleButton(final Color color) {
+		final JToggleButton button = new JToggleButton() {
+			private ButtonState state;
+			private ButtonState previousState;
+
+			{
+				this.state = ButtonState.NEUTRAL;
+
+				this.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent ev) {
+						if (ev.getStateChange() == ItemEvent.SELECTED) {
+							changeState(ButtonState.TOGGLED);
+						} else if (ev.getStateChange() == ItemEvent.DESELECTED) {
+							changeState(ButtonState.NEUTRAL);
+
+						}
+					}
+				});
+
+				this.addMouseListener(new MouseAdapter() {
+					public void mouseEntered(MouseEvent e) {
+						if (state == ButtonState.NEUTRAL)
+							changeState(ButtonState.HOVER);
+					};
+
+					public void mouseExited(MouseEvent e) {
+						if (state == ButtonState.HOVER)
+							changeState(previousState);
+					};
+
+					public void mousePressed(MouseEvent e) {
+						changeState(ButtonState.CLICK);
+					};
+
+					public void mouseReleased(MouseEvent e) {
+						if (state == ButtonState.CLICK) {
+							if (isSelected())
+								changeState(ButtonState.TOGGLED);
+							else
+								changeState(ButtonState.NEUTRAL);
+						}
+					};
+				});
+			}
+
+			private void changeState(ButtonState state) {
+				this.previousState = this.state;
+				this.state = state;
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				final Color fillColor;
+
+				if (this.isEnabled())
+					switch (this.state) {
+					case CLICK:
+						fillColor = GUIOp.scaleWhite(color, 1.8);
+						break;
+					case HOVER:
+						fillColor = GUIOp.scaleWhite(color, 1.6);
+						break;
+					case TOGGLED:
+						fillColor = GUIOp.scaleWhite(color, 2.0);
+						break;
+					default:
+						fillColor = color;
+						break;
+					}
+				else
+					fillColor = Color.LIGHT_GRAY;
+
+				g.setColor(fillColor);
+				g.fillRect(0, 0, getSize().width, getSize().height);
+
+				super.paintComponent(g);
+			}
+		};
+
+		button.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		button.setForeground(Color.white);
+
+		button.setContentAreaFilled(false);
+
+		return button;
+	}
+
 	/**
 	 * Builds a neat and tidy UI for tabbed panes.
 	 * 
@@ -417,9 +513,9 @@ public final class ComponentFactory {
 			protected void paintTabBackground(Graphics g, int tabPlacement,
 					int tabIndex, int x, int y, int w, int h, boolean isSelected) {
 				if (isSelected) {
-					g.setColor(Color.WHITE);
+					g.setColor(ScriptEaseUI.PRIMARY_UI);
 				} else {
-					g.setColor(Color.GRAY);
+					g.setColor(ScriptEaseUI.TERTIARY_UI);
 				}
 
 				g.fillRect(x, y, w, h + 2);
@@ -432,8 +528,8 @@ public final class ComponentFactory {
 				// Had to modify this from the default code to paint selected
 				// tab text black and unselected white.
 
-				final Color selectedText = ScriptEaseUI.BUTTON_BLACK;
-				final Color unselectedText = Color.WHITE;
+				final Color selectedText = ScriptEaseUI.SECONDARY_UI;
+				final Color unselectedText = ScriptEaseUI.PRIMARY_UI;
 				g.setFont(font);
 
 				final View v = getTextViewForTab(tabIndex);

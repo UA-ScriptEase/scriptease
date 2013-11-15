@@ -36,7 +36,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -218,9 +217,11 @@ class SEModelTabbedPane extends JTabbedPane {
 		else
 			icon = null;
 
-		newTab = new CloseableModelTab(this, model, icon);
-
 		this.addTab(title, icon, tabContents);
+
+		final int location = this.indexOfComponent(tabContents);
+
+		newTab = new CloseableModelTab(this, model, icon, tabContents);
 
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
 
@@ -494,7 +495,7 @@ class SEModelTabbedPane extends JTabbedPane {
 		 *            will show no icon.
 		 */
 		private CloseableModelTab(final JTabbedPane parent,
-				final SEModel model, Icon icon) {
+				final SEModel model, Icon icon, final Component component) {
 			// unset the annoying gaps that come with default FlowLayout
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
@@ -524,6 +525,21 @@ class SEModelTabbedPane extends JTabbedPane {
 
 			// add more space between the label and the button
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+
+			if (parent.getSelectedComponent() == component)
+				label.setForeground(ScriptEaseUI.SECONDARY_UI);
+			else
+				label.setForeground(ScriptEaseUI.PRIMARY_UI);
+
+			parent.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					if (parent.getSelectedComponent() == component)
+						label.setForeground(ScriptEaseUI.SECONDARY_UI);
+					else
+						label.setForeground(ScriptEaseUI.PRIMARY_UI);
+				}
+			});
 
 			closeButton = new TabButton(new CloseModelAction(model));
 			closeButton.setHideActionText(true);
