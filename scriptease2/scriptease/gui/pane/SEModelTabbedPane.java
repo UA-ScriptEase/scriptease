@@ -40,7 +40,6 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.ResourceTreeAdapter;
@@ -52,10 +51,12 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.action.file.CloseModelAction;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -127,6 +128,7 @@ class SEModelTabbedPane extends JTabbedPane {
 						}
 					}
 				});
+		this.setUI(ComponentFactory.buildFlatTabUI());
 	}
 
 	/**
@@ -385,18 +387,7 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyPanel.setTopComponent(storyGraphPanel);
 		storyPanel.setBottomComponent(storyComponentTree);
 
-		// Set the divider to a blank one
-		for (Component component : storyPanel.getComponents()) {
-			if (component instanceof BasicSplitPaneDivider) {
-				final BasicSplitPaneDivider divider;
-
-				divider = (BasicSplitPaneDivider) component;
-				divider.setBackground(Color.WHITE);
-				divider.setBorder(null);
-
-				break;
-			}
-		}
+		WidgetDecorator.setSimpleDivider(storyPanel);
 
 		topLevelPane.setBorder(null);
 		topLevelPane.setOpaque(true);

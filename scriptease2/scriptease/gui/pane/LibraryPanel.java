@@ -1,8 +1,6 @@
 package scriptease.gui.pane;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,16 +11,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.Timer;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -42,7 +37,6 @@ import scriptease.gui.filters.StoryComponentSearchFilter;
 import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.TypeFilter;
 import scriptease.gui.filters.VisibilityFilter;
-import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -215,6 +209,9 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(4, KeyEvent.VK_5);
 		this.setMnemonicAt(5, KeyEvent.VK_6);
 
+		this.setUI(ComponentFactory.buildFlatTabUI());
+
+		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
@@ -228,6 +225,8 @@ public class LibraryPanel extends JTabbedPane {
 	 */
 	private JPanel createTab(final StoryComponentPanelJList list) {
 		final JPanel tabPanel;
+		final JScrollPane listScroll;
+
 		final Timer searchFieldTimer;
 
 		final JComponent filterPane;
@@ -237,10 +236,11 @@ public class LibraryPanel extends JTabbedPane {
 		final TypeAction typeFilter;
 
 		tabPanel = new JPanel();
+		listScroll = new JScrollPane(list);
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
-				"Library", "");
+				"Search Library", "");
 
 		typeFilter = new TypeAction();
 
@@ -306,15 +306,9 @@ public class LibraryPanel extends JTabbedPane {
 			}
 		});
 
-		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
-				.createLineBorder(Color.gray), Il8nResources
-				.getString("Search_Filter_"),
-				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
-						"SansSerif", Font.PLAIN, 12), Color.black));
-
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
-		searchFilterPane.add(new JButton(typeFilter));
+		searchFilterPane.add(ComponentFactory.buildFlatButton(typeFilter));
 		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
 				BoxLayout.LINE_AXIS));
 		searchFilterPane.setOpaque(false);
@@ -328,8 +322,10 @@ public class LibraryPanel extends JTabbedPane {
 
 		tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.PAGE_AXIS));
 		tabPanel.add(filterPane);
-		tabPanel.add(Box.createVerticalStrut(5));
-		tabPanel.add(new JScrollPane(list));
+		listScroll.setBorder(BorderFactory.createEmptyBorder());
+		tabPanel.add(listScroll);
+		tabPanel.setBorder(BorderFactory
+				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
 
 		// Configure the displaying of the pane
 		this.updateList(list);

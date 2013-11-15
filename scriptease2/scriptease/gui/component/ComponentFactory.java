@@ -4,8 +4,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -15,16 +17,20 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import javax.swing.text.View;
 
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.GUIOp;
+import sun.swing.SwingUtilities2;
 
 /**
  * For creation of specialized JComponents. If we're just adding properties to a
@@ -269,6 +275,17 @@ public final class ComponentFactory {
 
 					g.drawImage(background, x, y, this);
 				}
+
+				final Color borderColor;
+
+				if (this.isEnabled()) {
+					borderColor = ScriptEaseUI.BUTTON_BLACK;
+				} else {
+					borderColor = Color.LIGHT_GRAY;
+				}
+
+				this.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+
 			}
 		};
 
@@ -280,7 +297,8 @@ public final class ComponentFactory {
 	}
 
 	public static JButton buildFlatButton(Action action) {
-		return ComponentFactory.buildFlatButton(action, ScriptEaseUI.BUTTON_BLACK);
+		return ComponentFactory.buildFlatButton(action,
+				ScriptEaseUI.BUTTON_BLACK);
 	}
 
 	public static JButton buildFlatButton(Color color) {
@@ -361,5 +379,109 @@ public final class ComponentFactory {
 			button.setAction(action);
 
 		return button;
+	}
+
+	/**
+	 * Builds a neat and tidy UI for tabbed panes.
+	 * 
+	 * @return
+	 */
+	public static BasicTabbedPaneUI buildFlatTabUI() {
+		return new BasicTabbedPaneUI() {
+			@Override
+			protected void paintTabBackground(Graphics g, int tabPlacement,
+					int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+				if (isSelected) {
+					g.setColor(Color.WHITE);
+				} else {
+					g.setColor(Color.GRAY);
+				}
+
+				g.fillRect(x, y, w, h + 2);
+			}
+
+			@Override
+			protected void paintText(Graphics g, int tabPlacement, Font font,
+					FontMetrics metrics, int tabIndex, String title,
+					Rectangle textRect, boolean isSelected) {
+				// Had to modify this from the default code to paint selected
+				// tab text black and unselected white.
+
+				final Color selectedText = ScriptEaseUI.BUTTON_BLACK;
+				final Color unselectedText = Color.WHITE;
+				g.setFont(font);
+
+				final View v = getTextViewForTab(tabIndex);
+				if (v != null) {
+					// html
+					v.paint(g, textRect);
+				} else {
+					// plain text
+					int mnemIndex = tabPane
+							.getDisplayedMnemonicIndexAt(tabIndex);
+
+					if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
+						final Color fg;
+
+						if (isSelected) {
+							fg = selectedText;
+						} else {
+							fg = unselectedText;
+						}
+
+						g.setColor(fg);
+						SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+								title, mnemIndex, textRect.x, textRect.y
+										+ metrics.getAscent());
+
+					} else { // tab disabled
+						g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
+						SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+								title, mnemIndex, textRect.x, textRect.y
+										+ metrics.getAscent());
+						g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
+						SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+								title, mnemIndex, textRect.x - 1, textRect.y
+										+ metrics.getAscent() - 1);
+
+					}
+				}
+			}
+
+			@Override
+			protected void paintContentBorderTopEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			}
+
+			@Override
+			protected void paintContentBorderRightEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			}
+
+			protected void paintContentBorderLeftEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			};
+
+			@Override
+			protected void paintContentBorderBottomEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			}
+
+			@Override
+			protected void paintTabBorder(Graphics g, int tabPlacement,
+					int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+				final int height = h * 2;
+
+				g.setColor(ScriptEaseUI.BUTTON_BLACK);
+
+				g.drawLine(x, y, x + w, y);
+				g.drawLine(x, y, x, y + height);
+				g.drawLine(x + w, y, x + w, y + height);
+			}
+		};
 	}
 }

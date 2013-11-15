@@ -111,7 +111,7 @@ public class CodeBlockPanel extends JPanel {
 
 		deleteCodeBlockButton = new JButton("Delete CodeBlock");
 		addParameterButton = ComponentFactory.buildAddButton();
-		typesButton = new JButton(typeAction);
+		typesButton = ComponentFactory.buildFlatButton(typeAction);
 
 		codeBlockEditorLayout = new GroupLayout(this);
 		labelFont = new Font("SansSerif", Font.BOLD,
@@ -465,7 +465,7 @@ public class CodeBlockPanel extends JPanel {
 				.getInstance()));
 		buttons.add(ComponentFactory.buildFlatButton(MoveFragmentDownAction
 				.getInstance()));
-		
+
 		buttons.setOpaque(false);
 
 		codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -475,7 +475,7 @@ public class CodeBlockPanel extends JPanel {
 		codeEditor.add(buttons, BorderLayout.PAGE_START);
 		codeEditor.add(codeEditorScrollPane, BorderLayout.CENTER);
 		codeEditor.setOpaque(false);
-		
+
 		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
