@@ -75,6 +75,8 @@ public final class PanelFactory {
 
 		libraryPanel.add(this.buildNotePane());
 
+		libraryPanel.setBackground(ScriptEaseUI.SECONDARY_UI);
+
 		librarySplitPane.setBottomComponent(resourcePanel);
 		librarySplitPane.setTopComponent(libraryPanel);
 
@@ -192,6 +194,7 @@ public final class PanelFactory {
 		statusPanel.add(currentTranslatorNameLabel);
 
 		statusPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		statusPanel.setBackground(ScriptEaseUI.SECONDARY_UI);
 
 		return statusPanel;
 	}

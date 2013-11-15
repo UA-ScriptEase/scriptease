@@ -92,7 +92,7 @@ class ParameterPanel extends JPanel {
 
 		typeAction = new TypeAction();
 		types = new ArrayList<String>();
-		typesButton = new JButton(typeAction);
+		typesButton = ComponentFactory.buildFlatButton(typeAction);
 		defaultTypeBox = new JComboBox();
 		deleteButton = ComponentFactory.buildRemoveButton();
 		groupLayout = new GroupLayout(this);

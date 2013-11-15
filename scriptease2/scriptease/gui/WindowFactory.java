@@ -45,7 +45,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -65,6 +64,7 @@ import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -94,11 +94,6 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public final class WindowFactory {
-	static {
-		UIManager.put("ProgressBar.selectionForeground", Color.black);
-		UIManager.put("ProgressBar.selectionBackground", Color.black);
-	}
-
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
 
@@ -1384,7 +1379,6 @@ public final class WindowFactory {
 				});
 
 		WidgetDecorator.setSimpleDivider(middleSplit);
-		middleSplit.setBorder(null);
 
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -1394,9 +1388,9 @@ public final class WindowFactory {
 
 		content.setLayout(contentLayout);
 
-		// Compressed Layout
 		middleSplit.setTopComponent(librarySplit);
 		middleSplit.setBottomComponent(middlePane);
+		middleSplit.setBorder(BorderFactory.createEmptyBorder());
 
 		content.add(middleSplit);
 		content.add(statusBar);
@@ -1415,6 +1409,8 @@ public final class WindowFactory {
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 
 		frame.getContentPane().add(content);
+
+		middlePane.setBackground(ScriptEaseUI.PRIMARY_UI);
 
 		SwingUtilities.invokeLater(yetAnotherSwingHack);
 

@@ -18,6 +18,9 @@ import scriptease.util.GUIOp;
  * @author jyuen
  */
 public interface ScriptEaseUI {
+	
+	public static final Color PRIMARY_UI = Color.WHITE;
+	public static final Color SECONDARY_UI = Color.LIGHT_GRAY;
 
 	/**
 	 * The colour (pale green) used to display graph group backgrounds.

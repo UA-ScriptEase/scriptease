@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.GUIOp;
 
 /**
@@ -35,11 +36,9 @@ public class WidgetDecorator {
 		for (Component component : pane.getComponents()) {
 			if (component instanceof BasicSplitPaneDivider) {
 				final BasicSplitPaneDivider divider;
-
 				divider = (BasicSplitPaneDivider) component;
-				divider.setBackground(Color.WHITE);
+				divider.setBackground(ScriptEaseUI.SECONDARY_UI);
 				divider.setBorder(null);
-
 				break;
 			}
 		}
