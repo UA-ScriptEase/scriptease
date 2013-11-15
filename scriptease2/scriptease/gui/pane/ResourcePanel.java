@@ -78,6 +78,7 @@ public class ResourcePanel extends JPanel {
 		treeScrollPane.setBackground(Color.WHITE);
 		treeScrollPane.getVerticalScrollBar().setUnitIncrement(
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 		typeFilter.setAction(new Runnable() {
 			@Override
@@ -108,6 +109,8 @@ public class ResourcePanel extends JPanel {
 
 		this.add(filterPane);
 		this.add(treeScrollPane);
+		this.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,
+				ScriptEaseUI.BUTTON_BLACK));
 
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
