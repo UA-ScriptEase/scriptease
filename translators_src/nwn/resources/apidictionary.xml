@@ -28609,10 +28609,14 @@
           <Enabled>true</Enabled>
           <Labels/>
           <Id>582</Id>
-          <Types/>
+          <Types>
+          	<Type>void</Type>
+          </Types>
           <Parameters>
           </Parameters>
-          <Code/>
+          <Code>
+            <FormatRef data="NONE" ref="children"/>
+          </Code>
         </CodeBlockSource>
       </CodeBlocks>
     </FunctionIt>
