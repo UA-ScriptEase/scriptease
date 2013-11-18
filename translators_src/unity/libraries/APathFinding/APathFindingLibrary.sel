@@ -1400,5 +1400,6 @@ http://cs.ualberta.ca/~script">
   </DescribeIts>
   <ControlIts/>
   <Behaviours/>
+  <FunctionIts/>
   <TypeConverters/>
 </LibraryModel>
