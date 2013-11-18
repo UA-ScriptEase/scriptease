@@ -28596,89 +28596,21 @@
   </Behaviours>
   <FunctionIts>
     <FunctionIt>
-      <Name>New Function &lt;Tset&gt;</Name>
+      <Name>New Function</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children>
-        <ScriptIt>
-          <Name>&lt;Caster&gt; casts a fake &lt;Spell&gt; at &lt;Target&gt;</Name>
-          <Visible>true</Visible>
-          <Enabled>true</Enabled>
-          <Labels>
-            <Label>TODO</Label>
-          </Labels>
-          <Children/>
-          <CodeBlocks>
-            <CodeBlockReference library="DefaultNWNLibrary">
-              <Name>&lt;Caster&gt; casts a fake &lt;Spell&gt; at &lt;Target&gt;</Name>
-              <Visible>true</Visible>
-              <Enabled>true</Enabled>
-              <Labels/>
-              <TargetId>170</TargetId>
-              <Parameters>
-                <KnowIt>
-                  <Name>Caster</Name>
-                  <Visible>true</Visible>
-                  <Enabled>true</Enabled>
-                  <Labels/>
-                  <Types>
-                    <Type>creature</Type>
-                    <Type>placeable</Type>
-                    <Type>door</Type>
-                    <Type>item</Type>
-                    <Type>trigger</Type>
-                  </Types>
-                  <Binding flavour="uninitialized">
-                    <KnowIt>
-                      <Name>Tset</Name>
-                      <Visible>true</Visible>
-                      <Enabled>true</Enabled>
-                      <Labels/>
-                      <Types>
-                        <Type>door</Type>
-                      </Types>
-                    </KnowIt>
-                  </Binding>
-                </KnowIt>
-                <KnowIt>
-                  <Name>Spell</Name>
-                  <Visible>true</Visible>
-                  <Enabled>true</Enabled>
-                  <Labels/>
-                  <Types>
-                    <Type>spell</Type>
-                  </Types>
-                  <Binding reference="/LibraryModel/Effects/ScriptIt[18]/CodeBlocks/CodeBlockSource/Parameters/KnowIt[2]/Binding"/>
-                </KnowIt>
-                <KnowIt>
-                  <Name>Target</Name>
-                  <Visible>true</Visible>
-                  <Enabled>true</Enabled>
-                  <Labels/>
-                  <Types>
-                    <Type>creature</Type>
-                    <Type>placeable</Type>
-                    <Type>door</Type>
-                    <Type>item</Type>
-                    <Type>trigger</Type>
-                  </Types>
-                </KnowIt>
-              </Parameters>
-            </CodeBlockReference>
-          </CodeBlocks>
-        </ScriptIt>
       </Children>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>New Function &lt;Tset&gt;</Name>
+          <Name>New Function</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Id>582</Id>
           <Types/>
           <Parameters>
-            <KnowIt reference="/LibraryModel/FunctionIts/FunctionIt/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
           </Parameters>
           <Code/>
         </CodeBlockSource>

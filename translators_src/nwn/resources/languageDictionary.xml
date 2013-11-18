@@ -325,7 +325,6 @@
 
 		<!-- Format for pickIts -->
 		<Format id="pickItConditional">
-
 			<Line>
 				<Literal>// PickIt Choices</Literal>
 			</Line>
@@ -353,9 +352,6 @@
 
 		<!-- Format for functionIts -->
 		<Format id="functionItCall">
-			<Line>
-				<Literal>// FunctionIt call</Literal>
-			</Line>
 			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
 
