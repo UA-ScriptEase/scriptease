@@ -71,12 +71,6 @@ public class ParameterBoundRule extends StoryAdapter implements StoryRule {
 			}
 
 			@Override
-			public void processUninitialized(
-					KnowItBindingUninitialized uninitialized) {
-				uninitialized.getValue().process(ParameterBoundRule.this);
-			}
-
-			@Override
 			public void processReference(KnowItBindingReference reference) {
 				reference.getValue().process(ParameterBoundRule.this);
 			}
