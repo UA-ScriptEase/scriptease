@@ -1,7 +1,6 @@
 package scriptease.model.complex;
 
 import scriptease.controller.StoryVisitor;
-import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 
 /**
@@ -30,16 +29,9 @@ public class FunctionIt extends ScriptIt {
 		this.registerChildType(PickIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
-
+	
 	@Override
-	public void process(StoryVisitor visitor) {
-		visitor.processFunctionIt(this);
-	}
-
-	@Override
-	public void revalidateKnowItBindings() {
-		for (StoryComponent child : this.getChildren()) {
-			child.revalidateKnowItBindings();
-		}
+	public void process(StoryVisitor processController) {
+		processController.processFunctionIt(this);
 	}
 }

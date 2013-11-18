@@ -46,7 +46,7 @@ public abstract class StoryAdapter implements StoryVisitor {
 	 */
 	@Override
 	public void processFunctionIt(FunctionIt functionIt) {
-		this.defaultProcessComplex(functionIt);
+		this.processScriptIt(functionIt);
 	}
 	
 	@Override

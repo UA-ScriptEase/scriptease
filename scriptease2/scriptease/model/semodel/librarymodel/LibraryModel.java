@@ -581,6 +581,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			}
 
 			@Override
+			public void processFunctionIt(FunctionIt functionIt) {
+				final boolean success = LibraryModel.this.functionsCategory
+						.removeStoryChild(functionIt);
+				if (success)
+					functionIt.removeStoryComponentObserver(LibraryModel.this);
+			}
+
+			@Override
 			public void processAskIt(AskIt askIt) {
 				final boolean success = LibraryModel.this.controllersCategory
 						.removeStoryChild(askIt);
@@ -662,6 +670,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
 		components.addAll(this.behavioursCategory.getChildren());
+		components.addAll(this.functionsCategory.getChildren());
 		components.addAll(this.controllersCategory.getChildren());
 		components.addAll(this.noteContainer.getChildren());
 
@@ -692,8 +701,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.causesCategory = new StoryComponentContainer("Causes");
 		this.descriptionsCategory = new StoryComponentContainer("Descriptions");
 		this.behavioursCategory = new StoryComponentContainer("Behaviours");
-		this.controllersCategory = new StoryComponentContainer("Controllers");
 		this.functionsCategory = new StoryComponentContainer("Functions");
+		this.controllersCategory = new StoryComponentContainer("Controllers");
 		this.noteContainer = new StoryComponentContainer("Note");
 		this.registerObservers();
 
@@ -779,22 +788,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			super.processScriptIt(scriptIt);
 
 			for (CodeBlock block : scriptIt.getCodeBlocks()) {
-				if (block.getId() == this.targetId
-						&& block instanceof CodeBlockSource) {
-					this.found = (CodeBlockSource) block;
-					return;
-				}
-			}
-		}
-
-		@Override
-		public void processBehaviour(Behaviour behaviour) {
-			if (this.found != null)
-				return;
-
-			super.processBehaviour(behaviour);
-
-			for (CodeBlock block : behaviour.getCodeBlocks()) {
 				if (block.getId() == this.targetId
 						&& block instanceof CodeBlockSource) {
 					this.found = (CodeBlockSource) block;
