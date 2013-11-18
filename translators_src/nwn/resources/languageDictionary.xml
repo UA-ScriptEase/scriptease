@@ -199,7 +199,6 @@
 				<FormatRef data="askIt" ref="askItConditional" />
 				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
-				<FormatRef data="functionIt" ref="functionItCall" />
 				<FormatRef data="controlIt" ref="controlItCall" />
 			</Series>
 		</Format>
@@ -352,6 +351,9 @@
 
 		<!-- Format for functionIts -->
 		<Format id="functionItCall">
+			<Line>
+				<Literal>// FunctionIt Call</Literal>
+			</Line>
 			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
 
