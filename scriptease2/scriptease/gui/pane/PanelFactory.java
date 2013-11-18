@@ -160,6 +160,10 @@ public final class PanelFactory {
 		timedLabel = new JLabel();
 		currentTranslatorLabel = new JLabel(transPrefix);
 		currentTranslatorNameLabel = new JLabel(NO_TRANSLATOR);
+		
+		timedLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
+		currentTranslatorLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
+		currentTranslatorNameLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
 
 		translatorObserver = new TranslatorObserver() {
 			@Override

@@ -19,6 +19,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -306,6 +307,19 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			}
 
 			@Override
+			public void processUninitialized(
+					KnowItBindingUninitialized uninitialized) {
+				defaultProcess(uninitialized);
+
+				final KnowIt knowIt = uninitialized.getValue();
+
+				if (knowIt.getOwner() == null)
+					knowIt.setOwner(KnowIt.this);
+
+				addObservers(knowIt);
+			}
+
+			@Override
 			protected void defaultProcess(KnowItBinding newBinding) {
 				/*
 				 * if the KnowIt was previously referencing another
@@ -322,6 +336,12 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 					public void processReference(
 							KnowItBindingReference reference) {
 						removeObservers(reference.getValue());
+					}
+
+					@Override
+					public void processUninitialized(
+							KnowItBindingUninitialized uninitialized) {
+						removeObservers(uninitialized.getValue());
 					}
 
 					@Override

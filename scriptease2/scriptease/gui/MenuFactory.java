@@ -123,8 +123,8 @@ public class MenuFactory {
 	public static JMenuBar createMainMenuBar(SEModel model) {
 		final JMenuBar bar = new JMenuBar();
 
+		bar.setForeground(ScriptEaseUI.PRIMARY_UI);
 		bar.setBackground(ScriptEaseUI.SECONDARY_UI);
-		
 		bar.setBorder(BorderFactory.createEmptyBorder());
 
 		bar.add(MenuFactory.buildFileMenu(model));
@@ -141,6 +141,7 @@ public class MenuFactory {
 
 		for (Component component : bar.getComponents()) {
 			component.setBackground(ScriptEaseUI.SECONDARY_UI);
+			component.setForeground(ScriptEaseUI.PRIMARY_UI);
 		}
 		return bar;
 	}

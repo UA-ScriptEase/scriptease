@@ -1,7 +1,7 @@
 package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
 
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 
@@ -24,7 +24,7 @@ public class KnowItBindingUninitializedContext extends KnowItBindingContext {
 	@Override
 	public String getValue() {
 		Context knowItContext = ContextFactory.getInstance().createContext(
-				this, ((KnowItBindingReference) this.binding).getValue());
+				this, ((KnowItBindingUninitialized) this.binding).getValue());
 		return knowItContext.getName();
 	}
 }

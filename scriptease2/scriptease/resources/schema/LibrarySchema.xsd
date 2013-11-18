@@ -318,7 +318,7 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="KnowIt_Type">
-		<xsd:sequence>
+		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element name="Binding" type="Binding_Type"
@@ -410,7 +410,7 @@
 		<xsd:attribute name="flavour" use="required">
 			<xsd:simpleType>
 				<xsd:restriction base="xsd:string">
-					<xsd:pattern value="constant|resource|function|reference|null|automatic" />
+					<xsd:pattern value="constant|resource|function|reference|null|automatic|uninitialized" />
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>

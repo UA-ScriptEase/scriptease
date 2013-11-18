@@ -18,6 +18,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.FunctionIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -195,6 +196,12 @@ public class ContextFactory {
 				ContextFactory.this.activeContext = new ScriptItContext(
 						pastContext, scriptIt);
 			}
+			
+			@Override
+			public void processFunctionIt(FunctionIt functionIt) {
+				ContextFactory.this.activeContext = new FunctionItContext(
+						pastContext, functionIt);
+			}
 
 			@Override
 			public void processControlIt(ControlIt controlIt) {
@@ -202,6 +209,12 @@ public class ContextFactory {
 						pastContext, controlIt);
 			}
 
+			@Override
+			public void processPickIt(PickIt pickIt) {
+				ContextFactory.this.activeContext = new PickItContext(
+						pastContext, pickIt);
+			}
+			
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
 				ContextFactory.this.activeContext = new CauseItContext(
@@ -215,12 +228,6 @@ public class ContextFactory {
 			}
 
 			/* ATOMIC TYPES */
-			@Override
-			public void processPickIt(PickIt pickIt) {
-				ContextFactory.this.activeContext = new PickItContext(
-						pastContext, pickIt);
-			}
-
 			@Override
 			public void processAskIt(AskIt questionIt) {
 				ContextFactory.this.activeContext = new AskItContext(

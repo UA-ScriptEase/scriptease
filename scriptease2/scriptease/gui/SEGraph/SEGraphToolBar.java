@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -19,13 +18,11 @@ import javax.swing.DefaultButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.Timer;
-import javax.swing.event.MouseInputAdapter;
 
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEGraphToolBarObserver;
-import scriptease.gui.WindowFactory;
-import scriptease.gui.component.UserInformationPane.UserInformationType;
+import scriptease.gui.component.ComponentFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.FileOp;
 import scriptease.util.GUIOp;
 
@@ -64,19 +61,26 @@ public class SEGraphToolBar extends JToolBar {
 	 * 
 	 */
 	public static enum Mode {
-		SELECT(false), INSERT, DELETE, CONNECT, DISCONNECT, GROUP;
+		SELECT(false, "Selects nodes."), INSERT("Inserts new nodes."), DELETE(
+				"Deletes nodes or ungroups story groups."), CONNECT(
+				"Links nodes together."), DISCONNECT(
+				"Removes the link between two nodes."), GROUP(
+				"Groups nodes together.");
 
 		private static final String CURSOR_DIRECTORY = "scriptease/resources/icons/buttonicons/";
 		private static final String CURSOR_EXTENSION = ".png";
 
 		private final ImageIcon image;
 		private final Cursor cursor;
+		private final String toolTipText;
 
-		private Mode() {
-			this(true);
+		private Mode(String toolTipText) {
+			this(true, toolTipText);
 		}
 
-		private Mode(boolean useCustomCursor) {
+		private Mode(boolean useCustomCursor, String toolTipText) {
+			this.toolTipText = toolTipText;
+
 			final String iconName = this.name().toLowerCase();
 
 			ImageIcon image;
@@ -106,6 +110,10 @@ public class SEGraphToolBar extends JToolBar {
 
 			this.image = image;
 
+		}
+
+		public String getToolTipText() {
+			return this.toolTipText;
 		}
 
 		/**
@@ -153,7 +161,7 @@ public class SEGraphToolBar extends JToolBar {
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setRollover(true);
 		this.setFloatable(false);
-		this.setBackground(Color.WHITE);
+		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 
 		buttonGroup.add(this.selectButton);
 		buttonGroup.add(this.insertButton);
@@ -180,65 +188,17 @@ public class SEGraphToolBar extends JToolBar {
 	 * @return
 	 */
 	protected JToggleButton buildToggleButton(final Mode mode) {
-		final JToggleButton button = new JToggleButton();
+		final JToggleButton button = ComponentFactory
+				.buildFlatToggleButton(ScriptEaseUI.TERTIARY_UI);
 
 		button.setIcon(mode.getIcon());
-		button.setHideActionText(true);
 		button.setFocusable(false);
+		button.setToolTipText(mode.getToolTipText());
 
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				SEGraphToolBar.this.setMode(mode);
-			}
-		});
-
-		final Timer timer = new Timer(1500, new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (mode == Mode.SELECT) {
-				} else if (mode == Mode.INSERT) {
-					WindowFactory.getInstance().showUserInformationBox(
-							"Use the insert tool to insert a new node.",
-							UserInformationType.INFO);
-				} else if (mode == Mode.DELETE) {
-					WindowFactory
-							.getInstance()
-							.showUserInformationBox(
-									"Use the delete tool to delete nodes / ungroup story groups.",
-									UserInformationType.INFO);
-				} else if (mode == Mode.CONNECT) {
-					WindowFactory.getInstance().showUserInformationBox(
-							"Use the connect tool to link nodes together.",
-							UserInformationType.INFO);
-				} else if (mode == Mode.DISCONNECT) {
-					WindowFactory.getInstance().showUserInformationBox(
-							"Use the disconnect tool to unlink nodes.",
-							UserInformationType.INFO);
-				} else if (mode == Mode.GROUP) {
-					WindowFactory.getInstance().showUserInformationBox(
-							"Use the group tool to group nodes together.",
-							UserInformationType.INFO);
-				} else {
-					WindowFactory.getInstance().showUserInformationBox(
-							"Select a node.", UserInformationType.INFO);
-				}
-			}
-		});
-		
-		timer.setRepeats(false);
-
-		button.addMouseListener(new MouseInputAdapter() {
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				timer.start();
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				timer.stop();
 			}
 		});
 

@@ -188,6 +188,7 @@
 				<Line />
 			</Series>
 		</Format>
+
 		<!-- Gets the children of the story component -->
 		<Format id="storyComponentChildren">
 			<Line>
@@ -198,6 +199,7 @@
 				<FormatRef data="askIt" ref="askItConditional" />
 				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
+				<FormatRef data="functionIt" ref="functionItCall" />
 				<FormatRef data="controlIt" ref="controlItCall" />
 			</Series>
 		</Format>
@@ -207,6 +209,7 @@
 			<FormatRef ref="variablesDefinition" />
 			<FormatRef ref="storyComponentChildren" />
 		</Format>
+
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
@@ -215,16 +218,19 @@
 			</Scope>
 			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
+
 		<!-- Finds the format for the ControlIt and uses it -->
 		<Format id="controlItCall">
 			<Fragment data="controlItFormat" />
 		</Format>
+
 		<!-- Defines all variables in the KnowIt -->
 		<Format id="knowItDefinition">
 			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
 			</Series>
 		</Format>
+
 		<!-- Turns a Note into a comment -->
 		<Format id="noteFormat">
 			<Line>
@@ -319,7 +325,7 @@
 
 		<!-- Format for pickIts -->
 		<Format id="pickItConditional">
-			
+
 			<Line>
 				<Literal>// PickIt Choices</Literal>
 			</Line>
@@ -333,7 +339,7 @@
 					<Literal>if (random &gt;= </Literal>
 					<Fragment data="choiceProbabilityLowerBound" />
 					<Literal> &amp;&amp; random &lt; </Literal>
-					<Fragment data="choiceProbabilityUpperBound" />		
+					<Fragment data="choiceProbabilityUpperBound" />
 					<Literal>) {</Literal>
 				</Line>
 				<Indent>
@@ -343,6 +349,14 @@
 					<Literal>}</Literal>
 				</Line>
 			</Series>
+		</Format>
+
+		<!-- Format for functionIts -->
+		<Format id="functionItCall">
+			<Line>
+				<Literal>// FunctionIt call</Literal>
+			</Line>
+			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
 
 		<!-- Format for the main method in normal script files -->
