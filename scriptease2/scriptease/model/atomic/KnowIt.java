@@ -312,10 +312,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				defaultProcess(uninitialized);
 
 				final KnowIt knowIt = uninitialized.getValue();
-
-				if (knowIt.getOwner() == null)
-					knowIt.setOwner(KnowIt.this);
-
 				addObservers(knowIt);
 			}
 

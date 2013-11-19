@@ -13,6 +13,7 @@ import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -93,6 +94,14 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 					.getEditedStoryComponent(destinationSlotPanel
 							.getBindingWidget().getParent());
 
+			// Special case for KnowItBindingUninitialized - they
+			// shouldn't be dragged into their own referenced KnowIt
+			if (sourceBinding instanceof KnowItBindingUninitialized) {
+				final KnowItBindingUninitialized uninit = (KnowItBindingUninitialized) sourceBinding;
+				if (uninit.getValue() == destinationKnowIt)
+					return false;
+			}
+			
 			// Check that the KnowItBinding type matches the destination
 			// KnowIt
 			if (sourceBinding != null && destinationKnowIt != null) {

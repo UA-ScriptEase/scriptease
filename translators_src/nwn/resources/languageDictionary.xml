@@ -200,6 +200,7 @@
 				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="controlIt" ref="controlItCall" />
+				<FormatRef data="functionIt" ref="functionItCall" />
 			</Series>
 		</Format>
 		<!-- Gets the appropriate format for the type -->
@@ -223,6 +224,20 @@
 			<Fragment data="controlItFormat" />
 		</Format>
 
+		<!-- Format for function it children -->
+		<Format id="functionItChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+			<FormatRef ref="childrenWithoutImplicits" />
+		</Format>
+
+		<!-- Finds the format for the FunctionIt and uses it -->
+		<Format id="functionItCall">
+		    <FormatRef ref="functionCall" />
+		</Format>
+		
 		<!-- Defines all variables in the KnowIt -->
 		<Format id="knowItDefinition">
 			<Series data="variables">
@@ -347,14 +362,6 @@
 					<Literal>}</Literal>
 				</Line>
 			</Series>
-		</Format>
-
-		<!-- Format for functionIts -->
-		<Format id="functionItCall">
-			<Line>
-				<Literal>// FunctionIt Call</Literal>
-			</Line>
-			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
 
 		<!-- Format for the main method in normal script files -->

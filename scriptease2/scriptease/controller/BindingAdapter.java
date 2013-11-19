@@ -42,6 +42,11 @@ public abstract class BindingAdapter implements BindingVisitor {
 	public void processReference(KnowItBindingReference reference) {
 		this.defaultProcess(reference);
 	}
+	
+	@Override
+	public void processUninitialized(KnowItBindingUninitialized uninitialized) {
+		this.defaultProcess(uninitialized);
+	}
 
 	@Override
 	public void processNull(KnowItBindingNull nullBinding) {
@@ -61,11 +66,6 @@ public abstract class BindingAdapter implements BindingVisitor {
 	@Override
 	public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
 		this.defaultProcess(storyGroup);
-	}
-
-	@Override
-	public void processUninitialized(KnowItBindingUninitialized uninitialized) {
-		this.defaultProcess(uninitialized);
 	}
 
 	/**

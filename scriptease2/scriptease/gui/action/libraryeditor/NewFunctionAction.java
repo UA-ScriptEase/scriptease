@@ -15,10 +15,13 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.FunctionIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.io.model.GameType;
 
 /**
- * Inserts a new FunctionIt into the Library. 
+ * Inserts a new FunctionIt into the Library.
  * 
  * @author jyuen
  */
@@ -57,7 +60,8 @@ public class NewFunctionAction extends ActiveModelSensitiveAction {
 		final CodeBlock codeBlock;
 		final int codeBlockID;
 		final Collection<String> types;
-		
+		final Collection<AbstractFragment> formatRef;
+
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
 
@@ -69,12 +73,17 @@ public class NewFunctionAction extends ActiveModelSensitiveAction {
 
 		types = new ArrayList<String>();
 		types.add(GameType.DEFAULT_VOID_TYPE);
+
+		formatRef = new ArrayList<AbstractFragment>();
+		formatRef.add(new FormatReferenceFragment(
+				"functionItChildren", FormatReferenceType.NONE));
 		
 		codeBlock = new CodeBlockSource(codeBlockID);
 		codeBlock.setTypes(types);
+		codeBlock.setCode(formatRef);
 		
 		newFunctionIt.addCodeBlock(codeBlock);
-		
+
 		libraryModel.add(newFunctionIt);
 		LibraryPanel.getInstance().navigateToComponent(newFunctionIt);
 	}
