@@ -22,6 +22,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -137,6 +138,14 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			destinationKnowIt = (KnowIt) ScriptWidgetFactory
 					.getEditedStoryComponent(destinationComponent.getParent());
 			sourceBinding = this.extractBinding(support);
+
+			// Special case for KnowItBindingUninitialized - they
+			// shouldn't be dragged into their own referenced KnowIt
+			if (sourceBinding instanceof KnowItBindingUninitialized) {
+				final KnowItBindingUninitialized uninit = (KnowItBindingUninitialized) sourceBinding;
+				if (uninit.getValue() == destinationKnowIt)
+					return false;
+			}
 
 			// Check that the KnowItBinding type matches the destination KnowIt
 			if (sourceBinding != null && destinationKnowIt != null) {
@@ -310,9 +319,10 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 					.getTransferData(KnowItBindingFlavor);
 
 			if (bindingWidget.getBinding() instanceof KnowItBindingReference) {
-				final KnowItBindingReference reference = (KnowItBindingReference) bindingWidget.getBinding();
+				final KnowItBindingReference reference = (KnowItBindingReference) bindingWidget
+						.getBinding();
 				final KnowIt knowIt = reference.getValue();
-				
+
 				if (!knowIt.isEnabled())
 					return true;
 			}

@@ -59,7 +59,11 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 		while (reference.getBinding() instanceof KnowItBindingReference) {
 			reference = (KnowIt) reference.getBinding().getValue();
 		}
-		return reference.getBinding();
+
+		if (reference.getBinding() instanceof KnowItBindingNull)
+			return this;
+		else
+			return reference.getBinding();
 	}
 
 	@Override
