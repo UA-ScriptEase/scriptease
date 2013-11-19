@@ -145,6 +145,28 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				final KnowItBindingUninitialized uninit = (KnowItBindingUninitialized) sourceBinding;
 				if (uninit.getValue() == destinationKnowIt)
 					return false;
+
+				// the destinationKnowIt should also be a child of the component
+				// that has the value the KnowItBindingUninitialized is
+				// referencing.
+
+				// TODO ScriptIt KnowIts don't know their owners right
+				// now...can't do this.
+				/*
+				 * StoryComponent owner = uninit.getValue().getOwner(); while
+				 * (!(owner instanceof ComplexStoryComponent)) owner =
+				 * owner.getOwner();
+				 * 
+				 * if (owner instanceof ComplexStoryComponent) { final
+				 * ComplexStoryComponent complex = (ComplexStoryComponent)
+				 * owner;
+				 * 
+				 * final List<StoryComponent> descendants = complex
+				 * .getDescendents();
+				 * 
+				 * if (!descendants.contains(destinationKnowIt.getOwner()))
+				 * return false; }
+				 */
 			}
 
 			// Check that the KnowItBinding type matches the destination KnowIt

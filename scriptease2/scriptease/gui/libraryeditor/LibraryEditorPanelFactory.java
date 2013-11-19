@@ -122,7 +122,7 @@ public class LibraryEditorPanelFactory {
 		functionPanel.add(codeBlockPanel);
 		functionPanel.add(this.buildFunctionItImplicitPanel(functionIt));
 		functionPanel.add(new StoryComponentPanelTree(transferPanel));
-
+		
 		codeBlockPanel.addListener(new CodeBlockPanelObserver() {
 
 			// Rebuilds the implicit panel when a parameter has changed
@@ -132,10 +132,11 @@ public class LibraryEditorPanelFactory {
 				functionPanel.add(buildFunctionItImplicitPanel(functionIt), 2);
 			}
 		});
-
+		
 		return functionPanel;
 	}
 
+	@SuppressWarnings("serial")
 	private JPanel buildFunctionItImplicitPanel(final FunctionIt functionIt) {
 		final JPanel implicitPanel;
 

@@ -25,6 +25,11 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_GROUP_BACKGROUND = Color.WHITE;
 
 	/**
+	 * The colour (purple) used to display uninitialized knowIts.
+	 */
+	public static final Color COLOUR_KNOWIT_UNINITIALIZED = new Color(187, 0, 196);
+	
+	/**
 	 * The colour (green) used to display known object bindings.
 	 */
 	public static final Color COLOUR_KNOWN_OBJECT = new Color(20, 175, 0);
