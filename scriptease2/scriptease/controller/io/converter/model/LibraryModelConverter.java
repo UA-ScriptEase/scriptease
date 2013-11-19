@@ -156,15 +156,13 @@ public class LibraryModelConverter implements Converter {
 
 		this.addDefaultCauseChildren(library, causes);
 
-		// Behaviours rely on the current library being set, so we need to load
+		// Behaviours and functions rely on the current library being set, so we need to load
 		// them after assigning the library to the static variable.
 		currentLibrary = library;
 
 		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
 				Behaviour.class);
 
-		// reset these to free memory
-		currentLibrary = null;
 
 		functions = XMLNode.FUNCTIONITS.readCollection(reader, context,
 				FunctionIt.class);
@@ -176,6 +174,9 @@ public class LibraryModelConverter implements Converter {
 		library.addAll(functions);
 
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
+		
+		// reset these to free memory
+		currentLibrary = null;
 
 		return library;
 	}
