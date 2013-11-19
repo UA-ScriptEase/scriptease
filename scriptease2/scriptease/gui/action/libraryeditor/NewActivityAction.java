@@ -12,7 +12,7 @@ import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
@@ -26,20 +26,20 @@ import scriptease.translator.io.model.GameType;
  * @author jyuen
  */
 @SuppressWarnings("serial")
-public class NewFunctionAction extends ActiveModelSensitiveAction {
-	private static final String NEW_FUNCTION_NAME = "Function";
+public class NewActivityAction extends ActiveModelSensitiveAction {
+	private static final String NEW_ACTIVITY_NAME = "Activity";
 
-	private static final NewFunctionAction instance = new NewFunctionAction();
+	private static final NewActivityAction instance = new NewActivityAction();
 
-	public static final NewFunctionAction getInstance() {
-		return NewFunctionAction.instance;
+	public static final NewActivityAction getInstance() {
+		return NewActivityAction.instance;
 	}
 
-	private NewFunctionAction() {
-		super(NewFunctionAction.NEW_FUNCTION_NAME);
+	private NewActivityAction() {
+		super(NewActivityAction.NEW_ACTIVITY_NAME);
 
 		this.putValue(Action.SHORT_DESCRIPTION,
-				NewFunctionAction.NEW_FUNCTION_NAME);
+				NewActivityAction.NEW_ACTIVITY_NAME);
 		this.putValue(
 				Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK
@@ -56,7 +56,7 @@ public class NewFunctionAction extends ActiveModelSensitiveAction {
 	public void actionPerformed(ActionEvent e) {
 		final LibraryModel libraryModel;
 
-		final FunctionIt newFunctionIt;
+		final ActivityIt newActivityIt;
 		final CodeBlock codeBlock;
 		final int codeBlockID;
 		final Collection<String> types;
@@ -65,9 +65,9 @@ public class NewFunctionAction extends ActiveModelSensitiveAction {
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
 
-		newFunctionIt = new FunctionIt("New Function");
-		newFunctionIt.setVisible(true);
-		newFunctionIt.setDisplayText("New Function");
+		newActivityIt = new ActivityIt("New Activity");
+		newActivityIt.setVisible(true);
+		newActivityIt.setDisplayText("New Activity");
 
 		codeBlockID = libraryModel.getNextCodeBlockID();
 
@@ -76,15 +76,15 @@ public class NewFunctionAction extends ActiveModelSensitiveAction {
 
 		formatRef = new ArrayList<AbstractFragment>();
 		formatRef.add(new FormatReferenceFragment(
-				"functionItChildren", FormatReferenceType.NONE));
+				"activityItChildren", FormatReferenceType.NONE));
 		
 		codeBlock = new CodeBlockSource(codeBlockID);
 		codeBlock.setTypes(types);
 		codeBlock.setCode(formatRef);
 		
-		newFunctionIt.addCodeBlock(codeBlock);
+		newActivityIt.addCodeBlock(codeBlock);
 
-		libraryModel.add(newFunctionIt);
-		LibraryPanel.getInstance().navigateToComponent(newFunctionIt);
+		libraryModel.add(newActivityIt);
+		LibraryPanel.getInstance().navigateToComponent(newActivityIt);
 	}
 }

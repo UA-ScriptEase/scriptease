@@ -31,7 +31,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
@@ -146,11 +146,11 @@ public class LibraryEditorPanel extends JPanel implements
 			}
 
 			@Override
-			public void processFunctionIt(FunctionIt functionIt) {
+			public void processActivityIt(ActivityIt activityIt) {
 				LibraryEditorPanel.this.removeAll();
 
 				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
-						.getInstance().buildFunctionItEditingPanel(functionIt));
+						.getInstance().buildActivityItEditingPanel(activityIt));
 
 				LibraryEditorPanel.this.repaint();
 				LibraryEditorPanel.this.revalidate();

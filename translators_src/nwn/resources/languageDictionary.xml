@@ -200,7 +200,7 @@
 				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="controlIt" ref="controlItCall" />
-				<FormatRef data="functionIt" ref="functionItCall" />
+				<FormatRef data="activityIt" ref="activityItCall" />
 			</Series>
 		</Format>
 		<!-- Gets the appropriate format for the type -->
@@ -224,8 +224,8 @@
 			<Fragment data="controlItFormat" />
 		</Format>
 
-		<!-- Format for function it children -->
-		<Format id="functionItChildren">
+		<!-- Format for activity it children -->
+		<Format id="activityItChildren">
 			<Scope data="Cause">
 				<FormatRef ref="implicitsDeclaration" />
 				<FormatRef ref="implicitsDefinition" />
@@ -233,8 +233,8 @@
 			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
 
-		<!-- Finds the format for the FunctionIt and uses it -->
-		<Format id="functionItCall">
+		<!-- Finds the format for the ActivityIt and uses it -->
+		<Format id="activityItCall">
 		    <FormatRef ref="functionCall" />
 		</Format>
 		

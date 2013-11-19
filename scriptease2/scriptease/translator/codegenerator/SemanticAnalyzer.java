@@ -19,7 +19,6 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
-import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
 

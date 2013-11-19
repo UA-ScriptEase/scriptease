@@ -45,9 +45,9 @@ public enum XMLNode {
 	
 	BEHAVIOURS("Behaviours", BEHAVIOUR),
 	
-	FUNCTIONIT("FunctionIt"),
+	ACTIVITYIT("ActivityIt"),
 	
-	FUNCTIONITS("FunctionIts", FUNCTIONIT),
+	ACTIVITYITS("ActivityIts", ACTIVITYIT),
 	
 	DIALOGUE_LINE("DialogueLine"),
 

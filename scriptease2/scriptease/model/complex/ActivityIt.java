@@ -4,18 +4,18 @@ import scriptease.controller.StoryVisitor;
 import scriptease.model.atomic.KnowIt;
 
 /**
- * Represents a container of effects, descriptions, and controls.
+ * Represents a container of effects, descriptions, questions, and controls.
  * 
  * @author jyuen
  */
-public class FunctionIt extends ScriptIt {
+public class ActivityIt extends ScriptIt {
 
 	/**
-	 * Constructor. Creates a new FunctionIt with the given name
+	 * Constructor. Creates a new ActivityIt with the given name
 	 * 
 	 * @param name
 	 */
-	public FunctionIt(String name) {
+	public ActivityIt(String name) {
 		super(name);
 
 		this.registerChildType(ScriptIt.class,
@@ -29,9 +29,9 @@ public class FunctionIt extends ScriptIt {
 		this.registerChildType(PickIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
-	
+
 	@Override
 	public void process(StoryVisitor processController) {
-		processController.processFunctionIt(this);
+		processController.processActivityIt(this);
 	}
 }

@@ -38,7 +38,7 @@ import scriptease.controller.io.converter.storycomponent.CauseItConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockReferenceConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.storycomponent.ControlItConverter;
-import scriptease.controller.io.converter.storycomponent.FunctionItConverter;
+import scriptease.controller.io.converter.storycomponent.ActivityItConverter;
 import scriptease.controller.io.converter.storycomponent.KnowItBindingConverter;
 import scriptease.controller.io.converter.storycomponent.KnowItConverter;
 import scriptease.controller.io.converter.storycomponent.NoteConverter;
@@ -65,7 +65,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -530,7 +530,7 @@ public class FileIO {
 		stream.alias("Behaviour", Behaviour.class);
 		stream.alias("IndependentTask", IndependentTask.class);
 		stream.alias("CollaborativeTask", CollaborativeTask.class);
-		stream.alias("FunctionIt", FunctionIt.class);
+		stream.alias("ActivityIt", ActivityIt.class);
 
 		// Language Dictionary Fragments
 		stream.alias("LibraryModel", LibraryModel.class);
@@ -581,7 +581,7 @@ public class FileIO {
 		stream.registerConverter(new BehaviourConverter());
 		stream.registerConverter(new IndependentTaskConverter());
 		stream.registerConverter(new CollaborativeTaskConverter());
-		stream.registerConverter(new FunctionItConverter());
+		stream.registerConverter(new ActivityItConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

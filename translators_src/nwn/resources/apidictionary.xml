@@ -28594,8 +28594,8 @@
       <StartTask reference="/LibraryModel/Behaviours/Behaviour/Children/IndependentTask"/>
     </Behaviour>
   </Behaviours>
-  <FunctionIts>
-    <FunctionIt>
+  <ActivityIts>
+    <ActivityIt>
       <Name>New Function</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -28612,12 +28612,12 @@
             <Type>void</Type>
           </Types>
           <Code>
-            <FormatRef data="NONE" ref="functionItChildren"/>
+            <FormatRef data="NONE" ref="ActivityItChildren"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </FunctionIt>
-    <FunctionIt>
+    </ActivityIt>
+    <ActivityIt>
       <Name>New Function &lt;Test&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -28684,15 +28684,15 @@
             <Type>void</Type>
           </Types>
           <Parameters>
-            <KnowIt reference="/LibraryModel/FunctionIts/FunctionIt[2]/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
+            <KnowIt reference="/LibraryModel/ActivityIts/ActivityIt[2]/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
           </Parameters>
           <Code>
-            <FormatRef data="NONE" ref="functionItChildren"/>
+            <FormatRef data="NONE" ref="ActivityItChildren"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </FunctionIt>
-    <FunctionIt>
+    </ActivityIt>
+    <ActivityIt>
       <Name>&lt;Attacker&gt; attacks &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -28810,7 +28810,7 @@
                     <Type>location</Type>
                   </Types>
                   <Binding flavour="reference">
-                    <KnowIt reference="/LibraryModel/FunctionIts/FunctionIt[3]/Children/KnowIt"/>
+                    <KnowIt reference="/LibraryModel/ActivityIts/ActivityIt[3]/Children/KnowIt"/>
                   </Binding>
                 </KnowIt>
               </Parameters>
@@ -28841,7 +28841,7 @@
                   <Types>
                     <Type>creature</Type>
                   </Types>
-                  <Binding reference="/LibraryModel/FunctionIts/FunctionIt[3]/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                  <Binding reference="/LibraryModel/ActivityIts/ActivityIt[3]/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
                 </KnowIt>
                 <KnowIt>
                   <Name>Target</Name>
@@ -28853,7 +28853,7 @@
                     <Type>door</Type>
                     <Type>placeable</Type>
                   </Types>
-                  <Binding reference="/LibraryModel/FunctionIts/FunctionIt[3]/Children/KnowIt/Binding/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                  <Binding reference="/LibraryModel/ActivityIts/ActivityIt[3]/Children/KnowIt/Binding/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
                 </KnowIt>
               </Parameters>
             </CodeBlockReference>
@@ -28871,15 +28871,15 @@
             <Type>void</Type>
           </Types>
           <Parameters>
-            <KnowIt reference="/LibraryModel/FunctionIts/FunctionIt[3]/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
-            <KnowIt reference="/LibraryModel/FunctionIts/FunctionIt[3]/Children/KnowIt/Binding/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
+            <KnowIt reference="/LibraryModel/ActivityIts/ActivityIt[3]/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
+            <KnowIt reference="/LibraryModel/ActivityIts/ActivityIt[3]/Children/KnowIt/Binding/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
           </Parameters>
           <Code>
-            <FormatRef data="NONE" ref="functionItChildren"/>
+            <FormatRef data="NONE" ref="ActivityItChildren"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
-    </FunctionIt>
-  </FunctionIts>
+    </ActivityIt>
+  </ActivityIts>
   <TypeConverters/>
 </LibraryModel>
