@@ -154,6 +154,9 @@ class ParameterPanel extends JPanel {
 				defaultTypeBox.setSelectedItem(initialDefaultType);
 
 				defaultTypeBox.revalidate();
+
+				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
 			}
 		});
 
@@ -296,7 +299,6 @@ class ParameterPanel extends JPanel {
 	 * 
 	 * @param bindingConstantComponent
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void updateBindingConstantComponent(
 			JComponent bindingConstantComponent) {
 		final JTextField inactiveTextField;

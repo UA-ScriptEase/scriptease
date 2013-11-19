@@ -196,8 +196,8 @@ public class CodeBlockPanel extends JPanel {
 
 						parameterPanel.repaint();
 						parameterPanel.revalidate();
-						notifyChange();
 					}
+					notifyChange();
 					break;
 				case CHANGE_PARAMETER_LIST_REMOVE:
 					// Rebuild parameter panels when a panel is removed
@@ -218,6 +218,7 @@ public class CodeBlockPanel extends JPanel {
 					implicitsListLabel.revalidate();
 					break;
 				default:
+					notifyChange();
 					break;
 				}
 			}
@@ -614,6 +615,7 @@ public class CodeBlockPanel extends JPanel {
 						case CHANGE_PARAMETER_LIST_ADD:
 						case CHANGE_PARAMETER_LIST_REMOVE:
 						case CHANGE_PARAMETER_NAME_SET:
+						case CHANGE_PARAMETER_TYPE:
 							buildItems.run();
 							subjectBox.revalidate();
 						default:

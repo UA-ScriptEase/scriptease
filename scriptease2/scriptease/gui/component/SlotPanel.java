@@ -24,6 +24,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Resource;
@@ -147,6 +148,13 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			public void processReference(KnowItBindingReference reference) {
 				bindingWidget.add(ScriptWidgetFactory
 						.buildObservedNameLabel(reference.getValue()));
+			}
+
+			@Override
+			public void processUninitialized(
+					KnowItBindingUninitialized uninitialized) {
+				bindingWidget.add(ScriptWidgetFactory
+						.buildObservedNameLabel(uninitialized.getValue()));
 			}
 
 			@Override

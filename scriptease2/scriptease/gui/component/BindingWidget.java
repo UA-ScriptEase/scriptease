@@ -198,7 +198,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 			@Override
 			public void processUninitialized(
 					KnowItBindingUninitialized unitialized) {
-				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
+				updateBackground(ScriptEaseUI.COLOUR_KNOWIT_UNINITIALIZED);
 			}
 
 			@Override
