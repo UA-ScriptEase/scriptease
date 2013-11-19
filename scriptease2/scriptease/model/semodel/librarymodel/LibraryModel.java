@@ -31,7 +31,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -86,7 +86,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private StoryComponentContainer descriptionsCategory;
 	private StoryComponentContainer behavioursCategory;
 	private StoryComponentContainer controllersCategory;
-	private StoryComponentContainer functionsCategory;
+	private StoryComponentContainer activitiesCategory;
 	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
 
@@ -170,7 +170,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		categories.add(this.causesCategory);
 		categories.add(this.descriptionsCategory);
 		categories.add(this.behavioursCategory);
-		categories.add(this.functionsCategory);
+		categories.add(this.activitiesCategory);
 		categories.add(this.controllersCategory);
 		categories.add(this.noteContainer);
 
@@ -196,11 +196,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			}
 
 			@Override
-			public void processFunctionIt(FunctionIt functionIt) {
-				final boolean success = this.model.functionsCategory
-						.addStoryChild(functionIt);
+			public void processActivityIt(ActivityIt activityIt) {
+				final boolean success = this.model.activitiesCategory
+						.addStoryChild(activityIt);
 				if (success)
-					functionIt.addStoryComponentObserver(this.model);
+					activityIt.addStoryComponentObserver(this.model);
 			}
 
 			@Override
@@ -296,7 +296,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.descriptionsCategory.clearAllowableChildren();
 		this.behavioursCategory.clearAllowableChildren();
 		this.controllersCategory.clearAllowableChildren();
-		this.functionsCategory.clearAllowableChildren();
+		this.activitiesCategory.clearAllowableChildren();
 		this.noteContainer.clearAllowableChildren();
 
 		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
@@ -312,7 +312,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.controllersCategory.registerChildType(KnowIt.class, max);
 		this.controllersCategory.registerChildType(ControlIt.class, max);
 		this.controllersCategory.registerChildType(PickIt.class, max);
-		this.functionsCategory.registerChildType(FunctionIt.class, max);
+		this.activitiesCategory.registerChildType(ActivityIt.class, max);
 		this.noteContainer.registerChildType(Note.class, 1);
 	}
 
@@ -322,7 +322,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.descriptionsCategory.addStoryComponentObserver(this);
 		this.behavioursCategory.addStoryComponentObserver(this);
 		this.controllersCategory.addStoryComponentObserver(this);
-		this.functionsCategory.addStoryComponentObserver(this);
+		this.activitiesCategory.addStoryComponentObserver(this);
 		this.noteContainer.addStoryComponentObserver(this);
 	}
 
@@ -355,8 +355,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		return this.controllersCategory;
 	}
 
-	public StoryComponentContainer getFunctionsCategory() {
-		return this.functionsCategory;
+	public StoryComponentContainer getActivitysCategory() {
+		return this.activitiesCategory;
 	}
 
 	public StoryComponentContainer getNoteContainer() {
@@ -487,8 +487,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					this.controllersCategory = containerChild;
 
 				else if (child.getDisplayText().equalsIgnoreCase(
-						ScriptEaseKeywords.FUNCTIONS))
-					this.functionsCategory = containerChild;
+						ScriptEaseKeywords.ACTIVITIES))
+					this.activitiesCategory = containerChild;
 
 				else if (child.getDisplayText().equalsIgnoreCase(
 						ScriptEaseKeywords.NOTE))
@@ -581,11 +581,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			}
 
 			@Override
-			public void processFunctionIt(FunctionIt functionIt) {
-				final boolean success = LibraryModel.this.functionsCategory
-						.removeStoryChild(functionIt);
+			public void processActivityIt(ActivityIt activityIt) {
+				final boolean success = LibraryModel.this.activitiesCategory
+						.removeStoryChild(activityIt);
 				if (success)
-					functionIt.removeStoryComponentObserver(LibraryModel.this);
+					activityIt.removeStoryComponentObserver(LibraryModel.this);
 			}
 
 			@Override
@@ -670,7 +670,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
 		components.addAll(this.behavioursCategory.getChildren());
-		components.addAll(this.functionsCategory.getChildren());
+		components.addAll(this.activitiesCategory.getChildren());
 		components.addAll(this.controllersCategory.getChildren());
 		components.addAll(this.noteContainer.getChildren());
 
@@ -701,7 +701,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.causesCategory = new StoryComponentContainer("Causes");
 		this.descriptionsCategory = new StoryComponentContainer("Descriptions");
 		this.behavioursCategory = new StoryComponentContainer("Behaviours");
-		this.functionsCategory = new StoryComponentContainer("Functions");
+		this.activitiesCategory = new StoryComponentContainer("Activities");
 		this.controllersCategory = new StoryComponentContainer("Controllers");
 		this.noteContainer = new StoryComponentContainer("Note");
 		this.registerObservers();

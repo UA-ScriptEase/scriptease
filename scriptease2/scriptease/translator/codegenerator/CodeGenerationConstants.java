@@ -87,7 +87,7 @@ public interface CodeGenerationConstants {
 		SCRIPTIT,
 		CONTROLIT,
 		PICKIT,
-		FUNCTIONIT
+		ACTIVITYIT
 	}
 
 	// Used in SeriesFragment

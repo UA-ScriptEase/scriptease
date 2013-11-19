@@ -1,13 +1,13 @@
 package scriptease.translator.codegenerator.code.contexts;
 
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 
 /**
- * Context for {@link FunctionIt}
+ * Context for {@link ActivityIt}
  * 
  * @author jyuen
  */
-public class FunctionItContext extends ScriptItContext {
+public class ActivityItContext extends ScriptItContext {
 
 	/**
 	 * Creates a new FunctionItContext with the source FunctionIt based on the context
@@ -16,12 +16,12 @@ public class FunctionItContext extends ScriptItContext {
 	 * @param other
 	 * @param source
 	 */
-	public FunctionItContext(Context other, FunctionIt source) {
+	public ActivityItContext(Context other, ActivityIt source) {
 		super(other, source);
 	}
 
 	@Override
-	public FunctionIt getComponent() {
-		return (FunctionIt) super.getComponent();
+	public ActivityIt getComponent() {
+		return (ActivityIt) super.getComponent();
 	}
 }

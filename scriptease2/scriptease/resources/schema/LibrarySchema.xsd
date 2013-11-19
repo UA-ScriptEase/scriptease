@@ -35,7 +35,7 @@
 			<xsd:element name="DescribeIts" type="DescribeItList_Type" />
 			<xsd:element name="ControlIts" type="ControlItList_Type" />
 			<xsd:element name="Behaviours" type="BehaviourList_Type" />
-			<xsd:element name="FunctionIts" type="FunctionList_Type" />
+			<xsd:element name="ActivityIts" type="ActivityList_Type" />
 			<xsd:element name="TypeConverters" type="TypeConverterList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string" use="required" />
@@ -85,10 +85,10 @@
 		</xsd:sequence>
 	</xsd:complexType>
 	
-	<!-- Defines a list of Functions (FunctionIt) definitions -->
-	<xsd:complexType name="FunctionList_Type">
+	<!-- Defines a list of Activitys (ActivityIt) definitions -->
+	<xsd:complexType name="ActivityList_Type">
 		<xsd:sequence>
-			<xsd:element name="FunctionIt" type="FunctionIt_Type"
+			<xsd:element name="ActivityIt" type="ActivityIt_Type"
 				maxOccurs="unbounded" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -236,8 +236,8 @@
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />
 	</xsd:complexType>
 	
-	<!-- Defines a Function -->
-	<xsd:complexType name="FunctionIt_Type">
+	<!-- Defines a Activity -->
+	<xsd:complexType name="ActivityIt_Type">
 		<xsd:sequence minOccurs="0">
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element name="Children" />

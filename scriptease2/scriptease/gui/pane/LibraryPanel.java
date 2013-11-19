@@ -96,7 +96,7 @@ public class LibraryPanel extends JTabbedPane {
 		final StoryComponentPanelJList behavioursList;
 		final StoryComponentPanelJList controlsList;
 		final StoryComponentPanelJList blocksList;
-		final StoryComponentPanelJList containersList;
+		final StoryComponentPanelJList activitiesList;
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
@@ -111,8 +111,8 @@ public class LibraryPanel extends JTabbedPane {
 				Category.CONTROLS));
 		blocksList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.BLOCKS));
-		containersList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.CONTAINERS));
+		activitiesList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.ACTIVITIES));
 
 		libraryObserver = new LibraryObserver() {
 			/**
@@ -196,7 +196,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(behavioursList);
 		this.storyComponentPanelJLists.add(controlsList);
 		this.storyComponentPanelJLists.add(blocksList);
-		this.storyComponentPanelJLists.add(containersList);
+		this.storyComponentPanelJLists.add(activitiesList);
 
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
@@ -204,7 +204,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.add("Behaviours", this.createTab(behavioursList));
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Blocks", this.createTab(blocksList));
-		this.add("Functions", this.createTab(containersList));
+		this.add("Activities", this.createTab(activitiesList));
 
 		// Set up Hotkeys
 		this.setMnemonicAt(0, KeyEvent.VK_1);
@@ -540,7 +540,7 @@ public class LibraryPanel extends JTabbedPane {
 					components = libraryModel.getControllersCategory()
 							.getChildren();
 				} else if (index == 6) {
-					components = libraryModel.getFunctionsCategory()
+					components = libraryModel.getActivitysCategory()
 							.getChildren();
 				} else {
 					throw new IllegalArgumentException(

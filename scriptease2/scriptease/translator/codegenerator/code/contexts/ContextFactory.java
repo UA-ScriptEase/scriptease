@@ -18,7 +18,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -198,9 +198,9 @@ public class ContextFactory {
 			}
 			
 			@Override
-			public void processFunctionIt(FunctionIt functionIt) {
-				ContextFactory.this.activeContext = new FunctionItContext(
-						pastContext, functionIt);
+			public void processActivityIt(ActivityIt activityIt) {
+				ContextFactory.this.activeContext = new ActivityItContext(
+						pastContext, activityIt);
 			}
 
 			@Override

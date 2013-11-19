@@ -49,7 +49,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
@@ -102,42 +102,42 @@ public class LibraryEditorPanelFactory {
 		return editorPanel;
 	}
 
-	// ******************* FUNCTIONIT EDITING PANEL ************************* //
+	// ******************* ACTIVITYIT EDITING PANEL ************************* //
 
-	public JPanel buildFunctionItEditingPanel(final FunctionIt functionIt) {
-		final JPanel functionPanel;
+	public JPanel buildActivityItEditingPanel(final ActivityIt activityIt) {
+		final JPanel activityPanel;
 		final StoryComponentPanel transferPanel;
 		final CodeBlockPanel codeBlockPanel;
 
-		functionPanel = new JPanel();
-		functionPanel.setLayout(new BoxLayout(functionPanel, BoxLayout.Y_AXIS));
+		activityPanel = new JPanel();
+		activityPanel.setLayout(new BoxLayout(activityPanel, BoxLayout.Y_AXIS));
 
 		transferPanel = StoryComponentPanelFactory.getInstance()
-				.buildStoryComponentPanel(functionIt);
+				.buildStoryComponentPanel(activityIt);
 
-		codeBlockPanel = new CodeBlockPanel(functionIt.getMainCodeBlock(),
-				functionIt, true);
+		codeBlockPanel = new CodeBlockPanel(activityIt.getMainCodeBlock(),
+				activityIt, true);
 
-		functionPanel.add(this.buildDescriptorPanel(functionIt));
-		functionPanel.add(codeBlockPanel);
-		functionPanel.add(this.buildFunctionItImplicitPanel(functionIt));
-		functionPanel.add(new StoryComponentPanelTree(transferPanel));
-		
+		activityPanel.add(this.buildDescriptorPanel(activityIt));
+		activityPanel.add(codeBlockPanel);
+		activityPanel.add(this.buildActivityItImplicitPanel(activityIt));
+		activityPanel.add(new StoryComponentPanelTree(transferPanel));
+
 		codeBlockPanel.addListener(new CodeBlockPanelObserver() {
 
 			// Rebuilds the implicit panel when a parameter has changed
 			@Override
 			public void codeBlockPanelChanged() {
-				functionPanel.remove(2);
-				functionPanel.add(buildFunctionItImplicitPanel(functionIt), 2);
+				activityPanel.remove(2);
+				activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
 			}
 		});
-		
-		return functionPanel;
+
+		return activityPanel;
 	}
 
 	@SuppressWarnings("serial")
-	private JPanel buildFunctionItImplicitPanel(final FunctionIt functionIt) {
+	private JPanel buildActivityItImplicitPanel(final ActivityIt activityIt) {
 		final JPanel implicitPanel;
 
 		implicitPanel = new JPanel() {
@@ -165,7 +165,7 @@ public class LibraryEditorPanelFactory {
 
 		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		final CodeBlock codeBlock = functionIt.getMainCodeBlock();
+		final CodeBlock codeBlock = activityIt.getMainCodeBlock();
 
 		for (KnowIt parameter : codeBlock.getParameters()) {
 			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,

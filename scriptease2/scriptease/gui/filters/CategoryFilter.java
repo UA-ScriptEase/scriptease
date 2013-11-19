@@ -7,7 +7,7 @@ import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
 import scriptease.model.complex.ScriptIt;
@@ -29,7 +29,7 @@ public class CategoryFilter extends StoryComponentFilter {
 	 * @author jyuen
 	 */
 	public enum Category {
-		EFFECTS, DESCRIPTIONS, BEHAVIOURS, CAUSES, CONTROLS, BLOCKS, CONTAINERS, NOTE;
+		EFFECTS, DESCRIPTIONS, BEHAVIOURS, CAUSES, CONTROLS, BLOCKS, ACTIVITIES, NOTE;
 	}
 
 	private Category category;
@@ -92,9 +92,9 @@ public class CategoryFilter extends StoryComponentFilter {
 		}
 
 		@Override
-		public void processFunctionIt(FunctionIt functionIt) {
+		public void processActivityIt(ActivityIt activityIt) {
 			this.acceptable = CategoryFilter.this.category
-					.equals(Category.CONTAINERS);
+					.equals(Category.ACTIVITIES);
 		}
 
 		@Override

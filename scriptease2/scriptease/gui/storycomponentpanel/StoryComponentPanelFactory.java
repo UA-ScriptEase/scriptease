@@ -35,7 +35,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -524,7 +524,7 @@ public class StoryComponentPanelFactory {
 				if (!(complex instanceof ScriptIt)
 						|| complex instanceof CauseIt
 						|| complex instanceof ControlIt
-						|| complex instanceof FunctionIt)
+						|| complex instanceof ActivityIt)
 					addExpansionButton(complex, panel);
 
 				// Add probability box if it is a children of PickIt

@@ -13,7 +13,7 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.FunctionIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -82,8 +82,8 @@ public class LibraryModelConverter implements Converter {
 				.getControllersCategory().getChildren());
 		XMLNode.BEHAVIOURS.writeObject(writer, context, library
 				.getBehavioursCategory().getChildren());
-		XMLNode.FUNCTIONITS.writeObject(writer, context, library
-				.getFunctionsCategory().getChildren());
+		XMLNode.ACTIVITYITS.writeObject(writer, context, library
+				.getActivitysCategory().getChildren());
 		XMLNode.TYPECONVERTERS.writeObject(writer, context, library
 				.getTypeConverter().getConverterDoIts());
 
@@ -104,7 +104,7 @@ public class LibraryModelConverter implements Converter {
 		final Collection<DescribeIt> descriptions;
 		final Collection<ControlIt> controls;
 		final Collection<Behaviour> behaviours;
-		final Collection<FunctionIt> functions;
+		final Collection<ActivityIt> activities;
 		final Collection<ScriptIt> typeConvertors;
 
 		System.out.println("Unmarshalling Library Model");
@@ -156,25 +156,25 @@ public class LibraryModelConverter implements Converter {
 
 		this.addDefaultCauseChildren(library, causes);
 
-		// Behaviours and functions rely on the current library being set, so we need to load
-		// them after assigning the library to the static variable.
+		// Behaviours and activities rely on the current library being set, so
+		// we need to load them after assigning the library to the static
+		// variable.
 		currentLibrary = library;
 
 		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
 				Behaviour.class);
 
-
-		functions = XMLNode.FUNCTIONITS.readCollection(reader, context,
-				FunctionIt.class);
+		activities = XMLNode.ACTIVITYITS.readCollection(reader, context,
+				ActivityIt.class);
 
 		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
 				ScriptIt.class);
 
 		library.addAll(behaviours);
-		library.addAll(functions);
+		library.addAll(activities);
 
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
-		
+
 		// reset these to free memory
 		currentLibrary = null;
 

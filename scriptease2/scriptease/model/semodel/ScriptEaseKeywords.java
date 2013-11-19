@@ -39,7 +39,7 @@ public interface ScriptEaseKeywords {
 	
 	public static final String BEHAVIOURS = "Behaviours";
 	
-	public static final String FUNCTIONS = "Functions";
+	public static final String ACTIVITIES = "Activities";
 
 	public static final String REPEATS = "Repeats";
 

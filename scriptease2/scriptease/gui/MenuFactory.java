@@ -45,11 +45,11 @@ import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
 import scriptease.gui.action.library.RemoveLibraryFromStoryModelAction;
 import scriptease.gui.action.libraryeditor.MergeLibraryAction;
+import scriptease.gui.action.libraryeditor.NewActivityAction;
 import scriptease.gui.action.libraryeditor.NewBehaviourAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
-import scriptease.gui.action.libraryeditor.NewFunctionAction;
 import scriptease.gui.action.libraryeditor.OpenLibraryEditorAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
@@ -177,7 +177,7 @@ public class MenuFactory {
 			final JMenuItem newEffect;
 			final JMenuItem newDescription;
 			final JMenuItem newBehaviour;
-			final JMenuItem newFunction;
+			final JMenuItem newActivity;
 			final JMenuItem mergeLibrary;
 
 			newMenu = new JMenu(MenuFactory.NEW);
@@ -185,7 +185,7 @@ public class MenuFactory {
 			newEffect = new JMenuItem(NewEffectAction.getInstance());
 			newDescription = new JMenuItem(NewDescriptionAction.getInstance());
 			newBehaviour = new JMenuItem(NewBehaviourAction.getInstance());
-			newFunction = new JMenuItem(NewFunctionAction.getInstance());
+			newActivity = new JMenuItem(NewActivityAction.getInstance());
 			mergeLibrary = new JMenuItem(MergeLibraryAction.getInstance());
 
 			newMenu.add(NewStoryModelAction.getInstance());
@@ -194,7 +194,7 @@ public class MenuFactory {
 			newMenu.add(newEffect);
 			newMenu.add(newDescription);
 			newMenu.add(newBehaviour);
-			newMenu.add(newFunction);
+			newMenu.add(newActivity);
 			newMenu.addSeparator();
 			newMenu.add(mergeLibrary);
 
