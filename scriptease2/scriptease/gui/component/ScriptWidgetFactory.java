@@ -674,7 +674,6 @@ public class ScriptWidgetFactory {
 					nameEditor.setText(component.getDisplayText());
 
 					GUIOp.resizeJTextField(nameEditor);
-
 				}
 			}
 		};

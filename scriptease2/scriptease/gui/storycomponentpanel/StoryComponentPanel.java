@@ -245,8 +245,6 @@ public class StoryComponentPanel extends JPanel implements
 			this.setVisible(component.isVisible());
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_LABELS_CHANGED)) {
 			StoryComponentPanelFactory.getInstance().rebuildLabels(this);
-		} else if (type.equals(StoryComponentChangeEnum.CHANGE_TEXT_NAME)) {
-			StoryComponentPanelFactory.getInstance().rebuildDisplayName(this);
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
 
 			// Change the font color to orange if disabled
