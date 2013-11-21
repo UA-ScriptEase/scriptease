@@ -3,6 +3,9 @@ package scriptease.model.atomic.knowitbindings;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 
 /**
@@ -23,6 +26,25 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	 */
 	public KnowItBindingUninitialized(KnowIt value) {
 		this.referenceValue = value;
+
+		if (referenceValue == null)
+			return;
+		
+		this.referenceValue
+				.addStoryComponentObserver(new StoryComponentObserver() {
+
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+							final KnowItBinding binding = referenceValue
+									.getBinding().resolveBinding();
+							
+							if (!(binding instanceof KnowItBindingNull)) {
+								referenceValue.setDisplayText("blah");
+							}
+						}
+					}
+				});
 	}
 
 	@Override
@@ -60,10 +82,7 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 			reference = (KnowIt) reference.getBinding().getValue();
 		}
 
-		if (reference.getBinding() instanceof KnowItBindingNull)
-			return this;
-		else
-			return reference.getBinding();
+		return reference.getBinding();
 	}
 
 	@Override

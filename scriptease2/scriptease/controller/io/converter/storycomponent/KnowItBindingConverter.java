@@ -46,6 +46,7 @@ public class KnowItBindingConverter implements Converter {
 	private static final String TAG_VALUE = "Value";
 
 	private static final String ATTRIBUTE_BINDING_FLAVOUR = "flavour";
+
 	private static final String ATTRIBUTE_VALUE_CONSTANT_FLAVOUR = "constant";
 	private static final String ATTRIBUTE_VALUE_RESOURCE_FLAVOUR = "resource";
 	private static final String ATTRIBUTE_VALUE_FUNCTION_FLAVOUR = "function";
@@ -223,6 +224,10 @@ public class KnowItBindingConverter implements Converter {
 		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
 				ATTRIBUTE_VALUE_UNINITIALIZED_FLAVOUR);
 
+		writer.startNode(KnowItConverter.TAG_KNOWIT);
+		context.convertAnother(binding.getValue());
+		writer.endNode();
+		
 		writer.startNode(KnowItConverter.TAG_KNOWIT);
 		context.convertAnother(binding.getValue());
 		writer.endNode();

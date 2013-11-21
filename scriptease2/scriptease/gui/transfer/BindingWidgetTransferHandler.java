@@ -245,8 +245,9 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 							"Set Binding " + sourceBinding);
 				if (BindingWidgetTransferHandler.lastDragShiftDown)
 					setGroupBindings(sourceBinding, destinationKnowIt, binding);
-				destinationKnowIt.setBinding(sourceBinding);
 
+				destinationKnowIt.setBinding(sourceBinding);
+				
 				// Check if the source binding is disabled. If it is, we should
 				// disable this component too.
 				if (this.isWidgetOwnerDisabled(support)) {
