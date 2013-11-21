@@ -25,6 +25,7 @@ import javax.swing.border.TitledBorder;
 import scriptease.ScriptEase;
 import scriptease.controller.observer.CodeBlockPanelObserver;
 import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.ParameterPanelObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
@@ -42,6 +43,7 @@ import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
+import scriptease.gui.libraryeditor.ParameterPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -303,8 +305,18 @@ public class CodeBlockPanel extends JPanel {
 		}
 
 		for (KnowIt parameter : codeBlock.getParameters()) {
-			parameterPanel.add(LibraryEditorPanelFactory.getInstance()
-					.buildParameterPanel(scriptIt, codeBlock, parameter));
+			final ParameterPanel paramPane = LibraryEditorPanelFactory.getInstance()
+					.buildParameterPanel(scriptIt, codeBlock, parameter);
+			
+			paramPane.addListener(new ParameterPanelObserver() {
+
+				@Override
+				public void parameterPanelChanged() {
+					notifyChange();
+				}
+			});
+			
+			parameterPanel.add(paramPane);
 		}
 
 		if (!onlyParamVisible) {

@@ -106,8 +106,8 @@ public class LibraryEditorPanelFactory {
 
 	public JPanel buildActivityItEditingPanel(final ActivityIt activityIt) {
 		final JPanel activityPanel;
-		final StoryComponentPanel transferPanel;
 		final CodeBlockPanel codeBlockPanel;
+		final StoryComponentPanel transferPanel;
 
 		activityPanel = new JPanel();
 		activityPanel.setLayout(new BoxLayout(activityPanel, BoxLayout.Y_AXIS));
@@ -125,11 +125,39 @@ public class LibraryEditorPanelFactory {
 
 		codeBlockPanel.addListener(new CodeBlockPanelObserver() {
 
-			// Rebuilds the implicit panel when a parameter has changed
+			// Rebuilds the implicit panel and StoryComponentPanelTree when a
+			// parameter has changed
 			@Override
 			public void codeBlockPanelChanged() {
+				final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
+						.getInstance().buildStoryComponentPanel(activityIt);
+
 				activityPanel.remove(2);
 				activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
+				activityPanel.remove(3);
+				activityPanel.add(
+						new StoryComponentPanelTree(newTransferPanel), 3);
+
+				activityPanel.repaint();
+				activityPanel.revalidate();
+			}
+		});
+
+		activityIt.addStoryComponentObserver(new StoryComponentObserver() {
+
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
+							.getInstance().buildStoryComponentPanel(activityIt);
+
+					activityPanel.remove(3);
+					activityPanel.add(new StoryComponentPanelTree(
+							newTransferPanel), 3);
+
+					activityPanel.repaint();
+					activityPanel.revalidate();
+				}
 			}
 		});
 
@@ -1136,8 +1164,8 @@ public class LibraryEditorPanelFactory {
 	 * @param knowIt
 	 * @return
 	 */
-	public JPanel buildParameterPanel(ScriptIt scriptIt, CodeBlock codeBlock,
-			KnowIt knowIt) {
+	public ParameterPanel buildParameterPanel(ScriptIt scriptIt,
+			CodeBlock codeBlock, KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
 	}
 }

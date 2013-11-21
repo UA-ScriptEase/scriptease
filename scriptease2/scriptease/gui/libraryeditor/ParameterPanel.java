@@ -26,6 +26,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.ParameterPanelObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
@@ -57,21 +59,24 @@ import scriptease.util.GUIOp;
  * CodeBlock.
  * 
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
-class ParameterPanel extends JPanel {
+public class ParameterPanel extends JPanel {
+	private final ObserverManager<ParameterPanelObserver> observerManager;
+
 	private final KnowIt knowIt;
 
 	/**
 	 * Creates a new ParameterComponent with the passed in KnowIt parameter.
 	 */
-	protected ParameterPanel(final ScriptIt scriptIt,
-			final CodeBlock codeBlock, final KnowIt knowIt) {
+	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
+			final KnowIt knowIt) {
 		this(scriptIt, codeBlock, knowIt, true);
 	}
 
-	protected ParameterPanel(final ScriptIt scriptIt,
-			final CodeBlock codeBlock, final KnowIt knowIt, boolean removable) {
+	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
+			final KnowIt knowIt, boolean removable) {
 		super();
 		this.knowIt = knowIt;
 
@@ -89,6 +94,8 @@ class ParameterPanel extends JPanel {
 		final JPanel bindingPanel;
 
 		final LibraryModel library;
+
+		this.observerManager = new ObserverManager<ParameterPanelObserver>();
 
 		typeAction = new TypeAction();
 		types = new ArrayList<String>();
@@ -157,6 +164,8 @@ class ParameterPanel extends JPanel {
 
 				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
+				
+				notifyChange();
 			}
 		});
 
@@ -269,6 +278,8 @@ class ParameterPanel extends JPanel {
 
 				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
+				
+				notifyChange();
 			}
 		};
 
@@ -497,5 +508,23 @@ class ParameterPanel extends JPanel {
 				ParameterPanel.this.knowIt.getTypes(), defaultBindingName);
 
 		ParameterPanel.this.knowIt.setBinding(newConstant);
+	}
+
+	public void addListener(ParameterPanelObserver observer) {
+		this.observerManager.addObserver(this, observer);
+	}
+
+	public void removeListener(ParameterPanelObserver observer) {
+		this.observerManager.removeObserver(observer);
+	}
+
+	/**
+	 * Notifies that the codeblock panel has changed.
+	 */
+	private void notifyChange() {
+		for (ParameterPanelObserver observer : this.observerManager
+				.getObservers()) {
+			observer.parameterPanelChanged();
+		}
 	}
 }

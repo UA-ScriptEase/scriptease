@@ -148,18 +148,12 @@ public class CodeBlockSource extends CodeBlock {
 
 	@Override
 	public void addType(String type) {
-		if (this.returnTypes.add(type)) {
-			this.notifyObservers(new StoryComponentEvent(this,
-					StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
-		}
+		this.returnTypes.add(type);
 	}
 
 	@Override
 	public void removeType(String type) {
-		if (this.returnTypes.remove(type)) {
-			this.notifyObservers(new StoryComponentEvent(this,
-					StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
-		}
+		this.returnTypes.remove(type);
 	}
 
 	protected void init(int id) {
