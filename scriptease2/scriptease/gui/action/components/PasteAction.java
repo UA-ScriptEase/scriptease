@@ -125,8 +125,7 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 			// Pastes the component in clip board to selected parent.
 			this.pasteComponent((StoryComponentPanel) focusOwner);
 		}
-		// We will not paste into StoryComponentPanelJList. Maybe in the future,
-		// but not now.
+		
 		else if (focusOwner instanceof SEGraph) {
 			// Paste the graph node into another component.
 			final SEGraph graph;
