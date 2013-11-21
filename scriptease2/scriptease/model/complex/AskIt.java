@@ -86,6 +86,7 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(Note.class);
 		ifElseValidTypes.add(ControlIt.class);
 		ifElseValidTypes.add(PickIt.class);
+		ifElseValidTypes.add(ActivityIt.class);
 		
 		// now we can Initialize the StoryComponentContainer
 		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);

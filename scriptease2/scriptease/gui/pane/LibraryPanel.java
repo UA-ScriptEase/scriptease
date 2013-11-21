@@ -172,9 +172,9 @@ public class LibraryPanel extends JTabbedPane {
 							});
 						}
 					});
-				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
+				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 					updateLists();
-				else if (event.getEventType() == SEModelEvent.Type.REMOVED
+				} else if (event.getEventType() == SEModelEvent.Type.REMOVED
 						&& SEModelManager.getInstance().getActiveModel() == null) {
 					updateLists();
 				}

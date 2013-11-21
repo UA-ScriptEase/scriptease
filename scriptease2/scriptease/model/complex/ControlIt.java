@@ -59,6 +59,7 @@ public class ControlIt extends ScriptIt {
 		this.registerChildType(Behaviour.class, max);
 		this.registerChildType(AskIt.class, max);
 		this.registerChildType(PickIt.class, max);
+		this.registerChildType(ActivityIt.class, max);
 	}
 
 	/**

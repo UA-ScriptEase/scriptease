@@ -116,11 +116,15 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 			final SEGraph graph;
 			final JComponent selectedComponent;
 
+			final Object lastSelectedNode;
+			
 			graph = (SEGraph) focusOwner;
 
-			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
-					.getValue(graph.getLastSelectedNode());
+			lastSelectedNode = graph.getLastSelectedNode();
 
+			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
+					.getValue(lastSelectedNode);
+			
 			this.copyComponent(selectedComponent);
 		}
 	}
