@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -20,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicMenuBarUI;
 
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
@@ -124,7 +127,19 @@ public class MenuFactory {
 		final JMenuBar bar = new JMenuBar();
 
 		bar.setForeground(ScriptEaseUI.PRIMARY_UI);
-		bar.setBackground(ScriptEaseUI.SECONDARY_UI);
+
+		/*
+		 * Simply calling bar.setBackground(..) does not change the background
+		 * colour on new Windows OS', so we override the paint method. A bit
+		 * uglier but it works.
+		 */
+		bar.setUI(new BasicMenuBarUI() {
+			public void paint(Graphics g, JComponent c) {
+				g.setColor(ScriptEaseUI.SECONDARY_UI);
+				g.fillRect(0, 0, c.getWidth(), c.getHeight());
+			}
+		});
+
 		bar.setBorder(BorderFactory.createEmptyBorder());
 
 		bar.add(MenuFactory.buildFileMenu(model));
