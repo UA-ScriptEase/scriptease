@@ -73,9 +73,11 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
+		// TODO Disabled SEGraph node copying for now because of complications
+		// with group. Should handle node copying in the future.
+
 		if (focusOwner instanceof StoryComponentPanel
-				|| focusOwner instanceof StoryComponentPanelJList
-				|| focusOwner instanceof SEGraph) {
+				|| focusOwner instanceof StoryComponentPanelJList) {
 			return super.isLegal();
 		} else
 			return false;
@@ -117,14 +119,14 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 			final JComponent selectedComponent;
 
 			final Object lastSelectedNode;
-			
+
 			graph = (SEGraph) focusOwner;
 
 			lastSelectedNode = graph.getLastSelectedNode();
 
 			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
 					.getValue(lastSelectedNode);
-			
+
 			this.copyComponent(selectedComponent);
 		}
 	}

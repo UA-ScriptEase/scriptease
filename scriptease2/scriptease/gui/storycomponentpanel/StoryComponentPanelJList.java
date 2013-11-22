@@ -230,8 +230,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				listModel = (DefaultListModel) this.getModel();
 				panel = panelMap.get(component);
 
-				listModel.removeElement(noResultsPanel);
-
 				if (panel == null) {
 					final StoryComponentPanel newPanel;
 
