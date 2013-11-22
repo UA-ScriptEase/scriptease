@@ -201,7 +201,10 @@ public class LibraryPanel extends JTabbedPane {
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
+		
+		// TODO uncomment after winter release
 		this.add("Behaviours", this.createTab(behavioursList));
+		
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Blocks", this.createTab(blocksList));
 		this.add("Activities", this.createTab(activitiesList));
@@ -213,7 +216,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
 		this.setMnemonicAt(5, KeyEvent.VK_6);
-		this.setMnemonicAt(6, KeyEvent.VK_7);
+		// this.setMnemonicAt(6, KeyEvent.VK_7);
 
 		this.setUI(ComponentFactory.buildFlatTabUI());
 

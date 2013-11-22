@@ -79,22 +79,23 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 							new TransferSupport(focusOwner, Toolkit
 									.getDefaultToolkit().getSystemClipboard()
 									.getContents(this)));
-		}
-		// We won't paste into StoryComponentPanelJList. Maybe in the future,
-		// but not now.
-		else if (focusOwner instanceof SEGraph) {
-			final SEGraph graph;
-			final JComponent selectedComponent;
 
-			graph = (SEGraph) focusOwner;
+			// TODO Disabled for now because of complications with group. Should
+			// handle node copying in the future.
 
-			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
-					.getValue(graph.getLastSelectedNode());
-
-			isLegal = selectedComponent.getTransferHandler().canImport(
-					new TransferSupport(selectedComponent, Toolkit
-							.getDefaultToolkit().getSystemClipboard()
-							.getContents(this)));
+			// } else if (focusOwner instanceof SEGraph) {
+			// final SEGraph graph;
+			// final JComponent selectedComponent;
+			//
+			// graph = (SEGraph) focusOwner;
+			//
+			// selectedComponent = (JComponent) graph.getNodesToComponentsMap()
+			// .getValue(graph.getLastSelectedNode());
+			//
+			// isLegal = selectedComponent.getTransferHandler().canImport(
+			// new TransferSupport(selectedComponent, Toolkit
+			// .getDefaultToolkit().getSystemClipboard()
+			// .getContents(this)));
 		} else {
 			isLegal = false;
 		}
@@ -114,7 +115,7 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 						.getContents(this));
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
@@ -125,8 +126,11 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 			// Pastes the component in clip board to selected parent.
 			this.pasteComponent((StoryComponentPanel) focusOwner);
 		}
-		
+
 		else if (focusOwner instanceof SEGraph) {
+			// TODO Disabled for now because of complications with group. Should
+			// handle node copying in the future.
+
 			// Paste the graph node into another component.
 			final SEGraph graph;
 			final JComponent selectedComponent;
