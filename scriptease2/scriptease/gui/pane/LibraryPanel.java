@@ -203,7 +203,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.add("Descriptions", this.createTab(descriptionsList));
 		
 		// TODO uncomment after winter release
-		this.add("Behaviours", this.createTab(behavioursList));
+		// this.add("Behaviours", this.createTab(behavioursList));
 		
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Blocks", this.createTab(blocksList));
