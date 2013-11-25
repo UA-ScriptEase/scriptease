@@ -2,6 +2,7 @@ package scriptease.gui.action.components;
 
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -66,7 +67,6 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 	 * Updates the action to either be enabled or disabled depending on the
 	 * current selection.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected boolean isLegal() {
 		final Component focusOwner;
 		final boolean isLegal;
@@ -109,13 +109,12 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 	 * @param component
 	 */
 	private void pasteComponent(JComponent component) {
-		component.getTransferHandler().importData(
-				component,
-				Toolkit.getDefaultToolkit().getSystemClipboard()
-						.getContents(this));
+		final Transferable transferable = Toolkit.getDefaultToolkit()
+				.getSystemClipboard().getContents(this);
+
+		component.getTransferHandler().importData(component, transferable);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;

@@ -18,6 +18,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
@@ -243,6 +244,14 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		}
 
 		@Override
+		public void processActivityIt(ActivityIt activityIt) {
+			processScriptIt(activityIt);
+			for (StoryComponent child : activityIt.getChildren()) {
+				child.process(this);
+			}
+		}
+		
+		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
 			defaultProcess(scriptIt);
 			for (KnowIt parameter : scriptIt.getParameters()) {
@@ -252,6 +261,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 					this.searchData.add(binding.getScriptValue());
 				parameter.process(this);
 			}
+			
 			for (KnowIt implicit : scriptIt.getImplicits()) {
 				implicit.process(this);
 			}

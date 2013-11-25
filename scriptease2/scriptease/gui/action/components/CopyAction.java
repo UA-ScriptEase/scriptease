@@ -104,7 +104,9 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 		if (focusOwner instanceof StoryComponentPanel) {
 			// Copies individual panels. This does copy multiple if multiple are
 			// selected.
-			this.copyComponent((StoryComponentPanel) focusOwner);
+			final StoryComponentPanel componentPanel = (StoryComponentPanel) focusOwner;
+
+			this.copyComponent(componentPanel);
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
 			// Copies from a StoryComponentPanelJList.
 			final StoryComponentPanelJList list;
