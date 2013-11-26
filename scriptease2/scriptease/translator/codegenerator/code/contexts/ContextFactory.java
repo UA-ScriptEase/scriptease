@@ -87,8 +87,7 @@ public class ContextFactory {
 		} else if (source instanceof StoryPoint) {
 			created = this.createContext(context, (StoryPoint) source);
 			// this should get checked last, otherwise the ones above can get
-			// caught
-			// by it because they're subclasses.
+			// caught by it because they're subclasses.
 		} else if (source instanceof StoryComponent) {
 			created = this.createContext(context, (StoryComponent) source);
 		} else if (source instanceof DialogueLine) {
@@ -96,8 +95,11 @@ public class ContextFactory {
 		} else if (source instanceof Resource) {
 			created = this.createContext(context, (Resource) source);
 		} else {
-			throw new CodeGenerationException(
-					"Cannot Generate Context for Object: " + source);
+			if (context instanceof FileContext)
+				created = context;
+			else
+				throw new CodeGenerationException(
+						"Cannot Generate Context for Object: " + source);
 		}
 
 		return created;
@@ -196,7 +198,7 @@ public class ContextFactory {
 				ContextFactory.this.activeContext = new ScriptItContext(
 						pastContext, scriptIt);
 			}
-			
+
 			@Override
 			public void processActivityIt(ActivityIt activityIt) {
 				ContextFactory.this.activeContext = new ActivityItContext(
@@ -214,7 +216,7 @@ public class ContextFactory {
 				ContextFactory.this.activeContext = new PickItContext(
 						pastContext, pickIt);
 			}
-			
+
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
 				ContextFactory.this.activeContext = new CauseItContext(

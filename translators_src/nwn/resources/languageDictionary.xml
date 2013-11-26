@@ -269,6 +269,8 @@
 			</Line>
 			<Line>
 				<Literal>#include "i_se_story"</Literal>
+			</Line>
+			<Line>	
 				<Literal>#include "i_se_aux"</Literal>
 			</Line>
 			<Series data="includes" unique="true">
