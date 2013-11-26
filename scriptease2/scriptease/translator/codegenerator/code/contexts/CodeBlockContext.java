@@ -3,6 +3,7 @@ package scriptease.translator.codegenerator.code.contexts;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import scriptease.controller.StoryComponentUtils;
@@ -160,6 +161,11 @@ public class CodeBlockContext extends Context {
 		codeFragments = this.codeBlock.getCode();
 
 		return AbstractFragment.resolveFormat(codeFragments, this);
+	}
+	
+	@Override
+	public Set<String> getIncludeFiles() {
+		return this.getIncludeFiles();
 	}
 
 	@Override

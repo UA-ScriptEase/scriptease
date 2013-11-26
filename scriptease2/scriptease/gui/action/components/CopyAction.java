@@ -17,6 +17,7 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
+import scriptease.model.complex.ScriptIt;
 
 /**
  * Represents and performs the Copy command, as well as encapsulates its enabled
