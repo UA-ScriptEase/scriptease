@@ -2,6 +2,8 @@ package scriptease.gui.action.components;
 
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -17,7 +19,6 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
-import scriptease.model.complex.ScriptIt;
 
 /**
  * Represents and performs the Copy command, as well as encapsulates its enabled
@@ -90,8 +91,11 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 	 * @param component
 	 */
 	private void copyComponent(JComponent component) {
-		component.getTransferHandler().exportToClipboard(component,
-				Toolkit.getDefaultToolkit().getSystemClipboard(),
+		Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+		Transferable t = clip.getContents(null);
+
+		component.getTransferHandler().exportToClipboard(component, clip,
 				TransferHandler.COPY);
 	}
 
