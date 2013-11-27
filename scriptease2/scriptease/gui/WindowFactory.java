@@ -150,8 +150,6 @@ public final class WindowFactory {
 				+ ScriptEase.getInstance().getVersion());
 		this.mainFrame.setJMenuBar(MenuFactory.createMainMenuBar(null));
 
-		int i = 6/0;
-		
 		if (!this.mainFrame.isVisible())
 			this.mainFrame.setVisible(true);
 	}

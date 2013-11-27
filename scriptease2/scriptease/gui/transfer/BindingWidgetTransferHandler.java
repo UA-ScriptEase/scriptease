@@ -243,6 +243,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Set Binding " + sourceBinding);
+				
 				if (BindingWidgetTransferHandler.lastDragShiftDown)
 					setGroupBindings(sourceBinding, destinationKnowIt, binding);
 
