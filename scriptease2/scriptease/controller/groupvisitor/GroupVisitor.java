@@ -12,9 +12,16 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 
+/**
+ * GroupVisitor keeps track of the group of KnowIts that have the same binding
+ * as the passed in component in the constructor.
+ * 
+ * @author kschenk
+ * @author jyuen
+ */
 public abstract class GroupVisitor extends StoryAdapter {
 
 	private List<KnowIt> group;
@@ -42,8 +49,7 @@ public abstract class GroupVisitor extends StoryAdapter {
 	private ScriptIt getParentCause(StoryComponent component) {
 		StoryComponent owner = component;
 
-		while (owner != null
-				&& !(owner instanceof CauseIt)) {
+		while (owner != null && !(owner instanceof CauseIt)) {
 			owner = owner.getOwner();
 		}
 		return (ScriptIt) owner;
@@ -82,16 +88,14 @@ public abstract class GroupVisitor extends StoryAdapter {
 	@Override
 	public void processAskIt(AskIt askIt) {
 		askIt.getCondition().process(this);
-		for (StoryComponent component : askIt.getChildren()) {
-			component.process(this);
-		}
+		
+		this.defaultProcessComplex(askIt);
 	}
 
 	@Override
-	public void processStoryComponentContainer(
-			StoryComponentContainer storyComponentContainer) {
-		for (StoryComponent component : storyComponentContainer.getChildren()) {
-			component.process(this);
+	protected void defaultProcessComplex(ComplexStoryComponent complex) {
+		for (StoryComponent child : complex.getChildren()) {
+			child.process(this);
 		}
 	}
 
