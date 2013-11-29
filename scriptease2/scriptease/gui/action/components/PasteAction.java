@@ -67,6 +67,7 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 	 * Updates the action to either be enabled or disabled depending on the
 	 * current selection.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected boolean isLegal() {
 		final Component focusOwner;
 		final boolean isLegal;
@@ -80,22 +81,19 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 									.getDefaultToolkit().getSystemClipboard()
 									.getContents(this)));
 
-			// TODO Disabled for now because of complications with group. Should
-			// handle node copying in the future.
+		} else if (focusOwner instanceof SEGraph) {
+			final SEGraph graph;
+			final JComponent selectedComponent;
 
-			// } else if (focusOwner instanceof SEGraph) {
-			// final SEGraph graph;
-			// final JComponent selectedComponent;
-			//
-			// graph = (SEGraph) focusOwner;
-			//
-			// selectedComponent = (JComponent) graph.getNodesToComponentsMap()
-			// .getValue(graph.getLastSelectedNode());
-			//
-			// isLegal = selectedComponent.getTransferHandler().canImport(
-			// new TransferSupport(selectedComponent, Toolkit
-			// .getDefaultToolkit().getSystemClipboard()
-			// .getContents(this)));
+			graph = (SEGraph) focusOwner;
+
+			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
+					.getValue(graph.getLastSelectedNode());
+
+			isLegal = selectedComponent.getTransferHandler().canImport(
+					new TransferSupport(selectedComponent, Toolkit
+							.getDefaultToolkit().getSystemClipboard()
+							.getContents(this)));
 		} else {
 			isLegal = false;
 		}
@@ -115,32 +113,29 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 		component.getTransferHandler().importData(component, transferable);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
-
+		
 		focusOwner = SEFocusManager.getInstance().getFocus();
-
+		
 		if (focusOwner instanceof StoryComponentPanel) {
 			// Pastes the component in clip board to selected parent.
 			this.pasteComponent((StoryComponentPanel) focusOwner);
-		}
-
-		else if (focusOwner instanceof SEGraph) {
-			// TODO Disabled for now because of complications with group. Should
-			// handle node copying in the future.
-
+			
+		} else if (focusOwner instanceof SEGraph) {
+			
 			// Paste the graph node into another component.
 			final SEGraph graph;
 			final JComponent selectedComponent;
-
+			
 			graph = (SEGraph) focusOwner;
-
+			
 			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
 					.getValue(graph.getLastSelectedNode());
-
+			
 			this.pasteComponent(selectedComponent);
 		}
-
 	}
 }
