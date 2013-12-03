@@ -3,9 +3,6 @@ package scriptease.model.atomic.knowitbindings;
 import java.util.Collection;
 
 import scriptease.controller.BindingVisitor;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent;
-import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
 
 /**
@@ -16,7 +13,7 @@ import scriptease.model.atomic.KnowIt;
  * 
  */
 public class KnowItBindingUninitialized extends KnowItBinding {
-	private final KnowIt referenceValue;
+	private final KnowItBindingReference reference;
 
 	/**
 	 * Builds a reference to the given KnowIt.
@@ -24,49 +21,33 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	 * @param value
 	 *            the referent.
 	 */
-	public KnowItBindingUninitialized(KnowIt value) {
-		this.referenceValue = value;
+	public KnowItBindingUninitialized(KnowItBindingReference reference) {
+		this.reference = reference;
 
-		if (referenceValue == null)
+		if (reference == null)
 			return;
-		
-		this.referenceValue
-				.addStoryComponentObserver(new StoryComponentObserver() {
-
-					@Override
-					public void componentChanged(StoryComponentEvent event) {
-						if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
-							final KnowItBinding binding = referenceValue
-									.getBinding().resolveBinding();
-							
-							if (!(binding instanceof KnowItBindingNull)) {
-								referenceValue.setDisplayText("blah");
-							}
-						}
-					}
-				});
 	}
 
 	@Override
 	public String getScriptValue() {
-		return this.referenceValue.getScriptValue();
+		return this.reference.getScriptValue();
 	}
 
 	@Override
 	public KnowIt getValue() {
-		return this.referenceValue;
+		return this.reference.getValue();
 	}
 
 	@Override
 	public Collection<String> getTypes() {
-		return referenceValue.getAcceptableTypes();
+		return this.reference.getValue().getAcceptableTypes();
 	}
 
 	@Override
 	public boolean equals(Object other) {
 		return (other instanceof KnowItBindingUninitialized)
-				&& ((KnowItBindingUninitialized) other).referenceValue
-						.equals(this.referenceValue);
+				&& ((KnowItBindingUninitialized) other).reference
+						.equals(this.reference);
 	}
 
 	/**
@@ -77,17 +58,12 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	 */
 	@Override
 	public KnowItBinding resolveBinding() {
-		KnowIt reference = this.referenceValue;
-		while (reference.getBinding() instanceof KnowItBindingReference) {
-			reference = (KnowIt) reference.getBinding().getValue();
-		}
-
-		return reference.getBinding();
+		return this.reference.resolveBinding();
 	}
 
 	@Override
 	public String toString() {
-		return "KnowItBindingUninitialized : " + this.referenceValue.toString();
+		return "KnowItBindingUninitialized : " + this.reference.toString();
 	}
 
 	@Override
@@ -97,18 +73,7 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 
 	@Override
 	protected boolean typeMatches(Collection<String> knowItTypes) {
-		if (super.typeMatches(knowItTypes)) {
-			KnowIt value = this.getValue();
-			if (value != null) {
-				Collection<String> types = value.getAcceptableTypes();
-				// return true if they share at least one matching type
-				for (String type : types) {
-					if (knowItTypes.contains(type))
-						return true;
-				}
-			}
-		}
-		return false;
+		return this.reference.typeMatches(knowItTypes);
 	}
 
 	@Override

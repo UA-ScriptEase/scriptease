@@ -273,7 +273,7 @@ public class ScriptWidgetFactory {
 		public void processKnowIt(KnowIt knowIt) {
 			if (knowIt.getBinding() instanceof KnowItBindingNull)
 				this.bindingWidget = new BindingWidget(
-						new KnowItBindingUninitialized(knowIt));
+						new KnowItBindingUninitialized(new KnowItBindingReference(knowIt)));
 			else
 				this.bindingWidget = new BindingWidget(
 						new KnowItBindingReference(knowIt));
