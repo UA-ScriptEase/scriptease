@@ -19,6 +19,22 @@ import scriptease.util.GUIOp;
  */
 public interface ScriptEaseUI {
 	
+	public static final Color BUTTON_ORANGE = new Color(199, 78, 44);
+	public static final Color BUTTON_GREEN = new Color(5, 142, 5);
+	public static final Color BUTTON_BURGUNDY = new Color(160, 26, 59);
+	public static final Color BUTTON_TEAL = new Color(5, 142, 158);
+	public static final Color BUTTON_YELLOW = new Color(234, 160, 31);
+	public static final Color BUTTON_BLUE = new Color(50, 131, 224);
+	public static final Color BUTTON_PURPLE = new Color(91, 61, 173);
+	public static final Color BUTTON_BLACK = new Color(68, 68, 68);
+	
+	public static final Color PRIMARY_UI = Color.WHITE;
+	public static final Color SECONDARY_UI = BUTTON_BLACK;
+	public static final Color TERTIARY_UI = Color.gray;
+
+	
+	public static final Color BUTTON_RED = new Color(255, 69, 40);
+	
 	/**
 	 * The colour (white) used to display graph group backgrounds.
 	 */
@@ -82,19 +98,19 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_NODE_DEFAULT = Color.WHITE;
 
 	/**
-	 * The colour (dark blue) used for selected graph nodes
+	 * The colour (Secondary UI) used for selected graph nodes
 	 */
-	public static final Color COLOUR_SELECTED_NODE = new Color(89, 147, 255);
+	public static final Color COLOUR_SELECTED_NODE = SECONDARY_UI;
 
 	/**
-	 * The colour (darker blue) used for parent of selected node
+	 * The colour (light grey) used for parent of selected node
 	 */
-	public static final Color COLOUR_PARENT_NODE = new Color(190, 180, 255);
+	public static final Color COLOUR_PARENT_NODE = Color.WHITE;
 
 	/**
-	 * The colour (lighter blue) used for children of selected node
+	 * The colour (same as parent node colour) used for children of selected node
 	 */
-	public static final Color COLOUR_CHILD_NODE = new Color(180, 255, 185);
+	public static final Color COLOUR_CHILD_NODE = COLOUR_PARENT_NODE;
 
 	/**
 	 * The colour (red) used for the delete node tool
@@ -117,21 +133,6 @@ public interface ScriptEaseUI {
 	 */
 	public static final Color COLOUR_GROUPABLE_NODE = new Color(162, 240, 250);
 
-	public static final Color BUTTON_ORANGE = new Color(199, 78, 44);
-	public static final Color BUTTON_GREEN = new Color(5, 142, 5);
-	public static final Color BUTTON_BURGUNDY = new Color(160, 26, 59);
-	public static final Color BUTTON_TEAL = new Color(5, 142, 158);
-	public static final Color BUTTON_YELLOW = new Color(234, 160, 31);
-	public static final Color BUTTON_BLUE = new Color(50, 131, 224);
-	public static final Color BUTTON_PURPLE = new Color(91, 61, 173);
-	public static final Color BUTTON_BLACK = new Color(68, 68, 68);
-	
-	public static final Color PRIMARY_UI = Color.WHITE;
-	public static final Color SECONDARY_UI = BUTTON_BLACK;
-	public static final Color TERTIARY_UI = Color.gray;
-
-	
-	public static final Color BUTTON_RED = new Color(255, 69, 40);
 	/**
 	 * The text colour (Dark Grey) we use for Notes.
 	 */

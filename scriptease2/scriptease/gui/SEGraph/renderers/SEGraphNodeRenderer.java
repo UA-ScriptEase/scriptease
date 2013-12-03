@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
@@ -187,23 +186,11 @@ public class SEGraphNodeRenderer<E> {
 	 */
 	public void setComponentAppearance(JComponent component, E node,
 			Color backgroundColour) {
-		final int INNER_BORDER_THICKNESS = 2;
 
-		final Border innerBorder;
-		final Border lineBorder;
-		final Border lineSpaceBorder;
+		component.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
+				ScriptEaseUI.SECONDARY_UI));
 
-		lineBorder = BorderFactory.createLineBorder(backgroundColour.darker());
-		innerBorder = BorderFactory.createEmptyBorder(INNER_BORDER_THICKNESS,
-				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS,
-				INNER_BORDER_THICKNESS);
-		lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
-				innerBorder);
-
-		if (component != null) {
-			component.setBorder(lineSpaceBorder);
-			component.setBackground(backgroundColour);
-		}
+		component.setBackground(backgroundColour);
 	}
 
 	/**
@@ -245,7 +232,7 @@ public class SEGraphNodeRenderer<E> {
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
-				toolHighlight = GUIOp.scaleWhite(toolColour, 1.25);
+				toolHighlight = GUIOp.scaleWhite(toolColour, 2.0);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			}
 
