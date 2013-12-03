@@ -20,7 +20,7 @@ import scriptease.util.GUIOp;
 public interface ScriptEaseUI {
 	
 	/**
-	 * The colour (pale green) used to display graph group backgrounds.
+	 * The colour (white) used to display graph group backgrounds.
 	 */
 	public static final Color COLOUR_GROUP_BACKGROUND = Color.WHITE;
 
@@ -69,7 +69,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (Grey) used for selected UI Components
 	 */
-	public static final Color SELECTED_COLOUR = new Color(180, 180, 180);
+	public static final Color SELECTED_COLOUR = new Color(140, 140, 140);
 
 	/**
 	 * The colour (White) used for unselected UI components
@@ -77,9 +77,9 @@ public interface ScriptEaseUI {
 	public static final Color UNSELECTED_COLOUR = Color.WHITE;
 
 	/**
-	 * The colour (light blue) used by default for node backgrounds.
+	 * The colour (white) used by default for node backgrounds.
 	 */
-	public static final Color COLOUR_NODE_DEFAULT = new Color(205, 221, 250);
+	public static final Color COLOUR_NODE_DEFAULT = Color.WHITE;
 
 	/**
 	 * The colour (dark blue) used for selected graph nodes

@@ -227,10 +227,6 @@ public class KnowItBindingConverter implements Converter {
 		writer.startNode(KnowItConverter.TAG_KNOWIT);
 		context.convertAnother(binding.getValue());
 		writer.endNode();
-		
-		writer.startNode(KnowItConverter.TAG_KNOWIT);
-		context.convertAnother(binding.getValue());
-		writer.endNode();
 	}
 
 	/*
@@ -427,14 +423,14 @@ public class KnowItBindingConverter implements Converter {
 		KnowItBindingUninitialized binding = new KnowItBindingUninitialized(
 				null);
 
-		// move down and read as a knowIt
 		reader.moveDown();
 
 		uninitiate = (KnowIt) context.convertAnother(binding, KnowIt.class);
 
 		reader.moveUp();
 
-		binding = new KnowItBindingUninitialized(uninitiate);
+		binding = new KnowItBindingUninitialized(new KnowItBindingReference(
+				uninitiate));
 
 		return binding;
 	}
