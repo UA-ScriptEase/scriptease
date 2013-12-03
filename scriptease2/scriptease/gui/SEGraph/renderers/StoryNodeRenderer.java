@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -18,6 +19,7 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
