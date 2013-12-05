@@ -105,7 +105,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (light grey) used for parent of selected node
 	 */
-	public static final Color COLOUR_PARENT_NODE = Color.WHITE;
+	public static final Color COLOUR_PARENT_NODE = new Color(140, 140, 140);
 
 	/**
 	 * The colour (same as parent node colour) used for children of selected node
@@ -138,7 +138,7 @@ public interface ScriptEaseUI {
 	 */
 	public static final Color COLOUR_NOTE_TEXT = new Color(133, 133, 133);
 
-	/**
+	/** 
 	 * The color used for the background of the text field for Notes.
 	 */
 	public static final Color COLOUR_NOTE_TEXT_BG = new Color(255, 252, 161);
