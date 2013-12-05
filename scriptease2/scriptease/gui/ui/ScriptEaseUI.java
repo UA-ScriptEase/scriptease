@@ -18,7 +18,7 @@ import scriptease.util.GUIOp;
  * @author jyuen
  */
 public interface ScriptEaseUI {
-	
+
 	public static final Color BUTTON_ORANGE = new Color(199, 78, 44);
 	public static final Color BUTTON_GREEN = new Color(5, 142, 5);
 	public static final Color BUTTON_BURGUNDY = new Color(160, 26, 59);
@@ -27,14 +27,13 @@ public interface ScriptEaseUI {
 	public static final Color BUTTON_BLUE = new Color(50, 131, 224);
 	public static final Color BUTTON_PURPLE = new Color(91, 61, 173);
 	public static final Color BUTTON_BLACK = new Color(68, 68, 68);
-	
+
 	public static final Color PRIMARY_UI = Color.WHITE;
 	public static final Color SECONDARY_UI = BUTTON_BLACK;
 	public static final Color TERTIARY_UI = Color.gray;
 
-	
 	public static final Color BUTTON_RED = new Color(255, 69, 40);
-	
+
 	/**
 	 * The colour (white) used to display graph group backgrounds.
 	 */
@@ -43,8 +42,9 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (purple) used to display uninitialized knowIts.
 	 */
-	public static final Color COLOUR_KNOWIT_UNINITIALIZED = new Color(187, 0, 196);
-	
+	public static final Color COLOUR_KNOWIT_UNINITIALIZED = new Color(187, 0,
+			196);
+
 	/**
 	 * The colour (green) used to display known object bindings.
 	 */
@@ -123,7 +123,7 @@ public interface ScriptEaseUI {
 	 */
 	public static final Color COLOUR_NOTE_TEXT = new Color(133, 133, 133);
 
-	/** 
+	/**
 	 * The color used for the background of the text field for Notes.
 	 */
 	public static final Color COLOUR_NOTE_TEXT_BG = new Color(255, 252, 161);
