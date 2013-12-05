@@ -18,7 +18,7 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	/**
 	 * Builds a reference to the given KnowIt.
 	 * 
-	 * @param value
+	 * @param reference
 	 *            the referent.
 	 */
 	public KnowItBindingUninitialized(KnowItBindingReference reference) {
@@ -71,6 +71,11 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 		return true;
 	}
 
+	@Override
+	public KnowItBinding clone() {
+		return this;
+	}
+	
 	@Override
 	protected boolean typeMatches(Collection<String> knowItTypes) {
 		return this.reference.typeMatches(knowItTypes);

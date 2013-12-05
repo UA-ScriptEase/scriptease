@@ -187,10 +187,12 @@ public class SEGraphNodeRenderer<E> {
 	public void setComponentAppearance(JComponent component, E node,
 			Color backgroundColour) {
 
-		component.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
-				ScriptEaseUI.SECONDARY_UI));
+		if (component != null) {
+			component.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
+					ScriptEaseUI.SECONDARY_UI));
 
-		component.setBackground(backgroundColour);
+			component.setBackground(backgroundColour);
+		}
 	}
 
 	/**
