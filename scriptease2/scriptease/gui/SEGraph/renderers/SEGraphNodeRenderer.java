@@ -158,11 +158,11 @@ public class SEGraphNodeRenderer<E> {
 					&& (this.graph.getParents(lastSelectedNode).contains(key) || this.graph
 							.getChildren(lastSelectedNode).contains(key))) {
 				this.setComponentAppearance(entry.getValue(), key,
-						ScriptEaseUI.COLOUR_NODE_DEFAULT,
+						ScriptEaseUI.UNSELECTED_COLOUR,
 						ScriptEaseUI.COLOUR_SELECTED_NODE);
 			} else {
 				this.setComponentAppearance(entry.getValue(), key,
-						ScriptEaseUI.COLOUR_NODE_DEFAULT);
+						ScriptEaseUI.UNSELECTED_COLOUR);
 			}
 
 		}
@@ -181,8 +181,8 @@ public class SEGraphNodeRenderer<E> {
 	 */
 	public void setComponentAppearance(JComponent component, E node,
 			Color backgroundColour) {
-			this.setComponentAppearance(component, node, backgroundColour,
-					ScriptEaseUI.SECONDARY_UI);
+		this.setComponentAppearance(component, node, backgroundColour,
+				ScriptEaseUI.SECONDARY_UI);
 	}
 
 	/**
@@ -310,22 +310,18 @@ public class SEGraphNodeRenderer<E> {
 								colour);
 					else
 						this.setComponentAppearance(nComponent, currNode,
-								ScriptEaseUI.COLOUR_NODE_DEFAULT);
+								ScriptEaseUI.UNSELECTED_COLOUR);
 				}
-				// TODO Refactor this stuff a bit. Too confusing as it is.
 			} else {
-				if (this.graph.getParents(lastSelectedNode).contains(node)) {
+				if (this.graph.getParents(lastSelectedNode).contains(node)
+						|| this.graph.getChildren(lastSelectedNode).contains(
+								node)) {
 					this.setComponentAppearance(component, node,
-							ScriptEaseUI.COLOUR_NODE_DEFAULT,
-							ScriptEaseUI.COLOUR_SELECTED_NODE);
-				} else if (this.graph.getChildren(lastSelectedNode).contains(
-						node)) {
-					this.setComponentAppearance(component, node,
-							ScriptEaseUI.COLOUR_NODE_DEFAULT,
+							ScriptEaseUI.UNSELECTED_COLOUR,
 							ScriptEaseUI.COLOUR_SELECTED_NODE);
 				} else {
 					this.setComponentAppearance(component, node,
-							ScriptEaseUI.COLOUR_NODE_DEFAULT);
+							ScriptEaseUI.UNSELECTED_COLOUR);
 				}
 
 			}
