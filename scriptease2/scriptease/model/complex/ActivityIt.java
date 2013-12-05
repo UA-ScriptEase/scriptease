@@ -36,8 +36,6 @@ public class ActivityIt extends ScriptIt {
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		this.registerChildType(PickIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
-		this.registerChildType(ActivityIt.class,
-				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 	}
 
 	@Override
@@ -55,7 +53,7 @@ public class ActivityIt extends ScriptIt {
 		final ActivityIt activityIt = (ActivityIt) super.clone();
 
 		final List<StoryComponent> children = activityIt.getChildren();
-
+		
 		for (StoryComponent child : children) {
 
 			child.process(new StoryAdapter() {

@@ -50,6 +50,11 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 						.equals(this.reference);
 	}
 
+//	@Override
+//	public boolean compatibleWith(KnowIt knowIt) {
+//		return true;
+//	}
+
 	/**
 	 * Determines the deepest non-reference KnowItBinding of the
 	 * KnowItBindingReference chain.
@@ -75,7 +80,7 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	public KnowItBinding clone() {
 		return this;
 	}
-	
+
 	@Override
 	protected boolean typeMatches(Collection<String> knowItTypes) {
 		return this.reference.typeMatches(knowItTypes);
