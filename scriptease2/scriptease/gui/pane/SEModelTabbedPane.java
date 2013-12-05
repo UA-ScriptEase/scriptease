@@ -219,8 +219,6 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		this.addTab(title, icon, tabContents);
 
-		final int location = this.indexOfComponent(tabContents);
-
 		newTab = new CloseableModelTab(this, model, icon, tabContents);
 
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);

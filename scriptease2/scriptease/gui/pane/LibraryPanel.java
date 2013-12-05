@@ -499,8 +499,6 @@ public class LibraryPanel extends JTabbedPane {
 	private void updateList(StoryComponentPanelJList list) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		list.removeAllStoryComponents();
-
 		if (model != null
 				&& TranslatorManager.getInstance().getActiveTranslator() != null) {
 			final Translator translator = model.getTranslator();
@@ -553,7 +551,7 @@ public class LibraryPanel extends JTabbedPane {
 				Collections.sort(components,
 						LibraryPanel.STORY_COMPONENT_COMPARATOR);
 
-				list.addStoryComponents(components);
+				list.setStoryComponents(components);
 			}
 		}
 	}
