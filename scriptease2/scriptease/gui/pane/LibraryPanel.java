@@ -334,7 +334,7 @@ public class LibraryPanel extends JTabbedPane {
 		listScroll.setBorder(BorderFactory.createEmptyBorder());
 		tabPanel.add(listScroll);
 		tabPanel.setBorder(BorderFactory
-				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		// Configure the displaying of the pane
 		this.updateList(list);

@@ -101,7 +101,7 @@ public class CodeFragmentPanel extends JPanel {
 		if (this.fragment == null) {
 			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-			this.setupPanel("Code", ScriptEaseUI.BUTTON_BLACK);
+			this.setupPanel("Code", ScriptEaseUI.SE_BLACK);
 			for (AbstractFragment subFragment : this.codeBlock.getCode()) {
 				this.add(new CodeFragmentPanel(codeBlock, subFragment));
 			}
@@ -136,10 +136,10 @@ public class CodeFragmentPanel extends JPanel {
 			public void processLineFragment(LineFragment fragment) {
 				final JLabel lineLabel = new JLabel("\\n");
 
-				lineLabel.setForeground(ScriptEaseUI.BUTTON_BURGUNDY);
+				lineLabel.setForeground(ScriptEaseUI.SE_BURGUNDY);
 				lineLabel.setFont(new Font("SansSerif", Font.PLAIN, 32));
 
-				panel.setupPanel("Line", ScriptEaseUI.BUTTON_BURGUNDY);
+				panel.setupPanel("Line", ScriptEaseUI.SE_BURGUNDY);
 				panel.setLayout(new FlowLayout(FlowLayout.LEADING));
 
 				this.buildSubPanes(fragment);
@@ -149,12 +149,12 @@ public class CodeFragmentPanel extends JPanel {
 
 			@Override
 			public void processIndentFragment(IndentFragment fragment) {
-				panel.setupPanel("Indent", ScriptEaseUI.BUTTON_ORANGE);
+				panel.setupPanel("Indent", ScriptEaseUI.SE_ORANGE);
 
 				final JLabel indentLabel = new JLabel(String.valueOf('\u21e5'));
 				final JPanel subFragmentsPanel = new JPanel();
 
-				indentLabel.setForeground(ScriptEaseUI.BUTTON_ORANGE);
+				indentLabel.setForeground(ScriptEaseUI.SE_ORANGE);
 				indentLabel.setFont(new Font("SansSerif", Font.PLAIN, 32));
 
 				panel.add(indentLabel);
@@ -170,14 +170,14 @@ public class CodeFragmentPanel extends JPanel {
 
 			@Override
 			public void processScopeFragment(ScopeFragment fragment) {
-				panel.setupPanel("Scope", ScriptEaseUI.BUTTON_YELLOW);
+				panel.setupPanel("Scope", ScriptEaseUI.SE_YELLOW);
 				panel.buildScopePanel(fragment);
 				this.buildSubPanes(fragment);
 			}
 
 			@Override
 			public void processSeriesFragment(SeriesFragment fragment) {
-				panel.setupPanel("Series", ScriptEaseUI.BUTTON_GREEN);
+				panel.setupPanel("Series", ScriptEaseUI.SE_GREEN);
 				panel.buildSeriesPanel(fragment);
 				this.buildSubPanes(fragment);
 			}
@@ -185,19 +185,19 @@ public class CodeFragmentPanel extends JPanel {
 			@Override
 			public void processFormatReferenceFragment(
 					FormatReferenceFragment fragment) {
-				panel.setupPanel("Format Reference", ScriptEaseUI.BUTTON_PURPLE);
+				panel.setupPanel("Format Reference", ScriptEaseUI.SE_PURPLE);
 				panel.buildTextEditorPanel(fragment);
 			}
 
 			@Override
 			public void processLiteralFragment(LiteralFragment fragment) {
-				panel.setupPanel("Literal", ScriptEaseUI.BUTTON_TEAL);
+				panel.setupPanel("Literal", ScriptEaseUI.SE_TEAL);
 				panel.buildTextEditorPanel(fragment);
 			}
 
 			@Override
 			public void processSimpleDataFragment(SimpleDataFragment fragment) {
-				panel.setupPanel("Simple Data", ScriptEaseUI.BUTTON_BLUE);
+				panel.setupPanel("Simple Data", ScriptEaseUI.SE_BLUE);
 				panel.buildSimplePanel(fragment);
 			}
 

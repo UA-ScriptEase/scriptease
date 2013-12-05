@@ -19,20 +19,20 @@ import scriptease.util.GUIOp;
  */
 public interface ScriptEaseUI {
 
-	public static final Color BUTTON_ORANGE = new Color(199, 78, 44);
-	public static final Color BUTTON_GREEN = new Color(5, 142, 5);
-	public static final Color BUTTON_BURGUNDY = new Color(160, 26, 59);
-	public static final Color BUTTON_TEAL = new Color(5, 142, 158);
-	public static final Color BUTTON_YELLOW = new Color(234, 160, 31);
-	public static final Color BUTTON_BLUE = new Color(50, 131, 224);
-	public static final Color BUTTON_PURPLE = new Color(91, 61, 173);
-	public static final Color BUTTON_BLACK = new Color(68, 68, 68);
+	public static final Color SE_ORANGE = new Color(199, 78, 44);
+	public static final Color SE_GREEN = new Color(5, 142, 5);
+	public static final Color SE_BURGUNDY = new Color(160, 26, 59);
+	public static final Color SE_TEAL = new Color(5, 142, 158);
+	public static final Color SE_YELLOW = new Color(234, 160, 31);
+	public static final Color SE_BLUE = new Color(50, 131, 224);
+	public static final Color SE_PURPLE = new Color(91, 61, 173);
+	public static final Color SE_BLACK = new Color(68, 68, 68);
+	public static final Color SE_RED = new Color(255, 69, 40);
 
 	public static final Color PRIMARY_UI = Color.WHITE;
-	public static final Color SECONDARY_UI = BUTTON_BLACK;
+	public static final Color SECONDARY_UI = SE_BLACK;
 	public static final Color TERTIARY_UI = Color.gray;
 
-	public static final Color BUTTON_RED = new Color(255, 69, 40);
 
 	/**
 	 * The colour (white) used to display graph group backgrounds.
@@ -48,7 +48,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (green) used to display known object bindings.
 	 */
-	public static final Color COLOUR_KNOWN_OBJECT = new Color(20, 175, 0);
+	public static final Color COLOUR_KNOWN_OBJECT = SE_GREEN;//new Color(20, 175, 0);
 
 	/**
 	 * The colour (lighter green) used to display the background of text fields
@@ -60,12 +60,12 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (sort of a light blue) used to display game object bindings.
 	 */
-	public static final Color COLOUR_GAME_OBJECT = new Color(102, 140, 255);
+	public static final Color COLOUR_GAME_OBJECT = SE_BLUE;//new Color(102, 140, 255);
 
 	/**
 	 * The colour (Warning Red) used to display unbound bindings.
 	 */
-	public static final Color COLOUR_UNBOUND = new Color(242, 0, 0);
+	public static final Color COLOUR_UNBOUND = new Color(230, 26, 59);
 
 	/**
 	 * The colour (Simple Brown) used to display simple bindings.
@@ -95,7 +95,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (Secondary UI) used for selected graph nodes
 	 */
-	public static final Color COLOUR_SELECTED_NODE = BUTTON_BLUE;
+	public static final Color COLOUR_SELECTED_NODE = SE_BLUE;
 
 	/**
 	 * The colour (red) used for the delete node tool
@@ -131,7 +131,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (Bright Pink) used for disabled components.
 	 */
-	public static final Color COLOUR_DISABLED = new Color(255, 106, 0);
+	public static final Color COLOUR_DISABLED = SE_YELLOW;
 
 	public static final Color COLOUR_ADD_BUTTON = COLOUR_KNOWN_OBJECT;
 

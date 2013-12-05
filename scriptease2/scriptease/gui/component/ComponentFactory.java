@@ -286,7 +286,7 @@ public final class ComponentFactory {
 				}
 
 				if (this.isEnabled()) {
-					borderColor = ScriptEaseUI.BUTTON_BLACK;
+					borderColor = ScriptEaseUI.SE_BLACK;
 				} else {
 					borderColor = Color.LIGHT_GRAY;
 				}
@@ -305,7 +305,7 @@ public final class ComponentFactory {
 
 	public static JButton buildFlatButton(Action action) {
 		return ComponentFactory.buildFlatButton(action,
-				ScriptEaseUI.BUTTON_BLACK);
+				ScriptEaseUI.SE_BLACK);
 	}
 
 	public static JButton buildFlatButton(Color color) {
@@ -571,7 +571,7 @@ public final class ComponentFactory {
 					int tabIndex, int x, int y, int w, int h, boolean isSelected) {
 				final int height = h * 2;
 
-				g.setColor(ScriptEaseUI.BUTTON_BLACK);
+				g.setColor(ScriptEaseUI.SE_BLACK);
 
 				g.drawLine(x, y, x + w, y);
 				g.drawLine(x, y, x, y + height);

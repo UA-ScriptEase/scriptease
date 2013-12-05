@@ -369,7 +369,7 @@ class SEModelTabbedPane extends JTabbedPane {
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
 		storyGraphPanel.setBorder(BorderFactory
-				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
 				Color.LIGHT_GRAY));
@@ -379,7 +379,7 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
 		storyComponentTree.setBorder(BorderFactory
-				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		// Set up the split pane
 		storyPanel.setBorder(BorderFactory.createEmptyBorder());

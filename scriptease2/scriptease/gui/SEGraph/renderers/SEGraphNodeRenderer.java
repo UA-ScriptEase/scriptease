@@ -246,7 +246,7 @@ public class SEGraphNodeRenderer<E> {
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
-				toolHighlight = GUIOp.scaleWhite(toolColour, 1.5);
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.7);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			}
 
