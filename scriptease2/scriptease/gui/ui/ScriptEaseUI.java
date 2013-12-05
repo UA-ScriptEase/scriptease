@@ -93,13 +93,6 @@ public interface ScriptEaseUI {
 	public static final Color UNSELECTED_COLOUR = Color.WHITE;
 
 	/**
-	 * The colour (white) used by default for node backgrounds.
-	 */
-	// TODO This could just be unselected color.
-	public static final Color COLOUR_NODE_DEFAULT = Color.WHITE;
-
-	// TODO Refactor the colors a bit. Some are the same.
-	/**
 	 * The colour (Secondary UI) used for selected graph nodes
 	 */
 	public static final Color COLOUR_SELECTED_NODE = BUTTON_BLUE;
