@@ -37,6 +37,7 @@ import javax.swing.text.View;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.GUIOp;
+import scriptease.util.StringOp;
 import sun.swing.SwingUtilities2;
 
 /**
@@ -298,22 +299,30 @@ public final class ComponentFactory {
 
 		return field;
 	}
-	
+
 	private enum ButtonState {
 		NEUTRAL, CLICK, HOVER, TOGGLED
 	}
 
 	public static JButton buildFlatButton(Action action) {
-		return ComponentFactory.buildFlatButton(action,
-				ScriptEaseUI.SE_BLACK);
+		return ComponentFactory.buildFlatButton(action, ScriptEaseUI.SE_BLACK);
 	}
 
 	public static JButton buildFlatButton(Color color) {
 		return ComponentFactory.buildFlatButton(null, color);
 	}
 
+	public static JButton buildFlatButton(Color color, String text) {
+		return ComponentFactory.buildFlatButton(null, text, color);
+	}
+
+	public static JButton buildFlatButton(Action action, Color color) {
+		return ComponentFactory.buildFlatButton(action, null, color);
+	}
+
 	@SuppressWarnings("serial")
-	public static JButton buildFlatButton(Action action, final Color color) {
+	public static JButton buildFlatButton(Action action, String text,
+			final Color color) {
 		final JButton button = new JButton() {
 			private ButtonState state;
 			private ButtonState previousState;
@@ -384,6 +393,9 @@ public final class ComponentFactory {
 
 		if (action != null)
 			button.setAction(action);
+
+		if (StringOp.exists(text))
+			button.setText(text);
 
 		return button;
 	}
