@@ -95,22 +95,14 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (white) used by default for node backgrounds.
 	 */
+	// TODO This could just be unselected color.
 	public static final Color COLOUR_NODE_DEFAULT = Color.WHITE;
 
+	// TODO Refactor the colors a bit. Some are the same.
 	/**
 	 * The colour (Secondary UI) used for selected graph nodes
 	 */
-	public static final Color COLOUR_SELECTED_NODE = SECONDARY_UI;
-
-	/**
-	 * The colour (light grey) used for parent of selected node
-	 */
-	public static final Color COLOUR_PARENT_NODE = new Color(140, 140, 140);
-
-	/**
-	 * The colour (same as parent node colour) used for children of selected node
-	 */
-	public static final Color COLOUR_CHILD_NODE = COLOUR_PARENT_NODE;
+	public static final Color COLOUR_SELECTED_NODE = BUTTON_BLUE;
 
 	/**
 	 * The colour (red) used for the delete node tool
