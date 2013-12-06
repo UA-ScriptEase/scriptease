@@ -29143,13 +29143,20 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockReference library="DefaultNWNLibrary">
+        <CodeBlockSource>
           <Name>Activity</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <TargetId>583</TargetId>
-        </CodeBlockReference>
+          <Id>583</Id>
+          <Types>
+            <Type>void</Type>
+          </Types>
+          <Parameters/>
+          <Code>
+            <FormatRef data="NONE" ref="activityItChildren"/>
+          </Code>
+        </CodeBlockSource>
       </CodeBlocks>
     </ActivityIt>
     <ActivityIt>

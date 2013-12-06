@@ -599,7 +599,7 @@ public class MenuFactory {
 			/*
 			 * TODO: Uncomment after releasing to 250
 			 */
-			menu.add(translatorItem);
+			 menu.add(translatorItem);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);
