@@ -252,7 +252,7 @@ public class StoryComponentTransferUtils {
 		final StoryComponent clone = child.clone();
 		final boolean success;
 
-		clone.revalidateKnowItBindings();
+		//clone.revalidateKnowItBindings();
 
 		StoryComponent sibling = parent.getChildAt(insertionIndex);
 		if (sibling != null) {

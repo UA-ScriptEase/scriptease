@@ -40,6 +40,15 @@ public class ActivityItConverter extends ScriptItConverter {
 
 		activity = (ActivityIt) super.unmarshal(reader, context);
 
-		return activity;
+		// TODO: Refactor this grossness.
+
+		// Hack to get a clone returned for a activity if we are loading it in
+		// the Story, otherwise just return the activity. This is done because
+		// KnowItBindingUninitialized don't reference the correct slot otherwise
+		try {
+			return activity.clone();
+		} catch (Exception e) {
+			return activity;
+		}
 	}
 }

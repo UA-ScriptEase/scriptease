@@ -23,7 +23,6 @@ import javax.swing.JSplitPane;
 import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
-import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -38,11 +37,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -50,7 +45,6 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
@@ -132,11 +126,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			final StoryComponentPanel panel;
 			final StoryComponentPanelManager selectionManager;
 			final List<StoryComponent> selected;
-			
+
 			panel = (StoryComponentPanel) comp;
 			selectionManager = panel.getSelectionManager();
 			selected = new ArrayList<StoryComponent>();
-			
+
 			// Get the parent selected StoryComponents, since the children
 			// will be grabbed implicitly from the model
 			if (selectionManager != null) {
@@ -146,44 +140,52 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 
-			// Sort selected panels based on order of appearance. 
-			final StoryAdapter adapter;
+			if (SEModelManager.getInstance().getActiveStoryModel() != null) {
 
-			adapter = new StoryAdapter() {
-				
-				@Override
-				public void processStoryPoint(StoryPoint storyPoint) {
-					this.defaultProcessComplex(storyPoint);
+				// Sort selected panels based on order of appearance by
+				// processing the selected panels. TODO Should be made more
+				// efficient by only processing the current story point we are in
+				final StoryAdapter adapter;
 
-					for (StoryNode successor : storyPoint.getSuccessors()) {
+				adapter = new StoryAdapter() {
+
+					@Override
+					public void processStoryPoint(StoryPoint storyPoint) {
+						this.defaultProcessComplex(storyPoint);
+
+						for (StoryNode successor : storyPoint.getSuccessors()) {
 							successor.process(this);
+						}
 					}
-				}
-				
-				@Override
-				public void processKnowIt(KnowIt knowIt) {
-					if (selected.contains(knowIt)) {
-						data.add(knowIt);
-						selected.remove(knowIt);
-					}
-				}
-				
-				@Override
-				protected void defaultProcessComplex(ComplexStoryComponent complex) {
-					if (selected.contains(complex)) {
-						data.add(complex);
-						selected.remove(complex);
-					}
-						
-					for (StoryComponent child : complex.getChildren()) {
-						child.process(this);
-					}
-				}
-			};
 
-			SEModelManager.getInstance().getActiveRoot().process(adapter);
-			Collections.reverse(data);
-			
+					@Override
+					public void processKnowIt(KnowIt knowIt) {
+						if (selected.contains(knowIt)) {
+							data.add(knowIt);
+							selected.remove(knowIt);
+						}
+					}
+
+					@Override
+					protected void defaultProcessComplex(
+							ComplexStoryComponent complex) {
+						if (selected.contains(complex)) {
+							data.add(complex);
+							selected.remove(complex);
+						}
+
+						for (StoryComponent child : complex.getChildren()) {
+							child.process(this);
+						}
+					}
+				};
+
+				SEModelManager.getInstance().getActiveRoot().process(adapter);
+				Collections.reverse(data);
+			} else {
+				data.addAll(selected);
+			}
+
 		} else if (comp instanceof JList) {
 			final JList list = (JList) comp;
 			for (Object panelObject : list.getSelectedValues()) {
