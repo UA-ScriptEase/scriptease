@@ -42,14 +42,8 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (purple) used to display uninitialized knowIts.
 	 */
-<<<<<<< HEAD
-	public static final Color COLOUR_KNOWIT_UNINITIALIZED = BUTTON_PURPLE;
+	public static final Color COLOUR_KNOWIT_UNINITIALIZED = SE_PURPLE;
 	
-=======
-	public static final Color COLOUR_KNOWIT_UNINITIALIZED = new Color(187, 0,
-			196);
-
->>>>>>> 92e7dc9a76cb1c12affcc9dfad24b5b79251fdfe
 	/**
 	 * The colour (green) used to display known object bindings.
 	 */

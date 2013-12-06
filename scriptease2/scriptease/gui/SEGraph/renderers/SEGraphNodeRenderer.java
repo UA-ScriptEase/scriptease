@@ -185,11 +185,6 @@ public class SEGraphNodeRenderer<E> {
 				ScriptEaseUI.SECONDARY_UI);
 	}
 
-<<<<<<< HEAD
-		if (component != null) {
-			component.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
-					ScriptEaseUI.SECONDARY_UI));
-=======
 	/**
 	 * Sets the appearance of the passed in node to the background colour and
 	 * border colour passed in.
@@ -207,7 +202,6 @@ public class SEGraphNodeRenderer<E> {
 			final int margin = 3;
 			component.setBorder(BorderFactory.createMatteBorder(margin, margin,
 					margin, margin, borderColour));
->>>>>>> 92e7dc9a76cb1c12affcc9dfad24b5b79251fdfe
 
 			component.setBackground(backgroundColour);
 		}
