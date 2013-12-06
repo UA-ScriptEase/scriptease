@@ -219,8 +219,6 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		this.addTab(title, icon, tabContents);
 
-		final int location = this.indexOfComponent(tabContents);
-
 		newTab = new CloseableModelTab(this, model, icon, tabContents);
 
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
@@ -252,17 +250,20 @@ class SEModelTabbedPane extends JTabbedPane {
 		final DialogueEditorPanel dialogueEditor;
 		final BehaviourEditorPanel behaviourEditor;
 
-		final JButton backToStory;
+		final JButton backFromDialogue;
+		final JButton backFromBehaviour;
 
 		final SEGraph<StoryNode> storyGraph;
 		final StoryComponentObserver graphRedrawer;
 		final JPanel storyGraphPanel;
 
 		final JScrollPane storyGraphScrollPane;
+		final String backText;
 
 		final StoryComponentPanelTree storyComponentTree = model
 				.getStoryComponentPanelTree();
 
+		backText = "<html><center>Back<br>to<br>Story</center></html>";
 		layout = new CardLayout();
 		topLevelPane = new JPanel(layout);
 
@@ -270,11 +271,13 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyGraph = SEGraphFactory.buildStoryGraph(start);
 		graphToolBar = storyGraph.getToolBar();
 
-		backToStory = new JButton(
-				"<html><center>Back<br>to<br>Story</center></html>");
+		backFromDialogue = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BLACK, backText);
+		backFromBehaviour = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BLACK, backText);
 
-		dialogueEditor = new DialogueEditorPanel(model, backToStory);
-		behaviourEditor = new BehaviourEditorPanel(backToStory);
+		dialogueEditor = new DialogueEditorPanel(model, backFromDialogue);
+		behaviourEditor = new BehaviourEditorPanel(backFromBehaviour);
 
 		graphRedrawer = new StoryComponentObserver() {
 			@Override
@@ -371,7 +374,7 @@ class SEModelTabbedPane extends JTabbedPane {
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
 		storyGraphPanel.setBorder(BorderFactory
-				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
 				Color.LIGHT_GRAY));
@@ -381,7 +384,7 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
 		storyComponentTree.setBorder(BorderFactory
-				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		// Set up the split pane
 		storyPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -398,13 +401,16 @@ class SEModelTabbedPane extends JTabbedPane {
 		topLevelPane.add(behaviourEditor, BEHAVIOUR_EDITOR);
 		topLevelPane.setBackground(ScriptEaseUI.SECONDARY_UI);
 
-		backToStory.addActionListener(new ActionListener() {
+		final ActionListener backListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				layout.show(topLevelPane, STORY_EDITOR);
 				dialogueEditor.setDialogueLine(null);
 			}
-		});
+		};
+
+		backFromDialogue.addActionListener(backListener);
+		backFromBehaviour.addActionListener(backListener);
 
 		ResourcePanel.getInstance().addObserver(topLevelPane,
 				new ResourceTreeAdapter() {

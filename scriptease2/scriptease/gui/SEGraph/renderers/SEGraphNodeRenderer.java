@@ -154,22 +154,17 @@ public class SEGraphNodeRenderer<E> {
 
 			final E key = entry.getKey();
 
-			final Color backgroundColour;
-
-			if (this.graph.getToolBarMode() == Mode.GROUP) {
-				backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+			if (this.graph.getToolBarMode() != Mode.GROUP
+					&& (this.graph.getParents(lastSelectedNode).contains(key) || this.graph
+							.getChildren(lastSelectedNode).contains(key))) {
+				this.setComponentAppearance(entry.getValue(), key,
+						ScriptEaseUI.UNSELECTED_COLOUR,
+						ScriptEaseUI.COLOUR_SELECTED_NODE);
 			} else {
-				if (this.graph.getParents(lastSelectedNode).contains(key)) {
-					backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
-				} else if (this.graph.getChildren(lastSelectedNode).contains(
-						key)) {
-					backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
-				} else {
-					backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
-				}
+				this.setComponentAppearance(entry.getValue(), key,
+						ScriptEaseUI.UNSELECTED_COLOUR);
 			}
 
-			this.setComponentAppearance(entry.getValue(), key, backgroundColour);
 		}
 	}
 
@@ -186,10 +181,33 @@ public class SEGraphNodeRenderer<E> {
 	 */
 	public void setComponentAppearance(JComponent component, E node,
 			Color backgroundColour) {
+		this.setComponentAppearance(component, node, backgroundColour,
+				ScriptEaseUI.SECONDARY_UI);
+	}
 
+<<<<<<< HEAD
 		if (component != null) {
 			component.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
 					ScriptEaseUI.SECONDARY_UI));
+=======
+	/**
+	 * Sets the appearance of the passed in node to the background colour and
+	 * border colour passed in.
+	 * 
+	 * @param component
+	 *            The component to set the appearance for.
+	 * @param borderColour
+	 *            The border colour to set on the component.
+	 * @param backgroundColour
+	 *            The background colour to set for the component.
+	 */
+	public void setComponentAppearance(JComponent component, E node,
+			Color backgroundColour, Color borderColour) {
+		if (component != null) {
+			final int margin = 3;
+			component.setBorder(BorderFactory.createMatteBorder(margin, margin,
+					margin, margin, borderColour));
+>>>>>>> 92e7dc9a76cb1c12affcc9dfad24b5b79251fdfe
 
 			component.setBackground(backgroundColour);
 		}
@@ -234,7 +252,7 @@ public class SEGraphNodeRenderer<E> {
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
-				toolHighlight = GUIOp.scaleWhite(toolColour, 2.0);
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.7);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			}
 
@@ -246,7 +264,8 @@ public class SEGraphNodeRenderer<E> {
 				backgroundColour = toolHighlight;
 			}
 
-			this.setComponentAppearance(component, node, backgroundColour);
+			this.setComponentAppearance(component, node, backgroundColour,
+					backgroundColour);
 
 		} else if (this.graph.getSelectedNodes().contains(node)) {
 			/*
@@ -268,7 +287,8 @@ public class SEGraphNodeRenderer<E> {
 			} else
 				backgroundColour = initialColour;
 
-			this.setComponentAppearance(component, node, backgroundColour);
+			this.setComponentAppearance(component, node, backgroundColour,
+					backgroundColour);
 
 			// If nothing and selected
 		} else {
@@ -296,19 +316,20 @@ public class SEGraphNodeRenderer<E> {
 								colour);
 					else
 						this.setComponentAppearance(nComponent, currNode,
-								ScriptEaseUI.COLOUR_NODE_DEFAULT);
+								ScriptEaseUI.UNSELECTED_COLOUR);
 				}
 			} else {
-				if (this.graph.getParents(lastSelectedNode).contains(node)) {
-					backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
-				} else if (this.graph.getChildren(lastSelectedNode).contains(
-						node)) {
-					backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+				if (this.graph.getParents(lastSelectedNode).contains(node)
+						|| this.graph.getChildren(lastSelectedNode).contains(
+								node)) {
+					this.setComponentAppearance(component, node,
+							ScriptEaseUI.UNSELECTED_COLOUR,
+							ScriptEaseUI.COLOUR_SELECTED_NODE);
 				} else {
-					backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+					this.setComponentAppearance(component, node,
+							ScriptEaseUI.UNSELECTED_COLOUR);
 				}
 
-				this.setComponentAppearance(component, node, backgroundColour);
 			}
 		}
 

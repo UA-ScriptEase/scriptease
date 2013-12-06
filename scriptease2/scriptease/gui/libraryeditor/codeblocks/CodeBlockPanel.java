@@ -305,9 +305,10 @@ public class CodeBlockPanel extends JPanel {
 		}
 
 		for (KnowIt parameter : codeBlock.getParameters()) {
-			final ParameterPanel paramPane = LibraryEditorPanelFactory.getInstance()
-					.buildParameterPanel(scriptIt, codeBlock, parameter);
-			
+			final ParameterPanel paramPane = LibraryEditorPanelFactory
+					.getInstance().buildParameterPanel(scriptIt, codeBlock,
+							parameter);
+
 			paramPane.addListener(new ParameterPanelObserver() {
 
 				@Override
@@ -315,7 +316,7 @@ public class CodeBlockPanel extends JPanel {
 					notifyChange();
 				}
 			});
-			
+
 			parameterPanel.add(paramPane);
 		}
 
@@ -514,19 +515,19 @@ public class CodeBlockPanel extends JPanel {
 		codeEditorScrollPane = new JScrollPane(codePanel);
 
 		buttons.add(ComponentFactory.buildFlatButton(
-				InsertLineAction.getInstance(), ScriptEaseUI.BUTTON_BURGUNDY));
+				InsertLineAction.getInstance(), ScriptEaseUI.SE_BURGUNDY));
 		buttons.add(ComponentFactory.buildFlatButton(
-				InsertIndentAction.getInstance(), ScriptEaseUI.BUTTON_ORANGE));
+				InsertIndentAction.getInstance(), ScriptEaseUI.SE_ORANGE));
 		buttons.add(ComponentFactory.buildFlatButton(
-				InsertScopeAction.getInstance(), ScriptEaseUI.BUTTON_YELLOW));
+				InsertScopeAction.getInstance(), ScriptEaseUI.SE_YELLOW));
 		buttons.add(ComponentFactory.buildFlatButton(
-				InsertSeriesAction.getInstance(), ScriptEaseUI.BUTTON_GREEN));
+				InsertSeriesAction.getInstance(), ScriptEaseUI.SE_GREEN));
 		buttons.add(ComponentFactory.buildFlatButton(
-				InsertSimpleAction.getInstance(), ScriptEaseUI.BUTTON_BLUE));
+				InsertSimpleAction.getInstance(), ScriptEaseUI.SE_BLUE));
 		buttons.add(ComponentFactory.buildFlatButton(
-				InsertLiteralAction.getInstance(), ScriptEaseUI.BUTTON_TEAL));
+				InsertLiteralAction.getInstance(), ScriptEaseUI.SE_TEAL));
 		buttons.add(ComponentFactory.buildFlatButton(
-				InsertReferenceAction.getInstance(), ScriptEaseUI.BUTTON_PURPLE));
+				InsertReferenceAction.getInstance(), ScriptEaseUI.SE_PURPLE));
 		buttons.add(ComponentFactory.buildFlatButton(MoveFragmentUpAction
 				.getInstance()));
 		buttons.add(ComponentFactory.buildFlatButton(MoveFragmentDownAction
