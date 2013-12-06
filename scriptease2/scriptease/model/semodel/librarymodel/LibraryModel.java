@@ -358,7 +358,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public StoryComponentContainer getActivitysCategory() {
 		return this.activitiesCategory;
 	}
-
+	
 	public StoryComponentContainer getNoteContainer() {
 		return this.noteContainer;
 	}
