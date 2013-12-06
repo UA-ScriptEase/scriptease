@@ -110,7 +110,7 @@ public class ResourcePanel extends JPanel {
 		this.add(filterPane);
 		this.add(treeScrollPane);
 		this.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,
-				ScriptEaseUI.BUTTON_BLACK));
+				ScriptEaseUI.SE_BLACK));
 
 		searchField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override

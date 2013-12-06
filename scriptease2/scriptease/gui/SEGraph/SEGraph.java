@@ -1023,16 +1023,12 @@ public class SEGraph<E> extends JComponent {
 								else
 									lineColor = ScriptEaseUI.COLOUR_GROUPABLE_NODE;
 							} else
-								lineColor = Color.LIGHT_GRAY;
+								lineColor = ScriptEaseUI.SECONDARY_UI;
 						} else {
-							if (parentSelected && childSelected) {
+							if (parentSelected || childSelected) {
 								lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;
-							} else if (parentSelected) {
-								lineColor = ScriptEaseUI.SECONDARY_UI;
-							} else if (childSelected) {
-								lineColor = ScriptEaseUI.SECONDARY_UI;
 							} else
-								lineColor = Color.LIGHT_GRAY;
+								lineColor = ScriptEaseUI.SECONDARY_UI;
 						}
 
 						// Move the arrows up if there are more children and

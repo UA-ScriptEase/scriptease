@@ -46,7 +46,7 @@ import scriptease.util.GUIOp;
 @SuppressWarnings("serial")
 public class StoryComponentPanelJList extends JList implements Filterable {
 	private ObserverManager<StoryComponentPanelJListObserver> observerManager;
-	private Filter filterRule;
+	private Filter filter;
 
 	// Store a weak map of panels to story components so that we do not have to
 	// redraw them every single time
@@ -67,7 +67,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * The JList also has a transfer handler attached that gives the ability to
 	 * drag and drop the Panels. <br>
 	 * <br>
-	 * Panels should be added using {@link #addStoryComponents(Collection)}
+	 * Panels should be added using {@link #setStoryComponents(Collection)}
 	 * 
 	 * @param filter
 	 */
@@ -80,7 +80,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * The JList also has a transfer handler attached that gives the ability to
 	 * drag and drop the Panels. <br>
 	 * <br>
-	 * Panels should be added using {@link #addStoryComponents(Collection)}
+	 * Panels should be added using {@link #setStoryComponents(Collection)}
 	 * 
 	 * @param filter
 	 * 
@@ -100,7 +100,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * The JList also has a transfer handler attached that gives the ability to
 	 * drag and drop the Panels. <br>
 	 * <br>
-	 * Panels should be added using {@link #addStoryComponents(Collection)}
+	 * Panels should be added using {@link #setStoryComponents(Collection)}
 	 * 
 	 * @param filter
 	 * 
@@ -119,7 +119,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		this.setModel(new DefaultListModel());
 
 		this.panelMap = new WeakHashMap<StoryComponent, StoryComponentPanel>();
-		this.filterRule = new VisibilityFilter(hideInvisible);
+		this.filter = new VisibilityFilter(hideInvisible);
 
 		if (filter != null)
 			this.updateFilter(filter);
@@ -199,49 +199,71 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 	/**
 	 * Generates panels for the passed in list of Story Components and adds them
-	 * to the list. <br>
-	 * <br>
-	 * Note: This does not remove any Story Component Panels. Call
-	 * {@link #removeAllStoryComponents()} first, as needed.
+	 * to the list.
 	 * 
 	 * @param storyComponentList
 	 */
-	public void addStoryComponents(Collection<StoryComponent> storyComponentList) {
-		final DefaultListModel listModel = (DefaultListModel) this.getModel();
-		listModel.removeElement(noResultsPanel);
+	public void setStoryComponents(Collection<StoryComponent> storyComponentList) {
+		final DefaultListModel listModel = new DefaultListModel();
 
 		for (StoryComponent component : storyComponentList) {
-			this.addStoryComponent(component);
+			if (this.matchesFilter(component))
+				this.addToModel(component, listModel);
 		}
+
+		this.setModel(listModel);
 
 		if (listModel.isEmpty())
 			listModel.addElement(noResultsPanel);
 	}
 
+	/**
+	 * Returns whether the component matches the filter.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	private boolean matchesFilter(StoryComponent component) {
+		return this.filter == null || this.filter.isAcceptable(component);
+	}
+
+	/**
+	 * Adds the component to the model. You might want to check if the component
+	 * {@link #matchesFilter(StoryComponent)} first.
+	 * 
+	 * @param component
+	 * @param model
+	 */
+	private void addToModel(StoryComponent component, DefaultListModel model) {
+		final StoryComponentPanel panel;
+
+		panel = panelMap.get(component);
+
+		if (panel == null) {
+			final StoryComponentPanel newPanel;
+
+			newPanel = StoryComponentPanelFactory.getInstance()
+					.buildStoryComponentPanel(component);
+
+			panelMap.put(component, newPanel);
+
+			model.addElement(newPanel);
+		} else {
+			model.addElement(panel);
+		}
+	}
+
+	/**
+	 * Adds the story component to the list if it matches the filter and if it
+	 * hasn't already been added.
+	 * 
+	 * @param component
+	 */
 	public void addStoryComponent(StoryComponent component) {
-		if ((this.filterRule == null)
-				|| ((this.filterRule != null) && (this.filterRule
-						.isAcceptable(component)))) {
+		if (this.matchesFilter(component)) {
 			// Check if the element is already part of the list
 			if (getIndexOfStoryComponent(component) == -1) {
-				final DefaultListModel listModel;
-				final StoryComponentPanel panel;
-
-				listModel = (DefaultListModel) this.getModel();
-				panel = panelMap.get(component);
-
-				if (panel == null) {
-					final StoryComponentPanel newPanel;
-
-					newPanel = StoryComponentPanelFactory.getInstance()
-							.buildStoryComponentPanel(component);
-
-					panelMap.put(component, newPanel);
-
-					listModel.addElement(newPanel);
-				} else {
-					listModel.addElement(panel);
-				}
+				this.addToModel(component, (DefaultListModel) this.getModel());
 			} else {
 				System.err.println("StoryComponent " + component
 						+ " already exists in StoryComponentPanelJList");
@@ -335,24 +357,15 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		}
 	}
 
-	/**
-	 * Removes all Story Components from the list.
-	 */
-	public void removeAllStoryComponents() {
-		this.panelMap.clear();
-		((DefaultListModel) this.getModel()).clear();
-	}
-
 	@Override
-	public void updateFilter(Filter newFilterRule) {
-		if (newFilterRule == null
-				|| !(newFilterRule instanceof StoryComponentFilter))
+	public void updateFilter(Filter newFilter) {
+		if (newFilter == null || !(newFilter instanceof StoryComponentFilter))
 			return;
 
-		if (this.filterRule == null)
-			this.filterRule = newFilterRule;
+		if (this.filter == null)
+			this.filter = newFilter;
 		else
-			this.filterRule.addRule(newFilterRule);
+			this.filter.addRule(newFilter);
 	}
 
 	/**

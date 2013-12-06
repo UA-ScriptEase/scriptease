@@ -1,6 +1,5 @@
 package scriptease.gui.SEGraph.renderers;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

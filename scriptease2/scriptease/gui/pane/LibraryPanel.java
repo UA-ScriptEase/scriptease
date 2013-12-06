@@ -334,7 +334,7 @@ public class LibraryPanel extends JTabbedPane {
 		listScroll.setBorder(BorderFactory.createEmptyBorder());
 		tabPanel.add(listScroll);
 		tabPanel.setBorder(BorderFactory
-				.createLineBorder(ScriptEaseUI.BUTTON_BLACK));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		// Configure the displaying of the pane
 		this.updateList(list);
@@ -499,8 +499,6 @@ public class LibraryPanel extends JTabbedPane {
 	private void updateList(StoryComponentPanelJList list) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		list.removeAllStoryComponents();
-
 		if (model != null
 				&& TranslatorManager.getInstance().getActiveTranslator() != null) {
 			final Translator translator = model.getTranslator();
@@ -553,7 +551,7 @@ public class LibraryPanel extends JTabbedPane {
 				Collections.sort(components,
 						LibraryPanel.STORY_COMPONENT_COMPARATOR);
 
-				list.addStoryComponents(components);
+				list.setStoryComponents(components);
 			}
 		}
 	}
