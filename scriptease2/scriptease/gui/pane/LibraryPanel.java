@@ -197,7 +197,8 @@ public class LibraryPanel extends JTabbedPane {
 		//this.storyComponentPanelJLists.add(behavioursList);
 		this.storyComponentPanelJLists.add(controlsList);
 		this.storyComponentPanelJLists.add(activitiesList);
-		this.storyComponentPanelJLists.add(blocksList);
+		// TODO uncomment after winter release
+		//this.storyComponentPanelJLists.add(blocksList);
 
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
@@ -208,7 +209,8 @@ public class LibraryPanel extends JTabbedPane {
 		
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Activities", this.createTab(activitiesList));
-		this.add("Blocks", this.createTab(blocksList));
+		// TODO uncomment after winter release
+		// this.add("Blocks", this.createTab(blocksList));
 
 		// Set up Hotkeys
 		this.setMnemonicAt(0, KeyEvent.VK_1);
@@ -216,7 +218,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(2, KeyEvent.VK_3);
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
-		this.setMnemonicAt(5, KeyEvent.VK_6);
+		// this.setMnemonicAt(5, KeyEvent.VK_6);
 		// this.setMnemonicAt(6, KeyEvent.VK_7);
 
 		this.setUI(ComponentFactory.buildFlatTabUI());
@@ -541,9 +543,9 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (index == 4) {
 					components = libraryModel.getActivitysCategory()
 							.getChildren();
-				} else if (index == 5) {
-					components = libraryModel.getControllersCategory()
-							.getChildren();
+//				} else if (index == 5) {
+//					components = libraryModel.getControllersCategory()
+//							.getChildren();
 				} else {
 					throw new IllegalArgumentException(
 							"Invalid list in LibraryPanel: " + list);
