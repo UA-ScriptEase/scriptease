@@ -198,7 +198,6 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 		block.setTypes(types);
 		for (KnowIt parameter : parameters) {
 			block.addParameter(parameter);
-			//parameter.setOwner(block);
 		}
 		block.setIncludes(includes);
 		block.setCode(code);
