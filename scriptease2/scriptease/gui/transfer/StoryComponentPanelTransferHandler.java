@@ -140,48 +140,52 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 
-			if (SEModelManager.getInstance().getActiveStoryModel() != null) {
+			final StoryModel model = SEModelManager.getInstance()
+					.getActiveStoryModel();
+			if (model != null) {
 
-				// Sort selected panels based on order of appearance by
-				// processing the selected panels. TODO Should be made more
-				// efficient by only processing the current story point we are in
-				final StoryAdapter adapter;
+				StoryComponentPanel parent = panel
+						.getParentStoryComponentPanel();
 
-				adapter = new StoryAdapter() {
+				// Get the first Story Point parent.
+				while (parent != null
+						&& !(parent.getStoryComponent() instanceof StoryPoint)) {
+					parent = parent.getParentStoryComponentPanel();
+				}
 
-					@Override
-					public void processStoryPoint(StoryPoint storyPoint) {
-						this.defaultProcessComplex(storyPoint);
+				if (parent != null) {
 
-						for (StoryNode successor : storyPoint.getSuccessors()) {
-							successor.process(this);
-						}
-					}
+					// Sort selected panels based on order of appearance by
+					// processing the selected panels.
+					final StoryPoint storyPoint = (StoryPoint) parent
+							.getStoryComponent();
 
-					@Override
-					public void processKnowIt(KnowIt knowIt) {
-						if (selected.contains(knowIt)) {
-							data.add(knowIt);
-							selected.remove(knowIt);
-						}
-					}
+					storyPoint.process(new StoryAdapter() {
 
-					@Override
-					protected void defaultProcessComplex(
-							ComplexStoryComponent complex) {
-						if (selected.contains(complex)) {
-							data.add(complex);
-							selected.remove(complex);
+						@Override
+						public void processKnowIt(KnowIt knowIt) {
+							if (selected.contains(knowIt)) {
+								data.add(knowIt);
+								selected.remove(knowIt);
+							}
 						}
 
-						for (StoryComponent child : complex.getChildren()) {
-							child.process(this);
-						}
-					}
-				};
+						@Override
+						protected void defaultProcessComplex(
+								ComplexStoryComponent complex) {
+							if (selected.contains(complex)) {
+								data.add(complex);
+								selected.remove(complex);
+							}
 
-				SEModelManager.getInstance().getActiveRoot().process(adapter);
-				Collections.reverse(data);
+							for (StoryComponent child : complex.getChildren()) {
+								child.process(this);
+							}
+						}
+					});
+
+					Collections.reverse(data);
+				}
 			} else {
 				data.addAll(selected);
 			}
