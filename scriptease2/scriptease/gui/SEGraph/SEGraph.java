@@ -416,7 +416,6 @@ public class SEGraph<E> extends JComponent {
 			}
 
 			this.renderer.resetAppearances();
-			this.model.setCurrentNodes(nodes);
 			
 			return true;
 		}

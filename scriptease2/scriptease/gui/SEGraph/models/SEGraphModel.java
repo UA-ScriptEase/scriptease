@@ -26,7 +26,6 @@ public abstract class SEGraphModel<E> {
 	// calculate it. This was added in due to an existing performance issue.
 	private final Map<E, Integer> depthMap;
 	private final E start;
-	private Collection<E> current;
 
 	/**
 	 * Creates a new model for an SEGraph with the passed in node as the start
@@ -37,8 +36,6 @@ public abstract class SEGraphModel<E> {
 	public SEGraphModel(E start) {
 		this.depthMap = new IdentityHashMap<E, Integer>();
 		this.start = start;
-		this.current = new ArrayList<E>();
-		this.current.add(start);
 		
 		this.recalculateDepthMap();
 	}
@@ -95,25 +92,6 @@ public abstract class SEGraphModel<E> {
 	 * @return
 	 */
 	public abstract boolean overwriteNodeData(E existingNode, E node);
-
-	/**
-	 * Returns the first current selected node. Returns null if no node is selected.
-	 * @return
-	 */
-	public E getCurrentNode() {
-		if (this.current.iterator().hasNext())
-			return this.current.iterator().next();
-		
-		return null;
-	}
-
-	/**
-	 * Sets the current selected nodes to the passed in collection.
-	 * @param current
-	 */
-	public void setCurrentNodes(Collection<E> current) {
-		this.current = current;
-	}
 	
 	/**
 	 * Adds a node between two existing nodes. Order of the two nodes does not
