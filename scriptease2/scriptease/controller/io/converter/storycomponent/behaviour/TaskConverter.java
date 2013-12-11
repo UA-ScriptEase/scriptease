@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent.behaviour;
 import java.util.HashSet;
 import java.util.Set;
 
+import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.storycomponent.ComplexStoryComponentConverter;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
@@ -19,10 +20,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public abstract class TaskConverter extends ComplexStoryComponentConverter {
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class.
-	public static final String TAG_CHANCE = "Chance";
-	public static final String TAG_SUCCESSORS = "Successors";
 
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
@@ -30,13 +27,8 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 		final Task task = (Task) source;
 		super.marshal(source, writer, context);
 
-		writer.startNode(TAG_CHANCE);
-		writer.setValue(task.getChance().toString());
-		writer.endNode();
-
-		writer.startNode(TAG_SUCCESSORS);
-		context.convertAnother(task.getSuccessors());
-		writer.endNode();
+		XMLNode.CHANCE.writeString(writer, task.getChance().toString());
+		XMLNode.SUCCESSORS.writeObject(writer, context, task.getSuccessors());
 	}
 
 	@Override
@@ -45,36 +37,27 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 		final Task task = (Task) super.unmarshal(reader, context);
 
 		final Set<Task> successors = new HashSet<Task>();
-		String chance = null;
+		final String chance;
+
+		if (reader.hasMoreChildren()) {
+			chance = XMLNode.CHANCE.readString(reader);
+		} else
+			chance = "";
 
 		if (reader.hasMoreChildren()) {
 			reader.moveDown();
-
-			if (reader.getNodeName().equalsIgnoreCase(TAG_CHANCE)) {
-				chance = reader.getValue();
-			} else {
-				System.err.println("Expected " + TAG_CHANCE + " but found "
-						+ reader.getNodeName());
-			}
-
-			reader.moveUp();
-		}
-
-		if (reader.hasMoreChildren()) {
-			reader.moveDown();
-			
-			if (reader.getNodeName().equalsIgnoreCase(TAG_SUCCESSORS)) {
+			final String successorXML = XMLNode.SUCCESSORS.getName();
+			if (reader.getNodeName().equalsIgnoreCase(successorXML)) {
 
 				while (reader.hasMoreChildren()) {
 					reader.moveDown();
 					final String nodeName = reader.getNodeName();
 
-					if (nodeName
-							.equals(IndependentTaskConverter.TAG_INDEPENDENT_TASK)) {
+					if (nodeName.equals(XMLNode.INDEPENDENT_TASK.getName())) {
 						successors.add((IndependentTask) context
 								.convertAnother(task, IndependentTask.class));
-					} else if (nodeName
-							.equals(CollaborativeTaskConverter.TAG_COLLABORATIVE_TASK)) {
+					} else if (nodeName.equals(XMLNode.COLLABORATIVE_TASK
+							.getName())) {
 						successors.add((CollaborativeTask) context
 								.convertAnother(task, CollaborativeTask.class));
 					} else {
@@ -86,7 +69,7 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 				}
 
 			} else {
-				System.err.println("Expected " + TAG_SUCCESSORS + " but found "
+				System.err.println("Expected " + successorXML + " but found "
 						+ reader.getNodeName());
 			}
 

@@ -3,9 +3,11 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
+import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -14,40 +16,28 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class SeriesFragmentConverter implements Converter {
-	private static final String DATA_TAG = "data";
-	private static final String UNIQUE_TAG = "unique";
-	private static final String FILTER_TAG = "filter";
-	private static final String FILTER_BY_TAG = "filterBy";
-	private static final String SEPARATOR_TAG = "separator";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final SeriesFragment series = (SeriesFragment) source;
+		final String filterType = series.getSeriesFilter().getType().toString();
+		final String filterValue = series.getSeriesFilter().getValue();
+		final String separator = series.getSeparator();
 
-		// Data Tag
-		writer.addAttribute(DATA_TAG, series.getDirectiveText());
+		XMLAttribute.DATA.write(writer, series.getDirectiveText());
 
-		// Unique Tag
 		if (series.isUnique())
-			writer.addAttribute(UNIQUE_TAG, "true");
+			XMLAttribute.UNIQUE.write(writer, "true");
 
-		// FilterBy Tag
-		String filterType = series.getSeriesFilter().getType().toString();
-		if (filterType != null
+		if (StringOp.exists(filterType)
 				&& !filterType.equals(SeriesFilterType.NONE.toString()))
-			writer.addAttribute(FILTER_BY_TAG, filterType);
+			XMLAttribute.FILTERBY.write(writer, filterType);
 
-		// Filter Tag
-		String filterValue = series.getSeriesFilter().getValue();
-		if (filterValue != null && !filterValue.isEmpty())
-			writer.addAttribute(FILTER_TAG, filterValue);
+		if (StringOp.exists(filterValue))
+			XMLAttribute.FILTER.write(writer, filterValue);
 
-		// Separator Tag
-		String separator = series.getSeparator();
-		if (separator != null && !separator.isEmpty()) {
-			writer.addAttribute(SEPARATOR_TAG, separator);
-		}
+		if (StringOp.exists(separator))
+			XMLAttribute.SEPARATOR.write(writer, separator);
 
 		// Write Sub Fragments
 		context.convertAnother(series.getSubFragments());
@@ -57,61 +47,37 @@ public class SeriesFragmentConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final String data;
-		String uniqueString;
-		String filterTypeString;
-		String filter;
-		List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
-		String separator = null;
-		SeriesFragment series = null;
+		final String data = XMLAttribute.DATA.read(reader);
+		final String uniqueString = XMLAttribute.UNIQUE.read(reader);
+		final String filterTypeString = XMLAttribute.FILTERBY.read(reader);
+		final String filter = XMLAttribute.FILTER.read(reader);
+		final String separator = XMLAttribute.SEPARATOR.read(reader);
 
-		// Data Tag
-		data = reader.getAttribute(DATA_TAG);
-		// Unique Tag
-		uniqueString = reader.getAttribute(UNIQUE_TAG);
-		// FilterBy Tag
-		if (uniqueString == null)
-			uniqueString = "false";
-		filterTypeString = reader.getAttribute(FILTER_BY_TAG);
-		if (filterTypeString == null)
-			filterTypeString = "";
-		// Filter Tag
-		filter = reader.getAttribute(FILTER_TAG);
-		if (filter == null)
-			filter = "";
+		final boolean isUnique;
+		final SeriesFilterType filterType;
+		final List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
 
-		separator = reader.getAttribute(SEPARATOR_TAG);
-		if (separator == null)
-			separator = "";
-
-		// Separator Tag
-		if (reader.hasMoreChildren()) {
-			// Read Sub Fragments
-			subFragments.addAll((List<AbstractFragment>) context
-					.convertAnother(series, ArrayList.class));
-		}
-
-		boolean isUnique;
-
-		if (uniqueString.equalsIgnoreCase("true"))
+		if (StringOp.exists(uniqueString)
+				&& uniqueString.equalsIgnoreCase("true"))
 			isUnique = true;
 		else
 			isUnique = false;
 
-		SeriesFilterType filterType;
-
-		if (filterTypeString.equalsIgnoreCase(SeriesFilterType.NAME.name()))
+		if (SeriesFilterType.NAME.name().equalsIgnoreCase(filterTypeString))
 			filterType = SeriesFilterType.NAME;
-		else if (filterTypeString
-				.equalsIgnoreCase(SeriesFilterType.SLOT.name()))
+		else if (SeriesFilterType.SLOT.name()
+				.equalsIgnoreCase(filterTypeString))
 			filterType = SeriesFilterType.SLOT;
 		else
 			filterType = SeriesFilterType.NONE;
 
-		series = new SeriesFragment(data, separator, subFragments, filter,
-				filterType, isUnique);
+		if (reader.hasMoreChildren()) {
+			subFragments.addAll((List<AbstractFragment>) context
+					.convertAnother(null, ArrayList.class));
+		}
 
-		return series;
+		return new SeriesFragment(data, separator, subFragments, filter,
+				filterType, isUnique);
 	}
 
 	@SuppressWarnings("rawtypes")

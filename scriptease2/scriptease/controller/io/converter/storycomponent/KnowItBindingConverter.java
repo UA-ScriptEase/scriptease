@@ -3,9 +3,9 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.Arrays;
 
 import scriptease.controller.BindingVisitor;
+import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.StoryModelConverter;
-import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
@@ -23,6 +23,7 @@ import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
+import scriptease.util.ListOp;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
@@ -39,23 +40,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public class KnowItBindingConverter implements Converter {
-
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
-	private static final String TAG_VALUE = "Value";
-
-	private static final String ATTRIBUTE_BINDING_FLAVOUR = "flavour";
-
-	private static final String ATTRIBUTE_VALUE_CONSTANT_FLAVOUR = "constant";
-	private static final String ATTRIBUTE_VALUE_RESOURCE_FLAVOUR = "resource";
-	private static final String ATTRIBUTE_VALUE_FUNCTION_FLAVOUR = "function";
-	private static final String ATTRIBUTE_VALUE_REFERENCE_FLAVOUR = "reference";
-	private static final String ATTRIBUTE_VALUE_UNINITIALIZED_FLAVOUR = "uninitialized";
-	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
-	private static final String ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR = "automatic";
-	private static final String ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR = "storyPoint";
-	private static final String ATTRIBUTE_VALUE_STORY_GROUP_FLAVOUR = "storyGroup";
+	private static final String FLAVOUR_CONSTANT = "constant";
+	private static final String FLAVOUR_RESOURCE = "resource";
+	private static final String FLAVOUR_FUNCTION = "function";
+	private static final String FLAVOUR_REFERENCE = "reference";
+	private static final String FLAVOUR_UNINITIALIZED = "uninitialized";
+	private static final String FLAVOUR_NULL = "null";
+	private static final String FLAVOUR_AUTOMATIC = "automatic";
+	private static final String FLAVOUR_STORY_POINT = "storyPoint";
+	private static final String FLAVOUR_STORY_GROUP = "storyGroup";
 
 	/**
 	 * Can convert any subclass of KnowItBinding
@@ -90,177 +83,61 @@ public class KnowItBindingConverter implements Converter {
 		binding.process(new BindingVisitor() {
 			@Override
 			public void processResource(KnowItBindingResource constant) {
-				if (constant.getFirstType().equals(StoryPoint.STORY_POINT_TYPE)) {
-					// deal with it B-->:)
-					KnowItBindingConverter.this.marshallConstantBinding(
-							constant, writer);
-				} else if (constant.isIdentifiableGameConstant())
-					KnowItBindingConverter.this
-							.marshallIdentifiableGameConstantBinding(constant,
-									writer);
-				else
-					KnowItBindingConverter.this.marshallConstantBinding(
-							constant, writer);
+				final Resource value = constant.getValue();
+
+				if (constant.isIdentifiableGameConstant()
+						&& !constant.getFirstType().equals(
+								StoryPoint.STORY_POINT_TYPE)) {
+					XMLAttribute.FLAVOUR.write(writer, FLAVOUR_RESOURCE);
+					writer.setValue(value.getTemplateID());
+				} else {
+					XMLAttribute.FLAVOUR.write(writer, FLAVOUR_CONSTANT);
+					XMLNode.TYPE.writeString(writer,
+							ListOp.getFirst(value.getTypes()));
+					XMLNode.VALUE.writeString(writer, value.getCodeText());
+				}
 			}
 
 			@Override
-			public void processFunction(KnowItBindingFunction function) {
-				KnowItBindingConverter.this.marshallFunctionBinding(function,
-						writer, context);
+			public void processFunction(KnowItBindingFunction fxn) {
+				XMLAttribute.FLAVOUR.write(writer, FLAVOUR_FUNCTION);
+				XMLNode.SCRIPTIT.writeObject(writer, context, fxn.getValue());
 			}
 
 			@Override
-			public void processReference(KnowItBindingReference reference) {
-				KnowItBindingConverter.this.marshallReferenceBinding(reference,
-						writer, context);
+			public void processReference(KnowItBindingReference ref) {
+				XMLAttribute.FLAVOUR.write(writer, FLAVOUR_REFERENCE);
+				XMLNode.KNOWIT.writeObject(writer, context, ref.getValue());
 			}
 
 			@Override
-			public void processUninitialized(
-					KnowItBindingUninitialized uninitialized) {
-				KnowItBindingConverter.this.marshallUninitializedBinding(
-						uninitialized, writer, context);
+			public void processUninitialized(KnowItBindingUninitialized un) {
+				XMLAttribute.FLAVOUR.write(writer, FLAVOUR_UNINITIALIZED);
+				XMLNode.KNOWIT.writeObject(writer, context, un.getValue());
 			}
 
 			@Override
 			public void processAutomatic(KnowItBindingAutomatic automatic) {
-				KnowItBindingConverter.this.marshallAutomaticBinding(automatic,
-						writer, context);
+				XMLAttribute.FLAVOUR.write(writer, FLAVOUR_AUTOMATIC);
 			}
 
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-						ATTRIBUTE_VALUE_NULL_FLAVOUR);
+				XMLAttribute.FLAVOUR.write(writer, FLAVOUR_NULL);
 			}
 
 			@Override
-			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
-				KnowItBindingConverter.this.marshallStoryPointBinding(
-						storyPoint, writer, context);
+			public void processStoryPoint(KnowItBindingStoryPoint sp) {
+				XMLAttribute.FLAVOUR.write(writer, FLAVOUR_STORY_POINT);
+				XMLNode.STORY_POINT.writeObject(writer, context, sp.getValue());
 			}
 
 			@Override
-			public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
-				KnowItBindingConverter.this.marshallStoryGroupBinding(
-						storyGroup, writer, context);
+			public void processStoryGroup(KnowItBindingStoryGroup sg) {
+				XMLAttribute.FLAVOUR.write(writer, FLAVOUR_STORY_GROUP);
+				XMLNode.STORY_GROUP.writeObject(writer, context, sg.getValue());
 			}
 		});
-	}
-
-	/*
-	 * Converts a Game Constant to XML
-	 */
-	private void marshallConstantBinding(KnowItBindingResource binding,
-			HierarchicalStreamWriter writer) {
-		final Resource constant = binding.getValue();
-
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_CONSTANT_FLAVOUR);
-
-		writer.startNode(TypedComponent.TAG_TYPE);
-		writer.setValue(constant.getTypes().iterator().next());
-		writer.endNode();
-
-		writer.startNode(TAG_VALUE);
-		writer.setValue(constant.getCodeText());
-		writer.endNode();
-	}
-
-	/*
-	 * Converts a Game Constant to XML
-	 */
-	private void marshallIdentifiableGameConstantBinding(
-			KnowItBindingResource binding, HierarchicalStreamWriter writer) {
-		final Resource resource = binding.getValue();
-
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_RESOURCE_FLAVOUR);
-
-		writer.setValue(resource.getTemplateID());
-	}
-
-	/*
-	 * Converts a KnowItBindingAutomatic to XML
-	 */
-	private void marshallAutomaticBinding(KnowItBindingAutomatic binding,
-			HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR);
-	}
-
-	/*
-	 * Converts a Function Reference to XML
-	 */
-	private void marshallFunctionBinding(KnowItBindingFunction binding,
-			HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_FUNCTION_FLAVOUR);
-
-		writer.startNode(ScriptItConverter.TAG_SCRIPTIT);
-		context.convertAnother(binding.getValue());
-		writer.endNode();
-	}
-
-	/*
-	 * Converts a KnowIt Reference to XML
-	 */
-	private void marshallReferenceBinding(KnowItBindingReference binding,
-			HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_REFERENCE_FLAVOUR);
-
-		writer.startNode(KnowItConverter.TAG_KNOWIT);
-		context.convertAnother(binding.getValue());
-		writer.endNode();
-	}
-
-	/*
-	 * Converts a KnowIt Uninitialized to XML
-	 */
-	private void marshallUninitializedBinding(
-			KnowItBindingUninitialized binding,
-			HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_UNINITIALIZED_FLAVOUR);
-
-		writer.startNode(KnowItConverter.TAG_KNOWIT);
-		context.convertAnother(binding.getValue());
-		writer.endNode();
-	}
-
-	/*
-	 * Converts a Story Point reference to XML
-	 */
-	private void marshallStoryPointBinding(KnowItBindingStoryPoint binding,
-			HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR);
-
-		writer.startNode(StoryPointConverter.TAG_STORYPOINT);
-		final StoryPoint value = binding.getValue();
-		if (value == null)
-			System.err.println("Bug track: Null value assigned to binding "
-					+ binding);
-		context.convertAnother(value);
-		writer.endNode();
-	}
-
-	/*
-	 * Converts a Story Group reference to XML
-	 */
-	private void marshallStoryGroupBinding(KnowItBindingStoryGroup binding,
-			HierarchicalStreamWriter writer, MarshallingContext context) {
-		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
-				ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR);
-
-		writer.startNode(StoryGroupConverter.TAG_STORYGROUP);
-		final StoryGroup value = binding.getValue();
-		if (value == null)
-			System.err.println("Bug track: Null value assigned to binding "
-					+ binding);
-		context.convertAnother(value);
-		writer.endNode();
 	}
 
 	// ====================== IN ======================
@@ -272,44 +149,34 @@ public class KnowItBindingConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final String flavour = reader.getAttribute(ATTRIBUTE_BINDING_FLAVOUR);
+		final String flavour = XMLAttribute.FLAVOUR.read(reader);
 		final KnowItBinding binding;
 
 		reader.getNodeName();
 
 		// Let's figure out which subtype of KnowItBinding we want.
-		if (flavour == null
-				|| flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_NULL_FLAVOUR))
+		if (flavour == null || flavour.equalsIgnoreCase(FLAVOUR_NULL))
 			binding = null;
-		else {
-			reader.getNodeName();
-
-			if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_CONSTANT_FLAVOUR))
-				binding = this.unmarshallConstantBinding(reader);
-			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_RESOURCE_FLAVOUR))
-				binding = this.unmarshallResourceBinding(reader);
-			else if (flavour.equalsIgnoreCase(ATTRIBUTE_VALUE_FUNCTION_FLAVOUR))
-				binding = this.unmarshallFunctionBinding(reader, context);
-			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_REFERENCE_FLAVOUR))
-				binding = this.unmarshallReferenceBinding(reader, context);
-			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_UNINITIALIZED_FLAVOUR))
-				binding = this.unmarshallUninitializedBinding(reader, context);
-			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR))
-				binding = this.unmarshallAutomaticBinding(reader, context);
-			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR))
-				binding = this.unmarshallStoryPointBinding(reader, context);
-			else if (flavour
-					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_GROUP_FLAVOUR))
-				binding = this.unmarshallStoryGroupBinding(reader, context);
-			else
-				// VizziniAmazementException - remiller
-				throw new ConversionException("Inconceivable binding type: "
-						+ flavour);
-		}
+		else if (flavour.equalsIgnoreCase(FLAVOUR_CONSTANT))
+			binding = this.unmarshallConstantBinding(reader);
+		else if (flavour.equalsIgnoreCase(FLAVOUR_RESOURCE))
+			binding = this.unmarshallResourceBinding(reader);
+		else if (flavour.equalsIgnoreCase(FLAVOUR_FUNCTION))
+			binding = this.unmarshallFunctionBinding(reader, context);
+		else if (flavour.equalsIgnoreCase(FLAVOUR_REFERENCE))
+			binding = this.unmarshallReferenceBinding(reader, context);
+		else if (flavour.equalsIgnoreCase(FLAVOUR_UNINITIALIZED))
+			binding = this.unmarshallUninitializedBinding(reader, context);
+		else if (flavour.equalsIgnoreCase(FLAVOUR_AUTOMATIC))
+			binding = new KnowItBindingAutomatic();
+		else if (flavour.equalsIgnoreCase(FLAVOUR_STORY_POINT))
+			binding = this.unmarshallStoryPointBinding(reader, context);
+		else if (flavour.equalsIgnoreCase(FLAVOUR_STORY_GROUP))
+			binding = this.unmarshallStoryGroupBinding(reader, context);
+		else
+			// VizziniAmazementException - remiller
+			throw new ConversionException("Inconceivable binding type: "
+					+ flavour);
 
 		if (binding == null || binding.getValue() == null)
 			return new KnowItBindingNull();
@@ -375,75 +242,40 @@ public class KnowItBindingConverter implements Converter {
 		return null;
 	}
 
-	private KnowItBindingAutomatic unmarshallAutomaticBinding(
-			HierarchicalStreamReader reader, UnmarshallingContext context) {
-		return new KnowItBindingAutomatic();
-	}
-
 	private KnowItBindingFunction unmarshallFunctionBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
-		KnowItBindingFunction binding = new KnowItBindingFunction(null);
 		final ScriptIt scriptIt;
-		final KnowItBindingFunction knowItBindingFunction;
 
-		// move down and read as a doIt
-		reader.moveDown();
+		scriptIt = XMLNode.SCRIPTIT.readObject(reader, context, ScriptIt.class);
 
-		scriptIt = (ScriptIt) context.convertAnother(binding, ScriptIt.class);
-
-		knowItBindingFunction = new KnowItBindingFunction(scriptIt);
-
-		reader.moveUp();
-
-		return knowItBindingFunction;
+		return new KnowItBindingFunction(scriptIt);
 	}
 
 	private KnowItBindingReference unmarshallReferenceBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		final KnowIt referent;
 
-		KnowItBindingReference binding = new KnowItBindingReference(null);
+		referent = XMLNode.KNOWIT.readObject(reader, context, KnowIt.class);
 
-		// move down and read as a knowIt
-		reader.moveDown();
-
-		referent = (KnowIt) context.convertAnother(binding, KnowIt.class);
-
-		reader.moveUp();
-
-		binding = new KnowItBindingReference(referent);
-
-		return binding;
+		return new KnowItBindingReference(referent);
 	}
 
 	private KnowItBindingUninitialized unmarshallUninitializedBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
-		final KnowIt uninitiate;
+		final KnowIt knowIt;
 
-		KnowItBindingUninitialized binding = new KnowItBindingUninitialized(
-				null);
+		knowIt = XMLNode.KNOWIT.readObject(reader, context, KnowIt.class);
 
-		reader.moveDown();
-
-		uninitiate = (KnowIt) context.convertAnother(binding, KnowIt.class);
-
-		reader.moveUp();
-
-		binding = new KnowItBindingUninitialized(new KnowItBindingReference(
-				uninitiate));
-
-		return binding;
+		return new KnowItBindingUninitialized(
+				new KnowItBindingReference(knowIt));
 	}
 
 	private KnowItBindingStoryPoint unmarshallStoryPointBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		final StoryPoint storyPoint;
 
-		// move down and read as a story point
-		reader.moveDown();
-		storyPoint = (StoryPoint) context
-				.convertAnother(null, StoryPoint.class);
-		reader.moveUp();
+		storyPoint = XMLNode.STORY_POINT.readObject(reader, context,
+				StoryPoint.class);
 
 		return new KnowItBindingStoryPoint(storyPoint);
 	}
@@ -452,11 +284,8 @@ public class KnowItBindingConverter implements Converter {
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		final StoryGroup storyGroup;
 
-		// move down and read as a story point
-		reader.moveDown();
-		storyGroup = (StoryGroup) context
-				.convertAnother(null, StoryGroup.class);
-		reader.moveUp();
+		storyGroup = XMLNode.STORY_GROUP.readObject(reader, context,
+				StoryGroup.class);
 
 		return new KnowItBindingStoryGroup(storyGroup);
 	}

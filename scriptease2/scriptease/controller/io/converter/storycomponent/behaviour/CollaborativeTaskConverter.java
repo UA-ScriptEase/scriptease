@@ -1,5 +1,6 @@
 package scriptease.controller.io.converter.storycomponent.behaviour;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 
@@ -14,25 +15,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public class CollaborativeTaskConverter extends TaskConverter {
-
-	public static final String TAG_COLLABORATIVE_TASK = "CollaborativeTask";
-
-	public static final String ATTRIBUTE_INITIATE = "Initiate";
-	public static final String ATTRIBUTE_RESPOND = "Respond";
-
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
-		final CollaborativeTask collaborativeTask = (CollaborativeTask) source;
+		final CollaborativeTask task = (CollaborativeTask) source;
+
 		super.marshal(source, writer, context);
 
-		// initiate name
-		writer.addAttribute(ATTRIBUTE_INITIATE,
-				collaborativeTask.getInitiatorName());
-
-		// responder name
-		writer.addAttribute(ATTRIBUTE_RESPOND,
-				collaborativeTask.getResponderName());
+		XMLAttribute.INITIATE.write(writer, task.getInitiatorName());
+		XMLAttribute.RESPOND.write(writer, task.getResponderName());
 	}
 
 	@Override
@@ -41,8 +32,8 @@ public class CollaborativeTaskConverter extends TaskConverter {
 		final CollaborativeTask collaborativeTask = (CollaborativeTask) super
 				.unmarshal(reader, context);
 
-		String initiatorName = reader.getAttribute(ATTRIBUTE_INITIATE);
-		String responderName = reader.getAttribute(ATTRIBUTE_RESPOND);
+		final String initiatorName = XMLAttribute.INITIATE.read(reader);
+		final String responderName = XMLAttribute.RESPOND.read(reader);
 
 		collaborativeTask.setInitiatorName(initiatorName);
 		collaborativeTask.setResponderName(responderName);

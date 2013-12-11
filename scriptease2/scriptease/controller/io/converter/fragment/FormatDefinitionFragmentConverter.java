@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 
@@ -13,15 +14,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class FormatDefinitionFragmentConverter implements Converter {
-	private static final String ID_TAG = "id";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final FormatDefinitionFragment format = (FormatDefinitionFragment) source;
 
-		// Write the Fragment's ID
-		writer.addAttribute(ID_TAG, format.getDirectiveText());
+		XMLAttribute.ID.write(writer, format.getDirectiveText());
 
 		// Write Sub Fragments
 		context.convertAnother(format.getSubFragments());
@@ -31,22 +29,16 @@ public class FormatDefinitionFragmentConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final String id;
-		final List<AbstractFragment> subFragments;
-		FormatDefinitionFragment format = null;
-
-		// Read the Fragment's ID
-		id = reader.getAttribute(ID_TAG);
+		final String id = XMLAttribute.ID.read(reader);
+		final List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
 
 		// Read sub fragments
-		subFragments = new ArrayList<AbstractFragment>();
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<AbstractFragment>) context.convertAnother(
-					format, ArrayList.class));
+			subFragments.addAll((List<AbstractFragment>) context
+					.convertAnother(null, ArrayList.class));
 		}
 
-		format = new FormatDefinitionFragment(id, subFragments);
-		return format;
+		return new FormatDefinitionFragment(id, subFragments);
 	}
 
 	@SuppressWarnings("rawtypes")

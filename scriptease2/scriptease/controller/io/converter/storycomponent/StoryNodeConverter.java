@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.XMLNode;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
@@ -18,20 +19,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public abstract class StoryNodeConverter extends ComplexStoryComponentConverter {
-
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class.
-	public static final String TAG_SUCCESSORS = "Successors";
-
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
-		final StoryNode storyNode = (StoryNode) source;
+		final StoryNode node = (StoryNode) source;
+
 		super.marshal(source, writer, context);
 
-		writer.startNode(TAG_SUCCESSORS);
-		context.convertAnother(storyNode.getSuccessors());
-		writer.endNode();
+		XMLNode.SUCCESSORS.writeObject(writer, context, node.getSuccessors());
 	}
 
 	@Override
@@ -44,7 +39,8 @@ public abstract class StoryNodeConverter extends ComplexStoryComponentConverter 
 
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_SUCCESSORS))
+			if (!reader.getNodeName().equalsIgnoreCase(
+					XMLNode.SUCCESSORS.getName()))
 				System.err.println("Expected successors list, but found "
 						+ reader.getNodeName());
 			else {
@@ -52,11 +48,10 @@ public abstract class StoryNodeConverter extends ComplexStoryComponentConverter 
 					reader.moveDown();
 					final String nodeName = reader.getNodeName();
 
-					if (nodeName.equals(StoryPointConverter.TAG_STORYPOINT)) {
+					if (nodeName.equals(XMLNode.STORY_POINT.getName())) {
 						successors.add((StoryPoint) context.convertAnother(
 								storyNode, StoryPoint.class));
-					} else if (nodeName
-							.equals(StoryGroupConverter.TAG_STORYGROUP)) {
+					} else if (nodeName.equals(XMLNode.STORY_GROUP.getName())) {
 						successors.add((StoryGroup) context.convertAnother(
 								storyNode, StoryGroup.class));
 					} else {

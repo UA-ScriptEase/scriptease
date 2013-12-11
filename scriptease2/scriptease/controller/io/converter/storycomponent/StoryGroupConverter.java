@@ -1,5 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
+import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
@@ -15,37 +16,16 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author jyuen
  */
 public class StoryGroupConverter extends StoryNodeConverter {
-
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. 
-	
-	public static final String TAG_STORYGROUP = "StoryGroup";
-
-	public static final String TAG_START_NODE = "StartNode";
-	public static final String TAG_EXIT_NODE = "ExitNode";
-	
-	public static final String TAG_EXPANDED = "Expanded";
-
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
-		final StoryGroup storyGroup = (StoryGroup) source;
+		final StoryGroup group = (StoryGroup) source;
+
 		super.marshal(source, writer, context);
 
-		// start node
-		writer.startNode(StoryGroupConverter.TAG_START_NODE);
-		context.convertAnother(storyGroup.getStartNode());
-		writer.endNode();
-
-		// exit node
-		writer.startNode(StoryGroupConverter.TAG_EXIT_NODE);
-		context.convertAnother(storyGroup.getExitNode());
-		writer.endNode();
-		
-		// expanded
-		writer.startNode(StoryGroupConverter.TAG_EXPANDED);
-		writer.setValue(storyGroup.isExpanded().toString());
-		writer.endNode();
+		XMLNode.START_NODE.writeObject(writer, context, group.getStartNode());
+		XMLNode.EXIT_NODE.writeObject(writer, context, group.getExitNode());
+		XMLNode.EXPANDED.writeBoolean(writer, group.isExpanded());
 	}
 
 	@Override
@@ -53,31 +33,19 @@ public class StoryGroupConverter extends StoryNodeConverter {
 			UnmarshallingContext context) {
 		final StoryGroup storyGroup = (StoryGroup) super.unmarshal(reader,
 				context);
-		
-		StoryNode startNode = null;
-		StoryNode exitNode = null;
 
-		boolean expanded = false;
+		final StoryNode start;
+		final StoryNode exit;
+		final boolean expanded;
 
-		while (reader.hasMoreChildren()) {
-			reader.moveDown();
-			final String nodeName = reader.getNodeName();
+		start = XMLNode.START_NODE.readObject(reader, context, StoryNode.class);
+		exit = XMLNode.EXIT_NODE.readObject(reader, context, StoryNode.class);
+		expanded = Boolean.valueOf(XMLNode.EXPANDED.readString(reader));
 
-			if (nodeName.equals(StoryGroupConverter.TAG_START_NODE)) {
-				startNode = (StoryNode) context.convertAnother(storyGroup, StoryNode.class);
-			} else if (nodeName.equals(StoryGroupConverter.TAG_EXIT_NODE)) {
-				exitNode = (StoryNode) context.convertAnother(storyGroup, StoryNode.class);
-			} else if (nodeName.equals(StoryGroupConverter.TAG_EXPANDED)) {
-				expanded = reader.getValue().equalsIgnoreCase("true");
-			}
-
-			reader.moveUp();
-		}
-
-		storyGroup.setStartNode(startNode);
-		storyGroup.setExitNode(exitNode);
+		storyGroup.setStartNode(start);
+		storyGroup.setExitNode(exit);
 		storyGroup.setExpanded(expanded);
-		
+
 		return storyGroup;
 	}
 

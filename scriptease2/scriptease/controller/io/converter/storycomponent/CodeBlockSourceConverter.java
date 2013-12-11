@@ -25,28 +25,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author remiller
  */
 public class CodeBlockSourceConverter extends StoryComponentConverter {
-
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. 
-	public static final String TAG_CODE_BLOCK_SOURCE = "CodeBlockSource";
-
-	private static final String TAG_SUBJECT = "Subject";
-	private static final String TAG_SLOT = "Slot";
-	private static final String TAG_CODE = "Code";
-	private static final String TAG_INCLUDES = "Includes";
-	private static final String TAG_INCLUDE = "Include";
-	private static final String TAG_PARAMETERS = "Parameters";
-	private static final String TAG_TYPES = "Types";
-	private static final String TAG_TYPE = "Type";
-	private static final String TAG_ID = "Id";
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	public boolean canConvert(Class type) {
-		return type.equals(CodeBlockSource.class);
-	}
-
-	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final CodeBlock block = (CodeBlock) source;
@@ -62,55 +40,26 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 
 		super.marshal(source, writer, context);
 
-		// Subject
 		if (block.hasSubject()) {
-			writer.startNode(TAG_SUBJECT);
-			writer.setValue(block.getSubjectName());
-			writer.endNode();
+			XMLNode.SUBJECT.writeString(writer, block.getSubjectName());
 		}
 
-		// Slot
 		if (block.hasSlot()) {
-			writer.startNode(TAG_SLOT);
-			writer.setValue(block.getSlot());
-			writer.endNode();
+			XMLNode.SLOT.writeString(writer, block.getSlot());
 		}
 
-		writer.startNode(TAG_ID);
-		writer.setValue(Integer.toString(block.getId()));
-		writer.endNode();
+		XMLNode.ID.writeInteger(writer, block.getId());
+		XMLNode.TYPES.writeChildren(writer, types);
 
-		// Types
-		writer.startNode(TAG_TYPES);
-		for (String type : types) {
-			writer.startNode(TAG_TYPE);
-			writer.setValue(type);
-			writer.endNode();
-		}
-		writer.endNode();
-
-		// Parameters
 		if (!parameters.isEmpty()) {
-			writer.startNode(TAG_PARAMETERS);
-			context.convertAnother(parameters);
-			writer.endNode();
+			XMLNode.PARAMETERS.writeObject(writer, context, parameters);
 		}
 
-		// Includes
 		if (!includes.isEmpty()) {
-			writer.startNode(TAG_INCLUDES);
-			for (String include : includes) {
-				writer.startNode(TAG_INCLUDE);
-				writer.setValue(include);
-				writer.endNode();
-			}
-			writer.endNode();
+			XMLNode.INCLUDES.writeChildren(writer, includes);
 		}
 
-		// code
-		writer.startNode(TAG_CODE);
-		context.convertAnother(code);
-		writer.endNode();
+		XMLNode.CODE.writeObject(writer, context, code);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -137,19 +86,21 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 		code = new ArrayList<AbstractFragment>();
 		types = new ArrayList<String>();
 
+		// Since all of these are optional, this is the most efficient way to
+		// read the data.
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
 
 			// subject
-			if (nodeName.equals(TAG_SUBJECT)) {
+			if (nodeName.equals(XMLNode.SUBJECT.getName())) {
 				subject = reader.getValue();
 
 				if (subject == null)
 					subject = "";
 			}
 			// slot
-			else if (nodeName.equals(TAG_SLOT)) {
+			else if (nodeName.equals(XMLNode.SLOT.getName())) {
 				slot = reader.getValue();
 
 				if (slot == null)
@@ -159,16 +110,17 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			 * ID. Cannot appear in Stories; ID is for CodeBlockSources, and
 			 * those must only exist in the Translator.
 			 */
-			else if (nodeName.equals(TAG_ID)) {
+			else if (nodeName.equalsIgnoreCase(XMLNode.ID.getName())) {
 				id = Integer.parseInt(reader.getValue());
 			}
 			// Types
-			else if (nodeName.equals(TAG_TYPES)) {
-				types.addAll(XMLNode.TYPES.readStringCollection(reader,
-						XMLNode.TYPE));
+			else if (nodeName.equals(XMLNode.TYPES.getName())) {
+				while (reader.hasMoreChildren()) {
+					types.add(XMLNode.TYPE.readString(reader));
+				}
 			}
 			// Parameters
-			else if (nodeName.equals(TAG_PARAMETERS)) {
+			else if (nodeName.equals(XMLNode.PARAMETERS.getName())) {
 				parameters.addAll(((Collection<KnowIt>) context.convertAnother(
 						block, ArrayList.class)));
 			}
@@ -176,15 +128,16 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			 * Includes. Cannot appear in Stories; includes are game-specific
 			 * and must be in the translator only.
 			 */
-			else if (nodeName.equals(TAG_INCLUDES)) {
-				includes.addAll(XMLNode.INCLUDES.readStringCollection(reader,
-						XMLNode.INCLUDE));
+			else if (nodeName.equals(XMLNode.INCLUDES.getName())) {
+				while (reader.hasMoreChildren()) {
+					includes.add(XMLNode.INCLUDE.readString(reader));
+				}
 			}
 			/*
 			 * Code. Cannot appear in Stories; code is game-specific and must be
 			 * in the translator only.
 			 */
-			else if (nodeName.equals(TAG_CODE)) {
+			else if (nodeName.equals(XMLNode.CODE.getName())) {
 				code.addAll(((Collection<AbstractFragment>) context
 						.convertAnother(block, ArrayList.class)));
 			}
@@ -210,4 +163,11 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			UnmarshallingContext context) {
 		return new CodeBlockSource();
 	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean canConvert(Class type) {
+		return type.equals(CodeBlockSource.class);
+	}
+
 }

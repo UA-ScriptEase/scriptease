@@ -1,5 +1,7 @@
 package scriptease.controller.io.converter.storycomponent.behaviour;
 
+import scriptease.controller.io.XMLAttribute;
+import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.behaviours.Behaviour;
@@ -19,60 +21,44 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class BehaviourConverter extends ScriptItConverter {
 
-	public static final String TAG_BEHAVIOUR = "Behaviour";
-
-	public static final String TAG_START_TASK = "StartTask";
-
-	public static final String ATTRIBUTE_TYPE = "type";
-	public static final String ATTRIBUTE_PRIORITY = "priority";
-
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
 		final Behaviour behaviour = (Behaviour) source;
 
-		// type
-		writer.addAttribute(ATTRIBUTE_TYPE, behaviour.getType().toString());
-
-		// priority
-		writer.addAttribute(ATTRIBUTE_PRIORITY, behaviour.getPriority()
-				.toString());
+		XMLAttribute.TYPE.write(writer, behaviour.getType().toString());
+		XMLAttribute.PRIORITY.write(writer, behaviour.getPriority().toString());
 
 		super.marshal(source, writer, context);
 
-		// start task
-		writer.startNode(TAG_START_TASK);
-		context.convertAnother(behaviour.getStartTask());
-		writer.endNode();
+		XMLNode.START_TASK.writeObject(writer, context,
+				behaviour.getStartTask());
 	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 
-		String type = null;
-		String priority = null;
+		final String type = XMLAttribute.TYPE.read(reader);
+		final String priority = XMLAttribute.PRIORITY.read(reader);
 		Task startTask = null;
-
-		type = reader.getAttribute(ATTRIBUTE_TYPE);
-		priority = reader.getAttribute(ATTRIBUTE_PRIORITY);
 
 		final Behaviour behaviour = (Behaviour) super
 				.unmarshal(reader, context);
 
-		while (reader.hasMoreChildren()) {
+		if (reader.hasMoreChildren()) {
 			reader.moveDown();
 			final String nodeName = reader.getNodeName();
-			
-			if (nodeName.equals(TAG_START_TASK)) {
-				
+
+			if (nodeName.equals(XMLNode.START_TASK.getName())) {
+
 				if (type.equals(Behaviour.Type.INDEPENDENT.toString())) {
-					startTask = (IndependentTask) context
-							.convertAnother(behaviour, IndependentTask.class);
-					
+					startTask = (IndependentTask) context.convertAnother(
+							behaviour, IndependentTask.class);
+
 				} else if (type.equals(Behaviour.Type.COLLABORATIVE.toString())) {
-					startTask = (CollaborativeTask) context
-							.convertAnother(behaviour, CollaborativeTask.class);
+					startTask = (CollaborativeTask) context.convertAnother(
+							behaviour, CollaborativeTask.class);
 				}
 			}
 

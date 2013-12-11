@@ -28,16 +28,15 @@ public class LineFragmentConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
-		LineFragment line = null;
 
 		// Read Sub Fragments
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<AbstractFragment>) context.convertAnother(
-					line, ArrayList.class));
+			subFragments.addAll((List<AbstractFragment>) context
+					.convertAnother(null, ArrayList.class));
 		}
 
-		line = new LineFragment(System.getProperty("line.separator"), subFragments);
-		return line;
+		return new LineFragment(System.getProperty("line.separator"),
+				subFragments);
 	}
 
 	@SuppressWarnings("rawtypes")

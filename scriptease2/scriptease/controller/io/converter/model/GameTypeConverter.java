@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
@@ -24,19 +25,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author mfchurch
  */
 public class GameTypeConverter implements Converter {
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
-
-	private static final String TAG_ENUM = "Enum";
-	private static final String TAG_LEGAL_VALUES = "LegalValues";
-	private static final String TAG_SLOTS = "Slots";
-	private static final String TAG_FORMAT = "Format";
-	private static final String TAG_GUI = "GUI";
-	private static final String TAG_WIDGETNAME = "WidgetName";
-	private static final String TAG_ESCAPE = "Escape";
-	private static final String TAG_ESCAPES = "Escapes";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -64,15 +52,11 @@ public class GameTypeConverter implements Converter {
 		if (type.hasGUI())
 			XMLNode.GUI.writeObject(writer, context, type.getGui());
 
-		// TODO
 		if (escapes != null && !escapes.isEmpty()) {
-			writer.startNode(TAG_ESCAPES);
+			writer.startNode(XMLNode.ESCAPES.getName());
 			for (Entry<String, String> entry : escapes.entrySet()) {
-				final String key = entry.getKey();
-				final String value = entry.getValue();
-				writer.startNode(TAG_ESCAPE);
-				writer.addAttribute("value", key);
-				writer.setValue(value);
+				XMLNode.ESCAPE.writeObject(writer, context, entry.getValue(),
+						XMLAttribute.VALUE, entry.getKey());
 			}
 			writer.endNode();
 		}
@@ -105,45 +89,45 @@ public class GameTypeConverter implements Converter {
 		keyword = XMLNode.KEYWORD.readString(reader);
 		codeSymbol = XMLNode.CODESYMBOL.readString(reader);
 
-		// Read Optional
+		// Read Optional Data
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 			// Read Format
 			String node = reader.getNodeName();
-			if (node.equals(TAG_FORMAT)) {
+			if (node.equals(XMLNode.FORMAT.getName())) {
 				fragments.addAll((Collection<AbstractFragment>) context
 						.convertAnother(type, ArrayList.class));
 			}
 
 			// Read Enum
-			if (node.equals(TAG_ENUM)) {
+			if (node.equals(XMLNode.ENUM.getName())) {
 				enums = reader.getValue();
 			}
 
 			// Read Reg
-			if (node.equals(TAG_LEGAL_VALUES)) {
+			if (node.equals(XMLNode.LEGAL_VALUES.getName())) {
 				reg = reader.getValue();
 			}
 
 			// Read Slots
-			if (node.equals(TAG_SLOTS)) {
-				slots.addAll(XMLNode.SLOTS.readStringCollection(reader,
-						XMLNode.SLOT));
+			if (node.equals(XMLNode.SLOTS.getName())) {
+				while (reader.hasMoreChildren()) {
+					slots.add(XMLNode.SLOT.readString(reader));
+				}
 			}
 
 			// Read Escapes
-			if (node.equals(TAG_ESCAPES)) {
+			if (node.equals(XMLNode.ESCAPES.getName())) {
 				while (reader.hasMoreChildren()) {
-					final String value = reader.getAttribute("value");
-					reader.moveDown();
-					final String key = reader.getValue();
+					final String value = XMLAttribute.VALUE.read(reader);
+					final String key = XMLNode.ESCAPE.readString(reader);
+
 					escapes.put(key, value);
-					reader.moveUp();
 				}
 			}
 
 			// Read GUI
-			if (node.equals(TAG_GUI)) {
+			if (node.equals(XMLNode.GUI.getName())) {
 				String guiStr = reader.getValue();
 
 				if (guiStr.equalsIgnoreCase(GUIType.JCOMBOBOX.toString()))
@@ -155,7 +139,7 @@ public class GameTypeConverter implements Converter {
 			}
 
 			// Read widget name
-			if (node.equals(TAG_WIDGETNAME)) {
+			if (node.equals(XMLNode.WIDGETNAME.getName())) {
 				widgetName = reader.getValue();
 			}
 

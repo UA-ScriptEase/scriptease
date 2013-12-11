@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
@@ -24,23 +25,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public abstract class ComplexStoryComponentConverter extends
 		StoryComponentConverter implements Converter {
 
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class.
-	private static final String TAG_CHILDREN = "Children";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final ComplexStoryComponent comp;
-
-		comp = (ComplexStoryComponent) source;
+		final ComplexStoryComponent comp = (ComplexStoryComponent) source;
 
 		super.marshal(source, writer, context);
 
-		writer.startNode(TAG_CHILDREN);
-		context.convertAnother(comp.getChildren());
-
-		writer.endNode();
+		XMLNode.CHILDREN.writeObject(writer, context, comp.getChildren());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -55,9 +47,10 @@ public abstract class ComplexStoryComponentConverter extends
 		// Read children.
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
-			if (!reader.getNodeName().equalsIgnoreCase(TAG_CHILDREN))
-				System.err.println("Expected child list, but found "
-						+ reader.getNodeName());
+			final String node = reader.getNodeName();
+
+			if (!node.equalsIgnoreCase(XMLNode.CHILDREN.getName()))
+				System.err.println("Expected child list, but found " + node);
 			else {
 				try {
 					children = (Collection<StoryComponent>) context

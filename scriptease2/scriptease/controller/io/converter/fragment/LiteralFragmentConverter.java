@@ -13,18 +13,15 @@ public class LiteralFragmentConverter implements Converter {
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		final LiteralFragment literal = (LiteralFragment) source;
-		writer.setValue(literal.getDirectiveText());
+		writer.setValue(((LiteralFragment) source).getDirectiveText());
 	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final LiteralFragment literal;
 		final String text = reader.getValue();
 
-		literal = new LiteralFragment(text);
-		return literal;
+		return new LiteralFragment(text);
 	}
 
 	@SuppressWarnings("rawtypes")

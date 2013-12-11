@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
 
@@ -13,21 +14,17 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ScopeFragmentConverter implements Converter {
-	private static final String DATA_TAG = "data";
-	private static final String REF_TAG = "ref";
 
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final ScopeFragment scope = (ScopeFragment) source;
-
-		// Data Tag
-		writer.addAttribute(DATA_TAG, scope.getDirectiveText());
-
-		// Ref Tag
 		final String nameRef = scope.getNameRef();
+
+		XMLAttribute.DATA.write(writer, scope.getDirectiveText());
+		// Ref Tag
 		if (nameRef != null)
-		writer.addAttribute(REF_TAG, nameRef);
+			XMLAttribute.REF.write(writer, nameRef);
 
 		// Write Sub Fragments
 		context.convertAnother(scope.getSubFragments());
@@ -37,25 +34,17 @@ public class ScopeFragmentConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final String data;
-		final String ref;
+		final String data = XMLAttribute.DATA.read(reader);
+		final String ref = XMLAttribute.REF.read(reader);
 		final List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
-		ScopeFragment scope = null;
-
-		// Data Tag
-		data = reader.getAttribute(DATA_TAG);
-
-		// Ref Tag
-		ref = reader.getAttribute(REF_TAG);
 
 		// Read Sub Fragments
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<AbstractFragment>) context.convertAnother(
-					scope, ArrayList.class));
+			subFragments.addAll((List<AbstractFragment>) context
+					.convertAnother(null, ArrayList.class));
 		}
 
-		scope = new ScopeFragment(data, ref, subFragments);
-		return scope;
+		return new ScopeFragment(data, ref, subFragments);
 	}
 
 	@SuppressWarnings("rawtypes")

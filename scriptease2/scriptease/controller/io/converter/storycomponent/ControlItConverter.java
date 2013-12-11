@@ -1,5 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ControlIt;
 
@@ -16,20 +17,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see ScriptItConverter
  */
 public class ControlItConverter extends ScriptItConverter {
-
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
-	private static final String ATTRIBUTE_FORMAT_FLAVOUR = "control";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 
 		final ControlIt controlIt = (ControlIt) source;
 
-		writer.addAttribute(ATTRIBUTE_FORMAT_FLAVOUR, controlIt.getFormat()
-				.name());
+		XMLAttribute.CONTROL.write(writer, controlIt.getFormat().name());
 
 		super.marshal(source, writer, context);
 	}
@@ -37,10 +31,9 @@ public class ControlItConverter extends ScriptItConverter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final ControlIt controlIt;
-		final String format;
+		final String format = XMLAttribute.CONTROL.read(reader);
 
-		format = reader.getAttribute(ATTRIBUTE_FORMAT_FLAVOUR);
+		final ControlIt controlIt;
 
 		controlIt = (ControlIt) super.unmarshal(reader, context);
 

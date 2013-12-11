@@ -69,8 +69,15 @@ public class SeriesFragment extends AbstractContainerFragment {
 			List<AbstractFragment> format, String filter,
 			SeriesFilterType filterType, boolean isUnique) {
 		super(data, format);
-		this.separator = separator;
-		this.filter = filter;
+		if (separator != null)
+			this.separator = separator;
+		else
+			this.separator = "";
+		if (filter != null)
+			this.filter = filter;
+		else
+			this.filter = "";
+
 		this.filterType = filterType;
 		this.seriesFilter = new SeriesFilter(filter, filterType);
 		this.isUnique = isUnique;
@@ -314,7 +321,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 		}
 
 		public SeriesFilter(String value, SeriesFilterType type) {
-			this.value = new String(value);
+			if (value != null)
+				this.value = new String(value);
+			else
+				this.value = "";
 			this.type = type;
 		}
 

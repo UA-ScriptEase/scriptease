@@ -13,7 +13,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * Enumeration of all of the nodes we can write to XML. Also contains various
- * methods to read and write these nodes.
+ * methods to read and write these nodes. This class makes it easier to do some
+ * tasks in XML, but we may sometimes have to do things manually.
  * 
  * @author kschenk
  * 
@@ -32,23 +33,43 @@ public enum XMLNode {
 	CAUSES("Causes", CAUSEIT),
 
 	CODESYMBOL("CodeSymbol"),
+	
+	CONDITION("Condition"),
 
 	CONTROLIT("ControlIt"),
 
 	CONTROLITS("ControlIts", CONTROLIT),
 
 	TASK("Task"),
-	
+
 	TASKS("Tasks", TASK),
-	
+
 	BEHAVIOUR("Behaviour"),
-	
+
 	BEHAVIOURS("Behaviours", BEHAVIOUR),
 	
+	BINDING("Binding"),
+
 	ACTIVITYIT("ActivityIt"),
-	
+
 	ACTIVITYITS("ActivityIts", ACTIVITYIT),
 	
+	CHANCE("Chance"),
+	
+	CHOICE("Choice"),
+	
+	CHOICES("Choices"),
+	
+	CHOICE_COUNTER("ChoiceCounter"),
+	
+	COLLABORATIVE_TASK("CollaborativeTask"),
+	
+	CODE("Code"),
+	
+	CODEBLOCKS("CodeBlocks"),
+	
+	INDEPENDENT_TASK("IndependentTask"),
+
 	DIALOGUE_LINE("DialogueLine"),
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),
@@ -70,6 +91,8 @@ public enum XMLNode {
 	DESCRIBEIT("DescribeIt"),
 
 	DESCRIBEITS("DescribeIts", DESCRIBEIT),
+	
+	FAN_IN("FanIn"),
 
 	FORMAT("Format"),
 
@@ -82,6 +105,8 @@ public enum XMLNode {
 	ID("ID"),
 
 	IMAGE("Image"),
+	
+	IMPLICITS("Implicits"),
 
 	INCLUDE("Include"),
 
@@ -112,7 +137,9 @@ public enum XMLNode {
 	PATH("Path", DESCRIBEITNODE),
 
 	PATHMAP("PathMap"),
-
+	
+	PARAMETERS("Parameters"),
+	
 	RESERVED_WORD("Word"),
 
 	RESERVED_WORDS("ReservedWords", RESERVED_WORD),
@@ -120,10 +147,26 @@ public enum XMLNode {
 	SLOT("Slot"),
 
 	SLOTS("Slots", SLOT),
+	
+	START_TASK("StartTask"),
 
 	START_STORY_POINT("StartStoryPoint"),
+	
+	START_NODE("StartNode"),
+	
+	EXIT_NODE("ExitNode"),
+	
+	EXPANDED("Expanded"),
+	
+	STORY_GROUP("StoryGroup"),
+	
+	STORY_POINT("StoryPoint"),
+	
+	SUBJECT("Subject"),
 
 	SUCCESSORS("Successors"),
+	
+	TARGET_ID("TargetId"),
 
 	TITLE("Title"),
 

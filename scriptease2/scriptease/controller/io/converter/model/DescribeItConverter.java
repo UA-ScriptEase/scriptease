@@ -35,12 +35,6 @@ public class DescribeItConverter implements Converter {
 		XMLNode.DESCRIBEITNODE.writeObject(writer, context,
 				describeIt.getStartNode());
 
-		// Write out the paths. These are special for DescribeIts, since we
-		// don't have a separate object for them.
-
-		// TODO There should be a way to read and write maps using methods in
-		// XMLNode. 
-
 		writer.startNode(XMLNode.PATHMAP.getName());
 		for (Collection<DescribeItNode> path : describeIt.getPaths()) {
 			// path with the consisting nodes and the resulting ScriptIt
@@ -72,7 +66,6 @@ public class DescribeItConverter implements Converter {
 		headNode = XMLNode.DESCRIBEITNODE.readObject(reader, context,
 				DescribeItNode.class);
 
-		// TODO See other above todo.
 		reader.moveDown();
 		if (reader.getNodeName().equals(XMLNode.PATHMAP.getName())) {
 			// read all of the paths
