@@ -115,7 +115,7 @@ public final class PanelFactory {
 		notePane.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,
 				ScriptEaseUI.SE_BLACK));
 
-		noteList.setStoryComponents(LibraryModel.getCommonLibrary()
+		noteList.addStoryComponents(LibraryModel.getCommonLibrary()
 				.getNoteContainer().getChildren());
 
 		notePane.setVisible(SEModelManager.getInstance().getActiveModel() instanceof StoryModel);

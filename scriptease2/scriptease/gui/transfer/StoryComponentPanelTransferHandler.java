@@ -126,11 +126,11 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			final StoryComponentPanel panel;
 			final StoryComponentPanelManager selectionManager;
 			final List<StoryComponent> selected;
-			
+
 			panel = (StoryComponentPanel) comp;
 			selectionManager = panel.getSelectionManager();
 			selected = new ArrayList<StoryComponent>();
-			
+
 			// Get the parent selected StoryComponents, since the children
 			// will be grabbed implicitly from the model
 			if (selectionManager != null) {
@@ -140,44 +140,52 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				}
 			}
 
-			// Sort selected panels based on order of appearance. 
-			final StoryAdapter adapter;
+			if (SEModelManager.getInstance().getActiveStoryModel() != null) {
 
-			adapter = new StoryAdapter() {
-				
-				@Override
-				public void processStoryPoint(StoryPoint storyPoint) {
-					this.defaultProcessComplex(storyPoint);
+				// Sort selected panels based on order of appearance by
+				// processing the selected panels. TODO Should be made more
+				// efficient by only processing the current story point we are in
+				final StoryAdapter adapter;
 
-					for (StoryNode successor : storyPoint.getSuccessors()) {
+				adapter = new StoryAdapter() {
+
+					@Override
+					public void processStoryPoint(StoryPoint storyPoint) {
+						this.defaultProcessComplex(storyPoint);
+
+						for (StoryNode successor : storyPoint.getSuccessors()) {
 							successor.process(this);
+						}
 					}
-				}
-				
-				@Override
-				public void processKnowIt(KnowIt knowIt) {
-					if (selected.contains(knowIt)) {
-						data.add(knowIt);
-						selected.remove(knowIt);
-					}
-				}
-				
-				@Override
-				protected void defaultProcessComplex(ComplexStoryComponent complex) {
-					if (selected.contains(complex)) {
-						data.add(complex);
-						selected.remove(complex);
-					}
-						
-					for (StoryComponent child : complex.getChildren()) {
-						child.process(this);
-					}
-				}
-			};
 
-			SEModelManager.getInstance().getActiveRoot().process(adapter);
-			Collections.reverse(data);
-			
+					@Override
+					public void processKnowIt(KnowIt knowIt) {
+						if (selected.contains(knowIt)) {
+							data.add(knowIt);
+							selected.remove(knowIt);
+						}
+					}
+
+					@Override
+					protected void defaultProcessComplex(
+							ComplexStoryComponent complex) {
+						if (selected.contains(complex)) {
+							data.add(complex);
+							selected.remove(complex);
+						}
+
+						for (StoryComponent child : complex.getChildren()) {
+							child.process(this);
+						}
+					}
+				};
+
+				SEModelManager.getInstance().getActiveRoot().process(adapter);
+				Collections.reverse(data);
+			} else {
+				data.addAll(selected);
+			}
+
 		} else if (comp instanceof JList) {
 			final JList list = (JList) comp;
 			for (Object panelObject : list.getSelectedValues()) {
