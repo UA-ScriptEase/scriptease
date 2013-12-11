@@ -200,7 +200,7 @@ public interface ScriptEaseUI {
 	 * Cursor to represent the start of the grouping action.
 	 */
 	public static final Cursor CURSOR_UNGROUP = GUIOp.createCursor("ungroup",
-			new Point(15, 15));
+			new Point(0, 0));
 	/**
 	 * The maximum screen width that ScriptEase can support. Can be increased if
 	 * we encounter ridiculous situations (e.g. 15 Macbook Pros with retina
