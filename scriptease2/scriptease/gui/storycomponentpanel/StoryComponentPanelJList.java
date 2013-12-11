@@ -242,9 +242,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				} else {
 					listModel.addElement(panel);
 				}
-			} else {
-				System.err.println("StoryComponent " + component
-						+ " already exists in StoryComponentPanelJList");
 			}
 		}
 	}

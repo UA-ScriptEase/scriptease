@@ -286,6 +286,8 @@ public class LibraryPanel extends JTabbedPane {
 			public void actionPerformed(ActionEvent e) {
 				list.updateFilter(new StoryComponentSearchFilter(searchField
 						.getText()));
+				
+				list.removeAllStoryComponents();
 
 				updateList(list, searchFieldTimer);
 			}
