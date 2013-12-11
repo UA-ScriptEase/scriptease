@@ -379,12 +379,13 @@ public class StoryComponentPanel extends JPanel implements
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				final StoryComponentPanelManager selectionManager;
+				final Point point;
 
 				selectionManager = panel.getSelectionManager();
+				point = e.getPoint();
 
 				if (selectionManager != null && dragStart != null
-						&& e.getPoint() != null
-						&& e.getPoint().distance(dragStart) > 20) {
+						&& point != null && point.distance(dragStart) > 20) {
 					final boolean clearSelection;
 
 					clearSelection = !(selectionManager.getSelectedPanels()
