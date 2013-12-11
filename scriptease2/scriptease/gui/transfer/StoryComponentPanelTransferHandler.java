@@ -45,13 +45,13 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.util.GUIOp;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * StoryComponentPanelTransferHandler is a more specific TransferHandler that is
@@ -129,7 +129,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 			panel = (StoryComponentPanel) comp;
 			selectionManager = panel.getSelectionManager();
-			selected = new ArrayList<StoryComponent>();
+			selected = new IdentityArrayList<StoryComponent>();
 
 			// Get the parent selected StoryComponents, since the children
 			// will be grabbed implicitly from the model
