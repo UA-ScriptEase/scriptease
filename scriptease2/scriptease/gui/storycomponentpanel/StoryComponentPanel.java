@@ -382,7 +382,8 @@ public class StoryComponentPanel extends JPanel implements
 
 				selectionManager = panel.getSelectionManager();
 
-				if (selectionManager != null
+				if (selectionManager != null && dragStart != null
+						&& e.getPoint() != null
 						&& e.getPoint().distance(dragStart) > 20) {
 					final boolean clearSelection;
 
