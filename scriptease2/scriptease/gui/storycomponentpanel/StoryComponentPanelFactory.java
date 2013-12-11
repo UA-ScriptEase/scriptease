@@ -489,7 +489,7 @@ public class StoryComponentPanelFactory {
 
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 			}
-		
+
 			@Override
 			public void processPickIt(final PickIt pickIt) {
 				final JPanel mainPanel;
@@ -565,6 +565,8 @@ public class StoryComponentPanelFactory {
 							@Override
 							public void processNull(
 									KnowItBindingNull nullBinding) {
+								StoryComponentPanelFactory.this.addWidget(
+										mainPanel, knowIt, true);
 							}
 
 							@Override
