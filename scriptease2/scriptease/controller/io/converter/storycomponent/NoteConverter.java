@@ -3,10 +3,8 @@ package scriptease.controller.io.converter.storycomponent;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
 
-import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * Converts Notes to/from XML. This is very simple.
@@ -16,23 +14,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see ComplexStoryComponentConverter
  */
 public class NoteConverter extends StoryComponentConverter {
-
-	@Override
-	public void marshal(Object source, HierarchicalStreamWriter writer,
-			MarshallingContext context) {
-		super.marshal(source, writer, context);
-	}
-
-	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		final Note note;
-
-		note = (Note) super.unmarshal(reader, context);
-
-		return note;
-	}
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {

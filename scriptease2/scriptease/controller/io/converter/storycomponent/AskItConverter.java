@@ -1,5 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
+import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
@@ -17,11 +18,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see StoryComponentConverter
  */
 public class AskItConverter extends ComplexStoryComponentConverter {
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. 
-	private static final String TAG_CONDITION = "Condition";
-	private static final String TAG_KNOWIT = "KnowIt";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -29,30 +25,24 @@ public class AskItConverter extends ComplexStoryComponentConverter {
 
 		super.marshal(source, writer, context);
 
-		writer.startNode(TAG_CONDITION);
-		writer.startNode(TAG_KNOWIT);
-		context.convertAnother(askIt.getCondition());
-		writer.endNode();
+		writer.startNode(XMLNode.CONDITION.getName());
+		XMLNode.KNOWIT.writeObject(writer, context, askIt.getCondition());
 		writer.endNode();
 	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final AskIt askIt;
-		KnowIt condition;
-		String nodeName;
-
-		// Read the AskIt like a ComplexStoryComponent.
-		askIt = (AskIt) super.unmarshal(reader, context);
+		final AskIt askIt = (AskIt) super.unmarshal(reader, context);
 
 		// Read and assign the AskIt's condition.
 		reader.moveDown();
-		nodeName = reader.getNodeName();
-		if (nodeName.equalsIgnoreCase(TAG_CONDITION)) {
-			reader.moveDown();
-			condition = (KnowIt) context.convertAnother(askIt, KnowIt.class);
-			reader.moveUp();
+		if (reader.getNodeName().equalsIgnoreCase(XMLNode.CONDITION.getName())) {
+			final KnowIt condition;
+
+			condition = XMLNode.KNOWIT
+					.readObject(reader, context, KnowIt.class);
+
 			askIt.setCondition(condition);
 		} else {
 			System.err.println("Missing condition for AskIt \""

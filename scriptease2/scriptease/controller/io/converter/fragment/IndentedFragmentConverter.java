@@ -27,18 +27,15 @@ public class IndentedFragmentConverter implements Converter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final List<AbstractFragment> subFragments;
-		IndentFragment indented = null;
-
+		final List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
+		
 		// Read sub fragments
-		subFragments = new ArrayList<AbstractFragment>();
 		if (reader.hasMoreChildren()) {
-			subFragments.addAll((List<AbstractFragment>) context.convertAnother(
-					indented, ArrayList.class));
+			subFragments.addAll((List<AbstractFragment>) context
+					.convertAnother(null, ArrayList.class));
 		}
 
-		indented = new IndentFragment(subFragments);
-		return indented;
+		return new IndentFragment(subFragments);
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.XMLNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
@@ -23,13 +24,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see ComplexStoryComponentConverter
  */
 public class ScriptItConverter extends ComplexStoryComponentConverter {
-
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
-	public static final String TAG_SCRIPTIT = "ScriptIt";
-	private static final String TAG_CODEBLOCKS = "CodeBlocks";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -37,10 +31,8 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 		super.marshal(source, writer, context);
 
-		// CodeBlocks
-		writer.startNode(TAG_CODEBLOCKS);
-		context.convertAnother(scriptIt.getCodeBlocks());
-		writer.endNode();
+		XMLNode.CODEBLOCKS.writeObject(writer, context,
+				scriptIt.getCodeBlocks());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,7 +45,8 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
-			if (reader.getNodeName().equalsIgnoreCase(TAG_CODEBLOCKS)) {
+			if (reader.getNodeName().equalsIgnoreCase(
+					XMLNode.CODEBLOCKS.getName())) {
 				final Collection<CodeBlock> codeBlocks;
 
 				codeBlocks = ((Collection<CodeBlock>) context.convertAnother(
@@ -62,7 +55,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 				if (codeBlocks.isEmpty())
 					throw new IllegalStateException(
 							"Unable to read CodeBlocks for " + scriptIt);
-				
+
 				scriptIt.setCodeBlocks(codeBlocks);
 			}
 		}
@@ -70,16 +63,6 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 		return scriptIt;
 	}
-
-	/**
-	 * This goes through the entire ScriptIt, looking for
-	 * KnowItBindingReferences in all of the nooks and crannies. Then we check
-	 * if these are supposed to be implicits, in which case we replace them with
-	 * actual implicits. Before, we were generating new knowits to be bound
-	 * here, which obliterated code gen..
-	 * 
-	 * @param scriptIt
-	 */
 
 	@SuppressWarnings("rawtypes")
 	@Override

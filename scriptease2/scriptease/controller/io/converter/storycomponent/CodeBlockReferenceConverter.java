@@ -3,6 +3,8 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.XMLAttribute;
+import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockReference;
@@ -13,7 +15,6 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
-import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -33,17 +34,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class CodeBlockReferenceConverter extends StoryComponentConverter
 		implements Converter {
-
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class.
-
-	public static final String TAG_CODE_BLOCK_REF = "CodeBlockReference";
-
-	private static final String TAG_PARAMETERS = "Parameters";
-	private static final String TAG_TARGET_ID = "TargetId";
-
-	private static final String ATTRIBUTE_LIBRARY = "library";
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
@@ -54,60 +44,40 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final CodeBlockReference codeBlock = (CodeBlockReference) source;
-
 		final LibraryModel library = codeBlock.getLibrary();
+		final Collection<KnowIt> parameters = codeBlock.getParameters();
 
 		if (library != null)
-			writer.addAttribute(ATTRIBUTE_LIBRARY, library.getTitle());
+			XMLAttribute.LIBRARY.write(writer, library.getTitle());
 		else
 			System.err.println("No library found for " + source
 					+ ". Library attribute will be left blank.");
 
-		final Collection<KnowIt> parameters = codeBlock.getParameters();
-
 		super.marshal(source, writer, context);
 
-		writer.startNode(TAG_TARGET_ID);
-		writer.setValue(Integer.toString(codeBlock.getId()));
-		writer.endNode();
+		XMLNode.TARGET_ID.writeInteger(writer, codeBlock.getId());
 
-		// Parameters
 		if (!parameters.isEmpty()) {
-			writer.startNode(TAG_PARAMETERS);
-			context.convertAnother(parameters);
-			writer.endNode();
+			XMLNode.PARAMETERS.writeObject(writer, context, parameters);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final String libraryName;
+		final String libraryName = XMLAttribute.LIBRARY.read(reader);
+
 		final CodeBlockReference block;
-		CodeBlockSource target = null;
-		String nodeName;
-
-		libraryName = reader.getAttribute(ATTRIBUTE_LIBRARY);
-
-		block = (CodeBlockReference) super.unmarshal(reader, context);
-
-		reader.moveDown();
-		nodeName = reader.getNodeName();
-
-		if (!nodeName.equals(TAG_TARGET_ID))
-			this.dieMissingTarget(TAG_TARGET_ID, nodeName);
-
 		final Translator translator;
 		final int targetId;
-		LibraryModel library;
 
+		block = (CodeBlockReference) super.unmarshal(reader, context);
 		translator = TranslatorManager.getInstance().getActiveTranslator();
-		targetId = Integer.parseInt(reader.getValue());
+		targetId = Integer.parseInt(XMLNode.TARGET_ID.readString(reader));
 
-		// We use this hack to load in any codeblock references to
-		// the existing library model before the library model is even
-		// completely read from XStream.
+		// We use this hack to load in any codeblock references to the existing
+		// library model before the library model is read from XStream.
+		LibraryModel library;
 		if (LibraryModelConverter.currentLibrary != null
 				&& libraryName.equals(LibraryModelConverter.currentLibrary
 						.getTitle())) {
@@ -115,6 +85,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		} else
 			library = translator.findLibrary(libraryName);
 
+		CodeBlockSource target = null;
 		if (library != null) {
 			target = library.getCodeBlockByID(targetId);
 			block.setLibrary(library);
@@ -129,38 +100,17 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		}
 
 		block.setTarget(target);
-		reader.moveUp();
 
-		// the parameter list doesn't exist if there aren't any, so look out for
-		// that.
 		if (reader.hasMoreChildren()) {
 			final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 
-			reader.moveDown();
-			nodeName = reader.getNodeName();
-
-			// Parameters
-			if (!nodeName.equals(TAG_PARAMETERS)) {
-				throw new XStreamException(
-						"CodeBlockReference missing parameter information, or data is in the wrong order. Expected "
-								+ TAG_PARAMETERS + ", but found " + nodeName);
-			}
-
-			parameters.addAll((Collection<KnowIt>) context.convertAnother(
-					block, ArrayList.class));
-
-			reader.moveUp();
+			parameters.addAll(XMLNode.PARAMETERS.readCollection(XMLNode.KNOWIT,
+					reader, context, KnowIt.class));
 
 			block.setParameters(parameters);
 		}
 
 		return block;
-	}
-
-	private void dieMissingTarget(String expected, String found) {
-		throw new XStreamException(
-				"CodeBlockReference missing target information, or data is in the wrong order. Expected "
-						+ expected + ", but found " + found);
 	}
 
 	@Override

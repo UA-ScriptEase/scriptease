@@ -14,10 +14,8 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 
-import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * Converts CauseIts to/from XML.
@@ -30,20 +28,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see ScriptItConverter
  */
 public class CauseItConverter extends ScriptItConverter {
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. 
-	@Override
-	public void marshal(Object source, HierarchicalStreamWriter writer,
-			MarshallingContext context) {
-		super.marshal(source, writer, context);
-	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final CauseIt causeIt;
-
-		causeIt = (CauseIt) super.unmarshal(reader, context);
+		final CauseIt causeIt = (CauseIt) super.unmarshal(reader, context);
 
 		// Search for KnowItBindingReferences.
 		if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY) {

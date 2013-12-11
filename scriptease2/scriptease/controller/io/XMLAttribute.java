@@ -13,13 +13,51 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public enum XMLAttribute {
 	AUTHOR("author"),
+	
+	CONTROL("control"),
+
+	DEFAULT("default"),
 
 	DEFAULT_FORMAT("defaultFormat"),
 	
+	FLAVOUR("flavour"),
+	
+	FORMAT("format"),
+
 	NAME("name"),
 
-	DESCRIPTION("description")
-	;
+	DESCRIPTION("description"),
+
+	VALUE("value"),
+
+	ID("id"),
+
+	INITIATE("Initiate"),
+	
+	RESPOND("Respond"),
+	
+	REF("ref"),
+	
+	LIBRARY("library"),
+	
+	PROBABILITY("Probability"),
+
+	DATA("data"),
+
+	UNIQUE("unique"),
+
+	FILTER("filter"),
+
+	FILTERBY("filterBy"),
+
+	SEPARATOR("separator"),
+	
+	TYPE("type"),
+	
+	PRIORITY("priority"),
+
+	LEGALVALUES("legalValues");
+
 	private final String name;
 
 	private XMLAttribute(String name) {

@@ -24,7 +24,6 @@ public class DescribeItNodeConverter implements Converter {
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-
 		final DescribeItNode node = (DescribeItNode) source;
 		final KnowIt value = node.getKnowIt();
 
@@ -58,8 +57,6 @@ public class DescribeItNodeConverter implements Converter {
 
 			final String nodeName = reader.getNodeName();
 
-			// TODO Can't refactor this with current XMLNode methods because
-			// it's optional, and we can't go backwards when reading.
 			if (nodeName.equals(XMLNode.KNOWIT.getName())) {
 				knowIt = (KnowIt) context.convertAnother(node, KnowIt.class);
 			} else if (nodeName.equals(XMLNode.SUCCESSORS.getName())) {

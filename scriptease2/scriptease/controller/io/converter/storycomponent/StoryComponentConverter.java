@@ -1,12 +1,10 @@
 package scriptease.controller.io.converter.storycomponent;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 
-import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -23,42 +21,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author remiller
  */
 public abstract class StoryComponentConverter implements Converter {
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class.
-	private static final String TAG_NAME = "Name";
-	private static final String TAG_LABELS = "Labels";
-	private static final String TAG_LABEL = "Label";
-	private static final String TAG_VISIBLE = "Visible";
-	private static final String TAG_ENABLED = "Enabled";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final StoryComponent comp = (StoryComponent) source;
 
-		// Name
-		writer.startNode(TAG_NAME);
-		writer.setValue(comp.getDisplayText());
-		writer.endNode();
-
-		// Visibility
-		writer.startNode(TAG_VISIBLE);
-		writer.setValue(comp.isVisible().toString());
-		writer.endNode();
-		
-		// Disability
-		writer.startNode(TAG_ENABLED);
-		writer.setValue(comp.isEnabled().toString());
-		writer.endNode();
-
-		// Labels
-		writer.startNode(TAG_LABELS);
-		for (String label : comp.getLabels()) {
-			writer.startNode(TAG_LABEL);
-			writer.setValue(label);
-			writer.endNode();
-		}
-		writer.endNode();
+		XMLNode.NAME.writeString(writer, comp.getDisplayText());
+		XMLNode.VISIBLE.writeBoolean(writer, comp.isVisible());
+		XMLNode.ENABLED.writeBoolean(writer, comp.isEnabled());
+		XMLNode.LABELS.writeChildren(writer, comp.getLabels());
 	}
 
 	/**
@@ -67,7 +38,6 @@ public abstract class StoryComponentConverter implements Converter {
 	 * {@link #buildComponent(HierarchicalStreamReader, UnmarshallingContext)},
 	 * which is called before any generic StoryComponent properties are read in.
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
@@ -75,25 +45,14 @@ public abstract class StoryComponentConverter implements Converter {
 		final String displayText;
 		final String visibility;
 		final String enabled;
-		final Collection<String> labels = new ArrayList<String>();
+		final Collection<String> labels;
 
 		comp = this.buildComponent(reader, context);
 
 		displayText = XMLNode.NAME.readString(reader);
 		visibility = XMLNode.VISIBLE.readString(reader);
 		enabled = XMLNode.ENABLED.readString(reader);
-
-		// Labels
-		reader.moveDown();
-		if (!reader.getNodeName().equalsIgnoreCase(TAG_LABELS))
-			throw new ConversionException(
-					"Failed to read labels for StoryComponent with displayText ["
-							+ displayText + "]");
-
-		labels.addAll(XMLNode.LABELS
-				.readStringCollection(reader, XMLNode.LABEL));
-
-		reader.moveUp();
+		labels = XMLNode.LABELS.readStringCollection(reader);
 
 		// Actually init the StoryComponent.
 		comp.setDisplayText(displayText);

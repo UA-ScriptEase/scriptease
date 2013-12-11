@@ -3,10 +3,12 @@ package scriptease.controller.io.converter.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.Slot;
+import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -20,104 +22,68 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author mfchurch
  */
 public class SlotConverter implements Converter {
-	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
-	private static final String TAG_NAME = "Name";
-	private static final String TAG_KEYWORD = "Keyword";
-	private static final String TAG_PARAMETERS = "Parameters";
-	private static final String TAG_IMPLICITS = "Implicits";
-	private static final String TAG_CONDITION = "Condition";
-	private static final String TAG_FORMAT = "format";
-
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final Slot slot = (Slot) source;
+		final String condition = slot.getCondition();
+		final Collection<KnowIt> parameters = slot.getParameters();
+		final Collection<KnowIt> implicits = slot.getImplicits();
 
 		if (!slot.getFormatKeyword().equals(
 				SEModelManager.getInstance().getActiveModel()
 						.getSlotDefaultFormat())) {
-			writer.addAttribute(TAG_FORMAT, slot.getFormatKeyword());
+			XMLAttribute.FORMAT.write(writer, slot.getFormatKeyword());
 		}
 
-		// Write Name
-		writer.startNode(TAG_NAME);
-		writer.setValue(slot.getDisplayName());
-		writer.endNode();
-
-		// Write Keyword
-		writer.startNode(TAG_KEYWORD);
-		writer.setValue(slot.getKeyword());
-		writer.endNode();
+		XMLNode.NAME.writeString(writer, slot.getDisplayName());
+		XMLNode.KEYWORD.writeString(writer, slot.getKeyword());
 
 		// Write Condition
-		final String condition = slot.getCondition();
-		if (condition != null && !condition.isEmpty()) {
-			writer.startNode(TAG_CONDITION);
-			writer.setValue(slot.getCondition());
-			writer.endNode();
+		if (StringOp.exists(condition)) {
+			XMLNode.CONDITION.writeString(writer, slot.getCondition());
 		}
 
-		// Write Parameters
-		final Collection<KnowIt> parameters = slot.getParameters();
-		writer.startNode(TAG_PARAMETERS);
-		if (parameters != null && !parameters.isEmpty())
-			context.convertAnother(parameters);
-		writer.endNode();
-
-		// Write Implicits
-		final Collection<KnowIt> implicits = slot.getImplicits();
-		writer.startNode(TAG_IMPLICITS);
-		if (implicits != null && !implicits.isEmpty())
-			context.convertAnother(implicits);
-		writer.endNode();
+		XMLNode.PARAMETERS.writeObject(writer, context, parameters);
+		XMLNode.IMPLICITS.writeObject(writer, context, implicits);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final String name;
-		final String keyword;
+		final String format = XMLAttribute.FORMAT.read(reader);
+
+		final String name = XMLNode.NAME.readString(reader);
+		final String keyword = XMLNode.KEYWORD.readString(reader);
 
 		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 		final Collection<KnowIt> implicits = new ArrayList<KnowIt>();
+
 		String condition = null;
-		Slot slot = null;
-		String formatKeyword = null;
-
-		// Read Format
-		formatKeyword = reader.getAttribute(TAG_FORMAT);
-
-		name = XMLNode.NAME.readString(reader);
-		keyword = XMLNode.KEYWORD.readString(reader);
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
 
 			final String node = reader.getNodeName();
 
-			if (node.equals(TAG_PARAMETERS)) {
+			if (node.equals(XMLNode.PARAMETERS.getName())) {
 				if (reader.hasMoreChildren())
 					parameters.addAll((Collection<KnowIt>) context
-							.convertAnother(slot, ArrayList.class));
+							.convertAnother(null, ArrayList.class));
 
-			} else if (node.equals(TAG_IMPLICITS)) {
+			} else if (node.equals(XMLNode.IMPLICITS.getName())) {
 				if (reader.hasMoreChildren())
 					implicits.addAll((Collection<KnowIt>) context
-							.convertAnother(slot, ArrayList.class));
+							.convertAnother(null, ArrayList.class));
 
-			} else if (node.equals(TAG_CONDITION))
+			} else if (node.equals(XMLNode.CONDITION.getName()))
 				condition = reader.getValue();
 
 			reader.moveUp();
 		}
 
-		slot = new Slot(name, keyword, parameters, implicits, formatKeyword,
-				condition);
-
-		return slot;
+		return new Slot(name, keyword, parameters, implicits, format, condition);
 	}
 
 	@SuppressWarnings("rawtypes")

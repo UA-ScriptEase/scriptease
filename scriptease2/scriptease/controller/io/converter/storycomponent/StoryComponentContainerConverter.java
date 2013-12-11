@@ -37,8 +37,8 @@ public class StoryComponentContainerConverter extends
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 
-		int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 		final StoryComponentContainer container;
 
 		container = new StoryComponentContainer();
@@ -51,16 +51,5 @@ public class StoryComponentContainerConverter extends
 		container.registerChildType(ControlIt.class, max);
 
 		return container;
-	}
-
-	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		StoryComponentContainer storyComponentContainer;
-
-		storyComponentContainer = (StoryComponentContainer) super.unmarshal(
-				reader, context);
-
-		return storyComponentContainer;
 	}
 }
