@@ -18,7 +18,7 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	/**
 	 * Builds a reference to the given KnowIt.
 	 * 
-	 * @param value
+	 * @param reference
 	 *            the referent.
 	 */
 	public KnowItBindingUninitialized(KnowItBindingReference reference) {
@@ -50,6 +50,11 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 						.equals(this.reference);
 	}
 
+//	@Override
+//	public boolean compatibleWith(KnowIt knowIt) {
+//		return true;
+//	}
+
 	/**
 	 * Determines the deepest non-reference KnowItBinding of the
 	 * KnowItBindingReference chain.
@@ -69,6 +74,11 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	@Override
 	public boolean isBound() {
 		return true;
+	}
+
+	@Override
+	public KnowItBinding clone() {
+		return this;
 	}
 
 	@Override
