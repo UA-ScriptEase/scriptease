@@ -36,7 +36,7 @@ public abstract class SEGraphModel<E> {
 	public SEGraphModel(E start) {
 		this.depthMap = new IdentityHashMap<E, Integer>();
 		this.start = start;
-
+		
 		this.recalculateDepthMap();
 	}
 
@@ -92,7 +92,7 @@ public abstract class SEGraphModel<E> {
 	 * @return
 	 */
 	public abstract boolean overwriteNodeData(E existingNode, E node);
-
+	
 	/**
 	 * Adds a node between two existing nodes. Order of the two nodes does not
 	 * matter; this method figures out which node is above the other.
