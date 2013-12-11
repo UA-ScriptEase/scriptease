@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.FileManager;
 import scriptease.controller.StoryComponentUtils;
+import scriptease.gui.WindowFactory;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
@@ -153,6 +154,17 @@ public final class ErfFile extends GameModule {
 						if (!journal.setStoryPoint(storyPoint, scriptIt)) {
 							// If set tag fails, remove binding.
 							try {
+								// Warn the user that more than one journal
+								// record was created for the same story point.
+								WindowFactory
+										.getInstance()
+										.showWarningDialog(
+												"Invalid Journal Record for Story Point",
+												"<html><b>Only one Journal Record can be created per Story Point.</b><br><br>"
+														+ "Add a new Journal Point to the existing Journal Record<br>"
+														+ "or create a new Journal Record for a new Story Point instead.<br><br>"
+														+ "<b>Warning: One of these Journal Records now has an unbinded Story Point.</b></html>");
+
 								parameter.clearBinding();
 							} catch (Exception e) {
 								System.err
@@ -370,7 +382,7 @@ public final class ErfFile extends GameModule {
 
 		final List<Resource> automatics = new ArrayList<Resource>();
 		automatics.add(module);
-		
+
 		return new HashMap<String, Collection<Resource>>() {
 			{
 				this.put("automatic", automatics);
