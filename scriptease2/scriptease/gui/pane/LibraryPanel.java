@@ -194,19 +194,19 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(effectsList);
 		this.storyComponentPanelJLists.add(descriptionsList);
 		// TODO uncomment after winter release
-		//this.storyComponentPanelJLists.add(behavioursList);
+		// this.storyComponentPanelJLists.add(behavioursList);
 		this.storyComponentPanelJLists.add(controlsList);
 		this.storyComponentPanelJLists.add(activitiesList);
 		// TODO uncomment after winter release
-		//this.storyComponentPanelJLists.add(blocksList);
+		// this.storyComponentPanelJLists.add(blocksList);
 
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
-		
+
 		// TODO uncomment after winter release
-		//this.add("Behaviours", this.createTab(behavioursList));
-		
+		// this.add("Behaviours", this.createTab(behavioursList));
+
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Activities", this.createTab(activitiesList));
 		// TODO uncomment after winter release
@@ -256,13 +256,14 @@ public class LibraryPanel extends JTabbedPane {
 
 		typeFilter = new TypeAction();
 
+		// 300 is the best time. Trust me, I've tried different ones many times
 		searchFieldTimer = new Timer(300, new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				list.updateFilter(new StoryComponentSearchFilter(searchField
 						.getText()));
-				
+
 				list.removeAllStoryComponents();
-				
+
 				updateList(list, (Timer) arg0.getSource());
 			};
 		});
@@ -289,7 +290,7 @@ public class LibraryPanel extends JTabbedPane {
 			public void actionPerformed(ActionEvent e) {
 				list.updateFilter(new StoryComponentSearchFilter(searchField
 						.getText()));
-				
+
 				list.removeAllStoryComponents();
 
 				updateList(list, searchFieldTimer);
@@ -539,18 +540,18 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (index == 2) {
 					components = libraryModel.getDescriptionsCategory()
 							.getChildren();
-//				} else if (index == 3) {
-//					components = libraryModel.getBehavioursCategory()
-//							.getChildren();
+					// } else if (index == 3) {
+					// components = libraryModel.getBehavioursCategory()
+					// .getChildren();
 				} else if (index == 3) {
 					components = libraryModel.getControllersCategory()
 							.getChildren();
 				} else if (index == 4) {
 					components = libraryModel.getActivitysCategory()
 							.getChildren();
-//				} else if (index == 5) {
-//					components = libraryModel.getControllersCategory()
-//							.getChildren();
+					// } else if (index == 5) {
+					// components = libraryModel.getControllersCategory()
+					// .getChildren();
 				} else {
 					throw new IllegalArgumentException(
 							"Invalid list in LibraryPanel: " + list);
@@ -561,6 +562,8 @@ public class LibraryPanel extends JTabbedPane {
 
 				list.addStoryComponents(components);
 			}
+		} else {
+			list.removeAllStoryComponents();
 		}
 	}
 

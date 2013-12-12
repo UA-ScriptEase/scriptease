@@ -210,24 +210,40 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		final DefaultListModel listModel = (DefaultListModel) this.getModel();
 		listModel.removeElement(noResultsPanel);
 
-		for (StoryComponent component : storyComponentList) {
-			this.addStoryComponent(component);
-		}
+		if (listModel.isEmpty()) {
+			final DefaultListModel newModel = new DefaultListModel();
 
-		if (listModel.isEmpty())
-			listModel.addElement(noResultsPanel);
+			for (StoryComponent component : storyComponentList) {
+				this.addStoryComponent(component, newModel);
+			}
+
+			this.setModel(newModel);
+		} else
+			for (StoryComponent component : storyComponentList) {
+				this.addStoryComponent(component, listModel);
+			}
+
+		final DefaultListModel currentModel;
+
+		currentModel = (DefaultListModel) this.getModel();
+
+		if (currentModel.isEmpty())
+			currentModel.addElement(noResultsPanel);
 	}
 
 	public void addStoryComponent(StoryComponent component) {
+		this.addStoryComponent(component, (DefaultListModel) this.getModel());
+	}
+
+	private void addStoryComponent(StoryComponent component,
+			DefaultListModel listModel) {
 		if ((this.filterRule == null)
 				|| ((this.filterRule != null) && (this.filterRule
 						.isAcceptable(component)))) {
 			// Check if the element is already part of the list
 			if (getIndexOfStoryComponent(component) == -1) {
-				final DefaultListModel listModel;
 				final StoryComponentPanel panel;
 
-				listModel = (DefaultListModel) this.getModel();
 				panel = panelMap.get(component);
 
 				if (panel == null) {
