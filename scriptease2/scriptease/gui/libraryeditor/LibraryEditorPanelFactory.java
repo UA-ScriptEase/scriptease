@@ -72,11 +72,6 @@ public class LibraryEditorPanelFactory {
 			Integer.parseInt(ScriptEase.getInstance().getPreference(
 					ScriptEase.FONT_SIZE_KEY)) + 1);
 
-	// Stores the current observers for the selected StoryComponent so that they
-	// do not get garbage collected.
-	private StoryComponentObserver currentNameObserver;
-	private StoryComponentObserver currentLabelObserver;
-
 	/**
 	 * Returns the single instance of StoryComponentBuilderPanelFactory
 	 * 
@@ -96,14 +91,15 @@ public class LibraryEditorPanelFactory {
 	 * @return
 	 */
 	public JPanel buildLibraryEditorPanel() {
-		final JPanel editorPanel;
-		editorPanel = new LibraryEditorPanel();
-
-		return editorPanel;
+		return new LibraryEditorPanel();
 	}
 
-	// ******************* ACTIVITYIT EDITING PANEL ************************* //
-
+	/**
+	 * Panel used to edit ActivityIts.
+	 * 
+	 * @param activityIt
+	 * @return
+	 */
 	public JPanel buildActivityItEditingPanel(final ActivityIt activityIt) {
 		final JPanel activityPanel;
 		final CodeBlockPanel codeBlockPanel;
@@ -112,7 +108,7 @@ public class LibraryEditorPanelFactory {
 		activityPanel = new JPanel();
 		activityPanel.setLayout(new BoxLayout(activityPanel, BoxLayout.Y_AXIS));
 		activityPanel.setOpaque(false);
-		
+
 		transferPanel = StoryComponentPanelFactory.getInstance()
 				.buildStoryComponentPanel(activityIt);
 
@@ -144,23 +140,25 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 
-		activityIt.addStoryComponentObserver(new StoryComponentObserver() {
+		activityIt.addStoryComponentObserver(activityPanel,
+				new StoryComponentObserver() {
 
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
-					final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
-							.getInstance().buildStoryComponentPanel(activityIt);
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+							final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
+									.getInstance().buildStoryComponentPanel(
+											activityIt);
 
-					activityPanel.remove(3);
-					activityPanel.add(new StoryComponentPanelTree(
-							newTransferPanel), 3);
+							activityPanel.remove(3);
+							activityPanel.add(new StoryComponentPanelTree(
+									newTransferPanel), 3);
 
-					activityPanel.repaint();
-					activityPanel.revalidate();
-				}
-			}
-		});
+							activityPanel.repaint();
+							activityPanel.revalidate();
+						}
+					}
+				});
 
 		return activityPanel;
 	}
@@ -203,8 +201,6 @@ public class LibraryEditorPanelFactory {
 
 		return implicitPanel;
 	}
-
-	// ******************* BEHAVIOUR EDITING PANEL ************************* //
 
 	/**
 	 * Builds a panel used to edit a behaviour.
@@ -960,21 +956,20 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		this.currentNameObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
-					nameField.setText(component.getDisplayText());
-				}
-			}
-		};
-
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
 				false);
 
 		nameField.setHorizontalAlignment(JTextField.LEADING);
 
-		component.addStoryComponentObserver(this.currentNameObserver);
+		component.addStoryComponentObserver(nameField,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+							nameField.setText(component.getDisplayText());
+						}
+					}
+				});
 
 		return nameField;
 	}
@@ -1018,17 +1013,6 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		this.currentLabelObserver = new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				StoryComponentChangeEnum eventType = event.getType();
-				if (eventType == StoryComponentChangeEnum.CHANGE_LABELS_CHANGED) {
-					labelField.setText(StringOp.getCollectionAsString(
-							component.getLabels(), SEPARATOR));
-				}
-			}
-		};
-
 		WidgetDecorator.decorateJTextFieldForFocusEvents(labelField,
 				commitText, false);
 
@@ -1036,7 +1020,17 @@ public class LibraryEditorPanelFactory {
 
 		labelField.setHorizontalAlignment(JTextField.LEADING);
 
-		component.addStoryComponentObserver(this.currentLabelObserver);
+		component.addStoryComponentObserver(labelField,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						StoryComponentChangeEnum eventType = event.getType();
+						if (eventType == StoryComponentChangeEnum.CHANGE_LABELS_CHANGED) {
+							labelField.setText(StringOp.getCollectionAsString(
+									component.getLabels(), SEPARATOR));
+						}
+					}
+				});
 
 		return labelField;
 	}
@@ -1063,15 +1057,16 @@ public class LibraryEditorPanelFactory {
 				}
 			}
 		});
-		component.addStoryComponentObserver(new StoryComponentObserver() {
-			@Override
-			public void componentChanged(StoryComponentEvent event) {
-				if (event.getType() == StoryComponentChangeEnum.CHANGE_VISIBILITY) {
-					visibleBox.setSelected(component.isVisible());
-				}
-			}
-		});
-		
+		component.addStoryComponentObserver(visibleBox,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_VISIBILITY) {
+							visibleBox.setSelected(component.isVisible());
+						}
+					}
+				});
+
 		visibleBox.setOpaque(false);
 
 		return visibleBox;

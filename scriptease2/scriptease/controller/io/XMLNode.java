@@ -63,6 +63,10 @@ public enum XMLNode {
 	CHOICE_COUNTER("ChoiceCounter"),
 
 	COLLABORATIVE_TASK("CollaborativeTask"),
+	
+	CODEBLOCKREFERENCE("CodeBlockReference"),
+	
+	CODEBLOCKSOURCE("CodeBlockSource"),
 
 	CODE("Code"),
 
@@ -77,7 +81,11 @@ public enum XMLNode {
 	EFFECTS("Effects", SCRIPTIT),
 
 	ENABLED("Enabled"),
+	
+	ASKIT("AskIt"),
 
+	PICKIT("PickIt"),
+	
 	ENUM("Enum"),
 
 	ENTRY("Entry"),
@@ -130,6 +138,8 @@ public enum XMLNode {
 
 	NAME("Name"),
 
+	NOTE("Note"),
+	
 	OPTIONAL_LIBRARY("OptionalLibrary"),
 
 	OPTIONAL_LIBRARIES("OptionalLibraries", OPTIONAL_LIBRARY),
@@ -153,6 +163,8 @@ public enum XMLNode {
 	START_STORY_POINT("StartStoryPoint"),
 
 	START_NODE("StartNode"),
+	
+	STORY_COMPONENT_CONTAINER("StoryComponentContainer"),
 
 	EXIT_NODE("ExitNode"),
 

@@ -34,7 +34,6 @@ public abstract class ComplexStoryComponentConverter extends
 
 		XMLNode.CHILDREN.writeObject(writer, context, comp.getChildren());
 	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
