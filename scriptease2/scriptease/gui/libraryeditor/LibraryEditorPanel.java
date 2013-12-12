@@ -48,20 +48,33 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 @SuppressWarnings("serial")
-public class LibraryEditorPanel extends JPanel implements
-		StoryComponentPanelJListObserver {
+public class LibraryEditorPanel extends JPanel {
 	private final StoryVisitor panelBuilder;
 
 	public LibraryEditorPanel() {
 		this.setBackground(ScriptEaseUI.PRIMARY_UI);
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-		final JLabel info = new JLabel(
-				"Select a story component from the left to edit it.");
+		final JLabel info;
+
+		info = new JLabel("Select a story component from the left to edit it.");
+
 		info.setFont(new Font("SansSerif", Font.PLAIN, 16));
+
 		this.add(info);
 
-		LibraryPanel.getInstance().addStoryComponentPanelJListObserver(this);
+		LibraryPanel.getInstance().addStoryComponentPanelJListObserver(
+				new StoryComponentPanelJListObserver() {
+					@Override
+					public void componentSelected(StoryComponent component) {
+						if (component == null) {
+							LibraryEditorPanel.this.removeAll();
+							LibraryEditorPanel.this.revalidate();
+						} else {
+							component.process(panelBuilder);
+						}
+					}
+				});
 
 		/*
 		 * Create a Story Adapter which calls an update on the editorPanel. This
@@ -314,15 +327,5 @@ public class LibraryEditorPanel extends JPanel implements
 				this.pane.revalidate();
 			}
 		};
-	}
-
-	@Override
-	public void componentSelected(StoryComponent component) {
-		if (component == null) {
-			this.removeAll();
-			this.revalidate();
-		} else {
-			component.process(this.panelBuilder);
-		}
 	}
 }
