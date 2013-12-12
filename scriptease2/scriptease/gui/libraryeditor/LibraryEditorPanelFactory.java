@@ -25,7 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
 
 import scriptease.ScriptEase;
 import scriptease.controller.observer.CodeBlockPanelObserver;
@@ -44,6 +43,7 @@ import scriptease.gui.libraryeditor.codeblocks.CodeBlockPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -111,7 +111,8 @@ public class LibraryEditorPanelFactory {
 
 		activityPanel = new JPanel();
 		activityPanel.setLayout(new BoxLayout(activityPanel, BoxLayout.Y_AXIS));
-
+		activityPanel.setOpaque(false);
+		
 		transferPanel = StoryComponentPanelFactory.getInstance()
 				.buildStoryComponentPanel(activityIt);
 
@@ -858,6 +859,10 @@ public class LibraryEditorPanelFactory {
 		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
 				.getStartNode());
 
+		describeItGraphPanel.setOpaque(false);
+		effectHolder.setBackground(ScriptEaseUI.SECONDARY_UI);
+		bindingPanel.setOpaque(false);
+
 		// Set the effectHolder to reflect the initial path of the describeIt
 		// (since it doesn't throw a path selection even in SEGraph the
 		// constructor)
@@ -903,10 +908,14 @@ public class LibraryEditorPanelFactory {
 
 		effectHolder.addSetEffectObserver(effectObserver);
 
+		final JScrollPane graphScroll = new JScrollPane(graph);
+
+		graphScroll.setBorder(BorderFactory.createEmptyBorder());
+
 		// Set up the JPanel containing the graph
 		describeItGraphPanel.setLayout(new BorderLayout());
 		describeItGraphPanel.add(graph.getToolBar(), BorderLayout.WEST);
-		describeItGraphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
+		describeItGraphPanel.add(graphScroll, BorderLayout.CENTER);
 
 		bindingPanel
 				.setLayout(new BoxLayout(bindingPanel, BoxLayout.PAGE_AXIS));
@@ -1062,6 +1071,8 @@ public class LibraryEditorPanelFactory {
 				}
 			}
 		});
+		
+		visibleBox.setOpaque(false);
 
 		return visibleBox;
 	}
@@ -1097,18 +1108,14 @@ public class LibraryEditorPanelFactory {
 
 		// Set up the labels
 		nameLabel.setFont(labelFont);
-		nameLabel.setLabelFor(nameField);
-
 		labelLabel.setFont(labelFont);
-		labelLabel.setLabelFor(labelsField);
-		labelLabel.setToolTipText(labelsField.getToolTipText());
-
 		visibleLabel.setFont(labelFont);
-		visibleLabel.setLabelFor(visibleBox);
+
+		labelLabel.setToolTipText(labelsField.getToolTipText());
 
 		// Set up the descriptorPanel
 		descriptorPanel.setLayout(descriptorPanelLayout);
-		descriptorPanel.setBorder(new TitledBorder("Component Descriptors"));
+		descriptorPanel.setOpaque(false);
 
 		descriptorPanelLayout.setAutoCreateGaps(true);
 		descriptorPanelLayout.setAutoCreateContainerGaps(true);

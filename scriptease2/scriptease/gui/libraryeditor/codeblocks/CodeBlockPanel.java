@@ -124,7 +124,8 @@ public class CodeBlockPanel extends JPanel {
 		typeAction = new TypeAction();
 		codePanel = this.buildCodeEditor(codeBlock);
 
-		deleteCodeBlockButton = new JButton("Delete CodeBlock");
+		deleteCodeBlockButton = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BURGUNDY, "Delete CodeBlock");
 		addParameterButton = ComponentFactory.buildAddButton();
 		typesButton = ComponentFactory.buildFlatButton(typeAction);
 
@@ -164,7 +165,7 @@ public class CodeBlockPanel extends JPanel {
 				BoxLayout.PAGE_AXIS));
 		parameterPanel.setBackground(Color.WHITE);
 
-		parameterScrollPane.setPreferredSize(new Dimension(400, 250));
+		parameterScrollPane.setPreferredSize(new Dimension(400, 150));
 		parameterScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
 		// Set up the label fonts and colors
@@ -536,7 +537,7 @@ public class CodeBlockPanel extends JPanel {
 		buttons.setOpaque(false);
 
 		codeEditorScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		codeEditorScrollPane.setPreferredSize(new Dimension(400, 400));
+		codeEditorScrollPane.setPreferredSize(new Dimension(400, 500));
 
 		codeEditor.setLayout(new BorderLayout());
 		codeEditor.add(buttons, BorderLayout.PAGE_START);

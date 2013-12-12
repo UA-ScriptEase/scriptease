@@ -15,6 +15,7 @@ import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.StoryNodeRenderer;
 import scriptease.gui.SEGraph.renderers.TaskNodeRenderer;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.describeits.DescribeItNode;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.behaviours.Task;
@@ -73,6 +74,8 @@ public class SEGraphFactory {
 				SelectionMode.SELECT_PATH_FROM_START, false, true);
 
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
+		
+		graph.setBackground(ScriptEaseUI.PRIMARY_UI);
 
 		return graph;
 	}
