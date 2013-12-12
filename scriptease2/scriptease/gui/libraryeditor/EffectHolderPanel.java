@@ -14,8 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import scriptease.controller.observer.SetEffectObserver;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.util.GUIOp;
@@ -83,7 +85,8 @@ public class EffectHolderPanel extends JPanel {
 		final JPanel panel;
 		final JButton removeEffectButton;
 
-		removeEffectButton = new JButton("Remove Effect");
+		removeEffectButton = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BURGUNDY, "Remove Effect");
 
 		if (effect != null)
 			panel = StoryComponentPanelFactory.getInstance()

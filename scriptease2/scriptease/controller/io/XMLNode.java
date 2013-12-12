@@ -33,7 +33,7 @@ public enum XMLNode {
 	CAUSES("Causes", CAUSEIT),
 
 	CODESYMBOL("CodeSymbol"),
-	
+
 	CONDITION("Condition"),
 
 	CONTROLIT("ControlIt"),
@@ -47,27 +47,27 @@ public enum XMLNode {
 	BEHAVIOUR("Behaviour"),
 
 	BEHAVIOURS("Behaviours", BEHAVIOUR),
-	
+
 	BINDING("Binding"),
 
 	ACTIVITYIT("ActivityIt"),
 
 	ACTIVITYITS("ActivityIts", ACTIVITYIT),
-	
+
 	CHANCE("Chance"),
-	
+
 	CHOICE("Choice"),
-	
+
 	CHOICES("Choices"),
-	
+
 	CHOICE_COUNTER("ChoiceCounter"),
-	
+
 	COLLABORATIVE_TASK("CollaborativeTask"),
-	
+
 	CODE("Code"),
-	
+
 	CODEBLOCKS("CodeBlocks"),
-	
+
 	INDEPENDENT_TASK("IndependentTask"),
 
 	DIALOGUE_LINE("DialogueLine"),
@@ -91,7 +91,7 @@ public enum XMLNode {
 	DESCRIBEIT("DescribeIt"),
 
 	DESCRIBEITS("DescribeIts", DESCRIBEIT),
-	
+
 	FAN_IN("FanIn"),
 
 	FORMAT("Format"),
@@ -105,7 +105,7 @@ public enum XMLNode {
 	ID("ID"),
 
 	IMAGE("Image"),
-	
+
 	IMPLICITS("Implicits"),
 
 	INCLUDE("Include"),
@@ -137,9 +137,9 @@ public enum XMLNode {
 	PATH("Path", DESCRIBEITNODE),
 
 	PATHMAP("PathMap"),
-	
+
 	PARAMETERS("Parameters"),
-	
+
 	RESERVED_WORD("Word"),
 
 	RESERVED_WORDS("ReservedWords", RESERVED_WORD),
@@ -147,25 +147,25 @@ public enum XMLNode {
 	SLOT("Slot"),
 
 	SLOTS("Slots", SLOT),
-	
+
 	START_TASK("StartTask"),
 
 	START_STORY_POINT("StartStoryPoint"),
-	
+
 	START_NODE("StartNode"),
-	
+
 	EXIT_NODE("ExitNode"),
-	
+
 	EXPANDED("Expanded"),
-	
+
 	STORY_GROUP("StoryGroup"),
-	
+
 	STORY_POINT("StoryPoint"),
-	
+
 	SUBJECT("Subject"),
 
 	SUCCESSORS("Successors"),
-	
+
 	TARGET_ID("TargetId"),
 
 	TITLE("Title"),
@@ -254,8 +254,6 @@ public enum XMLNode {
 	/**
 	 * Writes a node that also has an attribute attached to it.
 	 * 
-	 * TODO Suggested refactor: change parameter attributeData from "String" to
-	 * "String..."
 	 * 
 	 * @param writer
 	 * @param context
@@ -320,26 +318,6 @@ public enum XMLNode {
 		reader.moveUp();
 
 		return value;
-	}
-
-	/**
-	 * Reads the string data from the children of the node.
-	 * 
-	 * @param reader
-	 * @param child
-	 * @deprecated Use the other method instead
-	 * @return
-	 */
-	public Collection<String> readStringCollection(
-			HierarchicalStreamReader reader, XMLNode child) {
-		// TODO Need to get rid of while loops before deleting this method.
-		Collection<String> data = new ArrayList<String>();
-
-		while (reader.hasMoreChildren()) {
-			data.add(child.readString(reader));
-		}
-
-		return data;
 	}
 
 	/**

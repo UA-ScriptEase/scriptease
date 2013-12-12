@@ -1,6 +1,7 @@
 package scriptease.gui.libraryeditor;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -22,8 +23,10 @@ import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.action.typemenus.TypeAction;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.libraryeditor.codeblocks.CodeBlockPanel;
 import scriptease.gui.pane.LibraryPanel;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -50,8 +53,14 @@ public class LibraryEditorPanel extends JPanel implements
 	private final StoryVisitor panelBuilder;
 
 	public LibraryEditorPanel() {
+		this.setBackground(ScriptEaseUI.PRIMARY_UI);
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		
+
+		final JLabel info = new JLabel(
+				"Select a story component from the left to edit it.");
+		info.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		this.add(info);
+
 		LibraryPanel.getInstance().addStoryComponentPanelJListObserver(this);
 
 		/*
@@ -89,13 +98,12 @@ public class LibraryEditorPanel extends JPanel implements
 					final JButton addCodeBlockButton;
 
 					scriptItControlPanel = new JPanel();
-					addCodeBlockButton = new JButton("Add CodeBlock");
+					addCodeBlockButton = ComponentFactory.buildFlatButton(
+							ScriptEaseUI.SE_BLUE, "Add CodeBlock");
 
 					scriptItControlPanel.setLayout(new FlowLayout(
 							FlowLayout.LEADING));
-
-					scriptItControlPanel.setBorder(BorderFactory
-							.createTitledBorder("Effect Control"));
+					scriptItControlPanel.setOpaque(false);
 
 					addCodeBlockButton.addActionListener(new ActionListener() {
 						@Override
@@ -215,6 +223,7 @@ public class LibraryEditorPanel extends JPanel implements
 								knowIt);
 
 				knowItPanel.setLayout(knowItPanelLayout);
+				knowItPanel.setOpaque(false);
 
 				typesLabel.setFont(LibraryEditorPanelFactory.labelFont);
 				nameLabel.setFont(LibraryEditorPanelFactory.labelFont);

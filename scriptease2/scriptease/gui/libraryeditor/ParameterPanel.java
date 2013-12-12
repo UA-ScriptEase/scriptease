@@ -2,6 +2,7 @@ package scriptease.gui.libraryeditor;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -11,16 +12,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
-import javax.swing.GroupLayout;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.NumberEditor;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -77,7 +78,7 @@ public class ParameterPanel extends JPanel {
 
 	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
 			final KnowIt knowIt, boolean removable) {
-		super();
+		super(new FlowLayout(FlowLayout.LEADING));
 		this.knowIt = knowIt;
 
 		final TypeAction typeAction;
@@ -85,12 +86,9 @@ public class ParameterPanel extends JPanel {
 		final JButton typesButton;
 		final JComboBox defaultTypeBox;
 		final JButton deleteButton;
-		final GroupLayout groupLayout;
 		final JComponent bindingConstantComponent;
 
-		final JPanel typesPanel;
 		final JPanel defaultTypeBoxPanel;
-		final JPanel nameFieldPanel;
 		final JPanel bindingPanel;
 
 		final LibraryModel library;
@@ -102,29 +100,22 @@ public class ParameterPanel extends JPanel {
 		typesButton = ComponentFactory.buildFlatButton(typeAction);
 		defaultTypeBox = new JComboBox();
 		deleteButton = ComponentFactory.buildRemoveButton();
-		groupLayout = new GroupLayout(this);
 		bindingConstantComponent = new JPanel();
 
-		typesPanel = new JPanel();
-		defaultTypeBoxPanel = new JPanel();
-		nameFieldPanel = new JPanel();
-		bindingPanel = new JPanel();
+		defaultTypeBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		bindingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
 		library = codeBlock.getLibrary();
 
-		// Set up layouts and such
-		this.setLayout(groupLayout);
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setBackground(GUIOp.scaleColour(Color.GRAY, 1.9));
 
-		typesPanel.setOpaque(false);
 		defaultTypeBoxPanel.setOpaque(false);
-		nameFieldPanel.setOpaque(false);
 		bindingPanel.setOpaque(false);
 		bindingConstantComponent.setOpaque(false);
 
 		// Set up sizes
-		this.setMaximumSize(new Dimension(1920, 100));
+		this.setMaximumSize(new Dimension(1920, 50));
 
 		// Set default values
 		types.addAll(knowIt.getTypes());
@@ -164,7 +155,7 @@ public class ParameterPanel extends JPanel {
 
 				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
-				
+
 				notifyChange();
 			}
 		});
@@ -213,28 +204,24 @@ public class ParameterPanel extends JPanel {
 			deleteButton.setVisible(false);
 		}
 
-		typesPanel.add(typesButton);
+		defaultTypeBoxPanel.add(new JLabel("First Type:"));
 		defaultTypeBoxPanel.add(defaultTypeBox);
-		nameFieldPanel.add(this.buildNameField(scriptIt, codeBlock));
+		bindingPanel.add(new JLabel("Default Value:"));
 		bindingPanel.add(bindingConstantComponent);
 
-		typesPanel.setBorder(new TitledBorder("Types"));
-		nameFieldPanel.setBorder(new TitledBorder("Name"));
-		defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
-		bindingPanel.setBorder(new TitledBorder("Default Value"));
+		defaultTypeBoxPanel.setPreferredSize(new Dimension(350,
+				defaultTypeBoxPanel.getPreferredSize().height));
+		typesButton.setPreferredSize(new Dimension(100, typesButton
+				.getPreferredSize().height));
+		bindingPanel.setPreferredSize(new Dimension(350, bindingPanel
+				.getPreferredSize().height));
 
-		groupLayout.setAutoCreateGaps(true);
-		groupLayout.setAutoCreateContainerGaps(true);
-		groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-				.addComponent(nameFieldPanel).addComponent(typesPanel)
-				.addComponent(defaultTypeBoxPanel).addComponent(bindingPanel)
-				.addComponent(deleteButton));
-
-		groupLayout.setVerticalGroup(groupLayout
-				.createParallelGroup(GroupLayout.Alignment.CENTER)
-				.addComponent(nameFieldPanel).addComponent(typesPanel)
-				.addComponent(deleteButton).addComponent(defaultTypeBoxPanel)
-				.addComponent(bindingPanel));
+		this.add(this.buildNameField(scriptIt, codeBlock));
+		this.add(typesButton);
+		this.add(defaultTypeBoxPanel);
+		this.add(bindingPanel);
+		this.add(Box.createHorizontalGlue());
+		this.add(deleteButton);
 	}
 
 	/**
@@ -278,7 +265,7 @@ public class ParameterPanel extends JPanel {
 
 				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
-				
+
 				notifyChange();
 			}
 		};
@@ -286,6 +273,8 @@ public class ParameterPanel extends JPanel {
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
 				false);
 
+		// nameField.setMaximumSize(new Dimension(35000, nameField
+		// .getPreferredSize().height));
 		return nameField;
 	}
 
