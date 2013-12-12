@@ -652,9 +652,11 @@ public class StoryComponentPanelFactory {
 				if (hasChildren) {
 					// Add child panels
 					for (StoryComponent component : complex.getChildren()) {
-						StoryComponentPanel childPanel = StoryComponentPanelFactory
-								.getInstance().buildStoryComponentPanel(
-										component);
+						final StoryComponentPanel childPanel;
+
+						childPanel = StoryComponentPanelFactory.getInstance()
+								.buildStoryComponentPanel(component);
+
 						panel.add(childPanel,
 								StoryComponentPanelLayoutManager.CHILD);
 					}
