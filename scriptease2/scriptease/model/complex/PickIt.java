@@ -94,6 +94,7 @@ public class PickIt extends ComplexStoryComponent {
 		choiceValidTypes.add(ControlIt.class);
 		choiceValidTypes.add(PickIt.class);
 		choiceValidTypes.add(Behaviour.class);
+		choiceValidTypes.add(ActivityIt.class);
 
 		choice = new StoryComponentContainer("Choice " + ++choiceCounter,
 				choiceValidTypes);
