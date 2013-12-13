@@ -5,14 +5,15 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
@@ -46,6 +47,8 @@ public interface StoryVisitor {
 	public void processIndependentTask(IndependentTask task);
 	
 	public void processCollaborativeTask(CollaborativeTask task);
+	
+	public void processStoryNode(StoryNode storyNode);
 	
 	public void processStoryGroup(StoryGroup storyGroup);
 	

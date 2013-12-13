@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
@@ -220,6 +221,11 @@ public abstract class StoryNode extends ComplexStoryComponent {
 	@Override
 	public void setEnabled(Boolean isDisabled) {
 		// Do nothing - don't want to be able to disable story nodes
+	}
+
+	@Override
+	public void process(StoryVisitor visitor) {
+		visitor.processStoryNode(this);
 	}
 
 	/**
