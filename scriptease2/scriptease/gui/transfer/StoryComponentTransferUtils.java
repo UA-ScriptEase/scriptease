@@ -17,6 +17,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -98,7 +99,8 @@ public class StoryComponentTransferUtils {
 							|| component instanceof AskIt
 							|| component instanceof PickIt
 							|| component instanceof ControlIt
-							|| component instanceof Note) {
+							|| component instanceof Note
+							|| component instanceof ActivityIt) {
 
 						// We don't want to be dropping questions in their own
 						// blocks.
