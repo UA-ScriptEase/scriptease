@@ -168,6 +168,10 @@ public class LibraryEditorPanelFactory {
 	private JPanel buildActivityItImplicitPanel(final ActivityIt activityIt) {
 		final JPanel implicitPanel;
 
+		/*
+		 * Sets a fixed height for panels. Probably not the cleanest way to do
+		 * this. Refactor if necessary.
+		 */
 		implicitPanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {

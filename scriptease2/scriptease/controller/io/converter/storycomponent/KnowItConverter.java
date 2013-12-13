@@ -88,9 +88,9 @@ public class KnowItConverter extends StoryComponentConverter {
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
+
 			if (reader.getNodeName().equals(TAG_BINDING)) {
 				try {
-
 					binding = (KnowItBinding) context.convertAnother(knowIt,
 							KnowItBinding.class);
 				} catch (ConversionException e) {

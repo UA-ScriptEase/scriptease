@@ -2,19 +2,25 @@ package scriptease.gui.SEGraph.controllers;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.SEModelManager;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * Handles all graph grouping functionalities. A graph group represents a set of
@@ -170,7 +176,6 @@ public class GraphGroupController<E> {
 	 * 
 	 * @param ungroup
 	 */
-	@SuppressWarnings("unchecked")
 	public void formGroup() {
 
 		if (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -194,8 +199,47 @@ public class GraphGroupController<E> {
 
 		final StoryNode startNode = (StoryNode) this.startNode;
 
-		final StoryGroup newGroup = new StoryGroup(null,
-				(Set<StoryNode>) this.group, startNode, exitNode, true);
+		// Order the group first
+		final List<StoryNode> groupToForm = new IdentityArrayList<StoryNode>();
+
+		for (E node : this.group) {
+			final StoryNode storyNode = (StoryNode) node;
+
+			SEModelManager.getInstance().getActiveRoot()
+					.process(new StoryAdapter() {
+						@Override
+						public void processStoryGroup(StoryGroup storyGroup) {
+							if (storyNode == storyGroup) {
+								if (!groupToForm.contains(storyNode))
+									groupToForm.add(storyNode);
+							}
+
+							for (StoryNode successor : storyGroup
+									.getSuccessors()) {
+								if (!groupToForm.contains(successor))
+									successor.process(this);
+							}
+						}
+
+						@Override
+						public void processStoryPoint(StoryPoint storyPoint) {
+							if (storyNode == storyPoint) {
+								if (!groupToForm.contains(storyNode))
+									groupToForm.add(storyPoint);
+							}
+
+							for (StoryNode successor : storyPoint
+									.getSuccessors())
+								if (!groupToForm.contains(successor))
+									successor.process(this);
+						}
+					});
+		}
+
+		Collections.reverse(groupToForm);
+
+		final StoryGroup newGroup = new StoryGroup(null, groupToForm,
+				startNode, exitNode, true);
 
 		// Connect the children of the exit node to the new group node and
 		// remove the child from the exit node.
