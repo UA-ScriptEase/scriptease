@@ -441,8 +441,10 @@ public class KnowItBindingConverter implements Converter {
 
 		// move down and read as a story point
 		reader.moveDown();
+
 		storyPoint = (StoryPoint) context
 				.convertAnother(null, StoryPoint.class);
+
 		reader.moveUp();
 
 		return new KnowItBindingStoryPoint(storyPoint);

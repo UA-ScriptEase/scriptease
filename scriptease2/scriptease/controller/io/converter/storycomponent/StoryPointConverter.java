@@ -16,7 +16,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class StoryPointConverter extends StoryNodeConverter {
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. 
+	// this class.
 	public static final String TAG_STORYPOINT = "StoryPoint";
 	public static final String TAG_FAN_IN = "FanIn";
 
@@ -35,6 +35,7 @@ public class StoryPointConverter extends StoryNodeConverter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+
 		final StoryPoint storyPoint = (StoryPoint) super.unmarshal(reader,
 				context);
 
@@ -46,8 +47,8 @@ public class StoryPointConverter extends StoryNodeConverter {
 
 			if (nodeName.equals(TAG_FAN_IN)) {
 				fanIn = reader.getValue();
-			} 
-			
+			}
+
 			reader.moveUp();
 		}
 
