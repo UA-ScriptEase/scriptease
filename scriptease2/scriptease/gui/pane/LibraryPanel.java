@@ -518,6 +518,7 @@ public class LibraryPanel extends JTabbedPane {
 			// Show invisible components if we're editing a library model.
 			if (model instanceof LibraryModel) {
 				hideInvisible = false;
+				libraries.add(LibraryModel.getCommonLibrary());
 				libraries.add((LibraryModel) model);
 			} else {
 				hideInvisible = true;
