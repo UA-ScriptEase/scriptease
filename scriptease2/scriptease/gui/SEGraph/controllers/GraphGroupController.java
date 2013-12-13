@@ -2,7 +2,6 @@ package scriptease.gui.SEGraph.controllers;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +17,6 @@ import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
-import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModelManager;
 import sun.awt.util.IdentityArrayList;
 
@@ -199,44 +197,25 @@ public class GraphGroupController<E> {
 
 		final StoryNode startNode = (StoryNode) this.startNode;
 
-		// Order the group first
+		// Order the group first (not doing so seems to cause issues with xml
+		// saving order).
 		final List<StoryNode> groupToForm = new IdentityArrayList<StoryNode>();
 
-		for (E node : this.group) {
-			final StoryNode storyNode = (StoryNode) node;
-
-			SEModelManager.getInstance().getActiveRoot()
-					.process(new StoryAdapter() {
-						@Override
-						public void processStoryGroup(StoryGroup storyGroup) {
-							if (storyNode == storyGroup) {
-								if (!groupToForm.contains(storyNode))
-									groupToForm.add(storyNode);
-							}
-
-							for (StoryNode successor : storyGroup
-									.getSuccessors()) {
-								if (!groupToForm.contains(successor))
-									successor.process(this);
-							}
+		SEModelManager.getInstance().getActiveRoot()
+				.process(new StoryAdapter() {
+					@Override
+					public void processStoryNode(StoryNode storyNode) {
+						if (group.contains(storyNode)
+								&& !groupToForm.contains(storyNode)) {
+							groupToForm.add(storyNode);
 						}
 
-						@Override
-						public void processStoryPoint(StoryPoint storyPoint) {
-							if (storyNode == storyPoint) {
-								if (!groupToForm.contains(storyNode))
-									groupToForm.add(storyPoint);
-							}
-
-							for (StoryNode successor : storyPoint
-									.getSuccessors())
-								if (!groupToForm.contains(successor))
-									successor.process(this);
+						for (StoryNode successor : storyNode.getSuccessors()) {
+							if (!groupToForm.contains(successor))
+								successor.process(this);
 						}
-					});
-		}
-
-		Collections.reverse(groupToForm);
+					}
+				});
 
 		final StoryGroup newGroup = new StoryGroup(null, groupToForm,
 				startNode, exitNode, true);
@@ -244,7 +223,9 @@ public class GraphGroupController<E> {
 		// Connect the children of the exit node to the new group node and
 		// remove the child from the exit node.
 		final Collection<StoryNode> children = new ArrayList<StoryNode>();
+
 		children.addAll(exitNode.getSuccessors());
+
 		if (exitNode != null) {
 			for (StoryNode child : children) {
 				if (!this.group.contains(child)) {
@@ -257,9 +238,9 @@ public class GraphGroupController<E> {
 		// Connect the parents of the start node to the new group node. and
 		// remove this parent from the start node.
 		final Collection<StoryNode> parents = new ArrayList<StoryNode>();
-		
+
 		parents.addAll(startNode.getParents());
-		
+
 		for (StoryNode parent : parents) {
 			parent.addSuccessor(newGroup);
 			parent.removeSuccessor(startNode);
