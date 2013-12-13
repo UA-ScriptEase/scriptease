@@ -108,6 +108,12 @@ public class StoryComponentTransferUtils {
 								&& component instanceof AskIt)
 							return false;
 
+						// Don't want to be dropping activities within
+						// activities
+						if (destinationComponent.getOwner() instanceof ActivityIt
+								&& component instanceof ActivityIt)
+							return false;
+
 						// Nor do we want to be dropping causes in effects
 						if ((!(destinationComponent instanceof StoryPoint) && !(destinationComponent instanceof CauseIt))
 								&& component instanceof CauseIt)
@@ -254,7 +260,7 @@ public class StoryComponentTransferUtils {
 		final StoryComponent clone = child.clone();
 		final boolean success;
 
-		//clone.revalidateKnowItBindings();
+		// clone.revalidateKnowItBindings();
 
 		StoryComponent sibling = parent.getChildAt(insertionIndex);
 		if (sibling != null) {
