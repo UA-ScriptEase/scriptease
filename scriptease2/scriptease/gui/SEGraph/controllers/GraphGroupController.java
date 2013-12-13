@@ -257,7 +257,9 @@ public class GraphGroupController<E> {
 		// Connect the parents of the start node to the new group node. and
 		// remove this parent from the start node.
 		final Collection<StoryNode> parents = new ArrayList<StoryNode>();
+		
 		parents.addAll(startNode.getParents());
+		
 		for (StoryNode parent : parents) {
 			parent.addSuccessor(newGroup);
 			parent.removeSuccessor(startNode);
