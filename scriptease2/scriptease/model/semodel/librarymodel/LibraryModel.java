@@ -3,9 +3,7 @@ package scriptease.model.semodel.librarymodel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.BindingVisitor;
@@ -27,11 +25,11 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -41,7 +39,6 @@ import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
-import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Slot;
 import scriptease.util.FileOp;
 import scriptease.util.StringOp;
@@ -1010,46 +1007,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public Collection<AbstractFragment> getTypeFormat(String keyword) {
 		return new ArrayList<AbstractFragment>(this.getType(keyword)
 				.getFormat());
-	}
-
-	@Override
-	public String getTypeRegex(String keyword) {
-		return this.getType(keyword).getReg();
-	}
-
-	@Override
-	public Map<String, String> getTypeEnumeratedValues(String keyword) {
-		return new HashMap<String, String>(this.getType(keyword).getEnumMap());
-	}
-
-	@Override
-	public String getTypeDisplayText(String keyword) {
-		return this.getType(keyword).getDisplayName();
-	}
-
-	@Override
-	public Collection<String> getTypeSlots(String keyword) {
-		return new ArrayList<String>(this.getType(keyword).getSlots());
-	}
-
-	@Override
-	public String getTypeCodeSymbol(String keyword) {
-		return this.getType(keyword).getCodeSymbol();
-	}
-
-	@Override
-	public Map<String, String> getTypeEscapes(String keyword) {
-		return new HashMap<String, String>(this.getType(keyword).getEscapes());
-	}
-
-	@Override
-	public GUIType getTypeGUI(String keyword) {
-		return this.getType(keyword).getGui();
-	}
-
-	@Override
-	public String getTypeWidgetName(String keyword) {
-		return this.getType(keyword).getWidgetName();
 	}
 
 	/**

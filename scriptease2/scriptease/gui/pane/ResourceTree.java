@@ -150,7 +150,7 @@ class ResourceTree extends JPanel {
 			final ResourceContainer containerPanel;
 			final String displayText;
 
-			displayText = story.getTypeDisplayText(type);
+			displayText = story.getType(type).getDisplayName();
 			containerPanel = new ResourceContainer(type, displayText);
 
 			this.add(containerPanel);

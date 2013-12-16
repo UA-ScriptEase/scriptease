@@ -23,7 +23,8 @@ public class KnowItBindingContext extends Context {
 	 */
 	@Override
 	public String getType() {
-		return this.getModel().getTypeCodeSymbol(this.binding.getFirstType());
+		return this.getModel().getType(this.binding.getFirstType())
+				.getCodeSymbol();
 	}
 
 	@Override

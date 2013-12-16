@@ -105,7 +105,7 @@ public class KnowItContext extends StoryComponentContext {
 	public String getType() {
 		final String defaultType = this.getComponent().getDefaultType();
 
-		return this.getModel().getTypeCodeSymbol(defaultType);
+		return this.getModel().getType(defaultType).getCodeSymbol();
 	}
 
 	@Override

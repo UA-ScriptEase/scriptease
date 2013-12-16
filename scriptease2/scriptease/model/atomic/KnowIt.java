@@ -268,7 +268,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 					if (translator != null
 							&& translator.defaultLibraryIsLoaded()) {
 						for (String type : KnowIt.this.types) {
-							if (activeModel.getTypeGUI(type) != null) {
+							if (activeModel.getType(type).getGui() != null) {
 								final Resource resource;
 								final KnowItBindingResource bindingValue;
 
@@ -609,7 +609,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 								uninitialized.getValue())) {
 							setBinding(new KnowItBindingNull());
 						}
-						
+
 					} else {
 						setBinding(new KnowItBindingNull());
 					}

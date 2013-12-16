@@ -389,7 +389,7 @@ public class GenericFileFormat {
 		final Collection<String> scriptSlots;
 
 		scriptSlots = ErfFile.getTranslator().getLibrary()
-				.getTypeSlots(this.getScriptEaseType());
+				.getType(this.getScriptEaseType()).getSlots();
 
 		// remove all generated script references
 		for (String slotName : scriptSlots) {

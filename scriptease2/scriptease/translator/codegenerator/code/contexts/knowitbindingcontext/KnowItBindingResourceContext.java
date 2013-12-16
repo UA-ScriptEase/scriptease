@@ -20,7 +20,8 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public class KnowItBindingResourceContext extends KnowItBindingContext {
-	public KnowItBindingResourceContext(Context other, KnowItBindingResource source) {
+	public KnowItBindingResourceContext(Context other,
+			KnowItBindingResource source) {
 		super(other, source);
 	}
 
@@ -48,7 +49,7 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 	public String getTemplateID() {
 		return ((KnowItBindingResource) this.binding).getTemplateID();
 	}
-	
+
 	@Override
 	public String getUniqueID() {
 		final KnowItBindingResource binding;
@@ -76,7 +77,7 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 
 		// Handles Escaped Characters
 		final Set<Entry<String, String>> entrySet = this.getModel()
-				.getTypeEscapes(type).entrySet();
+				.getType(type).getEscapes().entrySet();
 
 		for (Entry<String, String> escape : entrySet) {
 			final String key = escape.getKey();
@@ -85,7 +86,7 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 		}
 
 		// Handle Legal Values the type can take
-		final String regex = this.getModel().getTypeRegex(type);
+		final String regex = this.getModel().getType(type).getReg();
 		if (StringOp.exists(regex) && !scriptValue.isEmpty()) {
 			final Pattern regexPattern = Pattern.compile(regex);
 
