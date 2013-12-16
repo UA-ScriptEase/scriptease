@@ -19,10 +19,35 @@ import scriptease.util.GUIOp;
  */
 public interface ScriptEaseUI {
 
+	public static final Color SE_ORANGE = new Color(199, 78, 44);
+	public static final Color SE_GREEN = new Color(5, 142, 5);
+	public static final Color SE_BURGUNDY = new Color(160, 26, 59);
+	public static final Color SE_TEAL = new Color(5, 142, 158);
+	public static final Color SE_YELLOW = new Color(234, 160, 31);
+	public static final Color SE_BLUE = new Color(50, 131, 224);
+	public static final Color SE_PURPLE = new Color(91, 61, 173);
+	public static final Color SE_BLACK = new Color(68, 68, 68);
+	public static final Color SE_RED = new Color(255, 69, 40);
+
+	public static final Color PRIMARY_UI = Color.WHITE;
+	public static final Color SECONDARY_UI = SE_BLACK;
+	public static final Color TERTIARY_UI = Color.gray;
+
+
+	/**
+	 * The colour (white) used to display graph group backgrounds.
+	 */
+	public static final Color COLOUR_GROUP_BACKGROUND = Color.WHITE;
+
+	/**
+	 * The colour (purple) used to display uninitialized knowIts.
+	 */
+	public static final Color COLOUR_KNOWIT_UNINITIALIZED = SE_PURPLE;
+	
 	/**
 	 * The colour (green) used to display known object bindings.
 	 */
-	public static final Color COLOUR_KNOWN_OBJECT = new Color(20, 175, 0);
+	public static final Color COLOUR_KNOWN_OBJECT = SE_GREEN;//new Color(20, 175, 0);
 
 	/**
 	 * The colour (lighter green) used to display the background of text fields
@@ -34,12 +59,12 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (sort of a light blue) used to display game object bindings.
 	 */
-	public static final Color COLOUR_GAME_OBJECT = new Color(102, 140, 255);
+	public static final Color COLOUR_GAME_OBJECT = SE_BLUE;//new Color(102, 140, 255);
 
 	/**
 	 * The colour (Warning Red) used to display unbound bindings.
 	 */
-	public static final Color COLOUR_UNBOUND = new Color(242, 0, 0);
+	public static final Color COLOUR_UNBOUND = new Color(230, 26, 59);
 
 	/**
 	 * The colour (Simple Brown) used to display simple bindings.
@@ -59,7 +84,7 @@ public interface ScriptEaseUI {
 	/**
 	 * The colour (Grey) used for selected UI Components
 	 */
-	public static final Color SELECTED_COLOUR = new Color(180, 180, 180);
+	public static final Color SELECTED_COLOUR = new Color(140, 140, 140);
 
 	/**
 	 * The colour (White) used for unselected UI components
@@ -67,24 +92,9 @@ public interface ScriptEaseUI {
 	public static final Color UNSELECTED_COLOUR = Color.WHITE;
 
 	/**
-	 * The colour (light blue) used by default for node backgrounds.
+	 * The colour (Secondary UI) used for selected graph nodes
 	 */
-	public static final Color COLOUR_NODE_DEFAULT = new Color(205, 221, 250);
-
-	/**
-	 * The colour (dark blue) used for selected graph nodes
-	 */
-	public static final Color COLOUR_SELECTED_NODE = new Color(89, 147, 255);
-
-	/**
-	 * The colour (darker blue) used for parent of selected node
-	 */
-	public static final Color COLOUR_PARENT_NODE = new Color(190, 180, 255);
-
-	/**
-	 * The colour (lighter blue) used for children of selected node
-	 */
-	public static final Color COLOUR_CHILD_NODE = new Color(180, 255, 185);
+	public static final Color COLOUR_SELECTED_NODE = SE_BLUE;
 
 	/**
 	 * The colour (red) used for the delete node tool
@@ -108,60 +118,6 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_GROUPABLE_NODE = new Color(162, 240, 250);
 
 	/**
-	 * The colour (White) used by Fragments by default Story Component Builder.
-	 */
-	public static final Color FRAGMENT_DEFAULT_COLOR = Color.white;
-	/**
-	 * The colour (Grey) used for the code editor in Story Component Builder.
-	 */
-	public static final Color CODE_EDITOR_COLOR = Color.GRAY;
-
-	/**
-	 * The colour (Light Grey) used for Line Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color LINE_FRAGMENT_COLOR = Color.LIGHT_GRAY;
-
-	/**
-	 * The colour (Light Grey) used for the Indent Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color INDENT_FRAGMENT_COLOR = Color.LIGHT_GRAY;
-
-	/**
-	 * The colour (Dark Green) used for the Scope Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color SCOPE_FRAGMENT_COLOR = GUIOp.scaleColour(
-			Color.GREEN, 0.5);
-
-	/**
-	 * The colour (Dark Orange) used for the Series Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color SERIES_FRAGMENT_COLOR = new Color(250, 165, 17)
-			.darker();
-
-	/**
-	 * The colour (Blue) used for the Simple Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color SIMPLE_FRAGMENT_COLOR = Color.BLUE;
-
-	/**
-	 * The colour (Gray) used for the Literal Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color LITERAL_FRAGMENT_COLOR = Color.GRAY;
-
-	/**
-	 * The colour (Purple) used for the Reference Fragments in Story Component
-	 * Builder.
-	 */
-	public static final Color REFERENCE_FRAGMENT_COLOR = GUIOp.scaleColour(
-			Color.magenta, 0.7);
-
-	/**
 	 * The text colour (Dark Grey) we use for Notes.
 	 */
 	public static final Color COLOUR_NOTE_TEXT = new Color(133, 133, 133);
@@ -170,11 +126,11 @@ public interface ScriptEaseUI {
 	 * The color used for the background of the text field for Notes.
 	 */
 	public static final Color COLOUR_NOTE_TEXT_BG = new Color(255, 252, 161);
-	
+
 	/**
 	 * The colour (Bright Pink) used for disabled components.
 	 */
-	public static final Color COLOUR_DISABLED = new Color(255, 106, 0);
+	public static final Color COLOUR_DISABLED = SE_YELLOW;
 
 	public static final Color COLOUR_ADD_BUTTON = COLOUR_KNOWN_OBJECT;
 
@@ -228,6 +184,12 @@ public interface ScriptEaseUI {
 			.get("Tree.collapsedIcon");
 
 	/**
+	 * Cursor to represent select actions.
+	 */
+	public static final Cursor CURSOR_SELECT = GUIOp.createCursor("select",
+			new Point(10, 10));
+
+	/**
 	 * Cursor to represent unavailable actions. A circle with a line through it,
 	 * like in No Smoking or No Pie signs.
 	 */
@@ -237,16 +199,8 @@ public interface ScriptEaseUI {
 	/**
 	 * Cursor to represent the start of the grouping action.
 	 */
-	public static final Cursor CURSOR_GROUP_START = GUIOp.createCursor("group",
-			new Point(15, 15));
-
-	/**
-	 * Cursor to represent the end of the grouping action, after the beginning
-	 * group node has already been selected.
-	 */
-	public static final Cursor CURSOR_GROUP_END = GUIOp.createCursor(
-			"group_end", new Point(15, 15));
-
+	public static final Cursor CURSOR_UNGROUP = GUIOp.createCursor("ungroup",
+			new Point(0, 0));
 	/**
 	 * The maximum screen width that ScriptEase can support. Can be increased if
 	 * we encounter ridiculous situations (e.g. 15 Macbook Pros with retina

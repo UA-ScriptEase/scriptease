@@ -9,8 +9,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -28,31 +33,37 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicButtonUI;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
+import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.controller.observer.UndoManagerObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
 import scriptease.gui.action.file.CloseModelAction;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.StoryComponent;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -71,6 +82,7 @@ import scriptease.util.BiHashMap;
  * 
  * @author ScriptEase Team
  * @author kschenk - major refactor to make it MVC and less buggy
+ * @author jyuen
  * 
  */
 @SuppressWarnings("serial")
@@ -84,19 +96,12 @@ class SEModelTabbedPane extends JTabbedPane {
 	protected SEModelTabbedPane() {
 		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
-		// Register a change listener for the tabs
-		this.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent evt) {
-				final Component tab = SEModelTabbedPane.this
-						.getSelectedComponent();
-				final SEModel model = SEModelTabbedPane.this.modelToComponent
-						.getKey(tab);
-
-				if (tab != null && model != null) {
-					SEModelManager.getInstance().activate(model);
-				}
-			}
-		});
+		// Register a mouse listener for the tabs to listen for title changes
+		TabTitleChangeListener titleListener = new TabTitleChangeListener(this);
+		this.addMouseListener(titleListener);
+		this.addChangeListener(titleListener);
+		UndoManager.getInstance().addUndoManagerObserver(
+				SEModelManager.getInstance().getActiveModel(), titleListener);
 
 		SEModelManager.getInstance().addSEModelObserver(this,
 				new SEModelObserver() {
@@ -122,6 +127,8 @@ class SEModelTabbedPane extends JTabbedPane {
 						}
 					}
 				});
+		this.setUI(ComponentFactory.buildFlatTabUI());
+		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 	}
 
 	/**
@@ -173,7 +180,6 @@ class SEModelTabbedPane extends JTabbedPane {
 					// Creates a story editor panel with a story graph
 					final StoryPoint root;
 					final JComponent panel;
-					final String savedTitle;
 					String modelTitle;
 
 					root = storyModel.getRoot();
@@ -184,11 +190,7 @@ class SEModelTabbedPane extends JTabbedPane {
 					if (modelTitle == null || modelTitle.equals(""))
 						modelTitle = "<Untitled>";
 
-					savedTitle = modelTitle + "("
-							+ storyModel.getModule().getLocation().getName()
-							+ ")";
-
-					SEModelTabbedPane.this.buildTab(savedTitle, storyModel,
+					SEModelTabbedPane.this.buildTab(modelTitle, storyModel,
 							panel);
 				}
 			});
@@ -215,32 +217,13 @@ class SEModelTabbedPane extends JTabbedPane {
 		else
 			icon = null;
 
-		newTab = new CloseableModelTab(this, model, icon);
-
 		this.addTab(title, icon, tabContents);
+
+		newTab = new CloseableModelTab(this, model, icon, tabContents);
 
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
 
 		this.setFocusable(false);
-
-		UndoManager.getInstance().addUndoManagerObserver(model,
-				new UndoManagerObserver() {
-					@Override
-					public void stackChanged() {
-						final SEModelTabbedPane tabPanel = SEModelTabbedPane.this;
-						final int index = tabPanel
-								.indexOfComponent(tabContents);
-
-						if (index < 0)
-							return;
-
-						if (UndoManager.getInstance().isSaved(model)) {
-							tabPanel.setTitleAt(index, title);
-						} else {
-							tabPanel.setTitleAt(index, "*" + title);
-						}
-					}
-				});
 
 		this.setSelectedComponent(tabContents);
 	}
@@ -257,20 +240,30 @@ class SEModelTabbedPane extends JTabbedPane {
 			final StoryPoint start) {
 		final String STORY_EDITOR = "Story Editor";
 		final String DIALOGUE_EDITOR = "Dialogue Editor";
+		final String BEHAVIOUR_EDITOR = "Behaviour Editor";
+
 		final CardLayout layout;
 		final JPanel topLevelPane;
 		final JSplitPane storyPanel;
 		final JToolBar graphToolBar;
-		final DialogueEditorPanel dialogueEditor;
-		final JButton backToStory;
 
-		final SEGraph<StoryPoint> storyGraph;
-		final StoryComponentPanelTree storyComponentTree;
+		final DialogueEditorPanel dialogueEditor;
+		final BehaviourEditorPanel behaviourEditor;
+
+		final JButton backFromDialogue;
+		final JButton backFromBehaviour;
+
+		final SEGraph<StoryNode> storyGraph;
 		final StoryComponentObserver graphRedrawer;
 		final JPanel storyGraphPanel;
 
 		final JScrollPane storyGraphScrollPane;
+		final String backText;
 
+		final StoryComponentPanelTree storyComponentTree = model
+				.getStoryComponentPanelTree();
+
+		backText = "<html><center>Back<br>to<br>Story</center></html>";
 		layout = new CardLayout();
 		topLevelPane = new JPanel(layout);
 
@@ -278,12 +271,14 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyGraph = SEGraphFactory.buildStoryGraph(start);
 		graphToolBar = storyGraph.getToolBar();
 
-		backToStory = new JButton(
-				"<html><center>Back<br>to<br>Story</center></html>");
+		backFromDialogue = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BLACK, backText);
+		backFromBehaviour = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BLACK, backText);
 
-		dialogueEditor = new DialogueEditorPanel(model, backToStory);
+		dialogueEditor = new DialogueEditorPanel(model, backFromDialogue);
+		behaviourEditor = new BehaviourEditorPanel(backFromBehaviour);
 
-		storyComponentTree = new StoryComponentPanelTree(start);
 		graphRedrawer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
@@ -291,7 +286,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 				type = event.getType();
 
-				if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_ADDED) {
+				if (type == StoryComponentChangeEnum.STORY_NODE_SUCCESSOR_ADDED) {
 					event.getSource().addStoryComponentObserver(this);
 					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
@@ -301,31 +296,40 @@ class SEModelTabbedPane extends JTabbedPane {
 					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
-				} else if (type == StoryComponentChangeEnum.STORY_POINT_SUCCESSOR_REMOVED) {
+				} else if (type == StoryComponentChangeEnum.STORY_NODE_SUCCESSOR_REMOVED) {
 					storyGraph.recalculateDepthMap();
 					storyGraph.repaint();
 					storyGraph.revalidate();
 
-					// Set root to start node if we remove the selected node.
+					// Set root to start node if we remove the selected node, or
+					// the group node if it has become part of the group.
 					if (event.getSource() == storyComponentTree.getRoot()) {
-						final Collection<StoryPoint> nodes;
+						final Collection<StoryNode> nodes;
 
-						nodes = new ArrayList<StoryPoint>();
+						nodes = new ArrayList<StoryNode>();
 
 						nodes.add(storyGraph.getStartNode());
 
 						storyGraph.setSelectedNodes(nodes);
-						storyComponentTree.setRoot(storyGraph.getStartNode());
+
+						final StoryComponent owner = event.getSource()
+								.getOwner();
+						if (owner instanceof StoryGroup) {
+							storyComponentTree.setRoot((StoryGroup) owner);
+						} else {
+							storyComponentTree.setRoot(storyGraph
+									.getStartNode());
+						}
 					}
 				}
-
 			}
 		};
+
 		storyGraphPanel = new JPanel();
 
 		storyGraphScrollPane = new JScrollPane(storyGraph);
 
-		for (StoryPoint point : start.getDescendants()) {
+		for (StoryNode point : start.getDescendants()) {
 			point.addStoryComponentObserver(graphRedrawer);
 		}
 
@@ -333,10 +337,11 @@ class SEModelTabbedPane extends JTabbedPane {
 		SEModelTabbedPane.this.modelToComponent.put(model, topLevelPane);
 
 		// Set up the Story Graph
-		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryPoint>() {
+		storyGraph.addSEGraphObserver(new SEGraphAdapter<StoryNode>() {
 
 			@Override
-			public void nodesSelected(final Collection<StoryPoint> nodes) {
+			public void nodesSelected(final Collection<StoryNode> nodes) {
+
 				SEModelManager.getInstance().getActiveModel()
 						.process(new ModelAdapter() {
 							@Override
@@ -348,15 +353,14 @@ class SEModelTabbedPane extends JTabbedPane {
 			}
 
 			@Override
-			public void nodeOverwritten(StoryPoint node) {
+			public void nodeOverwritten(StoryNode node) {
 				node.revalidateKnowItBindings();
 			}
 
 			@Override
-			public void nodeRemoved(StoryPoint removedNode) {
+			public void nodeRemoved(StoryNode removedNode) {
 				start.revalidateKnowItBindings();
 			}
-
 		});
 
 		start.addStoryComponentObserver(graphRedrawer);
@@ -370,7 +374,7 @@ class SEModelTabbedPane extends JTabbedPane {
 				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
 
 		storyGraphPanel.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		graphToolBar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1,
 				Color.LIGHT_GRAY));
@@ -380,59 +384,68 @@ class SEModelTabbedPane extends JTabbedPane {
 		storyGraphPanel.add(storyGraphScrollPane, BorderLayout.CENTER);
 
 		storyComponentTree.setBorder(BorderFactory
-				.createEtchedBorder(EtchedBorder.LOWERED));
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		// Set up the split pane
-		storyPanel.setBorder(null);
+		storyPanel.setBorder(BorderFactory.createEmptyBorder());
 		storyPanel.setOpaque(true);
 		storyPanel.setTopComponent(storyGraphPanel);
 		storyPanel.setBottomComponent(storyComponentTree);
 
-		// Set the divider to a blank one
-		for (Component component : storyPanel.getComponents()) {
-			if (component instanceof BasicSplitPaneDivider) {
-				final BasicSplitPaneDivider divider;
+		WidgetDecorator.setSimpleDivider(storyPanel);
 
-				divider = (BasicSplitPaneDivider) component;
-				divider.setBackground(Color.WHITE);
-				divider.setBorder(null);
-
-				break;
-			}
-		}
-
-		topLevelPane.setBorder(null);
+		topLevelPane.setBorder(BorderFactory.createEmptyBorder());
 		topLevelPane.setOpaque(true);
 		topLevelPane.add(storyPanel, STORY_EDITOR);
 		topLevelPane.add(dialogueEditor, DIALOGUE_EDITOR);
+		topLevelPane.add(behaviourEditor, BEHAVIOUR_EDITOR);
+		topLevelPane.setBackground(ScriptEaseUI.SECONDARY_UI);
 
-		backToStory.addActionListener(new ActionListener() {
+		final ActionListener backListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				layout.show(topLevelPane, STORY_EDITOR);
 				dialogueEditor.setDialogueLine(null);
 			}
-		});
+		};
+
+		backFromDialogue.addActionListener(backListener);
+		backFromBehaviour.addActionListener(backListener);
 
 		ResourcePanel.getInstance().addObserver(topLevelPane,
 				new ResourceTreeAdapter() {
 					@Override
 					public void resourceEditButtonClicked(Resource resource) {
 						if (resource instanceof DialogueLine) {
-							dialogueEditor
-									.setDialogueLine((DialogueLine) resource);
-							layout.show(topLevelPane, DIALOGUE_EDITOR);
-						}
-					}
-
-					@Override
-					public void resourceRemoveButtonClicked(Resource resource) {
-						if (dialogueEditor.getDialogueLine() == resource) {
-							layout.show(topLevelPane, STORY_EDITOR);
-							dialogueEditor.setDialogueLine(null);
+							if (dialogueEditor.getDialogueLine() == null) {
+								layout.show(topLevelPane, DIALOGUE_EDITOR);
+								dialogueEditor
+										.setDialogueLine((DialogueLine) resource);
+							} else {
+								layout.show(topLevelPane, STORY_EDITOR);
+								dialogueEditor.setDialogueLine(null);
+							}
 						}
 					}
 				});
+
+		model.addStoryModelObserver(new StoryModelAdapter() {
+			@Override
+			public void dialogueRootRemoved(DialogueLine removed) {
+				if (dialogueEditor.getDialogueLine() == removed) {
+					layout.show(topLevelPane, STORY_EDITOR);
+					dialogueEditor.setDialogueLine(null);
+				}
+			}
+
+			@Override
+			public void behaviourEdited(Behaviour behaviour) {
+				if (behaviour != null) {
+					layout.show(topLevelPane, BEHAVIOUR_EDITOR);
+					behaviourEditor.setBehaviour(behaviour);
+				}
+			}
+		});
 
 		return topLevelPane;
 	}
@@ -488,7 +501,7 @@ class SEModelTabbedPane extends JTabbedPane {
 		 *            will show no icon.
 		 */
 		private CloseableModelTab(final JTabbedPane parent,
-				final SEModel model, Icon icon) {
+				final SEModel model, Icon icon, final Component component) {
 			// unset the annoying gaps that come with default FlowLayout
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
@@ -504,12 +517,7 @@ class SEModelTabbedPane extends JTabbedPane {
 			// make JLabel read titles from JTabbedPane
 			label = new JLabel() {
 				public String getText() {
-					int i = parent.indexOfTabComponent(CloseableModelTab.this);
-
-					if (i == -1)
-						return null;
-
-					return parent.getTitleAt(i);
+					return model.getTitle();
 				}
 			};
 
@@ -523,6 +531,21 @@ class SEModelTabbedPane extends JTabbedPane {
 
 			// add more space between the label and the button
 			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+
+			if (parent.getSelectedComponent() == component)
+				label.setForeground(ScriptEaseUI.SECONDARY_UI);
+			else
+				label.setForeground(ScriptEaseUI.PRIMARY_UI);
+
+			parent.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					if (parent.getSelectedComponent() == component)
+						label.setForeground(ScriptEaseUI.SECONDARY_UI);
+					else
+						label.setForeground(ScriptEaseUI.PRIMARY_UI);
+				}
+			});
 
 			closeButton = new TabButton(new CloseModelAction(model));
 			closeButton.setHideActionText(true);
@@ -597,7 +620,7 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			Component component = e.getComponent();
+			final Component component = e.getComponent();
 			if (component instanceof AbstractButton) {
 				AbstractButton button = (AbstractButton) component;
 				button.setBorderPainted(true);
@@ -606,11 +629,172 @@ class SEModelTabbedPane extends JTabbedPane {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			Component component = e.getComponent();
+			final Component component = e.getComponent();
 			if (component instanceof AbstractButton) {
 				AbstractButton button = (AbstractButton) component;
 				button.setBorderPainted(false);
 			}
 		}
 	};
+
+	/**
+	 * Listens for double mouse clicks on tabs. Creates a textField over the tab
+	 * and allows the user to change the name of their story. Also listens to
+	 * other changes for the tab title - showing a * next to the title when the
+	 * model should be saved.
+	 * 
+	 * @author jyuen
+	 */
+	private class TabTitleChangeListener extends MouseAdapter implements
+			ChangeListener, UndoManagerObserver {
+
+		private final JTextField editor;
+		private final JTabbedPane tabbedPane;
+
+		public TabTitleChangeListener(final JTabbedPane tabbedPane) {
+			this.tabbedPane = tabbedPane;
+			this.editor = new JTextField();
+
+			editor.setBorder(BorderFactory.createEmptyBorder());
+			editor.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					renameTabTitle();
+				}
+			});
+			editor.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						renameTabTitle();
+					} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+						cancelEditing();
+					} else {
+						editor.setPreferredSize(editor.getText().length() > length ? null
+								: dimension);
+						tabbedPane.revalidate();
+					}
+				}
+			});
+		}
+
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			cancelEditing();
+
+			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
+			final SEModel model = SEModelTabbedPane.this.modelToComponent
+					.getKey(tab);
+
+			if (tab != null && model != null) {
+				SEModelManager.getInstance().activate(model);
+			}
+		}
+
+		@Override
+		public void stackChanged() {
+			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
+			final SEModel model = SEModelTabbedPane.this.modelToComponent
+					.getKey(tab);
+
+			if (tab != null && model != null) {
+				if (UndoManager.getInstance().isSaved(model)) {
+					if (model.getTitle().charAt(0) == '*') {
+						model.setTitle(model.getTitle().substring(1));
+						tab.setName(model.getTitle().substring(1));
+					}
+				} else {
+					if (model.getTitle().charAt(0) != '*') {
+						model.setTitle("*" + model.getTitle());
+						tab.setName("*" + model.getTitle());
+					}
+				}
+				SEModelTabbedPane.this.repaint();
+			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			final Rectangle rect;
+
+			int index = tabbedPane.getSelectedIndex();
+
+			if (index == -1)
+				return;
+
+			rect = tabbedPane.getUI().getTabBounds(tabbedPane, index);
+			if (rect != null && rect.contains(e.getPoint())
+					&& e.getClickCount() == 2) {
+				startEditing();
+			} else {
+				renameTabTitle();
+			}
+		}
+
+		private int editingIndex = -1;
+		private int length = -1;
+		private Dimension dimension;
+		private Component tabComponent = null;
+
+		private void startEditing() {
+			editingIndex = tabbedPane.getSelectedIndex();
+
+			if (editingIndex < 0)
+				return;
+
+			tabComponent = tabbedPane.getTabComponentAt(editingIndex);
+			tabbedPane.setTabComponentAt(editingIndex, editor);
+			editor.setVisible(true);
+
+			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
+			final SEModel model = SEModelTabbedPane.this.modelToComponent
+					.getKey(tab);
+
+			if (model.getTitle().charAt(0) != '*')
+				editor.setText(model.getTitle());
+			else
+				editor.setText(model.getTitle().substring(1));
+
+			editor.selectAll();
+			editor.requestFocusInWindow();
+			length = editor.getText().length();
+			dimension = editor.getPreferredSize();
+			editor.setMinimumSize(dimension);
+		}
+
+		private void cancelEditing() {
+			if (editingIndex >= 0) {
+				tabbedPane.setTabComponentAt(editingIndex, tabComponent);
+				editor.setVisible(false);
+				editingIndex = -1;
+				length = -1;
+				tabComponent = null;
+				editor.setPreferredSize(null);
+				tabbedPane.requestFocusInWindow();
+			}
+		}
+
+		private void renameTabTitle() {
+			String title = editor.getText().trim();
+			if (editingIndex >= 0 && !title.isEmpty()) {
+				final Component tab = SEModelTabbedPane.this
+						.getSelectedComponent();
+				final SEModel model = SEModelTabbedPane.this.modelToComponent
+						.getKey(tab);
+
+				// Musn't use * as first char - reserved for isSaved!
+				if (title.length() > 0 && !(title.charAt(0) == '*')) {
+					if (model != null) {
+						if (UndoManager.getInstance().isSaved(model)) {
+							model.setTitle(title);
+						} else {
+							model.setTitle("*" + title);
+						}
+					}
+				}
+			}
+
+			cancelEditing();
+		}
+	}
 }

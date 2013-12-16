@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraph;
@@ -28,6 +27,7 @@ import scriptease.util.GUIOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  * 
  * @param <E>
  */
@@ -35,7 +35,7 @@ public class SEGraphNodeRenderer<E> {
 	private final SEGraph<E> graph;
 
 	// This is such a weird hack. I apologize. - remiller
-	private JComponent hoveredComponent = null;
+	protected JComponent hoveredComponent = null;
 	private JComponent pressedComponent = null;
 
 	public SEGraphNodeRenderer(SEGraph<E> graph) {
@@ -140,7 +140,7 @@ public class SEGraphNodeRenderer<E> {
 	}
 
 	/**
-	 * Resets the appearance of all components to the default white colour.
+	 * Resets the appearance of all components to their default colours.
 	 */
 	public void resetAppearances() {
 		final E lastSelectedNode;
@@ -154,17 +154,17 @@ public class SEGraphNodeRenderer<E> {
 
 			final E key = entry.getKey();
 
-			final Color backgroundColour;
-
-			if (this.graph.getParents(lastSelectedNode).contains(key)) {
-				backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
-			} else if (this.graph.getChildren(lastSelectedNode).contains(key)) {
-				backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+			if (this.graph.getToolBarMode() != Mode.GROUP
+					&& (this.graph.getParents(lastSelectedNode).contains(key) || this.graph
+							.getChildren(lastSelectedNode).contains(key))) {
+				this.setComponentAppearance(entry.getValue(), key,
+						ScriptEaseUI.UNSELECTED_COLOUR,
+						ScriptEaseUI.COLOUR_SELECTED_NODE);
 			} else {
-				backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+				this.setComponentAppearance(entry.getValue(), key,
+						ScriptEaseUI.UNSELECTED_COLOUR);
 			}
 
-			this.setComponentAppearance(entry.getValue(), key, backgroundColour);
 		}
 	}
 
@@ -181,21 +181,30 @@ public class SEGraphNodeRenderer<E> {
 	 */
 	public void setComponentAppearance(JComponent component, E node,
 			Color backgroundColour) {
-		final int INNER_BORDER_THICKNESS = 2;
+		this.setComponentAppearance(component, node, backgroundColour,
+				ScriptEaseUI.SECONDARY_UI);
+	}
 
-		final Border innerBorder;
-		final Border lineBorder;
-		final Border lineSpaceBorder;
+	/**
+	 * Sets the appearance of the passed in node to the background colour and
+	 * border colour passed in.
+	 * 
+	 * @param component
+	 *            The component to set the appearance for.
+	 * @param borderColour
+	 *            The border colour to set on the component.
+	 * @param backgroundColour
+	 *            The background colour to set for the component.
+	 */
+	public void setComponentAppearance(JComponent component, E node,
+			Color backgroundColour, Color borderColour) {
+		if (component != null) {
+			final int margin = 3;
+			component.setBorder(BorderFactory.createMatteBorder(margin, margin,
+					margin, margin, borderColour));
 
-		lineBorder = BorderFactory.createLineBorder(backgroundColour.darker());
-		innerBorder = BorderFactory.createEmptyBorder(INNER_BORDER_THICKNESS,
-				INNER_BORDER_THICKNESS, INNER_BORDER_THICKNESS,
-				INNER_BORDER_THICKNESS);
-		lineSpaceBorder = BorderFactory.createCompoundBorder(lineBorder,
-				innerBorder);
-
-		component.setBorder(lineSpaceBorder);
-		component.setBackground(backgroundColour);
+			component.setBackground(backgroundColour);
+		}
 	}
 
 	/**
@@ -231,13 +240,13 @@ public class SEGraphNodeRenderer<E> {
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.1);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			} else if (!graph.isReadOnly()
-					&& (mode == Mode.DELETE || mode == Mode.DISCONNECT || mode == Mode.UNGROUP)) {
+					&& (mode == Mode.DELETE || mode == Mode.DISCONNECT)) {
 				toolColour = ScriptEaseUI.COLOUR_DELETE_NODE;
 				toolHighlight = GUIOp.scaleWhite(toolColour, 1.2);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
-				toolHighlight = GUIOp.scaleWhite(toolColour, 1.25);
+				toolHighlight = GUIOp.scaleWhite(toolColour, 1.7);
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
 			}
 
@@ -249,7 +258,8 @@ public class SEGraphNodeRenderer<E> {
 				backgroundColour = toolHighlight;
 			}
 
-			this.setComponentAppearance(component, node, backgroundColour);
+			this.setComponentAppearance(component, node, backgroundColour,
+					backgroundColour);
 
 		} else if (this.graph.getSelectedNodes().contains(node)) {
 			/*
@@ -271,7 +281,8 @@ public class SEGraphNodeRenderer<E> {
 			} else
 				backgroundColour = initialColour;
 
-			this.setComponentAppearance(component, node, backgroundColour);
+			this.setComponentAppearance(component, node, backgroundColour,
+					backgroundColour);
 
 			// If nothing and selected
 		} else {
@@ -284,32 +295,35 @@ public class SEGraphNodeRenderer<E> {
 			if (mode == Mode.GROUP) {
 				final Color colour;
 
-				if (this.graph.model.isGroup(this.graph.group))
+				if (this.graph.getGroupController().isGroup())
 					colour = ScriptEaseUI.COLOUR_GROUPABLE_END_NODE;
 				else
 					colour = ScriptEaseUI.COLOUR_GROUPABLE_NODE;
 
-				for (E n : this.graph.getNodes()) {
+				for (E currNode : this.graph.getNodes()) {
 					final JComponent nComponent;
-					nComponent = this.graph.nodesToComponents.getValue(n);
+					nComponent = this.graph.nodesToComponents
+							.getValue(currNode);
 
-					if (this.graph.group.contains(n))
-						this.setComponentAppearance(nComponent, n, colour);
+					if (this.graph.getGroupController().containsNode(currNode))
+						this.setComponentAppearance(nComponent, currNode,
+								colour);
 					else
-						this.setComponentAppearance(nComponent, n,
-								ScriptEaseUI.COLOUR_NODE_DEFAULT);
+						this.setComponentAppearance(nComponent, currNode,
+								ScriptEaseUI.UNSELECTED_COLOUR);
 				}
 			} else {
-				if (this.graph.getParents(lastSelectedNode).contains(node)) {
-					backgroundColour = ScriptEaseUI.COLOUR_PARENT_NODE;
-				} else if (this.graph.getChildren(lastSelectedNode).contains(
-						node)) {
-					backgroundColour = ScriptEaseUI.COLOUR_CHILD_NODE;
+				if (this.graph.getParents(lastSelectedNode).contains(node)
+						|| this.graph.getChildren(lastSelectedNode).contains(
+								node)) {
+					this.setComponentAppearance(component, node,
+							ScriptEaseUI.UNSELECTED_COLOUR,
+							ScriptEaseUI.COLOUR_SELECTED_NODE);
 				} else {
-					backgroundColour = ScriptEaseUI.COLOUR_NODE_DEFAULT;
+					this.setComponentAppearance(component, node,
+							ScriptEaseUI.UNSELECTED_COLOUR);
 				}
 
-				this.setComponentAppearance(component, node, backgroundColour);
 			}
 		}
 

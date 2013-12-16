@@ -20,6 +20,8 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author mfchurch
  */
 public class GameType {
+	public static final String DEFAULT_UNKNOWN_TYPE = "unknown";
+	
 	public static final String DEFAULT_VOID_TYPE = "void";
 	public static final String DEFAULT_BOOL_TYPE = "question";
 	public static final String DEFAULT_LIST_WIDGET = "Li";
@@ -44,6 +46,15 @@ public class GameType {
 	private Collection<AbstractFragment> format;
 	private String codeSymbol;
 	private Map<String, String> escapes;
+
+	/**
+	 * Builds a new Game Type that is completely empty.
+	 */
+	public GameType() {
+		this("", "unknown", "", new ArrayList<AbstractFragment>(),
+				new ArrayList<String>(), "", "", new HashMap<String, String>(),
+				null, null);
+	}
 
 	/**
 	 * Build a new Game Type representation.

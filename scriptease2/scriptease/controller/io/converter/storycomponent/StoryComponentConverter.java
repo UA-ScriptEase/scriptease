@@ -24,8 +24,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public abstract class StoryComponentConverter implements Converter {
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class.
 	private static final String TAG_NAME = "Name";
 	private static final String TAG_LABELS = "Labels";
 	private static final String TAG_LABEL = "Label";
@@ -68,6 +67,7 @@ public abstract class StoryComponentConverter implements Converter {
 	 * {@link #buildComponent(HierarchicalStreamReader, UnmarshallingContext)},
 	 * which is called before any generic StoryComponent properties are read in.
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {

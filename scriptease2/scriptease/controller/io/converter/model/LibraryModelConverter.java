@@ -13,8 +13,11 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 
@@ -29,8 +32,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 public class LibraryModelConverter implements Converter {
+	public static LibraryModel currentLibrary = null;
+
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -60,13 +66,13 @@ public class LibraryModelConverter implements Converter {
 
 		XMLAttribute.NAME.write(writer, library.getTitle());
 		XMLAttribute.AUTHOR.write(writer, library.getAuthor());
+		XMLAttribute.DESCRIPTION.write(writer, library.getInformation());
 
 		XMLNode.INCLUDE_FILES.writeChildren(writer,
 				library.getIncludeFilePaths());
 		XMLNode.TYPES.writeObject(writer, context, library.getGameTypes());
 		XMLNode.SLOTS.writeObject(writer, context, library.getSlots(),
 				XMLAttribute.DEFAULT_FORMAT, library.getSlotDefaultFormat());
-
 		XMLNode.CAUSES.writeObject(writer, context, causes);
 		XMLNode.EFFECTS.writeObject(writer, context, library
 				.getEffectsCategory().getChildren());
@@ -74,6 +80,10 @@ public class LibraryModelConverter implements Converter {
 				library.getDescribeIts());
 		XMLNode.CONTROLITS.writeObject(writer, context, library
 				.getControllersCategory().getChildren());
+		XMLNode.BEHAVIOURS.writeObject(writer, context, library
+				.getBehavioursCategory().getChildren());
+		XMLNode.ACTIVITYITS.writeObject(writer, context, library
+				.getActivitysCategory().getChildren());
 		XMLNode.TYPECONVERTERS.writeObject(writer, context, library
 				.getTypeConverter().getConverterDoIts());
 
@@ -93,6 +103,8 @@ public class LibraryModelConverter implements Converter {
 		final Collection<ScriptIt> effects;
 		final Collection<DescribeIt> descriptions;
 		final Collection<ControlIt> controls;
+		final Collection<Behaviour> behaviours;
+		final Collection<ActivityIt> activities;
 		final Collection<ScriptIt> typeConvertors;
 
 		System.out.println("Unmarshalling Library Model");
@@ -101,6 +113,7 @@ public class LibraryModelConverter implements Converter {
 
 		library.setTitle(XMLAttribute.NAME.read(reader));
 		library.setAuthor(XMLAttribute.AUTHOR.read(reader));
+		library.setInformation(XMLAttribute.DESCRIPTION.read(reader));
 
 		includeFilePaths = XMLNode.INCLUDE_FILES.readStringCollection(reader);
 		types = XMLNode.TYPES.readCollection(reader, context, GameType.class);
@@ -113,8 +126,6 @@ public class LibraryModelConverter implements Converter {
 				DescribeIt.class);
 		controls = XMLNode.CONTROLITS.readCollection(reader, context,
 				ControlIt.class);
-		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
-				ScriptIt.class);
 
 		// Construct the library
 		library.setIncludeFilePaths(includeFilePaths);
@@ -143,9 +154,29 @@ public class LibraryModelConverter implements Converter {
 
 		library.addAll(controls);
 
+		this.addDefaultCauseChildren(library, causes);
+
+		// Behaviours and activities rely on the current library being set, so
+		// we need to load them after assigning the library to the static
+		// variable.
+		currentLibrary = library;
+
+		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
+				Behaviour.class);
+
+		activities = XMLNode.ACTIVITYITS.readCollection(reader, context,
+				ActivityIt.class);
+
+		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
+				ScriptIt.class);
+
+		library.addAll(behaviours);
+		library.addAll(activities);
+
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
 
-		this.addDefaultCauseChildren(library, causes);
+		// reset these to free memory
+		currentLibrary = null;
 
 		return library;
 	}
@@ -162,7 +193,8 @@ public class LibraryModelConverter implements Converter {
 		if (library.getTitle().contains("Path")) {
 			System.out.println(library.getTitle());
 		}
-		final Collection<CauseIt> automatics = library.getAutomatics();
+		final Collection<CauseIt> automatics = library
+				.getAutomatics(GameModule.AUTOMATIC);
 
 		for (CauseIt cause : causes) {
 			if (automatics.contains(cause))

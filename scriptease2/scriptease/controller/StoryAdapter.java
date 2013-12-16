@@ -9,9 +9,16 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 
 /**
  * Default implementation of StoryVisitor that does nothing. Ever. <br>
@@ -27,19 +34,49 @@ import scriptease.model.complex.StoryPoint;
  * ComplexStroyComponents, or {@link #defaultProcess(StoryComponent)} for
  * anything. <br>
  * <br>
- * StoryAdapter is an Adapter (of the Adapter design pattern) to
- * StoryVisitor.
+ * StoryAdapter is an Adapter (of the Adapter design pattern) to StoryVisitor.
  * 
  * @author jtduncan
  * @author remiller
+ * @author jyuen
  */
 public abstract class StoryAdapter implements StoryVisitor {
 	/*
 	 * ============ COMPLEX TYPES ============
 	 */
 	@Override
+	public void processActivityIt(ActivityIt activityIt) {
+		this.processScriptIt(activityIt);
+	}
+
+	@Override
+	public void processBehaviour(Behaviour behaviour) {
+		this.processScriptIt(behaviour);
+	}
+
+	@Override
+	public void processIndependentTask(IndependentTask task) {
+		this.defaultProcessComplex(task);
+	}
+
+	@Override
+	public void processCollaborativeTask(CollaborativeTask task) {
+		this.defaultProcessComplex(task);
+	}
+
+	@Override
+	public void processStoryNode(StoryNode storyNode) {
+		this.defaultProcessComplex(storyNode);
+	}
+
+	@Override
+	public void processStoryGroup(StoryGroup storyGroup) {
+		this.processStoryNode(storyGroup);
+	}
+
+	@Override
 	public void processStoryPoint(StoryPoint storyPoint) {
-		this.defaultProcessComplex(storyPoint);
+		this.processStoryNode(storyPoint);
 	}
 
 	@Override
@@ -55,7 +92,7 @@ public abstract class StoryAdapter implements StoryVisitor {
 	public void processControlIt(ControlIt controlIt) {
 		this.processScriptIt(controlIt);
 	};
-	
+
 	public void processCauseIt(CauseIt causeIt) {
 		this.processScriptIt(causeIt);
 	}
@@ -63,6 +100,11 @@ public abstract class StoryAdapter implements StoryVisitor {
 	@Override
 	public void processAskIt(AskIt questionIt) {
 		this.defaultProcessComplex(questionIt);
+	}
+
+	@Override
+	public void processPickIt(PickIt pickIt) {
+		this.defaultProcessComplex(pickIt);
 	}
 
 	/*

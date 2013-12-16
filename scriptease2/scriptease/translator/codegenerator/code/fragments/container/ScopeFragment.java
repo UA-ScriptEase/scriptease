@@ -3,7 +3,7 @@ package scriptease.translator.codegenerator.code.fragments.container;
 import java.util.ArrayList;
 import java.util.List;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.CodeGenerationConstants.ScopeType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
@@ -70,12 +70,22 @@ public class ScopeFragment extends AbstractContainerFragment {
 	private Object getScope(Context context) {
 		final ScopeType scope;
 
-		scope = ScopeType.valueOf(this.getDirectiveText().toUpperCase());
+		final String directiveText = this.getDirectiveText();
+		try {
+			scope = ScopeType.valueOf(directiveText.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			System.out.println("Couldn't find the value of : " + directiveText);
+			return null;
+		}
 
 		// IF+ELSE BLOCK (scope data= <dataLabel> )
 		switch (scope) {
 		case SUBJECT:
 			return context.getSubject();
+		case RESOURCE:
+			return context.getResource();
+		case TEMPLATEID:
+			return context.getTemplateID();
 		case OWNER:
 			return context.getOwner();
 		case ARGUMENT:
@@ -132,7 +142,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 	}
 
 	@Override
-	public void process(AbstractFragmentVisitor visitor) {
+	public void process(FragmentVisitor visitor) {
 		visitor.processScopeFragment(this);
 	}
 }

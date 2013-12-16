@@ -3,6 +3,7 @@ package scriptease.gui.storycomponentpanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -59,6 +60,7 @@ public class StoryComponentPanel extends JPanel implements
 		// State of Panel
 		this.setOpaque(true);
 		this.component = component;
+		this.editable = true;
 
 		if (this.component == null)
 			return;
@@ -81,7 +83,6 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				
 			}
 		});
 
@@ -246,7 +247,7 @@ public class StoryComponentPanel extends JPanel implements
 			StoryComponentPanelFactory.getInstance().rebuildLabels(this);
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
 
-			// Change the font color to red if disabled
+			// Change the font color to orange if disabled
 			final JPanel mainPanel = this.getLayout().getMainPanel();
 			final Component[] children = mainPanel.getComponents();
 
@@ -254,13 +255,14 @@ public class StoryComponentPanel extends JPanel implements
 				if (child instanceof JLabel) {
 					final JLabel label = (JLabel) child;
 
+					// Get all the JLabels i.e. not Labels.
 					if (!label.getBackground().equals(
 							ScriptEaseUI.COLOUR_DISABLED)
 							&& !label
 									.getBackground()
 									.equals(ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR)) {
 
-						if (component.isEnabled())
+						if (this.component.isEnabled())
 							label.setForeground(Color.BLACK);
 						else
 							label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
@@ -276,15 +278,14 @@ public class StoryComponentPanel extends JPanel implements
 					for (Component panel : describeItPanels) {
 						if (panel instanceof JLabel) {
 							final JLabel label = (JLabel) panel;
-							if (!component.isEnabled())
-								label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
+							if (component.isEnabled())
+								label.setForeground(Color.BLACK);
 							else
-								label.setForeground(Color.black);
+								label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
 
 							label.repaint();
 						}
 					}
-
 				}
 			}
 		}
@@ -307,8 +308,10 @@ public class StoryComponentPanel extends JPanel implements
 	 */
 	public StoryComponentPanelManager getSelectionManager() {
 		final StoryComponentPanelTree parentTree = this.getParentTree();
+
 		if (parentTree != null)
 			return parentTree.getSelectionManager();
+
 		return null;
 	}
 
@@ -368,16 +371,21 @@ public class StoryComponentPanel extends JPanel implements
 			private Color previousColor = StoryComponentPanel.this
 					.getBackground();
 
+			private Point dragStart;
+
 			/**
 			 * Toggle a drag event manually
 			 */
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				final StoryComponentPanelManager selectionManager;
+				final Point point;
 
 				selectionManager = panel.getSelectionManager();
+				point = e.getPoint();
 
-				if (selectionManager != null) {
+				if (selectionManager != null && dragStart != null
+						&& point != null && point.distance(dragStart) > 20) {
 					final boolean clearSelection;
 
 					clearSelection = !(selectionManager.getSelectedPanels()
@@ -421,6 +429,8 @@ public class StoryComponentPanel extends JPanel implements
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				dragStart = e.getPoint();
+
 				e.consume();
 			}
 
@@ -468,12 +478,15 @@ public class StoryComponentPanel extends JPanel implements
 
 					if (manager != null)
 						manager.updatePanelBackgrounds();
-					else
+					else {
+						panel.setBackground(Color.WHITE);
+
 						System.out
 								.println("Attempted to change UI of panel "
 										+ "with null selection manager for "
 										+ "StoryComponent "
 										+ panel.getStoryComponent());
+					}
 				}
 				e.consume();
 			}

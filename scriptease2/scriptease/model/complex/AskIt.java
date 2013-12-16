@@ -1,7 +1,6 @@
 package scriptease.model.complex;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.StoryVisitor;
@@ -67,14 +66,13 @@ public final class AskIt extends ComplexStoryComponent {
 	 * 
 	 */
 	public AskIt() {
-		super("<No Name>");
+		super("<Question>");
 
 		final List<Class<? extends StoryComponent>> ifElseValidTypes;
 
 		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
 
 		this.setCondition(new KnowIt("Question", GameType.DEFAULT_BOOL_TYPE));
-		this.setDisplayText("<Question>");
 
 		// AskIts can have two children of type StoryComponentContainer. These
 		// function as containers for the If/Else blocks
@@ -87,6 +85,8 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(StoryComponentContainer.class);
 		ifElseValidTypes.add(Note.class);
 		ifElseValidTypes.add(ControlIt.class);
+		ifElseValidTypes.add(PickIt.class);
+		ifElseValidTypes.add(ActivityIt.class);
 
 		// now we can Initialize the StoryComponentContainer
 		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);
@@ -96,6 +96,8 @@ public final class AskIt extends ComplexStoryComponent {
 
 		this.addStoryChild(this.ifBlock);
 		this.addStoryChild(this.elseBlock);
+
+		this.setDisplayText("<Question>");
 	}
 
 	/* ================== IMPORTANT CODE ================== */
@@ -178,11 +180,32 @@ public final class AskIt extends ComplexStoryComponent {
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
 		boolean success = super.addStoryChildBefore(newChild, sibling);
+
+		final List<Class<? extends StoryComponent>> ifElseValidTypes;
+
+		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		// Define the valid types for the two sub-groups
+		ifElseValidTypes.add(AskIt.class);
+		ifElseValidTypes.add(ScriptIt.class);
+		ifElseValidTypes.add(KnowIt.class);
+		ifElseValidTypes.add(StoryComponentContainer.class);
+		ifElseValidTypes.add(Note.class);
+		ifElseValidTypes.add(ControlIt.class);
+		ifElseValidTypes.add(PickIt.class);
+		ifElseValidTypes.add(ActivityIt.class);
+
 		if (success) {
-			if (this.getChildren().iterator().next() == newChild)
-				this.setIfBlock((StoryComponentContainer) newChild);
-			else
-				this.setElseBlock((StoryComponentContainer) newChild);
+			final StoryComponentContainer container = (StoryComponentContainer) newChild;
+
+			container.registerChildTypes(ifElseValidTypes,
+					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+
+			if (this.getChildren().iterator().next() == newChild) {
+				this.setIfBlock(container);
+			} else {
+				this.setElseBlock(container);
+			}
 		}
 		return success;
 	}
@@ -203,10 +226,6 @@ public final class AskIt extends ComplexStoryComponent {
 	public void setEnabled(Boolean enabled) {
 		super.setEnabled(enabled);
 
-		final Collection<StoryComponent> descendents = this.getDescendents();
-		for (StoryComponent descendent : descendents) {
-			descendent.setEnabled(enabled);
-		}
 		condition.setEnabled(enabled);
 
 		// Enable the descriptions that are used as bindings if this
@@ -214,7 +233,7 @@ public final class AskIt extends ComplexStoryComponent {
 		if (enabled) {
 			final KnowIt condition = this.getCondition();
 			final KnowItBinding binding = condition.getBinding();
-			
+
 			if (binding instanceof KnowItBindingReference) {
 				final KnowItBindingReference reference = (KnowItBindingReference) binding;
 

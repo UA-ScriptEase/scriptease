@@ -18,10 +18,13 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -138,6 +141,39 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 					.getEditedStoryComponent(destinationComponent.getParent());
 			sourceBinding = this.extractBinding(support);
 
+			// Special case for KnowItBindingUninitialized - they
+			// shouldn't be dragged into their own referenced KnowIt
+			if (sourceBinding instanceof KnowItBindingUninitialized) {
+				final KnowItBindingUninitialized uninit = (KnowItBindingUninitialized) sourceBinding;
+				if (uninit.getValue() == destinationKnowIt)
+					return false;
+
+				// the destinationKnowIt should also be a child of the component
+				// that has the value the KnowItBindingUninitialized is
+				// referencing.
+
+				// TODO ScriptIt KnowIts don't know their owners right
+				// now...can't do this.
+
+				StoryComponent owner = uninit.getValue().getOwner();
+				while (!(owner instanceof ComplexStoryComponent))
+					owner = owner.getOwner();
+
+				if (owner instanceof ComplexStoryComponent) {
+					final ComplexStoryComponent complex = (ComplexStoryComponent) owner;
+
+					final List<StoryComponent> descendants = complex
+							.getDescendents();
+
+					StoryComponent destOwner = destinationKnowIt.getOwner();
+					while (!(destOwner instanceof ComplexStoryComponent))
+						destOwner = destOwner.getOwner();
+					
+					if (!descendants.contains(destOwner))
+						return false;
+				}
+			}
+
 			// Check that the KnowItBinding type matches the destination KnowIt
 			if (sourceBinding != null && destinationKnowIt != null) {
 				if (sourceBinding.compatibleWith(destinationKnowIt)) {
@@ -212,8 +248,10 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Set Binding " + sourceBinding);
+
 				if (BindingWidgetTransferHandler.lastDragShiftDown)
 					setGroupBindings(sourceBinding, destinationKnowIt, binding);
+
 				destinationKnowIt.setBinding(sourceBinding);
 
 				// Check if the source binding is disabled. If it is, we should
@@ -310,9 +348,10 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 					.getTransferData(KnowItBindingFlavor);
 
 			if (bindingWidget.getBinding() instanceof KnowItBindingReference) {
-				final KnowItBindingReference reference = (KnowItBindingReference) bindingWidget.getBinding();
+				final KnowItBindingReference reference = (KnowItBindingReference) bindingWidget
+						.getBinding();
 				final KnowIt knowIt = reference.getValue();
-				
+
 				if (!knowIt.isEnabled())
 					return true;
 			}

@@ -11,10 +11,15 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
@@ -25,7 +30,10 @@ import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.Kn
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryGroupContext;
 import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingUninitializedContext;
+import scriptease.translator.io.model.Resource;
 
 /**
  * ContextFactory generates a new context based on the current source. It also
@@ -37,7 +45,7 @@ import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.Kn
  * 
  * @author mfchurch
  * @author remiller
- * 
+ * @author jyuen
  */
 public class ContextFactory {
 	private static ContextFactory instance;
@@ -78,16 +86,20 @@ public class ContextFactory {
 			created = this.createContext(context, (KnowItBinding) source);
 		} else if (source instanceof StoryPoint) {
 			created = this.createContext(context, (StoryPoint) source);
-		}
-		// this should get checked last, otherwise the ones above can get caught
-		// by it because they're subclasses.
-		else if (source instanceof StoryComponent) {
+			// this should get checked last, otherwise the ones above can get
+			// caught by it because they're subclasses.
+		} else if (source instanceof StoryComponent) {
 			created = this.createContext(context, (StoryComponent) source);
-		} else if (source instanceof DialogueLine)
+		} else if (source instanceof DialogueLine) {
 			created = this.createContext(context, (DialogueLine) source);
-		else {
-			throw new CodeGenerationException(
-					"Cannot Generate Context for Object: " + source);
+		} else if (source instanceof Resource) {
+			created = this.createContext(context, (Resource) source);
+		} else {
+			if (context instanceof FileContext)
+				created = context;
+			else
+				throw new CodeGenerationException(
+						"Cannot Generate Context for Object: " + source);
 		}
 
 		return created;
@@ -117,6 +129,13 @@ public class ContextFactory {
 			}
 
 			@Override
+			public void processUninitialized(
+					KnowItBindingUninitialized uninitialized) {
+				ContextFactory.this.activeContext = new KnowItBindingUninitializedContext(
+						pastContext, uninitialized);
+			}
+
+			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
 				ContextFactory.this.activeContext = new KnowItBindingNullContext(
 						pastContext, nullBinding);
@@ -132,7 +151,12 @@ public class ContextFactory {
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				ContextFactory.this.activeContext = new KnowItBindingStoryPointContext(
 						pastContext, storyPoint);
+			}
 
+			@Override
+			public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
+				ContextFactory.this.activeContext = new KnowItBindingStoryGroupContext(
+						pastContext, storyGroup);
 			}
 
 			@Override
@@ -176,9 +200,27 @@ public class ContextFactory {
 			}
 
 			@Override
+			public void processActivityIt(ActivityIt activityIt) {
+				ContextFactory.this.activeContext = new ActivityItContext(
+						pastContext, activityIt);
+			}
+
+			@Override
 			public void processControlIt(ControlIt controlIt) {
 				ContextFactory.this.activeContext = new ControlItContext(
 						pastContext, controlIt);
+			}
+
+			@Override
+			public void processPickIt(PickIt pickIt) {
+				ContextFactory.this.activeContext = new PickItContext(
+						pastContext, pickIt);
+			}
+
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				ContextFactory.this.activeContext = new CauseItContext(
+						pastContext, causeIt);
 			}
 
 			@Override
@@ -219,20 +261,19 @@ public class ContextFactory {
 		return this.activeContext;
 	}
 
+	private Context createContext(final Context pastContext,
+			final Resource source) {
+		this.activeContext = new ResourceContext(pastContext, source);
+
+		return this.activeContext;
+	}
+
 	private Context createContext(Context pastContext, DialogueLine source) {
 		this.activeContext = new DialogueLineContext(pastContext, source);
 
 		return this.activeContext;
 	}
 
-	/**
-	 * Creates a new Context based on the pastContext and the source
-	 * {@link StoryPoint}.
-	 * 
-	 * @param pastContext
-	 * @param source
-	 * @return
-	 */
 	private Context createContext(final Context pastContext,
 			final StoryPoint source) {
 		this.activeContext = new StoryPointContext(pastContext, source);

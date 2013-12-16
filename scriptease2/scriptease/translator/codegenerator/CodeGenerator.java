@@ -87,12 +87,11 @@ public class CodeGenerator {
 	}
 
 	private CodeGenerator() {
-		// Privatized constructor
 		this.generatingStoryPoints = new HashSet<StoryPoint>();
 	}
 
 	/**
-	 * Returns the story points currently getting generated. This is faster than
+	 * Returns the story nodes currently getting generated. This is faster than
 	 * getting the descendants of the root. This should only be used while we're
 	 * actually generating code, since it won't reset until
 	 * {@link #generateCode(StoryModel, Collection)} is called.
@@ -129,26 +128,24 @@ public class CodeGenerator {
 		root = model.getRoot();
 
 		this.generatingStoryPoints.clear();
-		this.generatingStoryPoints.addAll(root.getDescendants());
+		this.generatingStoryPoints.addAll(root.getStoryPointDescendants());
+		
 		// do the first pass (semantic analysis) for the given story
 		analyzer = new SemanticAnalyzer(this.generatingStoryPoints);
-
-		// Set the automatic bindings for any causes that require one.
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
 
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
-			final Collection<StoryComponent> automatics;
+			final Collection<StoryComponent> automaticCauses;
 			final Collection<Set<CodeBlock>> scriptBuckets;
 
-			model.setAutomaticBindings(this.generatingStoryPoints);
-
-			automatics = model.generateAutomaticCauses();
+			// Set the automatic bindings for any causes that require one.
+			automaticCauses = model.generateAutomaticCauses();
 
 			// Temporarily add automatics.
-			root.addStoryChildren(automatics);
+			root.addStoryChildren(automaticCauses);
 
 			// aggregate the scripts based on the storyPoints
 			scriptBuckets = module
@@ -165,7 +162,7 @@ public class CodeGenerator {
 			}
 
 			// Remove the automatics from the story again.
-			root.removeStoryChildren(automatics);
+			root.removeStoryChildren(automaticCauses);
 		} else {
 			WindowFactory.getInstance().showCompileProblems(problems);
 		}

@@ -29,6 +29,8 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 	<property name="src.dir" value="io" />
 
 	<property name="debug.mode" value="false" />
+	
+	<property name="tutorials.mode" value="true" />
 
 	<property name="java.compile.version" value="1.6" />
 
@@ -63,6 +65,7 @@ Use 'ant zip' to create a distributable zip package. Use flag -Ddebug.mode=true 
 
 		<copy todir="${build.dir}" verbose="false">
 			<fileset dir=".">
+				<include name="${resources.dir}/help/**"/>
 				<include name="${resources.dir}/includes/**" />
 				<include name="${resources.dir}/apiDictionary.xml" />
 				<include name="${resources.dir}/languageDictionary.xml" />

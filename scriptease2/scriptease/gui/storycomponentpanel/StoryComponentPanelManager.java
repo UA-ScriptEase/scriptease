@@ -26,6 +26,8 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
 
 /**
+ * StoryComponentPanelManager manages the selection of StoryComponentPanels
+ * {@link StoryComponentPanel}.
  * 
  * @author mfchurch
  * @author jyuen
@@ -39,6 +41,7 @@ public class StoryComponentPanelManager {
 
 		SEFocusManager.getInstance().addSEFocusObserver(this,
 				new SEFocusObserver() {
+
 					@Override
 					public void gainFocus(Component oldFocus) {
 						final Component newFocus;
@@ -111,10 +114,11 @@ public class StoryComponentPanelManager {
 	public void setSelection(StoryComponentPanel panel, boolean isSelected,
 			boolean clearSelection) {
 		final boolean selectable = panel.isSelectable();
+
 		if (clearSelection)
 			clearSelection();
-		if (selectable) {
 
+		if (selectable) {
 			if (!(panel.getStoryComponent() instanceof StoryPoint))
 				for (StoryComponentPanel subPanel : panel.getDescendants()) {
 					this.selected.put(subPanel, isSelected);
@@ -164,6 +168,7 @@ public class StoryComponentPanelManager {
 			if (panel.isRemovable()) {
 				final StoryComponent child = panel.getStoryComponent();
 				final StoryComponent owner = child.getOwner();
+
 				// if the owner is its parent, remove the child
 				if (owner instanceof ComplexStoryComponent
 						&& ((ComplexStoryComponent) owner).hasChild(child)) {
@@ -416,20 +421,20 @@ public class StoryComponentPanelManager {
 	/**
 	 * Gets a list of all the selected StoryComponentPanels, excluding selected
 	 * parents which also have a selected parent. This has room for optimization
-	 * if/when we decided to sort the list of selected parents, as currently
-	 * each panel just adds it's highest selected parent (which may turn out to
-	 * be itself, it nothing higher than it is selected) to the selected
+	 * if/when we decide to sort the list of selected parents, as currently each
+	 * panel just adds it's highest selected parent (which may turn out to be
+	 * itself, if nothing higher than it is selected) to the selected
 	 * 
 	 * @author mfchurch
 	 * @return
 	 */
 	public List<StoryComponentPanel> getSelectedParents() {
-		List<StoryComponentPanel> selectedPanels = new ArrayList<StoryComponentPanel>();
+		final List<StoryComponentPanel> selectedPanels = new ArrayList<StoryComponentPanel>();
 		for (Entry<StoryComponentPanel, Boolean> entry : this.selected
 				.entrySet()) {
 			if (entry.getValue()) {
-				StoryComponentPanel panel = entry.getKey();
-				StoryComponentPanel selectedParent = getHighestSelectedParent(panel);
+				final StoryComponentPanel panel = entry.getKey();
+				final StoryComponentPanel selectedParent = getHighestSelectedParent(panel);
 				if (!selectedPanels.contains(selectedParent))
 					selectedPanels.add(selectedParent);
 			}

@@ -36,8 +36,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class KnowItConverter extends StoryComponentConverter {
 
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class. 
 	private static final String TAG_BINDING = "Binding";
 	public static final String TAG_KNOWIT = "KnowIt";
 
@@ -89,14 +88,12 @@ public class KnowItConverter extends StoryComponentConverter {
 
 		while (reader.hasMoreChildren()) {
 			reader.moveDown();
+
 			if (reader.getNodeName().equals(TAG_BINDING)) {
 				try {
-
 					binding = (KnowItBinding) context.convertAnother(knowIt,
 							KnowItBinding.class);
 				} catch (ConversionException e) {
-					// TODO #55240202 This shouldn't even be happening. Find out
-					// what's up and fix it. Consult ticket for more info.
 					e.printStackTrace();
 					WindowFactory
 							.getInstance()

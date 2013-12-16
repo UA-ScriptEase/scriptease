@@ -16,12 +16,9 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -34,10 +31,12 @@ import scriptease.controller.observer.SEGraphToolBarObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.SEGraph.SEGraphToolBar.Mode;
+import scriptease.gui.SEGraph.controllers.GraphGroupController;
 import scriptease.gui.SEGraph.models.SEGraphModel;
 import scriptease.gui.SEGraph.observers.SEGraphObserver;
 import scriptease.gui.SEGraph.renderers.SEGraphNodeRenderer;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.complex.StoryGroup;
 import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
 import sun.awt.util.IdentityArrayList;
@@ -79,6 +78,7 @@ public class SEGraph<E> extends JComponent {
 
 	public final BiHashMap<E, JComponent> nodesToComponents;
 	private final NodeMouseAdapter mouseAdapter;
+
 	private final List<SEGraphObserver<E>> observers;
 	private final LinkedHashSet<E> selectedNodes;
 
@@ -87,7 +87,9 @@ public class SEGraph<E> extends JComponent {
 	private SelectionMode selectionMode;
 	private boolean isReadOnly;
 
-	private final SEGraphToolBar toolBar;
+	private SEGraphToolBar toolBar;
+
+	private GraphGroupController<E> groupController;
 
 	/**
 	 * Builds a new graph with the passed in model and single node selection
@@ -97,7 +99,7 @@ public class SEGraph<E> extends JComponent {
 	 *            The model used for the Graph.
 	 */
 	protected SEGraph(SEGraphModel<E> model) {
-		this(model, SelectionMode.SELECT_NODE, false);
+		this(model, SelectionMode.SELECT_NODE, false, true);
 	}
 
 	/**
@@ -113,18 +115,21 @@ public class SEGraph<E> extends JComponent {
 	 *            If the graph is read only, only selection will be allowed.
 	 */
 	protected SEGraph(SEGraphModel<E> model, SelectionMode selectionMode,
-			boolean isReadOnly) {
+			boolean isReadOnly, boolean disableGroupTool) {
 		this.selectionMode = selectionMode;
 		this.model = model;
 		this.selectionMode = selectionMode;
 		this.isReadOnly = isReadOnly;
 
-		this.toolBar = new SEGraphToolBar();
+		this.toolBar = new SEGraphToolBar(disableGroupTool);
+
 		this.selectedNodes = new LinkedHashSet<E>();
 		this.mousePosition = new Point();
 		this.nodesToComponents = new BiHashMap<E, JComponent>();
 		this.mouseAdapter = new NodeMouseAdapter();
 		this.observers = new ArrayList<SEGraphObserver<E>>();
+
+		this.groupController = new GraphGroupController<E>(this);
 
 		this.transferHandler = new SEGraphNodeTransferHandler<E>(this);
 
@@ -163,6 +168,9 @@ public class SEGraph<E> extends JComponent {
 			@Override
 			public void modeChanged(Mode mode) {
 				SEGraph.this.setCursor(mode.getCursor());
+				SEGraph.this.getGroupController().resetGroup();
+				SEGraph.this.renderer.resetAppearances();
+				SEGraph.this.setUI(SEGraph.this.new SEGraphArrowUI());
 			}
 		});
 	}
@@ -378,6 +386,19 @@ public class SEGraph<E> extends JComponent {
 	}
 
 	/**
+	 * Sets the current selected node.
+	 * 
+	 * @return
+	 */
+	public boolean setSelectedNode(E node) {
+		final Collection<E> nodes = new ArrayList<E>();
+
+		nodes.add(node);
+
+		return this.setSelectedNodes(nodes);
+	}
+
+	/**
 	 * Sets the current selected nodes. Fires a
 	 * {@link SEGraphObserver#nodesSelected(Collection)} event if the selection
 	 * was successful.
@@ -395,14 +416,10 @@ public class SEGraph<E> extends JComponent {
 			}
 
 			this.renderer.resetAppearances();
-
-			for (E node : this.selectedNodes) {
-				this.renderer.reconfigureAppearance(this
-						.getNodesToComponentsMap().getValue(node), node);
-			}
-
+			
 			return true;
 		}
+
 		return false;
 	}
 
@@ -663,6 +680,19 @@ public class SEGraph<E> extends JComponent {
 		return this.toolBar;
 	}
 
+	public void setToolBar(SEGraphToolBar toolbar) {
+		this.toolBar = toolbar;
+	}
+
+	/**
+	 * Returns the {@link GraphGroupController} linked to the graph.
+	 * 
+	 * @return
+	 */
+	public GraphGroupController<E> getGroupController() {
+		return this.groupController;
+	}
+
 	/**
 	 * Returns a component for the passed in node. This method creates a
 	 * component for the node if none is found.
@@ -685,124 +715,6 @@ public class SEGraph<E> extends JComponent {
 			component = new JLabel(node.toString());
 		}
 		return component;
-	}
-
-	public Set<E> group = new HashSet<E>();
-	private E groupStartNode = null;
-
-	/**
-	 * Find children who are now all orphaned and remove them from the group.
-	 * 
-	 * @param node
-	 */
-	private void removeGroupOrphans(E node) {
-		final Queue<E> examine = new LinkedList<E>();
-		examine.add(node);
-
-		while (!examine.isEmpty()) {
-			final E currentNode = examine.poll();
-
-			for (E child : this.model.getChildren(currentNode)) {
-				boolean parentInGroup = false;
-
-				for (E parent : this.model.getParents(child)) {
-					if (group.contains(parent)) {
-						parentInGroup = true;
-					}
-				}
-
-				if (!parentInGroup) {
-					examine.add(child);
-					group.remove(child);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Adds the <code>node</code> to the possible group.
-	 * 
-	 * @param node
-	 * @return
-	 */
-	private void addNodeToGroup(E node) {
-		if (group.isEmpty()) {
-			if (SEGraph.this.model.isValidGroupStart(node)) {
-				this.groupStartNode = node;
-				this.group.add(node);
-			}
-		} else if (groupStartNode != null) {
-			// Check whether the node is already in the group
-			if (group.contains(node) && node != groupStartNode) {
-				group.remove(node);
-				this.removeGroupOrphans(node);
-
-			} else {
-				// Now we can start forming a group
-
-				// We don't want to add anything behind the start node.
-				if (!this.model.getParents(node).contains(groupStartNode)) {
-					// We need to find path back to start
-					final Set<E> tempGroup = new HashSet<E>();
-					final Queue<E> backQueue = new LinkedList<E>();
-					boolean foundStart = false;
-
-					// Must always include start in set
-					tempGroup.add(groupStartNode);
-					tempGroup.add(node);
-					backQueue.add(node);
-
-					while (!backQueue.isEmpty() && !foundStart) {
-						final E currNode = backQueue.poll();
-
-						for (E parent : this.getParents(currNode)) {
-							if (parent == groupStartNode) {
-								foundStart = true;
-							}
-
-							if (!tempGroup.contains(parent)) {
-								tempGroup.add(parent);
-
-								if (!backQueue.contains(parent)) {
-									backQueue.offer(parent);
-								}
-							}
-						}
-					}
-
-					if (foundStart) {
-						// There is at least once path from start to node, time
-						// to find all of them and add nodes
-						group = this.model.findGroupPaths(node, group,
-								this.groupStartNode);
-						group.add(node);
-					}
-
-				} else {
-					// Parent is already in graph, don't do extra work
-					group.add(node);
-				}
-
-			}
-		}
-
-		// TODO these two methods need to do something when I get back to groups
-		// if (this.model.isGroup(group)) {
-		// // TODO do something here later - like change all their colors
-		// for (E n : this.group) {
-		//
-		// }
-		// } else {
-		// // Let's do some repainting on the components.
-		// for (E groupableNode : this.group) {
-		// final JComponent component;
-		// component = this.nodesToComponents.getValue(groupableNode);
-		//
-		// // this.renderer.setComponentAppearance(component,
-		// // groupableNode, backgroundColour)
-		// }
-		// }
-
 	}
 
 	/**
@@ -990,6 +902,7 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @author previous devs
 	 * @author kschenk
+	 * @author jyuen
 	 * 
 	 */
 	private class SEGraphArrowUI extends ComponentUI {
@@ -1096,15 +1009,27 @@ public class SEGraph<E> extends JComponent {
 
 						childSelected = selected.contains(child);
 
-						if (parentSelected && childSelected) {
-							lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;
-						} else if (parentSelected) {
-							lineColor = ScriptEaseUI.COLOUR_CHILD_NODE.darker();
-						} else if (childSelected) {
-							lineColor = ScriptEaseUI.COLOUR_PARENT_NODE
-									.darker();
-						} else
-							lineColor = Color.LIGHT_GRAY;
+						if (SEGraph.this.toolBar.getMode() == Mode.GROUP) {
+							final GraphGroupController<E> groupController = SEGraph.this
+									.getGroupController();
+
+							final Set<E> group = groupController
+									.getCurrentGroup();
+
+							if (group.contains(child) && group.contains(parent)
+									&& child != groupController.getStartNode()) {
+								if (SEGraph.this.getGroupController().isGroup())
+									lineColor = ScriptEaseUI.COLOUR_GROUPABLE_END_NODE;
+								else
+									lineColor = ScriptEaseUI.COLOUR_GROUPABLE_NODE;
+							} else
+								lineColor = ScriptEaseUI.SECONDARY_UI;
+						} else {
+							if (parentSelected || childSelected) {
+								lineColor = ScriptEaseUI.COLOUR_SELECTED_NODE;
+							} else
+								lineColor = ScriptEaseUI.SECONDARY_UI;
+						}
 
 						// Move the arrows up if there are more children and
 						// the previous level's offset is different.
@@ -1152,7 +1077,6 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @author kschenk
 	 * @author jyuen
-	 * 
 	 */
 	private class NodeMouseAdapter extends MouseAdapter {
 		private E lastEnteredNode = null;
@@ -1191,11 +1115,15 @@ public class SEGraph<E> extends JComponent {
 			if (mode == Mode.INSERT || mode == Mode.CONNECT
 					|| mode == Mode.DISCONNECT) {
 				graph.draggedFromNode = source;
-				SEGraph.this.group.clear();
+				SEGraph.this.groupController.resetGroup();
 			} else if (mode == Mode.GROUP) {
-				graph.addNodeToGroup(source);
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					SEGraph.this.groupController.formGroup();
+				} else {
+					SEGraph.this.groupController.addNodeToGroup(source);
+				}
 			} else {
-				SEGraph.this.group.clear();
+				SEGraph.this.groupController.resetGroup();
 			}
 		}
 
@@ -1208,18 +1136,30 @@ public class SEGraph<E> extends JComponent {
 			this.lastExitedNode = null;
 			this.lastEnteredNode = graph.nodesToComponents.getKey(entered);
 
-			if (this.lastEnteredNode == graph.getStartNode()) {
-				if (mode == Mode.DELETE) {
-					// Make the cursor appear unavailable for start node
-					// deletion
+			if (mode == Mode.GROUP) {
+				// Make the cursor appear unavailable for nodes that can't be a
+				// part of the current group.
+				if (!SEGraph.this.getGroupController().isNodeLegal(
+						this.lastEnteredNode)) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			} else if (graph.isReadOnly)
+			} else if (mode == Mode.DELETE) {
+				if (this.lastEnteredNode == graph.getStartNode())
+					// Make the cursor appear unavailable for start node
+					// deletion.
+					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
+				else if (this.lastEnteredNode instanceof StoryGroup)
+					entered.setCursor(ScriptEaseUI.CURSOR_UNGROUP);
+				else
+					entered.setCursor(null);
+			} else if (graph.isReadOnly) {
 				if (mode != Mode.SELECT) {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
+			} else
+				entered.setCursor(null);
 		}
 
 		@Override
@@ -1280,36 +1220,46 @@ public class SEGraph<E> extends JComponent {
 			} else if (mode == Mode.INSERT) {
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
+						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 							UndoManager.getInstance().startUndoableAction(
 									"Add new node to " + node);
-						graph.addNewNodeTo(node);
 
-						UndoManager.getInstance().endUndoableAction();
+							graph.addNewNodeTo(node);
+
+							UndoManager.getInstance().endUndoableAction();
+						}
 					} else {
-						if (!UndoManager.getInstance().hasOpenUndoableAction())
+						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 							UndoManager.getInstance().startUndoableAction(
 									"Add " + node + " between "
 											+ this.lastEnteredNode + " and "
 											+ node);
 
-						graph.addNewNodeBetween(this.lastEnteredNode, node);
+							graph.addNewNodeBetween(this.lastEnteredNode, node);
 
-						UndoManager.getInstance().endUndoableAction();
+							UndoManager.getInstance().endUndoableAction();
+						}
 					}
 
 				graph.getNodesToComponentsMap().getValue(this.lastEnteredNode)
 						.requestFocusInWindow();
 			} else if (mode == Mode.DELETE) {
-				if (!UndoManager.getInstance().hasOpenUndoableAction())
-					UndoManager.getInstance().startUndoableAction(
-							"Remove " + node);
+				if (node instanceof StoryGroup) {
+					SEGraph.this.groupController.resetGroup();
+					if (node instanceof StoryGroup) {
+						SEGraph.this.groupController
+								.unformGroup((StoryGroup) node);
+					}
+				} else {
+					if (!UndoManager.getInstance().hasOpenUndoableAction())
+						UndoManager.getInstance().startUndoableAction(
+								"Remove " + node);
 
-				graph.removeNode(node);
-				graph.repaint();
+					graph.removeNode(node);
+					graph.repaint();
 
-				UndoManager.getInstance().endUndoableAction();
-
+					UndoManager.getInstance().endUndoableAction();
+				}
 			} else if (mode == Mode.CONNECT) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node

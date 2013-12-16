@@ -13,6 +13,7 @@ import javax.swing.border.EtchedBorder;
 
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 
@@ -41,7 +42,7 @@ public class DialogueEditorPanel extends JPanel {
 		this.backToStory = backToStory;
 
 		this.setLayout(new BorderLayout());
-		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.setBorder(BorderFactory.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		if (this.backToStory != null)
 			this.add(this.backToStory, BorderLayout.EAST);

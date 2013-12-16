@@ -15,9 +15,10 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
 
@@ -33,6 +34,7 @@ import scriptease.translator.TranslatorManager;
  * 
  * @author remiller
  * @author mfchurch
+ * @author jyuen
  */
 public class SemanticAnalyzer extends StoryAdapter {
 	private final Collection<StoryRule> rules;
@@ -52,7 +54,7 @@ public class SemanticAnalyzer extends StoryAdapter {
 
 		// Make sure all parameters are bound before generating code
 		this.rules.add(new ParameterBoundRule());
-		// Get all the StoryPoints in the model
+		// Get all the StoryNodes in the model
 		for (StoryPoint storyPoint : storyPoints) {
 			// Process all the components from each StoryPoint
 			for (StoryComponent child : storyPoint.getChildren()) {
@@ -73,21 +75,27 @@ public class SemanticAnalyzer extends StoryAdapter {
 
 	@Override
 	public void processAskIt(AskIt askIt) {
-
-		this.verifyRules(askIt);
+		this.defaultProcessComplex(askIt);
 
 		askIt.getCondition().process(this);
-
-		askIt.processChildren(this);
 	}
 
 	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
-		this.verifyRules(scriptIt);
+		this.defaultProcessComplex(scriptIt);
 
-		scriptIt.processChildren(this);
 		scriptIt.processParameters(this);
 		scriptIt.processSubjects(this);
+	}
+
+	@Override
+	public void processBehaviour(Behaviour behaviour) {
+		this.processScriptIt(behaviour);
+
+		//final Task startTask = behaviour.getStartTask();
+		//startTask.process(this);
+		//for (Task task : startTask.getSuccessors())
+		//	task.process(this);
 	}
 
 	@Override
@@ -122,10 +130,10 @@ public class SemanticAnalyzer extends StoryAdapter {
 	}
 
 	@Override
-	public void processStoryComponentContainer(StoryComponentContainer container) {
-		this.verifyRules(container);
+	protected void defaultProcessComplex(ComplexStoryComponent complex) {
+		this.verifyRules(complex);
 
-		container.processChildren(this);
+		complex.processChildren(this);
 	}
 
 	private void verifyRules(StoryComponent component) {

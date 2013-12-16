@@ -1,8 +1,6 @@
 package scriptease.gui.pane;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,16 +11,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.Timer;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -30,7 +25,7 @@ import scriptease.controller.ModelAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
 import scriptease.controller.observer.StoryComponentPanelJListObserver;
-import scriptease.controller.observer.StoryModelObserver;
+import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
@@ -42,7 +37,6 @@ import scriptease.gui.filters.StoryComponentSearchFilter;
 import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.TypeFilter;
 import scriptease.gui.filters.VisibilityFilter;
-import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -64,6 +58,7 @@ import scriptease.translator.io.model.GameType;
  * 
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class LibraryPanel extends JTabbedPane {
@@ -98,8 +93,10 @@ public class LibraryPanel extends JTabbedPane {
 		final StoryComponentPanelJList causesList;
 		final StoryComponentPanelJList effectsList;
 		final StoryComponentPanelJList descriptionsList;
+		final StoryComponentPanelJList behavioursList;
 		final StoryComponentPanelJList controlsList;
 		final StoryComponentPanelJList blocksList;
+		final StoryComponentPanelJList activitiesList;
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
@@ -108,8 +105,12 @@ public class LibraryPanel extends JTabbedPane {
 				Category.EFFECTS));
 		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.DESCRIPTIONS));
+		behavioursList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.BEHAVIOURS));
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
+		activitiesList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.ACTIVITIES));
 		blocksList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.BLOCKS));
 
@@ -158,17 +159,22 @@ public class LibraryPanel extends JTabbedPane {
 										libraryObserver);
 							}
 
-							story.addStoryModelObserver(new StoryModelObserver() {
+							story.addStoryModelObserver(new StoryModelAdapter() {
 								@Override
 								public void libraryAdded(LibraryModel library) {
+									LibraryPanel.this.updateLists();
+								}
+
+								@Override
+								public void libraryRemoved(LibraryModel library) {
 									LibraryPanel.this.updateLists();
 								}
 							});
 						}
 					});
-				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED)
+				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 					updateLists();
-				else if (event.getEventType() == SEModelEvent.Type.REMOVED
+				} else if (event.getEventType() == SEModelEvent.Type.REMOVED
 						&& SEModelManager.getInstance().getActiveModel() == null) {
 					updateLists();
 				}
@@ -187,14 +193,24 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
 		this.storyComponentPanelJLists.add(descriptionsList);
+		// TODO uncomment after winter release
+		//this.storyComponentPanelJLists.add(behavioursList);
 		this.storyComponentPanelJLists.add(controlsList);
-		this.storyComponentPanelJLists.add(blocksList);
+		this.storyComponentPanelJLists.add(activitiesList);
+		// TODO uncomment after winter release
+		//this.storyComponentPanelJLists.add(blocksList);
 
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
+		
+		// TODO uncomment after winter release
+		//this.add("Behaviours", this.createTab(behavioursList));
+		
 		this.add("Controls", this.createTab(controlsList));
-		this.add("Blocks", this.createTab(blocksList));
+		this.add("Activities", this.createTab(activitiesList));
+		// TODO uncomment after winter release
+		// this.add("Blocks", this.createTab(blocksList));
 
 		// Set up Hotkeys
 		this.setMnemonicAt(0, KeyEvent.VK_1);
@@ -202,7 +218,12 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(2, KeyEvent.VK_3);
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
-		
+		// this.setMnemonicAt(5, KeyEvent.VK_6);
+		// this.setMnemonicAt(6, KeyEvent.VK_7);
+
+		this.setUI(ComponentFactory.buildFlatTabUI());
+
+		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 		TranslatorManager.getInstance().addTranslatorObserver(this,
 				translatorObserver);
@@ -216,6 +237,8 @@ public class LibraryPanel extends JTabbedPane {
 	 */
 	private JPanel createTab(final StoryComponentPanelJList list) {
 		final JPanel tabPanel;
+		final JScrollPane listScroll;
+
 		final Timer searchFieldTimer;
 
 		final JComponent filterPane;
@@ -225,10 +248,11 @@ public class LibraryPanel extends JTabbedPane {
 		final TypeAction typeFilter;
 
 		tabPanel = new JPanel();
+		listScroll = new JScrollPane(list);
 		filterPane = new JPanel();
 		searchFilterPane = new JPanel();
 		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
-				"Library", "");
+				"Search Library", "");
 
 		typeFilter = new TypeAction();
 
@@ -236,6 +260,9 @@ public class LibraryPanel extends JTabbedPane {
 			public void actionPerformed(ActionEvent arg0) {
 				list.updateFilter(new StoryComponentSearchFilter(searchField
 						.getText()));
+				
+				list.removeAllStoryComponents();
+				
 				updateList(list, (Timer) arg0.getSource());
 			};
 		});
@@ -262,6 +289,8 @@ public class LibraryPanel extends JTabbedPane {
 			public void actionPerformed(ActionEvent e) {
 				list.updateFilter(new StoryComponentSearchFilter(searchField
 						.getText()));
+				
+				list.removeAllStoryComponents();
 
 				updateList(list, searchFieldTimer);
 			}
@@ -294,15 +323,9 @@ public class LibraryPanel extends JTabbedPane {
 			}
 		});
 
-		filterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory
-				.createLineBorder(Color.gray), Il8nResources
-				.getString("Search_Filter_"),
-				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, new Font(
-						"SansSerif", Font.PLAIN, 12), Color.black));
-
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
-		searchFilterPane.add(new JButton(typeFilter));
+		searchFilterPane.add(ComponentFactory.buildFlatButton(typeFilter));
 		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
 				BoxLayout.LINE_AXIS));
 		searchFilterPane.setOpaque(false);
@@ -316,8 +339,10 @@ public class LibraryPanel extends JTabbedPane {
 
 		tabPanel.setLayout(new BoxLayout(tabPanel, BoxLayout.PAGE_AXIS));
 		tabPanel.add(filterPane);
-		tabPanel.add(Box.createVerticalStrut(5));
-		tabPanel.add(new JScrollPane(list));
+		listScroll.setBorder(BorderFactory.createEmptyBorder());
+		tabPanel.add(listScroll);
+		tabPanel.setBorder(BorderFactory
+				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		// Configure the displaying of the pane
 		this.updateList(list);
@@ -482,8 +507,6 @@ public class LibraryPanel extends JTabbedPane {
 	private void updateList(StoryComponentPanelJList list) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		list.removeAllStoryComponents();
-
 		if (model != null
 				&& TranslatorManager.getInstance().getActiveTranslator() != null) {
 			final Translator translator = model.getTranslator();
@@ -516,12 +539,18 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (index == 2) {
 					components = libraryModel.getDescriptionsCategory()
 							.getChildren();
+//				} else if (index == 3) {
+//					components = libraryModel.getBehavioursCategory()
+//							.getChildren();
 				} else if (index == 3) {
 					components = libraryModel.getControllersCategory()
 							.getChildren();
 				} else if (index == 4) {
-					components = libraryModel.getControllersCategory()
+					components = libraryModel.getActivitysCategory()
 							.getChildren();
+//				} else if (index == 5) {
+//					components = libraryModel.getControllersCategory()
+//							.getChildren();
 				} else {
 					throw new IllegalArgumentException(
 							"Invalid list in LibraryPanel: " + list);

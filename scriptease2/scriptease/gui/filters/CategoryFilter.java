@@ -7,24 +7,29 @@ import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.behaviours.Behaviour;
 
 /**
  * Category Filter filters elements based on if they match the acceptable
  * {@link Category} given in the constructor.
  * 
  * @author mfchurch
+ * @author jyuen
  */
 public class CategoryFilter extends StoryComponentFilter {
 	/**
 	 * Legal categories for the category filter.
 	 * 
 	 * @author remiller
+	 * @author jyuen
 	 */
 	public enum Category {
-		EFFECTS, DESCRIPTIONS, CAUSES, CONTROLS, BLOCKS, NOTE;
+		EFFECTS, DESCRIPTIONS, BEHAVIOURS, CAUSES, CONTROLS, BLOCKS, ACTIVITIES, NOTE;
 	}
 
 	private Category category;
@@ -81,6 +86,18 @@ public class CategoryFilter extends StoryComponentFilter {
 		}
 
 		@Override
+		public void processBehaviour(Behaviour behaviour) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.BEHAVIOURS);
+		}
+
+		@Override
+		public void processActivityIt(ActivityIt activityIt) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.ACTIVITIES);
+		}
+
+		@Override
 		public void processControlIt(ControlIt controlIt) {
 
 			if (controlIt.getFormat().equals(ControlItFormat.BLOCK))
@@ -89,6 +106,12 @@ public class CategoryFilter extends StoryComponentFilter {
 			else
 				this.acceptable = CategoryFilter.this.category
 						.equals(Category.CONTROLS);
+		}
+
+		@Override
+		public void processPickIt(PickIt pickIt) {
+			this.acceptable = CategoryFilter.this.category
+					.equals(Category.CONTROLS);
 		}
 
 		@Override

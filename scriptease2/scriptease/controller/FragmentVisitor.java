@@ -18,7 +18,7 @@ import scriptease.translator.codegenerator.code.fragments.container.SeriesFragme
  * <br>
  * Classes should not implement this interface directly since it is strongly
  * recommended (and stylistically required) that they subclass
- * {@link AbstractFragmentAdapter}. <br>
+ * {@link FragmentAdapter}. <br>
  * <br>
  * <code>AbstractFragmentVisitor</code> is an implementation of the Visitor
  * design pattern.
@@ -27,7 +27,7 @@ import scriptease.translator.codegenerator.code.fragments.container.SeriesFragme
  * 
  * @see AbstractFragmentAdaptor
  */
-public interface AbstractFragmentVisitor {
+public interface FragmentVisitor {
 
 	public void processLineFragment(LineFragment fragment);
 

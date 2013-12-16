@@ -1,12 +1,9 @@
 package scriptease.gui.action.library;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.Action;
-import javax.swing.KeyStroke;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
+import scriptease.gui.dialog.DialogBuilder;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -16,7 +13,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * Adds a library to an open {@link StoryModel}.
  * 
  * @author kschenk
- * 
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
@@ -25,13 +22,9 @@ public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
 	public AddLibraryToStoryModelAction(LibraryModel library) {
 		super(library.getTitle());
 
-		this.library = library;
+		this.setEnabled(true);
 
-		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
-		this.putValue(
-				Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK
-						+ ActionEvent.SHIFT_MASK));
+		this.library = library;
 	}
 
 	@Override
@@ -43,10 +36,10 @@ public class AddLibraryToStoryModelAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final StoryModel model;
-
-		model = (StoryModel) SEModelManager.getInstance().getActiveModel();
-
-		model.addLibrary(this.library);
+		DialogBuilder.getInstance().showAddLibraryInfoDialog(this.library);
+	}
+	
+	public LibraryModel getLibrary() {
+		return library;
 	}
 }

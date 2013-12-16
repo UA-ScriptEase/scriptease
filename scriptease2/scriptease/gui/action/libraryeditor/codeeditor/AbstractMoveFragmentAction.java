@@ -1,5 +1,6 @@
 package scriptease.gui.action.libraryeditor.codeeditor;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,8 +8,11 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.libraryeditor.FormatFragmentSelectionManager;
+import scriptease.gui.SEFocusManager;
+import scriptease.gui.action.ActiveTranslatorSensitiveAction;
+import scriptease.gui.libraryeditor.codeblocks.CodeFragmentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
@@ -21,12 +25,26 @@ import scriptease.translator.codegenerator.code.fragments.container.AbstractCont
  * 
  */
 @SuppressWarnings("serial")
-public abstract class AbstractMoveFragmentAction extends AbstractFragmentAction {
+public abstract class AbstractMoveFragmentAction extends
+		ActiveTranslatorSensitiveAction {
 
 	protected AbstractMoveFragmentAction(String name) {
 		super(name);
 
 		this.putValue(Action.SHORT_DESCRIPTION, name);
+
+		SEFocusManager.getInstance().addSEFocusObserver(new SEFocusObserver() {
+
+			@Override
+			public void gainFocus(Component oldFocus) {
+				AbstractMoveFragmentAction.this.updateEnabledState();
+			}
+
+			@Override
+			public void loseFocus(Component oldFocus) {
+				AbstractMoveFragmentAction.this.updateEnabledState();
+			}
+		});
 	}
 
 	protected abstract int delta();
@@ -82,25 +100,32 @@ public abstract class AbstractMoveFragmentAction extends AbstractFragmentAction 
 	}
 
 	@Override
+	protected boolean isLegal() {
+		final Component focusOwner = SEFocusManager.getInstance().getFocus();
+
+		return super.isLegal() && focusOwner instanceof CodeFragmentPanel
+				&& ((CodeFragmentPanel) focusOwner).getCodeBlock() != null;
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		final CodeFragmentPanel panel;
 		final CodeBlock codeBlock;
+		final List<AbstractFragment> fragments;
+		final AbstractFragment selectedFragment;
 
-		codeBlock = FormatFragmentSelectionManager.getInstance().getCodeBlock();
+		panel = (CodeFragmentPanel) SEFocusManager.getInstance().getFocus();
+		codeBlock = panel.getCodeBlock();
 
-		if (codeBlock != null) {
-			final List<AbstractFragment> fragments = cloneFragments(codeBlock
-					.getCode());
-			final AbstractFragment selectedFragment = getClonedSelectedFragment(
-					FormatFragmentSelectionManager.getInstance()
-							.getFormatFragment(), fragments);
-			if (selectedFragment != null) {
-				this.moveFragment(fragments, selectedFragment, null);
-				UndoManager.getInstance().startUndoableAction(
-						"Setting CodeBlock " + codeBlock + " code to "
-								+ fragments);
-				codeBlock.setCode(fragments);
-				UndoManager.getInstance().endUndoableAction();
-			}
+		fragments = AbstractFragment.cloneFragments(codeBlock.getCode());
+		selectedFragment = AbstractFragment.getClonedSelectedFragment(
+				panel.getFragment(), fragments);
+		if (selectedFragment != null) {
+			this.moveFragment(fragments, selectedFragment, null);
+			UndoManager.getInstance().startUndoableAction(
+					"Setting CodeBlock " + codeBlock + " code to " + fragments);
+			codeBlock.setCode(fragments);
+			UndoManager.getInstance().endUndoableAction();
 		}
 	}
 }

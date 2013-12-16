@@ -12,7 +12,8 @@ import scriptease.gui.filters.Filterable;
 import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 
 /**
  * Tree which contains a root StoryComponentPanel, a StoryComponentPanelManager
@@ -22,16 +23,39 @@ import scriptease.model.complex.StoryPoint;
  * @author mfchurch
  * @author lari
  * @author kschenk
+ * @author jyuen
  */
 @SuppressWarnings("serial")
 public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	private StoryComponentPanelManager selectionManager;
 	private StoryComponentPanel rootPanel;
-	private StoryPoint root;
+	private StoryNode root;
 	private Filter filterRule;
 
-	public StoryComponentPanelTree() {
-		this(null);
+	/**
+	 * Sets up a StoryComponentPanelTree with the provided root
+	 * StoryComponentPanel
+	 * 
+	 * @param rootPanel
+	 */
+	public StoryComponentPanelTree(StoryComponentPanel rootPanel) {
+		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		this.getVerticalScrollBar().setUnitIncrement(
+				ScriptEaseUI.VERTICAL_SCROLLBAR_INCREMENT);
+
+		this.rootPanel = rootPanel;
+		this.selectionManager = new StoryComponentPanelManager();
+
+		this.rootPanel.updateComplexSettings();
+
+		this.selectionManager.clearSelection();
+		this.selectionManager.addPanel(this.rootPanel, false);
+
+		this.filterTree(this.rootPanel);
+		
+		this.setViewportView(this.rootPanel);
 	}
 
 	/**
@@ -40,7 +64,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * @param root
 	 * @param settings
 	 */
-	public StoryComponentPanelTree(StoryPoint root) {
+	public StoryComponentPanelTree(StoryNode root) {
 		super(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -58,17 +82,18 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * Sets the root of the StoryComponentPanelTree. For individual stories,
 	 * this will be the start point of the current story point.
 	 * 
-	 * @param root
+	 * @param storyNode
 	 *            The root StoryComponent for the tree.
 	 */
-	public void setRoot(StoryPoint root) {
-		this.root = root;
+	public void setRoot(StoryNode storyNode) {
+		this.root = storyNode;
 
 		if (this.rootPanel != null)
 			this.selectionManager.cleanUpPanel(this.rootPanel);
 
 		this.rootPanel = StoryComponentPanelFactory.getInstance()
-				.buildStoryComponentPanel(root);
+				.buildStoryComponentPanel(storyNode);
+
 		this.rootPanel.updateComplexSettings();
 
 		this.selectionManager.clearSelection();
@@ -76,7 +101,10 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 
 		this.filterTree(this.rootPanel);
 
-		this.setViewportView(this.rootPanel);
+		if (storyNode instanceof StoryGroup)
+			this.setViewportView(((StoryGroup) storyNode).getSEGraph());
+		else
+			this.setViewportView(this.rootPanel);
 	}
 
 	/**
@@ -84,7 +112,7 @@ public class StoryComponentPanelTree extends JScrollPane implements Filterable {
 	 * 
 	 * @return
 	 */
-	public StoryPoint getRoot() {
+	public StoryNode getRoot() {
 		return this.root;
 	}
 

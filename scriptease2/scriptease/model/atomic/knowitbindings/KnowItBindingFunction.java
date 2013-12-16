@@ -12,7 +12,7 @@ import scriptease.model.complex.ScriptIt;
  * @see {@link scriptease.model.atomic.KnowIt}
  */
 public class KnowItBindingFunction extends KnowItBinding {
-	private final ScriptIt functionValue;
+	private ScriptIt functionValue;
 
 	public KnowItBindingFunction(ScriptIt value) {
 		this.functionValue = value;
@@ -26,6 +26,10 @@ public class KnowItBindingFunction extends KnowItBinding {
 	@Override
 	public ScriptIt getValue() {
 		return this.functionValue;
+	}
+	
+	public void setValue(ScriptIt value) {
+		this.functionValue = value;
 	}
 
 	@Override

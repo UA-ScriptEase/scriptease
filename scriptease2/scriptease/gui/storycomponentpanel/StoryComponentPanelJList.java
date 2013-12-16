@@ -72,7 +72,27 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * @param filter
 	 */
 	public StoryComponentPanelJList(StoryComponentFilter filter) {
-		this(filter, true);
+		this(filter, true, true);
+	}
+
+	/**
+	 * Creates a JList that is able to render Story Component Panels as items.
+	 * The JList also has a transfer handler attached that gives the ability to
+	 * drag and drop the Panels. <br>
+	 * <br>
+	 * Panels should be added using {@link #addStoryComponents(Collection)}
+	 * 
+	 * @param filter
+	 * 
+	 * @param storyComponentList
+	 *            The list of StoryComponents to display in the list.
+	 * 
+	 * @param addToSEFocus
+	 *            Determines whether we should manage focus on this.
+	 */
+	public StoryComponentPanelJList(StoryComponentFilter filter,
+			boolean addToSEFocus) {
+		this(filter, true, addToSEFocus);
 	}
 
 	/**
@@ -89,9 +109,12 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 	 * 
 	 * @param hideInvisible
 	 *            If true, invisible components will be shown as well.
+	 * 
+	 * @param addToSEFocus
+	 *            Determines whether we should manage focus on this.
 	 */
 	public StoryComponentPanelJList(StoryComponentFilter filter,
-			boolean hideInvisible) {
+			boolean hideInvisible, boolean addToSEFocus) {
 		super();
 		this.setModel(new DefaultListModel());
 
@@ -100,18 +123,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 		if (filter != null)
 			this.updateFilter(filter);
-
-		this.addFocusListener(new FocusListener() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				SEFocusManager.getInstance().setFocus(
-						StoryComponentPanelJList.this);
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-			}
-		});
 
 		this.addMouseListener(new MouseAdapter() {
 			@Override
@@ -132,24 +143,44 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			}
 		});
 
-		SEFocusManager.getInstance().addSEFocusObserver(this,
-				new SEFocusObserver() {
-					@Override
-					public void gainFocus(Component oldFocus) {
-						setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
-					}
+		this.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				SEFocusManager.getInstance().setFocus(
+						StoryComponentPanelJList.this);
+			}
 
-					@Override
-					public void loseFocus(Component oldFocus) {
-						setSelectionBackground(GUIOp.scaleWhite(
-								ScriptEaseUI.SELECTED_COLOUR, 1.15));
-					}
-				});
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+		});
+
+		if (addToSEFocus)
+			SEFocusManager.getInstance().addSEFocusObserver(this,
+					new SEFocusObserver() {
+						@Override
+						public void gainFocus(Component oldFocus) {
+							setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
+						}
+
+						@Override
+						public void loseFocus(Component oldFocus) {
+							setSelectionBackground(GUIOp.scaleWhite(
+									ScriptEaseUI.SELECTED_COLOUR, 1.15));
+						}
+					});
 
 		this.setCellRenderer(new StoryComponentListRenderer());
 		this.setLayoutOrientation(JList.VERTICAL);
 
-		this.setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
+		final Color selectBg;
+
+		if (addToSEFocus)
+			selectBg = ScriptEaseUI.SELECTED_COLOUR;
+		else
+			selectBg = Color.WHITE;
+
+		this.setSelectionBackground(selectBg);
 		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
 		this.setDragEnabled(true);
@@ -199,8 +230,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				listModel = (DefaultListModel) this.getModel();
 				panel = panelMap.get(component);
 
-				listModel.removeElement(noResultsPanel);
-
 				if (panel == null) {
 					final StoryComponentPanel newPanel;
 
@@ -213,9 +242,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				} else {
 					listModel.addElement(panel);
 				}
-			} else {
-				System.err.println("StoryComponent " + component
-						+ " already exists in StoryComponentPanelJList");
 			}
 		}
 	}
@@ -336,7 +362,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
-
 			if (value instanceof StoryComponentPanel) {
 				final StoryComponentPanel valuePanel;
 				final StoryComponent valueComponent;

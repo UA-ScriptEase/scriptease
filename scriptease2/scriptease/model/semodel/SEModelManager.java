@@ -213,7 +213,7 @@ public final class SEModelManager {
 		this.observerManager.removeObserver(observer);
 	}
 
-	private void notifyChange(SEModel model, SEModelEvent.Type eventType) {
+	public void notifyChange(SEModel model, SEModelEvent.Type eventType) {
 		for (SEModelObserver observer : this.observerManager.getObservers()) {
 			observer.modelChanged(new SEModelEvent(model, eventType));
 		}

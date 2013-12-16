@@ -2,12 +2,14 @@ package scriptease.translator.codegenerator.code.fragments;
 
 import java.util.List;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -103,7 +105,17 @@ public class FormatReferenceFragment extends AbstractFragment {
 		public void processAskIt(AskIt questionIt) {
 			this.typeMatches = this.type == FormatReferenceType.ASKIT;
 		}
+		
+		@Override
+		public void processPickIt(PickIt pickIt) {
+			this.typeMatches = this.type == FormatReferenceType.PICKIT;
+		}
 
+		@Override
+		public void processActivityIt(ActivityIt activityIt) {
+			this.typeMatches = this.type == FormatReferenceType.ACTIVITYIT;
+		}
+		
 		@Override
 		public void processNote(Note note) {
 			this.typeMatches = this.type == FormatReferenceType.NOTE;
@@ -130,7 +142,7 @@ public class FormatReferenceFragment extends AbstractFragment {
 	}
 
 	@Override
-	public void process(AbstractFragmentVisitor visitor) {
+	public void process(FragmentVisitor visitor) {
 		visitor.processFormatReferenceFragment(this);
 	}
 }

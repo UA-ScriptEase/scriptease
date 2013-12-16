@@ -1,6 +1,5 @@
 package scriptease.gui.SEGraph;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +20,8 @@ import javax.swing.JToolBar;
 
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEGraphToolBarObserver;
+import scriptease.gui.component.ComponentFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.FileOp;
 import scriptease.util.GUIOp;
 
@@ -36,6 +37,7 @@ import scriptease.util.GUIOp;
  */
 @SuppressWarnings("serial")
 public class SEGraphToolBar extends JToolBar {
+
 	private final ObserverManager<SEGraphToolBarObserver> observers;
 
 	private final JToggleButton selectButton;
@@ -44,7 +46,9 @@ public class SEGraphToolBar extends JToolBar {
 	private final JToggleButton connectButton;
 	private final JToggleButton disconnectButton;
 	private final JToggleButton groupButton;
-	private final JToggleButton ungroupButton;
+
+	private final ButtonGroup buttonGroup;
+	private ButtonModel buttonModel;
 
 	private Mode mode;
 
@@ -56,19 +60,26 @@ public class SEGraphToolBar extends JToolBar {
 	 * 
 	 */
 	public static enum Mode {
-		SELECT(false), INSERT, DELETE, CONNECT, DISCONNECT, GROUP, UNGROUP;
+		SELECT(false, "Selects nodes."), INSERT("Inserts new nodes."), DELETE(
+				"Deletes nodes or ungroups story groups."), CONNECT(
+				"Links nodes together."), DISCONNECT(
+				"Removes the link between two nodes."), GROUP(
+				"Groups nodes together.");
 
 		private static final String CURSOR_DIRECTORY = "scriptease/resources/icons/buttonicons/";
 		private static final String CURSOR_EXTENSION = ".png";
 
 		private final ImageIcon image;
 		private final Cursor cursor;
+		private final String toolTipText;
 
-		private Mode() {
-			this(true);
+		private Mode(String toolTipText) {
+			this(true, toolTipText);
 		}
 
-		private Mode(boolean useCustomCursor) {
+		private Mode(boolean useCustomCursor, String toolTipText) {
+			this.toolTipText = toolTipText;
+
 			final String iconName = this.name().toLowerCase();
 
 			ImageIcon image;
@@ -98,6 +109,10 @@ public class SEGraphToolBar extends JToolBar {
 
 			this.image = image;
 
+		}
+
+		public String getToolTipText() {
+			return this.toolTipText;
 		}
 
 		/**
@@ -130,11 +145,10 @@ public class SEGraphToolBar extends JToolBar {
 		}
 	}
 
-	public SEGraphToolBar() {
+	public SEGraphToolBar(boolean disableGroupTool) {
 		super();
 		this.observers = new ObserverManager<SEGraphToolBarObserver>();
-
-		final ButtonGroup buttonGroup = new ButtonGroup();
+		this.buttonGroup = new ButtonGroup();
 
 		this.selectButton = this.buildToggleButton(Mode.SELECT);
 		this.insertButton = this.buildToggleButton(Mode.INSERT);
@@ -142,22 +156,20 @@ public class SEGraphToolBar extends JToolBar {
 		this.connectButton = this.buildToggleButton(Mode.CONNECT);
 		this.disconnectButton = this.buildToggleButton(Mode.DISCONNECT);
 		this.groupButton = this.buildToggleButton(Mode.GROUP);
-		this.ungroupButton = this.buildToggleButton(Mode.UNGROUP);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setRollover(true);
 		this.setFloatable(false);
-		this.setBackground(Color.WHITE);
+		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 
 		buttonGroup.add(this.selectButton);
 		buttonGroup.add(this.insertButton);
 		buttonGroup.add(this.deleteButton);
 		buttonGroup.add(this.connectButton);
 		buttonGroup.add(this.disconnectButton);
-		
-		/* TODO: Uncomment the below 2 lines when we move to groups */
-		//buttonGroup.add(this.groupButton);
-		//buttonGroup.add(this.ungroupButton);
+
+		if (!disableGroupTool)
+			buttonGroup.add(this.groupButton);
 
 		// Sorry about the bizarre loop, but that's the way these work :(
 		for (final Enumeration<AbstractButton> buttons = buttonGroup
@@ -174,12 +186,13 @@ public class SEGraphToolBar extends JToolBar {
 	 * @param mode
 	 * @return
 	 */
-	private JToggleButton buildToggleButton(final Mode mode) {
-		final JToggleButton button = new JToggleButton();
+	protected JToggleButton buildToggleButton(final Mode mode) {
+		final JToggleButton button = ComponentFactory
+				.buildFlatToggleButton(ScriptEaseUI.TERTIARY_UI);
 
 		button.setIcon(mode.getIcon());
-		button.setHideActionText(true);
 		button.setFocusable(false);
+		button.setToolTipText(mode.getToolTipText());
 
 		button.addActionListener(new ActionListener() {
 			@Override
@@ -187,13 +200,13 @@ public class SEGraphToolBar extends JToolBar {
 				SEGraphToolBar.this.setMode(mode);
 			}
 		});
+
 		return button;
 	}
 
 	public void setMode(Mode mode) {
 		this.mode = mode;
 
-		final ButtonModel buttonModel;
 		if (mode == Mode.SELECT) {
 			buttonModel = this.selectButton.getModel();
 		} else if (mode == Mode.INSERT) {
@@ -206,8 +219,6 @@ public class SEGraphToolBar extends JToolBar {
 			buttonModel = this.disconnectButton.getModel();
 		} else if (mode == Mode.GROUP) {
 			buttonModel = this.groupButton.getModel();
-		} else if (mode == Mode.UNGROUP) {
-			buttonModel = this.ungroupButton.getModel();
 		} else {
 			// Handle any strange behaviour by setting this to Select by
 			// default.
@@ -227,6 +238,13 @@ public class SEGraphToolBar extends JToolBar {
 	}
 
 	/**
+	 * Changes the layout to a horizontal layout.
+	 */
+	public void setHorizontal() {
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+	}
+
+	/**
 	 * Adds a {@link SEGraphToolBarObserver} to the toolbar. This observer will
 	 * last for the lifetime of the toolbar.
 	 * 
@@ -236,7 +254,7 @@ public class SEGraphToolBar extends JToolBar {
 		this.observers.addObserver(this, observer);
 	}
 
-	private void notifyModeSelection() {
+	protected void notifyModeSelection() {
 		for (SEGraphToolBarObserver observer : this.observers.getObservers()) {
 			observer.modeChanged(this.mode);
 		}

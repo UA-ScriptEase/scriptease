@@ -166,6 +166,10 @@ public abstract class CodeBlock extends StoryComponent implements
 		return this.parameters.remove(parameter);
 	}
 
+	public void clearParameters() {
+		this.parameters.clear();
+	}
+
 	/**
 	 * Sets the includes to the given include list.
 	 * 
@@ -221,8 +225,8 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * amount that could be known simply because such an event occurred.<br>
 	 * <br>
 	 * Implicits are lazy-loaded because they actually originate from the Slot
-	 * definitions in {@link EventSlotManager}. They are not saved per code
-	 * block, since they're common amongst code blocks with the same slot. The
+	 * definitions in the Library Model. They are not saved per code block,
+	 * since they're common amongst code blocks with the same slot. The
 	 * implicits cloned from <code>EventSlotManager</code> have their owner set
 	 * to this code block's Cause (as determined by {@link #getCause()}).
 	 * 
@@ -244,8 +248,8 @@ public abstract class CodeBlock extends StoryComponent implements
 				clonedImplicits = new ArrayList<KnowIt>();
 
 				// clone these because they're CodeBlock instance-specific
-				for (KnowIt implicit : this.getLibrary().getSlotImplicits(
-						this.getSlot())) {
+				for (KnowIt implicit : this.getLibrary()
+						.getSlot(this.getSlot()).getImplicits()) {
 					final KnowIt clone = implicit.clone();
 					clone.setOwner(this);
 					clonedImplicits.add(clone);
@@ -279,10 +283,10 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @return The concrete subject KnowIt.
 	 */
 	public KnowIt getSubject() {
-		final CauseIt cause = this.getCause();
 		final KnowIt subject;
 
 		if (!this.hasSubject()) {
+			final CauseIt cause = this.getCause();
 			final CodeBlock parentBlock = cause.getMainCodeBlock();
 			subject = parentBlock.getSubject();
 		} else {
@@ -318,8 +322,7 @@ public abstract class CodeBlock extends StoryComponent implements
 		 * close as we can get. - remiller
 		 */
 		StoryComponent owner = this.getOwner();
-		
-		
+
 		if (owner instanceof CauseIt) {
 			return (CauseIt) owner;
 		} else {
@@ -330,7 +333,7 @@ public abstract class CodeBlock extends StoryComponent implements
 			}
 
 			if (owner == null) {
-				//this.getCause();
+				// this.getCause();
 				throw new IllegalStateException(
 						"Failed to locate enclosing Cause for CodeBlock "
 								+ this.toString());

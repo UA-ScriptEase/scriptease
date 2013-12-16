@@ -2,6 +2,7 @@ package scriptease.gui.action.components;
 
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -66,7 +67,7 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 	 * Updates the action to either be enabled or disabled depending on the
 	 * current selection.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected boolean isLegal() {
 		final Component focusOwner;
 		final boolean isLegal;
@@ -79,10 +80,8 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 							new TransferSupport(focusOwner, Toolkit
 									.getDefaultToolkit().getSystemClipboard()
 									.getContents(this)));
-		}
-		// We won't paste into StoryComponentPanelJList. Maybe in the future,
-		// but not now.
-		else if (focusOwner instanceof SEGraph) {
+
+		} else if (focusOwner instanceof SEGraph) {
 			final SEGraph graph;
 			final JComponent selectedComponent;
 
@@ -108,37 +107,35 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 	 * @param component
 	 */
 	private void pasteComponent(JComponent component) {
-		component.getTransferHandler().importData(
-				component,
-				Toolkit.getDefaultToolkit().getSystemClipboard()
-						.getContents(this));
+		final Transferable transferable = Toolkit.getDefaultToolkit()
+				.getSystemClipboard().getContents(this);
+
+		component.getTransferHandler().importData(component, transferable);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final Component focusOwner;
-
+		
 		focusOwner = SEFocusManager.getInstance().getFocus();
-
+		
 		if (focusOwner instanceof StoryComponentPanel) {
 			// Pastes the component in clip board to selected parent.
 			this.pasteComponent((StoryComponentPanel) focusOwner);
-		}
-		// We will not paste into StoryComponentPanelJList. Maybe in the future,
-		// but not now.
-		else if (focusOwner instanceof SEGraph) {
+			
+		} else if (focusOwner instanceof SEGraph) {
+			
 			// Paste the graph node into another component.
 			final SEGraph graph;
 			final JComponent selectedComponent;
-
+			
 			graph = (SEGraph) focusOwner;
-
+			
 			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
 					.getValue(graph.getLastSelectedNode());
-
+			
 			this.pasteComponent(selectedComponent);
 		}
-
 	}
 }

@@ -22,7 +22,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.translator.io.model.SimpleResource;
 
 /**
@@ -76,7 +78,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 				final Component child = e.getComponent();
 				final Component parent = this.getValidParent(child);
-				
+
 				if (parent == null)
 					return;
 
@@ -194,6 +196,12 @@ public class BindingWidget extends JPanel implements Cloneable {
 			}
 
 			@Override
+			public void processUninitialized(
+					KnowItBindingUninitialized unitialized) {
+				updateBackground(ScriptEaseUI.COLOUR_KNOWIT_UNINITIALIZED);
+			}
+
+			@Override
 			public void processFunction(KnowItBindingFunction function) {
 				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
@@ -205,6 +213,11 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 			@Override
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
+			}
+
+			@Override
+			public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
 				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
 

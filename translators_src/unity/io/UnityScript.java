@@ -77,9 +77,9 @@ public class UnityScript {
 
 		this.guid = UnityProject.getActiveProject().generateGUIDForFile(
 				new File(this.fileName + SCRIPT_META_EXTENSION));
-		
+
 		if (this.unityFile.getTypes().contains(UnityType.PREFAB.getName())) {
-			
+
 			final List<UnityResource> children = this.unityFile.getResources();
 
 			for (UnityResource child : children) {
@@ -90,8 +90,12 @@ public class UnityScript {
 				}
 			}
 		} else {
-			this.attachedObject = this.unityFile.getObjectByTemplateID(subject
-					.getTemplateID());
+			if (subject.getTemplateID().equals(this.unityFile.getTemplateID())) {
+				this.attachedObject = this.unityFile.getScriptEaseObject();
+			} else {
+				this.attachedObject = this.unityFile
+						.getObjectByTemplateID(subject.getTemplateID());
+			}
 		}
 
 		this.idNumber = this.unityFile.getNextEmptyID();
@@ -170,6 +174,10 @@ public class UnityScript {
 		if (toBeRemoved != null) {
 			this.mComponentList.remove(toBeRemoved);
 		}
+	}
+	
+	public String getGUID() {
+		return this.guid;
 	}
 
 	/**

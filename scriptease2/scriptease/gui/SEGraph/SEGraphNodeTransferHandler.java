@@ -11,11 +11,13 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
+import scriptease.model.complex.StoryGroup;
 
 /**
  * Creates a new TransferHandler for the passed in graph.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  * @param <E>
  */
@@ -74,6 +76,10 @@ class SEGraphNodeTransferHandler<E> extends TransferHandler {
 			acceptingNode = this.graph.getNodesToComponentsMap().getKey(
 					acceptingPanel);
 
+			// Don't want to be copying StoryGroups, just doesn't make sense.
+			if (acceptingNode instanceof StoryGroup)
+				return false;
+			
 			if (acceptingNode != this.graph.getStartNode()) {
 				final E potentialChild;
 				potentialChild = this.extractNode(support.getTransferable());

@@ -11,7 +11,6 @@ import scriptease.gui.ui.ScriptEaseUI;
  * JButton used for toggling between expanded and collapsed states.
  * 
  * @author mfchurch
- * 
  */
 @SuppressWarnings("serial")
 public class ExpansionButton extends JButton {
@@ -28,7 +27,9 @@ public class ExpansionButton extends JButton {
 				this.expand.getIconWidth()) + 1, Math.max(
 				this.collapse.getIconHeight(), this.expand.getIconHeight()) + 1);
 
+		this.setMaximumSize(MAX_SIZE);
 		this.setPreferredSize(MAX_SIZE);
+		this.setMinimumSize(MAX_SIZE);
 		this.setFocusable(false);
 		this.setOpaque(true);
 		this.setCollapsed(isCollapsed);

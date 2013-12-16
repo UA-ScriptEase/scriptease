@@ -11,6 +11,11 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
 
+/**
+ * Context for DialogueLines.
+ * 
+ * @author kschenk
+ */
 public class DialogueLineContext extends Context {
 	private final DialogueLine line;
 

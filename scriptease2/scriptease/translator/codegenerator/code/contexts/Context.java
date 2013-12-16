@@ -14,6 +14,8 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
@@ -21,6 +23,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.LocationInformation;
 import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
+import scriptease.translator.io.model.Resource;
 
 /**
  * Context represents the object based context used in code generation. It
@@ -41,15 +44,15 @@ import scriptease.translator.codegenerator.code.CodeGenerationNamifier;
  * 
  * @author mfchurch
  * @author kschenk
- * 
+ * @author jyuen
  */
 public abstract class Context {
 	private String indent = "";
 	private final CodeGenerationNamifier namifier;
 	private final StoryModel model;
 
-	// This is a cached list of all story points. This prevents multiple
-	// expensive calls to StoryPoint#getDescendants()
+	// This is a cached list of all story nodes. This prevents multiple
+	// expensive calls to StoryNode#getDescendants()
 	private final Collection<StoryPoint> storyPoints;
 
 	/**
@@ -72,7 +75,7 @@ public abstract class Context {
 	}
 
 	public Context(Context other) {
-		this(other.getModel(), other.getStoryPoints(), other.getIndent(), other
+		this(other.getModel(), other.getStoryNodes(), other.getIndent(), other
 				.getNamifier());
 	}
 
@@ -156,7 +159,7 @@ public abstract class Context {
 			this.codeBlocks = new ArrayList<CodeBlock>();
 
 			// for each story point
-			for (StoryPoint point : this.storyPoints) {
+			for (StoryNode point : this.storyPoints) {
 				for (ScriptIt scriptIt : StoryComponentUtils
 						.getDescendantScriptIts(point)) {
 					final Collection<CodeBlock> codeBlocksForSlot;
@@ -233,23 +236,39 @@ public abstract class Context {
 	 * @return
 	 */
 	public CauseIt getFirstCause() {
-		for (StoryPoint point : this.storyPoints) {
-			for (StoryComponent child : point.getChildren()) {
-				if (child instanceof CauseIt) {
-					final CauseIt causeIt = (CauseIt) child;
-
-					final Collection<CodeBlock> codeBlocks;
-
-					codeBlocks = causeIt
-							.getCodeBlocksForLocation(this.locationInfo);
-
-					if (!codeBlocks.isEmpty())
-						return causeIt;
+		for (StoryNode node : this.storyPoints) {
+			for (StoryComponent child : node.getChildren()) {
+				if (child instanceof StoryPoint) {
+					for (StoryComponent storyPointChild : ((StoryPoint) child)
+							.getChildren()) {
+						if (this.isCauseValid(storyPointChild)) {
+							return (CauseIt) storyPointChild;
+						}
+					}
+				} else {
+					if (this.isCauseValid(child)) {
+						return (CauseIt) child;
+					}
 				}
 			}
 		}
 
 		return null;
+	}
+
+	private boolean isCauseValid(StoryComponent component) {
+		if (component instanceof CauseIt) {
+			final CauseIt causeIt = (CauseIt) component;
+
+			final Collection<CodeBlock> codeBlocks;
+
+			codeBlocks = causeIt.getCodeBlocksForLocation(this.locationInfo);
+
+			if (!codeBlocks.isEmpty())
+				return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -261,9 +280,37 @@ public abstract class Context {
 	public Collection<CauseIt> getCauses() {
 		final Collection<CauseIt> causes = new ArrayList<CauseIt>();
 
-		for (StoryPoint point : this.storyPoints) {
+		for (StoryNode point : this.storyPoints) {
 			for (StoryComponent child : point.getChildren()) {
-				if (child instanceof CauseIt) {
+				if (child instanceof StoryPoint) {
+					for (StoryComponent storyPointChild : ((StoryPoint) child)
+							.getChildren()) {
+
+						if (storyPointChild instanceof CauseIt) {
+							final CauseIt causeIt = (CauseIt) storyPointChild;
+
+							final Collection<CodeBlock> codeBlocks;
+
+							codeBlocks = causeIt
+									.getCodeBlocksForLocation(this.locationInfo);
+
+							if (!codeBlocks.isEmpty()) {
+								boolean causeExists = false;
+
+								for (CauseIt cause : causes) {
+									// Don't add equivalent causes to the list
+									if (cause.isEquivalentToCause(causeIt)) {
+										causeExists = true;
+										break;
+									}
+								}
+
+								if (!causeExists)
+									causes.add(causeIt);
+							}
+						}
+					}
+				} else if (child instanceof CauseIt) {
 					final CauseIt causeIt = (CauseIt) child;
 
 					final Collection<CodeBlock> codeBlocks;
@@ -292,8 +339,51 @@ public abstract class Context {
 		return causes;
 	}
 
-	public Collection<StoryPoint> getStoryPoints() {
+	public Collection<StoryPoint> getStoryNodes() {
 		return this.storyPoints;
+	}
+
+	public Collection<StoryPoint> getStoryPoints() {
+		final Collection<StoryPoint> storyPoints = new ArrayList<StoryPoint>();
+
+		for (StoryNode storyNode : this.storyPoints) {
+			storyPoints.addAll(this.getRecursiveStoryPoints(storyNode));
+		}
+
+		return storyPoints;
+	}
+
+	/**
+	 * Recursively gets the story points for the passed in story nodes. Does a
+	 * deep search within groups to find all the story points.
+	 * 
+	 * @param storyNode
+	 * @return
+	 */
+	private Collection<StoryPoint> getRecursiveStoryPoints(StoryNode storyNode) {
+		final Collection<StoryPoint> storyPoints = new ArrayList<StoryPoint>();
+
+		if (storyNode instanceof StoryPoint)
+			storyPoints.add((StoryPoint) storyNode);
+		else if (storyNode instanceof StoryGroup) {
+			for (StoryComponent child : storyNode.getChildren()) {
+				storyPoints.addAll(this
+						.getRecursiveStoryPoints((StoryNode) child));
+			}
+		}
+
+		return storyPoints;
+	}
+
+	/**
+	 * Gets the descendants in an ordered list. This is slower than
+	 * {@link #getStoryNodes()}, so make sure you know what you are getting
+	 * into.
+	 * 
+	 * @return
+	 */
+	public Collection<? extends StoryNode> getOrderedStoryNodes() {
+		return this.model.getRoot().getOrderedDescendants();
 	}
 
 	/**
@@ -303,8 +393,24 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	public Collection<? extends Object> getOrderedStoryPoints() {
-		return this.model.getRoot().getOrderedDescendants();
+	public Collection<? extends StoryPoint> getOrderedStoryPoints() {
+		final Collection<StoryNode> storyNodes = this.model.getRoot()
+				.getOrderedDescendants();
+
+		final Collection<StoryPoint> storyPoints = new ArrayList<StoryPoint>();
+
+		for (StoryNode storyNode : storyNodes) {
+			if (storyNode instanceof StoryPoint)
+				storyPoints.add((StoryPoint) storyNode);
+			else if (storyNode instanceof StoryGroup) {
+				for (StoryComponent child : storyNode.getChildren()) {
+					if (child instanceof StoryPoint)
+						storyPoints.add((StoryPoint) child);
+				}
+			}
+		}
+
+		return storyPoints;
 	}
 
 	/**
@@ -445,8 +551,8 @@ public abstract class Context {
 		unimplemented("getControlItFormat");
 		return null;
 	}
-
-	public Collection<ScriptIt> getIdenticalCauses() {
+	
+	public Collection<CauseIt> getIdenticalCauses() {
 		unimplemented("getIdenticalCauses");
 		return null;
 	}
@@ -514,6 +620,36 @@ public abstract class Context {
 
 	public KnowIt getImage() {
 		unimplemented("getImage");
+		return null;
+	}
+
+	public Resource getResource() {
+		unimplemented("getResource");
+		return null;
+	}
+
+	public String getTotalChoiceProbability() {
+		unimplemented("getNumChoices");
+		return null;
+	}
+
+	public Collection<StoryComponent> getChoices() {
+		unimplemented("getChoices");
+		return null;
+	}
+
+	public String getChoiceProbabilityLowerBound() {
+		unimplemented("getChoiceProbabilityLowerBound");
+		return null;
+	}
+
+	public String getChoiceProbabilityUpperBound() {
+		unimplemented("getChoiceProbabilityUpperBound");
+		return null;
+	}
+	
+	public String getIndex() {
+		unimplemented("getIndex");
 		return null;
 	}
 }

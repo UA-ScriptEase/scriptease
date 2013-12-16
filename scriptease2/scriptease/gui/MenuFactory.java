@@ -1,6 +1,7 @@
 package scriptease.gui;
 
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -8,8 +9,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -17,11 +22,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicMenuBarUI;
 
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.RecentFileObserver;
+import scriptease.controller.observer.StoryModelAdapter;
+import scriptease.gui.action.behavioureditor.OpenBehaviourEditorAction;
 import scriptease.gui.action.components.CopyAction;
 import scriptease.gui.action.components.CutAction;
 import scriptease.gui.action.components.DeleteAction;
@@ -38,6 +46,10 @@ import scriptease.gui.action.file.SaveModelPackageAction;
 import scriptease.gui.action.file.SaveModelWithoutCodeAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
+import scriptease.gui.action.library.RemoveLibraryFromStoryModelAction;
+import scriptease.gui.action.libraryeditor.MergeLibraryAction;
+import scriptease.gui.action.libraryeditor.NewActivityAction;
+import scriptease.gui.action.libraryeditor.NewBehaviourAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
@@ -45,9 +57,11 @@ import scriptease.gui.action.libraryeditor.OpenLibraryEditorAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.translator.TranslatorPreferencesAction;
+import scriptease.gui.action.tutorials.OpenTutorialAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -92,6 +106,7 @@ public class MenuFactory {
 	private static final String FILE = Il8nResources.getString("File");
 	private static final String ADD = Il8nResources.getString("Add");
 	private static final String LIBRARY = "Library";
+	private static final String BEHAVIOUR = "Behaviour";
 	private static final String HELP = Il8nResources.getString("Help");
 	private static final String NEW = Il8nResources.getString("New");
 	private static final String DEBUG = "Debug";
@@ -111,16 +126,38 @@ public class MenuFactory {
 	public static JMenuBar createMainMenuBar(SEModel model) {
 		final JMenuBar bar = new JMenuBar();
 
+		bar.setForeground(ScriptEaseUI.PRIMARY_UI);
+
+		/*
+		 * Simply calling bar.setBackground(..) does not change the background
+		 * colour on new Windows OS', so we override the paint method. A bit
+		 * uglier but it works.
+		 */
+		bar.setUI(new BasicMenuBarUI() {
+			public void paint(Graphics g, JComponent c) {
+				g.setColor(ScriptEaseUI.SECONDARY_UI);
+				g.fillRect(0, 0, c.getWidth(), c.getHeight());
+			}
+		});
+
+		bar.setBorder(BorderFactory.createEmptyBorder());
+
 		bar.add(MenuFactory.buildFileMenu(model));
 		bar.add(MenuFactory.buildEditMenu());
 
-		if (TOOLS_MENU_ENABLED)
+		if (TOOLS_MENU_ENABLED) {
 			bar.add(MenuFactory.buildLibraryMenu());
+			// bar.add(MenuFactory.buildBehaviourMenu());
+		}
 
 		bar.add(MenuFactory.buildHelpMenu());
 		if (ScriptEase.DEBUG_MODE)
 			bar.add(MenuFactory.buildDebugMenu());
 
+		for (Component component : bar.getComponents()) {
+			component.setBackground(ScriptEaseUI.SECONDARY_UI);
+			component.setForeground(ScriptEaseUI.PRIMARY_UI);
+		}
 		return bar;
 	}
 
@@ -154,17 +191,27 @@ public class MenuFactory {
 			final JMenuItem newCause;
 			final JMenuItem newEffect;
 			final JMenuItem newDescription;
+			final JMenuItem newBehaviour;
+			final JMenuItem newActivity;
+			final JMenuItem mergeLibrary;
 
 			newMenu = new JMenu(MenuFactory.NEW);
 			newCause = new JMenuItem(NewCauseAction.getInstance());
 			newEffect = new JMenuItem(NewEffectAction.getInstance());
 			newDescription = new JMenuItem(NewDescriptionAction.getInstance());
+			newBehaviour = new JMenuItem(NewBehaviourAction.getInstance());
+			newActivity = new JMenuItem(NewActivityAction.getInstance());
+			mergeLibrary = new JMenuItem(MergeLibraryAction.getInstance());
 
 			newMenu.add(NewStoryModelAction.getInstance());
 			newMenu.addSeparator();
 			newMenu.add(newCause);
 			newMenu.add(newEffect);
 			newMenu.add(newDescription);
+			newMenu.add(newBehaviour);
+			newMenu.add(newActivity);
+			newMenu.addSeparator();
+			newMenu.add(mergeLibrary);
 
 			menu.add(newMenu);
 		}
@@ -297,18 +344,63 @@ public class MenuFactory {
 		return editMenu;
 	}
 
+	/**
+	 * Adds menus for each of the tutorial files. If the file is a directory,
+	 * the files within it are recursively added.
+	 * 
+	 * @param tutorials
+	 * @param parentMenu
+	 */
+	private static void addTutorialMenus(Collection<File> tutorials,
+			JMenu parentMenu) {
+
+		for (final File tutorial : tutorials) {
+			if (tutorial.isDirectory()) {
+				final JMenu tutorialMenu;
+				tutorialMenu = new JMenu(tutorial.getName());
+
+				final List<File> tuts = new ArrayList<File>();
+				for (File tut : tutorial.listFiles()) {
+					tuts.add(tut);
+				}
+				Collections.sort(tuts);
+				MenuFactory.addTutorialMenus(tuts, tutorialMenu);
+				parentMenu.add(tutorialMenu);
+			} else {
+				final JMenuItem tutorialItem;
+				tutorialItem = new JMenuItem(new OpenTutorialAction(tutorial));
+				parentMenu.add(tutorialItem);
+			}
+		}
+	}
+
 	private static JMenu buildHelpMenu() {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
+		final List<JMenuItem> translatorItems;
 		final JMenuItem sendFeedbackItem;
 		final JMenuItem sendBugReportItem;
 		final JMenuItem helpMenuItem;
 
+		translatorItems = new ArrayList<JMenuItem>();
 		sendFeedbackItem = new JMenuItem("Send Feedback");
 		sendBugReportItem = new JMenuItem("Send Bug Report");
 		helpMenuItem = new JMenuItem(
 				Il8nResources.getString("About_ScriptEase"));
+
+		for (Translator translator : TranslatorManager.getInstance()
+				.getTranslators()) {
+			final JMenu translatorItem;
+			final Collection<File> tutorials;
+
+			translatorItem = new JMenu(translator.getName());
+			tutorials = translator.getTutorials();
+
+			MenuFactory.addTutorialMenus(tutorials, translatorItem);
+
+			translatorItems.add(translatorItem);
+		}
 
 		sendFeedbackItem.addActionListener(new ActionListener() {
 			@Override
@@ -335,6 +427,12 @@ public class MenuFactory {
 		sendBugReportItem.setMnemonic(KeyEvent.VK_R);
 		helpMenuItem.setMnemonic(KeyEvent.VK_A);
 
+		for (JMenuItem translatorItem : translatorItems) {
+			menu.add(translatorItem);
+		}
+
+		menu.addSeparator();
+
 		menu.add(sendFeedbackItem);
 		menu.add(sendBugReportItem);
 		menu.addSeparator();
@@ -356,21 +454,125 @@ public class MenuFactory {
 		activeModel = SEModelManager.getInstance().getActiveModel();
 
 		if (activeModel instanceof StoryModel) {
-			final Collection<LibraryModel> optionalLibraries;
+			final StoryModel model = (StoryModel) activeModel;
+
+			final Collection<LibraryModel> translatorOptionalLibraries;
+			final Collection<LibraryModel> modelOptionalLibraries;
 			final JMenu addLibrary;
+			final JMenu removeLibrary;
 
 			addLibrary = new JMenu("Add Library");
+			removeLibrary = new JMenu("Remove Library");
 
-			optionalLibraries = activeModel.getTranslator()
+			translatorOptionalLibraries = model.getTranslator()
 					.getOptionalLibraries();
+			modelOptionalLibraries = model.getOptionalLibraries();
 
-			addLibrary.setEnabled(!optionalLibraries.isEmpty());
+			addLibrary.setEnabled(!translatorOptionalLibraries.isEmpty());
+			removeLibrary.setEnabled(!modelOptionalLibraries.isEmpty());
 
-			for (LibraryModel library : optionalLibraries) {
-				addLibrary.add(new AddLibraryToStoryModelAction(library));
+			for (LibraryModel library : translatorOptionalLibraries) {
+				final AddLibraryToStoryModelAction addLibraryAction;
+
+				addLibraryAction = new AddLibraryToStoryModelAction(library);
+
+				addLibrary.add(addLibraryAction);
+				// disable all library actions with libraries that have already
+				// been added.
+				if (modelOptionalLibraries.contains(library))
+					addLibraryAction.setEnabled(false);
 			}
 
+			for (LibraryModel library : modelOptionalLibraries) {
+				removeLibrary
+						.add(new RemoveLibraryFromStoryModelAction(library));
+			}
+
+			// Listen for add / remove library changes.
+			model.addStoryModelObserver(new StoryModelAdapter() {
+
+				@Override
+				public void libraryAdded(LibraryModel library) {
+
+					// disable add library action for the library that was
+					// added.
+					for (Component libraryMenu : addLibrary.getMenuComponents()) {
+						if (libraryMenu instanceof JMenuItem) {
+
+							final JMenuItem item = (JMenuItem) libraryMenu;
+
+							if (item.getAction() instanceof AddLibraryToStoryModelAction) {
+								final AddLibraryToStoryModelAction action;
+
+								action = (AddLibraryToStoryModelAction) item
+										.getAction();
+
+								if (action.getLibrary() == library) {
+									action.setEnabled(false);
+									break;
+								}
+							}
+						}
+					}
+
+					// add a action for this library to be removed.
+					removeLibrary.add(new RemoveLibraryFromStoryModelAction(
+							library));
+					if (!removeLibrary.isEnabled())
+						removeLibrary.setEnabled(true);
+				}
+
+				@Override
+				public void libraryRemoved(LibraryModel library) {
+
+					// enable add library action for the library that was
+					// removed.
+					for (Component libraryMenu : addLibrary.getMenuComponents()) {
+						if (libraryMenu instanceof JMenuItem) {
+
+							final JMenuItem item = (JMenuItem) libraryMenu;
+
+							if (item.getAction() instanceof AddLibraryToStoryModelAction) {
+								final AddLibraryToStoryModelAction action;
+
+								action = (AddLibraryToStoryModelAction) item
+										.getAction();
+
+								if (action.getLibrary() == library) {
+									action.setEnabled(true);
+									break;
+								}
+							}
+						}
+					}
+
+					// remove the action for this library to be removed.
+					for (Component libraryMenu : removeLibrary
+							.getMenuComponents()) {
+						if (libraryMenu instanceof JMenuItem) {
+
+							final JMenuItem item = (JMenuItem) libraryMenu;
+
+							if (item.getAction() instanceof RemoveLibraryFromStoryModelAction) {
+								final RemoveLibraryFromStoryModelAction action;
+
+								action = (RemoveLibraryFromStoryModelAction) item
+										.getAction();
+
+								if (action.getLibrary() == library) {
+									removeLibrary.remove(item);
+									if (model.getOptionalLibraries().isEmpty())
+										removeLibrary.setEnabled(false);
+									break;
+								}
+							}
+						}
+					}
+				}
+			});
+
 			menu.add(addLibrary);
+			menu.add(removeLibrary);
 		}
 
 		for (Translator translator : TranslatorManager.getInstance()
@@ -384,7 +586,31 @@ public class MenuFactory {
 			/*
 			 * TODO: Uncomment after releasing to 250
 			 */
-			// menu.add(translatorItem);
+			 // menu.add(translatorItem);
+		}
+
+		menu.setMnemonic(KeyEvent.VK_L);
+
+		return menu;
+	}
+
+	/**
+	 * Builds the behaviour menu, with options to add and edit behaviours
+	 * 
+	 * @return
+	 */
+	private static JMenu buildBehaviourMenu() {
+		final JMenu menu = new JMenu(MenuFactory.BEHAVIOUR);
+
+		for (Translator translator : TranslatorManager.getInstance()
+				.getTranslators()) {
+			final OpenBehaviourEditorAction action;
+			final JMenuItem translatorItem;
+
+			action = new OpenBehaviourEditorAction(translator);
+			translatorItem = new JMenuItem(action);
+
+			menu.add(translatorItem);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);

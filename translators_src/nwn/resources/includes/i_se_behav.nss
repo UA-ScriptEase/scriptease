@@ -225,7 +225,7 @@ void SCEZ_Behaviour_Spawn() {
 
   SetLocalFloat(OBJECT_SELF, "SE_AUX_ORIGINAL_FACING", GetFacing(OBJECT_SELF));
   SetLocalLocation(OBJECT_SELF, "SE_AUX_ORIGINAL_LOCATION", GetLocation(OBJECT_SELF));
- // SCEZ_Behaviour_ResetLatentPriority(OBJECT_SELF);
+  // SCEZ_Behaviour_ResetLatentPriority(OBJECT_SELF);
   SCEZ_Behaviour_Signal (OBJECT_SELF);
   SCEZ_Behaviour_SendSpin(OBJECT_SELF);//SignalEvent(OBJECT_SELF, EventUserDefined(EVENT_BEHAVIOUR_LOOP));
 }

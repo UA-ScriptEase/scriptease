@@ -83,12 +83,13 @@ public class Translator {
 	 * properties.
 	 * 
 	 * @author remiller
+	 * @author jyuen
 	 */
 	public enum DescriptionKeys {
 		// Mandatory keys
 		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH, VERSION,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH;
+		SUPPORTED_FILE_EXTENSIONS, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH, TUTORIALS_PATH;
 
 		public static final String FALSE = "false";
 		private static final String DIRECTORY = "directory";
@@ -115,6 +116,8 @@ public class Translator {
 	private final File location;
 
 	private Collection<LibraryModel> optionalLibraries;
+	
+	private final Collection<File> tutorials;
 
 	/**
 	 * Builds a new Translator from the given translator Jar or description
@@ -180,6 +183,8 @@ public class Translator {
 			System.err.println(gmClass == null ? "null" : gmClass.getName()
 					+ " is not an instance of GameModule");
 		}
+		
+		this.tutorials = FileManager.getInstance().loadTutorials(this);
 	}
 
 	/**
@@ -241,6 +246,15 @@ public class Translator {
 		}
 
 		return new URLClassLoader(urlSourceLocations.toArray(new URL[0]));
+	}
+
+	/**
+	 * Returns the tutorials for this translator.
+	 * 
+	 * @return
+	 */
+	public Collection<File> getTutorials() {
+		return this.tutorials;
 	}
 
 	/**

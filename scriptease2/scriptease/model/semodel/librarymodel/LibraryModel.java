@@ -31,9 +31,13 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
@@ -55,10 +59,14 @@ import scriptease.util.StringOp;
  * @author remiller
  * @author mfchurch
  * @author kschenk
+ * @author jyuen
  */
 public class LibraryModel extends SEModel implements StoryComponentObserver {
-	private static final String AUTOMATIC_LABEL = "automatic";
 	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
+
+	// Information about the library that we want the user to know about.
+	private String information;
+	private String defaultSlotFormat = "";
 
 	private final ObserverManager<LibraryObserver> observerManager;
 
@@ -67,8 +75,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final StoryAdapter categoryAdder;
 
 	private final DescribeItManager describeItManager;
-	private final EventSlotManager slotManager;
-	private final Map<String, GameType> gameTypes;
+	private final Collection<Slot> slots;
+	private final Collection<GameType> gameTypes;
 	private final TypeConverter typeConverter;
 
 	private File location;
@@ -76,16 +84,19 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private StoryComponentContainer effectsCategory;
 	private StoryComponentContainer causesCategory;
 	private StoryComponentContainer descriptionsCategory;
+	private StoryComponentContainer behavioursCategory;
 	private StoryComponentContainer controllersCategory;
+	private StoryComponentContainer activitiesCategory;
 	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
 
 	private int nextID;
 
 	private static final LibraryModel COMMON_LIBRARY = new LibraryModel(
-			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
+			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
 		{
 			this.add(new AskIt());
+			this.add(new PickIt());
 			this.add(new Note());
 		}
 	};
@@ -101,11 +112,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Builds a new Library model with a blank author and title, and null
-	 * translator.
+	 * Builds a new Library model with a blank author, title, description, and
+	 * null translator.
 	 */
 	public LibraryModel() {
-		this("", "", null);
+		this("", "", "", null);
 	}
 
 	/**
@@ -115,9 +126,12 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param title
 	 *            the name of the library.
 	 * @param author
+	 *            the author of the library.
+	 * @param information
+	 *            details of the library.
 	 */
-	public LibraryModel(String title, String author) {
-		this(title, author, null);
+	public LibraryModel(String title, String author, String information) {
+		this(title, author, information, null);
 	}
 
 	/**
@@ -128,32 +142,41 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 *            the name of the library.
 	 * @param author
 	 *            the author of the library.
+	 * @param information
+	 *            details of the library.
 	 * @param translator
 	 *            The translator that this library belongs to.
 	 */
-	public LibraryModel(String title, String author, Translator translator) {
+	public LibraryModel(String title, String author, String information,
+			Translator translator) {
 		super(title, author);
-		this.gameTypes = new HashMap<String, GameType>();
 		this.typeConverter = new TypeConverter();
 
 		this.translator = translator;
+		this.information = information;
 		this.modelRoot = new StoryComponentContainer(title);
-		this.slotManager = new EventSlotManager();
+		this.slots = new ArrayList<Slot>();
+		this.gameTypes = new ArrayList<GameType>();
 		this.describeItManager = new DescribeItManager();
 		this.includeFilePaths = new ArrayList<String>();
 
-		Collection<StoryComponentContainer> categories = new ArrayList<StoryComponentContainer>();
+		final Collection<StoryComponentContainer> categories;
+
+		categories = new ArrayList<StoryComponentContainer>();
 
 		this.buildCategories();
 
 		categories.add(this.effectsCategory);
 		categories.add(this.causesCategory);
 		categories.add(this.descriptionsCategory);
+		categories.add(this.behavioursCategory);
+		categories.add(this.activitiesCategory);
 		categories.add(this.controllersCategory);
 		categories.add(this.noteContainer);
 
 		this.getRoot().registerChildType(StoryComponentContainer.class,
 				categories.size());
+
 		for (StoryComponentContainer category : categories) {
 			this.getRoot().addStoryChild(category);
 		}
@@ -165,7 +188,32 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			final LibraryModel model = LibraryModel.this;
 
 			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				final boolean success = this.model.behavioursCategory
+						.addStoryChild(behaviour);
+				if (success)
+					behaviour.addStoryComponentObserver(this.model);
+			}
+
+			@Override
+			public void processActivityIt(ActivityIt activityIt) {
+				final boolean success = this.model.activitiesCategory
+						.addStoryChild(activityIt);
+				if (success)
+					activityIt.addStoryComponentObserver(this.model);
+			}
+
+			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
+				for (StoryComponent child : this.model.effectsCategory
+						.getChildren()) {
+					final ScriptIt scriptItChild = (ScriptIt) child;
+
+					if (scriptIt.getMainCodeBlock().getId() == scriptItChild
+							.getMainCodeBlock().getId())
+						return;
+				}
+
 				final boolean success = this.model.effectsCategory
 						.addStoryChild(scriptIt);
 				if (success)
@@ -178,6 +226,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 						.addStoryChild(askIt);
 				if (success)
 					askIt.addStoryComponentObserver(this.model);
+			}
+
+			@Override
+			public void processPickIt(PickIt pickIt) {
+				final boolean success = this.model.controllersCategory
+						.addStoryChild(pickIt);
+				if (success)
+					pickIt.addStoryComponentObserver(this.model);
 			}
 
 			@Override
@@ -238,7 +294,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.effectsCategory.clearAllowableChildren();
 		this.causesCategory.clearAllowableChildren();
 		this.descriptionsCategory.clearAllowableChildren();
+		this.behavioursCategory.clearAllowableChildren();
 		this.controllersCategory.clearAllowableChildren();
+		this.activitiesCategory.clearAllowableChildren();
 		this.noteContainer.clearAllowableChildren();
 
 		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
@@ -246,12 +304,15 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.effectsCategory.registerChildType(ScriptIt.class, max);
 		this.causesCategory.registerChildType(CauseIt.class, max);
 		this.descriptionsCategory.registerChildType(KnowIt.class, max);
+		this.behavioursCategory.registerChildType(Behaviour.class, max);
 		this.controllersCategory.registerChildType(
 				StoryComponentContainer.class, max);
 		this.controllersCategory.registerChildType(ScriptIt.class, max);
 		this.controllersCategory.registerChildType(AskIt.class, max);
 		this.controllersCategory.registerChildType(KnowIt.class, max);
 		this.controllersCategory.registerChildType(ControlIt.class, max);
+		this.controllersCategory.registerChildType(PickIt.class, max);
+		this.activitiesCategory.registerChildType(ActivityIt.class, max);
 		this.noteContainer.registerChildType(Note.class, 1);
 	}
 
@@ -259,7 +320,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.effectsCategory.addStoryComponentObserver(this);
 		this.causesCategory.addStoryComponentObserver(this);
 		this.descriptionsCategory.addStoryComponentObserver(this);
+		this.behavioursCategory.addStoryComponentObserver(this);
 		this.controllersCategory.addStoryComponentObserver(this);
+		this.activitiesCategory.addStoryComponentObserver(this);
 		this.noteContainer.addStoryComponentObserver(this);
 	}
 
@@ -284,8 +347,16 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		return this.descriptionsCategory;
 	}
 
+	public StoryComponentContainer getBehavioursCategory() {
+		return this.behavioursCategory;
+	}
+
 	public StoryComponentContainer getControllersCategory() {
 		return this.controllersCategory;
+	}
+
+	public StoryComponentContainer getActivitysCategory() {
+		return this.activitiesCategory;
 	}
 
 	public StoryComponentContainer getNoteContainer() {
@@ -357,20 +428,24 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	/**
 	 * Retrieves the automatics causeIts
 	 * 
+	 * @param automaticLabel
+	 *            Retrieve the automatic causes with this label
+	 * 
 	 * @return
 	 */
-	public Collection<CauseIt> getAutomatics() {
+	public Collection<CauseIt> getAutomatics(String automaticLabel) {
 		final Collection<CauseIt> automatics = new ArrayList<CauseIt>();
 
 		for (StoryComponent cause : this.getCausesCategory().getChildren()) {
 			if (cause instanceof CauseIt) {
 				for (String label : cause.getLabels()) {
-					if (label.equalsIgnoreCase(AUTOMATIC_LABEL)) {
+					if (label.equalsIgnoreCase(automaticLabel)) {
 						automatics.add((CauseIt) cause);
 					}
 				}
 			}
 		}
+
 		return automatics;
 	}
 
@@ -391,17 +466,34 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			for (StoryComponent child : root.getChildren()) {
 				containerChild = (StoryComponentContainer) child;
 
-				if (child.getDisplayText().equalsIgnoreCase("EFFECTS"))
+				if (child.getDisplayText().equalsIgnoreCase(
+						ScriptEaseKeywords.EFFECTS))
 					this.effectsCategory = containerChild;
-				else if (child.getDisplayText().equalsIgnoreCase("CAUSES"))
+
+				else if (child.getDisplayText().equalsIgnoreCase(
+						ScriptEaseKeywords.CAUSES))
 					this.causesCategory = containerChild;
-				else if (child.getDisplayText()
-						.equalsIgnoreCase("DESCRIPTIONS"))
+
+				else if (child.getDisplayText().equalsIgnoreCase(
+						ScriptEaseKeywords.DESCRIPTIONS))
 					this.descriptionsCategory = containerChild;
-				else if (child.getDisplayText().equalsIgnoreCase("CONTROLLERS"))
+
+				else if (child.getDisplayText().equalsIgnoreCase(
+						ScriptEaseKeywords.BEHAVIOURS))
+					this.behavioursCategory = containerChild;
+
+				else if (child.getDisplayText().equalsIgnoreCase(
+						ScriptEaseKeywords.CONTROLLERS))
 					this.controllersCategory = containerChild;
-				else if (child.getDisplayText().equalsIgnoreCase("NOTE"))
+
+				else if (child.getDisplayText().equalsIgnoreCase(
+						ScriptEaseKeywords.ACTIVITIES))
+					this.activitiesCategory = containerChild;
+
+				else if (child.getDisplayText().equalsIgnoreCase(
+						ScriptEaseKeywords.NOTE))
 					this.noteContainer = containerChild;
+
 				else
 					System.out.println("Unimplemented Child Type: "
 							+ child.getDisplayText());
@@ -478,6 +570,22 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 						.removeStoryChild(causeIt);
 				if (success)
 					causeIt.removeStoryComponentObserver(LibraryModel.this);
+			}
+
+			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				final boolean success = LibraryModel.this.behavioursCategory
+						.removeStoryChild(behaviour);
+				if (success)
+					behaviour.removeStoryComponentObserver(LibraryModel.this);
+			}
+
+			@Override
+			public void processActivityIt(ActivityIt activityIt) {
+				final boolean success = LibraryModel.this.activitiesCategory
+						.removeStoryChild(activityIt);
+				if (success)
+					activityIt.removeStoryComponentObserver(LibraryModel.this);
 			}
 
 			@Override
@@ -561,6 +669,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		components.addAll(this.effectsCategory.getChildren());
 		components.addAll(this.causesCategory.getChildren());
 		components.addAll(this.descriptionsCategory.getChildren());
+		components.addAll(this.behavioursCategory.getChildren());
+		components.addAll(this.activitiesCategory.getChildren());
 		components.addAll(this.controllersCategory.getChildren());
 		components.addAll(this.noteContainer.getChildren());
 
@@ -590,6 +700,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.effectsCategory = new StoryComponentContainer("Effects");
 		this.causesCategory = new StoryComponentContainer("Causes");
 		this.descriptionsCategory = new StoryComponentContainer("Descriptions");
+		this.behavioursCategory = new StoryComponentContainer("Behaviours");
+		this.activitiesCategory = new StoryComponentContainer("Activities");
 		this.controllersCategory = new StoryComponentContainer("Controllers");
 		this.noteContainer = new StoryComponentContainer("Note");
 		this.registerObservers();
@@ -816,7 +928,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public Collection<GameType> getGameTypes() {
-		return new ArrayList<GameType>(this.gameTypes.values());
+		return new ArrayList<GameType>(this.gameTypes);
 	}
 
 	/**
@@ -825,8 +937,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param types
 	 */
 	public void addGameTypes(Collection<GameType> types) {
-		for (GameType type : types)
-			this.gameTypes.put(type.getKeyword(), type);
+		this.gameTypes.addAll(types);
 	}
 
 	/**
@@ -836,21 +947,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public TypeConverter getTypeConverter() {
 		return this.typeConverter;
-	}
-
-	/**
-	 * Returns the format for the type as a collection of
-	 * {@link AbstractFragment}s.
-	 * 
-	 * @param keyword
-	 * @return
-	 */
-	public Collection<AbstractFragment> getTypeFormat(String keyword) {
-		final GameType type = this.gameTypes.get(keyword);
-		final Collection<AbstractFragment> format = new ArrayList<AbstractFragment>();
-		if (type != null)
-			format.addAll(type.getFormat());
-		return format;
 	}
 
 	/**
@@ -872,178 +968,88 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public Collection<GameType> getTypes() {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final Collection<GameType> keywords = new ArrayList<GameType>();
+		final Collection<GameType> types = new ArrayList<GameType>();
 
 		if (defaultLibrary != null && this != defaultLibrary) {
-			keywords.addAll(defaultLibrary.getLibraryTypes());
+			types.addAll(defaultLibrary.getGameTypes());
 		}
 
-		keywords.addAll(this.getLibraryTypes());
+		types.addAll(this.getGameTypes());
 
-		return keywords;
-	}
-
-	/**
-	 * Returns a collection of keywords associated with types stored by this
-	 * LibraryModel only.
-	 */
-	public Collection<GameType> getLibraryTypes() {
-		return new ArrayList<GameType>(this.gameTypes.values());
+		return types;
 	}
 
 	@Override
 	public GameType getType(String keyword) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final GameType type = this.gameTypes.get(keyword);
 
-		if (type == null && defaultLibrary != null && this != defaultLibrary) {
-			return defaultLibrary.getType(keyword);
-		} else
-			return type;
+		GameType type = null;
+		for (GameType savedType : this.gameTypes) {
+			if (savedType.getKeyword().equals(keyword)) {
+				type = savedType;
+				break;
+			}
+		}
+
+		if (type == null)
+			if (defaultLibrary != null && this != defaultLibrary) {
+				type = defaultLibrary.getType(keyword);
+			} else
+				type = new GameType();
+
+		return type;
+	}
+
+	/**
+	 * Returns the format for the type as a collection of
+	 * {@link AbstractFragment}s.
+	 * 
+	 * @param keyword
+	 * @return
+	 */
+	public Collection<AbstractFragment> getTypeFormat(String keyword) {
+		return new ArrayList<AbstractFragment>(this.getType(keyword)
+				.getFormat());
 	}
 
 	@Override
 	public String getTypeRegex(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final GameType type = this.gameTypes.get(keyword);
-
-		String regex;
-		if (type != null) {
-			regex = type.getReg();
-		} else
-			regex = "";
-
-		if (!StringOp.exists(regex) && defaultLibrary != null
-				&& this != defaultLibrary) {
-			regex = defaultLibrary.getTypeRegex(keyword);
-		}
-
-		return regex;
+		return this.getType(keyword).getReg();
 	}
 
 	@Override
 	public Map<String, String> getTypeEnumeratedValues(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final Map<String, String> enums = new HashMap<String, String>();
-		final GameType type = this.gameTypes.get(keyword);
-
-		if (type != null)
-			enums.putAll(type.getEnumMap());
-
-		if (enums.isEmpty() && defaultLibrary != null && this != defaultLibrary) {
-			enums.putAll(defaultLibrary.getTypeEnumeratedValues(keyword));
-		}
-
-		return enums;
+		return new HashMap<String, String>(this.getType(keyword).getEnumMap());
 	}
 
 	@Override
 	public String getTypeDisplayText(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final GameType type = this.gameTypes.get(keyword);
-
-		String displayText;
-		if (type != null) {
-			displayText = type.getDisplayName();
-		} else
-			displayText = "";
-
-		if (!StringOp.exists(displayText) && defaultLibrary != null
-				&& this != defaultLibrary) {
-			displayText = defaultLibrary.getTypeDisplayText(keyword);
-		}
-
-		return displayText;
+		return this.getType(keyword).getDisplayName();
 	}
 
 	@Override
 	public Collection<String> getTypeSlots(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-
-		final Collection<String> slots = new ArrayList<String>();
-		final GameType type = this.gameTypes.get(keyword);
-
-		if (type != null)
-			slots.addAll(type.getSlots());
-
-		if (slots.isEmpty() && defaultLibrary != null && this != defaultLibrary) {
-			slots.addAll(defaultLibrary.getTypeSlots(keyword));
-		}
-
-		return slots;
+		return new ArrayList<String>(this.getType(keyword).getSlots());
 	}
 
 	@Override
 	public String getTypeCodeSymbol(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final GameType type = this.gameTypes.get(keyword);
-
-		String codeSymbol;
-		if (type != null) {
-			codeSymbol = type.getCodeSymbol();
-		} else
-			codeSymbol = "";
-
-		if (!StringOp.exists(codeSymbol) && defaultLibrary != null
-				&& this != defaultLibrary) {
-			codeSymbol = defaultLibrary.getTypeCodeSymbol(keyword);
-		}
-
-		return codeSymbol;
+		return this.getType(keyword).getCodeSymbol();
 	}
 
 	@Override
 	public Map<String, String> getTypeEscapes(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final Map<String, String> escapes = new HashMap<String, String>();
-		final GameType type = this.gameTypes.get(keyword);
-
-		if (type != null)
-			escapes.putAll(type.getEscapes());
-
-		if (escapes.isEmpty() && defaultLibrary != null
-				&& this != defaultLibrary) {
-			escapes.putAll(defaultLibrary.getTypeEscapes(keyword));
-		}
-
-		return escapes;
+		return new HashMap<String, String>(this.getType(keyword).getEscapes());
 	}
 
 	@Override
 	public GUIType getTypeGUI(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final GameType type = this.gameTypes.get(keyword);
-
-		GUIType gui;
-		if (type != null)
-			gui = type.getGui();
-		else
-			gui = null;
-
-		if (gui == null && defaultLibrary != null && this != defaultLibrary) {
-			gui = defaultLibrary.getTypeGUI(keyword);
-		}
-
-		return gui;
+		return this.getType(keyword).getGui();
 	}
 
 	@Override
 	public String getTypeWidgetName(String keyword) {
-		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		final GameType type = this.gameTypes.get(keyword);
-
-		String widgetName;
-		if (type != null)
-			widgetName = type.getWidgetName();
-		else
-			widgetName = null;
-
-		if (!StringOp.exists(widgetName) && defaultLibrary != null
-				&& this != defaultLibrary) {
-			widgetName = defaultLibrary.getTypeWidgetName(keyword);
-		}
-
-		return widgetName;
+		return this.getType(keyword).getWidgetName();
 	}
 
 	/**
@@ -1052,13 +1058,13 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param defaultKeyword
 	 */
 	public void setSlotDefaultFormat(String defaultKeyword) {
-		this.slotManager.setDefaultFormatKeyword(defaultKeyword);
+		this.defaultSlotFormat = defaultKeyword;
 	}
 
 	@Override
 	public String getSlotDefaultFormat() {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		String format = this.slotManager.getDefaultFormatKeyword();
+		String format = this.defaultSlotFormat;
 
 		if (!StringOp.exists(format) && defaultLibrary != null
 				&& this != defaultLibrary) {
@@ -1068,40 +1074,15 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		return format;
 	}
 
-	/**
-	 * Returns the parameters known for the slot.
-	 * 
-	 * @param slot
-	 * @return
-	 */
-	public Collection<KnowIt> getSlotParameters(String slot) {
-		return this.getSlot(slot).getParameters();
-	}
-
-	/**
-	 * Returns the implicits for a slot.
-	 * 
-	 * @param slot
-	 * @return
-	 */
-	public Collection<KnowIt> getSlotImplicits(String slot) {
-		return this.getSlot(slot).getImplicits();
-	}
-
-	/**
-	 * Returns the condition for a slot.
-	 * 
-	 * @param slot
-	 * @return
-	 */
-	public String getSlotCondition(String slot) {
-		return this.getSlot(slot).getCondition();
-	}
-
 	@Override
 	public Slot getSlot(String name) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
-		Slot slot = this.slotManager.getEventSlot(name);
+
+		Slot slot = null;
+		for (Slot savedSlot : this.slots) {
+			if (savedSlot.getKeyword().equals(name))
+				slot = savedSlot;
+		}
 
 		if (slot == null && defaultLibrary != null && this != defaultLibrary) {
 			slot = defaultLibrary.getSlot(name);
@@ -1117,10 +1098,29 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public Collection<Slot> getSlots() {
-		return this.slotManager.getEventSlots();
+		return new ArrayList<Slot>(this.slots);
 	}
 
+	/**
+	 * Adds a collection of slots.
+	 * 
+	 * @param slots
+	 */
 	public void addSlots(Collection<Slot> slots) {
-		this.slotManager.addEventSlots(slots, this);
+		for (Slot slot : slots) {
+			this.slots.add(slot);
+
+			for (KnowIt implicit : slot.getImplicits()) {
+				implicit.setLibrary(this);
+			}
+		}
+	}
+
+	public String getInformation() {
+		return this.information;
+	}
+
+	public void setInformation(String information) {
+		this.information = information;
 	}
 }

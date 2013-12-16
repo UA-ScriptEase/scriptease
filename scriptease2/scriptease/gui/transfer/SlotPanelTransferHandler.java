@@ -3,6 +3,7 @@ package scriptease.gui.transfer;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -11,8 +12,11 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -92,6 +96,36 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 			destinationKnowIt = (KnowIt) ScriptWidgetFactory
 					.getEditedStoryComponent(destinationSlotPanel
 							.getBindingWidget().getParent());
+
+			// Special case for KnowItBindingUninitialized - they
+			// shouldn't be dragged into their own referenced KnowIt
+			if (sourceBinding instanceof KnowItBindingUninitialized) {
+				final KnowItBindingUninitialized uninit = (KnowItBindingUninitialized) sourceBinding;
+				if (uninit.getValue() == destinationKnowIt)
+					return false;
+
+				// the destinationKnowIt should also be a child of the component
+				// that has the value the KnowItBindingUninitialized is
+				// referencing.
+
+				StoryComponent owner = uninit.getValue().getOwner();
+				while (!(owner instanceof ComplexStoryComponent))
+					owner = owner.getOwner();
+
+				if (owner instanceof ComplexStoryComponent) {
+					final ComplexStoryComponent complex = (ComplexStoryComponent) owner;
+
+					final List<StoryComponent> descendants = complex
+							.getDescendents();
+
+					StoryComponent destOwner = destinationKnowIt.getOwner();
+					while (!(destOwner instanceof ComplexStoryComponent))
+						destOwner = destOwner.getOwner();
+					
+					if (!descendants.contains(destOwner))
+						return false;
+				}
+			}
 
 			// Check that the KnowItBinding type matches the destination
 			// KnowIt

@@ -16,9 +16,14 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.ParallelGroup;
+import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -40,8 +45,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
@@ -50,17 +55,22 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
+import scriptease.gui.action.libraryeditor.MergeLibraryAction;
+import scriptease.gui.component.UserInformationPane;
+import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
@@ -84,15 +94,10 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public final class WindowFactory {
-	static {
-		UIManager.put("ProgressBar.selectionForeground", Color.black);
-		UIManager.put("ProgressBar.selectionBackground", Color.black);
-	}
-
 	private static final String CODE_GENERATION_PROBLEM = "Code Generation Problem";
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
 
-	private static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
+	public static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
 			+ "<font size=\"2\">Version: Beta "
 			+ ScriptEase.getInstance().getVersion()
 			+ "<br>Revision: "
@@ -174,6 +179,33 @@ public final class WindowFactory {
 		frame.setVisible(true);
 		frame.setResizable(resizable);
 		frame.setLocationRelativeTo(null);
+	}
+
+	private static boolean errorBoxActivated = false;
+
+	/**
+	 * Shows a user error box. This is different from a ScriptEase error. A user
+	 * error is something that the user tries to perform that is illegal in
+	 * ScriptEase. For example, dragging a effect into a StoryPoint component
+	 * panel.
+	 * 
+	 * @param message
+	 */
+	public void showUserInformationBox(String message, UserInformationType type) {
+		if (!errorBoxActivated) {
+			final UserInformationPane userErrorPane = new UserInformationPane(
+					message, type);
+
+			WindowFactory.getInstance().getCurrentFrame()
+					.setGlassPane(userErrorPane);
+
+			userErrorPane.setOpaque(false);
+			userErrorPane.setVisible(true);
+			errorBoxActivated = true;
+		} else {
+			((UserInformationPane) WindowFactory.getInstance()
+					.getCurrentFrame().getGlassPane()).restart(message, type);
+		}
 	}
 
 	/**
@@ -347,36 +379,50 @@ public final class WindowFactory {
 	}
 
 	public void showCompileProblems(Collection<StoryProblem> storyProblems) {
-		JPanel panel = new JPanel();
+		final JPanel panel = new JPanel();
 
-		// Show only visible problems
-		Collection<StoryProblem> visibleProblems = new ArrayList<StoryProblem>();
+		final Collection<StoryProblem> visibleProblems;
+
+		visibleProblems = new ArrayList<StoryProblem>();
+
 		for (StoryProblem problem : storyProblems) {
+			// Show only visible problems
 			if (problem.shouldNotify())
 				visibleProblems.add(problem);
 		}
 
-		panel.setLayout(new GridLayout(visibleProblems.size() + 2, 1));
-		panel.add(new JLabel(
-				"Problems have been detected. In order to generate code the following problems must be resolved:\n"));
+		final int numberOfProblems = visibleProblems.size();
 
+		panel.setLayout(new GridLayout(numberOfProblems + 2, 1));
+
+		{
+			final String problem;
+			final String has;
+
+			if (numberOfProblems == 1) {
+				problem = " problem ";
+				has = "has ";
+			} else {
+				problem = " problems ";
+				has = "have ";
+			}
+
+			panel.add(new JLabel(numberOfProblems + problem + has
+					+ "been detected. The following" + problem
+					+ "must be resolved to generate code:"));
+		}
+
+		panel.add(new JPanel());
+
+		int problemCount = 1;
 		for (StoryProblem problem : visibleProblems) {
-			final StoryComponent component = problem.getComponent();
-			final String description = problem.getDescription();
+			final String problemText;
+			final String description;
 
-			JPanel problemPanel = new JPanel();
-			// if available, show the panel being changed, otherwise use the
-			// display text
-			StoryComponentPanel componentPanel = StoryComponentPanelFactory
-					.getInstance().buildStoryComponentPanel(component);
-			if (componentPanel != null) {
-				componentPanel.setEnabled(false);
-				problemPanel.add(componentPanel);
-				problemPanel.add(new JLabel(" : " + description));
-			} else
-				problemPanel.add(new JLabel(component.getDisplayText() + " : "
-						+ description));
-			panel.add(problemPanel);
+			problemText = "<html><b>Problem " + problemCount++ + ": </b>";
+			description = StringOp.makeXMLSafe(problem.getDescription());
+
+			panel.add(new JLabel(problemText + description));
 		}
 
 		JOptionPane.showMessageDialog(this.mainFrame, panel,
@@ -739,6 +785,103 @@ public final class WindowFactory {
 	}
 
 	/**
+	 * Creates a dialog that lets the user choose which library they would like
+	 * to merge into the existing one.
+	 * 
+	 * @param translator
+	 */
+	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
+		final String TITLE = "Library to Merge";
+
+		final JDialog dialog;
+
+		final JPanel content;
+		final JLabel message;
+		final JComboBox libraryChoice;
+		final JButton mergeButton;
+		final JButton cancelButton;
+
+		final GroupLayout layout;
+
+		dialog = this.buildDialog(TITLE);
+
+		content = new JPanel();
+		message = new JLabel("Which Library would you like to merge?");
+		libraryChoice = new JComboBox();
+		mergeButton = new JButton("Merge");
+		cancelButton = new JButton("Cancel");
+
+		layout = new GroupLayout(content);
+
+		content.setLayout(layout);
+
+		final SEModel currentLibrary = SEModelManager.getInstance()
+				.getActiveModel();
+
+		if (translator.getLibrary() != currentLibrary)
+			libraryChoice.addItem(translator.getLibrary());
+
+		for (LibraryModel library : translator.getOptionalLibraries()) {
+			if (library != currentLibrary)
+				libraryChoice.addItem(library);
+		}
+
+		mergeButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Object selectedItem = libraryChoice.getSelectedItem();
+
+				if (selectedItem instanceof LibraryModel) {
+					final LibraryModel library = (LibraryModel) selectedItem;
+					MergeLibraryAction.getInstance().mergeLibrary(library);
+				}
+
+				dialog.dispose();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialog.setVisible(false);
+				dialog.dispose();
+			}
+		});
+
+		final JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+
+		layout.setHorizontalGroup(layout
+				.createParallelGroup()
+				.addComponent(message)
+				.addComponent(libraryChoice)
+				.addComponent(separator)
+				.addGroup(
+						GroupLayout.Alignment.TRAILING,
+						layout.createSequentialGroup()
+								.addComponent(mergeButton)
+								.addComponent(cancelButton)));
+
+		layout.setVerticalGroup(layout
+				.createSequentialGroup()
+				.addComponent(message)
+				.addComponent(libraryChoice)
+				.addComponent(separator)
+				.addGroup(
+						layout.createParallelGroup().addComponent(mergeButton)
+								.addComponent(cancelButton)).addGap(0));
+
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		dialog.setContentPane(content);
+		dialog.pack();
+		dialog.setResizable(false);
+		dialog.setLocationRelativeTo(dialog.getParent());
+
+		return dialog;
+	}
+
+	/**
 	 * Opens the Library Model that the user chooses from the libraries in the
 	 * translator.
 	 * 
@@ -797,7 +940,7 @@ public final class WindowFactory {
 					SEModelManager.getInstance().addAndActivate(
 							(LibraryModel) selectedItem);
 					dialog.dispose();
-				}
+				} 
 			}
 		});
 
@@ -844,6 +987,19 @@ public final class WindowFactory {
 	}
 
 	/**
+	 * Opens the Library Model that the user chooses from the libraries in the
+	 * translator.
+	 * 
+	 * @param translator
+	 * @return
+	 */
+	public JDialog buildBehaviourEditor(final Translator translator) {
+		// TODO Might not even need this if we use the library editor.
+
+		return null;
+	}
+
+	/**
 	 * Create a dialog with the provided panel.
 	 * 
 	 * @param title
@@ -872,6 +1028,7 @@ public final class WindowFactory {
 	 */
 	public JDialog buildFeedbackDialog() {
 		final String TITLE = "Send Feedback";
+		final int MAX_ATTACHMENTS = 3;
 		final JDialog feedbackDialog;
 
 		final JPanel content;
@@ -881,7 +1038,8 @@ public final class WindowFactory {
 		final JScrollPane areaScrollPane;
 		final JLabel emailLabel;
 		final JTextField emailField;
-
+		// final JLabel fileLabel;
+		final Map<JTextField, JButton> fileFields;
 		final GroupLayout layout;
 
 		feedbackDialog = this.buildDialog(TITLE);
@@ -891,8 +1049,32 @@ public final class WindowFactory {
 		cancelButton = new JButton("Cancel");
 		commentArea = new JTextArea();
 		areaScrollPane = new JScrollPane(commentArea);
-		emailLabel = new JLabel("Email");
+		emailLabel = new JLabel("Email: ");
 		emailField = new JTextField();
+		// fileLabel = new JLabel("Story Files(Optional): ");
+		fileFields = new HashMap<JTextField, JButton>();
+
+		for (int i = 0; i < MAX_ATTACHMENTS; i++)
+			fileFields.put(new JTextField(), new JButton("Browse"));
+
+		for (final Entry<JTextField, JButton> fileField : fileFields.entrySet()) {
+			JButton browseButton = fileField.getValue();
+
+			browseButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					final File filePath;
+
+					filePath = WindowFactory.getInstance().showFileChooser(
+							"Select", "",
+							new FileNameExtensionFilter("ses", "ses"));
+
+					if (filePath != null)
+						fileField.getKey().setText(filePath.getAbsolutePath());
+				}
+			});
+		}
 
 		commentArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		commentArea.setLineWrap(true);
@@ -900,7 +1082,7 @@ public final class WindowFactory {
 
 		areaScrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		areaScrollPane.setPreferredSize(new Dimension(250, 250));
+		areaScrollPane.setPreferredSize(new Dimension(350, 350));
 		areaScrollPane.setBorder(BorderFactory.createTitledBorder("Feedback"));
 
 		layout = new GroupLayout(content);
@@ -916,16 +1098,6 @@ public final class WindowFactory {
 					e.consume();
 					// \(^o^)/ nom nom nom
 				}
-			}
-		});
-
-		emailField.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				NetworkHandler.getInstance().sendFeedback(
-						commentArea.getText(), emailField.getText());
-				feedbackDialog.setVisible(false);
-				feedbackDialog.dispose();
 			}
 		});
 
@@ -947,27 +1119,50 @@ public final class WindowFactory {
 			}
 		});
 
-		layout.setHorizontalGroup(layout
+		ParallelGroup parallelGroup;
+		SequentialGroup sequentialGroup;
+
+		parallelGroup = layout
 				.createParallelGroup()
 				.addComponent(areaScrollPane)
 				.addGroup(
 						GroupLayout.Alignment.CENTER,
 						layout.createSequentialGroup().addComponent(emailLabel)
-								.addComponent(emailField))
-				.addGroup(
-						GroupLayout.Alignment.TRAILING,
-						layout.createSequentialGroup().addComponent(sendButton)
-								.addComponent(cancelButton)));
-
-		layout.setVerticalGroup(layout
+								.addComponent(emailField));
+		sequentialGroup = layout
 				.createSequentialGroup()
 				.addComponent(areaScrollPane)
 				.addGroup(
 						layout.createParallelGroup().addComponent(emailLabel)
-								.addComponent(emailField))
-				.addGroup(
-						layout.createParallelGroup().addComponent(sendButton)
-								.addComponent(cancelButton)));
+								.addComponent(emailField)).addGap(5);
+
+		/**
+		 * TODO: Uncomment once I get back to ticket 55016874
+		 */
+		// for (final Entry<JTextField, JButton> fileField :
+		// fileFields.entrySet()) {
+		// final JTextField field = fileField.getKey();
+		// final JButton button = fileField.getValue();
+		//
+		// parallelGroup = parallelGroup.addGroup(
+		// GroupLayout.Alignment.LEADING, layout
+		// .createSequentialGroup().addComponent(fileLabel)
+		// .addComponent(field).addComponent(button));
+		//
+		// sequentialGroup = sequentialGroup.addGroup(layout
+		// .createParallelGroup().addComponent(fileLabel)
+		// .addComponent(field).addComponent(button));
+		// }
+
+		parallelGroup = parallelGroup.addGroup(GroupLayout.Alignment.TRAILING,
+				layout.createSequentialGroup().addComponent(sendButton)
+						.addComponent(cancelButton));
+		sequentialGroup = sequentialGroup.addGap(10).addGroup(
+				layout.createParallelGroup().addComponent(sendButton)
+						.addComponent(cancelButton));
+
+		layout.setHorizontalGroup(parallelGroup);
+		layout.setVerticalGroup(sequentialGroup);
 
 		feedbackDialog.setContentPane(content);
 		feedbackDialog.pack();
@@ -1104,6 +1299,7 @@ public final class WindowFactory {
 		middlePane = new JPanel();
 
 		middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		middleSplit.setDividerLocation(320);
 		librarySplit = PanelFactory.getInstance().buildLibrarySplitPane();
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();
@@ -1136,7 +1332,8 @@ public final class WindowFactory {
 				activated = eventType == SEModelEvent.Type.ACTIVATED;
 
 				if (activated
-						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)) {
+						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)
+						|| (eventType == SEModelEvent.Type.TITLECHANGED)) {
 
 					final JMenuBar bar;
 
@@ -1147,8 +1344,19 @@ public final class WindowFactory {
 					String newTitle = "";
 					if (activeModel != null) {
 						String modelTitle = activeModel.getTitle();
-						if (!modelTitle.isEmpty())
-							newTitle += modelTitle + " - ";
+						String moduleTitle = "";
+
+						if (activeModel instanceof StoryModel) {
+							final StoryModel story = (StoryModel) activeModel;
+							moduleTitle = story.getModule().getLocation()
+									.getName();
+							if (!modelTitle.isEmpty() && !moduleTitle.isEmpty())
+								newTitle += modelTitle + " [" + moduleTitle
+										+ " ] - ";
+						} else {
+							if (!modelTitle.isEmpty())
+								newTitle += modelTitle + " - ";
+						}
 					}
 					newTitle += ScriptEase.TITLE + " "
 							+ ScriptEase.getInstance().getVersion();
@@ -1171,7 +1379,6 @@ public final class WindowFactory {
 				});
 
 		WidgetDecorator.setSimpleDivider(middleSplit);
-		middleSplit.setBorder(null);
 
 		frame.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -1181,9 +1388,9 @@ public final class WindowFactory {
 
 		content.setLayout(contentLayout);
 
-		// Compressed Layout
 		middleSplit.setTopComponent(librarySplit);
 		middleSplit.setBottomComponent(middlePane);
+		middleSplit.setBorder(BorderFactory.createEmptyBorder());
 
 		content.add(middleSplit);
 		content.add(statusBar);
@@ -1202,6 +1409,8 @@ public final class WindowFactory {
 		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
 
 		frame.getContentPane().add(content);
+
+		middlePane.setBackground(ScriptEaseUI.SECONDARY_UI);
 
 		SwingUtilities.invokeLater(yetAnotherSwingHack);
 

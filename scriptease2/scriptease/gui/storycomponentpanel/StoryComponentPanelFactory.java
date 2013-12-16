@@ -2,6 +2,7 @@ package scriptease.gui.storycomponentpanel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,12 +10,15 @@ import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
+import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.pane.DescribeItPanel;
@@ -31,8 +35,15 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 
@@ -154,6 +165,32 @@ public class StoryComponentPanelFactory {
 	}
 
 	/**
+	 * Reconstructs the StoryComponentPanel display names
+	 * 
+	 * @param panel
+	 */
+	public void rebuildDisplayName(StoryComponentPanel panel) {
+		final JPanel mainPanel = panel.getLayout().getMainPanel();
+		final Component[] children = mainPanel.getComponents();
+
+		// Remove all existing display names
+		for (Component child : children) {
+			if (child instanceof JLabel) {
+				final JLabel label = (JLabel) child;
+
+				// Terrible way to identify display names but it's the only way
+				// to distinguish them from other JLabels right now
+				if (label.getForeground() == Color.BLACK) {
+					mainPanel.remove(child);
+				}
+			}
+		}
+
+		mainPanel.add(ScriptWidgetFactory.buildLabel(panel.getStoryComponent()
+				.getDisplayText(), Color.BLACK), 0);
+	}
+
+	/**
 	 * Reconstruct the StoryComponentPanel with the given child added
 	 * 
 	 * @param panel
@@ -178,10 +215,7 @@ public class StoryComponentPanelFactory {
 						index);
 
 				// Update the settings of the child panel to match the parents
-				StoryComponentPanelTree parentTree = panel.getParentTree();
-				if (parentTree != null) {
-					childPanel.updateComplexSettings();
-				}
+				childPanel.updateComplexSettings();
 
 				boolean select = false;
 				// if the parent is selected, select the child as well
@@ -425,16 +459,78 @@ public class StoryComponentPanelFactory {
 			}
 
 			@Override
+			public void processBehaviour(final Behaviour behaviour) {
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
+				parseDisplayText(mainPanel, behaviour, true);
+
+				// Add a modification button
+				final JButton modificationButton;
+				mainPanel.add(Box.createHorizontalStrut(3));
+				modificationButton = ComponentFactory.buildEditButton();
+				mainPanel.add(modificationButton);
+
+				// Add a listener for the modification button
+				modificationButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						final SEModel model = SEModelManager.getInstance()
+								.getActiveModel();
+
+						if (model instanceof StoryModel) {
+							final StoryModel storyModel = (StoryModel) model;
+
+							storyModel.notifyBehaviourEdited(behaviour);
+						}
+					}
+				});
+
+				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+			}
+		
+			@Override
+			public void processPickIt(final PickIt pickIt) {
+				final JPanel mainPanel;
+				mainPanel = new JPanel();
+
+				parseDisplayText(mainPanel, pickIt, true);
+
+				// Add a addition button
+				final JButton additionButton;
+				mainPanel.add(Box.createHorizontalStrut(3));
+				additionButton = ComponentFactory.buildAddButton();
+				mainPanel.add(additionButton);
+
+				// Add a listener for the modification button
+				additionButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						pickIt.addChoice(50);
+					}
+				});
+
+				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+
+				// Add the children panels
+				addChildrenPanels(pickIt, panel);
+			}
+
+			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
 				// Add an expansion button
-
-				if (complex instanceof ScriptIt) {
-					if (complex instanceof CauseIt
-							|| complex instanceof ControlIt) {
-						addExpansionButton(complex, panel);
-					}
-				} else
+				if (!(complex instanceof ScriptIt)
+						|| complex instanceof CauseIt
+						|| complex instanceof ControlIt
+						|| complex instanceof ActivityIt)
 					addExpansionButton(complex, panel);
+
+				// Add probability box if it is a children of PickIt
+				if (complex.getOwner() instanceof PickIt) {
+					addProbabilityBox(complex, panel);
+				}
 
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
@@ -443,6 +539,13 @@ public class StoryComponentPanelFactory {
 
 				// Add a label for the complex story component
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
+
+				// Add a minus button if it is a children of PickIt
+				if (complex.getOwner() instanceof PickIt
+						&& !complex.getDisplayText().equals(PickIt.CHOICE_ONE)
+						&& !complex.getDisplayText().equals(PickIt.CHOICE_TWO)) {
+					addRemoveButton(complex, mainPanel);
+				}
 
 				// Add the children panels
 				addChildrenPanels(complex, panel);
@@ -484,8 +587,8 @@ public class StoryComponentPanelFactory {
 														ScriptWidgetFactory.LABEL_TEXT_COLOUR,
 														bgColor);
 										mainPanel.add(label, 0);
-										mainPanel.add(Box
-												.createHorizontalStrut(5), 1);
+										mainPanel.add(
+												Box.createHorizontalStrut(5), 1);
 									}
 								}
 
@@ -574,10 +677,73 @@ public class StoryComponentPanelFactory {
 
 					panel.setExpansionButton(expansionButton);
 					panel.add(expansionButton,
-							StoryComponentPanelLayoutManager.BUTTON);
+							StoryComponentPanelLayoutManager.EXPANSION_BUTTON);
 				}
 			}
 
+			private void addRemoveButton(final ComplexStoryComponent complex,
+					final JPanel panel) {
+				if (!(complex.getOwner() instanceof PickIt)
+						&& !(complex instanceof StoryComponentContainer))
+					return;
+
+				final PickIt owner = (PickIt) complex.getOwner();
+
+				final JButton removeButton;
+
+				removeButton = ComponentFactory.buildRemoveButton();
+
+				removeButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						owner.removeChoice((StoryComponentContainer) complex);
+					}
+				});
+
+				panel.add(Box.createHorizontalStrut(2));
+				panel.add(removeButton);
+			}
+
+			private void addProbabilityBox(final ComplexStoryComponent complex,
+					final StoryComponentPanel panel) {
+				if (!(complex.getOwner() instanceof PickIt)
+						&& !(complex instanceof StoryComponentContainer))
+					return;
+
+				final PickIt owner = (PickIt) complex.getOwner();
+
+				final JTextField probabilityField;
+
+				probabilityField = ComponentFactory.buildNumberTextField();
+
+				probabilityField.setMaximumSize(new Dimension(5, 20));
+				probabilityField.setMinimumSize(new Dimension(5, 20));
+				probabilityField.setPreferredSize(new Dimension(5, 20));
+
+				probabilityField.setText(Integer.toString(owner.getChoices()
+						.get(complex)));
+
+				probabilityField.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						final String text = probabilityField.getText();
+
+						if (text == null || text.equals("")) {
+							owner.getChoices().put(
+									(StoryComponentContainer) complex, 0);
+						} else {
+							owner.getChoices().put(
+									(StoryComponentContainer) complex,
+									Integer.parseInt(text));
+						}
+					}
+				});
+
+				panel.add(probabilityField,
+						StoryComponentPanelLayoutManager.TEXTFIELD);
+			}
 		};
 	}
 }
