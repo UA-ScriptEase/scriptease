@@ -115,7 +115,6 @@ public class LibraryEditorPanelFactory {
 		codeBlockPanel = new CodeBlockPanel(activityIt.getMainCodeBlock(),
 				activityIt, true);
 
-		activityPanel.add(this.buildDescriptorPanel(activityIt));
 		activityPanel.add(codeBlockPanel);
 		activityPanel.add(this.buildActivityItImplicitPanel(activityIt));
 		activityPanel.add(new StoryComponentPanelTree(transferPanel));
