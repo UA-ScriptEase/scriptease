@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
+import scriptease.model.semodel.SEModelManager;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * Handles all graph grouping functionalities. A graph group represents a set of
@@ -170,7 +174,6 @@ public class GraphGroupController<E> {
 	 * 
 	 * @param ungroup
 	 */
-	@SuppressWarnings("unchecked")
 	public void formGroup() {
 
 		if (!UndoManager.getInstance().hasOpenUndoableAction())
@@ -194,13 +197,35 @@ public class GraphGroupController<E> {
 
 		final StoryNode startNode = (StoryNode) this.startNode;
 
-		final StoryGroup newGroup = new StoryGroup(null,
-				(Set<StoryNode>) this.group, startNode, exitNode, true);
+		// Order the group first (not doing so seems to cause issues with xml
+		// saving order).
+		final List<StoryNode> groupToForm = new IdentityArrayList<StoryNode>();
+
+		SEModelManager.getInstance().getActiveRoot()
+				.process(new StoryAdapter() {
+					@Override
+					public void processStoryNode(StoryNode storyNode) {
+						if (group.contains(storyNode)
+								&& !groupToForm.contains(storyNode)) {
+							groupToForm.add(storyNode);
+						}
+
+						for (StoryNode successor : storyNode.getSuccessors()) {
+							if (!groupToForm.contains(successor))
+								successor.process(this);
+						}
+					}
+				});
+
+		final StoryGroup newGroup = new StoryGroup(null, groupToForm,
+				startNode, exitNode, true);
 
 		// Connect the children of the exit node to the new group node and
 		// remove the child from the exit node.
 		final Collection<StoryNode> children = new ArrayList<StoryNode>();
+
 		children.addAll(exitNode.getSuccessors());
+
 		if (exitNode != null) {
 			for (StoryNode child : children) {
 				if (!this.group.contains(child)) {
@@ -213,7 +238,9 @@ public class GraphGroupController<E> {
 		// Connect the parents of the start node to the new group node. and
 		// remove this parent from the start node.
 		final Collection<StoryNode> parents = new ArrayList<StoryNode>();
+
 		parents.addAll(startNode.getParents());
+
 		for (StoryNode parent : parents) {
 			parent.addSuccessor(newGroup);
 			parent.removeSuccessor(startNode);
