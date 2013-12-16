@@ -32,9 +32,9 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
@@ -72,6 +72,18 @@ public class LibraryEditorPanel extends JPanel {
 							LibraryEditorPanel.this.revalidate();
 						} else {
 							component.process(panelBuilder);
+							component
+									.addStoryComponentObserver(new StoryComponentObserver() {
+
+										@Override
+										public void componentChanged(
+												StoryComponentEvent event) {
+											if (event.getType() == StoryComponentEvent.StoryComponentChangeEnum.CHANGE_REMOVED) {
+												LibraryEditorPanel.this
+														.removeAll();
+											}
+										}
+									});
 						}
 					}
 				});
@@ -168,24 +180,31 @@ public class LibraryEditorPanel extends JPanel {
 
 			@Override
 			public void processActivityIt(ActivityIt activityIt) {
-				LibraryEditorPanel.this.removeAll();
+				final JPanel panel;
 
-				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
-						.getInstance().buildActivityItEditingPanel(activityIt));
+				panel = LibraryEditorPanelFactory.getInstance()
+						.buildActivityItEditingPanel(activityIt);
 
-				LibraryEditorPanel.this.repaint();
-				LibraryEditorPanel.this.revalidate();
+				this.defaultProcess(activityIt);
+				this.pane.add(panel);
+
+				this.pane.repaint();
+				this.pane.revalidate();
 			}
 
 			@Override
 			public void processBehaviour(Behaviour behaviour) {
-				LibraryEditorPanel.this.removeAll();
+				final JPanel panel;
 
-				LibraryEditorPanel.this.add(LibraryEditorPanelFactory
-						.getInstance().buildBehaviourEditingPanel(behaviour));
+				panel = LibraryEditorPanelFactory.getInstance()
+						.buildBehaviourEditingPanel(behaviour);
 
-				LibraryEditorPanel.this.repaint();
-				LibraryEditorPanel.this.revalidate();
+				this.pane.removeAll();
+				this.pane.add(panel);
+				this.pane.repaint();
+				this.pane.revalidate();
+				// Should we add default process? I'm not realy sure how
+				// behaviours are generated.
 			}
 
 			/**
@@ -319,11 +338,13 @@ public class LibraryEditorPanel extends JPanel {
 
 			@Override
 			public void defaultProcess(StoryComponent component) {
+				final JPanel descriptorPanel;
+
+				descriptorPanel = LibraryEditorPanelFactory.getInstance()
+						.buildDescriptorPanel(component);
+
 				this.pane.removeAll();
-
-				this.pane.add(LibraryEditorPanelFactory.getInstance()
-						.buildDescriptorPanel(component));
-
+				this.pane.add(descriptorPanel);
 				this.pane.revalidate();
 			}
 		};
