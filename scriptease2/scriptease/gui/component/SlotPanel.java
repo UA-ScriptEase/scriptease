@@ -185,7 +185,7 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 					if (library == null)
 						widgetName = null;
 					else
-						widgetName = library.getTypeGUI(bindingType);
+						widgetName = library.getType(bindingType).getGui();
 
 					if (widgetName == null)
 						bindingWidget.add(ScriptWidgetFactory.buildLabel(name,

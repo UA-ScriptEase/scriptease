@@ -748,14 +748,14 @@ public class CodeBlockPanel extends JPanel {
 
 		final Collection<String> slots;
 
-		slots = model.getTypeSlots(subject.getDefaultType());
+		slots = model.getType(subject.getDefaultType()).getSlots();
 
 		for (String type : subject.getTypes()) {
 			final Collection<String> otherSlots;
 
 			otherSlots = new ArrayList<String>();
 
-			for (String slot : model.getTypeSlots(type)) {
+			for (String slot : model.getType(type).getSlots()) {
 				if (slots.contains(slot))
 					otherSlots.add(slot);
 			}

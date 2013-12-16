@@ -21,7 +21,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class GameType {
 	public static final String DEFAULT_UNKNOWN_TYPE = "unknown";
-	
+
 	public static final String DEFAULT_VOID_TYPE = "void";
 	public static final String DEFAULT_BOOL_TYPE = "question";
 	public static final String DEFAULT_LIST_WIDGET = "Li";
@@ -189,8 +189,11 @@ public class GameType {
 	}
 
 	/**
-	 * Returns a copy of the GameType's enumerations where key=NAME and
-	 * value=VALUE
+	 * Returns the enumerated values of a type known by the model. <br>
+	 * <br>
+	 * An example of these would be if a translator gives special names to
+	 * booleans to make more sense to the user. So the enumerated map would look
+	 * like <code>{ (Active, true), (Inactive, false) }</code>
 	 * 
 	 * @return
 	 */
@@ -226,6 +229,12 @@ public class GameType {
 		return this.regEx;
 	}
 
+	/**
+	 * Returns the name of the widget that should be displayed in the
+	 * {@link TypeWidget} associated with a type known by the model.
+	 * 
+	 * @return
+	 */
 	public String getWidgetName() {
 		return this.widgetName;
 	}
@@ -253,11 +262,10 @@ public class GameType {
 	}
 
 	/**
-	 * Gets the GUI widget used to edit a binding of this type. Can be
-	 * <code>null</code>.
+	 * Returns the GUI widget that is to edit a type known by the model.
 	 * 
-	 * @return GUI widget used to edit a binding of this type. Can be
-	 *         <code>null</code>.
+	 * @return the GUI widget that will edit a component of this type, or
+	 *         <code>null</code> if there is no widget specified.
 	 */
 	public GUIType getGui() {
 		return this.guiEditorName;
@@ -277,8 +285,8 @@ public class GameType {
 	}
 
 	/**
-	 * returns a copy of the map of (key) characters which need to be escaped
-	 * and their escape characters (values)
+	 * Returns a copy of the map of (key) characters which need to be escaped
+	 * and their escape characters (values).
 	 * 
 	 * @return
 	 */

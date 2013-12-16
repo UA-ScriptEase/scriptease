@@ -125,11 +125,11 @@ public class ParameterPanel extends JPanel {
 				true);
 
 		for (String type : types)
-			defaultTypeBox.addItem(library.getTypeDisplayText(type) + " - "
-					+ type);
+			defaultTypeBox.addItem(library.getType(type).getDisplayName()
+					+ " - " + type);
 
-		defaultTypeBox.setSelectedItem(library.getTypeDisplayText(knowIt
-				.getDefaultType()));
+		defaultTypeBox.setSelectedItem(library.getType(knowIt.getDefaultType())
+				.getDisplayName());
 
 		updateBindingConstantComponent(bindingConstantComponent);
 
@@ -145,8 +145,9 @@ public class ParameterPanel extends JPanel {
 				defaultTypeBox.removeAllItems();
 
 				for (String type : knowIt.getTypes()) {
-					defaultTypeBox.addItem(scriptIt.getLibrary()
-							.getTypeDisplayText(type) + " - " + type);
+					defaultTypeBox.addItem(scriptIt.getLibrary().getType(type)
+							.getDisplayName()
+							+ " - " + type);
 				}
 
 				defaultTypeBox.setSelectedItem(initialDefaultType);
@@ -314,7 +315,7 @@ public class ParameterPanel extends JPanel {
 		library = (LibraryModel) activeModel;
 
 		defaultType = this.knowIt.getDefaultType();
-		defaultTypeGuiType = library.getTypeGUI(defaultType);
+		defaultTypeGuiType = library.getType(defaultType).getGui();
 
 		inactiveTextField = new JTextField(" Cannot set binding for ["
 				+ defaultType + "]");
@@ -401,7 +402,7 @@ public class ParameterPanel extends JPanel {
 				final Map<String, String> map;
 				final JComboBox bindingBox;
 
-				map = library.getTypeEnumeratedValues(defaultType);
+				map = library.getType(defaultType).getEnumMap();
 				bindingBox = new JComboBox();
 
 				bindingBox.addItem(null);

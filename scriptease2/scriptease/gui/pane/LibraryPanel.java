@@ -431,18 +431,16 @@ public class LibraryPanel extends JTabbedPane {
 					final LibraryModel k1Library = k1.getLibrary();
 					final LibraryModel k2Library = k2.getLibrary();
 
-					String k1Widget = k1Library.getTypeWidgetName(k1Type);
-					String k2Widget = k2Library.getTypeWidgetName(k2Type);
+					String k1Widget = k1Library.getType(k1Type).getWidgetName();
+					String k2Widget = k2Library.getType(k2Type).getWidgetName();
 
 					if (k1Widget == null || k1Widget.isEmpty()) {
-						if (!k1Library.getTypeEnumeratedValues(k1Type)
-								.isEmpty()) {
+						if (!k1Library.getType(k1Type).getEnumMap().isEmpty()) {
 							k1Widget = GameType.DEFAULT_LIST_WIDGET;
 						}
 					}
 					if (k2Widget == null || k2Widget.isEmpty()) {
-						if (!k2Library.getTypeEnumeratedValues(k2Type)
-								.isEmpty()) {
+						if (!k2Library.getType(k2Type).getEnumMap().isEmpty()) {
 							k2Widget = GameType.DEFAULT_LIST_WIDGET;
 						}
 					}

@@ -3,7 +3,6 @@ package scriptease.model.semodel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -36,7 +35,6 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType;
-import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
 import scriptease.util.StringOp;
@@ -162,7 +160,7 @@ public final class StoryModel extends SEModel {
 			observer.behaviourEdited(behaviour);
 		}
 	}
-	
+
 	/**
 	 * Sets the root of the model to the passed in {@link StoryPoint}. This is a
 	 * simple setter method that does not fire off any observers.
@@ -584,121 +582,6 @@ public final class StoryModel extends SEModel {
 		SEModelManager.getInstance().getActiveRoot().process(adapter);
 
 		return resources;
-	}
-
-	@Override
-	public String getTypeRegex(String keyword) {
-		String typeRegex = "";
-
-		for (LibraryModel library : this.getLibraries()) {
-			typeRegex = library.getTypeRegex(keyword);
-
-			if (StringOp.exists(typeRegex))
-				break;
-		}
-
-		return typeRegex;
-	}
-
-	@Override
-	public Map<String, String> getTypeEnumeratedValues(String keyword) {
-		final Map<String, String> enums = new HashMap<String, String>();
-
-		for (LibraryModel library : this.getLibraries()) {
-			enums.putAll(library.getTypeEnumeratedValues(keyword));
-
-			if (!enums.isEmpty())
-				break;
-		}
-
-		return enums;
-	}
-
-	@Override
-	public String getTypeDisplayText(String keyword) {
-		String displayText = "";
-
-		for (LibraryModel library : this.getLibraries()) {
-			displayText = library.getTypeDisplayText(keyword);
-
-			if (StringOp.exists(displayText))
-				break;
-		}
-
-		return displayText;
-	}
-
-	@Override
-	public Collection<String> getTypeSlots(String keyword) {
-		final Collection<String> slots;
-
-		slots = new ArrayList<String>();
-
-		for (LibraryModel library : this.getLibraries()) {
-			slots.addAll(library.getTypeSlots(keyword));
-
-			if (!slots.isEmpty())
-				break;
-		}
-
-		return slots;
-	}
-
-	@Override
-	public String getTypeCodeSymbol(String keyword) {
-		String codeSymbol = "";
-
-		for (LibraryModel library : this.getLibraries()) {
-			codeSymbol = library.getTypeCodeSymbol(keyword);
-
-			if (StringOp.exists(codeSymbol))
-				break;
-		}
-
-		return codeSymbol;
-	}
-
-	@Override
-	public Map<String, String> getTypeEscapes(String keyword) {
-		final Map<String, String> escapes = new HashMap<String, String>();
-
-		for (LibraryModel library : this.getLibraries()) {
-			escapes.putAll(library.getTypeEscapes(keyword));
-
-			if (!escapes.isEmpty())
-				break;
-
-		}
-
-		return escapes;
-	}
-
-	@Override
-	public GUIType getTypeGUI(String keyword) {
-		GUIType gui = null;
-
-		for (LibraryModel library : this.getLibraries()) {
-			gui = library.getTypeGUI(keyword);
-
-			if (gui != null)
-				break;
-		}
-
-		return gui;
-	}
-
-	@Override
-	public String getTypeWidgetName(String keyword) {
-		String widgetName = "";
-
-		for (LibraryModel library : this.getLibraries()) {
-			widgetName = library.getTypeWidgetName(keyword);
-
-			if (StringOp.exists(widgetName))
-				break;
-		}
-
-		return widgetName;
 	}
 
 	@Override

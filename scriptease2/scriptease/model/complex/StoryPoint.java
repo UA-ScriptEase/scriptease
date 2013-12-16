@@ -153,9 +153,14 @@ public class StoryPoint extends StoryNode {
 
 		String name = nameTag + this.getUniqueID();
 		// Handle Legal Values the type can take
-		final String regex = SEModelManager.getInstance().getActiveModel()
-				.getTypeRegex(StoryPoint.STORY_POINT_TYPE);
-		final Pattern regexPattern = Pattern.compile(regex);
+		final String regex;
+		final Pattern regexPattern;
+
+		regex = SEModelManager.getInstance().getActiveModel()
+				.getType(StoryPoint.STORY_POINT_TYPE).getReg();
+
+		regexPattern = Pattern.compile(regex);
+
 		name = StringOp.removeIllegalCharacters(name, regexPattern, false);
 
 		return name;

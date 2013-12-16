@@ -564,7 +564,7 @@ public class ScriptWidgetFactory {
 
 		final String scriptValue;
 
-		enumMap = knowIt.getLibrary().getTypeEnumeratedValues(bindingType);
+		enumMap = knowIt.getLibrary().getType(bindingType).getEnumMap();
 		list = new ArrayList<String>(enumMap.values());
 		Collections.sort(list);
 

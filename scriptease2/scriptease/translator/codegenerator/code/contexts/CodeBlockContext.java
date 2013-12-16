@@ -68,7 +68,7 @@ public class CodeBlockContext extends Context {
 		// Grab the first type of the first codeBlock - Assumes they will all
 		// have matching codeSymbols
 		for (String type : this.codeBlock.getTypes())
-			return this.getModel().getTypeCodeSymbol(type);
+			return this.getModel().getType(type).getCodeSymbol();
 
 		throw new NoSuchElementException("Error: No type found for CodeBlock "
 				+ this.codeBlock);
@@ -162,7 +162,7 @@ public class CodeBlockContext extends Context {
 
 		return AbstractFragment.resolveFormat(codeFragments, this);
 	}
-	
+
 	@Override
 	public Set<String> getIncludeFiles() {
 		return this.getIncludeFiles();

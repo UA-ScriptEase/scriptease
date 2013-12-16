@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import scriptease.controller.FragmentAdapter;
 import scriptease.controller.BindingAdapter;
+import scriptease.controller.FragmentAdapter;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
@@ -29,6 +29,7 @@ import scriptease.translator.codegenerator.code.fragments.container.IndentFragme
 import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
 import scriptease.translator.codegenerator.code.fragments.container.ScopeFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
+import scriptease.translator.io.model.GameType;
 
 /**
  * Accepts StoryComponents if one of their properties contains the text given in
@@ -169,14 +170,15 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 
 			model = SEModelManager.getInstance().getActiveModel();
 
-			for (final String type : types) {
-				this.searchData.add(type);
-				this.searchData.add(model.getTypeDisplayText(type));
-				this.searchData.add(model.getTypeCodeSymbol(type));
-				this.searchData.add(model.getTypeWidgetName(type));
+			for (final String typeName : types) {
+				final GameType type = model.getType(typeName);
 
-				final Map<String, String> enums = model
-						.getTypeEnumeratedValues(type);
+				this.searchData.add(type.getDisplayName());
+				this.searchData.add(type.getKeyword());
+				this.searchData.add(type.getCodeSymbol());
+				this.searchData.add(type.getWidgetName());
+
+				final Map<String, String> enums = type.getEnumMap();
 
 				this.searchData.addAll(enums.values());
 				this.searchData.addAll(enums.keySet());
@@ -250,7 +252,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 				child.process(this);
 			}
 		}
-		
+
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
 			defaultProcess(scriptIt);
@@ -261,7 +263,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 					this.searchData.add(binding.getScriptValue());
 				parameter.process(this);
 			}
-			
+
 			for (KnowIt implicit : scriptIt.getImplicits()) {
 				implicit.process(this);
 			}
