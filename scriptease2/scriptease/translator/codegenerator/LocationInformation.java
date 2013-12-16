@@ -2,6 +2,7 @@ package scriptease.translator.codegenerator;
 
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 
@@ -40,6 +41,11 @@ public class LocationInformation {
 		final Object subject;
 
 		slot = codeBlock.getSlot();
+		
+		if (codeBlock.getSubject().getBinding() instanceof KnowItBindingNull) {
+			return false;
+		}
+		
 		subject = codeBlock.getSubject().getBinding().getValue();
 
 		return this.slot.equals(slot) && this.subject.equals(subject);

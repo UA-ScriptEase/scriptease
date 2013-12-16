@@ -261,7 +261,8 @@ public abstract class StoryComponent implements Cloneable {
 
 		if (!enable && !this.getLabels().contains(StoryComponent.DISABLE_TEXT))
 			this.addLabel(StoryComponent.DISABLE_TEXT);
-		else if (enable && this.getLabels().contains(StoryComponent.DISABLE_TEXT))
+		else if (enable
+				&& this.getLabels().contains(StoryComponent.DISABLE_TEXT))
 			this.removeLabel(StoryComponent.DISABLE_TEXT);
 
 		this.notifyObservers(new StoryComponentEvent(this,
@@ -282,6 +283,23 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public final void addStoryComponentObserver(StoryComponentObserver observer) {
 		this.observerManager.addObserver(this, observer);
+	}
+
+	/**
+	 * Registers an instance of <code>StoryComponentObserver</code> as an
+	 * observer of this <code>StoryComponent</code>. The given observer will be
+	 * notified of changes made to this <code>StoryComponent</code>'s
+	 * properties.<br>
+	 * <br>
+	 * This observer will only remain active for the lifetime of the reference
+	 * object.
+	 * 
+	 * @param observer
+	 *            The observer who will be notified of changes
+	 */
+	public final void addStoryComponentObserver(Object reference,
+			StoryComponentObserver observer) {
+		this.observerManager.addObserver(reference, observer);
 	}
 
 	/**

@@ -3,24 +3,42 @@ package scriptease.gui.component;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.View;
 
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.GUIOp;
+import scriptease.util.StringOp;
+import sun.swing.SwingUtilities2;
 
 /**
  * For creation of specialized JComponents. If we're just adding properties to a
@@ -256,6 +274,8 @@ public final class ComponentFactory {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
+				final Color borderColor;
+
 				if (this.drawLabel) {
 					final int x;
 					final int y;
@@ -265,9 +285,331 @@ public final class ComponentFactory {
 
 					g.drawImage(background, x, y, this);
 				}
+
+				if (this.isEnabled()) {
+					borderColor = ScriptEaseUI.SE_BLACK;
+				} else {
+					borderColor = Color.LIGHT_GRAY;
+				}
+
+				this.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+
 			}
 		};
 
 		return field;
+	}
+
+	private enum ButtonState {
+		NEUTRAL, CLICK, HOVER, TOGGLED
+	}
+
+	public static JButton buildFlatButton(Action action) {
+		return ComponentFactory.buildFlatButton(action, ScriptEaseUI.SE_BLACK);
+	}
+
+	public static JButton buildFlatButton(Color color) {
+		return ComponentFactory.buildFlatButton(null, color);
+	}
+
+	public static JButton buildFlatButton(Color color, String text) {
+		return ComponentFactory.buildFlatButton(null, text, color);
+	}
+
+	public static JButton buildFlatButton(Action action, Color color) {
+		return ComponentFactory.buildFlatButton(action, null, color);
+	}
+
+	@SuppressWarnings("serial")
+	public static JButton buildFlatButton(Action action, String text,
+			final Color color) {
+		final JButton button = new JButton() {
+			private ButtonState state;
+			private ButtonState previousState;
+
+			{
+				this.state = ButtonState.NEUTRAL;
+
+				this.addMouseListener(new MouseAdapter() {
+					public void mouseEntered(MouseEvent e) {
+						if (state == ButtonState.NEUTRAL)
+							changeState(ButtonState.HOVER);
+					};
+
+					public void mouseExited(MouseEvent e) {
+						if (state == ButtonState.HOVER)
+							changeState(ButtonState.NEUTRAL);
+					};
+
+					public void mousePressed(MouseEvent e) {
+						changeState(ButtonState.CLICK);
+
+					};
+
+					public void mouseReleased(MouseEvent e) {
+						if (previousState == ButtonState.HOVER)
+							changeState(ButtonState.HOVER);
+						else
+							changeState(ButtonState.NEUTRAL);
+					};
+				});
+			}
+
+			private void changeState(ButtonState state) {
+				this.previousState = this.state;
+				this.state = state;
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				final Color fillColor;
+
+				if (this.isEnabled())
+					switch (this.state) {
+					case CLICK:
+						fillColor = GUIOp.scaleWhite(color, 1.8);
+						break;
+					case HOVER:
+						fillColor = GUIOp.scaleWhite(color, 1.6);
+						break;
+					default:
+						fillColor = color;
+						break;
+					}
+				else
+					fillColor = Color.LIGHT_GRAY;
+
+				g.setColor(fillColor);
+				g.fillRect(0, 0, getSize().width, getSize().height);
+
+				super.paintComponent(g);
+			}
+		};
+
+		button.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		button.setForeground(Color.white);
+
+		button.setContentAreaFilled(false);
+
+		if (action != null)
+			button.setAction(action);
+
+		if (StringOp.exists(text))
+			button.setText(text);
+
+		return button;
+	}
+
+	@SuppressWarnings("serial")
+	public static JToggleButton buildFlatToggleButton(final Color color) {
+		final JToggleButton button = new JToggleButton() {
+			private ButtonState state;
+			private ButtonState previousState;
+
+			{
+				this.state = ButtonState.NEUTRAL;
+
+				this.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent ev) {
+						if (ev.getStateChange() == ItemEvent.SELECTED) {
+							changeState(ButtonState.TOGGLED);
+						} else if (ev.getStateChange() == ItemEvent.DESELECTED) {
+							changeState(ButtonState.NEUTRAL);
+
+						}
+					}
+				});
+
+				this.addMouseListener(new MouseAdapter() {
+					public void mouseEntered(MouseEvent e) {
+						if (state == ButtonState.NEUTRAL)
+							changeState(ButtonState.HOVER);
+					};
+
+					public void mouseExited(MouseEvent e) {
+						if (state == ButtonState.HOVER)
+							changeState(previousState);
+					};
+
+					public void mousePressed(MouseEvent e) {
+						changeState(ButtonState.CLICK);
+					};
+
+					public void mouseReleased(MouseEvent e) {
+						if (state == ButtonState.CLICK) {
+							if (isSelected())
+								changeState(ButtonState.TOGGLED);
+							else
+								changeState(ButtonState.NEUTRAL);
+						}
+					};
+				});
+			}
+
+			private void changeState(ButtonState state) {
+				this.previousState = this.state;
+				this.state = state;
+			}
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				final Color fillColor;
+
+				if (this.isEnabled())
+					switch (this.state) {
+					case CLICK:
+						fillColor = GUIOp.scaleWhite(color, 1.8);
+						break;
+					case HOVER:
+						fillColor = GUIOp.scaleWhite(color, 1.6);
+						break;
+					case TOGGLED:
+						fillColor = GUIOp.scaleWhite(color, 2.0);
+						break;
+					default:
+						fillColor = color;
+						break;
+					}
+				else
+					fillColor = Color.LIGHT_GRAY;
+
+				g.setColor(fillColor);
+				g.fillRect(0, 0, getSize().width, getSize().height);
+
+				super.paintComponent(g);
+			}
+		};
+
+		button.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		button.setForeground(Color.white);
+
+		button.setContentAreaFilled(false);
+
+		return button;
+	}
+
+	/**
+	 * Builds a neat and tidy UI for tabbed panes.
+	 * 
+	 * @return
+	 */
+	public static BasicTabbedPaneUI buildFlatTabUI() {
+		return new BasicTabbedPaneUI() {
+			@Override
+			protected void paintTabBackground(Graphics g, int tabPlacement,
+					int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+				if (isSelected) {
+					g.setColor(ScriptEaseUI.PRIMARY_UI);
+				} else {
+					g.setColor(ScriptEaseUI.TERTIARY_UI);
+				}
+
+				g.fillRect(x, y, w, h + 2);
+			}
+
+			@Override
+			protected void paintText(Graphics g, int tabPlacement, Font font,
+					FontMetrics metrics, int tabIndex, String title,
+					Rectangle textRect, boolean isSelected) {
+				// Had to modify this from the default code to paint selected
+				// tab text black and unselected white.
+
+				final Color selectedText = ScriptEaseUI.SECONDARY_UI;
+				final Color unselectedText = ScriptEaseUI.PRIMARY_UI;
+				g.setFont(font);
+
+				final View v = getTextViewForTab(tabIndex);
+				if (v != null) {
+					// html
+					v.paint(g, textRect);
+				} else {
+					// plain text
+					int mnemIndex = tabPane
+							.getDisplayedMnemonicIndexAt(tabIndex);
+
+					if (tabPane.isEnabled() && tabPane.isEnabledAt(tabIndex)) {
+						final Color fg;
+
+						if (isSelected) {
+							fg = selectedText;
+						} else {
+							fg = unselectedText;
+						}
+
+						g.setColor(fg);
+						SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+								title, mnemIndex, textRect.x, textRect.y
+										+ metrics.getAscent());
+
+					} else { // tab disabled
+						g.setColor(tabPane.getBackgroundAt(tabIndex).brighter());
+						SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+								title, mnemIndex, textRect.x, textRect.y
+										+ metrics.getAscent());
+						g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
+						SwingUtilities2.drawStringUnderlineCharAt(tabPane, g,
+								title, mnemIndex, textRect.x - 1, textRect.y
+										+ metrics.getAscent() - 1);
+
+					}
+				}
+			}
+
+			@Override
+			protected void paintContentBorderTopEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			}
+
+			@Override
+			protected void paintContentBorderRightEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			}
+
+			protected void paintContentBorderLeftEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			};
+
+			@Override
+			protected void paintContentBorderBottomEdge(Graphics g,
+					int tabPlacement, int selectedIndex, int x, int y, int w,
+					int h) {
+			}
+
+			@Override
+			protected void paintTabBorder(Graphics g, int tabPlacement,
+					int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+				final int height = h * 2;
+
+				g.setColor(ScriptEaseUI.SE_BLACK);
+
+				g.drawLine(x, y, x + w, y);
+				g.drawLine(x, y, x, y + height);
+				g.drawLine(x + w, y, x + w, y + height);
+			}
+		};
+	}
+
+	@SuppressWarnings("serial")
+	public static JTextField buildNumberTextField() {
+		return new JTextField() {
+
+			@Override
+			protected Document createDefaultModel() {
+				return new PlainDocument() {
+
+					@Override
+					public void insertString(int offs, String str,
+							AttributeSet a) throws BadLocationException {
+						if (str == null)
+							return;
+						else if (str.matches("\\d+"))
+							super.insertString(offs, str, a);
+					}
+				};
+			}
+		};
 	}
 }

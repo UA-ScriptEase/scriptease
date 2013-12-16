@@ -11,6 +11,7 @@ import scriptease.model.semodel.SEModelManager;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  * 
  */
 public final class SEModelEvent {
@@ -18,7 +19,7 @@ public final class SEModelEvent {
 	private final Type eventType;
 
 	public static enum Type {
-		ACTIVATED, ADDED, REMOVED;
+		ACTIVATED, ADDED, REMOVED, TITLECHANGED, BEHAVIOUR_EDITED;
 	}
 
 	/**

@@ -23,10 +23,12 @@ import java.util.NoSuchElementException;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.FileManager;
 import scriptease.controller.StoryComponentUtils;
+import scriptease.gui.WindowFactory;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.GameCompilerException;
 import scriptease.translator.Translator;
@@ -152,6 +154,17 @@ public final class ErfFile extends GameModule {
 						if (!journal.setStoryPoint(storyPoint, scriptIt)) {
 							// If set tag fails, remove binding.
 							try {
+								// Warn the user that more than one journal
+								// record was created for the same story point.
+								WindowFactory
+										.getInstance()
+										.showWarningDialog(
+												"Invalid Journal Record for Story Point",
+												"<html><b>Only one Journal Record can be created per Story Point.</b><br><br>"
+														+ "Add a new Journal Point to the existing Journal Record<br>"
+														+ "or create a new Journal Record for a new Story Point instead.<br><br>"
+														+ "<b>Warning: One of these Journal Records now has an unbinded Story Point.</b></html>");
+
 								parameter.clearBinding();
 							} catch (Exception e) {
 								System.err
@@ -357,7 +370,7 @@ public final class ErfFile extends GameModule {
 
 	@SuppressWarnings("serial")
 	@Override
-	public Collection<Resource> getAutomaticHandlers() {
+	public Map<String, Collection<Resource>> getAutomaticHandlers() {
 		final Resource module;
 		final List<Resource> modules = this
 				.getResourcesOfType(GenericFileFormat.TYPE_MODULE);
@@ -367,9 +380,12 @@ public final class ErfFile extends GameModule {
 			throw new IllegalStateException("Cannot retrieve Module");
 		}
 
-		return new ArrayList<Resource>() {
+		final List<Resource> automatics = new ArrayList<Resource>();
+		automatics.add(module);
+
+		return new HashMap<String, Collection<Resource>>() {
 			{
-				this.add(module);
+				this.put("automatic", automatics);
 			}
 		};
 	}
@@ -588,7 +604,7 @@ public final class ErfFile extends GameModule {
 		final long offsetToKeyList;
 		final long offsetToResourceList;
 
-		for (StoryPoint point : CodeGenerator.getInstance()
+		for (StoryNode point : CodeGenerator.getInstance()
 				.getGeneratingStoryPoints()) {
 			for (ScriptIt scriptIt : StoryComponentUtils
 					.getDescendantScriptIts(point)) {

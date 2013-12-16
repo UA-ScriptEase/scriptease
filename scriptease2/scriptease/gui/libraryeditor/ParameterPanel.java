@@ -26,6 +26,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import scriptease.controller.observer.ObserverManager;
+import scriptease.controller.observer.ParameterPanelObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
@@ -60,16 +62,21 @@ import scriptease.util.GUIOp;
  * @author jyuen
  */
 @SuppressWarnings("serial")
-class ParameterPanel extends JPanel {
+public class ParameterPanel extends JPanel {
+	private final ObserverManager<ParameterPanelObserver> observerManager;
+
 	private final KnowIt knowIt;
 
 	/**
 	 * Creates a new ParameterComponent with the passed in KnowIt parameter.
-	 * 
-	 * @param knowIt
 	 */
-	protected ParameterPanel(final ScriptIt scriptIt,
-			final CodeBlock codeBlock, final KnowIt knowIt) {
+	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
+			final KnowIt knowIt) {
+		this(scriptIt, codeBlock, knowIt, true);
+	}
+
+	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
+			final KnowIt knowIt, boolean removable) {
 		super();
 		this.knowIt = knowIt;
 
@@ -88,9 +95,11 @@ class ParameterPanel extends JPanel {
 
 		final LibraryModel library;
 
+		this.observerManager = new ObserverManager<ParameterPanelObserver>();
+
 		typeAction = new TypeAction();
 		types = new ArrayList<String>();
-		typesButton = new JButton(typeAction);
+		typesButton = ComponentFactory.buildFlatButton(typeAction);
 		defaultTypeBox = new JComboBox();
 		deleteButton = ComponentFactory.buildRemoveButton();
 		groupLayout = new GroupLayout(this);
@@ -133,22 +142,30 @@ class ParameterPanel extends JPanel {
 
 		updateBindingConstantComponent(bindingConstantComponent);
 
-		// Set up listeners
-		knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterTypeObserver(knowIt,
-						defaultTypeBox));
-
-		knowIt.addStoryComponentObserver(LibraryEditorListenerFactory
-				.getInstance().buildParameterDefaultTypeObserver());
-
 		typeAction.setAction(new Runnable() {
 			@Override
 			public void run() {
 				knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
 						.getSelectedTypeKeywords());
 
-				knowIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPES_SET));
+				final String initialDefaultType;
+				initialDefaultType = (String) defaultTypeBox.getSelectedItem();
+
+				defaultTypeBox.removeAllItems();
+
+				for (String type : knowIt.getTypes()) {
+					defaultTypeBox.addItem(scriptIt.getLibrary()
+							.getTypeDisplayText(type) + " - " + type);
+				}
+
+				defaultTypeBox.setSelectedItem(initialDefaultType);
+
+				defaultTypeBox.revalidate();
+
+				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
+				
+				notifyChange();
 			}
 		});
 
@@ -175,9 +192,6 @@ class ParameterPanel extends JPanel {
 					}
 					knowIt.setTypes(newTypeList);
 					updateBindingConstantComponent(bindingConstantComponent);
-					scriptIt.notifyObservers(new StoryComponentEvent(
-							scriptIt,
-							StoryComponentChangeEnum.CHANGE_PARAMETER_DEFAULT_TYPE_SET));
 				}
 			}
 		});
@@ -207,7 +221,7 @@ class ParameterPanel extends JPanel {
 		typesPanel.setBorder(new TitledBorder("Types"));
 		nameFieldPanel.setBorder(new TitledBorder("Name"));
 		defaultTypeBoxPanel.setBorder(new TitledBorder("Default Type"));
-		bindingPanel.setBorder(new TitledBorder("Default Binding"));
+		bindingPanel.setBorder(new TitledBorder("Default Value"));
 
 		groupLayout.setAutoCreateGaps(true);
 		groupLayout.setAutoCreateContainerGaps(true);
@@ -264,11 +278,13 @@ class ParameterPanel extends JPanel {
 
 				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
+				
+				notifyChange();
 			}
 		};
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField, commitText,
-				false, Color.white);
+				false);
 
 		return nameField;
 	}
@@ -492,5 +508,23 @@ class ParameterPanel extends JPanel {
 				ParameterPanel.this.knowIt.getTypes(), defaultBindingName);
 
 		ParameterPanel.this.knowIt.setBinding(newConstant);
+	}
+
+	public void addListener(ParameterPanelObserver observer) {
+		this.observerManager.addObserver(this, observer);
+	}
+
+	public void removeListener(ParameterPanelObserver observer) {
+		this.observerManager.removeObserver(observer);
+	}
+
+	/**
+	 * Notifies that the codeblock panel has changed.
+	 */
+	private void notifyChange() {
+		for (ParameterPanelObserver observer : this.observerManager
+				.getObservers()) {
+			observer.parameterPanelChanged();
+		}
 	}
 }

@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.swing.Icon;
-import javax.swing.UIManager;
-
 import scriptease.gui.WindowFactory;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -55,11 +52,14 @@ public final class UnityProject extends GameModule {
 	 */
 	public static final String UNITY_TAG = "tag:unity3d.com,2011:";
 
-	private static final String RESOURCE_FOLDER_NAME = "Resources";
+	public static final String RESOURCE_FOLDER_NAME = "Resources";
+	public static final String ASSETS_FOLDER_NAME = "Assets";
+
+	public static final String GAME_OBJECT_AUTOMATIC = "gameobjectautomatic";
 
 	// Note: this used to be static, but we can't make it static since we want
 	// to be able to work on multiple projects at the same time.
-	private Map<String, File> guidsToMetaFiles;
+	private final Map<String, File> guidsToMetaFiles;
 
 	private File projectLocation;
 	// The nice thing about Unity is that it uses multiple files instead of one,
@@ -68,11 +68,11 @@ public final class UnityProject extends GameModule {
 	private File scripteaseGeneratedDirectory;
 	private File scripteaseCScriptDirectory;
 
-	private Collection<File> includeFiles;
-	private Collection<UnityFile> scenes;
-	private Collection<UnityFile> prefabs;
-	private Collection<Resource> resources;
-	private Collection<UnityScript> scripts;
+	private final Collection<File> includeFiles;
+	private final Collection<UnityFile> scenes;
+	private final Collection<UnityFile> prefabs;
+	private final Collection<Resource> resources;
+	private final Collection<UnityScript> scripts;
 
 	/**
 	 * Creates a new UnityProjects with no scenes or scripts added.
@@ -127,15 +127,53 @@ public final class UnityProject extends GameModule {
 		return id;
 	}
 
-	@Override
-	public Collection<Resource> getAutomaticHandlers() {
-		final Collection<Resource> automaticHandlers = new ArrayList<Resource>();
-
-		for (UnityFile scene : this.scenes) {
-			automaticHandlers.add(scene.getScriptEaseObject());
+	/**
+	 * Checks if the meta file exists for a specific guid. If the guid is for a
+	 * ScriptEase generated script (UnityScript)'s metafile, we return true.
+	 * 
+	 * @param guid
+	 * @return
+	 */
+	public boolean metaFileExists(String guid) {
+		for (UnityScript script : this.scripts) {
+			// Check if the GUID is part of a ScriptEase generated script. If
+			// so, return true.
+			if (script.getGUID().equals(guid))
+				return true;
 		}
 
-		return automaticHandlers;
+		final File metaFile = this.guidsToMetaFiles.get(guid);
+
+		if (metaFile == null)
+			return false;
+
+		return metaFile.exists();
+	}
+
+	@Override
+	public Map<String, Collection<Resource>> getAutomaticHandlers() {
+		final Map<String, Collection<Resource>> automaticMap = new HashMap<String, Collection<Resource>>();
+
+		final Collection<Resource> automaticScriptEaseObjects = new ArrayList<Resource>();
+		final Collection<Resource> automaticGameObjects = new ArrayList<Resource>();
+
+		for (UnityFile scene : this.scenes) {
+			automaticScriptEaseObjects.add(scene.getScriptEaseObject());
+
+			for (UnityResource resource : scene.getResources()) {
+				if (resource.getType() == UnityType.GAMEOBJECT) {
+					automaticGameObjects.add(resource);
+				}
+			}
+		}
+
+		automaticGameObjects.removeAll(automaticScriptEaseObjects);
+
+		automaticMap.put(GameModule.AUTOMATIC, automaticScriptEaseObjects);
+		automaticMap.put(UnityProject.GAME_OBJECT_AUTOMATIC,
+				automaticGameObjects);
+
+		return automaticMap;
 	}
 
 	@Override
@@ -148,17 +186,16 @@ public final class UnityProject extends GameModule {
 	@Override
 	public void addScripts(Collection<ScriptInfo> scriptList) {
 		for (ScriptInfo scriptInfo : scriptList) {
+			final Resource subject = scriptInfo.getSubject();
 
 			for (UnityFile scene : this.scenes) {
-				if (scene.getObjectByTemplateID(scriptInfo.getSubject()
-						.getTemplateID()) != null) {
+				if (scene.getTemplateID().equals(subject.getTemplateID())
+						|| scene.getObjectByTemplateID(subject.getTemplateID()) != null) {
 					this.scripts.add(new UnityScript(scriptInfo, scene));
 				}
 			}
 
 			for (UnityFile prefab : this.prefabs) {
-				final Resource subject = scriptInfo.getSubject();
-
 				if (subject.getTemplateID().equals(prefab.getTemplateID())) {
 					this.scripts.add(new UnityScript(scriptInfo, prefab));
 				}
@@ -338,7 +375,7 @@ public final class UnityProject extends GameModule {
 		guiSkinFilter = FileOp.createExtensionFilter("guiskin");
 		prefabFilter = FileOp
 				.createExtensionFilter(UnityFile.PREFAB_FILE_EXTENSION);
-		
+
 		resourceFolders = FileOp.findFiles(this.projectLocation,
 				resourceFolderFilter);
 
@@ -357,8 +394,6 @@ public final class UnityProject extends GameModule {
 
 		resources.addAll(this.buildSimpleUnityResources(guiSkins,
 				UnityType.SE_GUISKIN));
-
-//		prefabFiles = FileOp.findFiles(this.projectLocation, prefabFileFilter);
 
 		for (File prefabFile : prefabFiles) {
 			UnityFile prefab;
@@ -386,32 +421,15 @@ public final class UnityProject extends GameModule {
 	 */
 	private final Collection<Resource> buildSimpleUnityResources(
 			final Collection<File> files, final UnityType type) {
-		final String title = "Internal Error";
-		final String messageBrief = "ScriptEase has encountered an internal error.";
-		final String message = "It may be possible to continue past this error.<br>Would you like to help make ScriptEase better by reporting the problem?";
-		final Icon icon = UIManager.getIcon("OptionPane.errorIcon");
-
 		final Collection<Resource> resources = new ArrayList<Resource>();
 
 		for (File file : files) {
 			final SimpleResource resource;
 
-			String name = FileOp.removeExtension(file.getAbsolutePath());
-			// Since split takes a regex, we need to escape \ twice
-			final String[] splitBackSlash = name.split("\\\\"
-					+ RESOURCE_FOLDER_NAME + "\\\\");
-			if (splitBackSlash.length == 2)
-				name = splitBackSlash[1];
-			else {
-				final String[] splitForwardSlash = name.split("/"
-						+ RESOURCE_FOLDER_NAME + "/");
+			String name = FileOp.getFileNameUpTo(file,
+					UnityProject.RESOURCE_FOLDER_NAME);
 
-				if (splitForwardSlash.length == 2)
-					name = splitForwardSlash[1];
-				else
-					WindowFactory.getInstance().showExceptionDialog(title,
-							messageBrief, message, icon, null);
-			}
+			name = FileOp.removeExtension(name);
 
 			resource = SimpleResource.buildSimpleResource(type.getName(), name);
 

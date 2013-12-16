@@ -31,6 +31,7 @@ import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.ResourceObserver;
 import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.ResourceTreeObserver;
+import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
@@ -40,6 +41,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
@@ -409,7 +411,6 @@ class ResourceTree extends JPanel {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						ResourceTree.this.notifyAddButtonClicked(type);
-
 						ResourceContainer.this.updateResourcePanels();
 					}
 				});
@@ -424,6 +425,37 @@ class ResourceTree extends JPanel {
 			this.add(Box.createHorizontalGlue());
 
 			this.add(this.container);
+
+			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
+				final StoryModel story;
+
+				story = SEModelManager.getInstance().getActiveStoryModel();
+
+				if (story != null) {
+					story.addStoryModelObserver(this, new StoryModelAdapter() {
+						@Override
+						public void dialogueRootAdded(DialogueLine root) {
+							ResourceContainer.this.updateResourcePanels();
+						}
+
+						public void dialogueChildAdded(DialogueLine added,
+								DialogueLine parent) {
+							ResourceContainer.this.updateResourcePanels();
+						};
+
+						@Override
+						public void dialogueRootRemoved(DialogueLine removed) {
+							ResourceContainer.this.updateResourcePanels();
+						}
+
+						@Override
+						public void dialogueChildRemoved(DialogueLine removed,
+								DialogueLine parent) {
+							ResourceContainer.this.updateResourcePanels();
+						}
+					});
+				}
+			}
 
 			this.updateResourcePanels();
 		}

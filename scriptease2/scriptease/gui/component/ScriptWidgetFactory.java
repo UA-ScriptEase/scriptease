@@ -41,9 +41,14 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.StoryGroup;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -58,6 +63,7 @@ import scriptease.util.GUIOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public class ScriptWidgetFactory {
 	/**
@@ -138,7 +144,7 @@ public class ScriptWidgetFactory {
 	 * Builds a BindingWidget from the given StoryPoint.
 	 * 
 	 * @param component
-	 *            The story to build a binding widget for.
+	 *            The story point to build a binding widget for.
 	 * @param editable
 	 *            <code>true</code> means that the name is editable
 	 *            <code>false</code> otherwise.
@@ -150,10 +156,25 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a BindingWidget from the given StoryPoint.
+	 * Builds a BindingWidget from the given StoryGroup.
 	 * 
 	 * @param component
-	 *            The story to build a binding widget for.
+	 *            The story group to build a binding widget for.
+	 * @param editable
+	 *            <code>true</code> means that the name is editable
+	 *            <code>false</code> otherwise.
+	 * @return The binding widget for displaying the given StoryComponent
+	 */
+	public static BindingWidget buildBindingWidget(StoryGroup component,
+			boolean editable) {
+		return BindingWidgetBuilder.buildBindingWidget(component, editable);
+	}
+
+	/**
+	 * Builds a BindingWidget from the given KnowIt.
+	 * 
+	 * @param component
+	 *            The knowIt to build a binding widget for.
 	 * @param editable
 	 *            <code>true</code> means that the name is editable
 	 *            <code>false</code> otherwise.
@@ -250,14 +271,25 @@ public class ScriptWidgetFactory {
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
-			this.bindingWidget = new BindingWidget(new KnowItBindingReference(
-					knowIt));
+			if (knowIt.getBinding() instanceof KnowItBindingNull)
+				this.bindingWidget = new BindingWidget(
+						new KnowItBindingUninitialized(
+								new KnowItBindingReference(knowIt)));
+			else
+				this.bindingWidget = new BindingWidget(
+						new KnowItBindingReference(knowIt));
 		}
 
 		@Override
 		public void processStoryPoint(StoryPoint storyPoint) {
 			this.bindingWidget = new BindingWidget(new KnowItBindingStoryPoint(
 					storyPoint));
+		}
+
+		@Override
+		public void processStoryGroup(StoryGroup storyGroup) {
+			this.bindingWidget = new BindingWidget(new KnowItBindingStoryGroup(
+					storyGroup));
 		}
 	}
 
@@ -337,7 +369,7 @@ public class ScriptWidgetFactory {
 		label = new JLabel(text == null ? "" : text);
 		fontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
 				ScriptEase.FONT_SIZE_KEY));
-		font = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize);
+		font = new Font(Font.SANS_SERIF, Font.ROMAN_BASELINE, fontSize);
 
 		label.setFont(font);
 		if (textColor != null)
@@ -501,6 +533,12 @@ public class ScriptWidgetFactory {
 						spinner.setValue(newBinding);
 						spinner.addChangeListener(changeListener);
 					}
+
+					spinner.getEditor().revalidate();
+					spinner.getEditor().repaint();
+
+					spinner.revalidate();
+					spinner.repaint();
 				}
 			}
 		};
@@ -637,7 +675,6 @@ public class ScriptWidgetFactory {
 					nameEditor.setText(component.getDisplayText());
 
 					GUIOp.resizeJTextField(nameEditor);
-
 				}
 			}
 		};
@@ -661,7 +698,7 @@ public class ScriptWidgetFactory {
 
 		final boolean resizing;
 
-		if (component instanceof StoryPoint)
+		if (component instanceof StoryNode)
 			resizing = false;
 		else
 			resizing = true;
@@ -704,6 +741,8 @@ public class ScriptWidgetFactory {
 					bindingWidget.setBinding(knowIt.getBinding());
 
 					GUIOp.resizeJTextField(valueEditor);
+					valueEditor.revalidate();
+					valueEditor.repaint();
 				}
 			}
 		};
@@ -766,7 +805,7 @@ public class ScriptWidgetFactory {
 			Comparable<?> max) {
 		SpinnerNumberModel model;
 		final JSpinner fanInSpinner;
-		
+
 		try {
 			model = new SpinnerNumberModel(storyPoint.getFanIn(), 1, max, 1);
 		} catch (Exception e) {

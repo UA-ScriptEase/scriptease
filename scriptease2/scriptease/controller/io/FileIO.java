@@ -14,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 
+import scriptease.controller.FileManager;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
 import scriptease.controller.io.converter.fragment.FormatDefinitionFragmentConverter;
@@ -37,12 +38,18 @@ import scriptease.controller.io.converter.storycomponent.CauseItConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockReferenceConverter;
 import scriptease.controller.io.converter.storycomponent.CodeBlockSourceConverter;
 import scriptease.controller.io.converter.storycomponent.ControlItConverter;
+import scriptease.controller.io.converter.storycomponent.ActivityItConverter;
 import scriptease.controller.io.converter.storycomponent.KnowItBindingConverter;
 import scriptease.controller.io.converter.storycomponent.KnowItConverter;
 import scriptease.controller.io.converter.storycomponent.NoteConverter;
+import scriptease.controller.io.converter.storycomponent.PickItConverter;
 import scriptease.controller.io.converter.storycomponent.ScriptItConverter;
 import scriptease.controller.io.converter.storycomponent.StoryComponentContainerConverter;
+import scriptease.controller.io.converter.storycomponent.StoryGroupConverter;
 import scriptease.controller.io.converter.storycomponent.StoryPointConverter;
+import scriptease.controller.io.converter.storycomponent.behaviour.BehaviourConverter;
+import scriptease.controller.io.converter.storycomponent.behaviour.CollaborativeTaskConverter;
+import scriptease.controller.io.converter.storycomponent.behaviour.IndependentTaskConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
@@ -58,9 +65,15 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
@@ -354,64 +367,72 @@ public class FileIO {
 
 		FileOutputStream fileOut = null;
 
-		if (createBackup) {
+		if (createBackup && location.exists()) {
 			final File backupLocation;
 
-			backupLocation = FileOp.replaceExtension(location,
-					FileOp.getExtension(location) + "_backup");
-			// Create/empty the file we're saving to,
-			try {
-				if ((backupLocation.exists() && !backupLocation.delete())
-						|| !location.renameTo(backupLocation))
-					System.err.println("Failed to create a backup file for "
-							+ backupLocation + "!");
+			backupLocation = new File(location.getAbsolutePath().concat(
+					"_backup"));
 
+			try {
+				FileOp.copyFile(location, backupLocation);
+			} catch (IOException e) {
+				Thread.currentThread()
+						.getUncaughtExceptionHandler()
+						.uncaughtException(
+								Thread.currentThread(),
+								new IOException(
+										"Exception when creating backup file :"
+												+ e));
+			}
+		}
+
+		if (!location.exists()) {
+			try {
 				location.createNewFile();
 			} catch (IOException e) {
-				Thread.getDefaultUncaughtExceptionHandler().uncaughtException(
-						Thread.currentThread(), e);
+				Thread.currentThread()
+						.getUncaughtExceptionHandler()
+						.uncaughtException(
+								Thread.currentThread(),
+								new IOException(
+										"Couldn't create save file location: "
+												+ e));
 			}
 		}
 
 		// save the ScriptEase patterns.
+		final File tempLocation;
+
+		tempLocation = FileManager.getInstance().createTempFile("tmp",
+				"." + FileOp.getExtension(location), location.getParentFile(),
+				100);
+
 		try {
-			fileOut = new FileOutputStream(location);
+			fileOut = new FileOutputStream(tempLocation);
 			this.buildXStream().toXML(dataModel, fileOut);
-		} catch (IOException e) {
-			System.err.println("Patterns save problem: Could not access "
-					+ location.getAbsolutePath());
+
+			// If we reached this point, we've succeeded so now we'll copy the
+			// contents on the actual desired location
+			FileOp.copyFile(tempLocation, location);
+		} catch (Exception e) {
+			System.err.println("Patterns save problem: " + e);
 
 			boolean retry = WindowFactory.getInstance().showRetryProblemDialog(
 					"Save Patterns File",
-					"ScriptEase was unable to access "
-							+ location.getAbsolutePath());
+					"ScriptEase was unable save your story.");
 
 			if (retry)
-				this.writeData(dataModel, location, mode, true);
-			/*
-			 * TODO #54926402
-			 * 
-			 * Save the XML file to a temporary file first. If there are no
-			 * exceptions, then we copy its contents to the actual location and
-			 * delete the temporary file. Else if there were exceptions, just
-			 * destroy the temporary file and show the exception dialog.
-			 * 
-			 * This will be MUCH safer than whatever we're doing now, which just
-			 * nukes the file.
-			 * 
-			 * To find out if there was an exception, we could catch any
-			 * exception ever. To test if it works, throw an exception in one of
-			 * the converters' marshall methods.
-			 */
+				this.writeData(dataModel, location, mode, false);
 		} finally {
 			try {
 				if (fileOut != null)
 					fileOut.close();
-			} catch (IOException e2) {
+			} catch (IOException e) {
 				System.err
 						.println("Failed to close an output file connection.");
 			}
 
+			FileManager.getInstance().deleteTempFile(tempLocation);
 			this.mode = prevMode;
 		}
 	}
@@ -488,12 +509,28 @@ public class FileIO {
 		stream.alias("KnowIt", KnowIt.class);
 		stream.alias("StoryComponentContainer", StoryComponentContainer.class);
 		stream.alias("AskIt", AskIt.class);
+		stream.alias("PickIt", PickIt.class);
 		stream.alias("KnowItBinding", KnowItBinding.class);
 		stream.alias("Type", GameType.class);
 		stream.alias("Slot", Slot.class);
 		stream.alias("Binding", KnowItBinding.class);
 		stream.alias("Value", String.class);
 		stream.alias("DialogueLine", DialogueLine.class);
+		stream.alias("DescribeIt", DescribeIt.class);
+		stream.alias("DescribeItNode", DescribeItNode.class);
+		stream.alias("CodeBlock", CodeBlock.class);
+		stream.alias("CodeBlockSource", CodeBlockSource.class);
+		stream.alias("CodeBlockReference", CodeBlockReference.class);
+		stream.alias("ScriptIt", ScriptIt.class);
+		stream.alias("StoryGroup", StoryGroup.class);
+		stream.alias("StoryPoint", StoryPoint.class);
+		stream.alias("Note", Note.class);
+		stream.alias("ControlIt", ControlIt.class);
+		stream.alias("CauseIt", CauseIt.class);
+		stream.alias("Behaviour", Behaviour.class);
+		stream.alias("IndependentTask", IndependentTask.class);
+		stream.alias("CollaborativeTask", CollaborativeTask.class);
+		stream.alias("ActivityIt", ActivityIt.class);
 
 		// Language Dictionary Fragments
 		stream.alias("LibraryModel", LibraryModel.class);
@@ -506,16 +543,6 @@ public class FileIO {
 		stream.alias("Scope", ScopeFragment.class);
 		stream.alias("Series", SeriesFragment.class);
 		stream.alias("Fragment", SimpleDataFragment.class);
-		stream.alias("DescribeIt", DescribeIt.class);
-		stream.alias("DescribeItNode", DescribeItNode.class);
-		stream.alias("CodeBlock", CodeBlock.class);
-		stream.alias("CodeBlockSource", CodeBlockSource.class);
-		stream.alias("CodeBlockReference", CodeBlockReference.class);
-		stream.alias("ScriptIt", ScriptIt.class);
-		stream.alias("StoryPoint", StoryPoint.class);
-		stream.alias("Note", Note.class);
-		stream.alias("ControlIt", ControlIt.class);
-		stream.alias("CauseIt", CauseIt.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -526,6 +553,7 @@ public class FileIO {
 		stream.registerConverter(new DialogueLineConverter());
 		stream.registerConverter(new StoryComponentContainerConverter());
 		stream.registerConverter(new KnowItConverter());
+		stream.registerConverter(new PickItConverter());
 		stream.registerConverter(new AskItConverter());
 		stream.registerConverter(new KnowItBindingConverter());
 		stream.registerConverter(new GameTypeConverter());
@@ -544,11 +572,16 @@ public class FileIO {
 		stream.registerConverter(new CodeBlockReferenceConverter());
 		stream.registerConverter(new ScriptItConverter());
 		stream.registerConverter(new CauseItConverter());
+		stream.registerConverter(new StoryGroupConverter());
 		stream.registerConverter(new StoryPointConverter());
 		stream.registerConverter(new NoteConverter());
 		stream.registerConverter(new DescribeItConverter());
 		stream.registerConverter(new DescribeItNodeConverter());
 		stream.registerConverter(new ControlItConverter());
+		stream.registerConverter(new BehaviourConverter());
+		stream.registerConverter(new IndependentTaskConverter());
+		stream.registerConverter(new CollaborativeTaskConverter());
+		stream.registerConverter(new ActivityItConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

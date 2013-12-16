@@ -7,6 +7,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,30 +20,39 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.Timer;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.WindowFactory;
 import scriptease.gui.component.BindingWidget;
+import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.libraryeditor.EffectHolderPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.complex.ActivityIt;
+import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.util.GUIOp;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * StoryComponentPanelTransferHandler is a more specific TransferHandler that is
@@ -115,16 +126,69 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (comp instanceof StoryComponentPanel) {
 			final StoryComponentPanel panel;
 			final StoryComponentPanelManager selectionManager;
+			final List<StoryComponent> selected;
 
 			panel = (StoryComponentPanel) comp;
 			selectionManager = panel.getSelectionManager();
+			selected = new IdentityArrayList<StoryComponent>();
 
 			// Get the parent selected StoryComponents, since the children
 			// will be grabbed implicitly from the model
 			if (selectionManager != null) {
 				for (StoryComponentPanel aPanel : selectionManager
-						.getSelectedParents())
-					data.add(aPanel.getStoryComponent());
+						.getSelectedParents()) {
+					selected.add(aPanel.getStoryComponent());
+				}
+			}
+
+			final StoryModel model = SEModelManager.getInstance()
+					.getActiveStoryModel();
+			if (model != null) {
+
+				StoryComponentPanel parent = panel
+						.getParentStoryComponentPanel();
+
+				// Get the first Story Point parent.
+				while (parent != null
+						&& !(parent.getStoryComponent() instanceof StoryPoint)) {
+					parent = parent.getParentStoryComponentPanel();
+				}
+
+				if (parent != null) {
+
+					// Sort selected panels based on order of appearance by
+					// processing the selected panels.
+					final StoryPoint storyPoint = (StoryPoint) parent
+							.getStoryComponent();
+
+					storyPoint.process(new StoryAdapter() {
+
+						@Override
+						public void processKnowIt(KnowIt knowIt) {
+							if (selected.contains(knowIt)) {
+								data.add(knowIt);
+								selected.remove(knowIt);
+							}
+						}
+
+						@Override
+						protected void defaultProcessComplex(
+								ComplexStoryComponent complex) {
+							if (selected.contains(complex)) {
+								data.add(complex);
+								selected.remove(complex);
+							}
+
+							for (StoryComponent child : complex.getChildren()) {
+								child.process(this);
+							}
+						}
+					});
+
+					Collections.reverse(data);
+				}
+			} else {
+				data.addAll(selected);
 			}
 
 		} else if (comp instanceof JList) {
@@ -148,9 +212,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * Scrolls the story component tree if we are hovering over one.
 	 */
 	private void scrollForMousePosition(Component component) {
-		/*
-		 * Scrolls the StoryComponentTree if we are hovering over one.
-		 */
 		Container parent = component.getParent();
 		while (parent != null) {
 			if (parent instanceof JSplitPane) {
@@ -185,7 +246,29 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 		if (supportComponent instanceof StoryComponentPanel) {
 
 			final StoryComponentPanel acceptingPanel;
+			final StoryComponent component;
+
 			acceptingPanel = (StoryComponentPanel) supportComponent;
+			component = acceptingPanel.getStoryComponent();
+
+			// The start story point can't be accepting any children.
+			if (component instanceof StoryPoint) {
+				final StoryPoint storyPoint = (StoryPoint) acceptingPanel
+						.getStoryComponent();
+
+				if (SEModelManager.getInstance().getActiveStoryModel() == null)
+					return false;
+
+				else if (storyPoint == SEModelManager.getInstance()
+						.getActiveRoot() || storyPoint.getUniqueID() == 1) {
+					WindowFactory
+							.getInstance()
+							.showUserInformationBox(
+									"You can't drag components into the start story point.\n Create a new story point instead.",
+									UserInformationType.ERROR);
+					return false;
+				}
+			}
 
 			if (acceptingPanel.isEditable()) {
 				return (this.canImportAsChild(support) || this
@@ -207,18 +290,45 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				if (scriptIt instanceof CauseIt)
 					return false;
 
-				for (String type : scriptIt.getTypes()) {
-					if (!effectHolder.getAllowableTypes().contains(type))
-						return false;
-				}
+				// Make sure the types match
+				if (!scriptIt.getTypes().containsAll(
+						effectHolder.getAllowableTypes()))
+					return false;
+
 				return true;
 			}
+
+			if (this.hoveredPanel != null)
+				this.hoveredPanel.updatePanelBackgrounds();
 		}
 
-		if (this.hoveredPanel != null)
-			this.hoveredPanel.updatePanelBackgrounds();
 		return false;
 	}
+
+	final Timer hoverTimer = new Timer(500, new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (hoveredPanel != null
+					&& hoveredPanel.getSelectionManager() != null)
+
+				hoveredPanel.getSelectionManager().updatePanelBackgrounds();
+
+			hoveredPanel = acceptingPanel;
+
+			if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer
+					|| acceptingPanel.getStoryComponent() instanceof ControlIt
+					|| acceptingPanel.getStoryComponent() instanceof CauseIt)
+
+				setPanelAndChildrenBackground(Color.LIGHT_GRAY, acceptingPanel);
+			else
+				acceptingPanel.setBackground(Color.LIGHT_GRAY);
+
+			hoverTimer.stop();
+		}
+	});
+
+	StoryComponentPanel acceptingPanel = null;
 
 	/**
 	 * The regular case where the item being imported is a valid child type of
@@ -228,13 +338,20 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	 * @return true if the component can be imported, false otherwise.
 	 */
 	private boolean canImportAsChild(TransferSupport support) {
-		final StoryComponentPanel acceptingPanel;
+		final StoryComponentPanel prevPanel = StoryComponentPanelTransferHandler.this.acceptingPanel;
+
+		StoryComponentPanelTransferHandler.this.acceptingPanel = (StoryComponentPanel) support
+				.getComponent();
+
+		if (prevPanel != StoryComponentPanelTransferHandler.this.acceptingPanel)
+			this.hoverTimer.stop();
+
 		final StoryComponent acceptingStoryComponent;
 		final Collection<StoryComponent> potentialChildren;
 
-		acceptingPanel = (StoryComponentPanel) support.getComponent();
-		acceptingStoryComponent = acceptingPanel.getStoryComponent();
 		potentialChildren = this.extractStoryComponents(support);
+		acceptingStoryComponent = StoryComponentPanelTransferHandler.this.acceptingPanel
+				.getStoryComponent();
 
 		if (potentialChildren != null) {
 
@@ -243,22 +360,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				if (this.canAcceptChildren(acceptingStoryComponent,
 						potentialChildren)) {
 
-					if (this.hoveredPanel != null
-							&& this.hoveredPanel.getSelectionManager() != null)
-
-						this.hoveredPanel.getSelectionManager()
-								.updatePanelBackgrounds();
-
-					if (acceptingPanel.getStoryComponent() instanceof StoryComponentContainer
-							|| acceptingPanel.getStoryComponent() instanceof ControlIt
-							|| acceptingPanel.getStoryComponent() instanceof CauseIt)
-
-						setPanelAndChildrenBackground(Color.LIGHT_GRAY,
-								acceptingPanel);
-					else
-						acceptingPanel.setBackground(Color.LIGHT_GRAY);
-
-					this.hoveredPanel = acceptingPanel;
+					if (!hoverTimer.isRunning()) {
+						this.hoverTimer.start();
+						this.hoverTimer.setRepeats(false);
+					}
 
 					return true;
 				}
@@ -287,7 +392,8 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				this.hoveredPanel.getSelectionManager()
 						.updatePanelBackgrounds();
 
-			this.setPanelAndChildrenBackground(Color.GRAY, acceptingPanel);
+			StoryComponentPanelTransferHandler.this
+					.setPanelAndChildrenBackground(Color.GRAY, acceptingPanel);
 
 			this.hoveredPanel = acceptingPanel;
 
@@ -306,7 +412,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 	public boolean importData(TransferSupport support) {
 		final Component supportComponent = support.getComponent();
 
-		// Safety check. This is more than likely being called twice with ever
+		// Safety check. This is more than likely being called twice with every
 		// transfer, but we don't want someone accidently calling importData
 		// without checking canImport first.
 		if (!this.canImport(support))
@@ -410,15 +516,13 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				UndoManager.getInstance().endUndoableAction();
 
 			return true;
+
 		} else if (supportComponent instanceof EffectHolderPanel) {
 			final StoryComponent component;
 			final EffectHolderPanel effectHolder;
 
 			component = this.extractStoryComponents(support).iterator().next();
 			effectHolder = (EffectHolderPanel) supportComponent;
-
-			if (!(component instanceof ScriptIt))
-				return false;
 
 			return effectHolder.setEffect((ScriptIt) component);
 		}
@@ -491,7 +595,6 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 
 							owner.addStoryChildBefore(clone, sibling);
 						}
-
 					}
 				}
 			}
@@ -499,6 +602,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 			if (this.hoveredPanel != null) {
 				this.hoveredPanel.updatePanelBackgrounds();
 			}
+
 			// Close any open UndoableActions.
 			if (UndoManager.getInstance().hasOpenUndoableAction()) {
 				UndoManager.getInstance().endUndoableAction();
@@ -539,6 +643,10 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 						&& ((ComplexStoryComponent) potentialParent)
 								.canAcceptChild(child);
 			}
+
+			if (child.getOwner() instanceof PickIt
+					|| child.getOwner() instanceof AskIt)
+				acceptable = false;
 
 			if (!acceptable)
 				break;

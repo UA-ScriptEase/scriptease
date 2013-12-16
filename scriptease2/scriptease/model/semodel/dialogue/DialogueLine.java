@@ -66,7 +66,7 @@ public final class DialogueLine extends EditableResource {
 			int id, boolean enabled, KnowIt image, KnowIt audio,
 			List<Resource> children) {
 		super(dialogue, children);
-
+		
 		this.enabled = enabled;
 		this.speaker = speaker;
 		this.story = story;
@@ -211,6 +211,17 @@ public final class DialogueLine extends EditableResource {
 	}
 
 	@Override
+	public boolean removeChild(Resource child) {
+		final boolean removed = super.removeChild(child);
+
+		if (removed && child instanceof DialogueLine) {
+			this.story.notifyDialogueChildRemoved((DialogueLine) child, this);
+		}
+
+		return removed;
+	}
+
+	@Override
 	public boolean addChild(Resource child) {
 		if (!(child instanceof DialogueLine))
 			return false;
@@ -220,8 +231,16 @@ public final class DialogueLine extends EditableResource {
 		if (childLine.speaker == null)
 			this.setChildSpeaker(childLine);
 
-		return ((DialogueLine) child).speaker != this.speaker
-				&& super.addChild(child);
+		if (childLine.speaker != this.speaker) {
+			final boolean added;
+
+			if (added = super.addChild(child))
+				this.story.notifyDialogueChildAdded(childLine, this);
+
+			return added;
+		}
+
+		return false;
 	}
 
 	@Override

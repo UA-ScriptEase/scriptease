@@ -25,56 +25,79 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
- * Calculates metrics in the active model.
+ * Calculates metrics for the provided story model.
  * 
  * @author jyuen
  */
-public class MetricsAnalyzer {
-	// Singleton
-	private static MetricsAnalyzer instance = null;
+public class StoryMetrics {
 
-	private final Collection<AskIt> questions;
-	private final Collection<ScriptIt> effects;
-	private final Collection<CauseIt> causes;
-	private final Collection<ControlIt> delays;
-	private final Collection<ControlIt> repeats;
-	private final Collection<StoryPoint> storyPoints;
-	private final Collection<KnowIt> descriptions;
-	private final Collection<Note> notes;
-	private final Collection<KnowIt> gameObjects;
-	private final Collection<KnowIt> implicits;
+	private final StoryModel model;
 
-	/**
-	 * Gets the sole instance of this particular type of Action
-	 * 
-	 * @return The sole instance of this particular type of Action
-	 */
-	public static MetricsAnalyzer getInstance() {
-		if (instance == null) {
-			instance = new MetricsAnalyzer();
-		}
+	private final Map<String, Integer> numberComponents;
+	private final Map<String, Integer> storyPointComplexity;
+	private final Map<String, Float> storyComponentComplexity;
 
-		return MetricsAnalyzer.instance;
-	}
+	private final Map<String, Integer> favouriteCauses;
+	private final Map<String, Integer> favouriteEffects;
+	private final Map<String, Integer> favouriteDescriptions;
+	private final Map<String, Integer> favouriteQuestions;
+	private final Map<String, Integer> favouriteRepeats;
+	private final Map<String, Integer> favouriteDelays;
 
-	protected MetricsAnalyzer() {
-		this.questions = new HashSet<AskIt>();
-		this.effects = new HashSet<ScriptIt>();
-		this.causes = new HashSet<CauseIt>();
-		this.delays = new HashSet<ControlIt>();
-		this.repeats = new HashSet<ControlIt>();
-		this.storyPoints = new HashSet<StoryPoint>();
-		this.descriptions = new HashSet<KnowIt>();
-		this.notes = new HashSet<Note>();
-		this.gameObjects = new HashSet<KnowIt>();
-		this.implicits = new HashSet<KnowIt>();
+	public StoryMetrics(StoryModel model) {
+		final Collection<AskIt> questions;
+		final Collection<ScriptIt> effects;
+		final Collection<CauseIt> causes;
+		final Collection<ControlIt> delays;
+		final Collection<ControlIt> repeats;
+		final Collection<StoryPoint> storyPoints;
+		final Collection<KnowIt> descriptions;
+		final Collection<Note> notes;
+		final Collection<KnowIt> gameObjects;
+		final Collection<KnowIt> implicits;
+
+		this.model = model;
+
+		questions = new HashSet<AskIt>();
+		effects = new HashSet<ScriptIt>();
+		causes = new HashSet<CauseIt>();
+		delays = new HashSet<ControlIt>();
+		repeats = new HashSet<ControlIt>();
+		storyPoints = new HashSet<StoryPoint>();
+		descriptions = new HashSet<KnowIt>();
+		notes = new HashSet<Note>();
+		gameObjects = new HashSet<KnowIt>();
+		implicits = new HashSet<KnowIt>();
+
+		this.processStoryComponents(questions, effects, causes, delays,
+				repeats, storyPoints, descriptions, notes, gameObjects,
+				implicits);
+
+		this.numberComponents = this.calculateNumberComponents(questions,
+				effects, causes, delays, repeats, storyPoints, descriptions,
+				notes, gameObjects, implicits);
+
+		this.storyPointComplexity = this.calculateStoryPointComplexity();
+
+		this.storyComponentComplexity = this.calculateStoryComponentComplexity(
+				causes, storyPoints);
+
+		this.favouriteCauses = this.calculateFavouriteCauses(causes);
+		this.favouriteEffects = this.calculateFavouriteEffects(effects);
+		this.favouriteDescriptions = this
+				.calculateFavouriteDescriptions(descriptions);
+		this.favouriteQuestions = this.calculateFavouriteQuestions(questions);
+		this.favouriteRepeats = this.calculateFavouriteRepeats(repeats);
+		this.favouriteDelays = this.calculateFavouriteDelays(delays);
 	}
 
 	/**
@@ -84,41 +107,49 @@ public class MetricsAnalyzer {
 	 * @return A map containing the metric values in each of their respective
 	 *         categories.
 	 */
-	public Map<String, Integer> getNumStoryComponents() {
+	public Map<String, Integer> calculateNumberComponents(
+			final Collection<AskIt> questions,
+			final Collection<ScriptIt> effects,
+			final Collection<CauseIt> causes,
+			final Collection<ControlIt> delays,
+			final Collection<ControlIt> repeats,
+			final Collection<StoryPoint> storyPoints,
+			final Collection<KnowIt> descriptions,
+			final Collection<Note> notes, final Collection<KnowIt> gameObjects,
+			final Collection<KnowIt> implicits) {
+
 		final Map<String, Integer> metrics = new HashMap<String, Integer>();
 
-		metrics.put("Questions", questions.size());
-		metrics.put("Effects", effects.size());
-		metrics.put("Causes", causes.size());
-		metrics.put("Delays", delays.size());
-		metrics.put("Repeats", repeats.size());
-		metrics.put("StoryPoints", storyPoints.size());
-		metrics.put("Descriptions", descriptions.size());
-		metrics.put("Notes", notes.size());
-		metrics.put("Game Objects", gameObjects.size());
-		metrics.put("Implicits", implicits.size());
+		metrics.put(ScriptEaseKeywords.QUESTIONS, questions.size());
+		metrics.put(ScriptEaseKeywords.EFFECTS, effects.size());
+		metrics.put(ScriptEaseKeywords.CAUSES, causes.size());
+		metrics.put(ScriptEaseKeywords.DELAYS, delays.size());
+		metrics.put(ScriptEaseKeywords.REPEATS, repeats.size());
+		metrics.put(ScriptEaseKeywords.STORY_POINT, storyPoints.size());
+		metrics.put(ScriptEaseKeywords.DESCRIPTIONS, descriptions.size());
+		metrics.put(ScriptEaseKeywords.NOTES, notes.size());
+		metrics.put(ScriptEaseKeywords.GAME_OBJECTS, gameObjects.size());
+		metrics.put(ScriptEaseKeywords.IMPLICITS, implicits.size());
 
 		return metrics;
 	}
 
-	public Map<String, Integer> getStoryPointComplexity() {
+	public Map<String, Integer> calculateStoryPointComplexity() {
 		final String LONGEST_BRANCH = "Longest Branch";
 		final String END_POINTS = "End Points";
 
 		final Map<String, Integer> metrics = new HashMap<String, Integer>();
-		final Map<StoryPoint, Integer> depthMap;
+		final Map<StoryNode, Integer> depthMap;
 
 		final int longestPathLength;
 		int endPoints = 0;
 
-		depthMap = SEModelManager.getInstance().getActiveRoot()
-				.createDepthMap();
+		depthMap = this.model.getRoot().createDepthMap();
 
 		longestPathLength = Collections.max(depthMap.values()) + 1;
 
-		for (StoryPoint storypoint : depthMap.keySet()) {
-			if (storypoint.getSuccessors().isEmpty()) {
-				System.out.println(storypoint.getDisplayText());
+		for (StoryNode storyNode : depthMap.keySet()) {
+			if (storyNode.getSuccessors().isEmpty()) {
 				endPoints++;
 			}
 		}
@@ -137,8 +168,13 @@ public class MetricsAnalyzer {
 	 * @return A map containing the metric values in each of the respective
 	 *         categories.
 	 */
-	public Map<String, Float> getStoryComponentComplexity() {
-		Map<String, Float> metrics = new HashMap<String, Float>();
+	public Map<String, Float> calculateStoryComponentComplexity(
+			final Collection<CauseIt> causes,
+			final Collection<StoryPoint> storyPoints) {
+		final Map<String, Float> metrics = new HashMap<String, Float>();
+
+		final int numCauses = causes.size();
+		final int numStoryPoints = storyPoints.size();
 
 		float totalDelaysInCauses = 0;
 		float totalRepeatsInCauses = 0;
@@ -146,9 +182,6 @@ public class MetricsAnalyzer {
 		float totalQuestionsInCauses = 0;
 		float totalDescriptionsInCauses = 0;
 		float totalCausesInStoryPoints = 0;
-
-		int numCauses = causes.size();
-		int numStoryPoints = storyPoints.size();
 
 		// Return if there are no causes or story points.
 		if (numCauses == 0 || numStoryPoints == 0)
@@ -159,7 +192,7 @@ public class MetricsAnalyzer {
 			for (StoryComponent child : cause.getChildren()) {
 
 				if (child instanceof ControlIt) {
-					ControlIt controlIt = (ControlIt) child;
+					final ControlIt controlIt = (ControlIt) child;
 
 					if (controlIt.getFormat() == ControlIt.ControlItFormat.DELAY)
 						totalDelaysInCauses++;
@@ -197,7 +230,9 @@ public class MetricsAnalyzer {
 		// Check the complexity of story points.
 		for (StoryPoint storyPoint : storyPoints) {
 
-			List<StoryComponent> children = storyPoint.getChildren();
+			final List<StoryComponent> children;
+
+			children = storyPoint.getChildren();
 
 			for (StoryComponent child : children) {
 				if (child instanceof ScriptIt)
@@ -205,24 +240,24 @@ public class MetricsAnalyzer {
 			}
 		}
 
-		metrics.put("Effects/Cause", totalEffectsInCauses / numCauses);
-		metrics.put("Questions/Cause", totalQuestionsInCauses / numCauses);
-		metrics.put("Delays/Cause", totalDelaysInCauses / numCauses);
-		metrics.put("Repeats/Cause", totalRepeatsInCauses / numCauses);
-		metrics.put("Descriptions/Cause", totalDescriptionsInCauses / numCauses);
-		metrics.put("Causes/Story Point", totalCausesInStoryPoints
+		metrics.put(
+				ScriptEaseKeywords.EFFECTS + "/" + ScriptEaseKeywords.CAUSE,
+				totalEffectsInCauses / numCauses);
+		metrics.put(ScriptEaseKeywords.QUESTIONS + "/"
+				+ ScriptEaseKeywords.CAUSE, totalQuestionsInCauses / numCauses);
+		metrics.put(ScriptEaseKeywords.DELAYS + "/" + ScriptEaseKeywords.CAUSE,
+				totalDelaysInCauses / numCauses);
+		metrics.put(
+				ScriptEaseKeywords.REPEATS + "/" + ScriptEaseKeywords.CAUSE,
+				totalRepeatsInCauses / numCauses);
+		metrics.put(ScriptEaseKeywords.DESCRIPTIONS + "/"
+				+ ScriptEaseKeywords.CAUSE, totalDescriptionsInCauses
+				/ numCauses);
+		metrics.put(ScriptEaseKeywords.CAUSES + "/"
+				+ ScriptEaseKeywords.STORY_POINT, totalCausesInStoryPoints
 				/ numStoryPoints);
 
 		return metrics;
-	}
-
-	/**
-	 * Returns the game objects currently used by the active story model.
-	 * 
-	 * @return
-	 */
-	public Collection<KnowIt> getGameObjectsInUse() {
-		return this.gameObjects;
 	}
 
 	/**
@@ -230,7 +265,8 @@ public class MetricsAnalyzer {
 	 * 
 	 * @return A map containing each cause and their occurrence.
 	 */
-	public Map<String, Integer> getFavouriteCauses() {
+	public Map<String, Integer> calculateFavouriteCauses(
+			final Collection<CauseIt> causes) {
 		return calculateFavouriteMetricsFor(causes);
 	}
 
@@ -239,7 +275,8 @@ public class MetricsAnalyzer {
 	 * 
 	 * @return A map containing each effect and their occurrence.
 	 */
-	public Map<String, Integer> getFavouriteEffects() {
+	public Map<String, Integer> calculateFavouriteEffects(
+			final Collection<ScriptIt> effects) {
 		return calculateFavouriteMetricsFor(effects);
 	}
 
@@ -248,7 +285,8 @@ public class MetricsAnalyzer {
 	 * 
 	 * @return A map containing each description and their occurrence.
 	 */
-	public Map<String, Integer> getFavouriteDescriptions() {
+	public Map<String, Integer> calculateFavouriteDescriptions(
+			final Collection<KnowIt> descriptions) {
 		return calculateFavouriteMetricsFor(descriptions);
 	}
 
@@ -257,7 +295,8 @@ public class MetricsAnalyzer {
 	 * 
 	 * @return A map containing each question and their occurrence.
 	 */
-	public Map<String, Integer> getFavouriteQuestions() {
+	public Map<String, Integer> calculateFavouriteQuestions(
+			final Collection<AskIt> questions) {
 		return calculateFavouriteMetricsFor(questions);
 	}
 
@@ -266,7 +305,8 @@ public class MetricsAnalyzer {
 	 * 
 	 * @return A map containing each repeat and their occurrence.
 	 */
-	public Map<String, Integer> getFavouriteRepeats() {
+	public Map<String, Integer> calculateFavouriteRepeats(
+			final Collection<ControlIt> repeats) {
 		return calculateFavouriteMetricsFor(repeats);
 	}
 
@@ -275,7 +315,8 @@ public class MetricsAnalyzer {
 	 * 
 	 * @return A map containing each delay and their occurrence.
 	 */
-	public Map<String, Integer> getFavouriteDelays() {
+	public Map<String, Integer> calculateFavouriteDelays(
+			final Collection<ControlIt> delays) {
 		return calculateFavouriteMetricsFor(delays);
 	}
 
@@ -289,18 +330,19 @@ public class MetricsAnalyzer {
 	private Map<String, Integer> calculateFavouriteMetricsFor(
 			Collection<? extends StoryComponent> storyComponents) {
 
-		Map<String, Integer> metrics = new HashMap<String, Integer>();
-		SortedMap<String, Integer> sortedMetrics;
+		final Map<String, Integer> metrics = new HashMap<String, Integer>();
+		final SortedMap<String, Integer> sortedMetrics;
 
 		for (StoryComponent storyComponent : storyComponents) {
-			String stringComponent = storyComponent.getDisplayText();
+			final String stringComponent;
+
+			stringComponent = storyComponent.getDisplayText();
 
 			// Increment value if story component already exists.
 			if (metrics.containsKey(stringComponent)) {
-
-				int frequency = metrics.get(stringComponent) + 1;
+				final int frequency;
+				frequency = metrics.get(stringComponent) + 1;
 				metrics.put(stringComponent, frequency);
-
 			} else
 				metrics.put(stringComponent, 1);
 		}
@@ -313,15 +355,26 @@ public class MetricsAnalyzer {
 		return sortedMetrics;
 	}
 
-	public void processStoryComponents() {
-		this.questions.clear();
-		this.effects.clear();
-		this.causes.clear();
-		this.delays.clear();
-		this.repeats.clear();
-		this.storyPoints.clear();
-		this.descriptions.clear();
-		this.notes.clear();
+	public void processStoryComponents(final Collection<AskIt> questions,
+			final Collection<ScriptIt> effects,
+			final Collection<CauseIt> causes,
+			final Collection<ControlIt> delays,
+			final Collection<ControlIt> repeats,
+			final Collection<StoryPoint> storyPoints,
+			final Collection<KnowIt> descriptions,
+			final Collection<Note> notes, final Collection<KnowIt> gameObjects,
+			final Collection<KnowIt> implicits) {
+
+		questions.clear();
+		effects.clear();
+		causes.clear();
+		delays.clear();
+		repeats.clear();
+		storyPoints.clear();
+		descriptions.clear();
+		notes.clear();
+		gameObjects.clear();
+		implicits.clear();
 
 		final StoryAdapter adapter;
 
@@ -333,7 +386,7 @@ public class MetricsAnalyzer {
 
 					this.defaultProcessComplex(storyPoint);
 
-					for (StoryPoint successor : storyPoint.getSuccessors())
+					for (StoryNode successor : storyPoint.getSuccessors())
 						successor.process(this);
 				}
 			}
@@ -457,7 +510,7 @@ public class MetricsAnalyzer {
 	 */
 	private class FrequencyComparator implements Comparator<String> {
 
-		private Map<String, Integer> data;
+		private final Map<String, Integer> data;
 
 		public FrequencyComparator(Map<String, Integer> data) {
 			this.data = data;
@@ -465,8 +518,8 @@ public class MetricsAnalyzer {
 
 		@Override
 		public int compare(String storyComponent1, String storyComponent2) {
-			Integer frequency1 = this.data.get(storyComponent1);
-			Integer frequency2 = this.data.get(storyComponent2);
+			final Integer frequency1 = this.data.get(storyComponent1);
+			final Integer frequency2 = this.data.get(storyComponent2);
 			return frequency2.compareTo(frequency1);
 		}
 	}
@@ -477,47 +530,42 @@ public class MetricsAnalyzer {
 	public void exportMetrics(File metricsFile) {
 		final Collection<ArrayList<String>> data;
 
-		final String STORY_COMPONENTS = "Story Components";
-		final String FREQUENCY = "Frequency";
-		final String AVERAGE = "Average";
-		final String COMPLEXITY = "Complexity";
-		final String FAVOURITE = "Favourite";
-		final String CAUSES = "Causes";
-		final String EFFECTS = "Effects";
-		final String DESCRIPTIONS = "Descriptions";
-		final String QUESTIONS = "Questions";
-		final String REPEATS = "Repeats";
-		final String DELAYS = "Delays";
-		final String STORY_POINT_COMPLEXITY = "Story Point Complexity";
-
 		data = new ArrayList<ArrayList<String>>();
 
-		processDataToCSV(STORY_COMPONENTS, FREQUENCY,
-				this.getNumStoryComponents(), data);
+		processDataToCSV(ScriptEaseKeywords.STORY_COMPONENTS,
+				ScriptEaseKeywords.FREQUENCY, this.numberComponents, data);
 
-		processDataToCSV(COMPLEXITY, AVERAGE + " " + FREQUENCY,
-				this.getStoryComponentComplexity(), data);
+		processDataToCSV(
+				ScriptEaseKeywords.COMPLEXITY,
+				ScriptEaseKeywords.AVERAGE + " " + ScriptEaseKeywords.FREQUENCY,
+				this.storyComponentComplexity, data);
 
-		processDataToCSV(FAVOURITE + " " + CAUSES, FREQUENCY,
-				this.getFavouriteCauses(), data);
+		processDataToCSV(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.CAUSES, ScriptEaseKeywords.FREQUENCY,
+				this.favouriteCauses, data);
 
-		processDataToCSV(FAVOURITE + " " + EFFECTS, FREQUENCY,
-				this.getFavouriteEffects(), data);
+		processDataToCSV(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.EFFECTS, ScriptEaseKeywords.FREQUENCY,
+				this.favouriteEffects, data);
 
-		processDataToCSV(FAVOURITE + " " + DESCRIPTIONS, FREQUENCY,
-				this.getFavouriteDescriptions(), data);
+		processDataToCSV(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.DESCRIPTIONS,
+				ScriptEaseKeywords.FREQUENCY, this.favouriteDescriptions, data);
 
-		processDataToCSV(FAVOURITE + " " + QUESTIONS, FREQUENCY,
-				this.getFavouriteQuestions(), data);
+		processDataToCSV(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.QUESTIONS, ScriptEaseKeywords.FREQUENCY,
+				this.favouriteQuestions, data);
 
-		processDataToCSV(FAVOURITE + " " + REPEATS, FREQUENCY,
-				this.getFavouriteRepeats(), data);
+		processDataToCSV(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.REPEATS, ScriptEaseKeywords.FREQUENCY,
+				this.favouriteRepeats, data);
 
-		processDataToCSV(FAVOURITE + " " + DELAYS, FREQUENCY,
-				this.getFavouriteDelays(), data);
+		processDataToCSV(ScriptEaseKeywords.FAVOURITE + " "
+				+ ScriptEaseKeywords.DELAYS, ScriptEaseKeywords.FREQUENCY,
+				this.favouriteDelays, data);
 
-		processDataToCSV(STORY_POINT_COMPLEXITY, FREQUENCY,
-				this.getStoryPointComplexity(), data);
+		processDataToCSV(ScriptEaseKeywords.STORY_POINT_COMPLEXITY,
+				ScriptEaseKeywords.FREQUENCY, this.storyPointComplexity, data);
 
 		FileIO.getInstance().saveCSV(data, metricsFile);
 	}
@@ -547,5 +595,45 @@ public class MetricsAnalyzer {
 		tempRow = new ArrayList<String>();
 		tempRow.add("");
 		data.add(tempRow);
+	}
+
+	/*
+	 * *************** Getters for metrics. ********************
+	 */
+
+	public Map<String, Integer> getNumberComponents() {
+		return numberComponents;
+	}
+
+	public Map<String, Integer> getStoryPointComplexity() {
+		return storyPointComplexity;
+	}
+
+	public Map<String, Float> getStoryComponentComplexity() {
+		return storyComponentComplexity;
+	}
+
+	public Map<String, Integer> getFavouriteCauses() {
+		return favouriteCauses;
+	}
+
+	public Map<String, Integer> getFavouriteEffects() {
+		return favouriteEffects;
+	}
+
+	public Map<String, Integer> getFavouriteDescriptions() {
+		return favouriteDescriptions;
+	}
+
+	public Map<String, Integer> getFavouriteQuestions() {
+		return favouriteQuestions;
+	}
+
+	public Map<String, Integer> getFavouriteRepeats() {
+		return favouriteRepeats;
+	}
+
+	public Map<String, Integer> getFavouriteDelays() {
+		return favouriteDelays;
 	}
 }

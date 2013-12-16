@@ -17,10 +17,12 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
@@ -95,13 +97,21 @@ public class StoryComponentTransferUtils {
 					if (component instanceof ScriptIt
 							|| component instanceof KnowIt
 							|| component instanceof AskIt
+							|| component instanceof PickIt
 							|| component instanceof ControlIt
-							|| component instanceof Note) {
+							|| component instanceof Note
+							|| component instanceof ActivityIt) {
 
 						// We don't want to be dropping questions in their own
 						// blocks.
 						if (destinationComponent.getOwner() instanceof AskIt
 								&& component instanceof AskIt)
+							return false;
+
+						// Don't want to be dropping activities within
+						// activities
+						if (destinationComponent.getOwner() instanceof ActivityIt
+								&& component instanceof ActivityIt)
 							return false;
 
 						// Nor do we want to be dropping causes in effects
@@ -250,7 +260,7 @@ public class StoryComponentTransferUtils {
 		final StoryComponent clone = child.clone();
 		final boolean success;
 
-		clone.revalidateKnowItBindings();
+		// clone.revalidateKnowItBindings();
 
 		StoryComponent sibling = parent.getChildAt(insertionIndex);
 		if (sibling != null) {
@@ -259,6 +269,8 @@ public class StoryComponentTransferUtils {
 		} else {
 			success = parent.addStoryChild(clone);
 		}
+
+		clone.revalidateKnowItBindings();
 
 		if (!success)
 			throw new IllegalStateException("Was unable to add " + child

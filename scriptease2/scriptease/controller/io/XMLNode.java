@@ -37,6 +37,18 @@ public enum XMLNode {
 
 	CONTROLITS("ControlIts", CONTROLIT),
 
+	TASK("Task"),
+	
+	TASKS("Tasks", TASK),
+	
+	BEHAVIOUR("Behaviour"),
+	
+	BEHAVIOURS("Behaviours", BEHAVIOUR),
+	
+	ACTIVITYIT("ActivityIt"),
+	
+	ACTIVITYITS("ActivityIts", ACTIVITYIT),
+	
 	DIALOGUE_LINE("DialogueLine"),
 
 	DIALOGUES("Dialogues", DIALOGUE_LINE),

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.regex.PatternSyntaxException;
 
-import scriptease.controller.AbstractFragmentVisitor;
+import scriptease.controller.FragmentVisitor;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
@@ -188,14 +188,20 @@ public class SeriesFragment extends AbstractContainerFragment {
 	}
 
 	private Collection<? extends Object> getData(Context context) {
+		final String directiveText = this.getDirectiveText();
+
 		final SeriesType series;
 
-		series = SeriesType.valueOf(this.getDirectiveText().toUpperCase());
+		try {
+			series = SeriesType.valueOf(directiveText.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			System.out.println("Couldn't find the value of : " + directiveText);
+			return null;
+		}
 
 		switch (series) {
 		case INCLUDES:
 			return context.getIncludeFiles();
-
 		case CODEBLOCKS:
 			return context.getCodeBlocks();
 		case CAUSES:
@@ -212,8 +218,12 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getImplicits();
 		case CHILDREN:
 			return context.getChildren();
+		case STORYNODES:
+			return context.getStoryNodes();
 		case STORYPOINTS:
 			return context.getStoryPoints();
+		case ORDEREDSTORYNODES:
+			return context.getOrderedStoryNodes();
 		case ORDEREDSTORYPOINTS:
 			return context.getOrderedStoryPoints();
 		case PARENTNODES:
@@ -228,6 +238,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getOrderedDialogueLines();
 		case CHILDLINES:
 			return context.getChildLines();
+		case CHOICES:
+			return context.getChoices();
 		default:
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "
@@ -393,7 +405,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	}
 
 	@Override
-	public void process(AbstractFragmentVisitor visitor) {
+	public void process(FragmentVisitor visitor) {
 		visitor.processSeriesFragment(this);
 	}
 }

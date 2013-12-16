@@ -84,7 +84,6 @@ public class CodeBlockReference extends CodeBlock {
 		// parameters
 		for (KnowIt parameter : originalParameters) {
 			final KnowIt clonedParameter = parameter.clone();
-
 			clonedParameters.add(clonedParameter);
 		}
 
@@ -193,7 +192,7 @@ public class CodeBlockReference extends CodeBlock {
 	public void setTypes(Collection<String> types) {
 		this.getTarget().setTypes(types);
 		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
+				StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
 	}
 
 	@Override

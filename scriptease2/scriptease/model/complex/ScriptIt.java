@@ -323,9 +323,12 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE) {
 				this.notifyObservers(new StoryComponentEvent(this,
 						StoryComponentChangeEnum.CHANGE_PARAMETER_LIST_REMOVE));
-			} else if (type == StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES) {
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET) {
 				this.notifyObservers(new StoryComponentEvent(this,
-						StoryComponentChangeEnum.CHANGE_CODE_BLOCK_TYPES));
+						StoryComponentChangeEnum.CHANGE_PARAMETER_NAME_SET));
+			} else if (type == StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE) {
+				this.notifyObservers(new StoryComponentEvent(this,
+						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
 			} else if (type == StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET) {
 				this.notifyObservers(new StoryComponentEvent(this,
 						StoryComponentChangeEnum.CODE_BLOCK_SLOT_SET));

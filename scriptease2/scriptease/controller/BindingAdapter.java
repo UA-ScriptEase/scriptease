@@ -6,7 +6,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 
 /**
  * Default implementation of BindingVisitor that does nothing. Ever. <br>
@@ -40,6 +42,11 @@ public abstract class BindingAdapter implements BindingVisitor {
 	public void processReference(KnowItBindingReference reference) {
 		this.defaultProcess(reference);
 	}
+	
+	@Override
+	public void processUninitialized(KnowItBindingUninitialized uninitialized) {
+		this.defaultProcess(uninitialized);
+	}
 
 	@Override
 	public void processNull(KnowItBindingNull nullBinding) {
@@ -50,10 +57,15 @@ public abstract class BindingAdapter implements BindingVisitor {
 	public void processAutomatic(KnowItBindingAutomatic automatic) {
 		this.defaultProcess(automatic);
 	}
-	
+
 	@Override
 	public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 		this.defaultProcess(storyPoint);
+	}
+
+	@Override
+	public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
+		this.defaultProcess(storyGroup);
 	}
 
 	/**

@@ -8,7 +8,9 @@ import java.io.IOError;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -58,8 +60,7 @@ import scriptease.util.FileOp;
  * @author jyuen
  */
 public final class FileManager {
-	private static final String SAVE_AS = Il8nResources
-			.getString("Save_Model_As");
+	private static final String SAVE_AS = Il8nResources.getString("Save_Model");
 
 	private static final String SAVE_AS_PACKAGE = "Save As Package";
 	/**
@@ -235,6 +236,10 @@ public final class FileManager {
 			public void processLibraryModel(LibraryModel library) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
 
+				final String title = library.getTitle();
+				if (title.length() > 0 && title.charAt(0) == '*')
+					library.setTitle(title.substring(1));
+
 				File location = windowManager.showFileChooser(
 						FileManager.SAVE_AS, library.getTitle(),
 						FileManager.LIBRARY_FILTER);
@@ -259,6 +264,10 @@ public final class FileManager {
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
 				final WindowFactory windowManager = WindowFactory.getInstance();
+
+				final String title = storyModel.getTitle();
+				if (title.length() > 0 && title.charAt(0) == '*')
+					storyModel.setTitle(title.substring(1));
 
 				File location = windowManager.showFileChooser(
 						FileManager.SAVE_AS, storyModel.getTitle(),
@@ -736,6 +745,42 @@ public final class FileManager {
 		this.openFiles.put(location, library);
 
 		return library;
+	}
+
+	/**
+	 * Loads the tutorials for the provided translator. 
+	 * 
+	 * @param translator
+	 * @return
+	 */
+	public Collection<File> loadTutorials(Translator translator) {
+		final List<File> files = new ArrayList<File>();
+
+		final File location;
+
+		location = translator.getPathProperty(DescriptionKeys.TUTORIALS_PATH);
+
+		if (location == null)
+			return files;
+
+		final File[] fileArray = location.listFiles();
+		Arrays.sort(fileArray, new Comparator<File>() {
+
+			@Override
+			public int compare(File file1, File file2) {
+				return file1.getName().compareTo(file2.getName());
+			}
+		});
+
+		if (location.isDirectory()) {
+			for (File file : location.listFiles())
+				files.add(file);
+		} else
+			throw new IllegalStateException(
+					"Tried to retrieve tutorials from an invalid directory: "
+							+ location.getAbsolutePath());
+
+		return files;
 	}
 
 	/**

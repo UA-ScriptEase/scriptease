@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -34,8 +35,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		implements Converter {
 
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class.
 
 	public static final String TAG_CODE_BLOCK_REF = "CodeBlockReference";
 
@@ -85,7 +85,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 			UnmarshallingContext context) {
 		final String libraryName;
 		final CodeBlockReference block;
-		final CodeBlockSource target;
+		CodeBlockSource target = null;
 		String nodeName;
 
 		libraryName = reader.getAttribute(ATTRIBUTE_LIBRARY);
@@ -100,17 +100,25 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 		final Translator translator;
 		final int targetId;
-		final LibraryModel library;
+		LibraryModel library;
 
 		translator = TranslatorManager.getInstance().getActiveTranslator();
 		targetId = Integer.parseInt(reader.getValue());
-		library = translator.findLibrary(libraryName);
+
+		// We use this hack to load in any codeblock references to
+		// the existing library model before the library model is even
+		// completely read from XStream.
+		if (LibraryModelConverter.currentLibrary != null
+				&& libraryName.equals(LibraryModelConverter.currentLibrary
+						.getTitle())) {
+			library = LibraryModelConverter.currentLibrary;
+		} else
+			library = translator.findLibrary(libraryName);
 
 		if (library != null) {
 			target = library.getCodeBlockByID(targetId);
 			block.setLibrary(library);
-		} else
-			target = null;
+		}
 
 		if (target == null) {
 			final String msg = "Failed to read target information for \""

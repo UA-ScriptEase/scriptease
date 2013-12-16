@@ -31,6 +31,7 @@ import scriptease.util.FileOp;
  * 
  * @author remiller
  * @author kschenk
+ * @author jyuen
  */
 public class UnityFile extends Resource {
 	public static final String SCENE_FILE_EXTENSION = ".unity";
@@ -44,13 +45,13 @@ public class UnityFile extends Resource {
 	// There's no point of having multiple parsers unless we were reading in
 	// unity files multi-threaded, which we aren't, so we just use one.
 	private static final Yaml parser = new Yaml();
-	
+
 	static {
 		parser.setName("Unity Scene YAML Parser");
 	}
 
 	private final File location;
-	private final String filename;
+	private String filename;
 
 	private final Collection<String> types;
 	private final List<UnityResource> unityResources;
@@ -329,10 +330,10 @@ public class UnityFile extends Resource {
 	 * not initialize children or owner of the new resource. This is primarily
 	 * used to add script objects.
 	 * 
-	 * @param object
+	 * @param resource
 	 */
-	public void addResource(UnityResource object) {
-		this.unityResources.add(object);
+	public void addResource(UnityResource resource) {
+		this.unityResources.add(resource);
 	}
 
 	/**
@@ -355,24 +356,40 @@ public class UnityFile extends Resource {
 		final String unityFileHeader = "%YAML 1.1\n" + "%TAG !u! "
 				+ UnityProject.UNITY_TAG + "\n";
 
+		// Copy the existing scene file contents to a backup location first.
+		final File backupLocation;
+
+		backupLocation = new File(location.getParent() + "\\._"
+				+ FileOp.removeExtension(location.getName()) + "_backup."
+				+ FileOp.getExtension(location));
+
+		try {
+			FileOp.copyFile(location, backupLocation);
+		} catch (IOException e) {
+			Thread.currentThread()
+					.getUncaughtExceptionHandler()
+					.uncaughtException(
+							Thread.currentThread(),
+							new IOException(
+									"Exception when creating backup scene file at "
+											+ location + ": " + e));
+		}
+
+		// Actually write to the scene file now.
 		writer = new BufferedWriter(new FileWriter(location));
 
 		writer.write(unityFileHeader);
 
 		// Add an arbitrary number
-		for (Object data : this.unityResources) {
-			if (data instanceof UnityResource) {
-				final UnityResource resource = (UnityResource) data;
+		for (UnityResource resource : this.unityResources) {
+			final UnityType type = resource.getType();
 
-				final String number = "" + resource.getType().getID();
+			writer.write("--- !u!" + type.getID() + " &"
+					+ resource.getUniqueID() + "\n");
 
-				writer.write("--- !u!" + number + " &" + resource.getUniqueID()
-						+ "\n");
+			parser.dump(PropertyValue.convertToValueMap(resource
+					.getTopLevelPropertyMap()), writer);
 
-				parser.dump(PropertyValue.convertToValueMap(resource
-						.getTopLevelPropertyMap()), writer);
-			} else
-				System.out.println("Wut" + data);
 		}
 		writer.close();
 	}

@@ -13,20 +13,23 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.Task;
 
 /**
  * Checks if the parameters of the given source are bound (not
  * KnowItBindingNull);
  * 
  * @author mfchurch
+ * @author kschenk
  * @author jyuen
- * 
  */
-public class ParameterBoundRule extends StoryAdapter implements
-		StoryRule {
+public class ParameterBoundRule extends StoryAdapter implements StoryRule {
 	private Collection<StoryProblem> problems;
 
 	@Override
@@ -72,11 +75,11 @@ public class ParameterBoundRule extends StoryAdapter implements
 			}
 		});
 	}
-	
+
 	@Override
 	public void processAskIt(final AskIt askIt) {
 		final KnowIt condition;
-		
+
 		condition = askIt.getCondition();
 		condition.process(this);
 	}
@@ -87,8 +90,45 @@ public class ParameterBoundRule extends StoryAdapter implements
 	 * @param component
 	 */
 	private void addProblem(final KnowIt component) {
-		final String description = "Parameter is unbound";
-		StoryProblem problem = new StoryProblem(component, description);
+		String description = "Slot \"" + component.getDisplayText()
+				+ "\" is empty";
+
+		StoryComponent owner = component.getOwner();
+
+		while (owner != null) {
+			if (owner instanceof CauseIt) {
+				description += " in the \"" + owner.getDisplayText()
+						+ "\" cause";
+
+				final StoryComponent causeOwner = owner.getOwner();
+
+				if (causeOwner instanceof StoryPoint) {
+					description += " in the \"" + causeOwner.getDisplayText()
+							+ "\" story point";
+				}
+				break;
+			} else if (owner instanceof Task) {
+				description += " in the \"" + owner.getDisplayText()
+						+ "\" task";
+
+				final StoryComponent taskOwner = owner.getOwner();
+
+				if (taskOwner instanceof Behaviour) {
+					description += " in the \"" + taskOwner.getDisplayText()
+							+ "\" behaviour";
+				}
+				break;
+			} else
+				owner = owner.getOwner();
+		}
+
+		if (owner != null) {
+
+		}
+
+		description += ".";
+
+		final StoryProblem problem = new StoryProblem(component, description);
 		this.problems.add(problem);
 	}
 

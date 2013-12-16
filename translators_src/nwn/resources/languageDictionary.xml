@@ -53,9 +53,6 @@
 		</Format>
 		<!-- Declares all variables in the series -->
 		<Format id="variablesDeclaration">
-			<Line>
-				<Literal>// Variables Declaration</Literal>
-			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDeclaration" />
 			</Series>
@@ -70,9 +67,6 @@
 			</Line>
 		</Format>
 		<Format id="variablesDefinition">
-			<Line>
-				<Literal>// Variables Definition</Literal>
-			</Line>
 			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
 			</Series>
@@ -194,6 +188,7 @@
 				<Line />
 			</Series>
 		</Format>
+
 		<!-- Gets the children of the story component -->
 		<Format id="storyComponentChildren">
 			<Line>
@@ -202,8 +197,10 @@
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
 				<FormatRef data="askIt" ref="askItConditional" />
+				<FormatRef data="pickIt" ref="pickItConditional" />
 				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="controlIt" ref="controlItCall" />
+				<FormatRef data="activityIt" ref="activityItCall" />
 			</Series>
 		</Format>
 		<!-- Gets the appropriate format for the type -->
@@ -212,6 +209,7 @@
 			<FormatRef ref="variablesDefinition" />
 			<FormatRef ref="storyComponentChildren" />
 		</Format>
+
 		<!-- Format for control it children -->
 		<Format id="controlItChildren">
 			<Scope data="Cause">
@@ -220,16 +218,33 @@
 			</Scope>
 			<FormatRef ref="childrenWithoutImplicits" />
 		</Format>
+
 		<!-- Finds the format for the ControlIt and uses it -->
 		<Format id="controlItCall">
 			<Fragment data="controlItFormat" />
 		</Format>
+
+		<!-- Format for activity it children -->
+		<Format id="activityItChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+			<FormatRef ref="childrenWithoutImplicits" />
+		</Format>
+
+		<!-- Finds the format for the ActivityIt and uses it -->
+		<Format id="activityItCall">
+		    <FormatRef ref="functionCall" />
+		</Format>
+		
 		<!-- Defines all variables in the KnowIt -->
 		<Format id="knowItDefinition">
 			<Series data="variables">
 				<FormatRef ref="variableDefinition" />
 			</Series>
 		</Format>
+
 		<!-- Turns a Note into a comment -->
 		<Format id="noteFormat">
 			<Line>
@@ -254,6 +269,8 @@
 			</Line>
 			<Line>
 				<Literal>#include "i_se_story"</Literal>
+			</Line>
+			<Line>	
 				<Literal>#include "i_se_aux"</Literal>
 			</Line>
 			<Series data="includes" unique="true">
@@ -297,15 +314,8 @@
 			</Line>
 		</Format>
 
-		<!-- Format for askits -->
+		<!-- Format for askIts -->
 		<Format id="askItConditional">
-			<Line>
-				<Literal>//Condition Variables</Literal>
-			</Line>
-			<Series data="variables">
-				<FormatRef ref="variableDefinition" />
-			</Series>
-			<Line />
 			<Line>
 				<Literal>if(</Literal>
 				<Fragment data="condition" />
@@ -327,6 +337,33 @@
 			<Line>
 				<Literal>}</Literal>
 			</Line>
+		</Format>
+
+		<!-- Format for pickIts -->
+		<Format id="pickItConditional">
+			<Line>
+				<Literal>// PickIt Choices</Literal>
+			</Line>
+			<Line>
+				<Literal>int random = Random(</Literal>
+				<Fragment data="totalChoiceProbability" />
+				<Literal>);</Literal>
+			</Line>
+			<Series data="choices" unique="true">
+				<Line>
+					<Literal>if (random &gt;= </Literal>
+					<Fragment data="choiceProbabilityLowerBound" />
+					<Literal> &amp;&amp; random &lt; </Literal>
+					<Fragment data="choiceProbabilityUpperBound" />
+					<Literal>) {</Literal>
+				</Line>
+				<Indent>
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Indent>
+				<Line>
+					<Literal>}</Literal>
+				</Line>
+			</Series>
 		</Format>
 
 		<!-- Format for the main method in normal script files -->

@@ -4,16 +4,20 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 
+import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
 import scriptease.gui.SEGraph.models.DialogueLineGraphModel;
-import scriptease.gui.SEGraph.models.StoryPointGraphModel;
+import scriptease.gui.SEGraph.models.StoryNodeGraphModel;
+import scriptease.gui.SEGraph.models.TaskGraphModel;
 import scriptease.gui.SEGraph.renderers.DescribeItNodeRenderer;
 import scriptease.gui.SEGraph.renderers.DialogueLineNodeRenderer;
 import scriptease.gui.SEGraph.renderers.EditableDescribeItNodeRenderer;
-import scriptease.gui.SEGraph.renderers.StoryPointNodeRenderer;
+import scriptease.gui.SEGraph.renderers.StoryNodeRenderer;
+import scriptease.gui.SEGraph.renderers.TaskNodeRenderer;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 
@@ -23,6 +27,7 @@ import scriptease.model.semodel.dialogue.DialogueLine;
  * construction.
  * 
  * @author kschenk
+ * @author jyuen
  * 
  */
 public class SEGraphFactory {
@@ -43,7 +48,7 @@ public class SEGraphFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(start);
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, true);
+				SelectionMode.SELECT_PATH_FROM_START, true, true);
 
 		graph.setNodeRenderer(new DescribeItNodeRenderer(graph));
 		graph.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -65,7 +70,7 @@ public class SEGraphFactory {
 
 		describeItGraphModel = new DescribeItNodeGraphModel(start);
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, false);
+				SelectionMode.SELECT_PATH_FROM_START, false, true);
 
 		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
 
@@ -73,21 +78,58 @@ public class SEGraphFactory {
 	}
 
 	/**
-	 * Builds a graph for story points that has draggable binding widgets and a
-	 * fan in spinner. The binding widgets can have their names edited.
+	 * Builds a graph for story nodes with default white background colour, and
+	 * read only mode to false.
 	 * 
 	 * @param start
 	 * @return
 	 */
-	public static SEGraph<StoryPoint> buildStoryGraph(StoryPoint start) {
-		final SEGraph<StoryPoint> graph;
-		final StoryPointGraphModel storyGraphModel;
+	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start) {
+		return SEGraphFactory.buildStoryGraph(start, Color.WHITE, false);
+	}
 
-		storyGraphModel = new StoryPointGraphModel(start);
-		graph = new SEGraph<StoryPoint>(storyGraphModel);
+	/**
+	 * Builds a graph for story nodes.
+	 * 
+	 * @param start
+	 *            The graph start story node.
+	 * @param bgColour
+	 *            The background colour of the graph.
+	 * @param readOnly
+	 *            Whether the graph is read only.
+	 * @return
+	 */
+	public static SEGraph<StoryNode> buildStoryGraph(StoryNode start,
+			Color bgColour, boolean readOnly) {
+		final SEGraph<StoryNode> graph;
+		final StoryNodeGraphModel storyGraphModel;
 
-		graph.setNodeRenderer(new StoryPointNodeRenderer(graph));
-		graph.setBackground(Color.WHITE);
+		storyGraphModel = new StoryNodeGraphModel(start);
+		graph = new SEGraph<StoryNode>(storyGraphModel,
+				SelectionMode.SELECT_NODE, readOnly, false);
+
+		graph.setNodeRenderer(new StoryNodeRenderer(graph));
+		graph.setBackground(bgColour);
+
+		return graph;
+	}
+
+	/**
+	 * Builds a graph for tasks.
+	 * 
+	 * @param start
+	 *            The graph start task node.
+	 * @return
+	 */
+	public static SEGraph<Task> buildTaskGraph(Task start, boolean readOnly) {
+		final SEGraph<Task> graph;
+		final TaskGraphModel taskGraphModel;
+
+		taskGraphModel = new TaskGraphModel(start);
+		graph = new SEGraph<Task>(taskGraphModel, SelectionMode.SELECT_NODE,
+				readOnly, true);
+
+		graph.setNodeRenderer(new TaskNodeRenderer(graph));
 
 		return graph;
 	}
@@ -108,6 +150,26 @@ public class SEGraphFactory {
 
 		graph.setNodeRenderer(new DialogueLineNodeRenderer(graph));
 		graph.setBackground(Color.WHITE);
+
+		story.addStoryModelObserver(new StoryModelAdapter() {
+			private void redrawGraph() {
+				graph.recalculateDepthMap();
+				graph.repaint();
+				graph.revalidate();
+			}
+
+			@Override
+			public void dialogueChildAdded(DialogueLine added,
+					DialogueLine parent) {
+				this.redrawGraph();
+			}
+
+			@Override
+			public void dialogueChildRemoved(DialogueLine removed,
+					DialogueLine parent) {
+				this.redrawGraph();
+			}
+		});
 
 		return graph;
 	}

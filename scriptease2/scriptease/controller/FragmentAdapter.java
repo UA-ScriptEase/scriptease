@@ -18,13 +18,12 @@ import scriptease.translator.codegenerator.code.fragments.container.SeriesFragme
  * of the visitors whenever the interface changes. Subclasses also get the perk
  * of only having to override the methods they <i>do</i> support.<br>
  * <br>
- * AbstractFragmentAdapter is an Adapter (of the Adapter design pattern) to
- * AbstractFragmentVisitor.
+ * FragmentAdapter is an Adapter (of the Adapter design pattern) to
+ * FragmentVisitor.
  * 
  * @author mfchurch
  */
-public abstract class AbstractFragmentAdapter implements
-		AbstractFragmentVisitor {
+public abstract class FragmentAdapter implements FragmentVisitor {
 
 	@Override
 	public void processFormatDefinitionFragment(

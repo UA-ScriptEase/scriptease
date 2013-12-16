@@ -20,7 +20,7 @@ import scriptease.model.complex.StoryPoint;
 
 /**
  * Represents and performs a disable action on a story component. Disabling a
- * story component is equivalent to commenting it out in code.
+ * story component is equivalent to removing it from code generation.
  * 
  * @author jyuen
  */
@@ -46,11 +46,11 @@ public class DisableAction extends ActiveModelSensitiveAction {
 	 */
 	@Override
 	protected boolean isLegal() {
-		final Component focusOwner; 
-		
+		final Component focusOwner;
+
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
-		if (focusOwner instanceof StoryComponentPanel) 
+		if (focusOwner instanceof StoryComponentPanel)
 			return super.isLegal();
 		else
 			return false;
@@ -94,22 +94,27 @@ public class DisableAction extends ActiveModelSensitiveAction {
 
 		final boolean enabled = component.isEnabled();
 
-		// Don't want to be enabling the component if it's owner is disabled.
-		if (component.getOwner() != null
-				&& !(component.getOwner() instanceof StoryPoint)
-				&& !component.getOwner().isEnabled())
+		if (component instanceof StoryPoint)
 			return;
 
 		component.setEnabled(!enabled);
 
-		if (!(component instanceof StoryPoint)) {
-			for (StoryComponentPanel childPanel : componentPanel
-					.getDescendants()) {
-				childPanel.getStoryComponent().setEnabled(!enabled);
-				childPanel.repaint();
-			}
+		// Enable / Disable all child components
+		for (StoryComponentPanel childPanel : componentPanel.getDescendants()) {
+			childPanel.getStoryComponent().setEnabled(!enabled);
+			childPanel.repaint();
 		}
-
+		
+		// Re-enable all successive owners if the component is enabled.
+		StoryComponent owner = component.getOwner();
+		while (owner != null
+				&& !(owner instanceof StoryPoint)
+				&& !owner.isEnabled()
+				&& component.isEnabled()) {
+			owner.setEnabled(true);
+			owner = owner.getOwner();
+		}
+		
 		componentPanel.repaint();
 	}
 

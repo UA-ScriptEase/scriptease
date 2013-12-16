@@ -13,8 +13,11 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.GameModule;
@@ -43,13 +46,16 @@ public class KnowItBindingConverter implements Converter {
 	private static final String TAG_VALUE = "Value";
 
 	private static final String ATTRIBUTE_BINDING_FLAVOUR = "flavour";
+
 	private static final String ATTRIBUTE_VALUE_CONSTANT_FLAVOUR = "constant";
 	private static final String ATTRIBUTE_VALUE_RESOURCE_FLAVOUR = "resource";
 	private static final String ATTRIBUTE_VALUE_FUNCTION_FLAVOUR = "function";
 	private static final String ATTRIBUTE_VALUE_REFERENCE_FLAVOUR = "reference";
+	private static final String ATTRIBUTE_VALUE_UNINITIALIZED_FLAVOUR = "uninitialized";
 	private static final String ATTRIBUTE_VALUE_NULL_FLAVOUR = "null";
 	private static final String ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR = "automatic";
 	private static final String ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR = "storyPoint";
+	private static final String ATTRIBUTE_VALUE_STORY_GROUP_FLAVOUR = "storyGroup";
 
 	/**
 	 * Can convert any subclass of KnowItBinding
@@ -110,6 +116,13 @@ public class KnowItBindingConverter implements Converter {
 			}
 
 			@Override
+			public void processUninitialized(
+					KnowItBindingUninitialized uninitialized) {
+				KnowItBindingConverter.this.marshallUninitializedBinding(
+						uninitialized, writer, context);
+			}
+
+			@Override
 			public void processAutomatic(KnowItBindingAutomatic automatic) {
 				KnowItBindingConverter.this.marshallAutomaticBinding(automatic,
 						writer, context);
@@ -125,6 +138,12 @@ public class KnowItBindingConverter implements Converter {
 			public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
 				KnowItBindingConverter.this.marshallStoryPointBinding(
 						storyPoint, writer, context);
+			}
+
+			@Override
+			public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
+				KnowItBindingConverter.this.marshallStoryGroupBinding(
+						storyGroup, writer, context);
 			}
 		});
 	}
@@ -197,6 +216,20 @@ public class KnowItBindingConverter implements Converter {
 	}
 
 	/*
+	 * Converts a KnowIt Uninitialized to XML
+	 */
+	private void marshallUninitializedBinding(
+			KnowItBindingUninitialized binding,
+			HierarchicalStreamWriter writer, MarshallingContext context) {
+		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
+				ATTRIBUTE_VALUE_UNINITIALIZED_FLAVOUR);
+
+		writer.startNode(KnowItConverter.TAG_KNOWIT);
+		context.convertAnother(binding.getValue());
+		writer.endNode();
+	}
+
+	/*
 	 * Converts a Story Point reference to XML
 	 */
 	private void marshallStoryPointBinding(KnowItBindingStoryPoint binding,
@@ -206,6 +239,23 @@ public class KnowItBindingConverter implements Converter {
 
 		writer.startNode(StoryPointConverter.TAG_STORYPOINT);
 		final StoryPoint value = binding.getValue();
+		if (value == null)
+			System.err.println("Bug track: Null value assigned to binding "
+					+ binding);
+		context.convertAnother(value);
+		writer.endNode();
+	}
+
+	/*
+	 * Converts a Story Group reference to XML
+	 */
+	private void marshallStoryGroupBinding(KnowItBindingStoryGroup binding,
+			HierarchicalStreamWriter writer, MarshallingContext context) {
+		writer.addAttribute(ATTRIBUTE_BINDING_FLAVOUR,
+				ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR);
+
+		writer.startNode(StoryGroupConverter.TAG_STORYGROUP);
+		final StoryGroup value = binding.getValue();
 		if (value == null)
 			System.err.println("Bug track: Null value assigned to binding "
 					+ binding);
@@ -244,11 +294,17 @@ public class KnowItBindingConverter implements Converter {
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_REFERENCE_FLAVOUR))
 				binding = this.unmarshallReferenceBinding(reader, context);
 			else if (flavour
+					.equalsIgnoreCase(ATTRIBUTE_VALUE_UNINITIALIZED_FLAVOUR))
+				binding = this.unmarshallUninitializedBinding(reader, context);
+			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_AUTOMATIC_FLAVOUR))
 				binding = this.unmarshallAutomaticBinding(reader, context);
 			else if (flavour
 					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_POINT_FLAVOUR))
 				binding = this.unmarshallStoryPointBinding(reader, context);
+			else if (flavour
+					.equalsIgnoreCase(ATTRIBUTE_VALUE_STORY_GROUP_FLAVOUR))
+				binding = this.unmarshallStoryGroupBinding(reader, context);
 			else
 				// VizziniAmazementException - remiller
 				throw new ConversionException("Inconceivable binding type: "
@@ -360,16 +416,50 @@ public class KnowItBindingConverter implements Converter {
 		return binding;
 	}
 
+	private KnowItBindingUninitialized unmarshallUninitializedBinding(
+			HierarchicalStreamReader reader, UnmarshallingContext context) {
+		final KnowIt uninitiate;
+
+		KnowItBindingUninitialized binding = new KnowItBindingUninitialized(
+				null);
+
+		reader.moveDown();
+
+		uninitiate = (KnowIt) context.convertAnother(binding, KnowIt.class);
+
+		reader.moveUp();
+
+		binding = new KnowItBindingUninitialized(new KnowItBindingReference(
+				uninitiate));
+
+		return binding;
+	}
+
 	private KnowItBindingStoryPoint unmarshallStoryPointBinding(
 			HierarchicalStreamReader reader, UnmarshallingContext context) {
 		final StoryPoint storyPoint;
 
 		// move down and read as a story point
 		reader.moveDown();
-		storyPoint = (StoryPoint) context.convertAnother(null,
-				StoryPoint.class);
+
+		storyPoint = (StoryPoint) context
+				.convertAnother(null, StoryPoint.class);
+
 		reader.moveUp();
 
 		return new KnowItBindingStoryPoint(storyPoint);
+	}
+
+	private KnowItBindingStoryGroup unmarshallStoryGroupBinding(
+			HierarchicalStreamReader reader, UnmarshallingContext context) {
+		final StoryGroup storyGroup;
+
+		// move down and read as a story point
+		reader.moveDown();
+		storyGroup = (StoryGroup) context
+				.convertAnother(null, StoryGroup.class);
+		reader.moveUp();
+
+		return new KnowItBindingStoryGroup(storyGroup);
 	}
 }

@@ -93,7 +93,8 @@ public class KnowItBindingStoryPoint extends KnowItBinding {
 
 				model = SEModelManager.getInstance().getActiveModel();
 				if (model instanceof StoryModel) {
-					return ((StoryModel) model).getRoot().getDescendants()
+					return ((StoryModel) model).getRoot()
+							.getStoryPointDescendants()
 							.contains(this.getValue());
 				}
 			} else

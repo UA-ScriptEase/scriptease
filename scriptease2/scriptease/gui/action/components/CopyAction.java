@@ -73,9 +73,9 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
 
-		if (focusOwner instanceof StoryComponentPanel
-				|| focusOwner instanceof StoryComponentPanelJList
-				|| focusOwner instanceof SEGraph) {
+		if (focusOwner instanceof SEGraph
+				|| focusOwner instanceof StoryComponentPanel
+				|| focusOwner instanceof StoryComponentPanelJList) {
 			return super.isLegal();
 		} else
 			return false;
@@ -102,7 +102,19 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 		if (focusOwner instanceof StoryComponentPanel) {
 			// Copies individual panels. This does copy multiple if multiple are
 			// selected.
-			this.copyComponent((StoryComponentPanel) focusOwner);
+
+			/*
+			 * If you are curious how the multiple components are added onto the
+			 * clipboard even though copyComponent is only called once and for
+			 * one component only, head on over to
+			 * StoryComponentPanelTransferHandler and look inside the
+			 * createTransferable method. You will have a hard time debugging if
+			 * you're stepping through here for multiple selection - jyuen
+			 */
+			final StoryComponentPanel componentPanel = (StoryComponentPanel) focusOwner;
+
+			this.copyComponent(componentPanel);
+
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
 			// Copies from a StoryComponentPanelJList.
 			final StoryComponentPanelJList list;
@@ -111,15 +123,20 @@ public final class CopyAction extends ActiveModelSensitiveAction {
 			for (Object selectedObject : list.getSelectedValues()) {
 				this.copyComponent((StoryComponentPanel) selectedObject);
 			}
+
 		} else if (focusOwner instanceof SEGraph) {
 			// Copy the last node in an SEGraph
 			final SEGraph graph;
 			final JComponent selectedComponent;
 
+			final Object lastSelectedNode;
+
 			graph = (SEGraph) focusOwner;
 
+			lastSelectedNode = graph.getLastSelectedNode();
+
 			selectedComponent = (JComponent) graph.getNodesToComponentsMap()
-					.getValue(graph.getLastSelectedNode());
+					.getValue(lastSelectedNode);
 
 			this.copyComponent(selectedComponent);
 		}

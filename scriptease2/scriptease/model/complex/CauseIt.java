@@ -9,6 +9,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.behaviours.Behaviour;
 
 /**
  * A CauseIt represents a StoryComponent. It acts as a trigger and a cause /
@@ -33,7 +34,10 @@ public class CauseIt extends ScriptIt {
 		validTypes.add(StoryComponentContainer.class);
 		validTypes.add(Note.class);
 		validTypes.add(ControlIt.class);
-
+		validTypes.add(Behaviour.class);
+		validTypes.add(PickIt.class);
+		validTypes.add(ActivityIt.class);
+		
 		this.registerChildTypes(validTypes, MAX_NUM_OF_ONE_TYPE);
 	}
 

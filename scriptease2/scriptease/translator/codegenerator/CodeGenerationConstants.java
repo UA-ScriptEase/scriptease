@@ -37,7 +37,9 @@ public interface CodeGenerationConstants {
 		SLOTPARAMETER,
 		SCRIPTIT,
 		START,
-		SUBJECT
+		SUBJECT, 
+		RESOURCE,
+		TEMPLATEID
 	}
 
 	// Used in SimpleDataFragment
@@ -63,7 +65,11 @@ public interface CodeGenerationConstants {
 		UNIQUE32CHARNAME,
 		DISPLAYTEXT,
 		VALUE,
-		CURRENTSTORYPOINT
+		CURRENTSTORYPOINT, 
+		TOTALCHOICEPROBABILITY, 
+		INDEX, 
+		CHOICEPROBABILITYLOWERBOUND, 
+		CHOICEPROBABILITYUPPERBOUND, 
 	}
 
 	// Used in SeriesFragment
@@ -79,7 +85,9 @@ public interface CodeGenerationConstants {
 		KNOWIT,
 		NOTE,
 		SCRIPTIT,
-		CONTROLIT
+		CONTROLIT,
+		PICKIT,
+		ACTIVITYIT
 	}
 
 	// Used in SeriesFragment
@@ -96,11 +104,14 @@ public interface CodeGenerationConstants {
 		INCLUDES,
 		PARAMETERS,
 		PARENTNODES,
-		STORYPOINTS,
 		SLOTPARAMETERS,
 		VARIABLES, 
 		PARAMETERSWITHSLOT,
 		ORDEREDDIALOGUELINES,
-		ORDEREDSTORYPOINTS
+		ORDEREDSTORYPOINTS, 
+		STORYNODES, 
+		STORYPOINTS, 
+		ORDEREDSTORYNODES, 
+		CHOICES
 	}
 }

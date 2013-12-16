@@ -6,7 +6,9 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to
@@ -22,6 +24,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
  * pattern - Adapted from the implementation of StoryVisitor.
  * 
  * @author mfchurch
+ * @author jyuen
  * 
  * @see StoryAdapter
  */
@@ -35,6 +38,10 @@ public interface BindingVisitor {
 	public void processNull(KnowItBindingNull nullBinding);
 
 	public void processStoryPoint(KnowItBindingStoryPoint storyPoint);
-	
+
+	public void processStoryGroup(KnowItBindingStoryGroup storyGroup);
+
 	public void processAutomatic(KnowItBindingAutomatic automatic);
+
+	public void processUninitialized(KnowItBindingUninitialized uninitialized);
 }

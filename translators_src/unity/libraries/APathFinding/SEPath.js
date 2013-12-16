@@ -12,22 +12,6 @@
  */
 
 /**
- * Returns the SEPath attached to the object. Attaches an SEPath if none are
- * attached. This allows the experienced game developer to add an SEPath in the
- * editor but still make use of ScriptEase II.
- */
-static function GetPath(object:GameObject):SEPath {
-	var sePath:SEPath = object.GetComponent(SEPath);
-		
-	if(sePath == null) {
-		object.AddComponent(SEPath);
-		sePath = object.GetComponent(SEPath);
-	}
-	
-	return sePath;
-}
-
-/**
  * We extend the AIPath class so that we can add our custom function to it,
  * which is set in a Cause.
  *
@@ -36,6 +20,22 @@ class SEPath extends AIPath {
 	
 	var onReached:Function;
 	
+	/**
+	 * Returns the SEPath attached to the object. Attaches an SEPath if none are
+	 * attached. This allows the experienced game developer to add an SEPath in the
+	 * editor but still make use of ScriptEase II.
+	 */
+	static function GetPath(object:GameObject):SEPath {
+		var sePath:SEPath = object.GetComponent(SEPath);
+			
+		if(sePath == null) {
+			object.AddComponent(SEPath);
+			sePath = object.GetComponent(SEPath);
+		}
+		
+		return sePath;
+	}
+		
 	/**
 	 * Sets what happens when the target is reached
 	 */

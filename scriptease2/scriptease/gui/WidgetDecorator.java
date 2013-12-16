@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.util.GUIOp;
 
 /**
@@ -35,14 +36,53 @@ public class WidgetDecorator {
 		for (Component component : pane.getComponents()) {
 			if (component instanceof BasicSplitPaneDivider) {
 				final BasicSplitPaneDivider divider;
-
 				divider = (BasicSplitPaneDivider) component;
-				divider.setBackground(Color.WHITE);
+				divider.setBackground(ScriptEaseUI.SECONDARY_UI);
 				divider.setBorder(null);
-
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Adds focus and action listeners to a JTextField so that it commits its
+	 * text to the model when focus is lost or enter is pressed. Also gives the
+	 * JTextField a red border when commits have not been saved to the model.
+	 * Automatically resizes to fit the text.
+	 * 
+	 * @param textField
+	 *            The JTextField to decorate.
+	 * @param commitText
+	 *            This runnable defines how the TextField will commit its text
+	 *            to the model.
+	 * @return
+	 */
+	public static void decorateJTextFieldForFocusEvents(
+			final JTextField textField, final Runnable commitText) {
+		WidgetDecorator.decorateJTextFieldForFocusEvents(textField, commitText,
+				true);
+	}
+
+	/**
+	 * Adds focus and action listeners to a JTextField so that it commits its
+	 * text to the model when focus is lost or enter is pressed. Also gives the
+	 * JTextField a red border when commits have not been saved to the model.
+	 * 
+	 * @param textField
+	 *            The JTextField to decorate.
+	 * @param commitText
+	 *            This runnable defines how the TextField will commit its text
+	 *            to the model.
+	 * @param resizing
+	 *            Determines if the JTextField should resize itself or if the
+	 *            caller will handle it.
+	 * @return
+	 */
+	public static void decorateJTextFieldForFocusEvents(
+			final JTextField textField, final Runnable commitText,
+			final boolean resizing) {
+		WidgetDecorator.decorateJTextFieldForFocusEvents(textField, commitText,
+				resizing, Color.WHITE);
 	}
 
 	/**
@@ -59,7 +99,7 @@ public class WidgetDecorator {
 	 *            Determines if the JTextField should resize itself or if the
 	 *            caller will handle it.
 	 * @param color
-	 *            The color to set the JTextField.
+	 *            The color to set the background of the JTextField.
 	 * @return
 	 */
 	public static void decorateJTextFieldForFocusEvents(

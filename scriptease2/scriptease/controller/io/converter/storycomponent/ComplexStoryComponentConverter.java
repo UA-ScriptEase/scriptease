@@ -6,6 +6,7 @@ import java.util.Collection;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -24,8 +25,7 @@ public abstract class ComplexStoryComponentConverter extends
 		StoryComponentConverter implements Converter {
 
 	// TODO See LibraryModelConverter class for an example of how to refactor
-	// this class. However, since we're moving to YAML eventually, we don't need
-	// to waste anymore time on refactoring these.
+	// this class.
 	private static final String TAG_CHILDREN = "Children";
 
 	@Override
@@ -59,10 +59,15 @@ public abstract class ComplexStoryComponentConverter extends
 				System.err.println("Expected child list, but found "
 						+ reader.getNodeName());
 			else {
-				children = (Collection<StoryComponent>) context.convertAnother(
-						comp, ArrayList.class);
+				try {
+					children = (Collection<StoryComponent>) context
+							.convertAnother(comp, ArrayList.class);
 
-				comp.addStoryChildren(children);
+					comp.addStoryChildren(children);
+				} catch (ConversionException e) {
+					System.err.println("Problems converting the children of "
+							+ comp + " from xml: " + e);
+				}
 			}
 		}
 		reader.moveUp();

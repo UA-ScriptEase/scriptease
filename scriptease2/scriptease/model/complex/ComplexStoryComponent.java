@@ -403,8 +403,9 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 
 	protected final boolean isValidChild(
 			Class<? extends StoryComponent> newChildClass) {
-		return ((newChildClass != null) && this.allowableChildMap
+		boolean contains = ((newChildClass != null) && this.allowableChildMap
 				.containsKey(newChildClass));
+		return contains;
 	}
 
 	protected final int allowableNumberOf(Class<? extends StoryComponent> type) {
