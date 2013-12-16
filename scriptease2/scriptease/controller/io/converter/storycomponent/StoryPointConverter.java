@@ -16,7 +16,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author kschenk
  */
 public class StoryPointConverter extends StoryNodeConverter {
-
 	@Override
 	public void marshal(Object source, final HierarchicalStreamWriter writer,
 			final MarshallingContext context) {
@@ -30,6 +29,7 @@ public class StoryPointConverter extends StoryNodeConverter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+
 		final StoryPoint storyPoint = (StoryPoint) super.unmarshal(reader,
 				context);
 		final String fanIn = XMLNode.FAN_IN.readString(reader);

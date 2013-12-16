@@ -77,7 +77,7 @@ public final class AskIt extends ComplexStoryComponent {
 		// AskIts can have two children of type StoryComponentContainer. These
 		// function as containers for the If/Else blocks
 		this.registerChildType(StoryComponentContainer.class, 2);
-		
+
 		// Define the valid types for the two sub-groups
 		ifElseValidTypes.add(AskIt.class);
 		ifElseValidTypes.add(ScriptIt.class);
@@ -87,7 +87,7 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(ControlIt.class);
 		ifElseValidTypes.add(PickIt.class);
 		ifElseValidTypes.add(ActivityIt.class);
-		
+
 		// now we can Initialize the StoryComponentContainer
 		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);
 		this.ifBlock.setDisplayText("Yes:");
@@ -96,7 +96,7 @@ public final class AskIt extends ComplexStoryComponent {
 
 		this.addStoryChild(this.ifBlock);
 		this.addStoryChild(this.elseBlock);
-		
+
 		this.setDisplayText("<Question>");
 	}
 
@@ -180,11 +180,32 @@ public final class AskIt extends ComplexStoryComponent {
 	public boolean addStoryChildBefore(StoryComponent newChild,
 			StoryComponent sibling) {
 		boolean success = super.addStoryChildBefore(newChild, sibling);
+
+		final List<Class<? extends StoryComponent>> ifElseValidTypes;
+
+		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
+
+		// Define the valid types for the two sub-groups
+		ifElseValidTypes.add(AskIt.class);
+		ifElseValidTypes.add(ScriptIt.class);
+		ifElseValidTypes.add(KnowIt.class);
+		ifElseValidTypes.add(StoryComponentContainer.class);
+		ifElseValidTypes.add(Note.class);
+		ifElseValidTypes.add(ControlIt.class);
+		ifElseValidTypes.add(PickIt.class);
+		ifElseValidTypes.add(ActivityIt.class);
+
 		if (success) {
-			if (this.getChildren().iterator().next() == newChild)
-				this.setIfBlock((StoryComponentContainer) newChild);
-			else
-				this.setElseBlock((StoryComponentContainer) newChild);
+			final StoryComponentContainer container = (StoryComponentContainer) newChild;
+
+			container.registerChildTypes(ifElseValidTypes,
+					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
+
+			if (this.getChildren().iterator().next() == newChild) {
+				this.setIfBlock(container);
+			} else {
+				this.setElseBlock(container);
+			}
 		}
 		return success;
 	}
@@ -212,7 +233,7 @@ public final class AskIt extends ComplexStoryComponent {
 		if (enabled) {
 			final KnowIt condition = this.getCondition();
 			final KnowItBinding binding = condition.getBinding();
-			
+
 			if (binding instanceof KnowItBindingReference) {
 				final KnowItBindingReference reference = (KnowItBindingReference) binding;
 

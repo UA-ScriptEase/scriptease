@@ -378,26 +378,16 @@ public class MenuFactory {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 		menu.setMnemonic(KeyEvent.VK_H);
 
-		final JMenuItem ScriptEaseIIItem;
 		final List<JMenuItem> translatorItems;
 		final JMenuItem sendFeedbackItem;
 		final JMenuItem sendBugReportItem;
 		final JMenuItem helpMenuItem;
 
-		ScriptEaseIIItem = new JMenuItem("ScriptEase II Help");
 		translatorItems = new ArrayList<JMenuItem>();
 		sendFeedbackItem = new JMenuItem("Send Feedback");
 		sendBugReportItem = new JMenuItem("Send Bug Report");
 		helpMenuItem = new JMenuItem(
 				Il8nResources.getString("About_ScriptEase"));
-
-		ScriptEaseIIItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-			}
-		});
 
 		for (Translator translator : TranslatorManager.getInstance()
 				.getTranslators()) {
@@ -436,9 +426,6 @@ public class MenuFactory {
 		sendFeedbackItem.setMnemonic(KeyEvent.VK_F);
 		sendBugReportItem.setMnemonic(KeyEvent.VK_R);
 		helpMenuItem.setMnemonic(KeyEvent.VK_A);
-
-		// Add the menu items
-		menu.add(ScriptEaseIIItem);
 
 		for (JMenuItem translatorItem : translatorItems) {
 			menu.add(translatorItem);
