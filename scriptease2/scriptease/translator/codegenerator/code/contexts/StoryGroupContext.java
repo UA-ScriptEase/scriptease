@@ -23,13 +23,13 @@ public class StoryGroupContext extends StoryNodeContext {
 	public StoryGroupContext(Context other, StoryPoint source) {
 		super(other, source);
 	}
-	
+
 	@Override
 	public String getFormattedValue() {
 		final Collection<AbstractFragment> typeFormat;
 
 		typeFormat = this.getTranslator().getLibrary()
-				.getTypeFormat(StoryGroup.STORY_GROUP_TYPE);
+				.getType(StoryGroup.STORY_GROUP_TYPE).getFormat();
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 

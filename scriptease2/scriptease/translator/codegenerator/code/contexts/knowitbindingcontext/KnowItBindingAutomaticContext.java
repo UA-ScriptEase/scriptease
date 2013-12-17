@@ -7,6 +7,7 @@ import java.util.List;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 
 public class KnowItBindingAutomaticContext extends KnowItBindingContext {
@@ -21,18 +22,21 @@ public class KnowItBindingAutomaticContext extends KnowItBindingContext {
 	 */
 	@Override
 	public String getFormattedValue() {
-		final Collection<AbstractFragment> typeFormat;
-		final String type;
+		final String typeKeyword;
+		final GameType type;
 
-		type = this.binding.getFirstType();
+		typeKeyword = this.binding.getFirstType();
+		type = this.getModel().getType(typeKeyword);
 
-		typeFormat = this.getModel().getTypeFormat(type);
+		if (type != null) {
+			final Collection<AbstractFragment> typeFormat;
 
-		if (typeFormat == null || typeFormat.isEmpty()) {
-			return this.getValue();
+			typeFormat = type.getFormat();
+
+			if (typeFormat != null && !typeFormat.isEmpty())
+				return AbstractFragment.resolveFormat(typeFormat, this);
 		}
-
-		return AbstractFragment.resolveFormat(typeFormat, this);
+		return this.getValue();
 	}
 
 	/**

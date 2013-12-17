@@ -37,7 +37,6 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 import scriptease.util.FileOp;
@@ -995,18 +994,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 				type = new GameType();
 
 		return type;
-	}
-
-	/**
-	 * Returns the format for the type as a collection of
-	 * {@link AbstractFragment}s.
-	 * 
-	 * @param keyword
-	 * @return
-	 */
-	public Collection<AbstractFragment> getTypeFormat(String keyword) {
-		return new ArrayList<AbstractFragment>(this.getType(keyword)
-				.getFormat());
 	}
 
 	/**

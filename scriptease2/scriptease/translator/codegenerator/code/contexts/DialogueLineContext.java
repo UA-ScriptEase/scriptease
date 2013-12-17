@@ -34,9 +34,9 @@ public class DialogueLineContext extends Context {
 		final Collection<AbstractFragment> typeFormat;
 
 		if (this.line.isRoot() && StringOp.exists(dialogueType))
-			typeFormat = model.getTypeFormat(dialogueType);
+			typeFormat = model.getType(dialogueType).getFormat();
 		else if (StringOp.exists(dialogueLineType))
-			typeFormat = model.getTypeFormat(dialogueLineType);
+			typeFormat = model.getType(dialogueLineType).getFormat();
 		else
 			typeFormat = null;
 

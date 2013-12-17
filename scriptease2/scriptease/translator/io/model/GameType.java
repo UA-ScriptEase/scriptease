@@ -217,6 +217,12 @@ public class GameType {
 		return this.codeSymbol;
 	}
 
+	/**
+	 * Returns the format for the type as a collection of
+	 * {@link AbstractFragment}s.
+	 * 
+	 * @return
+	 */
 	public Collection<AbstractFragment> getFormat() {
 		return this.format;
 	}

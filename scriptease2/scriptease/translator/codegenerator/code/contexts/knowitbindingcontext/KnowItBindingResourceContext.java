@@ -36,7 +36,7 @@ public class KnowItBindingResourceContext extends KnowItBindingContext {
 
 		type = this.binding.getFirstType();
 
-		typeFormat = this.getModel().getTypeFormat(type);
+		typeFormat = this.getModel().getType(type).getFormat();
 
 		if (typeFormat == null || typeFormat.isEmpty()) {
 			return this.getValue();

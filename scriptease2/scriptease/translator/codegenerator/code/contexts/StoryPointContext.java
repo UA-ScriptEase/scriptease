@@ -194,7 +194,7 @@ public class StoryPointContext extends StoryNodeContext {
 		final Collection<AbstractFragment> typeFormat;
 
 		typeFormat = this.getTranslator().getLibrary()
-				.getTypeFormat(StoryPoint.STORY_POINT_TYPE);
+				.getType(StoryPoint.STORY_POINT_TYPE).getFormat();
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 
