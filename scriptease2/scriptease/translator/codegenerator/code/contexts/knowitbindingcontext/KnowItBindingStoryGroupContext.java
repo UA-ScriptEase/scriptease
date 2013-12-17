@@ -27,7 +27,8 @@ public class KnowItBindingStoryGroupContext extends KnowItBindingContext {
 		final Collection<AbstractFragment> typeFormat;
 
 		typeFormat = this.getTranslator().getLibrary()
-				.getTypeFormat(StoryGroup.STORY_GROUP_TYPE);
+				.getType(StoryGroup.STORY_GROUP_TYPE).getFormat();
+
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 

@@ -32,7 +32,6 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
-import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
@@ -336,28 +335,6 @@ public final class StoryModel extends SEModel {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Searches for the type format in all of the libraries contained in this
-	 * story.
-	 * 
-	 * @param keyword
-	 * @return
-	 */
-	public Collection<AbstractFragment> getTypeFormat(String keyword) {
-		final Collection<AbstractFragment> format;
-
-		format = new ArrayList<AbstractFragment>();
-
-		for (LibraryModel library : this.getLibraries()) {
-			format.addAll(library.getTypeFormat(keyword));
-
-			if (!format.isEmpty())
-				break;
-		}
-
-		return format;
 	}
 
 	/**
