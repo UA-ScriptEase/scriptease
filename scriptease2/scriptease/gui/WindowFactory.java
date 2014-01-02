@@ -987,19 +987,6 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Opens the Library Model that the user chooses from the libraries in the
-	 * translator.
-	 * 
-	 * @param translator
-	 * @return
-	 */
-	public JDialog buildBehaviourEditor(final Translator translator) {
-		// TODO Might not even need this if we use the library editor.
-
-		return null;
-	}
-
-	/**
 	 * Create a dialog with the provided panel.
 	 * 
 	 * @param title
