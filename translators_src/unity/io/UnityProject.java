@@ -549,10 +549,4 @@ public final class UnityProject extends GameModule {
 	public String getDialogueType() {
 		return UnityType.SE_DIALOGUE.getName();
 	}
-
-	public String getQuestionType() {
-		// TODO This doesnt get checked in SEII yet. When it does, add here.
-		return null;
-	};
-
 }
