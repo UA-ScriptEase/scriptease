@@ -983,12 +983,6 @@ public final class ErfFile extends GameModule {
 	}
 
 	@Override
-	public String getQuestionType() {
-		// TODO We don't use this yet. Once we do, we'll have to implement it.
-		return null;
-	}
-
-	@Override
 	public String getImageType() {
 		// We don't have images in NWN.
 		return null;
