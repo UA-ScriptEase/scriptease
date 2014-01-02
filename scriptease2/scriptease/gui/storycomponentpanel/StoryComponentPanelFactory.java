@@ -480,9 +480,8 @@ public class StoryComponentPanelFactory {
 								.getActiveModel();
 
 						if (model instanceof StoryModel) {
-							final StoryModel storyModel = (StoryModel) model;
-
-							storyModel.notifyBehaviourEdited(behaviour);
+							((StoryModel) model)
+									.notifyBehaviourEdited(behaviour);
 						}
 					}
 				});

@@ -49,8 +49,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.SEModel;
-import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType;
 import scriptease.util.ListOp;
 import scriptease.util.StringOp;
@@ -739,7 +738,7 @@ public class CodeBlockPanel extends JPanel {
 	 * @return
 	 */
 	private Collection<String> getCommonSlotsForTypes(KnowIt subject) {
-		final SEModel model = SEModelManager.getInstance().getActiveModel();
+		final LibraryModel model = subject.getLibrary();
 
 		final Collection<String> slots;
 

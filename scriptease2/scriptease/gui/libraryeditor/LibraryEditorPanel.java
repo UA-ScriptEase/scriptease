@@ -37,8 +37,6 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
-import scriptease.model.semodel.SEModelManager;
-import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType;
 
 /**
@@ -142,10 +140,8 @@ public class LibraryEditorPanel extends JPanel {
 
 							final CodeBlock codeBlock;
 
-							codeBlock = new CodeBlockSource(
-									((LibraryModel) SEModelManager
-											.getInstance().getActiveModel())
-											.getNextCodeBlockID());
+							codeBlock = new CodeBlockSource(scriptIt
+									.getLibrary().getNextCodeBlockID());
 
 							scriptIt.addCodeBlock(codeBlock);
 

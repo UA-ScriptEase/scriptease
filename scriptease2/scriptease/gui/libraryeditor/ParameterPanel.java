@@ -39,8 +39,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.model.semodel.SEModel;
-import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.SimpleResource;
@@ -293,15 +291,10 @@ public class ParameterPanel extends JPanel {
 			JComponent bindingConstantComponent) {
 		final JTextField inactiveTextField;
 		final String defaultType;
-
-		final SEModel activeModel;
 		final LibraryModel library;
 		final GUIType defaultTypeGuiType;
 
-		activeModel = SEModelManager.getInstance().getActiveModel();
-		if (!(activeModel instanceof LibraryModel))
-			return;
-		library = (LibraryModel) activeModel;
+		library = this.knowIt.getLibrary();
 
 		defaultType = this.knowIt.getDefaultType();
 		defaultTypeGuiType = library.getType(defaultType).getGui();

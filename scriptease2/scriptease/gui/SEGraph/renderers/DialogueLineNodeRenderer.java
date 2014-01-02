@@ -96,8 +96,8 @@ public class DialogueLineNodeRenderer extends SEGraphNodeRenderer<DialogueLine> 
 
 		if (!(model instanceof StoryModel))
 			throw new IllegalArgumentException(
-					"Why are we editing dialogue when a story model is "
-							+ "not active!? The active model is " + model);
+					"Why are we editing dialogue when a story model isn't "
+							+ "active? The active model is " + model);
 
 		final JTextArea dialogueArea;
 		final JScrollPane dialogueScrollPane;
