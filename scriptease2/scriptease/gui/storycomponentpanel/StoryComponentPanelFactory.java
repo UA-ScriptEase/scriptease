@@ -31,11 +31,11 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
@@ -69,7 +69,6 @@ public class StoryComponentPanelFactory {
 	public static final String CURRENT_STORY_POINT_TAG = "#currentStoryPoint";
 
 	private static final StoryComponentPanelFactory instance = new StoryComponentPanelFactory();
-	private static final String QUESTION = "question";
 	private static final ImageIcon noteIcon;
 
 	static {
@@ -330,8 +329,7 @@ public class StoryComponentPanelFactory {
 				tagName = toParse.substring(paramTagStart + 1, paramTagEnd);
 				plainText = toParse.substring(0, paramTagStart);
 
-				if (tagName.equalsIgnoreCase(QUESTION)
-						&& storyComponent instanceof AskIt) {
+				if (storyComponent instanceof AskIt) {
 					knowIt = ((AskIt) storyComponent).getCondition();
 				} else if (tagName.equalsIgnoreCase(CURRENT_STORY_POINT_TAG)) {
 
