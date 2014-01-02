@@ -243,7 +243,7 @@ public class LibraryPanel extends JTabbedPane {
 		final JComponent searchFilterPane;
 		final JTextField searchField;
 
-		final TypeAction typeFilter;
+		final TypeAction typeAction;
 
 		tabPanel = new JPanel();
 		listScroll = new JScrollPane(list);
@@ -252,7 +252,7 @@ public class LibraryPanel extends JTabbedPane {
 		searchField = ComponentFactory.buildJTextFieldWithTextBackground(20,
 				"Search Library", "");
 
-		typeFilter = new TypeAction();
+		typeAction = new TypeAction();
 
 		// 300 is the best time. Trust me, I've tried different ones many times
 		searchFieldTimer = new Timer(300, new ActionListener() {
@@ -311,11 +311,10 @@ public class LibraryPanel extends JTabbedPane {
 					}
 				});
 
-		typeFilter.setAction(new Runnable() {
+		typeAction.setAction(new Runnable() {
 			@Override
 			public void run() {
-				list.updateFilter(new TypeFilter(typeFilter
-						.getTypeSelectionDialogBuilder().getSelectedTypes()));
+				list.updateFilter(new TypeFilter(typeAction.getSelectedTypes()));
 
 				updateList(list);
 			}
@@ -323,7 +322,7 @@ public class LibraryPanel extends JTabbedPane {
 
 		// SearchFilterPane
 		searchFilterPane.add(searchField);
-		searchFilterPane.add(ComponentFactory.buildFlatButton(typeFilter));
+		searchFilterPane.add(ComponentFactory.buildFlatButton(typeAction));
 		searchFilterPane.setLayout(new BoxLayout(searchFilterPane,
 				BoxLayout.LINE_AXIS));
 		searchFilterPane.setOpaque(false);

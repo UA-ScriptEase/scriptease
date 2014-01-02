@@ -51,15 +51,13 @@ public class EditableDescribeItNodeRenderer extends
 			typeAction = new TypeAction();
 			typesButton = new JButton(typeAction);
 
-			typeAction.getTypeSelectionDialogBuilder().deselectAll();
-			typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(
-					knowIt.getTypes(), true);
+			typeAction.deselectAll();
+			typeAction.selectTypesByKeyword(knowIt.getTypes(), true);
 
 			typeAction.setAction(new Runnable() {
 				@Override
 				public void run() {
-					knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
-							.getSelectedTypes());
+					knowIt.setTypes(typeAction.getSelectedTypes());
 
 					component.removeAll();
 					configureInternalComponents(component, node);

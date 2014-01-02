@@ -261,9 +261,8 @@ public class LibraryEditorPanel extends JPanel {
 				typesLabel.setFont(LibraryEditorPanelFactory.labelFont);
 				nameLabel.setFont(LibraryEditorPanelFactory.labelFont);
 
-				typeAction.getTypeSelectionDialogBuilder().deselectAll();
-				typeAction.getTypeSelectionDialogBuilder()
-						.selectTypesByKeyword(knowIt.getTypes(), true);
+				typeAction.deselectAll();
+				typeAction.selectTypesByKeyword(knowIt.getTypes(), true);
 
 				WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
 						commitText, false);
@@ -277,7 +276,6 @@ public class LibraryEditorPanel extends JPanel {
 					@Override
 					public void run() {
 						final Collection<GameType> types = typeAction
-								.getTypeSelectionDialogBuilder()
 								.getSelectedTypes();
 
 						// Important: DescribeIt types MUST be set first because

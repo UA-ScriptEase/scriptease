@@ -116,9 +116,8 @@ public class ParameterPanel extends JPanel {
 		// Set default values
 		types.addAll(knowIt.getTypes());
 
-		typeAction.getTypeSelectionDialogBuilder().deselectAll();
-		typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(types,
-				true);
+		typeAction.deselectAll();
+		typeAction.selectTypesByKeyword(types, true);
 
 		for (String type : types)
 			defaultTypeBox.addItem(type);
@@ -130,8 +129,7 @@ public class ParameterPanel extends JPanel {
 		typeAction.setAction(new Runnable() {
 			@Override
 			public void run() {
-				knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
-						.getSelectedTypes());
+				knowIt.setTypes(typeAction.getSelectedTypes());
 
 				final String initialDefaultType;
 				initialDefaultType = (String) defaultTypeBox.getSelectedItem();
