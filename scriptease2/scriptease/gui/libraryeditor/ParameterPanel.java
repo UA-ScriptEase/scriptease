@@ -91,8 +91,6 @@ public class ParameterPanel extends JPanel {
 		final JPanel defaultTypeBoxPanel;
 		final JPanel bindingPanel;
 
-		final LibraryModel library;
-
 		this.observerManager = new ObserverManager<ParameterPanelObserver>();
 
 		typeAction = new TypeAction();
@@ -104,8 +102,6 @@ public class ParameterPanel extends JPanel {
 
 		defaultTypeBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		bindingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-
-		library = codeBlock.getLibrary();
 
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setBackground(GUIOp.scaleColour(Color.GRAY, 1.9));
@@ -125,11 +121,9 @@ public class ParameterPanel extends JPanel {
 				true);
 
 		for (String type : types)
-			defaultTypeBox.addItem(library.getType(type).getDisplayName()
-					+ " - " + type);
+			defaultTypeBox.addItem(type);
 
-		defaultTypeBox.setSelectedItem(library.getType(knowIt.getDefaultType())
-				.getDisplayName());
+		defaultTypeBox.setSelectedItem(knowIt.getDefaultType());
 
 		updateBindingConstantComponent(bindingConstantComponent);
 
@@ -145,9 +139,7 @@ public class ParameterPanel extends JPanel {
 				defaultTypeBox.removeAllItems();
 
 				for (String type : knowIt.getTypes()) {
-					defaultTypeBox.addItem(scriptIt.getLibrary().getType(type)
-							.getDisplayName()
-							+ " - " + type);
+					defaultTypeBox.addItem(type);
 				}
 
 				defaultTypeBox.setSelectedItem(initialDefaultType);
@@ -164,20 +156,19 @@ public class ParameterPanel extends JPanel {
 		defaultTypeBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final List<String> types;
 				final Collection<String> newTypeList;
 				final String selectedType;
-				final String selectedItem;
 
-				types = new ArrayList<String>();
 				newTypeList = new ArrayList<String>();
-				selectedItem = (String) defaultTypeBox.getSelectedItem();
+				selectedType = (String) defaultTypeBox.getSelectedItem();
 
-				if (selectedItem != null) {
-					selectedType = selectedItem.split(" - ")[1];
-					types.addAll(knowIt.getTypes());
-					if (selectedType != null)
-						newTypeList.add(selectedType);
+				if (selectedType != null) {
+					final List<String> types;
+
+					types = new ArrayList<String>(knowIt.getTypes());
+
+					newTypeList.add(selectedType);
+
 					for (String type : types) {
 						if (!type.equals(selectedType))
 							newTypeList.add(type);

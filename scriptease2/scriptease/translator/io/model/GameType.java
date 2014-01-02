@@ -20,11 +20,10 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author mfchurch
  */
 public class GameType {
-	public static final String DEFAULT_UNKNOWN_TYPE = "unknown";
-
-	public static final String DEFAULT_VOID_TYPE = "void";
-	public static final String DEFAULT_BOOL_TYPE = "question";
+	public static final String DEFAULT_VOID_TYPE = "Void";
+	public static final String DEFAULT_BOOL_TYPE = "Question";
 	public static final String DEFAULT_LIST_WIDGET = "Li";
+	public static final String STORY_POINT_TYPE = "Story Point";
 
 	/**
 	 * Enumeration of the possible widgets that may be used to display/edit a
@@ -37,7 +36,6 @@ public class GameType {
 	}
 
 	private String displayName;
-	private String keyword;
 	private String regEx;
 	private String widgetName;
 	private Collection<String> slots;
@@ -51,7 +49,7 @@ public class GameType {
 	 * Builds a new Game Type that is completely empty.
 	 */
 	public GameType() {
-		this("", "unknown", "", new ArrayList<AbstractFragment>(),
+		this("", "", new ArrayList<AbstractFragment>(),
 				new ArrayList<String>(), "", "", new HashMap<String, String>(),
 				null, null);
 	}
@@ -61,8 +59,6 @@ public class GameType {
 	 * 
 	 * @param name
 	 *            The name of this game type.
-	 * @param keyword
-	 *            The unique keyword for this game type.
 	 * @param codeSymbol
 	 *            The string to be used to represent this type in code.
 	 * @param fragments
@@ -82,7 +78,7 @@ public class GameType {
 	 *            be one of: <code>JComboBox</code><code>JSpinner</code>
 	 *            <code>JTextField</code>
 	 */
-	public GameType(String name, String keyword, String codeSymbol,
+	public GameType(String name, String codeSymbol,
 			Collection<AbstractFragment> fragments, Collection<String> slots,
 			String enums, String regEx, Map<String, String> escapes,
 			GUIType gui, String widgetName) {
@@ -95,7 +91,6 @@ public class GameType {
 					"Empty enumeration for game type using Combo Box editor.");
 
 		this.displayName = name;
-		this.keyword = keyword;
 		this.regEx = regEx;
 		this.slots = new ArrayList<String>(slots);
 		this.guiEditorName = gui;
@@ -201,10 +196,6 @@ public class GameType {
 		return new HashMap<String, String>(this.enums);
 	}
 
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
-	}
-
 	public void setFormat(Collection<AbstractFragment> format) {
 		this.format = format;
 	}
@@ -225,10 +216,6 @@ public class GameType {
 	 */
 	public Collection<AbstractFragment> getFormat() {
 		return this.format;
-	}
-
-	public String getKeyword() {
-		return this.keyword;
 	}
 
 	public String getReg() {
@@ -342,7 +329,7 @@ public class GameType {
 				return true;
 			}
 			final GameType other = (GameType) obj;
-			return other.keyword.equals(this.keyword);
+			return other.displayName.equals(this.displayName);
 		}
 		return false;
 	}

@@ -62,9 +62,10 @@ public class TypeWidget extends JToggleButton {
 			} else {
 				if (!type.getEnumMap().isEmpty())
 					widgetText = GameType.DEFAULT_LIST_WIDGET;
-				else
-					widgetText = type.getKeyword().substring(0, 2)
-							.toUpperCase();
+				else if (StringOp.exists(typeName)) {
+					widgetText = typeName.substring(0, 2).toUpperCase();
+				} else
+					widgetText = "n!";
 			}
 		} else {
 			widgetText = "!";

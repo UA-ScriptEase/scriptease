@@ -1,33 +1,28 @@
-<LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team" description="This library contains custom animations for the BELIEVE park game at:
-&lt;br&gt;http://cs.ualberta.ca/~script">
+<LibraryModel name="ParkGameAnimationLibrary" author="ScriptEase Team" description="This library contains custom animations for the BELIEVE park game at: &lt;br&gt;http://cs.ualberta.ca/~script">
   <IncludeFiles>
     <IncludeFile>SEAnimationController.js</IncludeFile>
   </IncludeFiles>
   <Types>
     <Type>
       <Name>RightLeft</Name>
-      <Keyword>RightLeft</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>2&lt;Left&gt;|1&lt;Right&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>Foot</Name>
-      <Keyword>Foot</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>2&lt;Right Foot&gt;|1&lt;Left Foot&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>AngryHappy</Name>
-      <Keyword>AngryHappy</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>2&lt;Happy&gt;|1&lt;Angry&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
     </Type>
     <Type>
       <Name>Emotion</Name>
-      <Keyword>Emotion</Keyword>
       <CodeSymbol>int</CodeSymbol>
       <Enum>3&lt;Angry&gt;|2&lt;Sad&gt;|1&lt;Happy&gt;|4&lt;Afraid&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
@@ -50,7 +45,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>0</Id>
+          <ID>0</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -89,7 +84,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>1</Id>
+          <ID>1</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -107,7 +102,7 @@
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -181,7 +176,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>2</Id>
+          <ID>2</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -237,7 +232,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>3</Id>
+          <ID>3</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -293,7 +288,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>4</Id>
+          <ID>4</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -332,7 +327,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>5</Id>
+          <ID>5</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -371,7 +366,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>6</Id>
+          <ID>6</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -430,7 +425,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>7</Id>
+          <ID>7</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -503,7 +498,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>8</Id>
+          <ID>8</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -542,7 +537,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>10</Id>
+          <ID>10</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -581,7 +576,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>11</Id>
+          <ID>11</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -815,7 +810,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>12</Id>
+          <ID>12</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -938,7 +933,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>13</Id>
+          <ID>13</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -1026,7 +1021,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>14</Id>
+          <ID>14</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -1106,7 +1101,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>15</Id>
+          <ID>15</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -1152,7 +1147,7 @@
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>16</Id>
+          <ID>16</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -1161,7 +1156,7 @@
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>

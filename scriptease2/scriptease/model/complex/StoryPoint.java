@@ -13,6 +13,7 @@ import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.translator.io.model.GameType;
 import scriptease.util.StringOp;
 
 /**
@@ -29,8 +30,6 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public class StoryPoint extends StoryNode {
-	public static final String STORY_POINT_TYPE = "storyPoint";
-
 	private static final int DEFAULT_FAN_IN = 1;
 	private static final String NEW_STORY_POINT = "New Story Point";
 
@@ -84,7 +83,7 @@ public class StoryPoint extends StoryNode {
 									.getParameters()) {
 								if (param.getBinding() instanceof KnowItBindingNull
 										&& param.getTypes().contains(
-												StoryPoint.STORY_POINT_TYPE)) {
+												GameType.STORY_POINT_TYPE)) {
 									param.setBinding(StoryPoint.this);
 								}
 							}
@@ -157,7 +156,7 @@ public class StoryPoint extends StoryNode {
 		final Pattern regexPattern;
 
 		regex = SEModelManager.getInstance().getActiveModel()
-				.getType(StoryPoint.STORY_POINT_TYPE).getReg();
+				.getType(GameType.STORY_POINT_TYPE).getReg();
 
 		regexPattern = Pattern.compile(regex);
 

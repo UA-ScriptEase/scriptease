@@ -9,6 +9,7 @@ import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.io.model.GameType;
 
 /**
  * Context representing a StoryPoint
@@ -194,7 +195,7 @@ public class StoryPointContext extends StoryNodeContext {
 		final Collection<AbstractFragment> typeFormat;
 
 		typeFormat = this.getTranslator().getLibrary()
-				.getType(StoryPoint.STORY_POINT_TYPE).getFormat();
+				.getType(GameType.STORY_POINT_TYPE).getFormat();
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 

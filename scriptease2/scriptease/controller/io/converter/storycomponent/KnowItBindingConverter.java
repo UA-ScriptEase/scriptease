@@ -21,6 +21,7 @@ import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.ListOp;
@@ -87,7 +88,7 @@ public class KnowItBindingConverter implements Converter {
 
 				if (constant.isIdentifiableGameConstant()
 						&& !constant.getFirstType().equals(
-								StoryPoint.STORY_POINT_TYPE)) {
+								GameType.STORY_POINT_TYPE)) {
 					XMLAttribute.FLAVOUR.write(writer, FLAVOUR_RESOURCE);
 					writer.setValue(value.getTemplateID());
 				} else {

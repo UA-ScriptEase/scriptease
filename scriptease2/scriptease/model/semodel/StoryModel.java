@@ -329,8 +329,7 @@ public final class StoryModel extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			final GameType type = library.getType(keyword);
 
-			if (type != null
-					&& !type.getKeyword().equals(GameType.DEFAULT_UNKNOWN_TYPE))
+			if (StringOp.exists(type.getDisplayName()))
 				return type;
 		}
 

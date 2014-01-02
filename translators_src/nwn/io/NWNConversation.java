@@ -16,7 +16,7 @@ import scriptease.util.FileOp;
  * @author remiller
  */
 public class NWNConversation extends NWNGameConstant {
-	public static final String TYPE_DIALOGUE = "dialogue";
+	public static final String TYPE_DIALOGUE = "Dialogue";
 	private final GenericFileFormat convo;
 	private List<Resource> children;
 

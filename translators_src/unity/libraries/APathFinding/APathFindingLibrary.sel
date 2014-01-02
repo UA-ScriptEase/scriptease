@@ -1,14 +1,4 @@
-<LibraryModel name="A* Pathfinding Library" author="ScriptEase Team" description="Library situated for Aron Granberg&apos;s &lt;b&gt;A* Pathfinding Project&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
-
-To use this library you will need to download the A* Pathfinding Project at:&lt;br&gt;
-http://arongranberg.com/astar/download&lt;br&gt;&lt;br&gt;
-
-Failure to download and install this package to your Unity Project will cause&lt;br&gt;
-compilation errors if you wish to add this library.&lt;br&gt;&lt;br&gt;
-
-For detailed instructions on how to install this package, follow the&lt;br&gt;
-instructions in Unity Tutorial 2 at:&lt;br&gt;
-http://cs.ualberta.ca/~script">
+<LibraryModel name="A* Pathfinding Library" author="ScriptEase Team" description="Library situated for Aron Granberg&apos;s &lt;b&gt;A* Pathfinding Project&lt;/b&gt;.&lt;br&gt;&lt;br&gt;  To use this library you will need to download the A* Pathfinding Project at:&lt;br&gt; http://arongranberg.com/astar/download&lt;br&gt;&lt;br&gt;  Failure to download and install this package to your Unity Project will cause&lt;br&gt; compilation errors if you wish to add this library.&lt;br&gt;&lt;br&gt;  For detailed instructions on how to install this package, follow the&lt;br&gt; instructions in Unity Tutorial 2 at:&lt;br&gt; http://cs.ualberta.ca/~script">
   <IncludeFiles>
     <IncludeFile>SEPath.js</IncludeFile>
   </IncludeFiles>
@@ -41,7 +31,7 @@ http://cs.ualberta.ca/~script">
                   <Visible>true</Visible>
                   <Enabled>true</Enabled>
                   <Labels/>
-                  <Id>29</Id>
+                  <ID>29</ID>
                   <Types>
                     <Type>GameObject</Type>
                   </Types>
@@ -75,9 +65,9 @@ http://cs.ualberta.ca/~script">
           <Labels/>
           <Subject>subject</Subject>
           <Slot>TargetReached</Slot>
-          <Id>15</Id>
+          <ID>15</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -127,9 +117,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>2</Id>
+          <ID>2</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -190,9 +180,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>3</Id>
+          <ID>3</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -210,7 +200,7 @@ http://cs.ualberta.ca/~script">
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -248,9 +238,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>6</Id>
+          <ID>6</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -268,7 +258,7 @@ http://cs.ualberta.ca/~script">
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -306,9 +296,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>7</Id>
+          <ID>7</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -326,7 +316,7 @@ http://cs.ualberta.ca/~script">
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -364,9 +354,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>8</Id>
+          <ID>8</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -422,9 +412,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>9</Id>
+          <ID>9</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -480,9 +470,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>10</Id>
+          <ID>10</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -500,7 +490,7 @@ http://cs.ualberta.ca/~script">
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -538,9 +528,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>11</Id>
+          <ID>11</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -558,7 +548,7 @@ http://cs.ualberta.ca/~script">
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -596,9 +586,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>12</Id>
+          <ID>12</ID>
           <Types>
-            <Type>void</Type>
+            <Type>Void</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -616,7 +606,7 @@ http://cs.ualberta.ca/~script">
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -654,9 +644,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>13</Id>
+          <ID>13</ID>
           <Types>
-            <Type>question</Type>
+            <Type>Question</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -695,9 +685,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>16</Id>
+          <ID>16</ID>
           <Types>
-            <Type>float</Type>
+            <Type>Number</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -736,7 +726,7 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>17</Id>
+          <ID>17</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -775,9 +765,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>18</Id>
+          <ID>18</ID>
           <Types>
-            <Type>float</Type>
+            <Type>Number</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -816,7 +806,7 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>20</Id>
+          <ID>20</ID>
           <Types>
             <Type>GameObject</Type>
           </Types>
@@ -857,9 +847,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>21</Id>
+          <ID>21</ID>
           <Types>
-            <Type>float</Type>
+            <Type>Number</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -898,9 +888,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>22</Id>
+          <ID>22</ID>
           <Types>
-            <Type>float</Type>
+            <Type>Number</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -939,9 +929,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>23</Id>
+          <ID>23</ID>
           <Types>
-            <Type>float</Type>
+            <Type>Number</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -980,9 +970,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>24</Id>
+          <ID>24</ID>
           <Types>
-            <Type>float</Type>
+            <Type>Number</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -1021,9 +1011,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>25</Id>
+          <ID>25</ID>
           <Types>
-            <Type>question</Type>
+            <Type>Question</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -1062,9 +1052,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>26</Id>
+          <ID>26</ID>
           <Types>
-            <Type>question</Type>
+            <Type>Question</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -1103,7 +1093,7 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>27</Id>
+          <ID>27</ID>
           <Types/>
           <Parameters>
             <KnowIt>
@@ -1121,7 +1111,7 @@ http://cs.ualberta.ca/~script">
               <Enabled>true</Enabled>
               <Labels/>
               <Types>
-                <Type>float</Type>
+                <Type>Number</Type>
               </Types>
               <Binding flavour="constant">
                 <Type>float</Type>
@@ -1159,9 +1149,9 @@ http://cs.ualberta.ca/~script">
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <Id>28</Id>
+          <ID>28</ID>
           <Types>
-            <Type>float</Type>
+            <Type>Number</Type>
           </Types>
           <Parameters>
             <KnowIt>
@@ -1186,23 +1176,12 @@ http://cs.ualberta.ca/~script">
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[13]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[17]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[10]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
-    <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
   </Effects>
   <DescribeIts>
     <DescribeIt>
       <Name>Look Distance</Name>
       <Types>
-        <Type>float</Type>
+        <Type>Number</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1218,9 +1197,9 @@ http://cs.ualberta.ca/~script">
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Switch Target Distance</Name>
+      <Name>Find Path Rate</Name>
       <Types>
-        <Type>float</Type>
+        <Type>Number</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1231,14 +1210,14 @@ http://cs.ualberta.ca/~script">
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
       <Name>Target Reached</Name>
       <Types>
-        <Type>question</Type>
+        <Type>Question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1256,7 +1235,7 @@ http://cs.ualberta.ca/~script">
     <DescribeIt>
       <Name>Can Move</Name>
       <Types>
-        <Type>question</Type>
+        <Type>Question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1274,7 +1253,7 @@ http://cs.ualberta.ca/~script">
     <DescribeIt>
       <Name>Walk Speed</Name>
       <Types>
-        <Type>float</Type>
+        <Type>Number</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1290,9 +1269,9 @@ http://cs.ualberta.ca/~script">
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Slow Down Distance</Name>
+      <Name>Switch Target Distance</Name>
       <Types>
-        <Type>float</Type>
+        <Type>Number</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1303,14 +1282,14 @@ http://cs.ualberta.ca/~script">
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[6]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Turn Speed</Name>
+      <Name>Can Find Path</Name>
       <Types>
-        <Type>float</Type>
+        <Type>Question</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1321,14 +1300,14 @@ http://cs.ualberta.ca/~script">
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[13]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Target Reached Percent</Name>
+      <Name>Turn Speed</Name>
       <Types>
-        <Type>float</Type>
+        <Type>Number</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1338,6 +1317,42 @@ http://cs.ualberta.ca/~script">
         <Entry>
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[13]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Slow Down Distance</Name>
+      <Types>
+        <Type>Number</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Target Reached Percent</Name>
+      <Types>
+        <Type>Number</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[10]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[17]"/>
         </Entry>
@@ -1355,45 +1370,9 @@ http://cs.ualberta.ca/~script">
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Can Find Path</Name>
-      <Types>
-        <Type>question</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[10]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Find Path Rate</Name>
-      <Types>
-        <Type>float</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
         </Entry>
       </PathMap>
     </DescribeIt>

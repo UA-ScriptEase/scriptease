@@ -8,6 +8,7 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.io.model.GameType;
 
 /**
  * Code generation Context for a KnowItBindingStoryPoint object.
@@ -34,7 +35,7 @@ public class KnowItBindingStoryPointContext extends KnowItBindingContext {
 		final Collection<AbstractFragment> typeFormat;
 
 		typeFormat = this.getTranslator().getLibrary()
-				.getType(StoryPoint.STORY_POINT_TYPE).getFormat();
+				.getType(GameType.STORY_POINT_TYPE).getFormat();
 		if (typeFormat == null || typeFormat.isEmpty())
 			return this.getValue();
 

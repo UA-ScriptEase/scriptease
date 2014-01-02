@@ -31,7 +31,9 @@ public class DescribeItConverter implements Converter {
 		final DescribeIt describeIt = (DescribeIt) source;
 
 		XMLNode.NAME.writeString(writer, describeIt.getName());
+
 		XMLNode.TYPES.writeChildren(writer, describeIt.getTypes());
+
 		XMLNode.DESCRIBEITNODE.writeObject(writer, context,
 				describeIt.getStartNode());
 
