@@ -128,7 +128,6 @@
 	<xsd:complexType name="Type_Type">
 		<xsd:sequence>
 			<xsd:element name="Name" type="xsd:string" />
-			<xsd:element name="Keyword" type="xsd:string" />
 			<xsd:element name="CodeSymbol" type="xsd:string" />
 			<xsd:element name="Format" type="Format_Type" minOccurs="0" />
 			<xsd:choice minOccurs="0">
@@ -288,7 +287,7 @@
 			<xsd:group ref="StoryComponentDataGroup" />
 			<xsd:element minOccurs="0" name="Subject" type="xsd:string" />
 			<xsd:element minOccurs="0" name="Slot" type="xsd:string" />
-			<xsd:element name="Id" type="xsd:integer" />
+			<xsd:element name="ID" type="xsd:integer" />
 			<xsd:element name="Types" type="SpecificTypeList_Type" />
 			<xsd:element minOccurs="0" name="Parameters" type="ParameterList_Type" />
 			<xsd:element minOccurs="0" name="Includes" type="IncludesList_Type" />

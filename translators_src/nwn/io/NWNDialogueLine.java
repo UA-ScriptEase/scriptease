@@ -21,7 +21,7 @@ import scriptease.util.StringOp;
 public class NWNDialogueLine extends NWNGameConstant {
 	public static final String INDEXER_SEPARATOR = ">";
 
-	public static final String TYPE_DIALOG_LINE = "dialogue_line";
+	public static final String TYPE_DIALOG_LINE = "Dialogue Line";
 
 	private final GffStruct dialogueSyncStruct;
 	private final boolean isPlayerLine;

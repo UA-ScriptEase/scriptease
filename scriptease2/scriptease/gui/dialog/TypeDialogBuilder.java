@@ -402,14 +402,14 @@ public class TypeDialogBuilder {
 		}
 		return checked;
 	}
-	
+
 	public Collection<String> getSelectedTypeKeywords() {
 		final Collection<String> keywords = new ArrayList<String>();
-		
-		for(GameType type : this.getSelectedTypes()) {
-			keywords.add(type.getKeyword());
+
+		for (GameType type : this.getSelectedTypes()) {
+			keywords.add(type.getDisplayName());
 		}
-		
+
 		return keywords;
 	}
 
@@ -443,7 +443,7 @@ public class TypeDialogBuilder {
 	public void selectTypesByKeyword(Collection<String> keywords,
 			boolean isSelected) {
 		for (GameType type : this.typesToSelected.keySet()) {
-			if (keywords.contains(type.getKeyword())) {
+			if (keywords.contains(type.getDisplayName())) {
 				selectType(type, isSelected);
 			}
 		}
@@ -505,7 +505,7 @@ public class TypeDialogBuilder {
 
 			this.typeKeyword = typeKeyword;
 			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeKeyword
-					.getKeyword());
+					.getDisplayName());
 			typeDisplayText = typeKeyword.getDisplayName();
 
 			typeLabel = new JLabel(" " + typeDisplayText);

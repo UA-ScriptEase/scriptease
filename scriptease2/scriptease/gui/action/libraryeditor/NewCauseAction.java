@@ -85,7 +85,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 				type = gameType;
 				types = new ArrayList<String>();
-				types.add(gameType.getKeyword());
+				types.add(gameType.getDisplayName());
 				parameter.setTypes(types);
 
 				break;

@@ -559,7 +559,12 @@ public class LibraryPanel extends JTabbedPane {
 				Collections.sort(components,
 						LibraryPanel.STORY_COMPONENT_COMPARATOR);
 
+				try {
 				list.addStoryComponents(components);
+				} catch (Exception e) {
+
+				e.printStackTrace();
+				}
 			}
 		} else {
 			list.removeAllStoryComponents();

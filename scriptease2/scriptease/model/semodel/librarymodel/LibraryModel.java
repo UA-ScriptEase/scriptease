@@ -976,12 +976,12 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	@Override
-	public GameType getType(String keyword) {
+	public GameType getType(String name) {
 		final LibraryModel defaultLibrary = this.getTranslatorDefaultLibrary();
 
 		GameType type = null;
 		for (GameType savedType : this.gameTypes) {
-			if (savedType.getKeyword().equals(keyword)) {
+			if (savedType.getDisplayName().equals(name)) {
 				type = savedType;
 				break;
 			}
@@ -989,9 +989,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 		if (type == null)
 			if (defaultLibrary != null && this != defaultLibrary) {
-				type = defaultLibrary.getType(keyword);
-			} else
+				type = defaultLibrary.getType(name);
+			} else {
 				type = new GameType();
+			}
 
 		return type;
 	}

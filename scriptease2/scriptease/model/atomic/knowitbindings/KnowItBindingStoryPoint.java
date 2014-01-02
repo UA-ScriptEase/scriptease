@@ -1,8 +1,6 @@
 package scriptease.model.atomic.knowitbindings;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import scriptease.controller.BindingVisitor;
 import scriptease.model.atomic.KnowIt;
@@ -10,6 +8,8 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.translator.io.model.GameType;
+import scriptease.util.ListOp;
 
 /**
  * This class represents a <b>Story Point</b> binding for a <code>KnowIt</code>.
@@ -52,9 +52,7 @@ public class KnowItBindingStoryPoint extends KnowItBinding {
 
 	@Override
 	public Collection<String> getTypes() {
-		List<String> types = new ArrayList<String>();
-		types.add(StoryPoint.STORY_POINT_TYPE);
-		return types;
+		return ListOp.createList(GameType.STORY_POINT_TYPE);
 	}
 
 	@Override

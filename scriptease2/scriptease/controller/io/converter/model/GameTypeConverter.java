@@ -37,7 +37,6 @@ public class GameTypeConverter implements Converter {
 		final String widgetName = type.getWidgetName();
 
 		XMLNode.NAME.writeString(writer, type.getDisplayName());
-		XMLNode.KEYWORD.writeString(writer, type.getKeyword());
 		XMLNode.CODESYMBOL.writeString(writer, type.getCodeSymbol());
 
 		if (format != null && !format.isEmpty())
@@ -74,7 +73,6 @@ public class GameTypeConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final String name;
-		final String keyword;
 		final String codeSymbol;
 		final Collection<AbstractFragment> fragments = new ArrayList<AbstractFragment>();
 		final Collection<String> slots = new ArrayList<String>();
@@ -86,7 +84,6 @@ public class GameTypeConverter implements Converter {
 		GameType type = null;
 
 		name = XMLNode.NAME.readString(reader);
-		keyword = XMLNode.KEYWORD.readString(reader);
 		codeSymbol = XMLNode.CODESYMBOL.readString(reader);
 
 		// Read Optional Data
@@ -146,8 +143,8 @@ public class GameTypeConverter implements Converter {
 			reader.moveUp();
 		}
 
-		type = new GameType(name, keyword, codeSymbol, fragments, slots, enums,
-				reg, escapes, gui, widgetName);
+		type = new GameType(name, codeSymbol, fragments, slots, enums, reg,
+				escapes, gui, widgetName);
 
 		return type;
 	}

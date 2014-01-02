@@ -52,7 +52,7 @@ public class GenericFileFormat {
 	protected static final String TYPE_MODULE_INFO = "IFO";
 	protected static final String TYPE_AREA_GAME_INSTANCE_FILE = "GIT";
 	protected static final String TYPE_AREA_FILE = "ARE";
-	public static final String TYPE_MODULE = "module";
+	public static final String TYPE_MODULE = "Story <Module>";
 
 	/**
 	 * Separator used when indexing occurs. The left hand side of the separator
@@ -563,28 +563,28 @@ public class GenericFileFormat {
 		String type = null;
 		final String typeString = this.fileType.trim();
 		if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_CREATURE_BP)) {
-			type = "creature";
+			type = "Creature";
 		} else if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_DOOR_BP)) {
-			type = "door";
+			type = "Door";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_ENCOUNTER_BP)) {
-			type = "encounter";
+			type = "Encounter";
 		} else if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_ITEM_BP)) {
-			type = "item";
+			type = "Item";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_MERCHANT_BP)) {
-			type = "merchant";
+			type = "Store";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_PLACEABLE_BP)) {
-			type = "placeable";
+			type = "Placeable";
 		} else if (typeString.equalsIgnoreCase(GenericFileFormat.TYPE_SOUND_BP)) {
-			type = "sound";
+			type = "Sound";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_TRIGGER_BP)) {
-			type = "trigger";
+			type = "Trigger";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_WAYPOINT_BP)) {
-			type = "waypoint";
+			type = "Waypoint";
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_DIALOGUE_BP)) {
 			type = NWNConversation.TYPE_DIALOGUE;
@@ -593,7 +593,7 @@ public class GenericFileFormat {
 			type = TYPE_MODULE;
 		} else if (typeString
 				.equalsIgnoreCase(GenericFileFormat.TYPE_AREA_FILE)) {
-			type = "area";
+			type = "Area";
 		}
 
 		if (type == null) {

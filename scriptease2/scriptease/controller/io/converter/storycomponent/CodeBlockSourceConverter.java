@@ -49,6 +49,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 		}
 
 		XMLNode.ID.writeInteger(writer, block.getId());
+
 		XMLNode.TYPES.writeChildren(writer, types);
 
 		if (!parameters.isEmpty()) {

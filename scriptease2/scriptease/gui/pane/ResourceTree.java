@@ -134,7 +134,7 @@ class ResourceTree extends JPanel {
 		final Collection<String> keywords = new ArrayList<String>();
 
 		for (GameType type : story.getTypes()) {
-			keywords.add(type.getKeyword());
+			keywords.add(type.getDisplayName());
 		}
 
 		this.filterTypes.addAll(keywords);
@@ -148,10 +148,8 @@ class ResourceTree extends JPanel {
 		// Add the dialogue type even if there are no dialogues.
 		for (String type : types) {
 			final ResourceContainer containerPanel;
-			final String displayText;
 
-			displayText = story.getType(type).getDisplayName();
-			containerPanel = new ResourceContainer(type, displayText);
+			containerPanel = new ResourceContainer(type);
 
 			this.add(containerPanel);
 			this.containers.add(containerPanel);
@@ -350,7 +348,7 @@ class ResourceTree extends JPanel {
 		 * @param displayText
 		 *            The text to display as the name.
 		 */
-		public ResourceContainer(final String type, String displayText) {
+		public ResourceContainer(final String type) {
 			this.type = type;
 			this.container = new JPanel();
 			this.resourcesToPanels = new HashMap<Resource, JPanel>();
@@ -363,7 +361,7 @@ class ResourceTree extends JPanel {
 
 			button = ScriptWidgetFactory.buildExpansionButton(false);
 
-			categoryLabel = new JLabel(displayText);
+			categoryLabel = new JLabel(type);
 			categoryPanel = new JPanel();
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
