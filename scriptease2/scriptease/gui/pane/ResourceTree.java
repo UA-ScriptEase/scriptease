@@ -123,6 +123,7 @@ class ResourceTree extends JPanel {
 		this.removeAll();
 
 		final StoryModel story;
+		final List<GameType> types;
 
 		story = SEModelManager.getInstance().getActiveStoryModel();
 
@@ -134,13 +135,11 @@ class ResourceTree extends JPanel {
 
 		this.filterTypes.addAll(story.getTypes());
 
-		final List<String> types;
+		types = new ArrayList<GameType>(this.filterTypes);
 
-		types = new ArrayList<String>(GameType.getTypeNames(this.filterTypes));
+		GameType.sortByName(types);
 
-		Collections.sort(types);
-
-		for (String type : types) {
+		for (GameType type : types) {
 			final ResourceContainer containerPanel;
 
 			containerPanel = new ResourceContainer(type);
@@ -230,7 +229,7 @@ class ResourceTree extends JPanel {
 	 * 
 	 * @param resource
 	 */
-	private void notifyAddButtonClicked(String type) {
+	private void notifyAddButtonClicked(GameType type) {
 		for (ResourceTreeObserver observer : this.observerManager
 				.getObservers()) {
 			observer.resourceAddButtonClicked(type);
@@ -330,7 +329,7 @@ class ResourceTree extends JPanel {
 		// This map is, sadly, necessary to prevent memory leaks.
 		private final Map<Resource, ResourceObserver> resourcesToObservers;
 		private final Map<Resource, JPanel> resourcesToPanels;
-		private final String type;
+		private final GameType type;
 		private final JPanel container;
 
 		/**
@@ -342,7 +341,7 @@ class ResourceTree extends JPanel {
 		 * @param displayText
 		 *            The text to display as the name.
 		 */
-		public ResourceContainer(final String type) {
+		public ResourceContainer(final GameType type) {
 			this.type = type;
 			this.container = new JPanel();
 			this.resourcesToPanels = new HashMap<Resource, JPanel>();
@@ -355,7 +354,7 @@ class ResourceTree extends JPanel {
 
 			button = ScriptWidgetFactory.buildExpansionButton(false);
 
-			categoryLabel = new JLabel(type);
+			categoryLabel = new JLabel(type.getName());
 			categoryPanel = new JPanel();
 
 			categoryLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -396,7 +395,7 @@ class ResourceTree extends JPanel {
 
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
-			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
+			if (StringOp.exists(dialogueType) && type.getName().equals(dialogueType)) {
 				final JButton addButton = ComponentFactory.buildAddButton();
 
 				addButton.addActionListener(new ActionListener() {
@@ -418,7 +417,7 @@ class ResourceTree extends JPanel {
 
 			this.add(this.container);
 
-			if (StringOp.exists(dialogueType) && type.equals(dialogueType)) {
+			if (StringOp.exists(dialogueType) && type.getName().equals(dialogueType)) {
 				final StoryModel story;
 
 				story = SEModelManager.getInstance().getActiveStoryModel();
@@ -470,11 +469,12 @@ class ResourceTree extends JPanel {
 
 			// TODO See above note on dialogue types. This entire section is
 			// awkward since it relies on dialogues.
-			if (StringOp.exists(dialogueType) && type.equals(dialogueType))
+			if (StringOp.exists(dialogueType)
+					&& type.getName().equals(dialogueType))
 				resources = new ArrayList<Resource>(story.getDialogueRoots());
 			else {
 				resources = new ArrayList<Resource>(story.getModule()
-						.getResourcesOfType(type));
+						.getResourcesOfType(type.getName()));
 
 				if (resources == null || resources.isEmpty()) {
 					this.setVisible(false);

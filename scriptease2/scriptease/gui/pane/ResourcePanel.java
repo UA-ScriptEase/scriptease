@@ -23,6 +23,7 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.StringOp;
 
@@ -156,7 +157,7 @@ public class ResourcePanel extends JPanel {
 
 		this.addObserver(this, new ResourceTreeAdapter() {
 			@Override
-			public void resourceAddButtonClicked(String type) {
+			public void resourceAddButtonClicked(GameType type) {
 				final StoryModel story;
 				final String dialogueType;
 
@@ -165,7 +166,7 @@ public class ResourcePanel extends JPanel {
 				if (story != null) {
 					dialogueType = story.getModule().getDialogueType();
 					if (StringOp.exists(dialogueType)
-							&& type.equals(dialogueType)) {
+							&& type.getName().equals(dialogueType)) {
 
 						UndoManager.getInstance().startUndoableAction(
 								"Create Dialogue Root");

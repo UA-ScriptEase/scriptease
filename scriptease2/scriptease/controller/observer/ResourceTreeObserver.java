@@ -1,5 +1,6 @@
 package scriptease.controller.observer;
 
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 
 /**
@@ -32,7 +33,7 @@ public interface ResourceTreeObserver {
 	/**
 	 * Called when the add resource button is pressed.
 	 */
-	public void resourceAddButtonClicked(String type);
+	public void resourceAddButtonClicked(GameType type);
 
 	/**
 	 * Called when a resource's edit button is pressed

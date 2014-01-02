@@ -2,10 +2,14 @@ package scriptease.translator.io.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import scriptease.gui.component.TypeWidget;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -374,5 +378,25 @@ public class GameType {
 		}
 
 		return typeNames;
+	}
+
+	/**
+	 * Returns the collection sorted by name.
+	 * 
+	 * @param types
+	 * @return
+	 */
+	public static void sortByName(List<GameType> types) {
+		final Comparator<GameType> sorter = new Comparator<GameType>() {
+
+			@Override
+			public int compare(GameType o1, GameType o2) {
+				// TODO Auto-generated method stub
+				return o1.getName().toLowerCase()
+						.compareTo(o2.getName().toLowerCase());
+			}
+		};
+
+		Collections.sort(types, sorter);
 	}
 }
