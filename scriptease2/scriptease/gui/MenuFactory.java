@@ -707,15 +707,6 @@ public class MenuFactory {
 			public void actionPerformed(ActionEvent e) {
 				// This is convenient for setting a breakpoint on to pause
 				// our program.
-
-				// Code to save a screenshot of the entire thing. Watch out,
-				// this also removes the content pane since it reassigns its
-				// parent.
-
-				// GUIOp.saveScreenshot(WindowFactory.getInstance()
-				// .getCurrentFrame().getContentPane(),
-				// System.getProperty("user.home") + "/Desktop/image.png");
-
 				System.out.println("Did nothing.");
 			}
 		});
