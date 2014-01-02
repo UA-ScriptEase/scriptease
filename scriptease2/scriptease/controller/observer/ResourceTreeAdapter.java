@@ -1,5 +1,6 @@
 package scriptease.controller.observer;
 
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 
 /**
@@ -16,7 +17,7 @@ public abstract class ResourceTreeAdapter implements ResourceTreeObserver {
 	}
 	
 	@Override
-	public void resourceAddButtonClicked(String type) {
+	public void resourceAddButtonClicked(GameType type) {
 	}
 
 	@Override
