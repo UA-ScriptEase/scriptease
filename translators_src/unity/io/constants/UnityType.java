@@ -11,7 +11,7 @@ package io.constants;
  * that is specific to Unity generated types.
  */
 public enum UnityType {
-	GAMEOBJECT(1, "GameObject"),
+	GAMEOBJECT(1, "Game Object"),
 
 	COMPONENT(2, "Component"),
 
@@ -341,7 +341,7 @@ public enum UnityType {
 
 	SE_DIALOGUE("Dialogue"),
 
-	SE_DIALOGUELINE("DialogueLine");
+	SE_DIALOGUELINE("Dialogue Line");
 	
 	public static final int SCRIPTEASE_TYPE = 0;
 

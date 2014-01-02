@@ -9,6 +9,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.translator.io.model.GameType;
 
 /**
  * Filters out all StoryComponents that do not contain some type of reference to
@@ -17,9 +18,9 @@ import scriptease.model.complex.StoryComponentContainer;
  * @author remiller
  */
 public class TypeFilter extends StoryComponentFilter {
-	private final Collection<String> types;
+	private final Collection<GameType> types;
 
-	public TypeFilter(Collection<String> types) {
+	public TypeFilter(Collection<GameType> types) {
 		this.types = types;
 	}
 
@@ -54,7 +55,8 @@ public class TypeFilter extends StoryComponentFilter {
 				String nextType = typeIterator.next();
 
 				// If the type matches, accept it.
-				if (TypeFilter.this.types.contains(nextType)) {
+				if (GameType.getTypeNames(TypeFilter.this.types).contains(
+						nextType)) {
 					this.acceptable = true;
 					return;
 				}
@@ -66,7 +68,7 @@ public class TypeFilter extends StoryComponentFilter {
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			for (String type : knowIt.getAcceptableTypes()) {
-				if (TypeFilter.this.types.contains(type)) {
+				if (GameType.getTypeNames(TypeFilter.this.types).contains(type)) {
 					this.acceptable = true;
 					return;
 				}

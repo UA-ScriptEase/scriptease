@@ -981,7 +981,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 		GameType type = null;
 		for (GameType savedType : this.gameTypes) {
-			if (savedType.getDisplayName().equals(name)) {
+			if (savedType.getName().equals(name)) {
 				type = savedType;
 				break;
 			}

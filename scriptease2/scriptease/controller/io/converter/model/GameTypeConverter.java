@@ -36,7 +36,7 @@ public class GameTypeConverter implements Converter {
 		final Collection<String> slots = type.getSlots();
 		final String widgetName = type.getWidgetName();
 
-		XMLNode.NAME.writeString(writer, type.getDisplayName());
+		XMLNode.NAME.writeString(writer, type.getName());
 		XMLNode.CODESYMBOL.writeString(writer, type.getCodeSymbol());
 
 		if (format != null && !format.isEmpty())

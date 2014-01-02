@@ -75,13 +75,13 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 		types.add(GameType.DEFAULT_VOID_TYPE);
 
 		formatRef = new ArrayList<AbstractFragment>();
-		formatRef.add(new FormatReferenceFragment(
-				"activityItChildren", FormatReferenceType.NONE));
-		
+		formatRef.add(new FormatReferenceFragment("activityItChildren",
+				FormatReferenceType.NONE));
+
 		codeBlock = new CodeBlockSource(codeBlockID);
-		codeBlock.setTypes(types);
+		codeBlock.setTypesByName(types);
 		codeBlock.setCode(formatRef);
-		
+
 		newActivityIt.addCodeBlock(codeBlock);
 
 		libraryModel.add(newActivityIt);

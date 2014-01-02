@@ -52,6 +52,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.translator.io.model.GameType;
 import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
@@ -238,9 +239,8 @@ public class CodeBlockPanel extends JPanel {
 			@Override
 			public void run() {
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-					final Collection<String> selectedTypes = typeAction
-							.getTypeSelectionDialogBuilder()
-							.getSelectedTypeKeywords();
+					final Collection<GameType> selectedTypes = typeAction
+							.getSelectedTypes();
 					UndoManager.getInstance().startUndoableAction(
 							"Setting CodeBlock " + codeBlock + " types to "
 									+ selectedTypes);

@@ -19,6 +19,7 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
+import scriptease.util.ListOp;
 
 /**
  * Inserts a new ScriptIt into the library. The new ScriptIt defaults to the
@@ -81,13 +82,8 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 			// We just need the first cause with slots, so we can just search
 			// the default library.
 			if (!gameType.getSlots().isEmpty()) {
-				final Collection<String> types;
-
 				type = gameType;
-				types = new ArrayList<String>();
-				types.add(gameType.getDisplayName());
-				parameter.setTypes(types);
-
+				parameter.setTypes(ListOp.createList(type));
 				break;
 			}
 		}

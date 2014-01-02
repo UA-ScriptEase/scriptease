@@ -12,6 +12,7 @@ import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.GameType;
+import scriptease.util.ListOp;
 
 /**
  * The Action for showing the Select Type selection dialog. This action is added
@@ -143,8 +144,8 @@ public final class TypeAction extends AbstractAction {
 			name = "All Types";
 		} else if (selectedCount == 1) {
 			// show just the first one
-			name = this.typeBuilder.getSelectedTypes().iterator().next()
-					.getDisplayName();
+			name = ListOp.getFirst(this.typeBuilder.getSelectedTypes())
+					.getName();
 		} else {
 			// show the number of selected types
 			name = selectedCount + " Types";
@@ -160,10 +161,6 @@ public final class TypeAction extends AbstractAction {
 	 */
 	public Collection<GameType> getSelectedTypes() {
 		return this.typeBuilder.getSelectedTypes();
-	}
-
-	public Collection<String> getSelectedTypeKeywords() {
-		return this.typeBuilder.getSelectedTypeKeywords();
 	}
 
 	/**

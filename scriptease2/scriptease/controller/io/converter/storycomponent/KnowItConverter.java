@@ -48,12 +48,12 @@ public class KnowItConverter extends StoryComponentConverter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final KnowIt knowIt;
-		final Collection<String> typeKeys;
+		final Collection<String> typeNames;
 		final KnowItBinding binding;
 
 		knowIt = (KnowIt) super.unmarshal(reader, context);
 
-		typeKeys = XMLNode.TYPES.readStringCollection(reader);
+		typeNames = XMLNode.TYPES.readStringCollection(reader);
 
 		if (reader.hasMoreChildren()) {
 			binding = XMLNode.BINDING.readObject(reader, context,
@@ -87,7 +87,7 @@ public class KnowItConverter extends StoryComponentConverter {
 			binding = null;
 
 		// Set the allowable types of the binding.
-		knowIt.setTypes(typeKeys);
+		knowIt.setTypesByName(typeNames);
 
 		if (binding != null) {
 			knowIt.setBinding(binding);

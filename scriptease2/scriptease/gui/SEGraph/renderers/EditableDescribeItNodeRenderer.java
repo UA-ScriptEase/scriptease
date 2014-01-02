@@ -59,7 +59,7 @@ public class EditableDescribeItNodeRenderer extends
 				@Override
 				public void run() {
 					knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
-							.getSelectedTypeKeywords());
+							.getSelectedTypes());
 
 					component.removeAll();
 					configureInternalComponents(component, node);

@@ -39,6 +39,7 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.io.model.GameType;
 
 /**
  * Creates a Panel dependent on the component being edited in the Library
@@ -275,9 +276,9 @@ public class LibraryEditorPanel extends JPanel {
 				typeAction.setAction(new Runnable() {
 					@Override
 					public void run() {
-						final Collection<String> types = typeAction
+						final Collection<GameType> types = typeAction
 								.getTypeSelectionDialogBuilder()
-								.getSelectedTypeKeywords();
+								.getSelectedTypes();
 
 						// Important: DescribeIt types MUST be set first because
 						// KnowIts notify observers when their's are changed,
