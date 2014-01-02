@@ -84,7 +84,7 @@ public class ResourcePanel extends JPanel {
 			@Override
 			public void run() {
 				ResourcePanel.this.resources.filterByTypes(typeFilter
-						.getSelectedTypeKeywords());
+						.getSelectedTypes());
 			}
 		});
 

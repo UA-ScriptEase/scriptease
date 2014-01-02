@@ -147,7 +147,7 @@ public class MenuFactory {
 
 		if (TOOLS_MENU_ENABLED) {
 			bar.add(MenuFactory.buildLibraryMenu());
-			// bar.add(MenuFactory.buildBehaviourMenu());
+			bar.add(MenuFactory.buildBehaviourMenu());
 		}
 
 		bar.add(MenuFactory.buildHelpMenu());
@@ -583,10 +583,7 @@ public class MenuFactory {
 			action = new OpenLibraryEditorAction(translator);
 			translatorItem = new JMenuItem(action);
 
-			/*
-			 * TODO: Uncomment after releasing to 250
-			 */
-			  menu.add(translatorItem);
+			menu.add(translatorItem);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);

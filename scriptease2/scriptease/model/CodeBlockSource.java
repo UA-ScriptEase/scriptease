@@ -125,7 +125,7 @@ public class CodeBlockSource extends CodeBlock {
 		this.init(id);
 		this.setSubject(subject);
 		this.setSlot(slot);
-		this.setTypes(returnTypes);
+		this.setTypesByName(returnTypes);
 		this.setParameters(parameters);
 		this.setIncludes(includes);
 		this.setCode(code);
@@ -135,7 +135,7 @@ public class CodeBlockSource extends CodeBlock {
 	/**
 	 * Accomodating AspectJ
 	 */
-	public void setTypes(Collection<String> types) {
+	public void setTypesByName(Collection<String> types) {
 		Collection<String> oldTypes = new ArrayList<String>(this.returnTypes);
 		for (String type : oldTypes) {
 			removeType(type);
@@ -185,7 +185,7 @@ public class CodeBlockSource extends CodeBlock {
 		final CodeBlockSource duplicate = new CodeBlockSource(uniqueId);
 		duplicate.setSubject(this.subjectName);
 		duplicate.setSlot(this.slot);
-		duplicate.setTypes(this.returnTypes);
+		duplicate.setTypesByName(this.returnTypes);
 
 		final Collection<KnowIt> clonedParameters = new ArrayList<KnowIt>();
 		final Collection<KnowIt> parameters = this.getParameters();

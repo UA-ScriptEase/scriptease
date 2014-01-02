@@ -35,7 +35,7 @@ public class GameType {
 		JTEXTFIELD, JSPINNER, JCOMBOBOX;
 	}
 
-	private String displayName;
+	private String name;
 	private String regEx;
 	private String widgetName;
 	private Collection<String> slots;
@@ -90,7 +90,7 @@ public class GameType {
 			throw new IllegalArgumentException(
 					"Empty enumeration for game type using Combo Box editor.");
 
-		this.displayName = name;
+		this.name = name;
 		this.regEx = regEx;
 		this.slots = new ArrayList<String>(slots);
 		this.guiEditorName = gui;
@@ -246,12 +246,12 @@ public class GameType {
 		return false;
 	}
 
-	public String getDisplayName() {
-		return this.displayName;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class GameType {
 			return false;
 		}
 		System.err.println("Tried to access slot " + slot + " on type "
-				+ this.displayName + " which does not have slots");
+				+ this.name + " which does not have slots");
 		return false;
 	}
 
@@ -329,7 +329,7 @@ public class GameType {
 				return true;
 			}
 			final GameType other = (GameType) obj;
-			return other.displayName.equals(this.displayName);
+			return other.name.equals(this.name);
 		}
 		return false;
 	}
@@ -339,7 +339,7 @@ public class GameType {
 	 */
 	@Override
 	public String toString() {
-		return "GameType [" + this.displayName + "]";
+		return "GameType [" + this.name + "]";
 	}
 
 	/**
@@ -358,5 +358,21 @@ public class GameType {
 	 */
 	public boolean hasEnum() {
 		return this.enums != null && !this.enums.isEmpty();
+	}
+
+	/**
+	 * Returns the names of all of the types in a collection.
+	 * 
+	 * @param types
+	 * @return
+	 */
+	public static Collection<String> getTypeNames(Collection<GameType> types) {
+		final Collection<String> typeNames = new ArrayList<String>();
+
+		for (GameType type : types) {
+			typeNames.add(type.getName());
+		}
+
+		return typeNames;
 	}
 }

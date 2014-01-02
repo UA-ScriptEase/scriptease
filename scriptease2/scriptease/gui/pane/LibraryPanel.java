@@ -142,9 +142,10 @@ public class LibraryPanel extends JTabbedPane {
 			 */
 			@Override
 			public void modelChanged(SEModelEvent event) {
-				final SEModel model = event.getPatternModel();
+				switch (event.getEventType()) {
+				case ADDED:
+					final SEModel model = event.getPatternModel();
 
-				if (event.getEventType() == SEModelEvent.Type.ADDED) {
 					model.process(new ModelAdapter() {
 						@Override
 						public void processLibraryModel(LibraryModel library) {
@@ -172,11 +173,14 @@ public class LibraryPanel extends JTabbedPane {
 							});
 						}
 					});
-				} else if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
+					break;
+				case REMOVED:
+					if (SEModelManager.getInstance().getActiveModel() != null)
+						break;
+				case ACTIVATED:
 					updateLists();
-				} else if (event.getEventType() == SEModelEvent.Type.REMOVED
-						&& SEModelManager.getInstance().getActiveModel() == null) {
-					updateLists();
+				default:
+					break;
 				}
 			}
 		};
@@ -193,24 +197,18 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
 		this.storyComponentPanelJLists.add(descriptionsList);
-		// TODO uncomment after winter release
-		// this.storyComponentPanelJLists.add(behavioursList);
+		this.storyComponentPanelJLists.add(behavioursList);
 		this.storyComponentPanelJLists.add(controlsList);
 		this.storyComponentPanelJLists.add(activitiesList);
-		// TODO uncomment after winter release
-		// this.storyComponentPanelJLists.add(blocksList);
+		this.storyComponentPanelJLists.add(blocksList);
 
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
-
-		// TODO uncomment after winter release
-		// this.add("Behaviours", this.createTab(behavioursList));
-
+		this.add("Behaviours", this.createTab(behavioursList));
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Activities", this.createTab(activitiesList));
-		// TODO uncomment after winter release
-		// this.add("Blocks", this.createTab(blocksList));
+		this.add("Blocks", this.createTab(blocksList));
 
 		// Set up Hotkeys
 		this.setMnemonicAt(0, KeyEvent.VK_1);
@@ -218,8 +216,8 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(2, KeyEvent.VK_3);
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
-		// this.setMnemonicAt(5, KeyEvent.VK_6);
-		// this.setMnemonicAt(6, KeyEvent.VK_7);
+		this.setMnemonicAt(5, KeyEvent.VK_6);
+		this.setMnemonicAt(6, KeyEvent.VK_7);
 
 		this.setUI(ComponentFactory.buildFlatTabUI());
 
@@ -317,8 +315,7 @@ public class LibraryPanel extends JTabbedPane {
 			@Override
 			public void run() {
 				list.updateFilter(new TypeFilter(typeFilter
-						.getTypeSelectionDialogBuilder()
-						.getSelectedTypeKeywords()));
+						.getTypeSelectionDialogBuilder().getSelectedTypes()));
 
 				updateList(list);
 			}
@@ -539,18 +536,18 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (index == 2) {
 					components = libraryModel.getDescriptionsCategory()
 							.getChildren();
-					// } else if (index == 3) {
-					// components = libraryModel.getBehavioursCategory()
-					// .getChildren();
 				} else if (index == 3) {
-					components = libraryModel.getControllersCategory()
+					components = libraryModel.getBehavioursCategory()
 							.getChildren();
 				} else if (index == 4) {
+					components = libraryModel.getControllersCategory()
+							.getChildren();
+				} else if (index == 5) {
 					components = libraryModel.getActivitysCategory()
 							.getChildren();
-					// } else if (index == 5) {
-					// components = libraryModel.getControllersCategory()
-					// .getChildren();
+				} else if (index == 6) {
+					components = libraryModel.getControllersCategory()
+							.getChildren();
 				} else {
 					throw new IllegalArgumentException(
 							"Invalid list in LibraryPanel: " + list);
@@ -559,12 +556,7 @@ public class LibraryPanel extends JTabbedPane {
 				Collections.sort(components,
 						LibraryPanel.STORY_COMPONENT_COMPARATOR);
 
-				try {
 				list.addStoryComponents(components);
-				} catch (Exception e) {
-
-				e.printStackTrace();
-				}
 			}
 		} else {
 			list.removeAllStoryComponents();
@@ -577,6 +569,7 @@ public class LibraryPanel extends JTabbedPane {
 	 */
 	private void updateLists() {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.removeAllStoryComponents();
 			this.updateList(list);
 		}
 	}

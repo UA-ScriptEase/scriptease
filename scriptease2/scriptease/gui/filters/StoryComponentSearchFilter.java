@@ -173,7 +173,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 			for (final String typeName : types) {
 				final GameType type = model.getType(typeName);
 
-				this.searchData.add(type.getDisplayName());
+				this.searchData.add(type.getName());
 				this.searchData.add(type.getCodeSymbol());
 				this.searchData.add(type.getWidgetName());
 

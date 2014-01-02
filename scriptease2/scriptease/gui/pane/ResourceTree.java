@@ -64,7 +64,7 @@ class ResourceTree extends JPanel {
 	private final ObserverManager<ResourceTreeObserver> observerManager;
 
 	private final Collection<ResourceContainer> containers;
-	private final Collection<String> filterTypes;
+	private final Collection<GameType> filterTypes;
 
 	private static final Comparator<Resource> constantSorter = new Comparator<Resource>() {
 		@Override
@@ -99,7 +99,7 @@ class ResourceTree extends JPanel {
 	 */
 	protected ResourceTree() {
 		super();
-		this.filterTypes = new ArrayList<String>();
+		this.filterTypes = new ArrayList<GameType>();
 		this.containers = new ArrayList<ResourceContainer>();
 		this.filterText = "";
 		this.observerManager = new ObserverManager<ResourceTreeObserver>();
@@ -131,21 +131,15 @@ class ResourceTree extends JPanel {
 			this.revalidate();
 			return;
 		}
-		final Collection<String> keywords = new ArrayList<String>();
 
-		for (GameType type : story.getTypes()) {
-			keywords.add(type.getDisplayName());
-		}
-
-		this.filterTypes.addAll(keywords);
+		this.filterTypes.addAll(story.getTypes());
 
 		final List<String> types;
 
-		types = new ArrayList<String>(this.filterTypes);
+		types = new ArrayList<String>(GameType.getTypeNames(this.filterTypes));
 
 		Collections.sort(types);
 
-		// Add the dialogue type even if there are no dialogues.
 		for (String type : types) {
 			final ResourceContainer containerPanel;
 
@@ -187,7 +181,7 @@ class ResourceTree extends JPanel {
 	 * 
 	 * @param filterTypes
 	 */
-	protected void filterByTypes(Collection<String> filterTypes) {
+	protected void filterByTypes(Collection<GameType> filterTypes) {
 		this.filterTypes.clear();
 		this.filterTypes.addAll(filterTypes);
 

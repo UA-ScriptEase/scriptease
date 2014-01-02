@@ -55,7 +55,7 @@ public class TypeWidget extends JToggleButton {
 		if (type != null) {
 			final String widgetName = type.getWidgetName();
 
-			typeName = type.getDisplayName();
+			typeName = type.getName();
 
 			if (StringOp.exists(widgetName)) {
 				widgetText = widgetName;

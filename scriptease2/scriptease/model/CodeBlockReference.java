@@ -115,7 +115,6 @@ public class CodeBlockReference extends CodeBlock {
 		if (newTarget == null)
 			newTarget = CodeBlockReference.NULL_TARGET;
 
-
 		if (oldTarget == newTarget)
 			return;
 
@@ -189,8 +188,8 @@ public class CodeBlockReference extends CodeBlock {
 	}
 
 	@Override
-	public void setTypes(Collection<String> types) {
-		this.getTarget().setTypes(types);
+	public void setTypesByName(Collection<String> types) {
+		this.getTarget().setTypesByName(types);
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
 	}

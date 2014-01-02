@@ -32,6 +32,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 
@@ -439,13 +440,17 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		return acceptableTypes;
 	}
 
+	public void setTypes(Collection<GameType> types) {
+		this.setTypesByName(GameType.getTypeNames(types));
+	}
+
 	/**
 	 * Sets the types of the KnowIt and notifies all observers of a
 	 * {@link StoryComponentChangeEnum#CHANGE_KNOW_IT_TYPE} event.
 	 * 
 	 * @param types
 	 */
-	public void setTypes(Collection<String> types) {
+	public void setTypesByName(Collection<String> types) {
 		this.types = types;
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_KNOW_IT_TYPE));

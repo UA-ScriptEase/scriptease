@@ -246,7 +246,7 @@ public class TypeDialogBuilder {
 			@Override
 			public int compare(CheckBoxPanel o1, CheckBoxPanel o2) {
 				return String.CASE_INSENSITIVE_ORDER.compare(o1.getType()
-						.getDisplayName(), o2.getType().getDisplayName());
+						.getName(), o2.getType().getName());
 			}
 		});
 
@@ -403,16 +403,6 @@ public class TypeDialogBuilder {
 		return checked;
 	}
 
-	public Collection<String> getSelectedTypeKeywords() {
-		final Collection<String> keywords = new ArrayList<String>();
-
-		for (GameType type : this.getSelectedTypes()) {
-			keywords.add(type.getDisplayName());
-		}
-
-		return keywords;
-	}
-
 	public void deselectAll() {
 		for (GameType type : this.typesToSelected.keySet()) {
 			selectType(type, false);
@@ -443,7 +433,7 @@ public class TypeDialogBuilder {
 	public void selectTypesByKeyword(Collection<String> keywords,
 			boolean isSelected) {
 		for (GameType type : this.typesToSelected.keySet()) {
-			if (keywords.contains(type.getDisplayName())) {
+			if (keywords.contains(type.getName())) {
 				selectType(type, isSelected);
 			}
 		}
@@ -493,22 +483,20 @@ public class TypeDialogBuilder {
 		private final TypeWidget typeWidget;
 		private final GameType typeKeyword;
 
-		private CheckBoxPanel(GameType typeKeyword) {
+		private CheckBoxPanel(GameType type) {
 			super();
 			final Dimension MAX_PANEL_SIZE = new Dimension(2400, 25);
 			final Dimension MIN_PANEL_SIZE = new Dimension(10, 25);
 
-			final String typeDisplayText;
+			final String typeName = type.getName();
 
 			final JLabel typeLabel;
 			final JPanel typePanel;
 
-			this.typeKeyword = typeKeyword;
-			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeKeyword
-					.getDisplayName());
-			typeDisplayText = typeKeyword.getDisplayName();
+			this.typeKeyword = type;
+			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeName);
 
-			typeLabel = new JLabel(" " + typeDisplayText);
+			typeLabel = new JLabel(" " + typeName);
 			typePanel = new JPanel();
 
 			typePanel.setLayout(new BoxLayout(typePanel, BoxLayout.LINE_AXIS));

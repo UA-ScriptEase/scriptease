@@ -131,7 +131,7 @@ public class ParameterPanel extends JPanel {
 			@Override
 			public void run() {
 				knowIt.setTypes(typeAction.getTypeSelectionDialogBuilder()
-						.getSelectedTypeKeywords());
+						.getSelectedTypes());
 
 				final String initialDefaultType;
 				initialDefaultType = (String) defaultTypeBox.getSelectedItem();
@@ -173,7 +173,7 @@ public class ParameterPanel extends JPanel {
 						if (!type.equals(selectedType))
 							newTypeList.add(type);
 					}
-					knowIt.setTypes(newTypeList);
+					knowIt.setTypesByName(newTypeList);
 					updateBindingConstantComponent(bindingConstantComponent);
 				}
 			}

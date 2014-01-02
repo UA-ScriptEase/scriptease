@@ -13,6 +13,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.io.model.GameType;
 
 /**
  * A CodeBlock represents a block of code which is generated in script,
@@ -130,13 +131,22 @@ public abstract class CodeBlock extends StoryComponent implements
 	public abstract void setSlot(String slot);
 
 	/**
+	 * Sets the return types for this code block to the given types.
+	 * 
+	 * @param types
+	 */
+	public void setTypes(Collection<GameType> types) {
+		this.setTypesByName(GameType.getTypeNames(types));
+	}
+
+	/**
 	 * Sets the return types for this code block to the contents of the given
 	 * list.
 	 * 
 	 * @param types
 	 *            the new return types
 	 */
-	public abstract void setTypes(Collection<String> types);
+	public abstract void setTypesByName(Collection<String> types);
 
 	public abstract void addType(String type);
 

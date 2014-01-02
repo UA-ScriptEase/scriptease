@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import scriptease.model.TypedComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.translator.io.model.GameType;
 import scriptease.util.ListOp;
 import sun.awt.util.IdentityArrayList;
 
@@ -167,8 +168,22 @@ public class DescribeIt implements TypedComponent {
 		return new ArrayList<String>(this.types);
 	}
 
-	public void setTypes(Collection<String> types) {
-		this.types = new ArrayList<String>(types);
+	/**
+	 * Sets the types to the passed in values.
+	 * 
+	 * @param types
+	 */
+	public void setTypesByName(Collection<String> types) {
+		this.types = types;
+	}
+
+	/**
+	 * Sets the types to the names of the passed in GameTypes.
+	 * 
+	 * @param types
+	 */
+	public void setTypes(Collection<GameType> types) {
+		this.setTypesByName(GameType.getTypeNames(types));
 	}
 
 	/**
