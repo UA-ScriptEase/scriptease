@@ -41,7 +41,6 @@ import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentDownAction;
 import scriptease.gui.action.libraryeditor.codeeditor.MoveFragmentUpAction;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
-import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.libraryeditor.ParameterPanel;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -141,14 +140,11 @@ public class CodeBlockPanel extends JPanel {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				final ArrayList<String> types;
-				final TypeDialogBuilder builder;
 
 				types = new ArrayList<String>(codeBlock.getTypes());
-				builder = typeAction.getTypeSelectionDialogBuilder();
 
-				builder.deselectAll();
-				builder.selectTypesByKeyword(types, true);
-
+				typeAction.deselectAll();
+				typeAction.selectTypesByKeyword(types, true);
 				typeAction.updateName();
 			}
 		});
@@ -231,9 +227,8 @@ public class CodeBlockPanel extends JPanel {
 		implicitsListLabel.setForeground(Color.DARK_GRAY);
 		implicitsListLabel.setText(this.buildImplicitList(codeBlock));
 
-		typeAction.getTypeSelectionDialogBuilder().deselectAll();
-		typeAction.getTypeSelectionDialogBuilder().selectTypesByKeyword(types,
-				true);
+		typeAction.deselectAll();
+		typeAction.selectTypesByKeyword(types, true);
 
 		typeAction.setAction(new Runnable() {
 			@Override

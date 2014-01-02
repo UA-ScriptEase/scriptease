@@ -8,7 +8,6 @@ import javax.swing.JDialog;
 
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
-import scriptease.gui.dialog.TypeDialogBuilder;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.GameType;
@@ -112,6 +111,24 @@ public final class TypeAction extends AbstractAction {
 
 		typeDialog = this.typeBuilder.buildTypeDialog();
 		typeDialog.setVisible(true);
+	}
+
+	/**
+	 * Sets selection state of types based on the keywords entered.
+	 * 
+	 * @param keywords
+	 * @param isSelected
+	 */
+	public void selectTypesByKeyword(Collection<String> keywords,
+			boolean isSelected) {
+		this.typeBuilder.selectTypesByKeyword(keywords, isSelected);
+	}
+
+	/**
+	 * Deselects all types in the type builder.
+	 */
+	public void deselectAll() {
+		this.typeBuilder.deselectAll();
 	}
 
 	/**
