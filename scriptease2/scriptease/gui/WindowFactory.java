@@ -940,7 +940,7 @@ public final class WindowFactory {
 					SEModelManager.getInstance().addAndActivate(
 							(LibraryModel) selectedItem);
 					dialog.dispose();
-				} 
+				}
 			}
 		});
 
@@ -1325,13 +1325,11 @@ public final class WindowFactory {
 			public void modelChanged(SEModelEvent event) {
 				final SEModelEvent.Type eventType;
 				final SEModel activeModel;
-				final boolean activated;
 
 				eventType = event.getEventType();
 				activeModel = SEModelManager.getInstance().getActiveModel();
-				activated = eventType == SEModelEvent.Type.ACTIVATED;
 
-				if (activated
+				if (eventType == SEModelEvent.Type.ACTIVATED
 						|| (eventType == SEModelEvent.Type.REMOVED && activeModel == null)
 						|| (eventType == SEModelEvent.Type.TITLECHANGED)) {
 

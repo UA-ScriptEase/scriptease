@@ -259,17 +259,20 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		value.process(new BindingAdapter() {
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				// Find an appropriate Default binding for the type.
-				final SEModel activeModel = SEModelManager.getInstance()
-						.getActiveModel();
+				// Find an appropriate Default binding for the type if it's GUI
+				// type isn't null.
+
+				final SEModel model;
+
+				model = SEModelManager.getInstance().getActiveModel();
 
 				// / TODO Clean this up if possible.
-				if (activeModel != null) {
-					final Translator translator = activeModel.getTranslator();
+				if (model != null) {
+					final Translator translator = model.getTranslator();
 					if (translator != null
 							&& translator.defaultLibraryIsLoaded()) {
 						for (String type : KnowIt.this.types) {
-							if (activeModel.getType(type).getGui() != null) {
+							if (model.getType(type).getGui() != null) {
 								final Resource resource;
 								final KnowItBindingResource bindingValue;
 
@@ -277,7 +280,9 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 										.buildSimpleResource(type);
 								bindingValue = new KnowItBindingResource(
 										resource);
+
 								this.defaultProcess(bindingValue);
+
 								return;
 							}
 						}
@@ -290,10 +295,10 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			public void processFunction(KnowItBindingFunction function) {
 				defaultProcess(function);
 				// Observer the reference
-				final ScriptIt doIt = function.getValue();
-				doIt.setOwner(KnowIt.this);
-				addObservers(doIt);
-				addParameterObservers(doIt);
+				final ScriptIt scriptIt = function.getValue();
+				scriptIt.setOwner(KnowIt.this);
+				addObservers(scriptIt);
+				addParameterObservers(scriptIt);
 			}
 
 			@Override
