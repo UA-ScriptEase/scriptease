@@ -168,7 +168,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 					StoryComponent destOwner = destinationKnowIt.getOwner();
 					while (!(destOwner instanceof ComplexStoryComponent))
 						destOwner = destOwner.getOwner();
-					
+
 					if (!descendants.contains(destOwner))
 						return false;
 				}
@@ -275,7 +275,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		parent = destinationComponent.getParent();
 
 		if (parent != null && parent instanceof SlotPanel) {
-			parent.removeAll();
 			((SlotPanel) parent).populate();
 		}
 	}

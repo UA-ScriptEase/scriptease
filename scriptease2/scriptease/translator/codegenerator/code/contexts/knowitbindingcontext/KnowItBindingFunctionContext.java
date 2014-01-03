@@ -12,6 +12,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * 
  * @see Context
  * @author mfchurch
+ * @author kschenk
  * 
  */
 public class KnowItBindingFunctionContext extends KnowItBindingContext {

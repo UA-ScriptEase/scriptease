@@ -2,6 +2,7 @@ package scriptease.gui.component;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -302,11 +303,14 @@ public class ScriptWidgetFactory {
 	 * @return the component that contains the collection of legal type widgets
 	 *         for the given knowIt
 	 */
-	public static JComponent populateLegalTypesPanel(JPanel typePanel,
-			KnowIt knowIt) {
-		typePanel.removeAll();
+	public static JPanel buildLegalTypesPanel(KnowIt knowIt) {
 		final KnowItBinding binding = knowIt.getBinding();
 		final Collection<String> types = knowIt.getAcceptableTypes();
+		final JPanel typePanel;
+
+		typePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+
+		typePanel.setOpaque(false);
 
 		// for each type the KnowIt can accept
 		// This is types for the other thing
@@ -394,16 +398,20 @@ public class ScriptWidgetFactory {
 	 */
 	public static JLabel buildLabel(String text, Color textColor,
 			Color background) {
-		JLabel label = buildLabel(text, textColor);
+		final JLabel label;
+		final int fontSize;
+
+		label = buildLabel(text, textColor);
+		fontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
+				ScriptEase.FONT_SIZE_KEY));
+
 		label.setBackground(background);
 		label.setOpaque(true);
 
 		// border
 		label.setBorder(BorderFactory.createMatteBorder(1, 3, 1, 3, background));
 
-		int fontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
-				ScriptEase.FONT_SIZE_KEY));
-		label.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize--));
+		label.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize - 1));
 
 		return label;
 	}
