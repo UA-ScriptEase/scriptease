@@ -138,7 +138,7 @@ public class ScopeFragment extends AbstractContainerFragment {
 		int hash = super.hashCode();
 		if (this.nameRef != null)
 			hash += this.nameRef.hashCode();
-		return hash + this.subFragments.hashCode();
+		return hash;
 	}
 
 	@Override

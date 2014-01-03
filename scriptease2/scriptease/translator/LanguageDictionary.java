@@ -14,13 +14,15 @@ import scriptease.translator.codegenerator.code.fragments.container.FormatDefini
  * @author remiller
  * @author jtduncan
  * @author mfchurch
+ * @author kschenk
  */
 public class LanguageDictionary {
 
 	private final Collection<FormatDefinitionFragment> formats;
 	private final Collection<String> reservedWords;
-	private String indentString;
-	private String name;
+	private final String indentString;
+	private final String lineBreak;
+	private final String name;
 
 	/**
 	 * Builds a new LanguageDictionary to represent the given data.
@@ -29,6 +31,8 @@ public class LanguageDictionary {
 	 *            Name of the dictionary.
 	 * @param indentString
 	 *            String to be used for indenting code.
+	 * @param lineBreak
+	 *            String used to add line breaks to code.
 	 * @param reservedWords
 	 *            List of strings to be avoided when generating names in code
 	 *            generation.
@@ -36,12 +40,17 @@ public class LanguageDictionary {
 	 * @param maps
 	 */
 	public LanguageDictionary(String name, String indentString,
-			Collection<String> reservedWords,
+			String lineBreak, Collection<String> reservedWords,
 			Collection<FormatDefinitionFragment> formats) {
 		this.name = name;
 		this.indentString = indentString;
+		this.lineBreak = lineBreak;
 		this.reservedWords = new HashSet<String>(reservedWords);
 		this.formats = new ArrayList<FormatDefinitionFragment>(formats);
+	}
+
+	public String getLineBreak() {
+		return lineBreak;
 	}
 
 	public String getName() {

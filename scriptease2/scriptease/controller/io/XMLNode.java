@@ -125,6 +125,8 @@ public enum XMLNode {
 	INCLUDE_FILES("IncludeFiles", INCLUDE_FILE),
 
 	INDENT_STRING("IndentString"),
+	
+	LINE_BREAK("LineBreak"),
 
 	KEYWORD("Keyword"),
 
