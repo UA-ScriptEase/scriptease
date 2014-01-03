@@ -5,6 +5,8 @@
 	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/LanguageDictionarySchema.xsd'>
 	<!-- Four space characters. Space = ASCII 32 -->
 	<IndentString>&#32;&#32;&#32;&#32;</IndentString>
+	<LineBreak>
+	</LineBreak>
 	<ReservedWords>
 		<Word>if</Word>
 		<Word>else</Word>

@@ -13,57 +13,41 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * to the code.
  * 
  * @author jason
+ * @author kschenk
  * 
  */
 public class LineFragment extends AbstractContainerFragment {
-	// This is a string because a new line is not necessarily expressable as a
-	// single character. This is the case, for example, with HTML, which uses
-	// '<br />'.
-	private String newLineChar;
-
 	/**
 	 * Constructor without FormatFragment list specified.
-	 * 
-	 * @param nlChar
-	 *            the character to mark a new line.
 	 */
-	public LineFragment(String nlChar) {
-		super("", new ArrayList<AbstractFragment>());
-		this.newLineChar = nlChar;
+	public LineFragment() {
+		this(new ArrayList<AbstractFragment>());
 	}
 
 	/**
 	 * Constructor with FormatFragment list specified.
 	 * 
-	 * @param nlChar
-	 *            the character to mark a new line.
 	 * @param fragments
 	 *            the child fragments
 	 */
-	public LineFragment(String nlChar, List<AbstractFragment> fragments) {
+	public LineFragment(List<AbstractFragment> fragments) {
 		super("", fragments);
-		this.newLineChar = nlChar;
-	}
-
-	@Override
-	public LineFragment clone() {
-		final LineFragment clone = (LineFragment) super.clone();
-		clone.setNewLineChar(this.newLineChar);
-		return clone;
-	}
-
-	public void setNewLineChar(String newLineChar) {
-		this.newLineChar = newLineChar;
 	}
 
 	@Override
 	public String resolve(Context context) {
 		super.resolve(context);
+		final String lineBreak;
+
+		lineBreak = context.getTranslator().getLanguageDictionary()
+				.getLineBreak();
+
 		String generated = context.getIndent();
 		for (AbstractFragment fragment : this.subFragments) {
 			generated += fragment.resolve(context);
 		}
-		return generated + this.newLineChar;
+
+		return generated + lineBreak;
 	}
 
 	@Override
@@ -77,12 +61,6 @@ public class LineFragment extends AbstractContainerFragment {
 			return this.hashCode() == obj.hashCode();
 		}
 		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return super.hashCode() + this.subFragments.hashCode()
-				+ this.newLineChar.hashCode();
 	}
 
 	@Override

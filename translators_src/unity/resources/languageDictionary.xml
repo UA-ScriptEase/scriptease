@@ -1,6 +1,8 @@
 <LanguageDictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/LanguageDictionarySchema.xsd'>
 	<IndentString>	</IndentString>
+	<LineBreak>
+	</LineBreak>
 	<ReservedWords>
 		<!-- Word lists from http://www.quackit.com/javascript/javascript_reserved_words.cfm -->
 		<!-- Direct javascript reserved words -->
