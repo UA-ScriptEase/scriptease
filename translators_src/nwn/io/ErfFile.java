@@ -123,17 +123,13 @@ public final class ErfFile extends GameModule {
 	 */
 	private void addJournalCategory(final ScriptIt scriptIt) {
 		final GeneratedJournalGFF journalGFF = this.getJournalGFF();
-
 		final GeneratedJournalGFF journal;
 
 		if (journalGFF == null) {
-			final NWNResource resource;
-
 			journal = new GeneratedJournalGFF(scriptIt);
-			resource = new NWNResource(journal.getResRef(),
-					ErfKey.JOURNAL_FILE_TYPE, journal);
 
-			ErfFile.this.resources.add(resource);
+			this.resources.add(new NWNResource(journal.getResRef(),
+					ErfKey.JOURNAL_FILE_TYPE, journal));
 		} else {
 			journal = journalGFF;
 			journal.addCategory(scriptIt);
@@ -163,7 +159,7 @@ public final class ErfFile extends GameModule {
 												"<html><b>Only one Journal Record can be created per Story Point.</b><br><br>"
 														+ "Add a new Journal Point to the existing Journal Record<br>"
 														+ "or create a new Journal Record for a new Story Point instead.<br><br>"
-														+ "<b>Warning: One of these Journal Records now has an unbinded Story Point.</b></html>");
+														+ "<b>Warning: The Story Point object in one of the effects has been removed.</b></html>");
 
 								parameter.clearBinding();
 							} catch (Exception e) {
@@ -597,12 +593,12 @@ public final class ErfFile extends GameModule {
 
 	@Override
 	public void save(boolean compile) throws IOException {
-
 		// size in bytes, not number of entries
 		final int localizedStringsSize;
 		final long offsetToLocalizedStrings;
 		final long offsetToKeyList;
 		final long offsetToResourceList;
+		final Collection<NWNResource> journalResources;
 
 		for (StoryNode point : CodeGenerator.getInstance()
 				.getGeneratingStoryPoints()) {
@@ -633,6 +629,7 @@ public final class ErfFile extends GameModule {
 		offsetToKeyList = offsetToLocalizedStrings + localizedStringsSize;
 		offsetToResourceList = offsetToKeyList + this.resources.size()
 				* ErfKey.BYTE_LENGTH;
+		journalResources = new ArrayList<NWNResource>();
 
 		this.createBackup();
 
@@ -651,10 +648,6 @@ public final class ErfFile extends GameModule {
 
 		// Remove all journals from the list of resources so that we create them
 		// new next time.
-		final Collection<NWNResource> journalResources;
-
-		journalResources = new ArrayList<NWNResource>();
-
 		for (NWNResource resource : ErfFile.this.resources) {
 			if (resource.isGFF()
 					&& resource.getGFF() instanceof GeneratedJournalGFF)
@@ -761,11 +754,10 @@ public final class ErfFile extends GameModule {
 		}
 
 		// get all of the compiler's compiled byte code output into resources
-		File byteCodeFile;
-		byte[] byteCode;
-		NWNResource compiledResource;
-
 		for (String resRef : resrefsToFiles.keySet()) {
+			final File byteCodeFile;
+			final byte[] byteCode;
+
 			byteCodeFile = FileOp.replaceExtension(resrefsToFiles.get(resRef),
 					"ncs").getAbsoluteFile();
 
@@ -777,10 +769,8 @@ public final class ErfFile extends GameModule {
 
 			byteCode = FileOp.readFileAsBytes(byteCodeFile);
 
-			compiledResource = new NWNResource(resRef,
-					ErfKey.SCRIPT_COMPILED_TYPE, byteCode);
-
-			this.resources.add(compiledResource);
+			this.resources.add(new NWNResource(resRef,
+					ErfKey.SCRIPT_COMPILED_TYPE, byteCode));
 		}
 
 		FileManager.getInstance().deleteTempFile(compilationDir);
