@@ -180,7 +180,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		if (storyPoint == null)
 			return;
 
-		if (storyPoint == SEModelManager.getInstance().getActiveRoot()) {
+		if (storyPoint.isRoot()) {
 			this.updateStoryRoot(component, storyPoint);
 			return;
 		}
