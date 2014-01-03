@@ -105,6 +105,8 @@ public enum XMLNode {
 	FORMAT("Format"),
 
 	FORMATS("Formats", FORMAT),
+	
+	FUNCTION_CALL_FORMAT("FunctionCallFormat"),
 
 	GAME_MODULE("GameModule"),
 
