@@ -300,6 +300,7 @@
 		<Word>SubstanceImporter</Word>																													
 		<Word>GUI</Word>
 	</ReservedWords>
+	<FunctionCallFormat>functionHeader</FunctionCallFormat>
 	<Formats>
 		<!-- Variables -->
 		<!-- Adds the type of the variable in front of it -->
@@ -399,10 +400,6 @@
 				<FormatRef ref="variableWithType" />
 			</Series>
 			<Literal>)</Literal>
-		</Format>
-		<!-- Used by ScriptEase to get the function name -->
-		<Format id="function_as_value">
-			<FormatRef ref="functionHeader" />
 		</Format>
 		<!-- Same as functionSignature, but without types. Used to call it -->
 		<Format id="functionHeader">

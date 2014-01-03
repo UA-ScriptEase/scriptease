@@ -38,6 +38,7 @@
 		<Word caseSensitive="false">true</Word>
 		<Word caseSensitive="false">false</Word>
 	</ReservedWords>
+	<FunctionCallFormat>functionHeader</FunctionCallFormat>
 	<Formats>
 		<!-- Variables -->
 		<!-- Adds the type of the variable in front of it -->
@@ -130,10 +131,6 @@
 				<FormatRef ref="functionSignature" />
 				<Literal>;</Literal>
 			</Line>
-		</Format>
-		<!-- Used by ScriptEase to get the function name -->
-		<Format id="function_as_value">
-			<FormatRef ref="functionHeader" />
 		</Format>
 		<!-- Same as functionSignature, but without types. Used to call it -->
 		<Format id="functionHeader">
@@ -237,9 +234,9 @@
 
 		<!-- Finds the format for the ActivityIt and uses it -->
 		<Format id="activityItCall">
-		    <FormatRef ref="functionCall" />
+			<FormatRef ref="functionCall" />
 		</Format>
-		
+
 		<!-- Defines all variables in the KnowIt -->
 		<Format id="knowItDefinition">
 			<Series data="variables">
@@ -272,7 +269,7 @@
 			<Line>
 				<Literal>#include "i_se_story"</Literal>
 			</Line>
-			<Line>	
+			<Line>
 				<Literal>#include "i_se_aux"</Literal>
 			</Line>
 			<Series data="includes" unique="true">

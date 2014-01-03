@@ -35,6 +35,9 @@ public class LanguageDictionaryConverter implements Converter {
 		XMLNode.RESERVED_WORDS.writeChildren(writer,
 				languageDictionary.getReservedWords());
 
+		XMLNode.FUNCTION_CALL_FORMAT.writeObject(writer, context,
+				languageDictionary.getFunctionCallFormatName());
+		
 		XMLNode.FORMATS.writeObject(writer, context,
 				languageDictionary.getFormats());
 	}
@@ -45,6 +48,7 @@ public class LanguageDictionaryConverter implements Converter {
 		final String name;
 		final String indentString;
 		final String lineBreak;
+		String functionCallFormat;
 		final Collection<String> reservedWords;
 		final Collection<FormatDefinitionFragment> fragments;
 
@@ -57,12 +61,13 @@ public class LanguageDictionaryConverter implements Converter {
 		indentString = XMLNode.INDENT_STRING.readString(reader);
 		lineBreak = XMLNode.LINE_BREAK.readString(reader);
 		reservedWords = XMLNode.RESERVED_WORDS.readStringCollection(reader);
-
+		functionCallFormat = XMLNode.FUNCTION_CALL_FORMAT.readString(reader);
+		
 		fragments = XMLNode.FORMATS.readCollection(reader, context,
 				FormatDefinitionFragment.class);
 
 		languageDictionary = new LanguageDictionary(name, indentString,
-				lineBreak, reservedWords, fragments);
+				lineBreak, functionCallFormat, reservedWords, fragments);
 
 		return languageDictionary;
 	}
