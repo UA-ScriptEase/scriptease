@@ -53,6 +53,7 @@ import scriptease.translator.io.model.GameModule;
 /**
  * @author Previous ScriptEase devs
  * @author jyuen
+ * @author zturchan
  */
 public class DialogBuilder {
 	/**
@@ -264,7 +265,8 @@ public class DialogBuilder {
 				final File location = new File(moduleField.getText());
 				final String title = titleField.getText();
 				final String author = authorField.getText();
-
+				final String description = descriptionField.getText();
+				
 				final TranslatorManager translatorManager;
 				final Translator selectedTranslator;
 				final Translator oldTranslator;
@@ -303,7 +305,7 @@ public class DialogBuilder {
 
 					compatibleVersion = ScriptEase.getInstance().getVersion();
 
-					model = new StoryModel(module, title, author,
+					model = new StoryModel(module, title, author, description,
 							compatibleVersion, selectedTranslator,
 							new ArrayList<LibraryModel>());
 
@@ -556,7 +558,7 @@ public class DialogBuilder {
 
 		title = "<h3>" + library.getTitle() + "</h3>";
 		author = "<h4>" + library.getAuthor() + "</h4>";
-		information = library.getInformation();
+		information = library.getDescription();
 
 		message = "<html>" + title + author + "<br>" + information
 				+ "<br><br><b>" + ADD_LIBRARY + "</b></html>";
@@ -594,6 +596,103 @@ public class DialogBuilder {
 		}
 	}
 
+	/**
+	 * Dialog box that shows the story Title, Author and Description
+	 */
+	public void showStoryPropertiesDialog() {
+		final String DIALOG_TITLE = "Story Properties";
+		final String TITLE_TEXT = "Title: ";
+		final String AUTHOR_TEXT = "Author: ";
+		final String DESCRIPTION_TEXT = "Description: ";
+		final String OKAY_TEXT = "Okay";
+		final String CANCEL_TEXT = "Cancel";
+
+		final int TEXTFIELD_COLUMNS = 20;
+		
+		final JDialog dialog;
+		
+		final JPanel titlePanel;
+		final JPanel authorPanel;
+		final JPanel descriptionPanel;
+		final JPanel buttonPanel;
+		
+		final JTextField titleField;
+		final JTextField authorField;
+		final JTextField descriptionField;
+
+		final JLabel titleLabel;
+		final JLabel authorLabel;
+		final JLabel descriptionLabel;
+		
+		final JButton okButton;
+		final JButton cancelButton;
+		
+		final StoryModel model = SEModelManager.getInstance().getActiveStoryModel();
+				
+		if (model == null) return;
+		
+		dialog = new JDialog(WindowFactory.getInstance().getCurrentFrame(), DIALOG_TITLE);
+		
+		titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		authorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		
+		titleLabel = new JLabel(TITLE_TEXT);
+		authorLabel = new JLabel(AUTHOR_TEXT);
+		descriptionLabel = new JLabel(DESCRIPTION_TEXT);
+		okButton = new JButton(OKAY_TEXT);
+		cancelButton = new JButton(CANCEL_TEXT);
+		
+		titleField = new JTextField(model.getTitle(), TEXTFIELD_COLUMNS);
+		authorField = new JTextField(model.getAuthor(), TEXTFIELD_COLUMNS);
+		descriptionField = new JTextField(model.getDescription(),TEXTFIELD_COLUMNS);
+
+		titlePanel.add(titleLabel);
+		titlePanel.add(titleField);
+		
+		authorPanel.add(authorLabel);
+		authorPanel.add(authorField);
+		
+		descriptionPanel.add(descriptionLabel);
+		descriptionPanel.add(descriptionField);
+		
+		buttonPanel.add(okButton);
+		buttonPanel.add(cancelButton);
+		
+		okButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.setTitle(titleField.getText());
+				model.setAuthor(authorField.getText());
+				model.setDescription(descriptionField.getText());
+				dialog.dispose();
+			}
+		});
+		
+		cancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialog.dispose();
+			}
+		});
+		// Create the main dialog box.
+		dialog.setTitle(DIALOG_TITLE);
+		dialog.getContentPane().setLayout(
+				new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
+		
+		dialog.add(titlePanel);
+		dialog.add(authorPanel);
+		dialog.add(descriptionPanel);
+		dialog.add(buttonPanel);
+		
+		dialog.setResizable(false);
+		dialog.pack();
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
+
+	}
+	
 	/**
 	 * Dialog box that allows the user to edit the NwN translator's compiler and
 	 * game directory path.

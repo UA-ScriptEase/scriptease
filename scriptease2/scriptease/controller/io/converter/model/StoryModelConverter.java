@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.ScriptEase;
+import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.gui.WindowFactory;
 import scriptease.model.complex.StoryPoint;
@@ -51,8 +52,9 @@ public class StoryModelConverter implements Converter {
 			libraryNames.add(library.getTitle());
 		}
 
-			XMLNode.TITLE.writeString(writer, model.getTitle());
-			XMLNode.AUTHOR.writeString(writer, model.getAuthor());
+			XMLAttribute.NAME.write(writer, model.getTitle());
+			XMLAttribute.AUTHOR.write(writer, model.getAuthor());
+			XMLAttribute.DESCRIPTION.write(writer, model.getDescription());
 			XMLNode.VERSION.writeString(writer, model.getCompatibleVersion());
 			XMLNode.TRANSLATOR.writeString(writer, model.getTranslator()
 					.getName());
@@ -75,6 +77,7 @@ public class StoryModelConverter implements Converter {
 		final String title;
 		final String author;
 		final String version;
+		final String description;
 		final String translatorName;
 		final Collection<String> libraryNames;
 		final String modulePath;
@@ -85,8 +88,9 @@ public class StoryModelConverter implements Converter {
 		final Translator translator;
 		final GameModule module;
 
-		title = XMLNode.TITLE.readString(reader);
-		author = XMLNode.AUTHOR.readString(reader);
+		title = XMLAttribute.NAME.read(reader);
+		author = XMLAttribute.AUTHOR.read(reader);
+		description = XMLAttribute.DESCRIPTION.read(reader);
 		version = XMLNode.VERSION.readString(reader);
 		translatorName = XMLNode.TRANSLATOR.readString(reader);
 		libraryNames = XMLNode.OPTIONAL_LIBRARIES.readStringCollection(reader);
@@ -155,7 +159,7 @@ public class StoryModelConverter implements Converter {
 			throw new IllegalStateException("Game module could not be loaded.");
 		}
 
-		model = new StoryModel(module, title, author, version, translator,
+		model = new StoryModel(module, title, author, description, version, translator,
 				optionalLibraries);
 
 		// Story points rely on the current story being set, so we need to load
