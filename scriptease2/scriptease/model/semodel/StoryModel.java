@@ -75,10 +75,10 @@ public final class StoryModel extends SEModel {
 	 * @param translator
 	 *            The Translator to use to interpret this story.
 	 */
-	public StoryModel(GameModule module, String title, String author,
+	public StoryModel(GameModule module, String title, String author, String description,
 			String compatibleVersion, Translator translator,
 			Collection<LibraryModel> optionalLibraries) {
-		super(title, author);
+		super(title, author, description);
 
 		this.setRoot(new StoryPoint("Start"));
 

@@ -60,8 +60,6 @@ import scriptease.util.StringOp;
 public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
 
-	// Information about the library that we want the user to know about.
-	private String information;
 	private String defaultSlotFormat = "";
 
 	private final ObserverManager<LibraryObserver> observerManager;
@@ -145,11 +143,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public LibraryModel(String title, String author, String information,
 			Translator translator) {
-		super(title, author);
+		super(title, author, information);
 		this.typeConverter = new TypeConverter();
 
 		this.translator = translator;
-		this.information = information;
 		this.modelRoot = new StoryComponentContainer(title);
 		this.slots = new ArrayList<Slot>();
 		this.gameTypes = new ArrayList<GameType>();
@@ -1061,11 +1058,4 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		}
 	}
 
-	public String getInformation() {
-		return this.information;
-	}
-
-	public void setInformation(String information) {
-		this.information = information;
-	}
 }

@@ -18,18 +18,20 @@ import scriptease.translator.io.model.Slot;
 public abstract class SEModel {
 	private String title;
 	private String author;
+	private String description;
 
-	public SEModel() {
-		this("", "");
-	}
-
-	public SEModel(String title) {
-		this(title, "");
-	}
-
-	public SEModel(String title, String author) {
+	public SEModel(String title, String author, String description) {
 		this.title = title;
 		this.author = author;
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	/**

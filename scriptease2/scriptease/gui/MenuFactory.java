@@ -54,6 +54,7 @@ import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
 import scriptease.gui.action.libraryeditor.OpenLibraryEditorAction;
 import scriptease.gui.action.metrics.MetricsAction;
+import scriptease.gui.action.preferences.StoryPropertiesAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
 import scriptease.gui.action.translator.TranslatorPreferencesAction;
 import scriptease.gui.action.tutorials.OpenTutorialAction;
@@ -100,6 +101,7 @@ import scriptease.util.FileOp;
  * @author remiller
  * @author kschenk
  * @author jyuen
+ * @author zturchan
  */
 public class MenuFactory {
 	private static final String FILE = Il8nResources.getString("File");
@@ -299,13 +301,15 @@ public class MenuFactory {
 		final JMenu editMenu;
 		final JMenuItem preferencesItem;
 		final JMenuItem translatorPreferencesItem;
-
+		final JMenuItem storyPropertiesItem;
+		
 		editMenu = new JMenu(Il8nResources.getString("Edit"));
 		preferencesItem = new JMenuItem(Il8nResources.getString("Preferences")
 				+ "...");
 		translatorPreferencesItem = new JMenuItem(
 				TranslatorPreferencesAction.getInstance());
-
+		storyPropertiesItem = new JMenuItem(
+				StoryPropertiesAction.getInstance());
 		// Set up the edit menu item
 		editMenu.setMnemonic(KeyEvent.VK_E);
 
@@ -336,6 +340,7 @@ public class MenuFactory {
 
 		editMenu.add(preferencesItem);
 		editMenu.add(translatorPreferencesItem);
+		editMenu.add(storyPropertiesItem);
 
 		// Return the Edit menu.
 		return editMenu;
