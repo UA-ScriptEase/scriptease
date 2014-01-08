@@ -231,9 +231,9 @@ public class BindingWidgetUI extends ComponentUI {
 	 */
 	private void paintBorder(final BindingWidget label,
 			final Graphics2D tempGraphics, final Shape labelShape) {
-		final Border borderRenderer = new GradientLineBorder(
+		final Border borderRenderer = BorderFactory.createLineBorder(Color.black);/*new GradientLineBorder(
 				this.determineLinePaint(label, this.isUp(label)), labelShape,
-				LINE_THICKNESS);
+				LINE_THICKNESS);*/
 
 		borderRenderer.paintBorder(label, tempGraphics, 0, 0, label.getWidth(),
 				label.getHeight());

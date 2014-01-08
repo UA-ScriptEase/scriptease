@@ -105,6 +105,8 @@ public enum XMLNode {
 	FORMAT("Format"),
 
 	FORMATS("Formats", FORMAT),
+	
+	FUNCTION_CALL_FORMAT("FunctionCallFormat"),
 
 	GAME_MODULE("GameModule"),
 
@@ -125,6 +127,8 @@ public enum XMLNode {
 	INCLUDE_FILES("IncludeFiles", INCLUDE_FILE),
 
 	INDENT_STRING("IndentString"),
+	
+	LINE_BREAK("LineBreak"),
 
 	KEYWORD("Keyword"),
 

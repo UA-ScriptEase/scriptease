@@ -531,8 +531,7 @@ public final class StoryModel extends SEModel {
 
 										if (resource
 												.isIdentifiableGameConstant())
-											resources.add(resource
-													.getResource());
+											resources.add(resource.getValue());
 									}
 								}
 							}
@@ -542,7 +541,7 @@ public final class StoryModel extends SEModel {
 					@Override
 					public void processResource(KnowItBindingResource resource) {
 						if (resource.isIdentifiableGameConstant())
-							resources.add(resource.getResource());
+							resources.add(resource.getValue());
 					};
 
 				});

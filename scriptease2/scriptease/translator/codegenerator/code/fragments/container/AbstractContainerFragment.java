@@ -30,6 +30,11 @@ public abstract class AbstractContainerFragment extends AbstractFragment {
 	}
 
 	@Override
+	public int hashCode() {
+		return super.hashCode() + this.subFragments.hashCode();
+	}
+
+	@Override
 	public AbstractContainerFragment clone() {
 		final AbstractContainerFragment clone = (AbstractContainerFragment) super
 				.clone();

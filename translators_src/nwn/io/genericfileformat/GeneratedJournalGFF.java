@@ -501,14 +501,10 @@ public class GeneratedJournalGFF extends GenericFileFormat {
 
 		@Override
 		public int compareTo(JournalCategory o) {
-			int comparison;
 			// Upper case has a different ascii value. This can be important for
 			// comparisons to underscores, etc.
-
-			comparison = this.getName().toUpperCase()
+			return this.getName().toUpperCase()
 					.compareTo(o.getName().toUpperCase());
-
-			return comparison;
 		}
 	}
 }

@@ -65,11 +65,6 @@ public class IndentFragment extends AbstractContainerFragment {
 	}
 
 	@Override
-	public int hashCode() {
-		return super.hashCode() + this.subFragments.hashCode();
-	}
-	
-	@Override
 	public void process(FragmentVisitor visitor) {
 		visitor.processIndentFragment(this);
 	}
