@@ -44,7 +44,7 @@ public class DescribeItNodeRenderer extends SEGraphNodeRenderer<DescribeItNode> 
 			for (String type : knowIt.getAcceptableTypes()) {
 				final TypeWidget typeWidget;
 
-				typeWidget = ScriptWidgetFactory.getTypeWidget(type);
+				typeWidget = ScriptWidgetFactory.buildTypeWidget(type);
 
 				typeWidget.setSelected(true);
 				typeWidget.setBackground(ScriptEaseUI.COLOUR_BOUND);

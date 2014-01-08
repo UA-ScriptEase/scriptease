@@ -52,7 +52,6 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 		// we don't want horizontal/vertical gaps, so make FlowLayout do this
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-		this.updateToolTip(this.binding);
 		this.updateBackgroundColour(this.binding);
 		this.setOpaque(false);
 		this.setUI(new BindingWidgetUI());
@@ -61,24 +60,20 @@ public class BindingWidget extends JPanel implements Cloneable {
 		this.addMouseListener(new MouseAdapter() {
 
 			private Component getValidParent(Component child) {
-				final Component parent;
-
-				parent = child.getParent();
+				final Component parent = child.getParent();
 
 				if (parent == null)
 					return null;
 				else if (parent.getMouseListeners().length > 0)
 					return parent;
 				else
-					return getValidParent(parent);
+					return this.getValidParent(parent);
 			}
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// Forward mouse clicked to first parent with mouse listeners.
-
-				final Component child = e.getComponent();
-				final Component parent = this.getValidParent(child);
+				final Component parent = this.getValidParent(e.getComponent());
 
 				if (parent == null)
 					return;
@@ -92,36 +87,32 @@ public class BindingWidget extends JPanel implements Cloneable {
 			};
 		});
 
-		this.setTransferHandler(BindingWidgetTransferHandler.getInstance());
-	}
-
-	/**
-	 * Updates the tooltip to reflect the current binding
-	 * 
-	 * @param binding
-	 */
-	private void updateToolTip(KnowItBinding binding) {
 		binding.process(new BindingAdapter() {
 			@Override
 			public void processResource(KnowItBindingResource constant) {
 				if (constant.isIdentifiableGameConstant()) {
-					String blueprint = constant.getValue().getTemplateID();
-					if (blueprint != null && !blueprint.isEmpty())
-						BindingWidget.this.setToolTipText(blueprint);
+					String templateID = constant.getValue().getTemplateID();
+					if (templateID != null && !templateID.isEmpty())
+						BindingWidget.this.setToolTipText(templateID);
 				}
 			}
 		});
+
+		this.setTransferHandler(BindingWidgetTransferHandler.getInstance());
 	}
 
 	@Override
 	public BindingWidget clone() {
-		BindingWidget clone = new BindingWidget(this.binding);
+		final BindingWidget clone = new BindingWidget(this.binding);
+
 		clone.setLocation(this.getLocation());
 		clone.setTransferHandler(this.transferHandler);
+
 		for (MouseListener listener : this.getMouseListeners())
 			clone.addMouseListener(listener);
 		for (MouseMotionListener listener : this.getMouseMotionListeners())
 			clone.addMouseMotionListener(listener);
+
 		return clone;
 	}
 
@@ -192,8 +183,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 			public void processReference(KnowItBindingReference reference) {
 				// Colour should be determined based off the final binding
 				// resolution
-				KnowItBinding referenced = reference.resolveBinding();
-				referenced.process(this);
+				reference.resolveBinding().process(this);
 			}
 
 			@Override

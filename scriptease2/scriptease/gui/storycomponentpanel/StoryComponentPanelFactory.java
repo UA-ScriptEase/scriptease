@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -174,6 +173,8 @@ public class StoryComponentPanelFactory {
 	public void rebuildDisplayName(StoryComponentPanel panel) {
 		final JPanel mainPanel = panel.getLayout().getMainPanel();
 		final Component[] children = mainPanel.getComponents();
+		final JLabel nameLabel = ScriptWidgetFactory.buildLabel(panel
+				.getStoryComponent().getDisplayText());
 
 		// Remove all existing display names
 		for (Component child : children) {
@@ -187,9 +188,8 @@ public class StoryComponentPanelFactory {
 				}
 			}
 		}
-
-		mainPanel.add(ScriptWidgetFactory.buildLabel(panel.getStoryComponent()
-				.getDisplayText(), Color.BLACK), 0);
+		nameLabel.setForeground(Color.BLACK);
+		mainPanel.add(nameLabel, 0);
 	}
 
 	/**
@@ -367,8 +367,9 @@ public class StoryComponentPanelFactory {
 			else
 				textColor = ScriptEaseUI.COLOUR_DISABLED;
 
-			plainTextLabel = ScriptWidgetFactory.buildLabel(plainText,
-					textColor);
+			plainTextLabel = ScriptWidgetFactory.buildLabel(plainText);
+
+			plainTextLabel.setForeground(textColor);
 
 			displayNamePanel.add(plainTextLabel);
 
@@ -451,23 +452,25 @@ public class StoryComponentPanelFactory {
 				final String welcomeText = "Welcome to ScriptEase II!";
 				final String getStartedText = "Add some nodes to the start node to get started. If you don't know how, go to the help menu for help.";
 				final int fontSize = 18;
-				
+
 				// Add an expansion button
-				final JPanel mainPanel; 
+				final JPanel mainPanel;
 				final JLabel welcomeLabel = new JLabel(welcomeText);
 				final JLabel getStartedLabel = new JLabel(getStartedText);
-				final JButton tutorialButton = ComponentFactory.buildLinkButton(tutorialUri, tutorialText);
-				
+				final JButton tutorialButton = ComponentFactory
+						.buildLinkButton(tutorialUri, tutorialText);
+
 				mainPanel = new JPanel();
-				
+
 				mainPanel.setOpaque(false);
-				
+
 				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 
 				if (storyPoint.isRoot()) {
-					mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
-					
+					mainPanel.setLayout(new BoxLayout(mainPanel,
+							BoxLayout.PAGE_AXIS));
+
 					GUIOp.resizeFont(fontSize, welcomeLabel);
 					GUIOp.resizeFont(fontSize, getStartedLabel);
 					GUIOp.resizeFont(fontSize, tutorialButton);
@@ -475,7 +478,7 @@ public class StoryComponentPanelFactory {
 					mainPanel.add(welcomeLabel);
 					mainPanel.add(getStartedLabel);
 					mainPanel.add(tutorialButton);
-					
+
 				} else {
 					// Add the children panels
 					addChildrenPanels(storyPoint, panel);
@@ -621,22 +624,22 @@ public class StoryComponentPanelFactory {
 								StoryComponentPanelFactory.this.addWidget(
 										mainPanel, knowIt, true);
 
-								final Color textColor;
+								final JLabel label;
+
+								label = ScriptWidgetFactory
+										.buildLabel(" describes ");
 								if (knowIt.isEnabled())
-									textColor = Color.black;
+									label.setForeground(Color.black);
 								else
-									textColor = ScriptEaseUI.COLOUR_DISABLED;
+									label.setForeground(ScriptEaseUI.COLOUR_DISABLED);
 
-								mainPanel.add(ScriptWidgetFactory.buildLabel(
-										" describes ", textColor));
+								mainPanel.add(label);
 
-								final Translator active;
 								final DescribeIt describeIt;
 
-								active = TranslatorManager.getInstance()
-										.getActiveTranslator();
-
-								describeIt = active.getDescribeIt(knowIt);
+								describeIt = TranslatorManager.getInstance()
+										.getActiveTranslator()
+										.getDescribeIt(knowIt);
 
 								if (describeIt != null) {
 									mainPanel.add(new DescribeItPanel(knowIt,

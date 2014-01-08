@@ -14,7 +14,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
-import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -57,9 +56,8 @@ public class BindingWidgetUI extends ComponentUI {
 		final KnowItBinding binding = widget.getBinding();
 
 		if (binding.isBound()) {
-			final String type;
-			type = binding.getFirstType();
-			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
+			this.typeRenderer = ScriptWidgetFactory.buildTypeWidget(binding
+					.getFirstType());
 		} else
 			this.typeRenderer = null;
 
@@ -91,32 +89,7 @@ public class BindingWidgetUI extends ComponentUI {
 			comp.setLayout(layout);
 		}
 
-		this.installBorder(comp);
-	}
-
-	private void installBorder(JComponent comp) {
-		final BindingWidget label = (BindingWidget) comp;
-		final Border border;
-		final int curveBuffer = 5;
-		final Border insideSpacer;
-		final Border outsideSpacer;
-
-		// this only exists to reserve some space for the actual GradientBorder
-		// to be painted in .paint() - remiller
-		int borderSpace = LINE_THICKNESS;
-		outsideSpacer = BorderFactory.createEmptyBorder(borderSpace,
-				borderSpace, borderSpace, borderSpace);
-
-		// pads the inside of the border, so that the text doesn't get too close
-		// to the curve.
-		insideSpacer = BorderFactory.createEmptyBorder(0, curveBuffer, 0,
-				curveBuffer);
-
-		// squish them together
-		border = BorderFactory
-				.createCompoundBorder(outsideSpacer, insideSpacer);
-
-		label.setBorder(border);
+		widget.setBorder(BorderFactory.createEmptyBorder(2, 7, 2, 7));
 	}
 
 	@Override
@@ -142,7 +115,8 @@ public class BindingWidgetUI extends ComponentUI {
 	@Override
 	public boolean contains(JComponent comp, int x, int y) {
 		boolean contains;
-		final Shape labelShape = this.constructLabelShape((BindingWidget) comp);
+		final Shape labelShape = this
+				.constructWidgetShape((BindingWidget) comp);
 
 		contains = labelShape.contains(x, y);
 
@@ -166,11 +140,11 @@ public class BindingWidgetUI extends ComponentUI {
 	 */
 	private RoundRectangle2D shape = new RoundRectangle2D.Float();
 
-	private Shape constructLabelShape(BindingWidget label) {
-		final FontMetrics metrics = label.getFontMetrics(label.getFont());
-		float width = label.getWidth() - LINE_THICKNESS;
+	private Shape constructWidgetShape(BindingWidget widget) {
+		final FontMetrics metrics = widget.getFontMetrics(widget.getFont());
+		float width = widget.getWidth() - LINE_THICKNESS;
 		float height = metrics.getHeight() + LINE_THICKNESS;
-		float totalHeight = label.getHeight();
+		float totalHeight = widget.getHeight();
 
 		this.shape.setRoundRect(LINE_THICKNESS / 2, (totalHeight - height) / 2,
 				width, height, height, height);
@@ -180,66 +154,51 @@ public class BindingWidgetUI extends ComponentUI {
 	@Override
 	public void paint(Graphics g, JComponent comp) {
 		final BindingWidget widget = (BindingWidget) comp;
-		final Graphics2D tempGraphics;
+		final Color base = widget.getBackground();
+
+		final Graphics2D g2d;
 		final Shape labelShape;
+		final Border borderRenderer;
 
 		// clone the other graphics so that we don't disturb its settings.
-		tempGraphics = (g == null) ? null : (Graphics2D) g.create();
+		g2d = (g == null) ? null : (Graphics2D) g.create();
 
-		labelShape = this.constructLabelShape(widget);
+		labelShape = this.constructWidgetShape(widget);
 
 		// paint the centre fill
-		this.paintFill(tempGraphics, widget, labelShape);
+
+		if (this.isUp(widget))
+			g2d.setPaint(base);
+		else
+			g2d.setPaint(GUIOp.scaleColour(base, 0.6));
+
+		g2d.fill(shape);
 
 		/*
-		 * Why yes, it is odd for us to paint a border here. Why not use the
-		 * built-in Java border drawing? See paintBorder()'s comments for
-		 * details! - remiller
+		 * So... you may find this odd, and that's because it is. Here's the
+		 * problem: I originally set up the UI to install a GradientLineBorder
+		 * as per normal. I then discovered that the border was painting over
+		 * the type symbol because JComponent draws borders last, and the type
+		 * symbol is drawn as part of this method.
+		 * 
+		 * So, in short, this is a hack to make it draw nicely. Now, it installs
+		 * an EmptyBorder instead to reserve the space. Then, it builds a new
+		 * GradientLineBorder just to paint, which is not unlike a CellRenderer.
+		 * 
+		 * - remiller
 		 */
-		this.paintBorder(widget, tempGraphics, labelShape);
+		borderRenderer = new GradientLineBorder(this.determineLinePaint(widget,
+				this.isUp(widget)), labelShape, LINE_THICKNESS);
+
+		borderRenderer.paintBorder(widget, g2d, 0, 0, widget.getWidth(),
+				widget.getHeight());
 
 		// paint the Type Symbol
 		if (widget.getBinding().isBound()) {
-			this.paintType(tempGraphics, widget);
+			this.paintType(g2d, widget);
 		}
 
-		tempGraphics.dispose();
-	}
-
-	/*
-	 * So... you may find this odd, and that's because it is. Here's the
-	 * problem: I originally set up the UI to install a GradientLineBorder as
-	 * per normal. I then discovered that the border was painting over the type
-	 * symbol because JComponent draws borders last, and the type symbol is
-	 * drawn as part of this method.
-	 * 
-	 * So, in short, this is a hack to make it draw nicely. Now, it installs an
-	 * EmptyBorder instead to reserve the space. Then, it builds a new
-	 * GradientLineBorder just to paint, which is not unlike a CellRenderer.
-	 * 
-	 * - remiller
-	 */
-	private void paintBorder(final BindingWidget label,
-			final Graphics2D tempGraphics, final Shape labelShape) {
-		final Border borderRenderer = new GradientLineBorder(
-				this.determineLinePaint(label, this.isUp(label)), labelShape,
-				LINE_THICKNESS);
-
-		borderRenderer.paintBorder(label, tempGraphics, 0, 0, label.getWidth(),
-				label.getHeight());
-	}
-
-	// Configure a Gradient to fill the shape with and paint it
-	private void paintFill(Graphics2D g, BindingWidget label, Shape shape) {
-		Color base = label.getBackground();
-
-		if (!this.isUp(label)) {
-			base = GUIOp.scaleColour(base, 0.6);
-		}
-
-		g.setPaint(base);
-
-		g.fill(shape);
+		g2d.dispose();
 	}
 
 	/**
@@ -258,10 +217,11 @@ public class BindingWidgetUI extends ComponentUI {
 		// This is for BindingWidgets....
 		for (String type : comp.getBinding().getTypes()) {
 
-			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
+			this.typeRenderer = ScriptWidgetFactory.buildTypeWidget(type);
 			this.typeRenderer.setBackground(bgColor);
 
 			final Dimension preferredTypeSize;
+
 			preferredTypeSize = this.typeRenderer.getPreferredSize();
 
 			renderer.paintComponent(
@@ -283,16 +243,14 @@ public class BindingWidgetUI extends ComponentUI {
 		final Color specularHue;
 		final Color diffuseHue;
 		final Color shadowHue;
-		final Point2D start;
-		final Point2D end;
 		final Paint paint;
-		final int height = label.getHeight();
 		// I hate arrays. - remiller
 		final float[] startDistances;
 		final Color[] gradient;
 
-		start = new Point(0, 0);
-		end = new Point(0, height == 0 ? 1 : height);
+		final int height = label.getHeight();
+		final Point2D start = new Point(0, 0);
+		final Point2D end = new Point(0, height == 0 ? 1 : height);
 
 		if (isUp) {
 			startDistances = new float[4];
