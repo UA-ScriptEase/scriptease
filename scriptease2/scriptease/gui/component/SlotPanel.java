@@ -12,10 +12,13 @@ import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.MouseForwardingAdapter;
+import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
+import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.transfer.SlotPanelTransferHandler;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -69,6 +72,39 @@ public class SlotPanel extends JPanel {
 				if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
 					SlotPanel.this.populate();
 				}
+			}
+		});
+
+		ResourcePanel.getInstance().addObserver(this,
+				new ResourceTreeAdapter() {
+					@Override
+					public void resourceSelected(final Resource selected) {
+						updateSelectedResourceBorder(selected);
+
+					}
+				});
+		updateSelectedResourceBorder(ResourcePanel.getInstance().getSelected());
+
+	}
+
+	/**
+	 * 
+	 */
+	public void updateSelectedResourceBorder(final Resource selected) {
+		knowIt.getBinding().process(new BindingAdapter() {
+			public void processResource(KnowItBindingResource constant) {
+				if (constant.getValue().equals(selected)) {
+					SlotPanel.this.setBorder(BorderFactory.createLineBorder(
+							Color.GREEN, 2));
+				} else {
+					this.defaultProcess(constant);
+				}
+			}
+
+			@Override
+			protected void defaultProcess(KnowItBinding binding) {
+				SlotPanel.this.setBorder(BorderFactory.createLineBorder(
+						Color.WHITE, 2));
 			}
 		});
 	}

@@ -13,9 +13,8 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
-
+import scriptease.model.complex.StoryNode;
 import scriptease.translator.io.model.Resource;
-
 
 /**
  * Provides some utilities for {@link StoryComponent}s, including methods that
@@ -77,6 +76,33 @@ public class StoryComponentUtils {
 		});
 
 		return variables;
+	}
+
+	/**
+	 * Returns all knowits bound to the value of a particular resource
+	 * 
+	 * @param selected
+	 * @return
+	 */
+	public static Collection<KnowIt> getKnowItsWithResource(
+			final Resource selected, StoryNode node) {
+		final Collection<KnowIt> matched = new ArrayList<KnowIt>();
+		final DescendantCollector collector = new DescendantCollector() {
+			@Override
+			public void processKnowIt(final KnowIt knowIt) {
+				super.processKnowIt(knowIt);
+				knowIt.getBinding().process(new BindingAdapter() {
+					@Override
+					public void processResource(KnowItBindingResource resource) {
+						if (selected == resource.getValue()) {
+							matched.add(knowIt);
+						}
+					}
+				});
+			}
+		};
+		node.process(collector);
+		return matched;
 	}
 
 	/**
@@ -189,28 +215,31 @@ class DescendantCollector extends StoryAdapter {
 }
 
 /**
- * Collects all occurrences of a Game Object or Story Component that match one selected by the user.
+ * Collects all occurrences of a Game Object or Story Component that match one
+ * selected by the user.
  * 
  * @author zturchan
- *
+ * 
  */
 class OccurrenceCollector extends StoryAdapter {
-	private final Collection<StoryComponent> matches = new HashSet<StoryComponent>();
+	private final Collection<StoryComponent> searched = new ArrayList<StoryComponent>();
+	private final Collection<KnowIt> matched = new ArrayList<KnowIt>();
+
 	private Resource resource;
-	
-	public OccurrenceCollector(Resource selected){
+
+	public OccurrenceCollector(Resource selected) {
 		super();
 		resource = selected;
 	}
-	
-	protected Collection<StoryComponent> getMatches() {
-		return this.matches;
+
+	protected Collection<KnowIt> getMatched() {
+		return this.matched;
 	}
-	
+
 	@Override
 	protected void defaultProcessComplex(ComplexStoryComponent complex) {
-		if (!this.matches.contains(complex)) {
-			this.matches.add(complex);
+		if (!this.searched.contains(complex)) {
+			this.searched.add(complex);
 			for (StoryComponent child : complex.getChildren())
 				child.process(this);
 		}
@@ -218,7 +247,7 @@ class OccurrenceCollector extends StoryAdapter {
 
 	@Override
 	public void processCauseIt(CauseIt causeIt) {
-		if (!this.matches.contains(causeIt)) {
+		if (!this.searched.contains(causeIt)) {
 			causeIt.processImplicits(this);
 			this.processScriptIt(causeIt);
 		}
@@ -226,25 +255,27 @@ class OccurrenceCollector extends StoryAdapter {
 
 	@Override
 	public void processScriptIt(ScriptIt scriptIt) {
-		if (!this.matches.contains(scriptIt)) {
+		if (!this.searched.contains(scriptIt)) {
 			scriptIt.processParameters(this);
 			this.defaultProcessComplex(scriptIt);
 		}
 	}
 
 	@Override
-	public void processKnowIt(KnowIt knowIt) {
-		if (!this.matches.contains(knowIt)) {
+	public void processKnowIt(final KnowIt knowIt) {
+		if (!this.searched.contains(knowIt)) {
 			final StoryAdapter adapter = this;
-			this.matches.add(knowIt);
+			this.searched.add(knowIt);
 			knowIt.getBinding().process(new BindingAdapter() {
-				
+
 				@Override
 				public void processResource(KnowItBindingResource constant) {
-					constant.getValue();
-					
+					if (constant.getValue() == resource) {
+						matched.add(knowIt);
+					}
+
 				}
-				
+
 				@Override
 				public void processFunction(KnowItBindingFunction function) {
 					function.getValue().process(adapter);
@@ -260,9 +291,9 @@ class OccurrenceCollector extends StoryAdapter {
 
 	@Override
 	public void processAskIt(AskIt questionIt) {
-		if (!this.matches.contains(questionIt)) {
+		if (!this.searched.contains(questionIt)) {
 			questionIt.getCondition().process(this);
 			this.defaultProcessComplex(questionIt);
 		}
 	}
-} 
+}

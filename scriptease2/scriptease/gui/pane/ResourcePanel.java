@@ -109,15 +109,6 @@ public class ResourcePanel extends JPanel {
 				this.resources.getPreferredSize().width, 0));
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-
-		//ZAK CODE STARTS HERE
-//		treeScrollPane.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//
-//			}
-//		});
-		//ZAK CODE ENDS
 		
 		this.add(filterPane);
 		this.add(treeScrollPane);
@@ -217,5 +208,13 @@ public class ResourcePanel extends JPanel {
 	 */
 	public void addObserver(Object object, ResourceTreeObserver observer) {
 		this.resources.addObserver(object, observer);
+	}
+	
+	/**
+	 * Returns the resource panel's currently selected resource
+	 * 
+	 */
+	public Resource getSelected(){
+		return this.resources.getSelected();
 	}
 }
