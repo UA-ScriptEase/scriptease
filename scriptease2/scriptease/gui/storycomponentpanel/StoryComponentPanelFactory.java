@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -46,6 +48,7 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
+import scriptease.util.GUIOp;
 
 /**
  * Builds a pane filled with ScriptEase Pattern Constructor GUI widgets for
@@ -443,17 +446,41 @@ public class StoryComponentPanelFactory {
 		return new StoryAdapter() {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
+				final String tutorialUri = "https://sites.google.com/a/ualberta.ca/scriptease/development/scriptease2/tutorials";
+				final String tutorialText = "Click here to go to find tutorials and other information on the ScriptEase II web site.";
+				final String welcomeText = "Welcome to ScriptEase II!";
+				final String getStartedText = "Add some nodes to the start node to get started. If you don't know how, go to the help menu for help.";
+				final int fontSize = 18;
+				
 				// Add an expansion button
-				final JPanel mainPanel;
+				final JPanel mainPanel; 
+				final JLabel welcomeLabel = new JLabel(welcomeText);
+				final JLabel getStartedLabel = new JLabel(getStartedText);
+				final JButton tutorialButton = ComponentFactory.buildLinkButton(tutorialUri, tutorialText);
+				
 				mainPanel = new JPanel();
-
+				
 				mainPanel.setOpaque(false);
-
+				
 				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 
-				// Add the children panels
-				addChildrenPanels(storyPoint, panel);
+				if (storyPoint.isRoot()) {
+					mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+					
+					GUIOp.resizeFont(fontSize, welcomeLabel);
+					GUIOp.resizeFont(fontSize, getStartedLabel);
+					GUIOp.resizeFont(fontSize, tutorialButton);
+
+					mainPanel.add(welcomeLabel);
+					mainPanel.add(getStartedLabel);
+					mainPanel.add(tutorialButton);
+					
+				} else {
+					// Add the children panels
+					addChildrenPanels(storyPoint, panel);
+				}
+
 			}
 
 			@Override

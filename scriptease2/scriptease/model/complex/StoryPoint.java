@@ -174,5 +174,13 @@ public class StoryPoint extends StoryNode {
 	public int hashCode() {
 		return super.hashCode() + this.getUniqueID();
 	}
-
+	
+	/**
+	 * Checks if the story point is the root node by checking if it has no parents.
+	 * @return
+	 */
+	public boolean isRoot() {
+		return this.getParents().isEmpty();
+	}
+		
 }

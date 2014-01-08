@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -595,5 +596,13 @@ public class GUIOp {
 		gradientPanel.setOpaque(false);
 
 		return gradientPanel;
+	}
+	/**
+	 * Takes in a JComponent and resizes it's font using the same font style and family as before.
+	 * @param newFontSize
+	 * @param component
+	 */
+	public static void resizeFont(int newFontSize, JComponent component){
+		component.setFont(new Font(component.getFont().getFamily(), component.getFont().getStyle(), newFontSize));
 	}
 }
