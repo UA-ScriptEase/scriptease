@@ -258,13 +258,7 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 				if (SEModelManager.getInstance().getActiveStoryModel() == null)
 					return false;
 
-				else if (storyPoint == SEModelManager.getInstance()
-						.getActiveRoot() || storyPoint.getUniqueID() == 1) {
-					WindowFactory
-							.getInstance()
-							.showUserInformationBox(
-									"You can't drag components into the start story point.\n Create a new story point instead.",
-									UserInformationType.ERROR);
+				else if (storyPoint.isRoot()) {
 					return false;
 				}
 			}
