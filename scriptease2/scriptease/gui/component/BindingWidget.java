@@ -48,7 +48,8 @@ public class BindingWidget extends JPanel implements Cloneable {
 	private TransferHandler transferHandler;
 
 	public BindingWidget(final KnowItBinding binding) {
-		this.setBinding(binding);
+		this.binding = binding;
+
 		// we don't want horizontal/vertical gaps, so make FlowLayout do this
 		this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		this.updateToolTip(this.binding);
