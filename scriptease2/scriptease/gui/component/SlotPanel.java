@@ -5,10 +5,9 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import scriptease.controller.BindingAdapter;
@@ -26,10 +25,12 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
+import scriptease.util.StringOp;
 
 /**
  * SlotPanel is a GUI slot which accepts KnowIt Bindings (binding slot). It
@@ -44,88 +45,75 @@ import scriptease.util.GUIOp;
  * @author jyuen
  */
 @SuppressWarnings("serial")
-public class SlotPanel extends JPanel implements StoryComponentObserver {
-	private BindingWidget bindingWidget;
+public class SlotPanel extends JPanel {
 	private final KnowIt knowIt;
-
 	private final boolean isNameEditable;
 
 	public SlotPanel(final KnowIt knowIt, boolean isNameEditable) {
 		if (knowIt == null)
 			throw new IllegalStateException(
 					"Cannot build a SlotPanel with a null KnowIt");
-
 		this.knowIt = knowIt;
 		this.isNameEditable = isNameEditable;
 
-		// Set a border of 2 pixels around the slot.
-		this.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
+		final int borderSize = 2;
+
+		this.setLayout(new FlowLayout(FlowLayout.LEFT, borderSize, borderSize));
+		this.setEnabled(true);
+
 		this.populate();
 
-		this.setEnabled(true);
-		this.knowIt.addStoryComponentObserver(this);
+		this.knowIt.addStoryComponentObserver(new StoryComponentObserver() {
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+					SlotPanel.this.populate();
+				}
+			}
+		});
 	}
 
+	/**
+	 * Populate the panel with all of its components.
+	 */
 	public void populate() {
-		// Set the layout for this panel.
-		final JPanel typesPanel;
+		this.removeAll();
+
 		final KnowItBinding binding = this.knowIt.getBinding();
+		final BindingWidget bindingWidget = this.buildBindingWidget();
 
-		this.bindingWidget = this.buildBindingWidget(this.knowIt);
-
-		// Set the layout for the types panel.
-		typesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-
-		typesPanel.setOpaque(false);
-
-		this.add(ScriptWidgetFactory.populateLegalTypesPanel(typesPanel,
-				this.knowIt));
-
-		this.add(this.bindingWidget);
+		this.add(ScriptWidgetFactory.buildLegalTypesPanel(this.knowIt));
+		this.add(bindingWidget);
 
 		this.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2,
-				GUIOp.scaleColour(this.bindingWidget.getBackground(), 0.8)));
+				GUIOp.scaleColour(bindingWidget.getBackground(), 0.8)));
 
-		this.setBackground(GUIOp.scaleColour(
-				this.bindingWidget.getBackground(), 0.95));
+		this.setBackground(GUIOp.scaleColour(bindingWidget.getBackground(),
+				0.95));
 
 		// Set a tool tip for users in case they don't know what to drag in.
 		if (binding instanceof KnowItBindingNull) {
-			final List<String> types;
+			final String typeString;
 
-			types = new ArrayList<String>();
+			typeString = StringOp.getCollectionAsString(this.knowIt.getTypes(),
+					", ");
 
-			types.addAll(knowIt.getTypes());
-
-			String tooltipTypes = "";
-			if (types.size() > 1) {
-				for (String type : types)
-					tooltipTypes += type += ", or ";
-
-				// Remove last ", or ".
-				tooltipTypes = tooltipTypes.substring(0,
-						tooltipTypes.length() - 5);
-			} else if (types.size() == 1)
-				tooltipTypes = types.get(0);
-
-			this.setToolTipText("Drag a binding of type " + tooltipTypes
-					+ " in here!");
+			this.setToolTipText("Drag a " + typeString + " in here!");
 		}
 	}
 
-	private BindingWidget buildBindingWidget(final KnowIt knowIt) {
-		final KnowItBinding binding;
-		final BindingWidget bindingWidget;
+	private BindingWidget buildBindingWidget() {
+		final String backgroundProperty = "background";
 
-		binding = knowIt.getBinding();
-		bindingWidget = new BindingWidget(binding);
+		final KnowItBinding binding = this.knowIt.getBinding();
+		final BindingWidget bindingWidget = new BindingWidget(binding);
 
 		// The slotPanel inherits the colour of its binding.
-		bindingWidget.addPropertyChangeListener("background",
+		bindingWidget.addPropertyChangeListener(backgroundProperty,
 				new PropertyChangeListener() {
 					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
-						if (evt.getPropertyName().equals("background")) {
+						if (evt.getPropertyName().equals(backgroundProperty)) {
 							SlotPanel.this.setBackground(bindingWidget
 									.getBackground());
 						}
@@ -134,14 +122,16 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 		// Build the input component
 		binding.process(new BindingAdapter() {
+			final KnowIt knowIt = SlotPanel.this.knowIt;
+
 			@Override
 			public void processNull(KnowItBindingNull nullBinding) {
-				if (isNameEditable)
+				if (SlotPanel.this.isNameEditable)
 					bindingWidget.add(ScriptWidgetFactory
-							.buildNameEditor(knowIt));
+							.buildNameEditor(this.knowIt));
 				else
 					bindingWidget.add(ScriptWidgetFactory
-							.buildObservedNameLabel(knowIt));
+							.buildObservedNameLabel(this.knowIt));
 			}
 
 			@Override
@@ -171,46 +161,53 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 
 			@Override
 			public void processResource(KnowItBindingResource constant) {
-				final Resource constantValue = constant.getValue();
-				final String name = constantValue.getName();
+				final Resource resource = constant.getValue();
+				final String name = resource.getName();
 
-				if (constantValue instanceof SimpleResource) {
-					final String bindingType;
-					final GUIType widgetName;
-					final LibraryModel library;
+				final JComponent component;
 
-					bindingType = binding.getFirstType();
-					library = knowIt.getLibrary();
+				if (resource instanceof SimpleResource) {
+					final String bindingType = binding.getFirstType();
+					final LibraryModel library = this.knowIt.getLibrary();
 
-					if (library == null)
-						widgetName = null;
-					else
-						widgetName = library.getType(bindingType).getGui();
+					final GUIType widgetType;
 
-					if (widgetName == null)
-						bindingWidget.add(ScriptWidgetFactory.buildLabel(name,
-								Color.WHITE));
-					else if (widgetName.equals(GUIType.JSPINNER)) {
-						bindingWidget.add(ScriptWidgetFactory
-								.buildSpinnerEditor(knowIt, bindingWidget,
-										constantValue, bindingType));
-					} else if (widgetName.equals(GUIType.JCOMBOBOX)) {
-						bindingWidget.add(ScriptWidgetFactory.buildComboEditor(
-								knowIt, bindingWidget, bindingType));
-					} else {
-						bindingWidget.add(ScriptWidgetFactory.buildValueEditor(
-								knowIt, bindingWidget));
-					}
+					if (library != null) {
+						final GameType type = library.getType(bindingType);
+
+						if (type != null)
+							// This could possibly return null.
+							widgetType = type.getGui();
+						else
+							widgetType = null;
+					} else
+						widgetType = null;
+
+					if (widgetType == GUIType.JSPINNER) {
+						component = ScriptWidgetFactory.buildSpinnerEditor(
+								this.knowIt, bindingWidget, resource,
+								bindingType);
+					} else if (widgetType == GUIType.JCOMBOBOX) {
+						component = ScriptWidgetFactory.buildComboEditor(
+								this.knowIt, bindingWidget, bindingType);
+					} else if (widgetType == GUIType.JTEXTFIELD) {
+						component = ScriptWidgetFactory.buildValueEditor(
+								this.knowIt, bindingWidget);
+					} else
+						component = ScriptWidgetFactory.buildLabel(name,
+								Color.WHITE);
 				} else {
-					bindingWidget.add(ScriptWidgetFactory.buildLabel(name,
-							Color.WHITE));
+					component = ScriptWidgetFactory.buildLabel(name,
+							Color.WHITE);
 				}
+
+				bindingWidget.add(component);
 			}
 
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
 				bindingWidget.add(ScriptWidgetFactory
-						.buildObservedNameLabel(knowIt));
+						.buildObservedNameLabel(this.knowIt));
 			}
 		});
 
@@ -233,26 +230,6 @@ public class SlotPanel extends JPanel implements StoryComponentObserver {
 			this.addMouseListener(MouseForwardingAdapter.getInstance());
 			this.addMouseMotionListener(MouseForwardingAdapter.getInstance());
 		}
-	}
-
-	@Override
-	public void componentChanged(StoryComponentEvent event) {
-		if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
-			this.bindingWidget.getBinding().process(new BindingAdapter() {
-				@Override
-				protected void defaultProcess(KnowItBinding binding) {
-					SlotPanel.this.removeAll();
-					SlotPanel.this.populate();
-				}
-			});
-
-			this.repaint();
-			this.revalidate();
-		}
-	}
-
-	public BindingWidget getBindingWidget() {
-		return this.bindingWidget;
 	}
 
 	@Override

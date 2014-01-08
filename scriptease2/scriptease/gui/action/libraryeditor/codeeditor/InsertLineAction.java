@@ -43,6 +43,6 @@ public final class InsertLineAction extends AbstractInsertFragmentAction {
 
 	@Override
 	protected AbstractFragment newFragment() {
-		return new LineFragment("/n");
+		return new LineFragment();
 	}
 }

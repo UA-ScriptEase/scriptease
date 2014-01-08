@@ -14,12 +14,6 @@ package scriptease.translator.codegenerator;
  * @author kschenk
  */
 public interface CodeGenerationConstants {
-
-	// Used in: KnowItBindingFunctionContext
-	public static enum FunctionConstant {
-		FUNCTION_AS_VALUE
-	}
-
 	// Used in ScopeFragment.
 	public static enum ScopeType {
 		ARGUMENT,

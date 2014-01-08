@@ -20,7 +20,6 @@ import javax.swing.Timer;
 import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -30,7 +29,6 @@ import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryPoint;
 import scriptease.util.GUIOp;
 
@@ -122,6 +120,11 @@ public class StoryComponentPanel extends JPanel implements
 		return this.expansionButton;
 	}
 
+	/**
+	 * TODO Note that the editable property may not work for all components.
+	 * 
+	 * @param editable
+	 */
 	public void setEditable(boolean editable) {
 		this.editable = editable;
 		final Collection<Component> components = GUIOp
@@ -333,30 +336,11 @@ public class StoryComponentPanel extends JPanel implements
 	public void updateComplexSettings() {
 		if (this.component != null) {
 			for (StoryComponentPanel panel : this.getDescendants()) {
-				updateSettings(panel);
+				panel.setSelectable(true);
+				panel.setRemovable(true);
+				panel.setEditable(true);
 			}
 		}
-	}
-
-	private void updateSettings(final StoryComponentPanel panel) {
-		panel.getStoryComponent().process(new StoryAdapter() {
-			@Override
-			protected void defaultProcess(StoryComponent component) {
-				panel.setSelectable(true);
-				panel.setRemovable(true);
-			}
-
-			/**
-			 * Everything but the root is selectable
-			 */
-			@Override
-			protected void defaultProcessComplex(ComplexStoryComponent complex) {
-				panel.setSelectable(true);
-				panel.setRemovable(true);
-			}
-		});
-
-		panel.setEditable(true);
 	}
 
 	/**

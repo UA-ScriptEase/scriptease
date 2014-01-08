@@ -294,8 +294,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() + this.subFragments.hashCode()
-				+ this.separator.hashCode() + this.seriesFilter.hashCode();
+		return super.hashCode() + this.separator.hashCode()
+				+ this.seriesFilter.hashCode();
 	}
 
 	@Override
