@@ -53,55 +53,45 @@ public class BindingWidgetUI extends ComponentUI {
 	public void installUI(JComponent comp) {
 		super.installUI(comp);
 
-		this.installListeners(comp);
-		this.installLayout(comp);
-		this.installBorder(comp);
-	}
+		final BindingWidget widget = (BindingWidget) comp;
+		final KnowItBinding binding = widget.getBinding();
 
-	private void installLayout(JComponent comp) {
-		final LayoutManager layout;
-		this.updateTypeRenderer((BindingWidget) comp);
-		if (this.typeRenderer != null) {
-			layout = new BoxLayout(comp, BoxLayout.X_AXIS);
+		if (binding.isBound()) {
+			final String type;
+			type = binding.getFirstType();
+			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
+		} else
+			this.typeRenderer = null;
 
-			// If the component is a BindingWidget, and is bound
-			if (comp instanceof BindingWidget
-					&& ((BindingWidget) comp).getBinding().isBound()) {
-				// Get the types of the Binding.
-				Collection<String> types = ((BindingWidget) comp).getBinding()
-						.getTypes();
-
-				// Add a placeholder strut for each type widget.
-				for (int i = 0; i < types.size(); i++) {
-					comp.add(Box.createHorizontalStrut(20));
-				}
-			}
-			comp.setLayout(layout);
-		}
-	}
-
-	private void installListeners(JComponent comp) {
-
-		comp.addMouseMotionListener(new MouseAdapter() {
-			/*
-			 * we have to do this to enable drag support on the bindings,
-			 * because they're built from a component that does not natively
-			 * support it. - remiller
-			 */
+		widget.addMouseMotionListener(new MouseAdapter() {
+			// Enable drag on bindings. This is necessary.
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				final BindingWidget source = (BindingWidget) e.getSource();
-				final TransferHandler transferHandler = source
+				final TransferHandler transferHandler = widget
 						.getTransferHandler();
 				if (transferHandler != null) {
-					if (source.getBinding().isBound()) {
-						// if (e.isShiftDown())
-						transferHandler.exportAsDrag(source, e,
+					if (binding.isBound()) {
+						transferHandler.exportAsDrag(widget, e,
 								TransferHandler.MOVE);
 					}
 				}
 			}
 		});
+
+		if (this.typeRenderer != null) {
+			final LayoutManager layout = new BoxLayout(comp, BoxLayout.X_AXIS);
+
+			// If the component is a BindingWidget, and is bound
+			if (binding.isBound()) {
+				// Add a placeholder strut for each type widget.
+				for (int i = 0; i < binding.getTypes().size(); i++) {
+					comp.add(Box.createHorizontalStrut(20));
+				}
+			}
+			comp.setLayout(layout);
+		}
+
+		this.installBorder(comp);
 	}
 
 	private void installBorder(JComponent comp) {
@@ -231,9 +221,9 @@ public class BindingWidgetUI extends ComponentUI {
 	 */
 	private void paintBorder(final BindingWidget label,
 			final Graphics2D tempGraphics, final Shape labelShape) {
-		final Border borderRenderer = BorderFactory.createLineBorder(Color.black);/*new GradientLineBorder(
+		final Border borderRenderer = new GradientLineBorder(
 				this.determineLinePaint(label, this.isUp(label)), labelShape,
-				LINE_THICKNESS);*/
+				LINE_THICKNESS);
 
 		borderRenderer.paintBorder(label, tempGraphics, 0, 0, label.getWidth(),
 				label.getHeight());
@@ -286,18 +276,6 @@ public class BindingWidgetUI extends ComponentUI {
 			// Increment counter.
 			i++;
 		}
-	}
-
-	private void updateTypeRenderer(BindingWidget widget) {
-		final String type;
-		KnowItBinding binding = widget.getBinding();
-
-		if (binding.isBound()) {
-			type = binding.getFirstType();
-			this.typeRenderer = ScriptWidgetFactory.getTypeWidget(type);
-		} else
-			this.typeRenderer = null;
-
 	}
 
 	private Paint determineLinePaint(BindingWidget label, boolean isUp) {
