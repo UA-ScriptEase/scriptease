@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -395,7 +396,8 @@ class ResourceTree extends JPanel {
 
 			final String dialogueType = ResourceTree.this.getDialogueType();
 
-			if (StringOp.exists(dialogueType) && type.getName().equals(dialogueType)) {
+			if (StringOp.exists(dialogueType)
+					&& type.getName().equals(dialogueType)) {
 				final JButton addButton = ComponentFactory.buildAddButton();
 
 				addButton.addActionListener(new ActionListener() {
@@ -417,7 +419,8 @@ class ResourceTree extends JPanel {
 
 			this.add(this.container);
 
-			if (StringOp.exists(dialogueType) && type.getName().equals(dialogueType)) {
+			if (StringOp.exists(dialogueType)
+					&& type.getName().equals(dialogueType)) {
 				final StoryModel story;
 
 				story = SEModelManager.getInstance().getActiveStoryModel();
@@ -709,11 +712,17 @@ class ResourceTree extends JPanel {
 
 				@Override
 				public void resourceSelected(Resource selected) {
-					if (resource != selected)
+					if (resource != selected) {
 						panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-					else
+						panel.setBorder(BorderFactory.createLineBorder(Color.WHITE,	1));
+					}
+					else {
 						panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
-
+						panel.setBorder(BorderFactory.createLineBorder(Color.GREEN,	1));
+						
+						
+						//Find all matching elements and highlight
+					}
 				}
 			});
 

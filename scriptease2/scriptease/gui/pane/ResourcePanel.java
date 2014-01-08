@@ -2,6 +2,8 @@ package scriptease.gui.pane;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -108,6 +110,15 @@ public class ResourcePanel extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
+		//ZAK CODE STARTS HERE
+//		treeScrollPane.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//
+//			}
+//		});
+		//ZAK CODE ENDS
+		
 		this.add(filterPane);
 		this.add(treeScrollPane);
 		this.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,

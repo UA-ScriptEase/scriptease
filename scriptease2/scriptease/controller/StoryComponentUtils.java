@@ -8,10 +8,14 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+
+import scriptease.translator.io.model.Resource;
+
 
 /**
  * Provides some utilities for {@link StoryComponent}s, including methods that
@@ -183,3 +187,82 @@ class DescendantCollector extends StoryAdapter {
 		}
 	}
 }
+
+/**
+ * Collects all occurrences of a Game Object or Story Component that match one selected by the user.
+ * 
+ * @author zturchan
+ *
+ */
+class OccurrenceCollector extends StoryAdapter {
+	private final Collection<StoryComponent> matches = new HashSet<StoryComponent>();
+	private Resource resource;
+	
+	public OccurrenceCollector(Resource selected){
+		super();
+		resource = selected;
+	}
+	
+	protected Collection<StoryComponent> getMatches() {
+		return this.matches;
+	}
+	
+	@Override
+	protected void defaultProcessComplex(ComplexStoryComponent complex) {
+		if (!this.matches.contains(complex)) {
+			this.matches.add(complex);
+			for (StoryComponent child : complex.getChildren())
+				child.process(this);
+		}
+	}
+
+	@Override
+	public void processCauseIt(CauseIt causeIt) {
+		if (!this.matches.contains(causeIt)) {
+			causeIt.processImplicits(this);
+			this.processScriptIt(causeIt);
+		}
+	}
+
+	@Override
+	public void processScriptIt(ScriptIt scriptIt) {
+		if (!this.matches.contains(scriptIt)) {
+			scriptIt.processParameters(this);
+			this.defaultProcessComplex(scriptIt);
+		}
+	}
+
+	@Override
+	public void processKnowIt(KnowIt knowIt) {
+		if (!this.matches.contains(knowIt)) {
+			final StoryAdapter adapter = this;
+			this.matches.add(knowIt);
+			knowIt.getBinding().process(new BindingAdapter() {
+				
+				@Override
+				public void processResource(KnowItBindingResource constant) {
+					constant.getValue();
+					
+				}
+				
+				@Override
+				public void processFunction(KnowItBindingFunction function) {
+					function.getValue().process(adapter);
+				}
+
+				@Override
+				public void processReference(KnowItBindingReference reference) {
+					reference.getValue().process(adapter);
+				}
+			});
+		}
+	}
+
+	@Override
+	public void processAskIt(AskIt questionIt) {
+		if (!this.matches.contains(questionIt)) {
+			questionIt.getCondition().process(this);
+			this.defaultProcessComplex(questionIt);
+		}
+	}
+} 
