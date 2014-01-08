@@ -580,8 +580,7 @@ class ResourceTree extends JPanel {
 
 			final JLabel nameLabel;
 
-			nameLabel = ScriptWidgetFactory.buildLabel(resourceName,
-					Color.WHITE);
+			nameLabel = ScriptWidgetFactory.buildLabel(resourceName);
 
 			gameObjectBindingWidget.add(nameLabel);
 

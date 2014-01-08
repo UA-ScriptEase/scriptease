@@ -513,7 +513,7 @@ class TypeDialogBuilder {
 			final JPanel typePanel;
 
 			this.typeKeyword = type;
-			this.typeWidget = ScriptWidgetFactory.getTypeWidget(typeName);
+			this.typeWidget = ScriptWidgetFactory.buildTypeWidget(typeName);
 
 			typeLabel = new JLabel(" " + typeName);
 			typePanel = new JPanel();

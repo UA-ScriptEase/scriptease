@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.swing.BorderFactory;
@@ -100,27 +99,6 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Gets the JPanel for the given knowIt from the widgetsToStoryComponents
-	 * map. Can return null, if the knowIt does not have a mapped Component.
-	 * 
-	 * @param component
-	 * @return
-	 */
-	public static Collection<JPanel> getEditedJPanel(StoryComponent component) {
-		Collection<JPanel> jPanels = new ArrayList<JPanel>();
-		Set<Component> components = widgetsToStoryComponents.keySet();
-		for (Component aComponent : components) {
-			if (aComponent instanceof JPanel) {
-				if (widgetsToStoryComponents.get(aComponent) == component) {
-					jPanels.add(((JPanel) aComponent));
-				}
-			}
-		}
-
-		return jPanels;
-	}
-
-	/**
 	 * Builds a button for displaying a particular game type. The created button
 	 * will be round and appear mildly convex.
 	 * 
@@ -129,7 +107,7 @@ public class ScriptWidgetFactory {
 	 * 
 	 * @return A button that displays a type.
 	 */
-	public static TypeWidget getTypeWidget(final String keyword) {
+	public static TypeWidget buildTypeWidget(final String keyword) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 		final GameType type;
 
@@ -142,37 +120,7 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
-	 * Builds a BindingWidget from the given StoryPoint.
-	 * 
-	 * @param component
-	 *            The story point to build a binding widget for.
-	 * @param editable
-	 *            <code>true</code> means that the name is editable
-	 *            <code>false</code> otherwise.
-	 * @return The binding widget for displaying the given StoryComponent
-	 */
-	public static BindingWidget buildBindingWidget(StoryPoint component,
-			boolean editable) {
-		return BindingWidgetBuilder.buildBindingWidget(component, editable);
-	}
-
-	/**
-	 * Builds a BindingWidget from the given StoryGroup.
-	 * 
-	 * @param component
-	 *            The story group to build a binding widget for.
-	 * @param editable
-	 *            <code>true</code> means that the name is editable
-	 *            <code>false</code> otherwise.
-	 * @return The binding widget for displaying the given StoryComponent
-	 */
-	public static BindingWidget buildBindingWidget(StoryGroup component,
-			boolean editable) {
-		return BindingWidgetBuilder.buildBindingWidget(component, editable);
-	}
-
-	/**
-	 * Builds a BindingWidget from the given KnowIt.
+	 * Builds a BindingWidget from the given Story Component.
 	 * 
 	 * @param component
 	 *            The knowIt to build a binding widget for.
@@ -181,7 +129,7 @@ public class ScriptWidgetFactory {
 	 *            <code>false</code> otherwise.
 	 * @return The binding widget for displaying the given StoryComponent
 	 */
-	public static BindingWidget buildBindingWidget(KnowIt component,
+	public static BindingWidget buildBindingWidget(StoryComponent component,
 			boolean editable) {
 		return BindingWidgetBuilder.buildBindingWidget(component, editable);
 	}
@@ -196,11 +144,11 @@ public class ScriptWidgetFactory {
 	public static JComponent buildObservedNameLabel(
 			StoryComponent storyComponent) {
 		final JLabel nameLabel;
-		final StoryComponentObserver observer;
 
-		nameLabel = ScriptWidgetFactory.buildLabel(
-				storyComponent.getDisplayText(), Color.WHITE);
-		observer = new StoryComponentObserver() {
+		nameLabel = ScriptWidgetFactory.buildLabel(storyComponent
+				.getDisplayText());
+
+		storyComponent.addStoryComponentObserver(new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				// only update the name for now, but if anything else is
@@ -209,9 +157,7 @@ public class ScriptWidgetFactory {
 					nameLabel.setText(event.getSource().getDisplayText());
 				}
 			}
-		};
-
-		storyComponent.addStoryComponentObserver(observer);
+		});
 
 		return nameLabel;
 	}
@@ -317,7 +263,7 @@ public class ScriptWidgetFactory {
 		for (String type : types) {
 			final TypeWidget slotTypeWidget;
 
-			slotTypeWidget = ScriptWidgetFactory.getTypeWidget(type);
+			slotTypeWidget = ScriptWidgetFactory.buildTypeWidget(type);
 			slotTypeWidget.setSelected(true);
 
 			// the colour depends on the actual binding of the KnowIt
@@ -358,26 +304,15 @@ public class ScriptWidgetFactory {
 	 * Constructor GUI.
 	 * 
 	 * @param text
-	 *            the text to display
-	 * @param textColor
-	 *            the colour to use for the text. If <code>null</code>, then the
-	 *            default colour for JLabels will be used.
-	 * 
 	 * @return An otherwise normal JLabel configured for display in the tree
 	 */
-	public static JLabel buildLabel(String text, Color textColor) {
-		final JLabel label;
-		final int fontSize;
-		final Font font;
+	public static JLabel buildLabel(String text) {
+		final JLabel label = new JLabel(text == null ? "" : text);
+		final int fontSize = Integer.parseInt(ScriptEase.getInstance()
+				.getPreference(ScriptEase.FONT_SIZE_KEY));
 
-		label = new JLabel(text == null ? "" : text);
-		fontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
-				ScriptEase.FONT_SIZE_KEY));
-		font = new Font(Font.SANS_SERIF, Font.ROMAN_BASELINE, fontSize);
-
-		label.setFont(font);
-		if (textColor != null)
-			label.setForeground(textColor);
+		label.setFont(new Font(Font.SANS_SERIF, Font.ROMAN_BASELINE, fontSize));
+		label.setForeground(Color.WHITE);
 
 		return label;
 	}
@@ -398,12 +333,11 @@ public class ScriptWidgetFactory {
 	 */
 	public static JLabel buildLabel(String text, Color textColor,
 			Color background) {
-		final JLabel label;
-		final int fontSize;
+		final JLabel label = buildLabel(text);
+		final int fontSize = Integer.parseInt(ScriptEase.getInstance()
+				.getPreference(ScriptEase.FONT_SIZE_KEY));
 
-		label = buildLabel(text, textColor);
-		fontSize = Integer.parseInt(ScriptEase.getInstance().getPreference(
-				ScriptEase.FONT_SIZE_KEY));
+		label.setForeground(textColor);
 
 		label.setBackground(background);
 		label.setOpaque(true);

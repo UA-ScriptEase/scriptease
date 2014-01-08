@@ -18,7 +18,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.transfer.SlotPanelTransferHandler;
-import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -230,11 +229,9 @@ public class SlotPanel extends JPanel {
 						component = ScriptWidgetFactory.buildValueEditor(
 								this.knowIt, bindingWidget);
 					} else
-						component = ScriptWidgetFactory.buildLabel(name,
-								Color.WHITE);
+						component = ScriptWidgetFactory.buildLabel(name);
 				} else {
-					component = ScriptWidgetFactory.buildLabel(name,
-							Color.WHITE);
+					component = ScriptWidgetFactory.buildLabel(name);
 				}
 
 				bindingWidget.add(component);
