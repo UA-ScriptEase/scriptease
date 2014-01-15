@@ -37,6 +37,7 @@ import scriptease.gui.filters.StoryComponentSearchFilter;
 import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.TypeFilter;
 import scriptease.gui.filters.VisibilityFilter;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -354,6 +355,13 @@ public class LibraryPanel extends JTabbedPane {
 		}
 	}
 
+	public void addStoryComponentPanelJListObserver(Object object,
+			StoryComponentPanelJListObserver observer) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.addObserver(object, observer);
+		}
+	}
+
 	/**
 	 * Finds and updates the StoryComponentPanel of the changed StoryComponent
 	 * in each StoryComponentPanelJList
@@ -572,4 +580,20 @@ public class LibraryPanel extends JTabbedPane {
 			this.updateList(list);
 		}
 	}
+
+	/**
+	 * Returns all the story components that are selected
+	 * @return panels
+	 */
+	public Collection<StoryComponentPanel> getSelected() {
+		final Collection<StoryComponentPanel> panels = new ArrayList<StoryComponentPanel>();
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			 Object[] objects = list.getSelectedValues();
+			 for ( int i = 0; i < objects.length; i++){
+				 panels.add((StoryComponentPanel)objects[i]);
+			 }
+		}
+		return panels;
+	}
+
 }

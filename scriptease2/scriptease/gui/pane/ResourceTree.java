@@ -713,8 +713,7 @@ class ResourceTree extends JPanel {
 				public void resourceSelected(Resource selected) {
 					if (resource != selected) {
 						panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-						panel.setBorder(BorderFactory.createLineBorder(
-								Color.WHITE, 2));
+						panel.setBorder(BorderFactory.createEmptyBorder());
 					} else {
 						panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 						panel.setBorder(BorderFactory.createLineBorder(
