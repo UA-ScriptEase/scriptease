@@ -131,14 +131,21 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				final StoryComponentPanel componentPanel;
 				final StoryComponent component;
 				final Object selected;
-
+				final Object[] selectedValues;
+				StoryComponentPanel panel;
+				StoryComponent selectedComponent;
 				componentList = (JList) e.getSource();
 				selected = componentList.getSelectedValue();
-
-				if (selected instanceof StoryComponentPanel) {
-					componentPanel = (StoryComponentPanel) selected;
-					component = componentPanel.getStoryComponent();
-					notifyObservers(component);
+				
+				//When a user clicks, ctrl-clicks, shift-clicks, etc in the Library panel, we want to notify observers of all the 
+				//selected storycomponentpanels so they do not lose their selected border.
+				selectedValues = componentList.getSelectedValues();
+				for (Object selectedValue : selectedValues) {
+					if (selectedValue instanceof StoryComponentPanel) {
+						panel = (StoryComponentPanel) selectedValue;
+						selectedComponent = panel.getStoryComponent();
+						notifyObservers(selectedComponent);
+					}
 				}
 			}
 		});
@@ -161,6 +168,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 						@Override
 						public void gainFocus(Component oldFocus) {
 							setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
+
 						}
 
 						@Override
@@ -338,6 +346,15 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 	public void addObserver(StoryComponentPanelJListObserver observer) {
 		this.observerManager.addObserver(this, observer);
+	}
+
+	/**
+	 * 
+	 * @param observer
+	 */
+	public void addObserver(Object object,
+			StoryComponentPanelJListObserver observer) {
+		this.observerManager.addObserver(object, observer);
 	}
 
 	private void notifyObservers(StoryComponent component) {

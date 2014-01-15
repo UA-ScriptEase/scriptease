@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -20,10 +21,12 @@ import javax.swing.JTextField;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.StoryComponentPanelJListObserver;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.pane.DescribeItPanel;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -106,6 +109,36 @@ public class StoryComponentPanelFactory {
 			component.process(componentProcessor(panel));
 			panel.setTransferHandler(StoryComponentPanelTransferHandler
 					.getInstance());
+
+			LibraryPanel.getInstance().addStoryComponentPanelJListObserver(
+					panel, new StoryComponentPanelJListObserver() {									
+						@Override
+						public void componentSelected(StoryComponent component) {
+							//Check to see if our component is selected, and if so draw a green border, else draw a normal gray one.
+							//Note that we currently can't get .equals() to work with StoryComponents, so this text comparison is an ugly
+							//way of doing the check we want.  
+							final Collection<StoryComponentPanel> selectedPanels = LibraryPanel
+									.getInstance().getSelected();
+							Collection<String> selectedTexts = new ArrayList<String>();
+
+							for (StoryComponentPanel selectedPanel : selectedPanels) {
+								selectedTexts.add(selectedPanel
+										.getStoryComponent().getDisplayText());
+							}
+
+							if (selectedTexts.contains(panel
+									.getStoryComponent().getDisplayText())) {
+								panel.setBorder(BorderFactory.createLineBorder(
+										Color.GREEN, 2));
+							} else {
+								panel.setBorder(BorderFactory.createLineBorder(
+										Color.LIGHT_GRAY, 1));
+							}
+
+						}
+
+					});
+
 		}
 
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -451,23 +484,25 @@ public class StoryComponentPanelFactory {
 				final String welcomeText = "Welcome to ScriptEase II!";
 				final String getStartedText = "Add some nodes to the start node to get started. If you don't know how, go to the help menu for help.";
 				final int fontSize = 18;
-				
+
 				// Add an expansion button
-				final JPanel mainPanel; 
+				final JPanel mainPanel;
 				final JLabel welcomeLabel = new JLabel(welcomeText);
 				final JLabel getStartedLabel = new JLabel(getStartedText);
-				final JButton tutorialButton = ComponentFactory.buildLinkButton(tutorialUri, tutorialText);
-				
+				final JButton tutorialButton = ComponentFactory
+						.buildLinkButton(tutorialUri, tutorialText);
+
 				mainPanel = new JPanel();
-				
+
 				mainPanel.setOpaque(false);
-				
+
 				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 
 				if (storyPoint.isRoot()) {
-					mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
-					
+					mainPanel.setLayout(new BoxLayout(mainPanel,
+							BoxLayout.PAGE_AXIS));
+
 					GUIOp.resizeFont(fontSize, welcomeLabel);
 					GUIOp.resizeFont(fontSize, getStartedLabel);
 					GUIOp.resizeFont(fontSize, tutorialButton);
@@ -475,7 +510,7 @@ public class StoryComponentPanelFactory {
 					mainPanel.add(welcomeLabel);
 					mainPanel.add(getStartedLabel);
 					mainPanel.add(tutorialButton);
-					
+
 				} else {
 					// Add the children panels
 					addChildrenPanels(storyPoint, panel);

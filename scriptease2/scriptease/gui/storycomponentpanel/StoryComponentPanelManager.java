@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.AskIt;
@@ -352,7 +354,7 @@ public class StoryComponentPanelManager {
 
 	/**
 	 * Updates the selection appearance of the given panel to the given
-	 * isSelected
+	 * isSelected.  Also change the border colour to green if the panel is selected in the library panel.
 	 * 
 	 * @param panel
 	 * @param isSelected
@@ -379,35 +381,70 @@ public class StoryComponentPanelManager {
 		} else {
 			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
+			final Collection<StoryComponentPanel> selectedPanels = LibraryPanel.getInstance().getSelected();
+			final String panelText = panel.getStoryComponent().getDisplayText();
+			
+			/**
+			 * This loop is somewhat awkward.  We want to check whether or not the panel is contained in 
+			 * the list of currently selected panels, but we can't use contains() for StoryComponentPanels for some reason
+			 * (even though .equals() has been known to work.  So we use a loop and just compare the display text and set the flag
+			 * if a match is found.  However, in order to access this variable in the process() methods, it must be final, which 
+			 * doesn't work if we want to have the variable be false by default and sometimes change to true.  So we have to declare 
+			 * a final variable after the loop and use that.
+			 *   
+			 */
+			boolean isPanelSelected = false;
+			for(StoryComponentPanel p : selectedPanels){
+				if (p.getStoryComponent().getDisplayText().equals(panelText)){
+					isPanelSelected = true;
+				}
+			}
+			final boolean isActive = isPanelSelected;		
+			
 			final StoryComponent panelComponent;
-
 			panelComponent = panel.getStoryComponent();
-
 			panelComponent.process(new StoryAdapter() {
 				@Override
 				protected void defaultProcessComplex(
 						ComplexStoryComponent complex) {
-					this.defaultProcess(complex);
+						this.defaultProcess(complex);
 				}
 
 				@Override
 				protected void defaultProcess(StoryComponent component) {
-					panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+					if(isActive){
+						panel.setBorder(BorderFactory
+								.createLineBorder(Color.GREEN, 2));		
+					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
+						panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
+					}
 				}
 
 				public void processCauseIt(CauseIt causeIt) {
-					panel.setBorder(BorderFactory
-							.createLineBorder(Color.LIGHT_GRAY));
+					if(isActive){
+						panel.setBorder(BorderFactory
+								.createLineBorder(Color.GREEN, 2));		
+					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
+						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					}
 				}
 
 				public void processControlIt(ControlIt controlIt) {
-					panel.setBorder(BorderFactory
-							.createLineBorder(Color.LIGHT_GRAY));
+					if(isActive){
+						panel.setBorder(BorderFactory
+								.createLineBorder(Color.GREEN, 2));		
+					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
+						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					}
 				}
 
 				public void processAskIt(AskIt askIt) {
-					panel.setBorder(BorderFactory
-							.createLineBorder(Color.LIGHT_GRAY));
+					if(isActive){
+						panel.setBorder(BorderFactory
+								.createLineBorder(Color.GREEN, 2));		
+					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
+						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					}
 				}
 
 				@Override
@@ -415,6 +452,7 @@ public class StoryComponentPanelManager {
 					this.defaultProcess(atom);
 				}
 			});
+			
 		}
 	}
 

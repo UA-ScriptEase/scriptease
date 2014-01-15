@@ -28,7 +28,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.ResourceObserver;
 import scriptease.controller.observer.ResourceTreeAdapter;
@@ -39,9 +38,7 @@ import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.complex.StoryNode;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -717,8 +714,7 @@ class ResourceTree extends JPanel {
 				public void resourceSelected(Resource selected) {
 					if (resource != selected) {
 						panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-						panel.setBorder(BorderFactory.createLineBorder(
-								Color.WHITE, 2));
+						panel.setBorder(BorderFactory.createEmptyBorder());
 					} else {
 						panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 						panel.setBorder(BorderFactory.createLineBorder(

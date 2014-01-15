@@ -88,7 +88,8 @@ public class SlotPanel extends JPanel {
 	}
 
 	/**
-	 * 
+	 * Updates the border of a SlotPanel which corresponds to a specified Resource.
+	 * The border will be green if it matches and white (invisible) otherwise.
 	 */
 	public void updateSelectedResourceBorder(final Resource selected) {
 		knowIt.getBinding().process(new BindingAdapter() {
@@ -103,8 +104,7 @@ public class SlotPanel extends JPanel {
 
 			@Override
 			protected void defaultProcess(KnowItBinding binding) {
-				SlotPanel.this.setBorder(BorderFactory.createLineBorder(
-						Color.WHITE, 2));
+				SlotPanel.this.setBorder(BorderFactory.createEmptyBorder());
 			}
 		});
 	}
