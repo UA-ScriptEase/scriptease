@@ -6,8 +6,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -19,10 +21,12 @@ import javax.swing.JTextField;
 
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.observer.StoryComponentPanelJListObserver;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.pane.DescribeItPanel;
+import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
@@ -104,6 +108,36 @@ public class StoryComponentPanelFactory {
 			component.process(componentProcessor(panel));
 			panel.setTransferHandler(StoryComponentPanelTransferHandler
 					.getInstance());
+
+			LibraryPanel.getInstance().addStoryComponentPanelJListObserver(
+					panel, new StoryComponentPanelJListObserver() {									
+						@Override
+						public void componentSelected(StoryComponent component) {
+							//Check to see if our component is selected, and if so draw a green border, else draw a normal gray one.
+							//Note that we currently can't get .equals() to work with StoryComponents, so this text comparison is an ugly
+							//way of doing the check we want.  
+							final Collection<StoryComponentPanel> selectedPanels = LibraryPanel
+									.getInstance().getSelected();
+							Collection<String> selectedTexts = new ArrayList<String>();
+
+							for (StoryComponentPanel selectedPanel : selectedPanels) {
+								selectedTexts.add(selectedPanel
+										.getStoryComponent().getDisplayText());
+							}
+
+							if (selectedTexts.contains(panel
+									.getStoryComponent().getDisplayText())) {
+								panel.setBorder(BorderFactory.createLineBorder(
+										Color.GREEN, 2));
+							} else {
+								panel.setBorder(BorderFactory.createLineBorder(
+										Color.LIGHT_GRAY, 1));
+							}
+
+						}
+
+					});
+
 		}
 
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
