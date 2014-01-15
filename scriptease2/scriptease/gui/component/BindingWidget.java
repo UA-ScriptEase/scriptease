@@ -47,7 +47,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	 */
 	private TransferHandler transferHandler;
 
-	public BindingWidget(final KnowItBinding binding) {
+	protected BindingWidget(final KnowItBinding binding) {
 		this.binding = binding;
 
 		// we don't want horizontal/vertical gaps, so make FlowLayout do this

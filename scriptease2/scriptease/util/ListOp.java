@@ -132,6 +132,12 @@ public class ListOp {
 		return null;
 	}
 
+	/**
+	 * Creates a list containing the passed in contents.
+	 * 
+	 * @param contents
+	 * @return
+	 */
 	public static <T> ArrayList<T> createList(T... contents) {
 		final ArrayList<T> list = new ArrayList<T>();
 

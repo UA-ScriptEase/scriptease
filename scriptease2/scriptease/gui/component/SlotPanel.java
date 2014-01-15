@@ -51,7 +51,7 @@ public class SlotPanel extends JPanel {
 	private final KnowIt knowIt;
 	private final boolean isNameEditable;
 
-	public SlotPanel(final KnowIt knowIt, boolean isNameEditable) {
+	protected SlotPanel(final KnowIt knowIt, boolean isNameEditable) {
 		if (knowIt == null)
 			throw new IllegalStateException(
 					"Cannot build a SlotPanel with a null KnowIt");
@@ -245,6 +245,10 @@ public class SlotPanel extends JPanel {
 		});
 
 		return bindingWidget;
+	}
+
+	public KnowIt getKnowIt() {
+		return this.knowIt;
 	}
 
 	@Override

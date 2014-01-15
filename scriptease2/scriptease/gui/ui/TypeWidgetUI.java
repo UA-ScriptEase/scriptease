@@ -54,7 +54,7 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements ScriptEaseUI {
 	public void installUI(JComponent comp) {
 		super.installUI(comp);
 
-		AbstractButton button = (AbstractButton) comp;
+		final AbstractButton button = (AbstractButton) comp;
 
 		this.installBorder(button);
 		button.setOpaque(false);

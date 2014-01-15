@@ -17,7 +17,7 @@ public class ExpansionButton extends JButton {
 	private final Icon collapse;
 	private final Icon expand;
 
-	public ExpansionButton(boolean isCollapsed) {
+	protected ExpansionButton(boolean isCollapsed) {
 		this.expand = ScriptEaseUI.COLLAPSE_ICON;
 		this.collapse = ScriptEaseUI.EXPAND_ICON;
 

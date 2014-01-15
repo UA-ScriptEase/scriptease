@@ -96,7 +96,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		if (action == TransferHandler.NONE) {
 
 			// Get the KnowIt for the Widget.
-			KnowIt toRemove = (KnowIt) ScriptWidgetFactory
+			final KnowIt toRemove = (KnowIt) ScriptWidgetFactory
 					.getEditedStoryComponent(component.getParent());
 
 			if (toRemove == null)

@@ -21,7 +21,6 @@ import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.SEModelManager;
 
 /**
  * Special renderer for nodes representing StoryNodes {@link StoryNode}. Story
@@ -92,8 +91,10 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		final int VERTICAL_MARGIN = 60;
 		final int HORIZONTAL_MARGIN = 12;
 
-		final ExpansionButton expansionButton = new ExpansionButton(
-				!group.isExpanded());
+		final ExpansionButton expansionButton;
+
+		expansionButton = ScriptWidgetFactory.buildExpansionButton(!group
+				.isExpanded());
 
 		expansionButton.addActionListener(new ActionListener() {
 
@@ -158,10 +159,10 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 
 		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 				component);
-		
+
 		widget = ScriptWidgetFactory.buildBindingWidget(storyPoint, false);
 		component.add(widget);
-		
+
 		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
 				component);
 

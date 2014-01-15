@@ -3,7 +3,6 @@ package scriptease.gui.action.preferences;
 import java.awt.event.ActionEvent;
 
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.action.translator.TranslatorPreferencesAction;
 import scriptease.gui.dialog.DialogBuilder;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;

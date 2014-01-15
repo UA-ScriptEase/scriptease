@@ -22,9 +22,10 @@ import scriptease.util.StringOp;
  */
 @SuppressWarnings("serial")
 public class TypeWidget extends JToggleButton {
-	private static final float LABEL_FONT_SIZE_SCALE_FACTOR = 1.1f;
 
-	public TypeWidget(final GameType type) {
+	protected TypeWidget(final GameType type) {
+		final float LABEL_FONT_SIZE_SCALE_FACTOR = 1.1f;
+
 		final int baseFontSize;
 		final int fontSize;
 		final String typeName;

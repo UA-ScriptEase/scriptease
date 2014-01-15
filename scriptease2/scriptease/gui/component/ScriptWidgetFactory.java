@@ -135,6 +135,16 @@ public class ScriptWidgetFactory {
 	}
 
 	/**
+	 * Builds a new binding widget for the passed in binding.
+	 * 
+	 * @param binding
+	 * @return
+	 */
+	public static BindingWidget buildBindingWidget(KnowItBinding binding) {
+		return new BindingWidget(binding);
+	}
+
+	/**
 	 * Builds a name label for a component that updates itself based on the name
 	 * passed to it.
 	 * 
@@ -323,29 +333,25 @@ public class ScriptWidgetFactory {
 	 * 
 	 * @param text
 	 *            the text to display
-	 * @param textColor
-	 *            the colour to use for the text. If <code>null</code>, then the
-	 *            default colour for JLabels will be used.
+	 * 
 	 * @param background
 	 *            the background colour to use
 	 * 
 	 * @return An otherwise normal JLabel configured for display in the tree
 	 */
-	public static JLabel buildLabel(String text, Color textColor,
-			Color background) {
-		final JLabel label = buildLabel(text);
+	public static JLabel buildMonospaceLabel(String text, Color background) {
+		final JLabel label = new JLabel(text == null ? "" : text);
 		final int fontSize = Integer.parseInt(ScriptEase.getInstance()
 				.getPreference(ScriptEase.FONT_SIZE_KEY));
 
-		label.setForeground(textColor);
+		label.setForeground(ScriptWidgetFactory.LABEL_TEXT_COLOUR);
 
+		label.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize - 1));
 		label.setBackground(background);
 		label.setOpaque(true);
 
 		// border
 		label.setBorder(BorderFactory.createMatteBorder(1, 3, 1, 3, background));
-
-		label.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize - 1));
 
 		return label;
 	}
