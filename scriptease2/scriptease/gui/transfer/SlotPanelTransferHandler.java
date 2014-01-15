@@ -9,7 +9,6 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -92,8 +91,7 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 
 			// Get the destination KnowIt
 			slotPanel = (SlotPanel) destinationComponent;
-			knowIt = (KnowIt) ScriptWidgetFactory
-					.getEditedStoryComponent(slotPanel);
+			knowIt = slotPanel.getKnowIt();
 
 			// Special case for KnowItBindingUninitialized - they
 			// shouldn't be dragged into their own referenced KnowIt
@@ -169,8 +167,7 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 		final KnowItBinding sourceBinding;
 
 		slotPanel = (SlotPanel) support.getComponent();
-		knowIt = (KnowIt) ScriptWidgetFactory
-				.getEditedStoryComponent(slotPanel);
+		knowIt = slotPanel.getKnowIt();
 
 		// Get the KnowItBindingWidget being transferred.
 		sourceBinding = this.extractBinding(support);

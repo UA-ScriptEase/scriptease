@@ -41,13 +41,12 @@ public class UserInformationPane extends JPanel {
 		INFO, WARNING, ERROR;
 	};
 
-	String message;
-	Point startPoint;
-	UserInformationType type;
+	private String message;
+	private Point startPoint;
+	private UserInformationType type;
 
-	Timer timer;
-
-	float opacity;
+	private Timer timer;
+	private float opacity;
 
 	public UserInformationPane(String message, UserInformationType type) {
 		super();

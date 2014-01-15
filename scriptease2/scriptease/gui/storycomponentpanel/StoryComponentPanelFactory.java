@@ -45,7 +45,6 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.util.GUIOp;
 
@@ -157,8 +156,7 @@ public class StoryComponentPanelFactory {
 			else
 				bgColour = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
 
-			newLabel = ScriptWidgetFactory.buildLabel(label,
-					ScriptWidgetFactory.LABEL_TEXT_COLOUR, bgColour);
+			newLabel = ScriptWidgetFactory.buildMonospaceLabel(label, bgColour);
 
 			mainPanel.add(newLabel, 0);
 			mainPanel.add(Box.createHorizontalStrut(5), 1);
@@ -308,8 +306,8 @@ public class StoryComponentPanelFactory {
 					else
 						bgColour = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
 
-					JLabel label = ScriptWidgetFactory.buildLabel(labelText,
-							ScriptWidgetFactory.LABEL_TEXT_COLOUR, bgColour);
+					JLabel label = ScriptWidgetFactory.buildMonospaceLabel(
+							labelText, bgColour);
 
 					displayNamePanel.add(label, 0);
 					displayNamePanel.add(Box.createHorizontalStrut(5), 1);
@@ -611,9 +609,7 @@ public class StoryComponentPanelFactory {
 											bgColor = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
 
 										JLabel label = ScriptWidgetFactory
-												.buildLabel(
-														labelText,
-														ScriptWidgetFactory.LABEL_TEXT_COLOUR,
+												.buildMonospaceLabel(labelText,
 														bgColor);
 										mainPanel.add(label, 0);
 										mainPanel.add(
