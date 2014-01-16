@@ -299,6 +299,8 @@ class ResourceTree extends JPanel {
 		if (this.filterText.length() == 0)
 			return true;
 
+		// TODO instead, we need a list of resources to set visible
+
 		final String searchText;
 
 		searchText = this.filterText.toUpperCase();
@@ -498,7 +500,7 @@ class ResourceTree extends JPanel {
 
 					newPanel = this.createResourcePanel(resource, 0);
 
-					this.resourcesToPanels.put(resource, newPanel);
+					// this.resourcesToPanels.put(resource, newPanel);
 					this.container.add(newPanel, ++previousIndex);
 				} else
 					previousIndex = GUIOp.getComponentIndex(panel);
@@ -724,6 +726,8 @@ class ResourceTree extends JPanel {
 			});
 
 			childPanel.setVisible(false);
+
+			this.resourcesToPanels.put(resource, panel);
 
 			return panel;
 		}
