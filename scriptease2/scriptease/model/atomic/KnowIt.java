@@ -260,34 +260,25 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			public void processNull(KnowItBindingNull nullBinding) {
 				// Find an appropriate Default binding for the type if it's GUI
 				// type isn't null.
+				KnowItBinding bindingValue = nullBinding;
 
 				final SEModel model;
 
 				model = SEModelManager.getInstance().getActiveModel();
 
-				// / TODO Clean this up if possible.
-				if (model != null) {
-					final Translator translator = model.getTranslator();
-					if (translator != null
-							&& translator.defaultLibraryIsLoaded()) {
-						for (String type : KnowIt.this.types) {
-							if (model.getType(type).getGui() != null) {
-								final Resource resource;
-								final KnowItBindingResource bindingValue;
+				if (model != null
+						&& model.getTranslator().defaultLibraryIsLoaded()) {
+					for (String type : KnowIt.this.types) {
+						final GameType gameType = model.getType(type);
 
-								resource = SimpleResource
-										.buildSimpleResource(type);
-								bindingValue = new KnowItBindingResource(
-										resource);
-
-								this.defaultProcess(bindingValue);
-
-								return;
-							}
+						if (gameType != null && gameType.getGui() != null) {
+							bindingValue = new KnowItBindingResource(
+									SimpleResource.buildSimpleResource(type));
 						}
 					}
 				}
-				this.defaultProcess(nullBinding);
+
+				this.defaultProcess(bindingValue);
 			}
 
 			@Override
@@ -418,30 +409,24 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @return
 	 */
 	public Collection<String> getAcceptableTypes() {
-		final Translator activeTranslator = TranslatorManager.getInstance()
+		final Translator translator = TranslatorManager.getInstance()
 				.getActiveTranslator();
-		final Collection<String> acceptableTypes = new ArrayList<String>();
+		final Collection<String> acceptedTypes = new ArrayList<String>();
 
 		// The KnowIts types are acceptable
-		acceptableTypes.addAll(this.types);
+		acceptedTypes.addAll(this.types);
 
 		// Acceptable Types also include types that can be converted from
-		if (activeTranslator != null) {
-			if (activeTranslator.defaultLibraryIsLoaded()) {
-				// TODO This isn't checking the optional libraries we have
-				// loaded. If we ever fix these typeconverters, we'll need
-				// to do something about that here.
-
-				final TypeConverter typeConverter = activeTranslator
-						.getLibrary().getTypeConverter();
+		if (translator != null && translator.defaultLibraryIsLoaded()) {
+			for (LibraryModel library : translator.getAllLibraries()) {
+				final TypeConverter converter = library.getTypeConverter();
 
 				for (String type : this.types) {
-					acceptableTypes.addAll(typeConverter
-							.getConvertableTypes(type));
+					acceptedTypes.addAll(converter.getConvertableTypes(type));
 				}
 			}
 		}
-		return acceptableTypes;
+		return acceptedTypes;
 	}
 
 	public void setTypes(Collection<GameType> types) {
