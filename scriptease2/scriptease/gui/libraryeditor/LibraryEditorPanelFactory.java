@@ -8,6 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,11 +30,13 @@ import javax.swing.JTextField;
 
 import scriptease.ScriptEase;
 import scriptease.controller.observer.CodeBlockPanelObserver;
+import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
+import scriptease.gui.SEFocusManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
@@ -58,6 +62,7 @@ import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.StringOp;
+import sun.font.Decoration;
 
 /**
  * A factory used to create a library editor. This is a singleton class, so use
@@ -558,10 +563,10 @@ public class LibraryEditorPanelFactory {
 					.setDisplayText("<Initiator> does action with priority <Priority>");
 
 			initiator.setDisplayText("Initiator");
-			initiator.addType("creature");
+			initiator.addType("Creature");
 
 			priority.setDisplayText("Priority");
-			priority.addType("float");
+			priority.addType("Number");
 			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
 					.toString(behaviour.getPriority())));
 
@@ -607,13 +612,13 @@ public class LibraryEditorPanelFactory {
 					.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");
 
 			initiator.setDisplayText("Initiator");
-			initiator.addType("creature");
+			initiator.addType("Creature");
 
 			responder.setDisplayText("Responder");
-			responder.addType("creature");
+			responder.addType("Creature");
 
 			priority.setDisplayText("Priority");
-			priority.addType("float");
+			priority.addType("Number");
 			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
 					.toString(behaviour.getPriority())));
 
@@ -645,6 +650,9 @@ public class LibraryEditorPanelFactory {
 
 		final JTextField actionField;
 		final JTextField priorityField;
+
+		final Runnable commitText;
+		final Runnable commitPriority;
 
 		namePanel = new JPanel() {
 			@Override
@@ -689,29 +697,32 @@ public class LibraryEditorPanelFactory {
 		priorityField.setColumns(5);
 
 		// Add listeners for the text fields
-		actionField.addActionListener(new ActionListener() {
 
+		commitText = new Runnable() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				final String oldDisplayText = behaviour.getDisplayText();
-
-				final String oldActionName = oldDisplayText.substring(
-						oldDisplayText.indexOf("<") + 12,
-						oldDisplayText.indexOf(" <Responder>"));
-
-				if (actionField.getText().contains("<")
-						|| actionField.getText().contains(">"))
-					return;
-
-				behaviour.setDisplayText(behaviour.getDisplayText().replace(
-						oldActionName, actionField.getText()));
+			public void run() {
+				 final String oldDisplayText = behaviour.getDisplayText();
+				
+				 final String oldActionName = oldDisplayText.substring(
+				 oldDisplayText.indexOf("<") + 12,
+				 oldDisplayText.indexOf(" <Responder>"));
+				
+				 if (actionField.getText().contains("<")
+				 || actionField.getText().contains(">"))
+				 return;
+				
+				 behaviour.setDisplayText(behaviour.getDisplayText().replace(
+				 oldActionName, actionField.getText()));
+				 
 			}
-		});
+		};
 
-		priorityField.addActionListener(new ActionListener() {
+		WidgetDecorator.decorateJTextFieldForFocusEvents(actionField,
+				commitText, false);
 
+		commitPriority = new Runnable() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void run() {
 				final KnowIt priorityKnowIt = behaviour.getMainCodeBlock()
 						.getParameters().get(2);
 				final String priority = priorityField.getText();
@@ -723,7 +734,10 @@ public class LibraryEditorPanelFactory {
 
 				priorityKnowIt.revalidateKnowItBindings();
 			}
-		});
+		};
+
+		WidgetDecorator.decorateJTextFieldForFocusEvents(priorityField,
+				commitPriority, false);
 
 		namePanel.add(initiatorLabel);
 		namePanel.add(actionField);
@@ -742,6 +756,9 @@ public class LibraryEditorPanelFactory {
 
 		final JTextField actionField;
 		final JTextField priorityField;
+
+		final Runnable commitText;
+		final Runnable commitPriority;
 
 		namePanel = new JPanel() {
 			@Override
@@ -787,10 +804,10 @@ public class LibraryEditorPanelFactory {
 		priorityField.setColumns(5);
 
 		// Add listeners for the text fields
-		actionField.addActionListener(new ActionListener() {
 
+		commitText = new Runnable() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void run() {
 				final String oldDisplayText = behaviour.getDisplayText();
 
 				final String oldActionName = oldDisplayText.substring(
@@ -804,12 +821,14 @@ public class LibraryEditorPanelFactory {
 				behaviour.setDisplayText(behaviour.getDisplayText().replace(
 						oldActionName, actionField.getText()));
 			}
-		});
+		};
 
-		priorityField.addActionListener(new ActionListener() {
+		WidgetDecorator.decorateJTextFieldForFocusEvents(actionField,
+				commitText, false);
 
+		commitPriority = new Runnable() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void run() {
 				final KnowIt priorityKnowIt = behaviour.getMainCodeBlock()
 						.getParameters().get(1);
 				final String priority = priorityField.getText();
@@ -820,8 +839,14 @@ public class LibraryEditorPanelFactory {
 						.getTypes(), priority));
 
 				priorityKnowIt.revalidateKnowItBindings();
+
+				behaviour.setDisplayText(behaviour.getDisplayText());
+
 			}
-		});
+		};
+
+		WidgetDecorator.decorateJTextFieldForFocusEvents(priorityField,
+				commitPriority, false);
 
 		namePanel.add(initiatorLabel);
 		namePanel.add(actionField);
