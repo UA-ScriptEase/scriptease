@@ -15,10 +15,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -288,40 +286,6 @@ class ResourceTree extends JPanel {
 	}
 
 	/**
-	 * Determines whether any fields in the game constant match the passed in
-	 * text. Recursively searches Conversations to see if any roots contain the
-	 * text.
-	 * 
-	 * @param resource
-	 * @return true if text is found
-	 */
-	private boolean matchesSearchText(Resource resource) {
-		if (this.filterText.length() == 0)
-			return true;
-
-		// TODO instead, we need a list of resources to set visible
-
-		final String searchText;
-
-		searchText = this.filterText.toUpperCase();
-
-		if (resource.getCodeText().toUpperCase().contains(searchText)
-				|| resource.getName().toUpperCase().contains(searchText)
-				|| resource.getTag().toUpperCase().contains(searchText)
-				|| resource.getTemplateID().toUpperCase().contains(searchText)) {
-			return true;
-		}
-
-		boolean nodeContainsText = false;
-
-		for (Resource child : resource.getChildren()) {
-			nodeContainsText = nodeContainsText || matchesSearchText(child);
-		}
-
-		return nodeContainsText;
-	}
-
-	/**
 	 * Container for all resource panels in the tree. Represents a type in the
 	 * tree.
 	 * 
@@ -334,6 +298,44 @@ class ResourceTree extends JPanel {
 		private final Map<Resource, JPanel> resourcesToPanels;
 		private final GameType type;
 		private final JPanel container;
+
+		/**
+		 * 
+		 * Determines whether any fields in the game constant match the passed
+		 * in text. Recursively searches Conversations to see if any roots
+		 * contain the text.
+		 * 
+		 * @param resource
+		 * @return true if text is found
+		 */
+		private boolean setVisibility(Resource resource) {
+			boolean visible = false;
+
+			if (ResourceTree.this.filterText.length() == 0
+					|| StringOp.foundIn(ResourceTree.this.filterText,
+							resource.getCodeText(), resource.getName(),
+							resource.getTag(), resource.getTemplateID())) {
+				visible = true;
+				this.setVisibleDeep(resource, visible);
+			} else {
+				// Even if the top level component isn't visible, its children
+				// might be. So we check.
+				for (Resource child : resource.getChildren()) {
+					visible = setVisibility(child) || visible;
+				}
+				this.resourcesToPanels.get(resource).setVisible(visible);
+			}
+
+			return visible;
+		}
+
+		private void setVisibleDeep(Resource resource, boolean visible) {
+			this.resourcesToPanels.get(resource).setVisible(visible);
+
+			for (Resource child : resource.getChildren()) {
+				this.setVisibleDeep(child, visible);
+			}
+		}
 
 		/**
 		 * Creates a new game object container with the passed in name and
@@ -504,28 +506,8 @@ class ResourceTree extends JPanel {
 					this.container.add(newPanel, ++previousIndex);
 				} else
 					previousIndex = GUIOp.getComponentIndex(panel);
-			}
 
-			final Collection<Entry<Resource, JPanel>> entrySet;
-
-			// Needs to be a new set to avoid concurrent modifications.
-			entrySet = new HashSet<Entry<Resource, JPanel>>(
-					this.resourcesToPanels.entrySet());
-
-			for (Entry<Resource, JPanel> entry : entrySet) {
-				final Resource resource = entry.getKey();
-				final JPanel panel = entry.getValue();
-
-				// Check if the resource still exists
-				if (resources.contains(resource)) {
-					// Make visibility match search text
-					panel.setVisible(ResourceTree.this
-							.matchesSearchText(resource));
-				} else {
-					// Remove any that no longer exist in the model
-					this.container.remove(panel);
-					this.resourcesToPanels.remove(resource);
-				}
+				this.setVisibility(resource);
 			}
 
 			this.revalidate();
@@ -805,7 +787,7 @@ class ResourceTree extends JPanel {
 	}
 
 	/**
-	 * Returns the currently sleected resource
+	 * Returns the currently selected resource
 	 * 
 	 * @return
 	 */
