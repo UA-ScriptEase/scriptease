@@ -1,9 +1,11 @@
 package scriptease.gui.SEGraph.models;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 
@@ -23,6 +25,33 @@ public class StoryNodeGraphModel extends SEGraphModel<StoryNode> {
 		super(storyNode);
 	}
 
+	@Override
+	public boolean isGroup(StoryNode node)
+	{	
+		return node instanceof StoryGroup;
+	}
+	
+	@Override
+	public Collection<StoryNode> getGroupMembers(StoryNode node){
+		Collection<StoryNode> groupMembers = new ArrayList<StoryNode>();
+		if (isGroup(node)){
+			StoryGroup group = (StoryGroup) node;
+			groupMembers = (Collection<StoryNode>) group.getAllStoryNodes();
+		}
+		return groupMembers;
+	}
+	
+	@Override
+	public Collection<StoryPoint> getSubGroupMembers(StoryNode node){
+
+		Collection<StoryPoint> subGroupMembers = new ArrayList<StoryPoint>();
+		if (isGroup(node)){
+			StoryGroup group = (StoryGroup) node;
+			subGroupMembers =  group.getAllStoryPoints();
+		}
+		return subGroupMembers;
+	}
+	
 	@Override
 	public StoryNode createNewNode() {
 		return new StoryPoint("");

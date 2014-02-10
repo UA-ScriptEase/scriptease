@@ -113,7 +113,7 @@ public class StoryComponentPanelFactory {
 					panel, new StoryComponentPanelJListObserver() {									
 						@Override
 						public void componentSelected(StoryComponent component) {
-							//Check to see if our component is selected, and if so draw a green border, else draw a normal gray one.
+							//Check to see if our component is selected, and if so draw a red border, else draw a normal gray one.
 							//Note that we currently can't get .equals() to work with StoryComponents, so this text comparison is an ugly
 							//way of doing the check we want.  
 							final Collection<StoryComponentPanel> selectedPanels = LibraryPanel
@@ -128,7 +128,7 @@ public class StoryComponentPanelFactory {
 							if (selectedTexts.contains(panel
 									.getStoryComponent().getDisplayText())) {
 								panel.setBorder(BorderFactory.createLineBorder(
-										Color.GREEN, 2));
+										ScriptEaseUI.SE_RED, 2));
 							} else {
 								panel.setBorder(BorderFactory.createLineBorder(
 										Color.LIGHT_GRAY, 1));
@@ -480,17 +480,24 @@ public class StoryComponentPanelFactory {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
 				final String tutorialUri = "https://sites.google.com/a/ualberta.ca/scriptease/development/scriptease2/tutorials";
-				final String tutorialText = "Click here to go to find tutorials and other information on the ScriptEase II web site.";
+				final String tutorialText = "Click here to access tutorials and other information on the ScriptEase II web site.";
 				final String welcomeText = "Welcome to ScriptEase II!";
-				final String getStartedText = "Add some nodes to the start node to get started. If you don't know how, go to the help menu for help.";
+				final String getStartedText = "Add some nodes to the start node to get started. If you don't know how, use the help menu.";
+				final String noAddText = "No Causes can be added to the Start Story Point.  Please select a different Story Point.";
 				final int fontSize = 18;
 
 				// Add an expansion button
 				final JPanel mainPanel;
 				final JLabel welcomeLabel = new JLabel(welcomeText);
 				final JLabel getStartedLabel = new JLabel(getStartedText);
+				final JLabel noAddLabel = new JLabel(noAddText);
 				final JButton tutorialButton = ComponentFactory
 						.buildLinkButton(tutorialUri, tutorialText);
+
+				GUIOp.resizeFont(fontSize, welcomeLabel);
+				GUIOp.resizeFont(fontSize, getStartedLabel);
+				GUIOp.resizeFont(fontSize, tutorialButton);
+				GUIOp.resizeFont(fontSize, noAddLabel);
 
 				mainPanel = new JPanel();
 
@@ -498,19 +505,19 @@ public class StoryComponentPanelFactory {
 
 				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
-
-				if (storyPoint.isRoot()) {
+								
+				if (storyPoint.isRoot() && storyPoint.getSuccessors().size() == 0) {
 					mainPanel.setLayout(new BoxLayout(mainPanel,
 							BoxLayout.PAGE_AXIS));
-
-					GUIOp.resizeFont(fontSize, welcomeLabel);
-					GUIOp.resizeFont(fontSize, getStartedLabel);
-					GUIOp.resizeFont(fontSize, tutorialButton);
 
 					mainPanel.add(welcomeLabel);
 					mainPanel.add(getStartedLabel);
 					mainPanel.add(tutorialButton);
 
+				} else if (storyPoint.isRoot()){
+					mainPanel.setLayout(new BoxLayout(mainPanel,
+							BoxLayout.PAGE_AXIS));
+					mainPanel.add(noAddLabel);
 				} else {
 					// Add the children panels
 					addChildrenPanels(storyPoint, panel);

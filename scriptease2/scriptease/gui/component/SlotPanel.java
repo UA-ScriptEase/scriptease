@@ -1,6 +1,5 @@
 package scriptease.gui.component;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
@@ -18,6 +17,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.transfer.SlotPanelTransferHandler;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -95,7 +95,7 @@ public class SlotPanel extends JPanel {
 			public void processResource(KnowItBindingResource constant) {
 				if (constant.getValue().equals(selected)) {
 					SlotPanel.this.setBorder(BorderFactory.createLineBorder(
-							Color.GREEN, 2));
+							ScriptEaseUI.SE_RED, 2));
 				} else {
 					this.defaultProcess(constant);
 				}

@@ -39,8 +39,36 @@ public abstract class SEGraphModel<E> {
 		
 		this.recalculateDepthMap();
 	}
+	
+	
+	/**
+	 * Returns if the node is a group.  Any sort of group classes should override this to return true.
+	 * @param node
+	 * @return
+	 */
+	public boolean isGroup(E node){
+		return false;
+	}
 
 	/**
+	 * Returns the members of the group represented by the node.
+	 * @param node
+	 * @return
+	 */
+	public Collection<E> getGroupMembers(E node){
+		return new ArrayList<E>();
+	}
+	
+	/**
+	 * Returns the members of the group represented by the node and all subgroups
+	 * @param node
+	 * @return
+	 */
+	public Collection<? extends E> getSubGroupMembers(E node){
+		return new ArrayList<E>();
+	}
+	
+	/**s
 	 * Creates a new node.
 	 * 
 	 * @return the new node

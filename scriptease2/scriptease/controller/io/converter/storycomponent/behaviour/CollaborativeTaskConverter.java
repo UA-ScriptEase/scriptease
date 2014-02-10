@@ -20,20 +20,22 @@ public class CollaborativeTaskConverter extends TaskConverter {
 			final MarshallingContext context) {
 		final CollaborativeTask task = (CollaborativeTask) source;
 
-		super.marshal(source, writer, context);
-
 		XMLAttribute.INITIATE.write(writer, task.getInitiatorName());
 		XMLAttribute.RESPOND.write(writer, task.getResponderName());
+
+		super.marshal(source, writer, context);
+
 	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final CollaborativeTask collaborativeTask = (CollaborativeTask) super
-				.unmarshal(reader, context);
-
+		
 		final String initiatorName = XMLAttribute.INITIATE.read(reader);
 		final String responderName = XMLAttribute.RESPOND.read(reader);
+
+		final CollaborativeTask collaborativeTask = (CollaborativeTask) super
+				.unmarshal(reader, context);
 
 		collaborativeTask.setInitiatorName(initiatorName);
 		collaborativeTask.setResponderName(responderName);

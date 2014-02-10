@@ -128,17 +128,13 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				final JList componentList;
-				final StoryComponentPanel componentPanel;
-				final StoryComponent component;
-				final Object selected;
 				final Object[] selectedValues;
 				StoryComponentPanel panel;
 				StoryComponent selectedComponent;
 				componentList = (JList) e.getSource();
-				selected = componentList.getSelectedValue();
 				
 				//When a user clicks, ctrl-clicks, shift-clicks, etc in the Library panel, we want to notify observers of all the 
-				//selected storycomponentpanels so they do not lose their selected border.
+				//selected StoryComponentPanels so they do not lose their selected border.
 				selectedValues = componentList.getSelectedValues();
 				for (Object selectedValue : selectedValues) {
 					if (selectedValue instanceof StoryComponentPanel) {

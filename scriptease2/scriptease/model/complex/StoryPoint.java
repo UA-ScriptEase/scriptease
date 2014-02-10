@@ -176,11 +176,13 @@ public class StoryPoint extends StoryNode {
 	}
 	
 	/**
-	 * Checks if the story point is the root node by checking if it has no parents.
+	 * Checks if the story point is the root node by checking if it has no parents 
+	 * and if it has no owner component (I.e. it's not in a group)
+	 * We can do this because the start node can't be in a group.
 	 * @return
 	 */
 	public boolean isRoot() {
-		return this.getParents().isEmpty();
+		return this.getParents().isEmpty() && this.ownerComponent == null;
 	}
 		
 }

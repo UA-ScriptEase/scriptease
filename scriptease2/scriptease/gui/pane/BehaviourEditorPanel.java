@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.border.EtchedBorder;
 
 import scriptease.gui.SEGraph.SEGraph;
@@ -231,8 +232,20 @@ public class BehaviourEditorPanel extends JPanel {
 					responderPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
 
-					taskPanel.add(initiatorPanelTree);
-					taskPanel.add(responderPanelTree);
+					taskPanel.setLayout(new BoxLayout(taskPanel,BoxLayout.PAGE_AXIS));
+
+					JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,initiatorPanelTree, responderPanelTree);
+					splitPane.setResizeWeight(0.5);
+					taskPanel.setLayout(new BoxLayout(taskPanel,BoxLayout.X_AXIS));
+					
+					//Provide minimum sizes for the two components in the split pane
+					//Should be enough space for each panel to have 3 effects event at low resolutions.
+					Dimension minimumSize = new Dimension(500, 300);
+					splitPane.setMinimumSize(minimumSize);
+					splitPane.setPreferredSize(minimumSize);
+					
+					taskPanel.add(splitPane);
+					
 				}
 
 				layoutPanel.add(taskPanel);

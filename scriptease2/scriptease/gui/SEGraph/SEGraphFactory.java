@@ -137,6 +137,7 @@ public class SEGraphFactory {
 		return graph;
 	}
 
+	
 	/**
 	 * Builds a DialogueLine graph based on the passed in DialogueLine.
 	 * 

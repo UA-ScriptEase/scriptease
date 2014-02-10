@@ -414,7 +414,7 @@ public class StoryComponentPanelManager {
 				protected void defaultProcess(StoryComponent component) {
 					if(isActive){
 						panel.setBorder(BorderFactory
-								.createLineBorder(Color.GREEN, 2));		
+								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
 					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
 						panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 					}
@@ -423,7 +423,7 @@ public class StoryComponentPanelManager {
 				public void processCauseIt(CauseIt causeIt) {
 					if(isActive){
 						panel.setBorder(BorderFactory
-								.createLineBorder(Color.GREEN, 2));		
+								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
 					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
 						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					}
@@ -432,7 +432,7 @@ public class StoryComponentPanelManager {
 				public void processControlIt(ControlIt controlIt) {
 					if(isActive){
 						panel.setBorder(BorderFactory
-								.createLineBorder(Color.GREEN, 2));		
+								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
 					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
 						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					}
@@ -441,7 +441,7 @@ public class StoryComponentPanelManager {
 				public void processAskIt(AskIt askIt) {
 					if(isActive){
 						panel.setBorder(BorderFactory
-								.createLineBorder(Color.GREEN, 2));		
+								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
 					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
 						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					}

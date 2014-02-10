@@ -717,7 +717,7 @@ class ResourceTree extends JPanel {
 					} else {
 						panel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 						panel.setBorder(BorderFactory.createLineBorder(
-								Color.GREEN, 2));
+								ScriptEaseUI.SE_RED, 2));
 
 					}
 				}
