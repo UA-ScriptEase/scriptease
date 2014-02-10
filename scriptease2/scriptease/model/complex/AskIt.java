@@ -11,6 +11,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.translator.io.model.GameType;
 
 /**
@@ -87,6 +88,8 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(ControlIt.class);
 		ifElseValidTypes.add(PickIt.class);
 		ifElseValidTypes.add(ActivityIt.class);
+		ifElseValidTypes.add(Behaviour.class);
+
 
 		// now we can Initialize the StoryComponentContainer
 		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);
