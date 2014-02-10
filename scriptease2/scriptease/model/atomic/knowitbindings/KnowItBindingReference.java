@@ -108,9 +108,9 @@ public class KnowItBindingReference extends KnowItBinding {
 				// Special case for behaviour initiators and behaviour responder
 				// implicits - since the effects that contain these implicits
 				// are not children to anything, scope visitor would not work.
-				if (thisValue.getDisplayText().equals("Behaviour Initiator")
+				if (thisValue.getDisplayText().equals("Initiator")
 						|| thisValue.getDisplayText().equals(
-								"Behaviour Responder"))
+								"Responder"))
 					return true;
 
 				for (KnowIt scope : ScopeVisitor.getScope(knowIt))

@@ -8,8 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,21 +24,22 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 import scriptease.ScriptEase;
 import scriptease.controller.observer.CodeBlockPanelObserver;
-import scriptease.controller.observer.SEFocusObserver;
+import scriptease.controller.observer.ParameterPanelObserver;
 import scriptease.controller.observer.SetEffectObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.SEFocusManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.SEGraph.SEGraphFactory;
 import scriptease.gui.SEGraph.observers.SEGraphAdapter;
+import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.libraryeditor.codeblocks.CodeBlockPanel;
@@ -49,10 +48,12 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockReference;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
@@ -61,8 +62,8 @@ import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.translator.io.model.SimpleResource;
+import scriptease.util.ListOp;
 import scriptease.util.StringOp;
-import sun.font.Decoration;
 
 /**
  * A factory used to create a library editor. This is a singleton class, so use
@@ -324,21 +325,21 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 180;
+				dimension.height = 245;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMaximumSize() {
 				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 180;
+				dimension.height = 245;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMinimumSize() {
 				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 180;
+				dimension.height = 245;
 				return dimension;
 			}
 		};
@@ -346,46 +347,10 @@ public class LibraryEditorPanelFactory {
 		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 
+		graphPanel.add(graph.getToolBar());
 		graphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
 		return graphPanel;
-	}
-
-	@SuppressWarnings("serial")
-	private JPanel buildBehaviourToolbarPanel(SEGraph<Task> graph) {
-		final JPanel toolbarPanel;
-
-		toolbarPanel = new JPanel() {
-			@Override
-			public Dimension getPreferredSize() {
-				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 80;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMaximumSize() {
-				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 80;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMinimumSize() {
-				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 80;
-				return dimension;
-			}
-		};
-
-		toolbarPanel.setBorder(BorderFactory
-				.createTitledBorder("Graph Toolbar"));
-		toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-		toolbarPanel.add(graph.getToolBar());
-		graph.getToolBar().setHorizontal();
-
-		return toolbarPanel;
 	}
 
 	private SEGraph<Task> buildBehaviourGraph(final Behaviour behaviour,
@@ -459,7 +424,8 @@ public class LibraryEditorPanelFactory {
 
 					final StoryComponentPanelTree initiatorPanelTree;
 					final StoryComponentPanelTree responderPanelTree;
-
+					
+					
 					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
 							.getInstance().buildStoryComponentPanel(
 									((CollaborativeTask) task)
@@ -479,14 +445,26 @@ public class LibraryEditorPanelFactory {
 							.createEmptyBorder());
 					responderPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
+					
 
-					taskPanel.add(initiatorPanelTree);
-					taskPanel.add(responderPanelTree);
+					JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,initiatorPanelTree, responderPanelTree);
+					splitPane.setResizeWeight(0.5);
+					taskPanel.setLayout(new BoxLayout(taskPanel,BoxLayout.X_AXIS));
+					
+					//Provide minimum sizes for the two components in the split pane
+					//Should be enough space for each panel to have 3 effects event at low resolutions.
+					Dimension minimumSize = new Dimension(500, 300);
+					splitPane.setMinimumSize(minimumSize);
+					splitPane.setPreferredSize(minimumSize);
+					
+					taskPanel.add(splitPane);
+
 				}
 
 				behaviourPanel.add(taskPanel);
 				behaviourPanel.repaint();
 				behaviourPanel.revalidate();
+				
 			}
 
 			@Override
@@ -503,41 +481,56 @@ public class LibraryEditorPanelFactory {
 		return graph;
 	}
 
-	@SuppressWarnings("serial")
-	private JPanel buildBehaviourImplicitPanel(List<KnowIt> implicitList) {
+	private JPanel buildBehaviourImplicitPanel(final List<KnowIt> implicitList) {
 		final JPanel implicitPanel;
-
-		implicitPanel = new JPanel() {
-			@Override
-			public Dimension getPreferredSize() {
-				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 60;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMaximumSize() {
-				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 60;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMinimumSize() {
-				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 60;
-				return dimension;
-			}
-		};
-
+		
+		implicitPanel = new JPanel();
 		implicitPanel.setBorder(BorderFactory.createTitledBorder("Implicits"));
-		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		implicitPanel.setLayout(new BoxLayout(implicitPanel, BoxLayout.Y_AXIS ));
+				
+		for (final KnowIt implicit : implicitList) {
+			final BindingWidget bindingWidget = ScriptWidgetFactory.buildBindingWidget(implicit, false);
+			final JPanel subPanel = new JPanel();
+			final ParameterPanel parameterPanel;
 
-		for (KnowIt implicit : implicitList) {
-			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(implicit,
-					false));
-		}
+			subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			subPanel.add(bindingWidget);
+			
+		    parameterPanel = buildParameterPanel(implicit);
+			parameterPanel.addListener(new ParameterPanelObserver (){
+				@Override
+				public void parameterPanelChanged() {
+					
+					/**
+					 * So this chunk is to make sure that the binding's code block itself has it's types updated in addition
+					 * to just the KnowIt (which is not done by the ParameterPanel, but is what's sued when drawing the BindingWidget). 
+					 */
+					
+					final KnowItBinding implicitBinding = implicit.getBinding();
+					final ScriptIt implicitBindingValue = (ScriptIt)implicitBinding.getValue();
+					final CodeBlockReference implicitCodeBlock = (CodeBlockReference) ListOp.getFirst(implicitBindingValue.getCodeBlocks());
+					
+					implicitCodeBlock.setTypesByName(implicit.getTypes());
+					
+					BindingWidget updatedWidget = ScriptWidgetFactory.buildBindingWidget(implicit, false);
+					subPanel.removeAll();
+					subPanel.add(updatedWidget);
+					subPanel.add(parameterPanel);
+					
+				}
+			});
+			subPanel.add(parameterPanel, false);
+			
 
+			implicitPanel.add(subPanel, false);
+		} 
+
+
+		final Dimension dimension = implicitPanel.getPreferredSize();
+		dimension.height = implicitList.size() * 90;
+		dimension.width = implicitPanel.getMaximumSize().width;
+		implicitPanel.setMaximumSize(dimension);
+		
 		return implicitPanel;
 	}
 
@@ -574,8 +567,7 @@ public class LibraryEditorPanelFactory {
 			behaviour.getMainCodeBlock().addParameter(priority);
 		}
 
-		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
-		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
+		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));		
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph));
 		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
@@ -629,7 +621,6 @@ public class LibraryEditorPanelFactory {
 
 		behaviourPanel
 				.add(this.buildCollaborativeBehaviourNamePanel(behaviour));
-		behaviourPanel.add(this.buildBehaviourToolbarPanel(graph));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
 				graph));
 		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
@@ -1197,5 +1188,17 @@ public class LibraryEditorPanelFactory {
 	public ParameterPanel buildParameterPanel(ScriptIt scriptIt,
 			CodeBlock codeBlock, KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
+	}
+	
+	/**
+	 * Builds a parameter panel for behaviour implicits.
+	 * 
+	 * @param scriptIt
+	 * @param codeBlock
+	 * @param knowIt
+	 * @return
+	 */
+	public ParameterPanel buildParameterPanel(KnowIt knowIt) {
+		return new ParameterPanel(knowIt);
 	}
 }

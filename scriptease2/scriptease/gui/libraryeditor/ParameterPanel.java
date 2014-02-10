@@ -66,6 +66,8 @@ public class ParameterPanel extends JPanel {
 
 	private final KnowIt knowIt;
 
+	private ArrayList<String> selectedTypes = new ArrayList<String>();
+	
 	/**
 	 * Creates a new ParameterComponent with the passed in KnowIt parameter.
 	 */
@@ -73,7 +75,14 @@ public class ParameterPanel extends JPanel {
 			final KnowIt knowIt) {
 		this(scriptIt, codeBlock, knowIt, true);
 	}
-
+	
+	/**
+	 * Creates a new ParameterPanel with just the KnowIt, used for behaviour implicits. 
+	 */
+	public ParameterPanel(final KnowIt knowIt){
+		this(null, null, knowIt, false);
+	}
+	
 	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
 			final KnowIt knowIt, boolean removable) {
 		super(new FlowLayout(FlowLayout.LEADING));
@@ -138,12 +147,16 @@ public class ParameterPanel extends JPanel {
 					defaultTypeBox.addItem(type);
 				}
 
+				
+				
 				defaultTypeBox.setSelectedItem(initialDefaultType);
 
 				defaultTypeBox.revalidate();
 
-				scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-						StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
+				if (scriptIt != null){
+					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
+							StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));					
+				}
 
 				notifyChange();
 			}
@@ -168,6 +181,7 @@ public class ParameterPanel extends JPanel {
 					for (String type : types) {
 						if (!type.equals(selectedType))
 							newTypeList.add(type);
+							selectedTypes.add(type);
 					}
 					knowIt.setTypesByName(newTypeList);
 					updateBindingConstantComponent(bindingConstantComponent);
@@ -175,7 +189,7 @@ public class ParameterPanel extends JPanel {
 			}
 		});
 
-		if (!this.isSubjectInCause(scriptIt, codeBlock)) {
+		if ((scriptIt != null && codeBlock != null ) && !this.isSubjectInCause(scriptIt, codeBlock)) {
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -194,6 +208,7 @@ public class ParameterPanel extends JPanel {
 
 		defaultTypeBoxPanel.add(new JLabel("First Type:"));
 		defaultTypeBoxPanel.add(defaultTypeBox);
+
 		bindingPanel.add(new JLabel("Default Value:"));
 		bindingPanel.add(bindingConstantComponent);
 
@@ -204,12 +219,17 @@ public class ParameterPanel extends JPanel {
 		bindingPanel.setPreferredSize(new Dimension(350, bindingPanel
 				.getPreferredSize().height));
 
-		this.add(this.buildNameField(scriptIt, codeBlock));
+		if (scriptIt != null && codeBlock != null) {
+			this.add(this.buildNameField(scriptIt, codeBlock));
+		}
+		this.getPreferredSize();
 		this.add(typesButton);
 		this.add(defaultTypeBoxPanel);
-		this.add(bindingPanel);
-		this.add(Box.createHorizontalGlue());
-		this.add(deleteButton);
+		if (scriptIt != null && codeBlock != null){
+			this.add(bindingPanel);
+			this.add(Box.createHorizontalGlue());
+			this.add(deleteButton);
+		}
 	}
 
 	/**
@@ -498,5 +518,21 @@ public class ParameterPanel extends JPanel {
 				.getObservers()) {
 			observer.parameterPanelChanged();
 		}
+	}
+	
+	/**
+	 * Returns the list of types for the current KnowIt
+	 * @return
+	 */
+	public ArrayList<String> getSelectedTypes(){
+		return this.selectedTypes;
+	}
+	
+	/**
+	 * returns the KnowIt that the ParameterPanel modifies.
+	 * @return
+	 */
+	public KnowIt getKnowIt(){
+		return this.knowIt;
 	}
 }

@@ -130,6 +130,25 @@ public class StoryGroup extends StoryNode {
 
 		return storyPoints;
 	}
+	
+	/**
+	 * Gets all the story nodes in this group.
+	 * 
+	 * @return
+	 */
+	public Collection<StoryNode> getAllStoryNodes() {
+		return this.getAllStoryNodes(this);
+	}
+	
+	private Collection<StoryNode> getAllStoryNodes(StoryGroup group){
+		final Collection<StoryNode> storyNodes = new HashSet<StoryNode>();
+		for (StoryComponent child : group.getChildren()) {
+			if (child instanceof StoryNode)
+				storyNodes.add((StoryNode) child);
+		}
+
+		return storyNodes;
+	}
 
 	/**
 	 * Returns the SEGraph associated with this group.

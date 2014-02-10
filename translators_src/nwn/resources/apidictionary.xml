@@ -3914,7 +3914,7 @@
       <Parameters/>
       <Implicits>
         <KnowIt>
-          <Name>Behaviour Initiator</Name>
+          <Name>Initiator</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
@@ -3923,14 +3923,14 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Behaviour Initiator</Name>
+              <Name>Initiator</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Behaviour Initiator</Name>
+                  <Name>Initiator</Name>
                   <Visible>true</Visible>
                   <Enabled>true</Enabled>
                   <Labels/>
@@ -3945,7 +3945,7 @@
           </Binding>
         </KnowIt>
         <KnowIt>
-          <Name>Behaviour Responder</Name>
+          <Name>Responder</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
@@ -3954,14 +3954,14 @@
           </Types>
           <Binding flavour="function">
             <ScriptIt>
-              <Name>Behaviour Responder</Name>
+              <Name>Responder</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
               <Labels/>
               <Children/>
               <CodeBlocks>
                 <CodeBlockSource>
-                  <Name>Behaviour Responder</Name>
+                  <Name>Responder</Name>
                   <Visible>true</Visible>
                   <Enabled>true</Enabled>
                   <Labels/>
@@ -28774,7 +28774,7 @@
                           </Types>
                           <Binding flavour="reference">
                             <KnowIt>
-                              <Name>Behaviour Initiator</Name>
+                              <Name>Initiator</Name>
                               <Visible>true</Visible>
                               <Enabled>true</Enabled>
                               <Labels/>
@@ -28783,14 +28783,14 @@
                               </Types>
                               <Binding flavour="function">
                                 <ScriptIt>
-                                  <Name>Behaviour Initiator</Name>
+                                  <Name>Initiator</Name>
                                   <Visible>true</Visible>
                                   <Enabled>true</Enabled>
                                   <Labels/>
                                   <Children/>
                                   <CodeBlocks>
                                     <CodeBlockReference library="DefaultNWNLibrary">
-                                      <Name>Behaviour Initiator</Name>
+                                      <Name>Initiator</Name>
                                       <Visible>true</Visible>
                                       <Enabled>true</Enabled>
                                       <Labels/>

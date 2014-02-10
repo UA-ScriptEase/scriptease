@@ -716,7 +716,34 @@ public class SEGraph<E> extends JComponent {
 		}
 		return component;
 	}
-
+	
+	/**
+	 * Returns whether or not the given node is a group.
+	 * @param node
+	 * @return
+	 */
+	public boolean isGroup(E node){
+		return this.model.isGroup(node);
+	}
+	
+	/**
+	 * Returns the nodes in a group if node is a group.  Otherwise returns the empty set.
+	 * @param node
+	 * @return
+	 */
+	public Collection<E> getGroupMembers (E node){
+		return this.model.getGroupMembers(node);
+	}
+	
+	/**
+	 * Get all the leaf nodes in a given node
+	 * @param node
+	 * @return
+	 */
+	public Collection<? extends E> getSubGroupMembers (E node){
+		return this.model.getSubGroupMembers(node);
+	}	
+	
 	/**
 	 * The class that handles the actual laying out of GraphNodes. The logic is
 	 * fairly basic, and should probably be updated to handle more cases.
@@ -1204,6 +1231,8 @@ public class SEGraph<E> extends JComponent {
 					graph.selectNodesUntil(node);
 
 					for (E selectedNode : graph.getSelectedNodes()) {
+					//for (E selectedNode : graph.getNodes()) {
+
 						graph.renderer.reconfigureAppearance(
 								graph.nodesToComponents.getValue(selectedNode),
 								selectedNode);
