@@ -308,6 +308,63 @@ public class StringOp {
 	}
 
 	/**
+	 * Returns whether the word is contained in container, regardless of case.
+	 * 
+	 * @param container
+	 * @param word
+	 * @return
+	 */
+	public static boolean contains(String container, String word) {
+		return StringOp.exists(word) && StringOp.exists(container)
+				&& container.toUpperCase().contains(word.toUpperCase());
+	}
+
+	/**
+	 * Returns whether the container contains one of the passed in words. Beware
+	 * that this method does not separate words based on spaces, so "one dog"
+	 * will not be contained in "one blue dog". This method is null safe. Also
+	 * see {@link #foundIn(String, String...)} for a similar method.
+	 * 
+	 * 
+	 * @see StringOp#foundIn(String, String...)
+	 * @param container
+	 * @param words
+	 * @return
+	 */
+	public static boolean containsOne(String container, String... words) {
+		if (StringOp.exists(container)) {
+			final String ucContainer = container.toUpperCase();
+			for (String word : words) {
+				if (StringOp.exists(word)
+						&& ucContainer.contains(word.toUpperCase()))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns true if the word is found in the passed in word. This method is
+	 * null safe. Also see {@link #containsOne(String, String...)} for a similar
+	 * method.
+	 * 
+	 * @param word
+	 * @param containers
+	 * @return
+	 */
+	public static boolean foundIn(String word, String... containers) {
+		if (StringOp.exists(word)) {
+			final String ucWord = word.toUpperCase();
+			for (String container : containers) {
+				if (StringOp.exists(container)
+						&& container.toUpperCase().contains(ucWord))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Returns whether a string does not equal null and is not empty. Cuts down
 	 * on some code we have everywhere and reduces the chance of programmer
 	 * error.
