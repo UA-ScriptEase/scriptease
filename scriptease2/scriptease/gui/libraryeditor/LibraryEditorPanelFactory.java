@@ -130,16 +130,19 @@ public class LibraryEditorPanelFactory {
 			// Rebuilds the implicit panel and StoryComponentPanelTree when a
 			// parameter has changed
 			@Override
-			public void codeBlockPanelChanged() {
+			public void codeBlockPanelChanged() {				
 				final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
 						.getInstance().buildStoryComponentPanel(activityIt);
 
+				//Should always be able to remove the tree regardless
 				activityPanel.remove(2);
 				activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
-				activityPanel.remove(3);
-				activityPanel.add(
-						new StoryComponentPanelTree(newTransferPanel), 3);
 
+				//Checking if getComponent(3) is null results in an out of bounds exception so we have to make sure we list is big enough before doing our null check
+				if(activityPanel.getComponentCount() > 3 && activityPanel.getComponent(3) != null){
+					activityPanel.remove(3);
+				}
+				activityPanel.add(new StoryComponentPanelTree(newTransferPanel), 3);
 				activityPanel.repaint();
 				activityPanel.revalidate();
 			}
@@ -149,13 +152,19 @@ public class LibraryEditorPanelFactory {
 				new StoryComponentObserver() {
 
 					@Override
-					public void componentChanged(StoryComponentEvent event) {
-						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME) {
+					public void componentChanged(StoryComponentEvent event) {						
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME || event.getType() == StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE) {
 							final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
 									.getInstance().buildStoryComponentPanel(
 											activityIt);
 
-							activityPanel.remove(3);
+							//Should always be able to remove the tree regardless
+							activityPanel.remove(2);
+							activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
+							
+							if(activityPanel.getComponent(3) != null){
+								activityPanel.remove(3);
+							}
 							activityPanel.add(new StoryComponentPanelTree(
 									newTransferPanel), 3);
 
@@ -199,10 +208,12 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
+		
+		
 		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		final CodeBlock codeBlock = activityIt.getMainCodeBlock();
-
+		
 		for (KnowIt parameter : codeBlock.getParameters()) {
 			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,
 					false));
@@ -505,7 +516,7 @@ public class LibraryEditorPanelFactory {
 					 * So this chunk is to make sure that the binding's code block itself has it's types updated in addition
 					 * to just the KnowIt (which is not done by the ParameterPanel, but is what's sued when drawing the BindingWidget). 
 					 */
-					
+										
 					final KnowItBinding implicitBinding = implicit.getBinding();
 					final ScriptIt implicitBindingValue = (ScriptIt)implicitBinding.getValue();
 					final CodeBlockReference implicitCodeBlock = (CodeBlockReference) ListOp.getFirst(implicitBindingValue.getCodeBlocks());
