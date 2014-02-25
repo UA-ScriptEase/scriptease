@@ -107,6 +107,22 @@ public class NetworkHandler extends Handler {
 	}
 
 	/**
+	 * Sends a report to the server.
+	 * 
+	 * @param comment
+	 *            the user comment taken from ExceptionDialog
+	 * @see ExceptionDialog
+	 */
+	public void sendReport(String comment, String log) {
+		final String report;
+
+		this.connect();
+		report = this.generateReport(comment, log);
+
+		this.sendToServer(report);
+	}
+	
+	/**
 	 * Connects to the server, creates a log and sends it to Httpclient.
 	 * serverlog.cgi is used server side to handle reporting.
 	 * 

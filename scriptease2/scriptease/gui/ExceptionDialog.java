@@ -193,9 +193,13 @@ public class ExceptionDialog extends JDialog {
 						.equals("Report"))
 					ExceptionDialog.this.showCommentBox();
 				else {
-
+					String trace = "";
+					if(ExceptionDialog.this.exceptionStackTrace != null){
+						for (StackTraceElement element : ExceptionDialog.this.exceptionStackTrace)
+							trace += element + "\n";
+					}
 					NetworkHandler.getInstance().sendReport(
-							ExceptionDialog.this.commentText.getText());
+							ExceptionDialog.this.commentText.getText(), trace);
 					ExceptionDialog.this.reportButton.setText("Report");
 					ExceptionDialog.this.setVisible(false);
 					ExceptionDialog.this.dispose();
