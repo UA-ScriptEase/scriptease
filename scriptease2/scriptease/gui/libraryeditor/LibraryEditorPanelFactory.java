@@ -206,9 +206,7 @@ public class LibraryEditorPanelFactory {
 				dimension.height = 40;
 				return dimension;
 			}
-		};
-
-		
+		};		
 		
 		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
