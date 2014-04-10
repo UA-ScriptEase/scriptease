@@ -241,6 +241,8 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 	private void addStoryComponent(StoryComponent component,
 			DefaultListModel listModel) {
+		listModel.removeElement(noResultsPanel);
+
 		if ((this.filterRule == null)
 				|| ((this.filterRule != null) && (this.filterRule
 						.isAcceptable(component)))) {
