@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListModel;
 
+import scriptease.ScriptEase;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.observer.StoryComponentPanelJListObserver;
@@ -30,6 +31,8 @@ import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.CauseIt;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.util.GUIOp;
 
 /**
@@ -183,10 +186,10 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			selectBg = ScriptEaseUI.SELECTED_COLOUR;
 		else
 			selectBg = Color.WHITE;
-
+		
 		this.setSelectionBackground(selectBg);
 		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-
+		
 		this.setDragEnabled(true);
 		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
@@ -255,9 +258,9 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 					newPanel = StoryComponentPanelFactory.getInstance()
 							.buildStoryComponentPanel(component);
-
+					
 					panelMap.put(component, newPanel);
-
+					
 					listModel.addElement(newPanel);
 				} else {
 					listModel.addElement(panel);
@@ -403,8 +406,11 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 				valuePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1,
 						0, Color.LIGHT_GRAY));
-
-				if (isSelected && isVisible)
+			
+				if (isVisible && valueComponent.getLibrary().getReadOnly() && !isSelected 
+						&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel && !ScriptEase.DEBUG_MODE)
+					valuePanel.setBackground(ScriptEaseUI.TERTIARY_UI);
+				else if (isSelected && isVisible)
 					valuePanel.setBackground(list.getSelectionBackground());
 				else if (isSelected && !isVisible)
 					valuePanel.setBackground(Color.GRAY);

@@ -41,6 +41,7 @@
 		<xsd:attribute name="name" type="xsd:string" use="required" />
 		<xsd:attribute name="author" type="xsd:string" use="required" />
 		<xsd:attribute name="description" type="xsd:string" use="required" />
+		<xsd:attribute name="readonly" type="xsd:boolean" use="required" />
 	</xsd:complexType>
 
 	<!-- Defines a list of game Type definitions -->

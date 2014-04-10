@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 
+import scriptease.ScriptEase;
 import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;
@@ -65,15 +66,16 @@ public class SEGraphFactory {
 	 * @return
 	 */
 	public static SEGraph<DescribeItNode> buildDescribeItEditorGraph(
-			DescribeItNode start) {
+			DescribeItNode start, final boolean isEditable) {
 		final DescribeItNodeGraphModel describeItGraphModel;
 		final SEGraph<DescribeItNode> graph;
-
+		
 		describeItGraphModel = new DescribeItNodeGraphModel(start);
+		
 		graph = new SEGraph<DescribeItNode>(describeItGraphModel,
-				SelectionMode.SELECT_PATH_FROM_START, false, true);
+				SelectionMode.SELECT_PATH_FROM_START, !isEditable, true);
 
-		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph));
+		graph.setNodeRenderer(new EditableDescribeItNodeRenderer(graph, isEditable));
 		
 		graph.setBackground(ScriptEaseUI.PRIMARY_UI);
 

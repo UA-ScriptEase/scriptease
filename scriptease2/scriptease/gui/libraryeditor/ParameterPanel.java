@@ -27,6 +27,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import scriptease.ScriptEase;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.ParameterPanelObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -94,10 +95,13 @@ public class ParameterPanel extends JPanel {
 		final JComboBox defaultTypeBox;
 		final JButton deleteButton;
 		final JComponent bindingConstantComponent;
+		final JTextField nameField;
 
 		final JPanel defaultTypeBoxPanel;
 		final JPanel bindingPanel;
 
+		final boolean isEditable;
+		
 		this.observerManager = new ObserverManager<ParameterPanelObserver>();
 
 		typeAction = new TypeAction();
@@ -109,7 +113,18 @@ public class ParameterPanel extends JPanel {
 
 		defaultTypeBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		bindingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-
+		
+		//Behaviours currently use a null ScriptIt to generate their parameter panel
+		//So we have to account for that when checking read only.  When behaviours 
+		//are more implemented this will probably need to be reworked. (currently 
+		//-zturchan
+		if (scriptIt != null) {
+			isEditable = ScriptEase.DEBUG_MODE  || !scriptIt.getLibrary().getReadOnly();
+		} else {
+			isEditable = true;
+			//isEditable = ScriptEase.DEBUG_MODE;
+		}
+		
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setBackground(GUIOp.scaleColour(Color.GRAY, 1.9));
 
@@ -206,10 +221,13 @@ public class ParameterPanel extends JPanel {
 			deleteButton.setVisible(false);
 		}
 
+		
 		defaultTypeBoxPanel.add(new JLabel("First Type:"));
+		defaultTypeBox.setEnabled(isEditable);
 		defaultTypeBoxPanel.add(defaultTypeBox);
 
 		bindingPanel.add(new JLabel("Default Value:"));
+		bindingConstantComponent.setEnabled(isEditable);
 		bindingPanel.add(bindingConstantComponent);
 
 		defaultTypeBoxPanel.setPreferredSize(new Dimension(350,
@@ -219,8 +237,15 @@ public class ParameterPanel extends JPanel {
 		bindingPanel.setPreferredSize(new Dimension(350, bindingPanel
 				.getPreferredSize().height));
 
+		typesButton.setEnabled(isEditable);
+		defaultTypeBoxPanel.setEnabled(isEditable);
+		deleteButton.setEnabled(isEditable);
+		bindingPanel.setEnabled(isEditable);
+		
 		if (scriptIt != null && codeBlock != null) {
-			this.add(this.buildNameField(scriptIt, codeBlock));
+			nameField = this.buildNameField(scriptIt, codeBlock);
+			nameField.setEnabled(isEditable);
+			this.add(nameField);
 		}
 		this.getPreferredSize();
 		this.add(typesButton);
@@ -313,6 +338,7 @@ public class ParameterPanel extends JPanel {
 		final String defaultType;
 		final LibraryModel library;
 		final GUIType defaultTypeGuiType;
+		final boolean isEditable;
 
 		library = this.knowIt.getLibrary();
 
@@ -324,6 +350,8 @@ public class ParameterPanel extends JPanel {
 
 		inactiveTextField.setEnabled(false);
 
+		isEditable = ScriptEase.DEBUG_MODE || !library.getReadOnly();
+		
 		bindingConstantComponent.removeAll();
 
 		if (defaultTypeGuiType == null)
@@ -428,6 +456,7 @@ public class ParameterPanel extends JPanel {
 					}
 				});
 
+				bindingBox.setEnabled(isEditable);
 				bindingConstantComponent.add(bindingBox);
 				break;
 			default: {

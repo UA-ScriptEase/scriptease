@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import scriptease.ScriptEase;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.action.typemenus.TypeAction;
@@ -28,10 +29,12 @@ public class EditableDescribeItNodeRenderer extends
 		SEGraphNodeRenderer<DescribeItNode> {
 
 	final SEGraph<DescribeItNode> graph;
-
-	public EditableDescribeItNodeRenderer(SEGraph<DescribeItNode> graph) {
+	final boolean isEditable;
+	
+	public EditableDescribeItNodeRenderer(SEGraph<DescribeItNode> graph, final boolean isEditable) {
 		super(graph);
 		this.graph = graph;
+		this.isEditable = isEditable;
 	}
 
 	@Override
@@ -40,20 +43,21 @@ public class EditableDescribeItNodeRenderer extends
 
 		final KnowIt knowIt;
 		final JToggleButton knowItButton;
-
+		
+		
 		knowIt = node.getKnowIt();
 		knowItButton = new JToggleButton("KnowIt");
 
 		if (knowIt != null) {
 			final JButton typesButton;
 			final TypeAction typeAction;
-
+			
 			typeAction = new TypeAction();
 			typesButton = new JButton(typeAction);
 
 			typeAction.deselectAll();
 			typeAction.selectTypesByKeyword(knowIt.getTypes(), true);
-
+			
 			typeAction.setAction(new Runnable() {
 				@Override
 				public void run() {
@@ -69,14 +73,17 @@ public class EditableDescribeItNodeRenderer extends
 
 			knowItButton.setSelected(true);
 
+			knowItButton.setEnabled(this.isEditable);
+			typesButton.setEnabled(this.isEditable);
+			
 			component.add(knowItButton);
-			component.add(ScriptWidgetFactory.buildSlotPanel(knowIt, true));
+			component.add(ScriptWidgetFactory.buildSlotPanel(knowIt, this.isEditable));
 			component.add(typesButton);
 		} else {
 			final JTextField nodeNameEditor;
 			final Runnable commitText;
 
-			nodeNameEditor = new JTextField(node.getName());
+			nodeNameEditor = new JTextField(node.getName());			
 			commitText = new Runnable() {
 				@Override
 				public void run() {
@@ -87,6 +94,9 @@ public class EditableDescribeItNodeRenderer extends
 			WidgetDecorator.decorateJTextFieldForFocusEvents(nodeNameEditor,
 					commitText);
 
+			knowItButton.setEnabled(this.isEditable);
+			nodeNameEditor.setEnabled(this.isEditable);
+	
 			component.add(knowItButton);
 			component.add(nodeNameEditor);
 		}

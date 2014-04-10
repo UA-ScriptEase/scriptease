@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
+import scriptease.ScriptEase;
 import scriptease.controller.FragmentAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
@@ -53,12 +54,15 @@ import scriptease.util.GUIOp;
 public class CodeFragmentPanel extends JPanel {
 	private final CodeBlock codeBlock;
 	private final AbstractFragment fragment;
-
+	private final boolean isEditable;
+	
 	public CodeFragmentPanel(final CodeBlock codeBlock,
 			AbstractFragment fragment) {
 		this.codeBlock = codeBlock;
 		this.fragment = fragment;
 
+		isEditable = ScriptEase.DEBUG_MODE  || !codeBlock.ownerComponent.getLibrary().getReadOnly();
+		
 		this.setOpaque(true);
 		this.setBackground(Color.WHITE);
 
@@ -84,7 +88,7 @@ public class CodeFragmentPanel extends JPanel {
 					}
 				});
 
-		this.redraw();
+		this.redraw(isEditable);
 	}
 
 	public AbstractFragment getFragment() {
@@ -95,7 +99,7 @@ public class CodeFragmentPanel extends JPanel {
 		return codeBlock;
 	}
 
-	public void redraw() {
+	public void redraw(final boolean isEditable) {
 		this.removeAll();
 
 		if (this.fragment == null) {
@@ -171,14 +175,14 @@ public class CodeFragmentPanel extends JPanel {
 			@Override
 			public void processScopeFragment(ScopeFragment fragment) {
 				panel.setupPanel("Scope", ScriptEaseUI.SE_YELLOW);
-				panel.buildScopePanel(fragment);
+				panel.buildScopePanel(fragment, isEditable);
 				this.buildSubPanes(fragment);
 			}
 
 			@Override
 			public void processSeriesFragment(SeriesFragment fragment) {
 				panel.setupPanel("Series", ScriptEaseUI.SE_GREEN);
-				panel.buildSeriesPanel(fragment);
+				panel.buildSeriesPanel(fragment, isEditable);
 				this.buildSubPanes(fragment);
 			}
 
@@ -186,19 +190,19 @@ public class CodeFragmentPanel extends JPanel {
 			public void processFormatReferenceFragment(
 					FormatReferenceFragment fragment) {
 				panel.setupPanel("Format Reference", ScriptEaseUI.SE_PURPLE);
-				panel.buildTextEditorPanel(fragment);
+				panel.buildTextEditorPanel(fragment, isEditable);
 			}
 
 			@Override
 			public void processLiteralFragment(LiteralFragment fragment) {
 				panel.setupPanel("Literal", ScriptEaseUI.SE_TEAL);
-				panel.buildTextEditorPanel(fragment);
+				panel.buildTextEditorPanel(fragment, isEditable);
 			}
 
 			@Override
 			public void processSimpleDataFragment(SimpleDataFragment fragment) {
 				panel.setupPanel("Simple Data", ScriptEaseUI.SE_BLUE);
-				panel.buildSimplePanel(fragment);
+				panel.buildSimplePanel(fragment, isEditable);
 			}
 
 			public void processFormatDefinitionFragment(
@@ -233,7 +237,7 @@ public class CodeFragmentPanel extends JPanel {
 	 *            completely new ScopeFragment.
 	 * @return
 	 */
-	private void buildScopePanel(final ScopeFragment scopeFragment) {
+	private void buildScopePanel(final ScopeFragment scopeFragment, final boolean isEditable) {
 		final JLabel directiveLabel = new JLabel("Data");
 		final JLabel nameRefLabel = new JLabel("NameRef");
 
@@ -271,6 +275,9 @@ public class CodeFragmentPanel extends JPanel {
 
 		scopeComponentPanel.setOpaque(false);
 
+		directiveBox.setEnabled(isEditable);
+		nameRefField.setEnabled(isEditable);
+		
 		scopeComponentPanel.add(directiveLabel);
 		scopeComponentPanel.add(directiveBox);
 		scopeComponentPanel.add(nameRefLabel);
@@ -285,7 +292,7 @@ public class CodeFragmentPanel extends JPanel {
 	 * @param seriesFragment
 	 * @return
 	 */
-	private void buildSeriesPanel(final SeriesFragment seriesFragment) {
+	private void buildSeriesPanel(final SeriesFragment seriesFragment, final boolean isEditable) {
 		final JLabel directiveLabel = new JLabel("Data");
 		final JLabel separatorLabel = new JLabel("Separator");
 		final JLabel uniqueLabel = new JLabel("Unique");
@@ -366,6 +373,13 @@ public class CodeFragmentPanel extends JPanel {
 		seriesComponentPanel.setOpaque(false);
 		filterComponentPanel.setOpaque(false);
 
+		directiveBox.setEnabled(isEditable);
+		separatorField.setEnabled(isEditable);
+		uniqueCheckBox.setEnabled(isEditable);
+		
+		filterField.setEnabled(isEditable);
+		filterTypeBox.setEnabled(isEditable);
+		
 		seriesComponentPanel.add(directiveLabel);
 		seriesComponentPanel.add(directiveBox);
 		seriesComponentPanel.add(separatorLabel);
@@ -388,7 +402,7 @@ public class CodeFragmentPanel extends JPanel {
 	 * @param fragment
 	 * @return
 	 */
-	private void buildTextEditorPanel(final AbstractFragment fragment) {
+	private void buildTextEditorPanel(final AbstractFragment fragment, final boolean isEditable) {
 		final JTextField field;
 
 		field = new JTextField(fragment.getDirectiveText());
@@ -402,6 +416,8 @@ public class CodeFragmentPanel extends JPanel {
 			}
 		});
 
+		field.setEnabled(isEditable);
+		
 		this.add(field);
 	}
 
@@ -411,13 +427,13 @@ public class CodeFragmentPanel extends JPanel {
 	 * @param simpleFragment
 	 * @return
 	 */
-	private void buildSimplePanel(final SimpleDataFragment simpleFragment) {
+	private void buildSimplePanel(final SimpleDataFragment simpleFragment, final boolean isEditable) {
 		final JLabel directiveLabel = new JLabel("Data");
 		final JLabel legalRangeLabel = new JLabel("LegalRange");
 
 		final JComboBox directiveBox;
 		final JTextField legalRangeField;
-
+		
 		directiveBox = new JComboBox();
 		legalRangeField = new JTextField(simpleFragment.getLegalRange());
 
@@ -443,6 +459,9 @@ public class CodeFragmentPanel extends JPanel {
 					}
 				});
 
+		directiveBox.setEnabled(isEditable);
+		legalRangeField.setEnabled(isEditable);
+		
 		this.add(directiveLabel);
 		this.add(directiveBox);
 		this.add(legalRangeLabel);

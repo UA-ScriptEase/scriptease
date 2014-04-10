@@ -73,6 +73,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final Collection<GameType> gameTypes;
 	private final TypeConverter typeConverter;
 
+	private boolean readOnly;
 	private File location;
 	private Translator translator;
 	private StoryComponentContainer effectsCategory;
@@ -145,13 +146,14 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			Translator translator) {
 		super(title, author, information);
 		this.typeConverter = new TypeConverter();
-
+		
 		this.translator = translator;
 		this.modelRoot = new StoryComponentContainer(title);
 		this.slots = new ArrayList<Slot>();
 		this.gameTypes = new ArrayList<GameType>();
 		this.describeItManager = new DescribeItManager();
 		this.includeFilePaths = new ArrayList<String>();
+		this.readOnly = false;
 
 		final Collection<StoryComponentContainer> categories;
 
@@ -1057,5 +1059,21 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			}
 		}
 	}
+	
+	/**
+	 * Returns the read only value of the library
+	 * 
+	 */
+	public boolean getReadOnly(){
+		return this.readOnly;
+	}
 
+	/**
+	 * Sets the read only value of the library
+	 * @param read
+	 */
+	public void setReadOnly(boolean read){
+		this.readOnly = read;
+	}
+	
 }

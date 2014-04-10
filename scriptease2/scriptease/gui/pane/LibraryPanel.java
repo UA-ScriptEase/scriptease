@@ -124,7 +124,7 @@ public class LibraryPanel extends JTabbedPane {
 			@Override
 			public void modelChanged(LibraryModel changed, LibraryEvent event) {
 				final StoryComponent storyComponent = event.getSource();
-
+				
 				if (event.getEventType() == LibraryEvent.Type.CHANGE) {
 					updateElement(storyComponent);
 				} else if (event.getEventType() == LibraryEvent.Type.ADDITION) {
@@ -522,6 +522,8 @@ public class LibraryPanel extends JTabbedPane {
 				hideInvisible = false;
 				libraries.add(LibraryModel.getCommonLibrary());
 				libraries.add((LibraryModel) model);
+				//Adds the default library for use but not editing.
+				libraries.add(translator.getLibrary());
 			} else {
 				hideInvisible = true;
 				libraries.addAll(((StoryModel) model).getLibraries());

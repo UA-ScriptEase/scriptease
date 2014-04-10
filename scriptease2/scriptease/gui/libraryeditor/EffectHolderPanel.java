@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import scriptease.ScriptEase;
 import scriptease.controller.observer.SetEffectObserver;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
@@ -84,9 +85,12 @@ public class EffectHolderPanel extends JPanel {
 
 		final JPanel panel;
 		final JButton removeEffectButton;
-
+		final boolean isEditable;
+		
 		removeEffectButton = ComponentFactory.buildFlatButton(
 				ScriptEaseUI.SE_BURGUNDY, "Remove Effect");
+		
+		isEditable = ScriptEase.DEBUG_MODE || !effect.getLibrary().getReadOnly();
 
 		if (effect != null)
 			panel = StoryComponentPanelFactory.getInstance()
@@ -111,6 +115,8 @@ public class EffectHolderPanel extends JPanel {
 
 		this.add(new JLabel(new ImageIcon(image)));
 
+		removeEffectButton.setEnabled(isEditable);
+		
 		this.add(removeEffectButton);
 
 		// Notify observers

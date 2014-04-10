@@ -1,4 +1,4 @@
-<LibraryModel name="DefaultNWNLibrary" author="ScriptEase2" description="">
+<LibraryModel name="DefaultNWNLibrary" author="ScriptEase2" description="" readonly="true">
   <IncludeFiles>
     <IncludeFile>includes/i_se_aux.nss</IncludeFile>
     <IncludeFile>includes/i_se_behav.nss</IncludeFile>
