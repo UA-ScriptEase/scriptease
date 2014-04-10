@@ -154,6 +154,8 @@ public enum XMLNode {
 
 	PARAMETERS("Parameters"),
 
+	READONLY("ReadOnly"),
+	
 	RESERVED_WORD("Word"),
 
 	RESERVED_WORDS("ReservedWords", RESERVED_WORD),

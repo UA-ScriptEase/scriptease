@@ -34,6 +34,8 @@ public enum XMLAttribute {
 
 	INITIATE("Initiate"),
 	
+	READONLY("readonly"),
+	
 	RESPOND("Respond"),
 	
 	REF("ref"),

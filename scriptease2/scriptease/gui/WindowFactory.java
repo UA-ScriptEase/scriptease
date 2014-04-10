@@ -916,11 +916,20 @@ public final class WindowFactory {
 		newLibrary = "New...";
 
 		content.setLayout(layout);
-
-		libraryChoice.addItem(translator.getLibrary());
+		
+		LibraryModel defaultLibrary = translator.getLibrary();		
+		
+		//If we decide we want to not allow people to even look at read-only libraries in the editor, uncomment these lines
+		//-zturchan
+		
+		//if(defaultLibrary.getReadOnly() == false || ScriptEase.DEBUG_MODE){
+			libraryChoice.addItem(defaultLibrary);
+		//}
 
 		for (LibraryModel library : translator.getOptionalLibraries()) {
-			libraryChoice.addItem(library);
+			//if(library.getReadOnly() == false  || ScriptEase.DEBUG_MODE){
+				libraryChoice.addItem(library);
+			//}
 		}
 
 		libraryChoice.addItem(newLibrary);

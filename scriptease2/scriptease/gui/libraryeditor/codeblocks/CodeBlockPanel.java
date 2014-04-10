@@ -30,6 +30,8 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
+import scriptease.gui.action.libraryeditor.codeeditor.AbstractInsertFragmentAction;
+import scriptease.gui.action.libraryeditor.codeeditor.AbstractMoveFragmentAction;
 import scriptease.gui.action.libraryeditor.codeeditor.InsertIndentAction;
 import scriptease.gui.action.libraryeditor.codeeditor.InsertLineAction;
 import scriptease.gui.action.libraryeditor.codeeditor.InsertLiteralAction;
@@ -50,6 +52,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
 import scriptease.util.ListOp;
 import scriptease.util.StringOp;
@@ -112,6 +115,8 @@ public class CodeBlockPanel extends JPanel {
 		final TypeAction typeAction;
 
 		final List<String> types;
+		
+		final boolean isEditable;
 
 		this.observerManager = new ObserverManager<CodeBlockPanelObserver>();
 
@@ -134,12 +139,19 @@ public class CodeBlockPanel extends JPanel {
 						ScriptEase.FONT_SIZE_KEY)) + 1);
 
 		types = new ArrayList<String>(codeBlock.getTypes());
-
+		
+		isEditable = ScriptEase.DEBUG_MODE  || !scriptIt.getLibrary().getReadOnly();		
+		
+		deleteCodeBlockButton.setEnabled(isEditable);
+		addParameterButton.setEnabled(isEditable);
+		typesButton.setEnabled(isEditable);
+		
+		
 		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				final ArrayList<String> types;
-
+				
 				types = new ArrayList<String>(codeBlock.getTypes());
 
 				typeAction.deselectAll();
@@ -263,7 +275,7 @@ public class CodeBlockPanel extends JPanel {
 			subjectBox = this.buildInvisible();
 			includesField = this.buildIncludesField(codeBlock);
 			slotBox = this.buildSlotComboBox(codeBlock);
-
+			
 			deleteCodeBlockButton.setVisible(false);
 			subjectLabel.setVisible(false);
 		} else {
@@ -299,6 +311,9 @@ public class CodeBlockPanel extends JPanel {
 			}
 		}
 
+		slotBox.setEnabled(isEditable);
+		includesField.setEnabled(isEditable);
+		
 		for (KnowIt parameter : codeBlock.getParameters()) {
 			final ParameterPanel paramPane = LibraryEditorPanelFactory
 					.getInstance().buildParameterPanel(scriptIt, codeBlock,
@@ -504,29 +519,96 @@ public class CodeBlockPanel extends JPanel {
 		final JPanel buttons;
 		final CodeFragmentPanel codePanel;
 		final JScrollPane codeEditorScrollPane;
-
+		final boolean isEditable;
+		final JButton lineButton;
+		final JButton indentButton;
+		final JButton scopeButton;
+		final JButton seriesButton;
+		final JButton simpleButton;
+		final JButton literalButton;
+		final JButton referenceButton;
+		final JButton upButton;
+		final JButton downButton;
+		
 		buttons = new JPanel();
 		codePanel = new CodeFragmentPanel(codeBlock, null);
 		codeEditorScrollPane = new JScrollPane(codePanel);
+		isEditable = !codeBlock.ownerComponent.getLibrary().getReadOnly() || ScriptEase.DEBUG_MODE;
+	
+		if(!isEditable){
+			//So the actions have built-in components which update their enabled state when they gain or lose focus
+			//That code doesn't know about the read-only status of the Story Component being edited.
+			//So we just add a bunch of fake actions which override that code, if the current component isn't editable
+			//-zturchan
+			   class DisabledInsertAction extends AbstractInsertFragmentAction {
+					protected DisabledInsertAction(String name) {
+						super(name);
+					}
+					@Override
+					 protected AbstractFragment newFragment(){
+						 return null;
+					 }					
+					@Override 
+					protected boolean isLegal(){
+						return false;
+					}
+		        }
+			   class DisabledMoveAction extends AbstractMoveFragmentAction {
+					protected DisabledMoveAction(String name) {
+						super(name);
+					}
+				
+					@Override 
+					protected boolean isLegal(){
+						return false;
+					}
+					@Override
+					protected int delta() {
+						return 0;
+					}
+		        }
 
-		buttons.add(ComponentFactory.buildFlatButton(
-				InsertLineAction.getInstance(), ScriptEaseUI.SE_BURGUNDY));
-		buttons.add(ComponentFactory.buildFlatButton(
-				InsertIndentAction.getInstance(), ScriptEaseUI.SE_ORANGE));
-		buttons.add(ComponentFactory.buildFlatButton(
-				InsertScopeAction.getInstance(), ScriptEaseUI.SE_YELLOW));
-		buttons.add(ComponentFactory.buildFlatButton(
-				InsertSeriesAction.getInstance(), ScriptEaseUI.SE_GREEN));
-		buttons.add(ComponentFactory.buildFlatButton(
-				InsertSimpleAction.getInstance(), ScriptEaseUI.SE_BLUE));
-		buttons.add(ComponentFactory.buildFlatButton(
-				InsertLiteralAction.getInstance(), ScriptEaseUI.SE_TEAL));
-		buttons.add(ComponentFactory.buildFlatButton(
-				InsertReferenceAction.getInstance(), ScriptEaseUI.SE_PURPLE));
-		buttons.add(ComponentFactory.buildFlatButton(MoveFragmentUpAction
-				.getInstance()));
-		buttons.add(ComponentFactory.buildFlatButton(MoveFragmentDownAction
-				.getInstance()));
+				lineButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Line"), ScriptEaseUI.SE_BURGUNDY);
+				indentButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Indent"), ScriptEaseUI.SE_ORANGE);
+				scopeButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Scope"), ScriptEaseUI.SE_YELLOW);
+				seriesButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Series"), ScriptEaseUI.SE_GREEN);
+				simpleButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Serial"), ScriptEaseUI.SE_BLUE);
+				literalButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Literal"), ScriptEaseUI.SE_TEAL);
+				referenceButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Reference"), ScriptEaseUI.SE_PURPLE);
+				upButton = ComponentFactory.buildFlatButton(new DisabledMoveAction("Up"));
+				downButton = ComponentFactory.buildFlatButton(new DisabledMoveAction("Down"));
+			
+		} else {
+			lineButton = ComponentFactory.buildFlatButton(InsertLineAction.getInstance(), ScriptEaseUI.SE_BURGUNDY);
+			indentButton = ComponentFactory.buildFlatButton(InsertIndentAction.getInstance(), ScriptEaseUI.SE_ORANGE);
+			scopeButton = ComponentFactory.buildFlatButton(InsertScopeAction.getInstance(), ScriptEaseUI.SE_YELLOW);
+			seriesButton = ComponentFactory.buildFlatButton(InsertSeriesAction.getInstance(), ScriptEaseUI.SE_GREEN);
+			simpleButton = ComponentFactory.buildFlatButton(InsertSimpleAction.getInstance(), ScriptEaseUI.SE_BLUE);
+			literalButton = ComponentFactory.buildFlatButton(InsertLiteralAction.getInstance(), ScriptEaseUI.SE_TEAL);
+			referenceButton = ComponentFactory.buildFlatButton(InsertReferenceAction.getInstance(), ScriptEaseUI.SE_PURPLE);
+			upButton = ComponentFactory.buildFlatButton(MoveFragmentUpAction.getInstance());
+			downButton = ComponentFactory.buildFlatButton(MoveFragmentDownAction.getInstance());
+		}
+			
+		lineButton.setEnabled(isEditable);
+		indentButton.setEnabled(isEditable);
+		scopeButton.setEnabled(isEditable);
+		seriesButton.setEnabled(isEditable);
+		simpleButton.setEnabled(isEditable);
+		literalButton.setEnabled(isEditable);
+		referenceButton.setEnabled(isEditable);
+		upButton.setEnabled(isEditable);
+		downButton.setEnabled(isEditable);
+		
+		buttons.add(lineButton);
+		buttons.add(indentButton);
+		buttons.add(scopeButton);
+		buttons.add(seriesButton);
+		buttons.add(simpleButton);
+		buttons.add(literalButton);
+		buttons.add(referenceButton);
+		buttons.add(upButton);
+		buttons.add(downButton);
 
 		buttons.setOpaque(false);
 
@@ -541,10 +623,11 @@ public class CodeBlockPanel extends JPanel {
 		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
+
 				final Rectangle visible = codeEditorScrollPane.getVisibleRect();
 
-				codePanel.redraw();
-
+				codePanel.redraw(isEditable);
+					
 				codeEditorScrollPane.scrollRectToVisible(visible);
 			}
 		});
@@ -566,6 +649,7 @@ public class CodeBlockPanel extends JPanel {
 		listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				final String currentSelected;
 				final String currentSubject;
 
@@ -618,6 +702,7 @@ public class CodeBlockPanel extends JPanel {
 				new StoryComponentObserver() {
 					@Override
 					public void componentChanged(StoryComponentEvent event) {
+
 						switch (event.getType()) {
 						case CODE_BLOCK_SUBJECT_SET:
 						case CHANGE_PARAMETER_LIST_ADD:
@@ -687,6 +772,7 @@ public class CodeBlockPanel extends JPanel {
 			public void run() {
 				final boolean subjectExists = codeBlock.hasSubject();
 
+	
 				slotBox.removeActionListener(listener);
 				slotBox.removeAllItems();
 				slotBox.setEnabled(subjectExists);
@@ -715,7 +801,7 @@ public class CodeBlockPanel extends JPanel {
 		codeBlock.addStoryComponentObserver(slotBox,
 				new StoryComponentObserver() {
 					@Override
-					public void componentChanged(StoryComponentEvent event) {
+					public void componentChanged(StoryComponentEvent event) {				
 						switch (event.getType()) {
 						case CODE_BLOCK_SLOT_SET:
 						case CODE_BLOCK_SUBJECT_SET:

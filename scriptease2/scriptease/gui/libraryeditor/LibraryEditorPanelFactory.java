@@ -158,11 +158,13 @@ public class LibraryEditorPanelFactory {
 									.getInstance().buildStoryComponentPanel(
 											activityIt);
 
-							//Should always be able to remove the tree regardless
-							activityPanel.remove(2);
+							if(activityPanel.getComponents().length >= 3 && activityPanel.getComponent(2) != null){
+								activityPanel.remove(2);
+							}
+							
 							activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
 							
-							if(activityPanel.getComponent(3) != null){
+							if(activityPanel.getComponents().length >= 4 && activityPanel.getComponent(3) != null){
 								activityPanel.remove(3);
 							}
 							activityPanel.add(new StoryComponentPanelTree(
@@ -874,14 +876,19 @@ public class LibraryEditorPanelFactory {
 		final EffectHolderPanel effectHolder;
 		final SetEffectObserver effectObserver;
 		final SEGraph<DescribeItNode> graph;
-
+		
+		final boolean isEditable;
+		
 		bindingPanel = new JPanel();
 		describeItGraphPanel = new JPanel();
 
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 
+		isEditable = ScriptEase.DEBUG_MODE || !knowIt.getLibrary().getReadOnly();
+		
 		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
-				.getStartNode());
+				.getStartNode(), isEditable);
+		
 
 		describeItGraphPanel.setOpaque(false);
 		effectHolder.setBackground(ScriptEaseUI.SECONDARY_UI);
@@ -1113,10 +1120,13 @@ public class LibraryEditorPanelFactory {
 		final JLabel nameLabel;
 		final JLabel labelLabel;
 		final JLabel visibleLabel;
+		final JLabel readOnlyLabel;
 
 		final JTextField nameField;
 		final JTextField labelsField;
 		final JCheckBox visibleBox;
+		
+		final boolean isEditable;
 
 		descriptorPanel = new JPanel();
 		descriptorPanelLayout = new GroupLayout(descriptorPanel);
@@ -1124,15 +1134,22 @@ public class LibraryEditorPanelFactory {
 		nameLabel = new JLabel("Name: ");
 		labelLabel = new JLabel("Labels: ");
 		visibleLabel = new JLabel("Visible: ");
-
+		readOnlyLabel = new JLabel("This element is from a read-only library and cannot be edited.");
+		
 		nameField = this.buildNameEditorPanel(component);
 		labelsField = this.buildLabelEditorField(component);
 		visibleBox = this.buildVisibleBox(component);
-
+		
+		//Check whether or not this StoryComponent should be editable (debug mode, or not read-only)
+		isEditable = ScriptEase.DEBUG_MODE  || !component.getLibrary().getReadOnly();
+		
 		// Set up the labels
 		nameLabel.setFont(labelFont);
 		labelLabel.setFont(labelFont);
 		visibleLabel.setFont(labelFont);
+		readOnlyLabel.setFont(labelFont);
+		readOnlyLabel.setForeground(ScriptEaseUI.SE_BLUE);
+		
 
 		labelLabel.setToolTipText(labelsField.getToolTipText());
 
@@ -1143,45 +1160,95 @@ public class LibraryEditorPanelFactory {
 		descriptorPanelLayout.setAutoCreateGaps(true);
 		descriptorPanelLayout.setAutoCreateContainerGaps(true);
 		descriptorPanelLayout.setHonorsVisibility(true);
-
+		
 		// Add JComponents to DescriptorPanel using GroupLayout
-		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
-				.createParallelGroup().addGroup(
-						descriptorPanelLayout
-								.createSequentialGroup()
-								.addGroup(
-										descriptorPanelLayout
-												.createParallelGroup()
-												.addComponent(nameLabel)
-												.addComponent(visibleLabel)
-												.addComponent(labelLabel))
-								.addGroup(
-										descriptorPanelLayout
-												.createParallelGroup()
-												.addComponent(visibleBox)
-												.addComponent(nameField)
-												.addComponent(labelsField))));
+		if(isEditable){
+			descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
+					.createParallelGroup().addGroup(
+							descriptorPanelLayout
+									.createSequentialGroup()
+									.addGroup(
+											descriptorPanelLayout
+													.createParallelGroup()
+													.addComponent(nameLabel)
+													.addComponent(visibleLabel)
+													.addComponent(labelLabel))
+									.addGroup(
+											descriptorPanelLayout
+													.createParallelGroup()
+													.addComponent(visibleBox)
+													.addComponent(nameField)
+													.addComponent(labelsField))));
 
-		descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
-				.createSequentialGroup()
-				.addGroup(
-						descriptorPanelLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(visibleLabel)
-								.addComponent(visibleBox))
-				.addGroup(
-						descriptorPanelLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(nameLabel)
-								.addComponent(nameField))
-				.addGroup(
-						descriptorPanelLayout
-								.createParallelGroup(
-										GroupLayout.Alignment.BASELINE)
-								.addComponent(labelLabel)
-								.addComponent(labelsField)));
+			descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
+					.createSequentialGroup()
+					.addGroup(
+							descriptorPanelLayout
+									.createParallelGroup(
+											GroupLayout.Alignment.BASELINE)
+									.addComponent(visibleLabel)
+									.addComponent(visibleBox))
+					.addGroup(
+							descriptorPanelLayout
+									.createParallelGroup(
+											GroupLayout.Alignment.BASELINE)
+									.addComponent(nameLabel)
+									.addComponent(nameField))
+					.addGroup(
+							descriptorPanelLayout
+									.createParallelGroup(
+											GroupLayout.Alignment.BASELINE)
+									.addComponent(labelLabel)
+									.addComponent(labelsField)));
+		} else {
+			visibleBox.setEnabled(false);
+			nameField.setEnabled(false);
+			labelsField.setEnabled(false);
+			descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
+					.createParallelGroup().addGroup(
+							descriptorPanelLayout
+									.createSequentialGroup()
+									.addGroup(
+											descriptorPanelLayout
+													.createParallelGroup()
+													.addComponent(nameLabel)
+													.addComponent(visibleLabel)
+													.addComponent(labelLabel))
+									.addGroup(
+											descriptorPanelLayout
+													.createParallelGroup()
+													.addComponent(readOnlyLabel)
+													.addComponent(visibleBox)
+													.addComponent(nameField)
+													.addComponent(labelsField))));
+
+			descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
+					.createSequentialGroup()
+					.addGroup(
+							descriptorPanelLayout
+									.createParallelGroup(
+											GroupLayout.Alignment.BASELINE)
+									.addComponent(readOnlyLabel))
+					.addGroup(
+							descriptorPanelLayout
+									.createParallelGroup(
+											GroupLayout.Alignment.BASELINE)
+									.addComponent(visibleLabel)
+									.addComponent(visibleBox))
+					.addGroup(
+							descriptorPanelLayout
+									.createParallelGroup(
+											GroupLayout.Alignment.BASELINE)
+									.addComponent(nameLabel)
+									.addComponent(nameField))
+					.addGroup(
+							descriptorPanelLayout
+									.createParallelGroup(
+											GroupLayout.Alignment.BASELINE)
+									.addComponent(labelLabel)
+									.addComponent(labelsField)));
+		}
+
 
 		return descriptorPanel;
 	}

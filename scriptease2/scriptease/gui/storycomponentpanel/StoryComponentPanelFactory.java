@@ -133,13 +133,12 @@ public class StoryComponentPanelFactory {
 								panel.setBorder(BorderFactory.createLineBorder(
 										Color.LIGHT_GRAY, 1));
 							}
-
+							
 						}
 
 					});
 
-		}
-
+		}		
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
 		return panel;

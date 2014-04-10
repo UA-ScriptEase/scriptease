@@ -166,10 +166,11 @@ public class DialogBuilder {
 
 				TranslatorManager.getInstance().setActiveTranslator(translator);
 
-				model = new LibraryModel(title, author, description, translator);
+				model = new LibraryModel(title, author, description, translator);			
 
 				SEModelManager.getInstance().addAndActivate(model);
-				translator.addOptionalLibrary(model);
+				translator.addOptionalLibrary(model);				
+
 			}
 		};
 
@@ -198,7 +199,8 @@ public class DialogBuilder {
 		});
 
 		// Display the wizard
-		wizard.setVisible(true);
+		wizard.setVisible(true);		
+
 	}
 
 	/**

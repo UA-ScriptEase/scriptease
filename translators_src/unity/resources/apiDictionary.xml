@@ -1,4 +1,4 @@
-<LibraryModel name="DefaultUnityLibraryModel" author="ScriptEase Team" description="">
+<LibraryModel name="DefaultUnityLibraryModel" author="ScriptEase Team" description="" readonly="true">
   <IncludeFiles>
     <IncludeFile>includes/SEDialogue.js</IncludeFile>
     <IncludeFile>includes/SEFunctions.js</IncludeFile>

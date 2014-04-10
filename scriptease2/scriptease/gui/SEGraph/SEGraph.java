@@ -1171,7 +1171,7 @@ public class SEGraph<E> extends JComponent {
 					entered.setCursor(ScriptEaseUI.CURSOR_UNAVAILABLE);
 				} else
 					entered.setCursor(null);
-			} else if (mode == Mode.DELETE) {
+			} else if (mode == Mode.DELETE && !graph.isReadOnly) {
 				if (this.lastEnteredNode == graph.getStartNode())
 					// Make the cursor appear unavailable for start node
 					// deletion.
@@ -1246,7 +1246,7 @@ public class SEGraph<E> extends JComponent {
 					graph.setSelectedNodes(nodes);
 				}
 				source.requestFocusInWindow();
-			} else if (mode == Mode.INSERT) {
+			} else if (mode == Mode.INSERT && !graph.isReadOnly) {
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
 						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
@@ -1272,7 +1272,7 @@ public class SEGraph<E> extends JComponent {
 
 				graph.getNodesToComponentsMap().getValue(this.lastEnteredNode)
 						.requestFocusInWindow();
-			} else if (mode == Mode.DELETE) {
+			} else if (mode == Mode.DELETE && !graph.isReadOnly) {
 				if (node instanceof StoryGroup) {
 					SEGraph.this.groupController.resetGroup();
 					if (node instanceof StoryGroup) {
@@ -1289,7 +1289,7 @@ public class SEGraph<E> extends JComponent {
 
 					UndoManager.getInstance().endUndoableAction();
 				}
-			} else if (mode == Mode.CONNECT) {
+			} else if (mode == Mode.CONNECT && !graph.isReadOnly) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node
 						&& this.lastExitedNode != this.lastEnteredNode) {
@@ -1302,7 +1302,7 @@ public class SEGraph<E> extends JComponent {
 
 					UndoManager.getInstance().endUndoableAction();
 				}
-			} else if (mode == Mode.DISCONNECT) {
+			} else if (mode == Mode.DISCONNECT && !graph.isReadOnly) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
 					if (!UndoManager.getInstance().hasOpenUndoableAction())

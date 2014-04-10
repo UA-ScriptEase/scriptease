@@ -67,7 +67,8 @@ public class LibraryModelConverter implements Converter {
 		XMLAttribute.NAME.write(writer, library.getTitle());
 		XMLAttribute.AUTHOR.write(writer, library.getAuthor());
 		XMLAttribute.DESCRIPTION.write(writer, library.getDescription());
-
+		XMLAttribute.READONLY.write(writer, String.valueOf(library.getReadOnly()));
+		
 		XMLNode.INCLUDE_FILES.writeChildren(writer,
 				library.getIncludeFilePaths());
 		XMLNode.TYPES.writeObject(writer, context, library.getGameTypes());
@@ -114,7 +115,8 @@ public class LibraryModelConverter implements Converter {
 		library.setTitle(XMLAttribute.NAME.read(reader));
 		library.setAuthor(XMLAttribute.AUTHOR.read(reader));
 		library.setDescription(XMLAttribute.DESCRIPTION.read(reader));
-
+		library.setReadOnly(Boolean.parseBoolean(XMLAttribute.READONLY.read(reader)));
+		
 		includeFilePaths = XMLNode.INCLUDE_FILES.readStringCollection(reader);
 		types = XMLNode.TYPES.readCollection(reader, context, GameType.class);
 		slots = XMLNode.SLOTS.readAttributedCollection(reader, context,

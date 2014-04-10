@@ -246,8 +246,8 @@ public class SEGraphNodeRenderer<E> {
 				toolPress = GUIOp.scaleWhite(toolHighlight, 1.4);
 			} else {
 				toolColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
-				toolHighlight = GUIOp.scaleWhite(toolColour, 1.7);
-				toolPress = GUIOp.scaleWhite(toolHighlight, 1.1);
+				toolHighlight = ScriptEaseUI.COLOUR_SELECTED_NODE;
+				toolPress = ScriptEaseUI.COLOUR_SELECTED_NODE;
 			}
 
 			if (this.pressedComponent == component) {
@@ -270,10 +270,10 @@ public class SEGraphNodeRenderer<E> {
 			final Color initialColour;
 
 			if (graph.equals(SEFocusManager.getInstance().getFocus())) {
-				initialColour = ScriptEaseUI.COLOUR_SELECTED_NODE;
+				initialColour = ScriptEaseUI.SELECTED_COLOUR;
 			} else {
 				initialColour = GUIOp.scaleWhite(
-						ScriptEaseUI.COLOUR_SELECTED_NODE, 1.2);
+						ScriptEaseUI.SELECTED_COLOUR, 1.2);
 			}
 
 			if (this.pressedComponent == component) {

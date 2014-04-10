@@ -28,7 +28,9 @@ public interface ScriptEaseUI {
 	public static final Color SE_PURPLE = new Color(91, 61, 173);
 	public static final Color SE_BLACK = new Color(68, 68, 68);
 	public static final Color SE_RED = new Color(255, 69, 40);
-
+	public static final Color SE_TAN = new Color(255, 204, 150);
+	public static final Color SE_LIGHT_BLUE = new Color(144,225,255);
+	
 	public static final Color PRIMARY_UI = Color.WHITE;
 	public static final Color SECONDARY_UI = SE_BLACK;
 	public static final Color TERTIARY_UI = Color.gray;
@@ -82,10 +84,11 @@ public interface ScriptEaseUI {
 	public static final Color COLOUR_BOUND = Color.LIGHT_GRAY;
 
 	/**
-	 * The colour (Grey) used for selected UI Components
+	 * The colour (Light Blue) used for selected UI Components
 	 */
-	public static final Color SELECTED_COLOUR = new Color(140, 140, 140);
-
+	//public static final Color SELECTED_COLOUR = new Color(140, 140, 140);
+	public static final Color SELECTED_COLOUR = SE_LIGHT_BLUE;
+	
 	/**
 	 * The colour (White) used for unselected UI components
 	 */

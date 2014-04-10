@@ -36,6 +36,7 @@ import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.component.ExpansionButton;
 import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
@@ -706,6 +707,8 @@ class ResourceTree extends JPanel {
 					}
 				}
 			});
+			
+
 
 			childPanel.setVisible(false);
 
