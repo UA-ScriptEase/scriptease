@@ -10,6 +10,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import sun.awt.util.IdentityArrayList;
 
 /**
@@ -31,7 +32,7 @@ public class ControlIt extends ScriptIt {
 	 * 
 	 */
 	public enum ControlItFormat {
-		NONE, DELAY, REPEAT, QUESTION, BLOCK
+		NONE, DELAY, REPEAT, BLOCK
 	}
 
 	private ControlItFormat format;
@@ -43,8 +44,9 @@ public class ControlIt extends ScriptIt {
 	 * @param name
 	 * @param format
 	 */
-	public ControlIt(String name, ControlItFormat format) {
-		super(name);
+	public ControlIt(LibraryModel library, int id, String name,
+			ControlItFormat format) {
+		super(library, id, name);
 		this.allowableChildMap.clear();
 
 		this.format = format;

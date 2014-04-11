@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -47,7 +48,7 @@ public class StoryPointConverter extends StoryNodeConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
+			UnmarshallingContext context, LibraryModel library, int id) {
 		return new StoryPoint("");
 	}
 }

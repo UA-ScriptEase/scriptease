@@ -2,8 +2,11 @@ package scriptease.controller.io.converter.storycomponent;
 
 import java.util.Collection;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
+import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -26,6 +29,10 @@ public abstract class StoryComponentConverter implements Converter {
 			MarshallingContext context) {
 		final StoryComponent comp = (StoryComponent) source;
 
+		// TODO Write the library + id attributes.
+
+		XMLAttribute.NAME.write(writer, "TEST");
+
 		XMLNode.NAME.writeString(writer, comp.getDisplayText());
 		XMLNode.VISIBLE.writeBoolean(writer, comp.isVisible());
 		XMLNode.ENABLED.writeBoolean(writer, comp.isEnabled());
@@ -47,7 +54,17 @@ public abstract class StoryComponentConverter implements Converter {
 		final String enabled;
 		final Collection<String> labels;
 
-		comp = this.buildComponent(reader, context);
+		final LibraryModel library;
+
+		// TODO Read the "id" and "library" attributes and create the story
+		// component with them.
+		final String libraryStr = XMLAttribute.LIBRARY.read(reader);
+		final String idStr = XMLAttribute.ID.read(reader);
+		final int id = Integer.parseInt(idStr);
+
+		library = SEModelManager.getInstance().getLibraryByName(libraryStr);
+
+		comp = this.buildComponent(reader, context, library, id);
 
 		displayText = XMLNode.NAME.readString(reader);
 		visibility = XMLNode.VISIBLE.readString(reader);
@@ -74,10 +91,14 @@ public abstract class StoryComponentConverter implements Converter {
 	 *            the reader to read from
 	 * @param context
 	 *            the context to read in
-	 * 
+	 * @param library
+	 *            the library that the story component belongs to
+	 * @param id
+	 *            the unique id of the story component referenced to the library
 	 * @return instance a StoryComponent subclass
 	 * @see #unmarshal(HierarchicalStreamReader, UnmarshallingContext)
 	 */
 	protected abstract StoryComponent buildComponent(
-			HierarchicalStreamReader reader, UnmarshallingContext context);
+			HierarchicalStreamReader reader, UnmarshallingContext context,
+			LibraryModel library, int id);
 }

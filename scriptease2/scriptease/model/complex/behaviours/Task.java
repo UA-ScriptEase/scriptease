@@ -9,6 +9,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A task is a series of effects. Each task has a probability of execution
@@ -29,8 +30,8 @@ public abstract class Task extends ComplexStoryComponent {
 	 * 
 	 * @param name
 	 */
-	protected Task(String name) {
-		super(name);
+	protected Task(LibraryModel library, int id, String name) {
+		super(library, id, name);
 
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();

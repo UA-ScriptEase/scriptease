@@ -11,6 +11,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -46,22 +47,18 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author remiller
  */
 public class CodeBlockSource extends CodeBlock {
-	private static final int DEFAULT_ID = -1;
 	private String subjectName;
 	private String slot;
 	private Collection<String> returnTypes;
 	private Collection<String> includes;
 	private Collection<AbstractFragment> code;
 	private Set<WeakReference<CodeBlockReference>> references;
-	private int id;
 
 	/**
 	 * Creates a new CodeBlockSource with default properties.
 	 */
-	public CodeBlockSource() {
-		this("", "", new ArrayList<String>(), new ArrayList<KnowIt>(),
-				new ArrayList<String>(), new ArrayList<AbstractFragment>(),
-				CodeBlockSource.DEFAULT_ID);
+	public CodeBlockSource(LibraryModel library) {
+		this(library, library.getNextID());
 	}
 
 	/**
@@ -70,9 +67,8 @@ public class CodeBlockSource extends CodeBlock {
 	 * @param id
 	 *            The unique ID of this codeblock.
 	 */
-	public CodeBlockSource(int id) {
-		this("", "", new ArrayList<String>(), new ArrayList<KnowIt>(),
-				new ArrayList<String>(), new ArrayList<AbstractFragment>(), id);
+	public CodeBlockSource(LibraryModel library, int id) {
+		this("", "", new ArrayList<KnowIt>(), library, id);
 	}
 
 	/**
@@ -91,9 +87,10 @@ public class CodeBlockSource extends CodeBlock {
 	 *            The unique ID of this codeblock.
 	 */
 	public CodeBlockSource(String subject, String slot,
-			Collection<KnowIt> parameters, int id) {
+			Collection<KnowIt> parameters, LibraryModel library, int id) {
 		this(subject, slot, new ArrayList<String>(), parameters,
-				new ArrayList<String>(), new ArrayList<AbstractFragment>(), id);
+				new ArrayList<String>(), new ArrayList<AbstractFragment>(),
+				library, id);
 	}
 
 	/**
@@ -121,8 +118,17 @@ public class CodeBlockSource extends CodeBlock {
 	public CodeBlockSource(String subject, String slot,
 			Collection<String> returnTypes, Collection<KnowIt> parameters,
 			Collection<String> includes, Collection<AbstractFragment> code,
-			int id) {
-		this.init(id);
+			LibraryModel library, int id) {
+		super(library, id);
+		super.init();
+
+		this.subjectName = "";
+		this.slot = "";
+		this.returnTypes = new ArrayList<String>();
+
+		this.code = new ArrayList<AbstractFragment>();
+		this.references = new HashSet<WeakReference<CodeBlockReference>>();
+
 		this.setSubject(subject);
 		this.setSlot(slot);
 		this.setTypesByName(returnTypes);
@@ -156,16 +162,6 @@ public class CodeBlockSource extends CodeBlock {
 		this.returnTypes.remove(type);
 	}
 
-	protected void init(int id) {
-		super.init();
-		this.subjectName = "";
-		this.slot = "";
-		this.returnTypes = new ArrayList<String>();
-		this.id = id;
-		this.code = new ArrayList<AbstractFragment>();
-		this.references = new HashSet<WeakReference<CodeBlockReference>>();
-	}
-
 	@Override
 	public CodeBlock clone() {
 		// Sources can't be cloned, since they're supposed to be unique.
@@ -181,8 +177,11 @@ public class CodeBlockSource extends CodeBlock {
 	 * @author mfchurch
 	 * @return
 	 */
-	public CodeBlockSource duplicate(int uniqueId) {
-		final CodeBlockSource duplicate = new CodeBlockSource(uniqueId);
+	public CodeBlockSource duplicate() {
+		final LibraryModel library = this.getLibrary();
+		final CodeBlockSource duplicate = new CodeBlockSource(library,
+				library.getNextID());
+
 		duplicate.setSubject(this.subjectName);
 		duplicate.setSlot(this.slot);
 		duplicate.setTypesByName(this.returnTypes);
@@ -331,30 +330,6 @@ public class CodeBlockSource extends CodeBlock {
 	@Override
 	public String getSubjectName() {
 		return this.subjectName;
-	}
-
-	@Override
-	public int getId() {
-		return this.id;
-	}
-
-	/**
-	 * IDs are unique, so this must only be called on loading from the Library.
-	 * They may not be reset or changed or modified. Ever.
-	 * 
-	 * @param id
-	 *            the id for this CodeBlock.
-	 */
-	public void setId(int id) {
-		if (this.getId() == CodeBlockSource.DEFAULT_ID) {
-			this.id = id;
-		} else {
-			// if you get here, Very Bad Things have happened and you need to
-			// fix them. These IDs must never change once set; they must be
-			// unique and this is an excellent way to enforce that. - remiller
-			throw new IllegalStateException(
-					"Cannot change a CodeBlockSource's ID.");
-		}
 	}
 
 	@Override

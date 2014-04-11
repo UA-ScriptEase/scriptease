@@ -38,6 +38,7 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType;
 
 /**
@@ -114,14 +115,15 @@ public class LibraryEditorPanel extends JPanel {
 				final JPanel codeBlockEditingPanel;
 
 				final boolean isEditable;
-				
+
 				codeBlockEditingPanel = new JPanel();
 
 				codeBlockEditingPanel.setLayout(new BoxLayout(
 						codeBlockEditingPanel, BoxLayout.PAGE_AXIS));
 
-				isEditable = ScriptEase.DEBUG_MODE  || !scriptIt.getLibrary().getReadOnly();
-		
+				isEditable = ScriptEase.DEBUG_MODE
+						|| !scriptIt.getLibrary().getReadOnly();
+
 				if (!(scriptIt instanceof CauseIt)) {
 					final JPanel scriptItControlPanel;
 					final JButton addCodeBlockButton;
@@ -143,20 +145,19 @@ public class LibraryEditorPanel extends JPanel {
 										"Adding CodeBlock to "
 												+ scriptIt.getDisplayText());
 
-							final CodeBlock codeBlock;
-
-							codeBlock = new CodeBlockSource(scriptIt
-									.getLibrary().getNextCodeBlockID());
+							final LibraryModel library = scriptIt.getLibrary();
+							final CodeBlock codeBlock = new CodeBlockSource(
+									library, library.getNextID());
 
 							scriptIt.addCodeBlock(codeBlock);
 
 							UndoManager.getInstance().endUndoableAction();
 						}
 					});
-					if (!isEditable){
+					if (!isEditable) {
 						addCodeBlockButton.setEnabled(false);
 					}
-					
+
 					scriptItControlPanel.add(addCodeBlockButton);
 					this.pane.add(scriptItControlPanel);
 				}
@@ -237,7 +238,7 @@ public class LibraryEditorPanel extends JPanel {
 				final DescribeIt describeIt;
 
 				final boolean isEditable;
-				
+
 				knowItPanel = new JPanel();
 
 				knowItPanelLayout = new GroupLayout(knowItPanel);
@@ -245,15 +246,17 @@ public class LibraryEditorPanel extends JPanel {
 				typesButton = new JButton(typeAction);
 
 				describeIt = knowIt.getLibrary().getDescribeIt(knowIt);
-				
-				isEditable = ScriptEase.DEBUG_MODE  || !knowIt.getLibrary().getReadOnly();
-				
+
+				isEditable = ScriptEase.DEBUG_MODE
+						|| !knowIt.getLibrary().getReadOnly();
+
 				nameField = new JTextField(describeIt.getName());
 
 				nameLabel = new JLabel("Name: ");
 				typesLabel = new JLabel("Types: ");
-				readOnlyLabel = new JLabel("This element is from a read-only library and cannot be edited.");
-				
+				readOnlyLabel = new JLabel(
+						"This element is from a read-only library and cannot be edited.");
+
 				commitText = new Runnable() {
 					@Override
 					public void run() {
@@ -265,7 +268,7 @@ public class LibraryEditorPanel extends JPanel {
 				describeItEditingPanel = LibraryEditorPanelFactory
 						.getInstance().buildDescribeItEditingPanel(describeIt,
 								knowIt);
-				
+
 				knowItPanel.setLayout(knowItPanelLayout);
 				knowItPanel.setOpaque(false);
 
@@ -300,90 +303,91 @@ public class LibraryEditorPanel extends JPanel {
 					}
 				});
 
-				if (!isEditable){
+				if (!isEditable) {
 					typesButton.setEnabled(isEditable);
 					nameField.setEnabled(isEditable);
-					
-					knowItPanelLayout
-					.setHorizontalGroup(knowItPanelLayout
-							.createParallelGroup()
-							.addGroup(
-									knowItPanelLayout
-											.createSequentialGroup()
-											.addGroup(
-													knowItPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	nameLabel)
-															.addComponent(
-																	typesLabel))
-											.addGroup(
-													knowItPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	readOnlyLabel)
-															.addComponent(
-																	nameField)
-															.addComponent(
-																	typesButton))));
 
-			knowItPanelLayout.setVerticalGroup(knowItPanelLayout
-					.createSequentialGroup()
-					.addGroup(
-							knowItPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(readOnlyLabel))
-					.addGroup(
-							knowItPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(nameLabel)
-									.addComponent(nameField))
-					.addGroup(
-							knowItPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(typesLabel)
-									.addComponent(typesButton)));
+					knowItPanelLayout
+							.setHorizontalGroup(knowItPanelLayout
+									.createParallelGroup()
+									.addGroup(
+											knowItPanelLayout
+													.createSequentialGroup()
+													.addGroup(
+															knowItPanelLayout
+																	.createParallelGroup()
+																	.addComponent(
+																			nameLabel)
+																	.addComponent(
+																			typesLabel))
+													.addGroup(
+															knowItPanelLayout
+																	.createParallelGroup()
+																	.addComponent(
+																			readOnlyLabel)
+																	.addComponent(
+																			nameField)
+																	.addComponent(
+																			typesButton))));
+
+					knowItPanelLayout
+							.setVerticalGroup(knowItPanelLayout
+									.createSequentialGroup()
+									.addGroup(
+											knowItPanelLayout
+													.createParallelGroup(
+															GroupLayout.Alignment.BASELINE)
+													.addComponent(readOnlyLabel))
+									.addGroup(
+											knowItPanelLayout
+													.createParallelGroup(
+															GroupLayout.Alignment.BASELINE)
+													.addComponent(nameLabel)
+													.addComponent(nameField))
+									.addGroup(
+											knowItPanelLayout
+													.createParallelGroup(
+															GroupLayout.Alignment.BASELINE)
+													.addComponent(typesLabel)
+													.addComponent(typesButton)));
 				} else {
 					knowItPanelLayout
-					.setHorizontalGroup(knowItPanelLayout
-							.createParallelGroup()
-							.addGroup(
-									knowItPanelLayout
-											.createSequentialGroup()
-											.addGroup(
-													knowItPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	nameLabel)
-															.addComponent(
-																	typesLabel))
-											.addGroup(
-													knowItPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	nameField)
-															.addComponent(
-																	typesButton))));
+							.setHorizontalGroup(knowItPanelLayout
+									.createParallelGroup()
+									.addGroup(
+											knowItPanelLayout
+													.createSequentialGroup()
+													.addGroup(
+															knowItPanelLayout
+																	.createParallelGroup()
+																	.addComponent(
+																			nameLabel)
+																	.addComponent(
+																			typesLabel))
+													.addGroup(
+															knowItPanelLayout
+																	.createParallelGroup()
+																	.addComponent(
+																			nameField)
+																	.addComponent(
+																			typesButton))));
 
-			knowItPanelLayout.setVerticalGroup(knowItPanelLayout
-					.createSequentialGroup()
-					.addGroup(
-							knowItPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(nameLabel)
-									.addComponent(nameField))
-					.addGroup(
-							knowItPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(typesLabel)
-									.addComponent(typesButton)));
+					knowItPanelLayout
+							.setVerticalGroup(knowItPanelLayout
+									.createSequentialGroup()
+									.addGroup(
+											knowItPanelLayout
+													.createParallelGroup(
+															GroupLayout.Alignment.BASELINE)
+													.addComponent(nameLabel)
+													.addComponent(nameField))
+									.addGroup(
+											knowItPanelLayout
+													.createParallelGroup(
+															GroupLayout.Alignment.BASELINE)
+													.addComponent(typesLabel)
+													.addComponent(typesButton)));
 				}
-
 
 				this.pane.add(knowItPanel);
 				this.pane.add(describeItEditingPanel);

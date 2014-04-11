@@ -211,8 +211,7 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 		for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 			if (codeBlock instanceof CodeBlockSource) {
 				CodeBlockSource source = (CodeBlockSource) codeBlock;
-				clone.addCodeBlock(source.duplicate(library
-						.getNextCodeBlockID()));
+				clone.addCodeBlock(source.duplicate());
 			}
 		}
 

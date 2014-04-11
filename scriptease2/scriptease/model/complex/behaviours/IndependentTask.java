@@ -12,6 +12,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A independent task is a subclass of Task with only one subject.
@@ -23,13 +24,17 @@ public class IndependentTask extends Task {
 
 	private StoryComponentContainer initiatorContainer;
 
+	public IndependentTask(LibraryModel library, int id) {
+		this(library, id, "");
+	}
+
 	/**
 	 * Constructor. Creates a new independent task with the given name
 	 * 
 	 * @param name
 	 */
-	public IndependentTask(String name) {
-		super(name);
+	public IndependentTask(LibraryModel library, int id, String name) {
+		super(library, id, name);
 
 		final List<Class<? extends StoryComponent>> taskContainerTypes;
 
@@ -77,7 +82,7 @@ public class IndependentTask extends Task {
 			if (this.getChildren().iterator().next() == newChild)
 				this.setInitiatorContainer((StoryComponentContainer) newChild);
 		}
-		
+
 		return success;
 	}
 

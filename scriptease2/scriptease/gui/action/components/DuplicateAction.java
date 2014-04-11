@@ -117,8 +117,7 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 				final StoryComponentPanel selectedPanel = (StoryComponentPanel) selectedObject;
 				final StoryComponent selectedComponent = selectedPanel
 						.getStoryComponent();
-				final LibraryModel libraryModel = selectedComponent
-						.getLibrary();
+				final LibraryModel library = selectedComponent.getLibrary();
 				selectedComponent.process(new StoryAdapter() {
 
 					// Clone ScriptIts, then replace the referenced codeBlocks
@@ -136,10 +135,8 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 								@Override
 								public void processCodeBlockSource(
 										CodeBlockSource codeBlockSource) {
-									final CodeBlockSource duplicate = codeBlockSource
-											.duplicate(libraryModel
-													.getNextCodeBlockID());
-									clone.addCodeBlock(duplicate);
+									clone.addCodeBlock(codeBlockSource
+											.duplicate());
 								}
 
 								@Override
@@ -150,13 +147,13 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 								}
 							});
 						}
-						libraryModel.add(clone);
+						library.add(clone);
 					}
 
 					@Override
 					protected void defaultProcess(StoryComponent component) {
 						final StoryComponent clone = component.clone();
-						libraryModel.add(clone);
+						library.add(clone);
 					}
 				});
 			}

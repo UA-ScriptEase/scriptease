@@ -52,6 +52,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  */
 public abstract class StoryComponent implements Cloneable {
 
+	private final int id;
 	private String displayText;
 	private Set<String> labels;
 	private Boolean isVisible;
@@ -67,13 +68,28 @@ public abstract class StoryComponent implements Cloneable {
 	public static final String BLANK_TEXT = "";
 	public static final String DISABLE_TEXT = "DISABLED";
 
-	protected StoryComponent() {
-		this(StoryComponent.BLANK_TEXT);
+	/*
+	 * TODO All story components should have libraries. It should no longer be
+	 * optional. They should also all have IDs.
+	 * 
+	 * TODO Make sure cloning these still works properly.
+	 * 
+	 * TODO We could possibly get rid of cloning as we're doing it and instead
+	 * implement Robin's method... Maybe.
+	 */
+	protected StoryComponent(LibraryModel library) {
+		this(library, library.getNextID());
 	}
 
-	protected StoryComponent(String name) {
+	protected StoryComponent(LibraryModel library, int id) {
+		this(library, id, StoryComponent.BLANK_TEXT);
+	}
+
+	protected StoryComponent(LibraryModel library, int id, String name) {
 		this.init();
 		this.displayText = name;
+		this.library = library;
+		this.id = id;
 	}
 
 	/**
@@ -155,6 +171,10 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public String getDisplayText() {
 		return this.displayText;
+	}
+
+	public int getID() {
+		return this.id;
 	}
 
 	/**

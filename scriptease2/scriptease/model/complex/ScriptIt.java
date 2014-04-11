@@ -16,6 +16,7 @@ import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 
 /**
@@ -33,8 +34,8 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 
 	protected Collection<CodeBlock> codeBlocks;
 
-	public ScriptIt(String name) {
-		super(name);
+	public ScriptIt(LibraryModel library, int id, String name) {
+		super(library, id, name);
 		this.codeBlocks = new ArrayList<CodeBlock>();
 
 		// Only classes that extend ScriptIts should be able to have children.
@@ -97,7 +98,15 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 			equal &= thisBlocks.size() == otherBlocks.size();
 
 			for (CodeBlock thisBlock : thisBlocks) {
-				equal &= thisBlock.idIsInCollection(otherBlocks);
+				boolean isInOther = false;
+
+				for (CodeBlock otherBlock : otherBlocks) {
+					if (thisBlock.getID() == otherBlock.getID()) {
+						isInOther = true;
+					}
+				}
+
+				equal &= isInOther;
 			}
 		}
 

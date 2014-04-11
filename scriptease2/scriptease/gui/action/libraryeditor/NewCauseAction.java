@@ -62,17 +62,17 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 		final CodeBlock codeBlock;
 		final KnowIt parameter;
 		final Collection<KnowIt> parameters;
-
-		final String SUBJECT = "subject";
+		final String subject = "subject";
 
 		GameType type;
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		newCause = new CauseIt("When <" + SUBJECT + ">");
+		newCause = new CauseIt(library, library.getNextID(), "When <" + subject
+				+ ">");
 
 		type = null;
-		parameter = new KnowIt(SUBJECT);
+		parameter = new KnowIt(library, library.getNextID(), subject);
 		parameters = new ArrayList<KnowIt>();
 
 		parameters.add(parameter);
@@ -89,13 +89,13 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 		}
 
 		if (type != null) {
-			final int id = library.getNextCodeBlockID();
 			final String slot = type.getSlots().iterator().next();
 
-			codeBlock = new CodeBlockSource(SUBJECT, slot, parameters, id);
+			codeBlock = new CodeBlockSource(subject, slot, parameters, library,
+					library.getNextID());
 
 			newCause.addCodeBlock(codeBlock);
-			newCause.setDisplayText("When <" + SUBJECT + ">");
+			newCause.setDisplayText("When <" + subject + ">");
 			newCause.setVisible(true);
 
 			library.add(newCause);

@@ -2,6 +2,7 @@ package scriptease.model.atomic;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A story component that contains text and nothing else. Can be inserted
@@ -12,13 +13,31 @@ import scriptease.model.StoryComponent;
  */
 public final class Note extends StoryComponent {
 
-	public Note() {
-		this("");
+	/**
+	 * Used to create the common note. If you're adding a note in code, it's
+	 * recommended to use {@link LibraryModel#createNote()} instead.
+	 * 
+	 * @param library
+	 * @param id
+	 */
+	public Note(LibraryModel library, int id) {
+		this(library, id, "");
 	}
 
-	public Note(String string) {
-		super();
-		this.setDisplayText(string);
+	/**
+	 * Used to build notes from save files. If you're adding a note in code,
+	 * it's recommended to use {@link LibraryModel#createNote()} instead.
+	 * 
+	 * @param library
+	 * @param id
+	 */
+	public Note(LibraryModel library, int id, String string) {
+		super(library, id, "");
+	}
+
+	@Override
+	public Note clone() {
+		return (Note) super.clone();
 	}
 
 	@Override

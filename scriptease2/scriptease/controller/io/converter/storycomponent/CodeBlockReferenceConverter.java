@@ -55,8 +55,6 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 		super.marshal(source, writer, context);
 
-		XMLNode.TARGET_ID.writeInteger(writer, codeBlock.getId());
-
 		if (!parameters.isEmpty()) {
 			XMLNode.PARAMETERS.writeObject(writer, context, parameters);
 		}
@@ -65,15 +63,16 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+
+		// TODO Setting target here may be wrong. Check it out
+
 		final String libraryName = XMLAttribute.LIBRARY.read(reader);
 
 		final CodeBlockReference block;
 		final Translator translator;
-		final int targetId;
 
 		block = (CodeBlockReference) super.unmarshal(reader, context);
 		translator = TranslatorManager.getInstance().getActiveTranslator();
-		targetId = Integer.parseInt(XMLNode.TARGET_ID.readString(reader));
 
 		// We use this hack to load in any codeblock references to the existing
 		// library model before the library model is read from XStream.
@@ -87,7 +86,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 		CodeBlockSource target = null;
 		if (library != null) {
-			target = library.getCodeBlockByID(targetId);
+			target = library.getCodeBlockByID(block.getID());
 			block.setLibrary(library);
 		}
 
@@ -115,7 +114,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new CodeBlockReference();
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new CodeBlockReference(library, id);
 	}
 }

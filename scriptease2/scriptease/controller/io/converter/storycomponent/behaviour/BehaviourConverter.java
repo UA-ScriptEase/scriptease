@@ -8,6 +8,7 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -80,7 +81,7 @@ public class BehaviourConverter extends ScriptItConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new Behaviour("");
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new Behaviour(library, id, "");
 	}
 }

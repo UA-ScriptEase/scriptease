@@ -19,6 +19,7 @@ import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferen
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.io.model.GameType;
+import scriptease.util.ListOp;
 
 /**
  * Inserts a new FunctionIt into the Library.
@@ -54,37 +55,32 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final LibraryModel libraryModel;
+		final LibraryModel library;
 
 		final ActivityIt newActivityIt;
 		final CodeBlock codeBlock;
-		final int codeBlockID;
 		final Collection<String> types;
 		final Collection<AbstractFragment> formatRef;
 
-		libraryModel = (LibraryModel) SEModelManager.getInstance()
-				.getActiveModel();
+		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		newActivityIt = new ActivityIt("New Activity");
+		newActivityIt = new ActivityIt(library, library.getNextID(),
+				"New Activity");
 		newActivityIt.setVisible(true);
-		newActivityIt.setDisplayText("New Activity");
 
-		codeBlockID = libraryModel.getNextCodeBlockID();
-
-		types = new ArrayList<String>();
-		types.add(GameType.DEFAULT_VOID_TYPE);
-
+		types = ListOp.createList(GameType.DEFAULT_VOID_TYPE);
+		
 		formatRef = new ArrayList<AbstractFragment>();
 		formatRef.add(new FormatReferenceFragment("activityItChildren",
 				FormatReferenceType.NONE));
 
-		codeBlock = new CodeBlockSource(codeBlockID);
+		codeBlock = new CodeBlockSource(library, library.getNextID());
 		codeBlock.setTypesByName(types);
 		codeBlock.setCode(formatRef);
 
 		newActivityIt.addCodeBlock(codeBlock);
 
-		libraryModel.add(newActivityIt);
+		library.add(newActivityIt);
 		LibraryPanel.getInstance().navigateToComponent(newActivityIt);
 	}
 }

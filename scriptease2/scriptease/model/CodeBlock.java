@@ -12,6 +12,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
 
@@ -32,6 +33,15 @@ import scriptease.translator.io.model.GameType;
  */
 public abstract class CodeBlock extends StoryComponent implements
 		TypedComponent, StoryComponentObserver {
+
+	protected CodeBlock(LibraryModel library) {
+		super(library);
+	}
+
+	protected CodeBlock(LibraryModel library, int id) {
+		super(library, id);
+	}
+
 	/*
 	 * Only instance-specific information may be stored in this parent class.
 	 * Anything that is translator-only must be stored in CodeBlockSource,
@@ -85,20 +95,6 @@ public abstract class CodeBlock extends StoryComponent implements
 		}
 
 		return hashCode;
-	}
-
-	/**
-	 * Returns whether the ID exists in the collection of code blocks.
-	 * 
-	 * @param codeBlocks
-	 * @return
-	 */
-	public boolean idIsInCollection(Collection<CodeBlock> codeBlocks) {
-		for (CodeBlock block : codeBlocks) {
-			if (block.getId() == this.getId())
-				return true;
-		}
-		return false;
 	}
 
 	@Override
@@ -375,15 +371,6 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * @return the code block's code.
 	 */
 	public abstract Collection<AbstractFragment> getCode();
-
-	/**
-	 * Gets the base ID for this CodeBlock. The Base ID is the ID of the source
-	 * code block, which is either directly for this code block, or if it a
-	 * reference then is the ID of its source.
-	 * 
-	 * @return The base id of this code block.
-	 */
-	public abstract int getId();
 
 	@Override
 	public void componentChanged(StoryComponentEvent event) {
