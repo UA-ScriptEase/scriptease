@@ -10,6 +10,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A CauseIt represents a StoryComponent. It acts as a trigger and a cause /
@@ -24,8 +25,8 @@ import scriptease.model.complex.behaviours.Behaviour;
  * @author jyuen
  */
 public class CauseIt extends ScriptIt {
-	public CauseIt(String name) {
-		super(name);
+	public CauseIt(LibraryModel library, int id, String name) {
+		super(library, id, name);
 		final List<Class<? extends StoryComponent>> validTypes = new ArrayList<Class<? extends StoryComponent>>();
 
 		validTypes.add(ScriptIt.class);
@@ -37,7 +38,7 @@ public class CauseIt extends ScriptIt {
 		validTypes.add(Behaviour.class);
 		validTypes.add(PickIt.class);
 		validTypes.add(ActivityIt.class);
-		
+
 		this.registerChildTypes(validTypes, MAX_NUM_OF_ONE_TYPE);
 	}
 
@@ -50,6 +51,8 @@ public class CauseIt extends ScriptIt {
 	 * @return
 	 */
 	public boolean isEquivalentToCause(CauseIt cause) {
+		// TODO Can probably just check library and ID now!!
+
 		boolean equality = true;
 
 		equality &= cause.getDisplayText().equals(this.getDisplayText());

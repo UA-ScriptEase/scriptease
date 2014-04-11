@@ -7,6 +7,7 @@ import scriptease.controller.io.XMLNode;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -72,7 +73,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new ScriptIt("");
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new ScriptIt(library, id, "");
 	}
 }

@@ -2,6 +2,7 @@ package scriptease.controller.io.converter.storycomponent;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -22,7 +23,7 @@ public class NoteConverter extends StoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new Note("");
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new Note(library, id, "");
 	}
 }

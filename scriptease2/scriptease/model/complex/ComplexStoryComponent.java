@@ -12,6 +12,7 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import sun.awt.util.IdentityArrayList;
 
 public abstract class ComplexStoryComponent extends StoryComponent {
@@ -23,12 +24,12 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	protected List<StoryComponent> childComponents;
 
 	/************* CONSTRUCTORS ********************/
-	public ComplexStoryComponent() {
-		this("");
+	public ComplexStoryComponent(LibraryModel library, int id) {
+		this(library, id, "");
 	}
 
-	protected ComplexStoryComponent(String name) {
-		super(name);
+	protected ComplexStoryComponent(LibraryModel library, int id, String name) {
+		super(library, id, name);
 		this.init();
 	}
 
@@ -101,7 +102,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			StoryComponent sibling) {
 		int siblingIndex = -1;
 		final StoryComponent previousOwner = newChild.getOwner();
-		
+
 		if (!this.canAcceptChild(newChild)) {
 			System.err.println("ComplexStoryComponent '"
 					+ this.getDisplayText() + "' has rejected '" + newChild

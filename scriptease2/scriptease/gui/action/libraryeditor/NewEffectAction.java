@@ -45,27 +45,23 @@ public class NewEffectAction extends ActiveModelSensitiveAction {
 		return super.isLegal()
 				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final LibraryModel libraryModel;
+		final LibraryModel library;
 
 		final ScriptIt newEffect;
-		final int codeBlockID;
 		final CodeBlock codeBlock;
 
-		libraryModel = (LibraryModel) SEModelManager.getInstance()
-				.getActiveModel();
+		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		newEffect = new ScriptIt("New Effect");
-		codeBlockID = libraryModel.getNextCodeBlockID();
-		codeBlock = new CodeBlockSource(codeBlockID);
+		newEffect = new ScriptIt(library, library.getNextID(), "New Effect");
+		codeBlock = new CodeBlockSource(library, library.getNextID());
 
 		newEffect.addCodeBlock(codeBlock);
-		newEffect.setDisplayText("New Effect");
 		newEffect.setVisible(true);
 
-		libraryModel.add(newEffect);
+		library.add(newEffect);
 		LibraryPanel.getInstance().navigateToComponent(newEffect);
 	}
 }

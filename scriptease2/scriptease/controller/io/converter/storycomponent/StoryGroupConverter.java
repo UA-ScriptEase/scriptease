@@ -4,6 +4,7 @@ import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -57,7 +58,7 @@ public class StoryGroupConverter extends StoryNodeConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
+			UnmarshallingContext context, LibraryModel library, int id) {
 		return new StoryGroup();
 	}
 }

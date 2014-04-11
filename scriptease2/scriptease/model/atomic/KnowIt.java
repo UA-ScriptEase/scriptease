@@ -67,12 +67,35 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	private KnowItBinding knowItBinding;
 	private Collection<String> types;
 
-	public KnowIt() {
-		this("", new ArrayList<String>());
+	/**
+	 * Creates a non unique KnowIt with the passed in name.
+	 * 
+	 * @param name
+	 */
+	public KnowIt(String name) {
+		this(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID(), name);
 	}
 
-	public KnowIt(String name) {
-		this(name, new ArrayList<String>());
+	/**
+	 * Creates a non unique KnowIt with the passed in name and type.
+	 * 
+	 * @param name
+	 */
+	public KnowIt(String name, String type) {
+		this(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID(), name,
+				type);
+	}
+
+	public KnowIt(LibraryModel library) {
+		this(library, library.getNextID());
+	}
+
+	public KnowIt(LibraryModel library, int id) {
+		this(library, id, "");
+	}
+
+	public KnowIt(LibraryModel library, int id, String name) {
+		this(library, id, name, new ArrayList<String>());
 
 	}
 
@@ -83,8 +106,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @param type
 	 */
 	@SuppressWarnings("serial")
-	public KnowIt(String name, final String type) {
-		this(name, new ArrayList<String>() {
+	public KnowIt(LibraryModel library, int id, String name, final String type) {
+		this(library, id, name, new ArrayList<String>() {
 			{
 				this.add(type);
 			}
@@ -100,12 +123,13 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @param types
 	 *            The types of the <code>KnowIt</code>.
 	 */
-	public KnowIt(String name, Collection<String> types) {
+	public KnowIt(LibraryModel library, int id, String name,
+			Collection<String> types) {
+		super(library, id, name);
 		// null binding by default
 		this.types = new HashSet<String>();
 		this.knowItBinding = new KnowItBindingNull();
 		this.clearBinding();
-		this.setDisplayText(name);
 
 		if (types != null) {
 			this.types = types;
