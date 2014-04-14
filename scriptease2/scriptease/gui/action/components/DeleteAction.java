@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.ScriptEase;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
@@ -148,7 +149,10 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			if (manager != null) {
 				manager.deleteSelected();
 			}
-		} else if (focusOwner instanceof StoryComponentPanelJList) {
+		} else if (focusOwner instanceof StoryComponentPanelJList
+				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel
+				&& (!((LibraryModel)SEModelManager.getInstance().getActiveModel()).getReadOnly() || ScriptEase.DEBUG_MODE))	{
+			
 			/*
 			 * TODO Needs undoability
 			 * 

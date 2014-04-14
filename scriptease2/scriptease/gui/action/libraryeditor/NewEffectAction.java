@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.ScriptEase;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
@@ -56,16 +57,18 @@ public class NewEffectAction extends ActiveModelSensitiveAction {
 
 		libraryModel = (LibraryModel) SEModelManager.getInstance()
 				.getActiveModel();
-
-		newEffect = new ScriptIt("New Effect");
-		codeBlockID = libraryModel.getNextCodeBlockID();
-		codeBlock = new CodeBlockSource(codeBlockID);
-
-		newEffect.addCodeBlock(codeBlock);
-		newEffect.setDisplayText("New Effect");
-		newEffect.setVisible(true);
-
-		libraryModel.add(newEffect);
-		LibraryPanel.getInstance().navigateToComponent(newEffect);
+		
+		if(!libraryModel.getReadOnly() || ScriptEase.DEBUG_MODE){
+			newEffect = new ScriptIt("New Effect");
+			codeBlockID = libraryModel.getNextCodeBlockID();
+			codeBlock = new CodeBlockSource(codeBlockID);
+	
+			newEffect.addCodeBlock(codeBlock);
+			newEffect.setDisplayText("New Effect");
+			newEffect.setVisible(true);
+	
+			libraryModel.add(newEffect);
+			LibraryPanel.getInstance().navigateToComponent(newEffect);
+		}
 	}
 }
