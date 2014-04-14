@@ -167,7 +167,6 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 						@Override
 						public void gainFocus(Component oldFocus) {
 							setSelectionBackground(ScriptEaseUI.SELECTED_COLOUR);
-
 						}
 
 						@Override
@@ -413,7 +412,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				else if (isSelected && isVisible)
 					valuePanel.setBackground(list.getSelectionBackground());
 				else if (isSelected && !isVisible)
-					valuePanel.setBackground(Color.GRAY);
+					valuePanel.setBackground(ScriptEaseUI.SELECTED_COLOUR);
 				else if (!isSelected && !isVisible)
 					valuePanel.setBackground(Color.DARK_GRAY);
 				else if (!isSelected && isVisible)
