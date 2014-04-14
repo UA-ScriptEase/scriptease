@@ -886,8 +886,7 @@ public class LibraryEditorPanelFactory {
 
 		isEditable = ScriptEase.DEBUG_MODE || !knowIt.getLibrary().getReadOnly();
 		
-		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt
-				.getStartNode(), isEditable);
+		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt.getStartNode(), isEditable);
 		
 
 		describeItGraphPanel.setOpaque(false);
