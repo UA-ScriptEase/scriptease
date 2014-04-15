@@ -138,9 +138,11 @@ public class StoryComponentPanelFactory {
 
 					});
 
+			panel.setToolTipText(component.getLibrary() + " : " + component.getDisplayText());
 		}		
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
+	
 		return panel;
 	}
 
