@@ -73,4 +73,5 @@ public enum XMLAttribute {
 	public String read(HierarchicalStreamReader reader) {
 		return reader.getAttribute(this.name);
 	}
+	
 }
