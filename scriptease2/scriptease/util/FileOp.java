@@ -254,6 +254,7 @@ public class FileOp {
 					out.write(FileOp.readStreamAsBytes(resourceStream));
 					System.out.println("Extracted resource " + location
 							+ " from JAR to to file system");
+					out.close();
 				} catch (IOException e) {
 					Thread.getDefaultUncaughtExceptionHandler()
 							.uncaughtException(Thread.currentThread(), e);
@@ -277,11 +278,16 @@ public class FileOp {
 			throws IOException {
 		if (!destination.exists())
 			destination.createNewFile();
+		final FileInputStream src = new FileInputStream(source);
+		final FileOutputStream dest = new FileOutputStream(destination);
 
 		// Credit: http://javaalmanac.com/egs/java.nio/File2File.html
-		FileChannel srcChannel = new FileInputStream(source).getChannel();
-		FileChannel dstChannel = new FileOutputStream(destination).getChannel();
+		final FileChannel srcChannel = src.getChannel();
+		final FileChannel dstChannel = dest.getChannel();
 		dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+		
+		src.close();
+		dest.close();
 		srcChannel.close();
 		dstChannel.close();
 	}
