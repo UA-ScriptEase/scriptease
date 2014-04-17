@@ -90,12 +90,14 @@ public class EffectHolderPanel extends JPanel {
 		removeEffectButton = ComponentFactory.buildFlatButton(
 				ScriptEaseUI.SE_BURGUNDY, "Remove Effect");
 		
-		isEditable = ScriptEase.DEBUG_MODE || !effect.getLibrary().getReadOnly();
 
-		if (effect != null)
+		if (effect != null) {
+			isEditable = ScriptEase.DEBUG_MODE || !effect.getLibrary().getReadOnly();
 			panel = StoryComponentPanelFactory.getInstance()
 					.buildStoryComponentPanel(effect);
+		}
 		else {
+			isEditable = true;
 			panel = new JPanel();
 			panel.add(new JLabel("No Effect"));
 			removeEffectButton.setEnabled(false);

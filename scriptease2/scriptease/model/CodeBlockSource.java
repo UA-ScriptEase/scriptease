@@ -177,8 +177,7 @@ public class CodeBlockSource extends CodeBlock {
 	 * @author mfchurch
 	 * @return
 	 */
-	public CodeBlockSource duplicate() {
-		final LibraryModel library = this.getLibrary();
+	public CodeBlockSource duplicate(LibraryModel library) {
 		final CodeBlockSource duplicate = new CodeBlockSource(library,
 				library.getNextID());
 
@@ -201,6 +200,19 @@ public class CodeBlockSource extends CodeBlock {
 		duplicate.setCode(clonedCode);
 
 		return duplicate;
+	}
+
+	/**
+	 * Creates a duplicate of the CodeBlock with the given ID assigned. This is
+	 * similar to cloning however should only be used with regards to making
+	 * CodeBlocks modifications that we do not wish to be reflected in the
+	 * original (LibraryEditor).
+	 * 
+	 * @author mfchurch
+	 * @return
+	 */
+	public CodeBlockSource duplicate() {
+		return this.duplicate(this.getLibrary());
 	}
 
 	@Override
