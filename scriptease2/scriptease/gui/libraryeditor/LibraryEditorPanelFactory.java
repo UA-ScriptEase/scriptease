@@ -409,15 +409,19 @@ public class LibraryEditorPanelFactory {
 				taskPanel.setBorder(BorderFactory
 						.createTitledBorder("Task Panel"));
 
+				//Debug code
+				final Component testPanel = behaviourPanel.getComponent(behaviourPanel.getComponents().length - 1);
+				
+				
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = behaviourPanel
 						.getComponent(behaviourPanel.getComponents().length - 1);
-
+				
 				if (lastComponent instanceof JPanel) {
 					final JPanel panel = (JPanel) lastComponent;
 
 					if (panel.getComponentCount() > 0
-							&& panel.getComponent(0) instanceof JScrollPane) {
+							&& panel.getComponent(0) instanceof JScrollPane || panel.getComponent(0) instanceof JSplitPane) {
 						behaviourPanel.remove(lastComponent);
 					}
 				}

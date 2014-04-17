@@ -14,6 +14,7 @@ import javax.swing.event.ChangeListener;
 
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
@@ -71,7 +72,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-
+		
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
 		spinner.setValue(task.getChance());
@@ -87,7 +88,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		nameField = new JTextField(task.getDisplayText());
 
 		percent = new JLabel(" %");
-		percent.setForeground(Color.WHITE);
+		percent.setForeground(ScriptEaseUI.SE_BLACK);
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
 				new Runnable() {
@@ -140,7 +141,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		});
 
 		percent = new JLabel(" %");
-		percent.setForeground(Color.WHITE);
+		percent.setForeground(ScriptEaseUI.SE_BLACK);
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(initiatorField,
 				new Runnable() {
