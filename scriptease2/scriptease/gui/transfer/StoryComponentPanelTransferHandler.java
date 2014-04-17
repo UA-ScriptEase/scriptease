@@ -624,10 +624,9 @@ public class StoryComponentPanelTransferHandler extends TransferHandler {
 					final LibraryModel library = codeBlock.getLibrary();
 
 					//Testing code to allow default library code to be inserted into non-default libraries
-					acceptable &= (model instanceof LibraryModel && (model == library || library == potentialParent.getLibrary().getTranslator().getLibrary()))
-//					acceptable &= (model instanceof LibraryModel && model == library)
+					acceptable &= (model instanceof LibraryModel
 							|| (model instanceof StoryModel && ((StoryModel) model)
-									.getLibraries().contains(library));
+									.getLibraries().contains(library)));
 				}
 			}
 

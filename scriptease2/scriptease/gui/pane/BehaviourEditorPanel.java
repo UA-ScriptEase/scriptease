@@ -171,6 +171,7 @@ public class BehaviourEditorPanel extends JPanel {
 
 			@Override
 			public void nodesSelected(final Collection<Task> nodes) {
+
 				final JPanel taskPanel = new JPanel();
 
 				final FlowLayout layout = new FlowLayout(FlowLayout.LEADING);
@@ -191,7 +192,7 @@ public class BehaviourEditorPanel extends JPanel {
 				final Task task = nodes.iterator().next();
 				
 				if (task instanceof IndependentTask) {
-					
+									
 					final StoryComponentPanelTree storyComponentPanelTree;
 
 					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
@@ -208,7 +209,7 @@ public class BehaviourEditorPanel extends JPanel {
 					taskPanel.add(storyComponentPanelTree);
 
 				} else if (task instanceof CollaborativeTask) {
-
+					
 					final StoryComponentPanelTree initiatorPanelTree;
 					final StoryComponentPanelTree responderPanelTree;
 
