@@ -61,6 +61,7 @@ import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.ScriptEaseKeywords;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.ListOp;
 import scriptease.util.StringOp;
@@ -130,19 +131,23 @@ public class LibraryEditorPanelFactory {
 			// Rebuilds the implicit panel and StoryComponentPanelTree when a
 			// parameter has changed
 			@Override
-			public void codeBlockPanelChanged() {				
+			public void codeBlockPanelChanged() {
 				final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
 						.getInstance().buildStoryComponentPanel(activityIt);
 
-				//Should always be able to remove the tree regardless
+				// Should always be able to remove the tree regardless
 				activityPanel.remove(2);
 				activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
 
-				//Checking if getComponent(3) is null results in an out of bounds exception so we have to make sure we list is big enough before doing our null check
-				if(activityPanel.getComponentCount() > 3 && activityPanel.getComponent(3) != null){
+				// Checking if getComponent(3) is null results in an out of
+				// bounds exception so we have to make sure we list is big
+				// enough before doing our null check
+				if (activityPanel.getComponentCount() > 3
+						&& activityPanel.getComponent(3) != null) {
 					activityPanel.remove(3);
 				}
-				activityPanel.add(new StoryComponentPanelTree(newTransferPanel), 3);
+				activityPanel.add(
+						new StoryComponentPanelTree(newTransferPanel), 3);
 				activityPanel.repaint();
 				activityPanel.revalidate();
 			}
@@ -152,19 +157,24 @@ public class LibraryEditorPanelFactory {
 				new StoryComponentObserver() {
 
 					@Override
-					public void componentChanged(StoryComponentEvent event) {						
-						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME || event.getType() == StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE) {
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_TEXT_NAME
+								|| event.getType() == StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE) {
 							final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
 									.getInstance().buildStoryComponentPanel(
 											activityIt);
 
-							if(activityPanel.getComponents().length >= 3 && activityPanel.getComponent(2) != null){
+							if (activityPanel.getComponents().length >= 3
+									&& activityPanel.getComponent(2) != null) {
 								activityPanel.remove(2);
 							}
-							
-							activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
-							
-							if(activityPanel.getComponents().length >= 4 && activityPanel.getComponent(3) != null){
+
+							activityPanel
+									.add(buildActivityItImplicitPanel(activityIt),
+											2);
+
+							if (activityPanel.getComponents().length >= 4
+									&& activityPanel.getComponent(3) != null) {
 								activityPanel.remove(3);
 							}
 							activityPanel.add(new StoryComponentPanelTree(
@@ -208,12 +218,12 @@ public class LibraryEditorPanelFactory {
 				dimension.height = 40;
 				return dimension;
 			}
-		};		
-		
+		};
+
 		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		final CodeBlock codeBlock = activityIt.getMainCodeBlock();
-		
+
 		for (KnowIt parameter : codeBlock.getParameters()) {
 			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,
 					false));
@@ -368,6 +378,7 @@ public class LibraryEditorPanelFactory {
 			final JPanel behaviourPanel, final String type) {
 		final SEGraph<Task> graph;
 		final Task startTask;
+		final LibraryModel library = behaviour.getLibrary();
 
 		if (behaviour.getStartTask() != null) {
 			// If behaviour is defined, build its existing task graph
@@ -375,9 +386,9 @@ public class LibraryEditorPanelFactory {
 		} else {
 			// Else create a new one.
 			if (type == ScriptEaseKeywords.INDEPENDENT)
-				startTask = new IndependentTask("");
+				startTask = new IndependentTask(library, library.getNextID());
 			else
-				startTask = new CollaborativeTask("", "");
+				startTask = new CollaborativeTask(library, library.getNextID());
 
 			behaviour.setStartTask(startTask);
 		}
@@ -439,8 +450,7 @@ public class LibraryEditorPanelFactory {
 
 					final StoryComponentPanelTree initiatorPanelTree;
 					final StoryComponentPanelTree responderPanelTree;
-					
-					
+
 					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
 							.getInstance().buildStoryComponentPanel(
 									((CollaborativeTask) task)
@@ -460,18 +470,22 @@ public class LibraryEditorPanelFactory {
 							.createEmptyBorder());
 					responderPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
-					
 
-					JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,initiatorPanelTree, responderPanelTree);
+					JSplitPane splitPane = new JSplitPane(
+							JSplitPane.VERTICAL_SPLIT, initiatorPanelTree,
+							responderPanelTree);
 					splitPane.setResizeWeight(0.5);
-					taskPanel.setLayout(new BoxLayout(taskPanel,BoxLayout.X_AXIS));
-					
-					//Provide minimum sizes for the two components in the split pane
-					//Should be enough space for each panel to have 3 effects event at low resolutions.
+					taskPanel.setLayout(new BoxLayout(taskPanel,
+							BoxLayout.X_AXIS));
+
+					// Provide minimum sizes for the two components in the split
+					// pane
+					// Should be enough space for each panel to have 3 effects
+					// event at low resolutions.
 					Dimension minimumSize = new Dimension(500, 300);
 					splitPane.setMinimumSize(minimumSize);
 					splitPane.setPreferredSize(minimumSize);
-					
+
 					taskPanel.add(splitPane);
 
 				}
@@ -479,7 +493,7 @@ public class LibraryEditorPanelFactory {
 				behaviourPanel.add(taskPanel);
 				behaviourPanel.repaint();
 				behaviourPanel.revalidate();
-				
+
 			}
 
 			@Override
@@ -498,54 +512,58 @@ public class LibraryEditorPanelFactory {
 
 	private JPanel buildBehaviourImplicitPanel(final List<KnowIt> implicitList) {
 		final JPanel implicitPanel;
-		
+
 		implicitPanel = new JPanel();
 		implicitPanel.setBorder(BorderFactory.createTitledBorder("Implicits"));
-		implicitPanel.setLayout(new BoxLayout(implicitPanel, BoxLayout.Y_AXIS ));
-				
+		implicitPanel.setLayout(new BoxLayout(implicitPanel, BoxLayout.Y_AXIS));
+
 		for (final KnowIt implicit : implicitList) {
-			final BindingWidget bindingWidget = ScriptWidgetFactory.buildBindingWidget(implicit, false);
+			final BindingWidget bindingWidget = ScriptWidgetFactory
+					.buildBindingWidget(implicit, false);
 			final JPanel subPanel = new JPanel();
 			final ParameterPanel parameterPanel;
 
 			subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			subPanel.add(bindingWidget);
-			
-		    parameterPanel = buildParameterPanel(implicit);
-			parameterPanel.addListener(new ParameterPanelObserver (){
+
+			parameterPanel = buildParameterPanel(implicit);
+			parameterPanel.addListener(new ParameterPanelObserver() {
 				@Override
 				public void parameterPanelChanged() {
-					
+
 					/**
-					 * So this chunk is to make sure that the binding's code block itself has it's types updated in addition
-					 * to just the KnowIt (which is not done by the ParameterPanel, but is what's sued when drawing the BindingWidget). 
+					 * So this chunk is to make sure that the binding's code
+					 * block itself has it's types updated in addition to just
+					 * the KnowIt (which is not done by the ParameterPanel, but
+					 * is what's sued when drawing the BindingWidget).
 					 */
-										
+
 					final KnowItBinding implicitBinding = implicit.getBinding();
-					final ScriptIt implicitBindingValue = (ScriptIt)implicitBinding.getValue();
-					final CodeBlockReference implicitCodeBlock = (CodeBlockReference) ListOp.getFirst(implicitBindingValue.getCodeBlocks());
-					
+					final ScriptIt implicitBindingValue = (ScriptIt) implicitBinding
+							.getValue();
+					final CodeBlockReference implicitCodeBlock = (CodeBlockReference) ListOp
+							.getFirst(implicitBindingValue.getCodeBlocks());
+
 					implicitCodeBlock.setTypesByName(implicit.getTypes());
-					
-					BindingWidget updatedWidget = ScriptWidgetFactory.buildBindingWidget(implicit, false);
+
+					BindingWidget updatedWidget = ScriptWidgetFactory
+							.buildBindingWidget(implicit, false);
 					subPanel.removeAll();
 					subPanel.add(updatedWidget);
 					subPanel.add(parameterPanel);
-					
+
 				}
 			});
 			subPanel.add(parameterPanel, false);
-			
 
 			implicitPanel.add(subPanel, false);
-		} 
-
+		}
 
 		final Dimension dimension = implicitPanel.getPreferredSize();
 		dimension.height = implicitList.size() * 90;
 		dimension.width = implicitPanel.getMaximumSize().width;
 		implicitPanel.setMaximumSize(dimension);
-		
+
 		return implicitPanel;
 	}
 
@@ -558,14 +576,15 @@ public class LibraryEditorPanelFactory {
 
 		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
 				.next();
+		final LibraryModel library = behaviour.getLibrary();
 
 		graph.setBorder(BorderFactory.createEmptyBorder());
 
 		implicitList.add(initiatorImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
-			final KnowIt initiator = new KnowIt();
-			final KnowIt priority = new KnowIt();
+			final KnowIt initiator = new KnowIt(library, library.getNextID());
+			final KnowIt priority = new KnowIt(library, library.getNextID());
 
 			behaviour
 					.setDisplayText("<Initiator> does action with priority <Priority>");
@@ -582,7 +601,7 @@ public class LibraryEditorPanelFactory {
 			behaviour.getMainCodeBlock().addParameter(priority);
 		}
 
-		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));		
+		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph));
 		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
@@ -604,6 +623,7 @@ public class LibraryEditorPanelFactory {
 
 		final KnowIt initiatorImplicit = iterator.next();
 		final KnowIt responderImplicit = iterator.next();
+		final LibraryModel library = behaviour.getLibrary();
 
 		graph.setBorder(BorderFactory.createEmptyBorder());
 
@@ -611,9 +631,9 @@ public class LibraryEditorPanelFactory {
 		implicitList.add(responderImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
-			final KnowIt initiator = new KnowIt();
-			final KnowIt responder = new KnowIt();
-			final KnowIt priority = new KnowIt();
+			final KnowIt initiator = new KnowIt(library, library.getNextID());
+			final KnowIt responder = new KnowIt(library, library.getNextID());
+			final KnowIt priority = new KnowIt(library, library.getNextID());
 
 			behaviour
 					.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");
@@ -707,19 +727,19 @@ public class LibraryEditorPanelFactory {
 		commitText = new Runnable() {
 			@Override
 			public void run() {
-				 final String oldDisplayText = behaviour.getDisplayText();
-				
-				 final String oldActionName = oldDisplayText.substring(
-				 oldDisplayText.indexOf("<") + 12,
-				 oldDisplayText.indexOf(" <Responder>"));
-				
-				 if (actionField.getText().contains("<")
-				 || actionField.getText().contains(">"))
-				 return;
-				
-				 behaviour.setDisplayText(behaviour.getDisplayText().replace(
-				 oldActionName, actionField.getText()));
-				 
+				final String oldDisplayText = behaviour.getDisplayText();
+
+				final String oldActionName = oldDisplayText.substring(
+						oldDisplayText.indexOf("<") + 12,
+						oldDisplayText.indexOf(" <Responder>"));
+
+				if (actionField.getText().contains("<")
+						|| actionField.getText().contains(">"))
+					return;
+
+				behaviour.setDisplayText(behaviour.getDisplayText().replace(
+						oldActionName, actionField.getText()));
+
 			}
 		};
 
@@ -880,18 +900,19 @@ public class LibraryEditorPanelFactory {
 		final EffectHolderPanel effectHolder;
 		final SetEffectObserver effectObserver;
 		final SEGraph<DescribeItNode> graph;
-		
+
 		final boolean isEditable;
-		
+
 		bindingPanel = new JPanel();
 		describeItGraphPanel = new JPanel();
 
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 
-		isEditable = ScriptEase.DEBUG_MODE || !knowIt.getLibrary().getReadOnly();
-		
-		graph = SEGraphFactory.buildDescribeItEditorGraph(describeIt.getStartNode(), isEditable);
-		
+		isEditable = ScriptEase.DEBUG_MODE
+				|| !knowIt.getLibrary().getReadOnly();
+
+		graph = SEGraphFactory.buildDescribeItEditorGraph(
+				describeIt.getStartNode(), isEditable);
 
 		describeItGraphPanel.setOpaque(false);
 		effectHolder.setBackground(ScriptEaseUI.SECONDARY_UI);
@@ -1128,7 +1149,7 @@ public class LibraryEditorPanelFactory {
 		final JTextField nameField;
 		final JTextField labelsField;
 		final JCheckBox visibleBox;
-		
+
 		final boolean isEditable;
 
 		descriptorPanel = new JPanel();
@@ -1137,22 +1158,24 @@ public class LibraryEditorPanelFactory {
 		nameLabel = new JLabel("Name: ");
 		labelLabel = new JLabel("Labels: ");
 		visibleLabel = new JLabel("Visible: ");
-		readOnlyLabel = new JLabel("This element is from a read-only library and cannot be edited.");
-		
+		readOnlyLabel = new JLabel(
+				"This element is from a read-only library and cannot be edited.");
+
 		nameField = this.buildNameEditorPanel(component);
 		labelsField = this.buildLabelEditorField(component);
 		visibleBox = this.buildVisibleBox(component);
-		
-		//Check whether or not this StoryComponent should be editable (debug mode, or not read-only)
-		isEditable = ScriptEase.DEBUG_MODE  || !component.getLibrary().getReadOnly();
-		
+
+		// Check whether or not this StoryComponent should be editable (debug
+		// mode, or not read-only)
+		isEditable = ScriptEase.DEBUG_MODE
+				|| !component.getLibrary().getReadOnly();
+
 		// Set up the labels
 		nameLabel.setFont(labelFont);
 		labelLabel.setFont(labelFont);
 		visibleLabel.setFont(labelFont);
 		readOnlyLabel.setFont(labelFont);
 		readOnlyLabel.setForeground(ScriptEaseUI.SE_BLUE);
-		
 
 		labelLabel.setToolTipText(labelsField.getToolTipText());
 
@@ -1163,25 +1186,33 @@ public class LibraryEditorPanelFactory {
 		descriptorPanelLayout.setAutoCreateGaps(true);
 		descriptorPanelLayout.setAutoCreateContainerGaps(true);
 		descriptorPanelLayout.setHonorsVisibility(true);
-		
+
 		// Add JComponents to DescriptorPanel using GroupLayout
-		if(isEditable){
-			descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
-					.createParallelGroup().addGroup(
-							descriptorPanelLayout
-									.createSequentialGroup()
-									.addGroup(
-											descriptorPanelLayout
-													.createParallelGroup()
-													.addComponent(nameLabel)
-													.addComponent(visibleLabel)
-													.addComponent(labelLabel))
-									.addGroup(
-											descriptorPanelLayout
-													.createParallelGroup()
-													.addComponent(visibleBox)
-													.addComponent(nameField)
-													.addComponent(labelsField))));
+		if (isEditable) {
+			descriptorPanelLayout
+					.setHorizontalGroup(descriptorPanelLayout
+							.createParallelGroup()
+							.addGroup(
+									descriptorPanelLayout
+											.createSequentialGroup()
+											.addGroup(
+													descriptorPanelLayout
+															.createParallelGroup()
+															.addComponent(
+																	nameLabel)
+															.addComponent(
+																	visibleLabel)
+															.addComponent(
+																	labelLabel))
+											.addGroup(
+													descriptorPanelLayout
+															.createParallelGroup()
+															.addComponent(
+																	visibleBox)
+															.addComponent(
+																	nameField)
+															.addComponent(
+																	labelsField))));
 
 			descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
 					.createSequentialGroup()
@@ -1207,30 +1238,38 @@ public class LibraryEditorPanelFactory {
 			visibleBox.setEnabled(false);
 			nameField.setEnabled(false);
 			labelsField.setEnabled(false);
-			descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
-					.createParallelGroup().addGroup(
-							descriptorPanelLayout
-									.createSequentialGroup()
-									.addGroup(
-											descriptorPanelLayout
-													.createParallelGroup()
-													.addComponent(nameLabel)
-													.addComponent(visibleLabel)
-													.addComponent(labelLabel))
-									.addGroup(
-											descriptorPanelLayout
-													.createParallelGroup()
-													.addComponent(readOnlyLabel)
-													.addComponent(visibleBox)
-													.addComponent(nameField)
-													.addComponent(labelsField))));
+			descriptorPanelLayout
+					.setHorizontalGroup(descriptorPanelLayout
+							.createParallelGroup()
+							.addGroup(
+									descriptorPanelLayout
+											.createSequentialGroup()
+											.addGroup(
+													descriptorPanelLayout
+															.createParallelGroup()
+															.addComponent(
+																	nameLabel)
+															.addComponent(
+																	visibleLabel)
+															.addComponent(
+																	labelLabel))
+											.addGroup(
+													descriptorPanelLayout
+															.createParallelGroup()
+															.addComponent(
+																	readOnlyLabel)
+															.addComponent(
+																	visibleBox)
+															.addComponent(
+																	nameField)
+															.addComponent(
+																	labelsField))));
 
 			descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
 					.createSequentialGroup()
 					.addGroup(
-							descriptorPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
+							descriptorPanelLayout.createParallelGroup(
+									GroupLayout.Alignment.BASELINE)
 									.addComponent(readOnlyLabel))
 					.addGroup(
 							descriptorPanelLayout
@@ -1252,7 +1291,6 @@ public class LibraryEditorPanelFactory {
 									.addComponent(labelsField)));
 		}
 
-
 		return descriptorPanel;
 	}
 
@@ -1268,7 +1306,7 @@ public class LibraryEditorPanelFactory {
 			CodeBlock codeBlock, KnowIt knowIt) {
 		return new ParameterPanel(scriptIt, codeBlock, knowIt);
 	}
-	
+
 	/**
 	 * Builds a parameter panel for behaviour implicits.
 	 * 

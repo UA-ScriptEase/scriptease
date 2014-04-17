@@ -13,6 +13,7 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 
 /**
@@ -72,6 +73,16 @@ public final class SEModelManager {
 	 */
 	public Collection<SEModel> getModels() {
 		return new ArrayList<SEModel>(this.models);
+	}
+
+	public LibraryModel getLibraryByName(String name) {
+		for (SEModel model : this.models) {
+			if (model instanceof LibraryModel)
+				if (model.getTitle().equals(name))
+					return (LibraryModel) model;
+		}
+
+		return null;
 	}
 
 	/**

@@ -12,6 +12,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A collaborative task is a subclass of Task with a initiator subject and a
@@ -27,14 +28,19 @@ public class CollaborativeTask extends Task {
 	private StoryComponentContainer initiatorContainer;
 	private StoryComponentContainer responderContainer;
 
+	public CollaborativeTask(LibraryModel library, int id) {
+		this(library, id, "", "");
+	}
+
 	/**
 	 * Constructor to create a CollaborativeTask.
 	 * 
 	 * @param initiatorName
 	 * @param responderName
 	 */
-	public CollaborativeTask(String initiatorName, String responderName) {
-		super(initiatorName + ":" + responderName);
+	public CollaborativeTask(LibraryModel library, int id,
+			String initiatorName, String responderName) {
+		super(library, id, initiatorName + ":" + responderName);
 
 		final List<Class<? extends StoryComponent>> taskContainerTypes;
 

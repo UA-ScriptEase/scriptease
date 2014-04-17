@@ -3,17 +3,13 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
-import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -44,18 +40,9 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final CodeBlockReference codeBlock = (CodeBlockReference) source;
-		final LibraryModel library = codeBlock.getLibrary();
 		final Collection<KnowIt> parameters = codeBlock.getParameters();
 
-		if (library != null)
-			XMLAttribute.LIBRARY.write(writer, library.getTitle());
-		else
-			System.err.println("No library found for " + source
-					+ ". Library attribute will be left blank.");
-
 		super.marshal(source, writer, context);
-
-		XMLNode.TARGET_ID.writeInteger(writer, codeBlock.getId());
 
 		if (!parameters.isEmpty()) {
 			XMLNode.PARAMETERS.writeObject(writer, context, parameters);
@@ -65,30 +52,16 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final String libraryName = XMLAttribute.LIBRARY.read(reader);
 
 		final CodeBlockReference block;
-		final Translator translator;
-		final int targetId;
+		final LibraryModel library;
 
 		block = (CodeBlockReference) super.unmarshal(reader, context);
-		translator = TranslatorManager.getInstance().getActiveTranslator();
-		targetId = Integer.parseInt(XMLNode.TARGET_ID.readString(reader));
-
-		// We use this hack to load in any codeblock references to the existing
-		// library model before the library model is read from XStream.
-		LibraryModel library;
-		if (LibraryModelConverter.currentLibrary != null
-				&& libraryName.equals(LibraryModelConverter.currentLibrary
-						.getTitle())) {
-			library = LibraryModelConverter.currentLibrary;
-		} else
-			library = translator.findLibrary(libraryName);
+		library = block.getLibrary();
 
 		CodeBlockSource target = null;
 		if (library != null) {
-			target = library.getCodeBlockByID(targetId);
-			block.setLibrary(library);
+			target = library.getCodeBlockByID(block.getID());
 		}
 
 		if (target == null) {
@@ -115,7 +88,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new CodeBlockReference();
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new CodeBlockReference(library, id);
 	}
 }

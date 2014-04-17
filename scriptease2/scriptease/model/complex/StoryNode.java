@@ -13,6 +13,7 @@ import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.StoryComponent;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A story node represents a node in the story graph. A story node can either
@@ -22,6 +23,10 @@ import scriptease.model.StoryComponent;
  * @author jyuen
  */
 public abstract class StoryNode extends ComplexStoryComponent {
+
+	public StoryNode() {
+		super(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID());
+	}
 
 	private static int storyNodeCounter = 1;
 

@@ -9,6 +9,7 @@ import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -107,8 +108,8 @@ public class PickItConverter extends ComplexStoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		final PickIt pickIt = new PickIt();
+			UnmarshallingContext context, LibraryModel library, int id) {
+		final PickIt pickIt = new PickIt(library, id);
 
 		// Remove the default generated choices.
 		for (StoryComponent child : pickIt.getChildren())

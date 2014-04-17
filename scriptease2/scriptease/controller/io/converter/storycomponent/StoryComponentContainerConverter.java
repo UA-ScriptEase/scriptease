@@ -8,6 +8,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -36,7 +37,7 @@ public class StoryComponentContainerConverter extends
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
+			UnmarshallingContext context, LibraryModel library, int id) {
 		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 
 		final StoryComponentContainer container;

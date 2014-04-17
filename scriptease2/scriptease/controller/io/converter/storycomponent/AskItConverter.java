@@ -4,6 +4,7 @@ import scriptease.controller.io.XMLNode;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -61,8 +62,8 @@ public class AskItConverter extends ComplexStoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		AskIt askIt = new AskIt();
+			UnmarshallingContext context, LibraryModel library, int id) {
+		AskIt askIt = new AskIt(library, id);
 		// Remove the default generated If and Else blocks.
 		askIt.removeStoryChild(askIt.getIfBlock());
 		askIt.removeStoryChild(askIt.getElseBlock());

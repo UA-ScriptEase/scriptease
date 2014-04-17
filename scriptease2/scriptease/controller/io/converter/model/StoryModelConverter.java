@@ -43,6 +43,10 @@ public class StoryModelConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final StoryModel model = (StoryModel) source;
+
+		LibraryModelConverter.currentLibrary = model.getTranslator()
+				.getLibrary();
+
 		final Collection<String> libraryNames = new ArrayList<String>();
 		final String modulePath;
 
@@ -52,18 +56,18 @@ public class StoryModelConverter implements Converter {
 			libraryNames.add(library.getTitle());
 		}
 
-			XMLAttribute.NAME.write(writer, model.getTitle());
-			XMLAttribute.AUTHOR.write(writer, model.getAuthor());
-			XMLAttribute.DESCRIPTION.write(writer, model.getDescription());
-			XMLNode.VERSION.writeString(writer, model.getCompatibleVersion());
-			XMLNode.TRANSLATOR.writeString(writer, model.getTranslator()
-					.getName());
-			XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
-			XMLNode.GAME_MODULE.writeString(writer, modulePath);
-			XMLNode.DIALOGUES.writeObject(writer, context,
-					model.getDialogueRoots());
-			XMLNode.START_STORY_POINT.writeObject(writer, context,
-					model.getRoot());
+		XMLAttribute.NAME.write(writer, model.getTitle());
+		XMLAttribute.AUTHOR.write(writer, model.getAuthor());
+		XMLAttribute.DESCRIPTION.write(writer, model.getDescription());
+		XMLNode.VERSION.writeString(writer, model.getCompatibleVersion());
+		XMLNode.TRANSLATOR.writeString(writer, model.getTranslator().getName());
+		XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
+		XMLNode.GAME_MODULE.writeString(writer, modulePath);
+		XMLNode.DIALOGUES
+				.writeObject(writer, context, model.getDialogueRoots());
+		XMLNode.START_STORY_POINT.writeObject(writer, context, model.getRoot());
+
+		LibraryModelConverter.currentLibrary = null;
 	}
 
 	@Override
@@ -101,6 +105,7 @@ public class StoryModelConverter implements Converter {
 		translator = TranslatorManager.getInstance().getTranslator(
 				translatorName);
 
+
 		// Make sure the .ses file and the current ScriptEase version are
 		// compatible
 		if (!version.equals(SE_VERSION)
@@ -122,6 +127,8 @@ public class StoryModelConverter implements Converter {
 			return null;
 		} else if (translator == null)
 			throw new IllegalStateException("Translator could not be found.");
+
+		LibraryModelConverter.currentLibrary = translator.getLibrary();
 
 		// Load the Translator
 		TranslatorManager.getInstance().setActiveTranslator(translator);
@@ -159,8 +166,8 @@ public class StoryModelConverter implements Converter {
 			throw new IllegalStateException("Game module could not be loaded.");
 		}
 
-		model = new StoryModel(module, title, author, description, version, translator,
-				optionalLibraries);
+		model = new StoryModel(module, title, author, description, version,
+				translator, optionalLibraries);
 
 		// Story points rely on the current story being set, so we need to load
 		// them after assigning the story to the static variable.
@@ -181,6 +188,7 @@ public class StoryModelConverter implements Converter {
 
 		// reset these to free the memory.
 		currentStory = null;
+		LibraryModelConverter.currentLibrary = null;
 
 		return model;
 	}

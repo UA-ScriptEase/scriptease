@@ -115,7 +115,7 @@ public class CodeBlockPanel extends JPanel {
 		final TypeAction typeAction;
 
 		final List<String> types;
-		
+
 		final boolean isEditable;
 
 		this.observerManager = new ObserverManager<CodeBlockPanelObserver>();
@@ -139,19 +139,19 @@ public class CodeBlockPanel extends JPanel {
 						ScriptEase.FONT_SIZE_KEY)) + 1);
 
 		types = new ArrayList<String>(codeBlock.getTypes());
-		
-		isEditable = ScriptEase.DEBUG_MODE  || !scriptIt.getLibrary().getReadOnly();		
-		
+
+		isEditable = ScriptEase.DEBUG_MODE
+				|| !scriptIt.getLibrary().getReadOnly();
+
 		deleteCodeBlockButton.setEnabled(isEditable);
 		addParameterButton.setEnabled(isEditable);
 		typesButton.setEnabled(isEditable);
-		
-		
+
 		codeBlock.addStoryComponentObserver(new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 				final ArrayList<String> types;
-				
+
 				types = new ArrayList<String>(codeBlock.getTypes());
 
 				typeAction.deselectAll();
@@ -162,7 +162,7 @@ public class CodeBlockPanel extends JPanel {
 
 		// Set up the layout
 		this.setLayout(codeBlockEditorLayout);
-		this.setBorder(new TitledBorder("Code Block #" + codeBlock.getId()));
+		this.setBorder(new TitledBorder("Code Block #" + codeBlock.getID()));
 		this.setBackground(Color.WHITE);
 
 		codeBlockEditorLayout.setAutoCreateGaps(true);
@@ -259,8 +259,7 @@ public class CodeBlockPanel extends JPanel {
 		addParameterButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final KnowIt knowIt = new KnowIt();
-				knowIt.setLibrary(codeBlock.getLibrary());
+				final KnowIt knowIt = new KnowIt(codeBlock.getLibrary());
 				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
 					UndoManager.getInstance().startUndoableAction(
 							"Add parameter " + knowIt + " to " + codeBlock);
@@ -275,7 +274,7 @@ public class CodeBlockPanel extends JPanel {
 			subjectBox = this.buildInvisible();
 			includesField = this.buildIncludesField(codeBlock);
 			slotBox = this.buildSlotComboBox(codeBlock);
-			
+
 			deleteCodeBlockButton.setVisible(false);
 			subjectLabel.setVisible(false);
 		} else {
@@ -313,7 +312,7 @@ public class CodeBlockPanel extends JPanel {
 
 		slotBox.setEnabled(isEditable);
 		includesField.setEnabled(isEditable);
-		
+
 		for (KnowIt parameter : codeBlock.getParameters()) {
 			final ParameterPanel paramPane = LibraryEditorPanelFactory
 					.getInstance().buildParameterPanel(scriptIt, codeBlock,
@@ -529,67 +528,94 @@ public class CodeBlockPanel extends JPanel {
 		final JButton referenceButton;
 		final JButton upButton;
 		final JButton downButton;
-		
+
 		buttons = new JPanel();
 		codePanel = new CodeFragmentPanel(codeBlock, null);
 		codeEditorScrollPane = new JScrollPane(codePanel);
-		isEditable = !codeBlock.ownerComponent.getLibrary().getReadOnly() || ScriptEase.DEBUG_MODE;
-	
-		if(!isEditable){
-			//So the actions have built-in components which update their enabled state when they gain or lose focus
-			//That code doesn't know about the read-only status of the Story Component being edited.
-			//So we just add a bunch of fake actions which override that code, if the current component isn't editable
-			//-zturchan
-			   class DisabledInsertAction extends AbstractInsertFragmentAction {
-					protected DisabledInsertAction(String name) {
-						super(name);
-					}
-					@Override
-					 protected AbstractFragment newFragment(){
-						 return null;
-					 }					
-					@Override 
-					protected boolean isLegal(){
-						return false;
-					}
-		        }
-			   class DisabledMoveAction extends AbstractMoveFragmentAction {
-					protected DisabledMoveAction(String name) {
-						super(name);
-					}
-				
-					@Override 
-					protected boolean isLegal(){
-						return false;
-					}
-					@Override
-					protected int delta() {
-						return 0;
-					}
-		        }
+		isEditable = !codeBlock.ownerComponent.getLibrary().getReadOnly()
+				|| ScriptEase.DEBUG_MODE;
 
-				lineButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Line"), ScriptEaseUI.SE_BURGUNDY);
-				indentButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Indent"), ScriptEaseUI.SE_ORANGE);
-				scopeButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Scope"), ScriptEaseUI.SE_YELLOW);
-				seriesButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Series"), ScriptEaseUI.SE_GREEN);
-				simpleButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Serial"), ScriptEaseUI.SE_BLUE);
-				literalButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Literal"), ScriptEaseUI.SE_TEAL);
-				referenceButton = ComponentFactory.buildFlatButton(new DisabledInsertAction("Reference"), ScriptEaseUI.SE_PURPLE);
-				upButton = ComponentFactory.buildFlatButton(new DisabledMoveAction("Up"));
-				downButton = ComponentFactory.buildFlatButton(new DisabledMoveAction("Down"));
-			
+		if (!isEditable) {
+			// So the actions have built-in components which update their
+			// enabled state when they gain or lose focus
+			// That code doesn't know about the read-only status of the Story
+			// Component being edited.
+			// So we just add a bunch of fake actions which override that code,
+			// if the current component isn't editable
+			// -zturchan
+			class DisabledInsertAction extends AbstractInsertFragmentAction {
+				protected DisabledInsertAction(String name) {
+					super(name);
+				}
+
+				@Override
+				protected AbstractFragment newFragment() {
+					return null;
+				}
+
+				@Override
+				protected boolean isLegal() {
+					return false;
+				}
+			}
+			class DisabledMoveAction extends AbstractMoveFragmentAction {
+				protected DisabledMoveAction(String name) {
+					super(name);
+				}
+
+				@Override
+				protected boolean isLegal() {
+					return false;
+				}
+
+				@Override
+				protected int delta() {
+					return 0;
+				}
+			}
+
+			lineButton = ComponentFactory.buildFlatButton(
+					new DisabledInsertAction("Line"), ScriptEaseUI.SE_BURGUNDY);
+			indentButton = ComponentFactory.buildFlatButton(
+					new DisabledInsertAction("Indent"), ScriptEaseUI.SE_ORANGE);
+			scopeButton = ComponentFactory.buildFlatButton(
+					new DisabledInsertAction("Scope"), ScriptEaseUI.SE_YELLOW);
+			seriesButton = ComponentFactory.buildFlatButton(
+					new DisabledInsertAction("Series"), ScriptEaseUI.SE_GREEN);
+			simpleButton = ComponentFactory.buildFlatButton(
+					new DisabledInsertAction("Serial"), ScriptEaseUI.SE_BLUE);
+			literalButton = ComponentFactory.buildFlatButton(
+					new DisabledInsertAction("Literal"), ScriptEaseUI.SE_TEAL);
+			referenceButton = ComponentFactory.buildFlatButton(
+					new DisabledInsertAction("Reference"),
+					ScriptEaseUI.SE_PURPLE);
+			upButton = ComponentFactory.buildFlatButton(new DisabledMoveAction(
+					"Up"));
+			downButton = ComponentFactory
+					.buildFlatButton(new DisabledMoveAction("Down"));
+
 		} else {
-			lineButton = ComponentFactory.buildFlatButton(InsertLineAction.getInstance(), ScriptEaseUI.SE_BURGUNDY);
-			indentButton = ComponentFactory.buildFlatButton(InsertIndentAction.getInstance(), ScriptEaseUI.SE_ORANGE);
-			scopeButton = ComponentFactory.buildFlatButton(InsertScopeAction.getInstance(), ScriptEaseUI.SE_YELLOW);
-			seriesButton = ComponentFactory.buildFlatButton(InsertSeriesAction.getInstance(), ScriptEaseUI.SE_GREEN);
-			simpleButton = ComponentFactory.buildFlatButton(InsertSimpleAction.getInstance(), ScriptEaseUI.SE_BLUE);
-			literalButton = ComponentFactory.buildFlatButton(InsertLiteralAction.getInstance(), ScriptEaseUI.SE_TEAL);
-			referenceButton = ComponentFactory.buildFlatButton(InsertReferenceAction.getInstance(), ScriptEaseUI.SE_PURPLE);
-			upButton = ComponentFactory.buildFlatButton(MoveFragmentUpAction.getInstance());
-			downButton = ComponentFactory.buildFlatButton(MoveFragmentDownAction.getInstance());
+			lineButton = ComponentFactory.buildFlatButton(
+					InsertLineAction.getInstance(), ScriptEaseUI.SE_BURGUNDY);
+			indentButton = ComponentFactory.buildFlatButton(
+					InsertIndentAction.getInstance(), ScriptEaseUI.SE_ORANGE);
+			scopeButton = ComponentFactory.buildFlatButton(
+					InsertScopeAction.getInstance(), ScriptEaseUI.SE_YELLOW);
+			seriesButton = ComponentFactory.buildFlatButton(
+					InsertSeriesAction.getInstance(), ScriptEaseUI.SE_GREEN);
+			simpleButton = ComponentFactory.buildFlatButton(
+					InsertSimpleAction.getInstance(), ScriptEaseUI.SE_BLUE);
+			literalButton = ComponentFactory.buildFlatButton(
+					InsertLiteralAction.getInstance(), ScriptEaseUI.SE_TEAL);
+			referenceButton = ComponentFactory
+					.buildFlatButton(InsertReferenceAction.getInstance(),
+							ScriptEaseUI.SE_PURPLE);
+			upButton = ComponentFactory.buildFlatButton(MoveFragmentUpAction
+					.getInstance());
+			downButton = ComponentFactory
+					.buildFlatButton(MoveFragmentDownAction.getInstance());
 		}
-			
+
 		lineButton.setEnabled(isEditable);
 		indentButton.setEnabled(isEditable);
 		scopeButton.setEnabled(isEditable);
@@ -599,7 +625,7 @@ public class CodeBlockPanel extends JPanel {
 		referenceButton.setEnabled(isEditable);
 		upButton.setEnabled(isEditable);
 		downButton.setEnabled(isEditable);
-		
+
 		buttons.add(lineButton);
 		buttons.add(indentButton);
 		buttons.add(scopeButton);
@@ -627,7 +653,7 @@ public class CodeBlockPanel extends JPanel {
 				final Rectangle visible = codeEditorScrollPane.getVisibleRect();
 
 				codePanel.redraw(isEditable);
-					
+
 				codeEditorScrollPane.scrollRectToVisible(visible);
 			}
 		});
@@ -772,7 +798,6 @@ public class CodeBlockPanel extends JPanel {
 			public void run() {
 				final boolean subjectExists = codeBlock.hasSubject();
 
-	
 				slotBox.removeActionListener(listener);
 				slotBox.removeAllItems();
 				slotBox.setEnabled(subjectExists);
@@ -801,7 +826,7 @@ public class CodeBlockPanel extends JPanel {
 		codeBlock.addStoryComponentObserver(slotBox,
 				new StoryComponentObserver() {
 					@Override
-					public void componentChanged(StoryComponentEvent event) {				
+					public void componentChanged(StoryComponentEvent event) {
 						switch (event.getType()) {
 						case CODE_BLOCK_SLOT_SET:
 						case CODE_BLOCK_SUBJECT_SET:

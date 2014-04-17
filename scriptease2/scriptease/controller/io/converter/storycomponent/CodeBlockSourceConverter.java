@@ -9,6 +9,7 @@ import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 import com.thoughtworks.xstream.XStreamException;
@@ -48,8 +49,6 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			XMLNode.SLOT.writeString(writer, block.getSlot());
 		}
 
-		XMLNode.ID.writeInteger(writer, block.getId());
-
 		XMLNode.TYPES.writeChildren(writer, types);
 
 		if (!parameters.isEmpty()) {
@@ -71,7 +70,6 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 				context);
 		String subject = "";
 		String slot = "";
-		int id = -1;
 		final Collection<String> includes;
 		final Collection<KnowIt> parameters;
 		final Collection<AbstractFragment> code;
@@ -107,13 +105,6 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 				if (slot == null)
 					slot = "";
 			}
-			/*
-			 * ID. Cannot appear in Stories; ID is for CodeBlockSources, and
-			 * those must only exist in the Translator.
-			 */
-			else if (nodeName.equalsIgnoreCase(XMLNode.ID.getName())) {
-				id = Integer.parseInt(reader.getValue());
-			}
 			// Types
 			else if (nodeName.equals(XMLNode.TYPES.getName())) {
 				while (reader.hasMoreChildren()) {
@@ -146,7 +137,6 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 			reader.moveUp();
 		}
 
-		block.setId(id);
 		block.setSubject(subject);
 		block.setSlot(slot);
 		block.setTypesByName(types);
@@ -161,8 +151,8 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new CodeBlockSource();
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new CodeBlockSource(library, id);
 	}
 
 	@SuppressWarnings("rawtypes")

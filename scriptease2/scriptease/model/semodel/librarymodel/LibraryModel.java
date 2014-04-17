@@ -9,6 +9,7 @@ import scriptease.controller.BindingAdapter;
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
@@ -58,7 +59,10 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public class LibraryModel extends SEModel implements StoryComponentObserver {
-	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
+	public static final String COMMON_LIBRARY_NAME = "ScriptEase";
+	public static final String NON_LIBRARY_NAME = "NO LIBRARY";
+
+	private static final int NON_UNIQUE_ID = -1;
 
 	private String defaultSlotFormat = "";
 
@@ -85,25 +89,72 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
 
-	private int nextID;
+	// Initialized to 0. It changes if we add things to the library.
+	private int nextID = 0;
 
-	private static final LibraryModel COMMON_LIBRARY = new LibraryModel(
-			COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME) {
-		{
-			this.add(new AskIt());
-			this.add(new PickIt());
-			this.add(new Note());
-		}
-	};
+	private static final LibraryModel COMMON_LIBRARY;
+	private static final LibraryModel NON_LIBRARY;
+
+	private static final AskIt COMMON_ASKIT;
+	private static final PickIt COMMON_PICKIT;
+	private static final Note COMMON_NOTE;
+
+	static {
+		COMMON_LIBRARY = new LibraryModel(COMMON_LIBRARY_NAME,
+				COMMON_LIBRARY_NAME, COMMON_LIBRARY_NAME);
+		NON_LIBRARY = new LibraryModel(NON_LIBRARY_NAME, NON_LIBRARY_NAME,
+				NON_LIBRARY_NAME);
+
+		COMMON_ASKIT = new AskIt(COMMON_LIBRARY, COMMON_LIBRARY.getNextID());
+		COMMON_PICKIT = new PickIt(COMMON_LIBRARY, COMMON_LIBRARY.getNextID());
+		COMMON_NOTE = new Note(COMMON_LIBRARY, COMMON_LIBRARY.getNextID());
+
+		COMMON_LIBRARY.add(COMMON_ASKIT);
+		COMMON_LIBRARY.add(COMMON_PICKIT);
+		COMMON_LIBRARY.add(COMMON_NOTE);
+	}
 
 	/**
 	 * The common library contains components common to all translators, such as
-	 * notes.
+	 * notes, askIts, and pickIts.
 	 * 
 	 * @return
 	 */
 	public static LibraryModel getCommonLibrary() {
 		return COMMON_LIBRARY;
+	}
+
+	/**
+	 * Use this to reference a library that technically doesn't exist.
+	 * 
+	 * @return
+	 */
+	public static LibraryModel getNonLibrary() {
+		return NON_LIBRARY;
+	}
+
+	public static AskIt createAskIt() {
+		return COMMON_ASKIT.clone();
+	}
+
+	public static PickIt createPickIt() {
+		return COMMON_PICKIT.clone();
+	}
+
+	public static Note createNote() {
+		return COMMON_NOTE.clone();
+	}
+
+	public static Note createNote(String text) {
+		final Note note = COMMON_NOTE.clone();
+
+		note.setDisplayText(text);
+
+		return note;
+	}
+
+	public static int getNonUniqueID() {
+		return NON_UNIQUE_ID;
 	}
 
 	/**
@@ -146,7 +197,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			Translator translator) {
 		super(title, author, information);
 		this.typeConverter = new TypeConverter();
-		
+
 		this.translator = translator;
 		this.modelRoot = new StoryComponentContainer(title);
 		this.slots = new ArrayList<Slot>();
@@ -204,8 +255,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 						.getChildren()) {
 					final ScriptIt scriptItChild = (ScriptIt) child;
 
-					if (scriptIt.getMainCodeBlock().getId() == scriptItChild
-							.getMainCodeBlock().getId())
+					if (scriptIt.getMainCodeBlock().getID() == scriptItChild
+							.getMainCodeBlock().getID())
 						return;
 				}
 
@@ -283,6 +334,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					container.addStoryComponentObserver(this.model);
 			}
 		};
+	}
+
+	public int getNextID() {
+		return this.nextID;
 	}
 
 	private void registerCategoryChildTypes() {
@@ -514,38 +569,28 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public void add(StoryComponent component) {
 		component.process(this.categoryAdder);
-		component.setLibrary(this);
 
-		if (component instanceof ScriptIt) {
-			final List<CodeBlock> codeBlocks;
+		if (component instanceof ComplexStoryComponent) {
+			// If only we had Java 8, then we could do this more efficiently
+			// with lambdas...
+			for (StoryComponent descendant : StoryComponentUtils
+					.getAllDescendants((ComplexStoryComponent) component)) {
+				this.setMaxID(descendant.getID());
 
-			codeBlocks = new ArrayList<CodeBlock>(
-					((ScriptIt) component).getCodeBlocks());
-
-			for (CodeBlock codeBlock : codeBlocks) {
-				this.nextID = Math.max(codeBlock.getId() + 1, this.nextID);
+				if (descendant instanceof ScriptIt) {
+					for (CodeBlock block : ((ScriptIt) descendant)
+							.getCodeBlocks()) {
+						this.setMaxID(block.getID());
+					}
+				}
 			}
 		}
 
 		this.notifyChange(component, LibraryEvent.Type.ADDITION);
 	}
 
-	/**
-	 * Adds a KnowIt representing a DescribeIt to the LibraryModel. Adds the
-	 * DescribeIt to the DescribeItManager if it is not already in there.
-	 * 
-	 * This should only ever be called when we are creating an entirely new
-	 * DescribeIt.
-	 * 
-	 * @param describeIt
-	 */
-	public void add(DescribeIt describeIt) {
-		final KnowIt knowIt;
-
-		knowIt = this.createKnowItForDescribeIt(describeIt);
-
-		this.add(knowIt);
-		this.addDescribeIt(describeIt, knowIt);
+	private void setMaxID(int id) {
+		this.nextID = Math.max(id + 1, this.nextID);
 	}
 
 	public void remove(StoryComponent component) {
@@ -783,7 +828,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			super.processScriptIt(scriptIt);
 
 			for (CodeBlock block : scriptIt.getCodeBlocks()) {
-				if (block.getId() == this.targetId
+				if (block.getID() == this.targetId
 						&& block instanceof CodeBlockSource) {
 					this.found = (CodeBlockSource) block;
 					return;
@@ -833,15 +878,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					return;
 			}
 		}
-	}
-
-	/**
-	 * Retrieves the next code block unique ID for this library.
-	 * 
-	 * @return The next available unique id for a code block.
-	 */
-	public int getNextCodeBlockID() {
-		return this.nextID++;
 	}
 
 	/**
@@ -902,7 +938,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @return
 	 */
 	public KnowIt createKnowItForDescribeIt(DescribeIt describeIt) {
-		return this.describeItManager.createKnowItForDescribeIt(describeIt);
+		return this.describeItManager.createKnowItForDescribeIt(this,
+				describeIt);
 	}
 
 	/**
@@ -1053,27 +1090,24 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void addSlots(Collection<Slot> slots) {
 		for (Slot slot : slots) {
 			this.slots.add(slot);
-
-			for (KnowIt implicit : slot.getImplicits()) {
-				implicit.setLibrary(this);
-			}
 		}
 	}
-	
+
 	/**
 	 * Returns the read only value of the library
 	 * 
 	 */
-	public boolean getReadOnly(){
+	public boolean getReadOnly() {
 		return this.readOnly;
 	}
 
 	/**
 	 * Sets the read only value of the library
+	 * 
 	 * @param read
 	 */
-	public void setReadOnly(boolean read){
+	public void setReadOnly(boolean read) {
 		this.readOnly = read;
 	}
-	
+
 }

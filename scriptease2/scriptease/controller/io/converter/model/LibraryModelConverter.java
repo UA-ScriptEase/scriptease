@@ -42,6 +42,8 @@ public class LibraryModelConverter implements Converter {
 			MarshallingContext context) {
 		final LibraryModel library = (LibraryModel) source;
 
+		currentLibrary = library;
+
 		final Collection<CauseIt> causes = new ArrayList<CauseIt>();
 
 		// Remove all the children of the causes we save. We need to make a
@@ -67,8 +69,9 @@ public class LibraryModelConverter implements Converter {
 		XMLAttribute.NAME.write(writer, library.getTitle());
 		XMLAttribute.AUTHOR.write(writer, library.getAuthor());
 		XMLAttribute.DESCRIPTION.write(writer, library.getDescription());
-		XMLAttribute.READONLY.write(writer, String.valueOf(library.getReadOnly()));
-		
+		XMLAttribute.READONLY.write(writer,
+				String.valueOf(library.getReadOnly()));
+
 		XMLNode.INCLUDE_FILES.writeChildren(writer,
 				library.getIncludeFilePaths());
 		XMLNode.TYPES.writeObject(writer, context, library.getGameTypes());
@@ -90,12 +93,16 @@ public class LibraryModelConverter implements Converter {
 
 		// Add the defaults back in case we're playing with the libraries.
 		this.addDefaultCauseChildren(library, causes);
+
+		currentLibrary = null;
 	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final LibraryModel library = new LibraryModel();
+
+		currentLibrary = library;
 
 		final Collection<String> includeFilePaths;
 		final Collection<GameType> types;
@@ -115,8 +122,9 @@ public class LibraryModelConverter implements Converter {
 		library.setTitle(XMLAttribute.NAME.read(reader));
 		library.setAuthor(XMLAttribute.AUTHOR.read(reader));
 		library.setDescription(XMLAttribute.DESCRIPTION.read(reader));
-		library.setReadOnly(Boolean.parseBoolean(XMLAttribute.READONLY.read(reader)));
-		
+		library.setReadOnly(Boolean.parseBoolean(XMLAttribute.READONLY
+				.read(reader)));
+
 		includeFilePaths = XMLNode.INCLUDE_FILES.readStringCollection(reader);
 		types = XMLNode.TYPES.readCollection(reader, context, GameType.class);
 		slots = XMLNode.SLOTS.readAttributedCollection(reader, context,
@@ -161,7 +169,6 @@ public class LibraryModelConverter implements Converter {
 		// Behaviours and activities rely on the current library being set, so
 		// we need to load them after assigning the library to the static
 		// variable.
-		currentLibrary = library;
 
 		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
 				Behaviour.class);
@@ -206,7 +213,7 @@ public class LibraryModelConverter implements Converter {
 				if (description instanceof KnowIt
 						&& description.getDisplayText().contains("Is Active")) {
 					final KnowIt knowIt = ((KnowIt) description).clone();
-					final AskIt askIt = new AskIt();
+					final AskIt askIt = LibraryModel.createAskIt();
 
 					cause.addStoryChild(knowIt);
 					cause.addStoryChild(askIt);

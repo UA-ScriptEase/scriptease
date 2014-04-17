@@ -1,4 +1,4 @@
-<LibraryModel name="A* Pathfinding Library" author="ScriptEase Team" description="Library situated for Aron Granberg&apos;s &lt;b&gt;A* Pathfinding Project&lt;/b&gt;.&lt;br&gt;&lt;br&gt;  To use this library you will need to download the A* Pathfinding Project at:&lt;br&gt; http://arongranberg.com/astar/download&lt;br&gt;&lt;br&gt;  Failure to download and install this package to your Unity Project will cause&lt;br&gt; compilation errors if you wish to add this library.&lt;br&gt;&lt;br&gt;  For detailed instructions on how to install this package, follow the&lt;br&gt; instructions in Unity Tutorial 2 at:&lt;br&gt; http://cs.ualberta.ca/~script">
+<LibraryModel name="A* Pathfinding Library" author="ScriptEase Team" description="Library situated for Aron Granberg&apos;s &lt;b&gt;A* Pathfinding Project&lt;/b&gt;.&lt;br&gt;&lt;br&gt;  To use this library you will need to download the A* Pathfinding Project at:&lt;br&gt; http://arongranberg.com/astar/download&lt;br&gt;&lt;br&gt;  Failure to download and install this package to your Unity Project will cause&lt;br&gt; compilation errors if you wish to add this library.&lt;br&gt;&lt;br&gt;  For detailed instructions on how to install this package, follow the&lt;br&gt; instructions in Unity Tutorial 2 at:&lt;br&gt; http://cs.ualberta.ca/~script" readonly="false">
   <IncludeFiles>
     <IncludeFile>SEPath.js</IncludeFile>
   </IncludeFiles>
@@ -10,7 +10,7 @@
       <Condition>Start</Condition>
       <Parameters/>
       <Implicits>
-        <KnowIt>
+        <KnowIt library="A* Pathfinding Library" id="0">
           <Name>Target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
@@ -19,19 +19,18 @@
             <Type>GameObject</Type>
           </Types>
           <Binding flavour="function">
-            <ScriptIt>
+            <ScriptIt library="A* Pathfinding Library" id="1">
               <Name>Target</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
               <Labels/>
               <Children/>
               <CodeBlocks>
-                <CodeBlockSource>
+                <CodeBlockSource library="A* Pathfinding Library" id="2">
                   <Name>Target</Name>
                   <Visible>true</Visible>
                   <Enabled>true</Enabled>
                   <Labels/>
-                  <ID>29</ID>
                   <Types>
                     <Type>GameObject</Type>
                   </Types>
@@ -49,7 +48,7 @@
     </Slot>
   </Slots>
   <Causes>
-    <CauseIt>
+    <CauseIt library="A* Pathfinding Library" id="3">
       <Name>When &lt;subject&gt; reaches its &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -58,19 +57,18 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="4">
           <Name>When &lt;subject&gt; reaches its &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Subject>subject</Subject>
           <Slot>TargetReached</Slot>
-          <ID>15</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="5">
               <Name>subject</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -103,7 +101,7 @@
     </CauseIt>
   </Causes>
   <Effects>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="6">
       <Name>&lt;Object&gt; walks a path to &lt;Target&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -112,17 +110,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="7">
           <Name>&lt;Object&gt; walks a path to &lt;Target&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>2</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="8">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -131,7 +128,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="9">
               <Name>Target</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -166,7 +163,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="10">
       <Name>&lt;Object&gt; walks at a speed of &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -175,17 +172,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="11">
           <Name>&lt;Object&gt; walks at a speed of &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>3</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="12">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -194,7 +190,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="13">
               <Name>Speed</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -202,10 +198,6 @@
               <Types>
                 <Type>Number</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>float</Type>
-                <Value>0.0</Value>
-              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -224,7 +216,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="14">
       <Name>&lt;Object&gt; reaches its target when it is &lt;Unit&gt; units away from the target</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -233,17 +225,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="15">
           <Name>&lt;Object&gt; reaches its target when it is &lt;Unit&gt; units away from the target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>6</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="16">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -252,7 +243,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="17">
               <Name>Unit</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -260,10 +251,6 @@
               <Types>
                 <Type>Number</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>float</Type>
-                <Value>0.0</Value>
-              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -282,7 +269,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="18">
       <Name>&lt;Object&gt; looks for a new path to its target at a rate of &lt;Rate&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -291,17 +278,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="19">
           <Name>&lt;Object&gt; looks for a new path to its target at a rate of &lt;Rate&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>7</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="20">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -310,7 +296,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="21">
               <Name>Rate</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -318,10 +304,6 @@
               <Types>
                 <Type>Number</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>float</Type>
-                <Value>0.0</Value>
-              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -340,7 +322,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="22">
       <Name>&lt;Allow&gt; &lt;Object&gt; to look for a new path to its target</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -349,17 +331,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="23">
           <Name>&lt;Allow&gt; &lt;Object&gt; to look for a new path to its target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>8</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="24">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -368,7 +349,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="25">
               <Name>Allow</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -398,7 +379,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="26">
       <Name>&lt;Allow&gt; &lt;Object&gt; to move to its target</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -407,17 +388,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="27">
           <Name>&lt;Allow&gt; &lt;Object&gt; to move to its target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>9</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="28">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -426,7 +406,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="29">
               <Name>Allow</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -456,7 +436,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="30">
       <Name>&lt;Object&gt; turns at a speed of &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -465,17 +445,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="31">
           <Name>&lt;Object&gt; turns at a speed of &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>10</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="32">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -484,7 +463,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="33">
               <Name>Speed</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -492,10 +471,6 @@
               <Types>
                 <Type>Number</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>float</Type>
-                <Value>0.0</Value>
-              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -514,7 +489,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="34">
       <Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; units away from the target</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -523,17 +498,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="35">
           <Name>&lt;Object&gt; starts to slow down when it is &lt;Distance&gt; units away from the target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>11</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="36">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -542,7 +516,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="37">
               <Name>Distance</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -550,10 +524,6 @@
               <Types>
                 <Type>Number</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>float</Type>
-                <Value>0.0</Value>
-              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -572,7 +542,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="38">
       <Name>&lt;Object&gt; switches to a new target when it is &lt;Distance&gt; units from its current target</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -581,17 +551,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="39">
           <Name>&lt;Object&gt; switches to a new target when it is &lt;Distance&gt; units from its current target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>12</ID>
           <Types>
             <Type>Void</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="40">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -600,7 +569,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="41">
               <Name>Distance</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -608,10 +577,6 @@
               <Types>
                 <Type>Number</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>float</Type>
-                <Value>0.0</Value>
-              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -630,7 +595,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="42">
       <Name>if &lt;Object&gt; has reached its target</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -639,17 +604,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="43">
           <Name>if &lt;Object&gt; has reached its target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>13</ID>
           <Types>
             <Type>Question</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="44">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -671,7 +635,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="45">
       <Name>&lt;Object&gt;&apos;s walking speed</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -680,17 +644,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="46">
           <Name>&lt;Object&gt;&apos;s walking speed</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>16</ID>
           <Types>
             <Type>Number</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="47">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -712,7 +675,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="48">
       <Name>&lt;Object&gt; loses its target</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -721,15 +684,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="49">
           <Name>&lt;Object&gt; loses its target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>17</ID>
           <Types/>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="50">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -751,7 +713,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="51">
       <Name>&lt;Object&gt;&apos;s turning speed</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -760,17 +722,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="52">
           <Name>&lt;Object&gt;&apos;s turning speed</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>18</ID>
           <Types>
             <Type>Number</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="53">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -792,7 +753,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="54">
       <Name>the target &lt;Object&gt; is walking to</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -801,17 +762,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="55">
           <Name>the target &lt;Object&gt; is walking to</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>20</ID>
           <Types>
             <Type>GameObject</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="56">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -833,7 +793,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="57">
       <Name>the distance from &lt;Object&gt;&apos;s current target at which it switches to a new target</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -842,17 +802,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="58">
           <Name>the distance from &lt;Object&gt;&apos;s current target at which it switches to a new target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>21</ID>
           <Types>
             <Type>Number</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="59">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -874,7 +833,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="60">
       <Name>the distance from &lt;Object&gt;&apos;s current target at which it starts to slow down</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -883,17 +842,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="61">
           <Name>the distance from &lt;Object&gt;&apos;s current target at which it starts to slow down</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>22</ID>
           <Types>
             <Type>Number</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="62">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -915,7 +873,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="63">
       <Name>the percent of the next target distance that &lt;Object&gt; considers its target reached</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -924,17 +882,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="64">
           <Name>the percent of the next target distance that &lt;Object&gt; considers its target reached</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>23</ID>
           <Types>
             <Type>Number</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="65">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -956,7 +913,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="66">
       <Name>the rate at which &lt;Object&gt; tries to find a new path</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -965,17 +922,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="67">
           <Name>the rate at which &lt;Object&gt; tries to find a new path</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>24</ID>
           <Types>
             <Type>Number</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="68">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -997,7 +953,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="69">
       <Name>whether &lt;Object&gt; is allowed to look for a new path to its target</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -1006,17 +962,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="70">
           <Name>whether &lt;Object&gt; is allowed to look for a new path to its target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>25</ID>
           <Types>
             <Type>Question</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="71">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1038,7 +993,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="72">
       <Name>whether &lt;Object&gt; is allowed to move to its target</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -1047,17 +1002,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="73">
           <Name>whether &lt;Object&gt; is allowed to move to its target</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>26</ID>
           <Types>
             <Type>Question</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="74">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1079,7 +1033,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="75">
       <Name>&lt;Object&gt; looks forward &lt;Distance&gt; units for a path</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -1088,15 +1042,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="76">
           <Name>&lt;Object&gt; looks forward &lt;Distance&gt; units for a path</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>27</ID>
           <Types/>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="77">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1105,7 +1058,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="78">
               <Name>Distance</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1113,10 +1066,6 @@
               <Types>
                 <Type>Number</Type>
               </Types>
-              <Binding flavour="constant">
-                <Type>float</Type>
-                <Value>0.0</Value>
-              </Binding>
             </KnowIt>
           </Parameters>
           <Code>
@@ -1135,7 +1084,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt>
+    <ScriptIt library="A* Pathfinding Library" id="79">
       <Name>the distance &lt;Object&gt; looks forward for a path</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
@@ -1144,17 +1093,16 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource>
+        <CodeBlockSource library="A* Pathfinding Library" id="80">
           <Name>the distance &lt;Object&gt; looks forward for a path</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
-          <ID>28</ID>
           <Types>
             <Type>Number</Type>
           </Types>
           <Parameters>
-            <KnowIt>
+            <KnowIt library="A* Pathfinding Library" id="81">
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1179,7 +1127,7 @@
   </Effects>
   <DescribeIts>
     <DescribeIt>
-      <Name>Look Distance</Name>
+      <Name>Slow Down Distance</Name>
       <Types>
         <Type>Number</Type>
       </Types>
@@ -1192,12 +1140,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Find Path Rate</Name>
+      <Name>Switch Target Distance</Name>
       <Types>
         <Type>Number</Type>
       </Types>
@@ -1210,7 +1158,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -1233,6 +1181,24 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
+      <Name>Find Path Rate</Name>
+      <Types>
+        <Type>Number</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[18]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
       <Name>Can Move</Name>
       <Types>
         <Type>Question</Type>
@@ -1244,9 +1210,45 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[4]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[5]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[20]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Look Distance</Name>
+      <Types>
+        <Type>Number</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[6]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[22]"/>
+        </Entry>
+      </PathMap>
+    </DescribeIt>
+    <DescribeIt>
+      <Name>Target</Name>
+      <Types>
+        <Type>GameObject</Type>
+      </Types>
+      <DescribeItNode>
+        <Name>Placeholder Node</Name>
+        <Successors/>
+      </DescribeItNode>
+      <PathMap>
+        <Entry>
+          <Path>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
+          </Path>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -1262,27 +1264,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[5]/DescribeItNode"/>
+            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
           </Path>
           <ScriptIt reference="/LibraryModel/Effects/ScriptIt[11]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Switch Target Distance</Name>
-      <Types>
-        <Type>Number</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[6]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[15]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -1298,45 +1282,9 @@
       <PathMap>
         <Entry>
           <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[7]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Turn Speed</Name>
-      <Types>
-        <Type>Number</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
-            <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[8]/DescribeItNode"/>
-          </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[13]"/>
-        </Entry>
-      </PathMap>
-    </DescribeIt>
-    <DescribeIt>
-      <Name>Slow Down Distance</Name>
-      <Types>
-        <Type>Number</Type>
-      </Types>
-      <DescribeItNode>
-        <Name>Placeholder Node</Name>
-        <Successors/>
-      </DescribeItNode>
-      <PathMap>
-        <Entry>
-          <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[9]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[16]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[19]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
@@ -1359,9 +1307,9 @@
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Target</Name>
+      <Name>Turn Speed</Name>
       <Types>
-        <Type>GameObject</Type>
+        <Type>Number</Type>
       </Types>
       <DescribeItNode>
         <Name>Placeholder Node</Name>
@@ -1372,7 +1320,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[11]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[14]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[13]"/>
         </Entry>
       </PathMap>
     </DescribeIt>

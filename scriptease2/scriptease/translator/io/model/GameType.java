@@ -391,7 +391,6 @@ public class GameType {
 
 			@Override
 			public int compare(GameType o1, GameType o2) {
-				// TODO Auto-generated method stub
 				return o1.getName().toLowerCase()
 						.compareTo(o2.getName().toLowerCase());
 			}
