@@ -208,18 +208,14 @@ public class CodeBlockContext extends Context {
 					if (child instanceof StoryPoint) {
 						for (StoryComponent storyPointChild : ((StoryPoint) child)
 								.getChildren()) {
-							if (storyPointChild instanceof CauseIt) {
-								if (causeIt
-										.isEquivalentToCause((CauseIt) storyPointChild))
-									this.identicalCauses
-											.add((CauseIt) storyPointChild);
-							}
+							if (storyPointChild instanceof CauseIt
+									&& causeIt.isEquivalent(storyPointChild))
+								this.identicalCauses
+										.add((CauseIt) storyPointChild);
 						}
-
-					} else if (child instanceof CauseIt) {
-						if (causeIt.isEquivalentToCause((CauseIt) child)) {
-							this.identicalCauses.add((CauseIt) child);
-						}
+					} else if (child instanceof CauseIt
+							&& causeIt.isEquivalent(child)) {
+						this.identicalCauses.add((CauseIt) child);
 					}
 				}
 			}

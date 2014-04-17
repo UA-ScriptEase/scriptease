@@ -354,7 +354,8 @@ public class StoryComponentPanelManager {
 
 	/**
 	 * Updates the selection appearance of the given panel to the given
-	 * isSelected.  Also change the border colour to green if the panel is selected in the library panel.
+	 * isSelected. Also change the border colour to green if the panel is
+	 * selected in the library panel.
 	 * 
 	 * @param panel
 	 * @param isSelected
@@ -381,69 +382,81 @@ public class StoryComponentPanelManager {
 		} else {
 			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
-			final Collection<StoryComponentPanel> selectedPanels = LibraryPanel.getInstance().getSelected();
-			final String panelText = panel.getStoryComponent().getDisplayText();
-			
+			final Collection<StoryComponentPanel> selectedPanels = LibraryPanel
+					.getInstance().getSelected();
+			final int id = panel.getStoryComponent().getID();
+
 			/**
-			 * This loop is somewhat awkward.  We want to check whether or not the panel is contained in 
-			 * the list of currently selected panels, but we can't use contains() for StoryComponentPanels for some reason
-			 * (even though .equals() has been known to work.  So we use a loop and just compare the display text and set the flag
-			 * if a match is found.  However, in order to access this variable in the process() methods, it must be final, which 
-			 * doesn't work if we want to have the variable be false by default and sometimes change to true.  So we have to declare 
-			 * a final variable after the loop and use that.
-			 *   
+			 * This loop is somewhat awkward. We want to check whether or not
+			 * the panel is contained in the list of currently selected panels,
+			 * but we can't use contains() for StoryComponentPanels for some
+			 * reason (even though .equals() has been known to work. So we use a
+			 * loop and just compare the display text and set the flag if a
+			 * match is found. However, in order to access this variable in the
+			 * process() methods, it must be final, which doesn't work if we
+			 * want to have the variable be false by default and sometimes
+			 * change to true. So we have to declare a final variable after the
+			 * loop and use that.
+			 * 
 			 */
 			boolean isPanelSelected = false;
-			for(StoryComponentPanel p : selectedPanels){
-				if (p.getStoryComponent().getDisplayText().equals(panelText)){
+			for (StoryComponentPanel p : selectedPanels) {
+				if (p.getStoryComponent().getID() == id) {
 					isPanelSelected = true;
 				}
 			}
-			final boolean isActive = isPanelSelected;		
-			
+			final boolean isActive = isPanelSelected;
+
 			final StoryComponent panelComponent;
 			panelComponent = panel.getStoryComponent();
 			panelComponent.process(new StoryAdapter() {
 				@Override
 				protected void defaultProcessComplex(
 						ComplexStoryComponent complex) {
-						this.defaultProcess(complex);
+					this.defaultProcess(complex);
 				}
 
 				@Override
 				protected void defaultProcess(StoryComponent component) {
-					if(isActive){
-						panel.setBorder(BorderFactory
-								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
-					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
+					if (isActive) {
+						panel.setBorder(BorderFactory.createLineBorder(
+								ScriptEaseUI.SE_RED, 2));
+					} else if (selectedPanels.size() == 0
+							|| GUIOp.isPanelBorderEmpty(panel)) {
 						panel.setBorder(ScriptEaseUI.UNSELECTED_BORDER);
 					}
 				}
 
 				public void processCauseIt(CauseIt causeIt) {
-					if(isActive){
-						panel.setBorder(BorderFactory
-								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
-					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
-						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					if (isActive) {
+						panel.setBorder(BorderFactory.createLineBorder(
+								ScriptEaseUI.SE_RED, 2));
+					} else if (selectedPanels.size() == 0
+							|| GUIOp.isPanelBorderEmpty(panel)) {
+						panel.setBorder(BorderFactory.createLineBorder(
+								Color.LIGHT_GRAY, 1));
 					}
 				}
 
 				public void processControlIt(ControlIt controlIt) {
-					if(isActive){
-						panel.setBorder(BorderFactory
-								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
-					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
-						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					if (isActive) {
+						panel.setBorder(BorderFactory.createLineBorder(
+								ScriptEaseUI.SE_RED, 2));
+					} else if (selectedPanels.size() == 0
+							|| GUIOp.isPanelBorderEmpty(panel)) {
+						panel.setBorder(BorderFactory.createLineBorder(
+								Color.LIGHT_GRAY, 1));
 					}
 				}
 
 				public void processAskIt(AskIt askIt) {
-					if(isActive){
-						panel.setBorder(BorderFactory
-								.createLineBorder(ScriptEaseUI.SE_RED, 2));		
-					} else if (selectedPanels.size() == 0 || GUIOp.isPanelBorderEmpty(panel)){
-						panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					if (isActive) {
+						panel.setBorder(BorderFactory.createLineBorder(
+								ScriptEaseUI.SE_RED, 2));
+					} else if (selectedPanels.size() == 0
+							|| GUIOp.isPanelBorderEmpty(panel)) {
+						panel.setBorder(BorderFactory.createLineBorder(
+								Color.LIGHT_GRAY, 1));
 					}
 				}
 
@@ -452,7 +465,7 @@ public class StoryComponentPanelManager {
 					this.defaultProcess(atom);
 				}
 			});
-			
+
 		}
 	}
 

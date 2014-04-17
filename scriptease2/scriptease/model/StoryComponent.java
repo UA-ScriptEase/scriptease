@@ -68,15 +68,6 @@ public abstract class StoryComponent implements Cloneable {
 	public static final String BLANK_TEXT = "";
 	public static final String DISABLE_TEXT = "DISABLED";
 
-	/*
-	 * TODO All story components should have libraries. It should no longer be
-	 * optional. They should also all have IDs.
-	 * 
-	 * TODO Make sure cloning these still works properly.
-	 * 
-	 * TODO We could possibly get rid of cloning as we're doing it and instead
-	 * implement Robin's method... Maybe.
-	 */
 	protected StoryComponent(LibraryModel library) {
 		this(library, library.getNextID());
 	}
@@ -406,6 +397,8 @@ public abstract class StoryComponent implements Cloneable {
 				&& (other.getClass().equals(this.getClass()))) {
 			comp = (StoryComponent) other;
 			equal = comp.getDisplayText().equals(this.displayText);
+			equal &= comp.id == this.id;
+			equal &= comp.library == this.library;
 			equal &= comp.isVisible == this.isVisible;
 			for (String label : comp.getLabels()) {
 				equal &= this.labels.contains(label);
@@ -413,6 +406,16 @@ public abstract class StoryComponent implements Cloneable {
 		}
 
 		return equal;
+	}
+
+	/**
+	 * Returns whether the two story components have matching IDs and libraries.
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean isEquivalent(StoryComponent other) {
+		return this.id == other.id && this.library == other.library;
 	}
 
 	/**
