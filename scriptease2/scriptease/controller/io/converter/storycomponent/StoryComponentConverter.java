@@ -6,7 +6,6 @@ import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.model.StoryComponent;
-import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.Converter;
