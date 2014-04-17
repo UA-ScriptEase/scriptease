@@ -44,14 +44,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final CodeBlockReference codeBlock = (CodeBlockReference) source;
-		final LibraryModel library = codeBlock.getLibrary();
 		final Collection<KnowIt> parameters = codeBlock.getParameters();
-
-		if (library != null)
-			XMLAttribute.LIBRARY.write(writer, library.getTitle());
-		else
-			System.err.println("No library found for " + source
-					+ ". Library attribute will be left blank.");
 
 		super.marshal(source, writer, context);
 
@@ -64,30 +57,15 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 
-		// TODO Setting target here may be wrong. Check it out
-
-		final String libraryName = XMLAttribute.LIBRARY.read(reader);
-
 		final CodeBlockReference block;
-		final Translator translator;
+		final LibraryModel library;
 
 		block = (CodeBlockReference) super.unmarshal(reader, context);
-		translator = TranslatorManager.getInstance().getActiveTranslator();
-
-		// We use this hack to load in any codeblock references to the existing
-		// library model before the library model is read from XStream.
-		LibraryModel library;
-		if (LibraryModelConverter.currentLibrary != null
-				&& libraryName.equals(LibraryModelConverter.currentLibrary
-						.getTitle())) {
-			library = LibraryModelConverter.currentLibrary;
-		} else
-			library = translator.findLibrary(libraryName);
+		library = block.getLibrary();
 
 		CodeBlockSource target = null;
 		if (library != null) {
 			target = library.getCodeBlockByID(block.getID());
-			block.setLibrary(library);
 		}
 
 		if (target == null) {
