@@ -42,6 +42,8 @@ public class LibraryModelConverter implements Converter {
 			MarshallingContext context) {
 		final LibraryModel library = (LibraryModel) source;
 
+		currentLibrary = library;
+
 		final Collection<CauseIt> causes = new ArrayList<CauseIt>();
 
 		// Remove all the children of the causes we save. We need to make a
@@ -91,6 +93,8 @@ public class LibraryModelConverter implements Converter {
 
 		// Add the defaults back in case we're playing with the libraries.
 		this.addDefaultCauseChildren(library, causes);
+
+		currentLibrary = null;
 	}
 
 	@Override

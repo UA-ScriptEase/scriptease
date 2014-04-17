@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
+import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.model.StoryComponent;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -29,9 +30,13 @@ public abstract class StoryComponentConverter implements Converter {
 			MarshallingContext context) {
 		final StoryComponent comp = (StoryComponent) source;
 
-		// TODO Write the library + id attributes.
+		XMLAttribute.ID.write(writer, Integer.toString(comp.getID()));
 
-		XMLAttribute.NAME.write(writer, "TEST");
+		final LibraryModel library = comp.getLibrary();
+
+		if (library != LibraryModelConverter.currentLibrary) {
+			XMLAttribute.LIBRARY.write(writer, library.getTitle());
+		}
 
 		XMLNode.NAME.writeString(writer, comp.getDisplayText());
 		XMLNode.VISIBLE.writeBoolean(writer, comp.isVisible());
@@ -62,7 +67,13 @@ public abstract class StoryComponentConverter implements Converter {
 		final String idStr = XMLAttribute.ID.read(reader);
 		final int id = Integer.parseInt(idStr);
 
-		library = SEModelManager.getInstance().getLibraryByName(libraryStr);
+		if (libraryStr != null)
+			library = SEModelManager.getInstance().getLibraryByName(libraryStr);
+		else
+			library = LibraryModelConverter.currentLibrary;
+
+		if (library == null)
+			System.out.println("STAWP");
 
 		comp = this.buildComponent(reader, context, library, id);
 
