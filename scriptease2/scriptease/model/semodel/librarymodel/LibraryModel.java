@@ -569,7 +569,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public void add(StoryComponent component) {
 		component.process(this.categoryAdder);
-		component.setLibrary(this);
 
 		if (component instanceof ComplexStoryComponent) {
 			// If only we had Java 8, then we could do this more efficiently
@@ -1091,10 +1090,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void addSlots(Collection<Slot> slots) {
 		for (Slot slot : slots) {
 			this.slots.add(slot);
-
-			for (KnowIt implicit : slot.getImplicits()) {
-				implicit.setLibrary(this);
-			}
 		}
 	}
 

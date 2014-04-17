@@ -273,7 +273,7 @@ public abstract class Context {
 
 	/**
 	 * Returns unique causes based on the
-	 * {@link CauseIt#isEquivalentToCause(CauseIt)} method.
+	 * {@link StoryComponent#isEquivalent(StoryComponent)} method.
 	 * 
 	 * @return
 	 */
@@ -299,7 +299,7 @@ public abstract class Context {
 
 								for (CauseIt cause : causes) {
 									// Don't add equivalent causes to the list
-									if (cause.isEquivalentToCause(causeIt)) {
+									if (cause.isEquivalent(causeIt)) {
 										causeExists = true;
 										break;
 									}
@@ -323,7 +323,7 @@ public abstract class Context {
 
 						for (CauseIt cause : causes) {
 							// Don't add equivalent causes to the list
-							if (cause.isEquivalentToCause(causeIt)) {
+							if (cause.isEquivalent(causeIt)) {
 								causeExists = true;
 								break;
 							}
@@ -551,7 +551,7 @@ public abstract class Context {
 		unimplemented("getControlItFormat");
 		return null;
 	}
-	
+
 	public Collection<CauseIt> getIdenticalCauses() {
 		unimplemented("getIdenticalCauses");
 		return null;
@@ -647,7 +647,7 @@ public abstract class Context {
 		unimplemented("getChoiceProbabilityUpperBound");
 		return null;
 	}
-	
+
 	public String getIndex() {
 		unimplemented("getIndex");
 		return null;

@@ -3,17 +3,13 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
-import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;

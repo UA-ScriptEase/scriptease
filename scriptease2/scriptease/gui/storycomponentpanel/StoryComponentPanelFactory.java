@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -110,35 +109,36 @@ public class StoryComponentPanelFactory {
 					.getInstance());
 
 			LibraryPanel.getInstance().addStoryComponentPanelJListObserver(
-					panel, new StoryComponentPanelJListObserver() {									
+					panel, new StoryComponentPanelJListObserver() {
 						@Override
 						public void componentSelected(StoryComponent component) {
-							//Check to see if our component is selected, and if so draw a red border, else draw a normal gray one.
-							//Note that we currently can't get .equals() to work with StoryComponents, so this text comparison is an ugly
-							//way of doing the check we want.  
-							final Collection<StoryComponentPanel> selectedPanels = LibraryPanel
-									.getInstance().getSelected();
-							Collection<String> selectedTexts = new ArrayList<String>();
+							// Check to see if our component is selected, and if
+							// so draw a red border, else draw a normal gray
+							// one.
+							boolean found = false;
+							for (StoryComponentPanel selectedPanel : LibraryPanel
+									.getInstance().getSelected()) {
 
-							for (StoryComponentPanel selectedPanel : selectedPanels) {
-								selectedTexts.add(selectedPanel
-										.getStoryComponent().getDisplayText());
+								if (selectedPanel.getStoryComponent().getID() == panel
+										.getStoryComponent().getID()) {
+									found = true;
+									break;
+								}
 							}
 
-							if (selectedTexts.contains(panel
-									.getStoryComponent().getDisplayText())) {
+							if (found) {
 								panel.setBorder(BorderFactory.createLineBorder(
 										ScriptEaseUI.SE_RED, 2));
 							} else {
 								panel.setBorder(BorderFactory.createLineBorder(
 										Color.LIGHT_GRAY, 1));
 							}
-							
+
 						}
 
 					});
 
-		}		
+		}
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
 		return panel;
@@ -504,8 +504,9 @@ public class StoryComponentPanelFactory {
 
 				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
-								
-				if (storyPoint.isRoot() && storyPoint.getSuccessors().size() == 0) {
+
+				if (storyPoint.isRoot()
+						&& storyPoint.getSuccessors().size() == 0) {
 					mainPanel.setLayout(new BoxLayout(mainPanel,
 							BoxLayout.PAGE_AXIS));
 
@@ -513,7 +514,7 @@ public class StoryComponentPanelFactory {
 					mainPanel.add(getStartedLabel);
 					mainPanel.add(tutorialButton);
 
-				} else if (storyPoint.isRoot()){
+				} else if (storyPoint.isRoot()) {
 					mainPanel.setLayout(new BoxLayout(mainPanel,
 							BoxLayout.PAGE_AXIS));
 					mainPanel.add(noAddLabel);
