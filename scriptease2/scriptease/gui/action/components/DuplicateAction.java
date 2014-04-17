@@ -9,6 +9,7 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
@@ -108,7 +109,10 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 
 			if (manager != null)
 				manager.duplicateSelected();
-		} else if (focusOwner instanceof StoryComponentPanelJList) {
+		} else if (focusOwner instanceof StoryComponentPanelJList
+				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel
+				&& (!((LibraryModel) SEModelManager.getInstance()
+						.getActiveModel()).getReadOnly() || ScriptEase.DEBUG_MODE)) {
 			// Delete elements from StoryComponentPanelJList
 			final StoryComponentPanelJList list;
 			list = (StoryComponentPanelJList) focusOwner;
@@ -117,7 +121,16 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 				final StoryComponentPanel selectedPanel = (StoryComponentPanel) selectedObject;
 				final StoryComponent selectedComponent = selectedPanel
 						.getStoryComponent();
-				final LibraryModel library = selectedComponent.getLibrary();
+				// We want to add the new component to the current library
+				// For example if I want to make my own variant of a component
+				// that belongs to a read only library
+				// We should make a new, editable component if we're working in
+				// an editable library.
+				// -zturchan
+				// final LibraryModel libraryModel =
+				// selectedComponent.getLibrary();
+				final LibraryModel library = (LibraryModel) SEModelManager
+						.getInstance().getActiveModel();
 				selectedComponent.process(new StoryAdapter() {
 
 					// Clone ScriptIts, then replace the referenced codeBlocks
@@ -136,7 +149,7 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 								public void processCodeBlockSource(
 										CodeBlockSource codeBlockSource) {
 									clone.addCodeBlock(codeBlockSource
-											.duplicate());
+											.duplicate(library));
 								}
 
 								@Override

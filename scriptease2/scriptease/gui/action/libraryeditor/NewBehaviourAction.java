@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.ScriptEase;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
@@ -50,24 +51,25 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final LibraryModel library;
-
 		final Behaviour newBehaviour;
 		final CodeBlock codeBlock;
 		final String slot;
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		newBehaviour = new Behaviour(library, library.getNextID(),
-				"New Behaviour");
-		slot = "onBehaviour";
+		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+			newBehaviour = new Behaviour(library, library.getNextID(),
+					"New Behaviour");
+			slot = "onBehaviour";
 
-		codeBlock = new CodeBlockSource(library, library.getNextID());
-		codeBlock.setSlot(slot);
+			codeBlock = new CodeBlockSource(library, library.getNextID());
+			codeBlock.setSlot(slot);
 
-		newBehaviour.addCodeBlock(codeBlock);
-		newBehaviour.setVisible(true);
+			newBehaviour.addCodeBlock(codeBlock);
+			newBehaviour.setVisible(true);
 
-		library.add(newBehaviour);
-		LibraryPanel.getInstance().navigateToComponent(newBehaviour);
+			library.add(newBehaviour);
+			LibraryPanel.getInstance().navigateToComponent(newBehaviour);
+		}
 	}
 }

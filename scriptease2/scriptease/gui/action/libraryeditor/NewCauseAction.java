@@ -8,6 +8,7 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.ScriptEase;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
@@ -68,44 +69,48 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		newCause = new CauseIt(library, library.getNextID(), "When <" + subject
-				+ ">");
+		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+			newCause = new CauseIt(library, library.getNextID(), "When <"
+					+ subject + ">");
 
-		type = null;
-		parameter = new KnowIt(library, library.getNextID(), subject);
-		parameters = new ArrayList<KnowIt>();
+			type = null;
+			parameter = new KnowIt(library, library.getNextID(), subject);
+			parameters = new ArrayList<KnowIt>();
 
-		parameters.add(parameter);
+			parameters.add(parameter);
 
-		for (GameType gameType : TranslatorManager.getInstance()
-				.getActiveDefaultLibrary().getGameTypes()) {
-			// We just need the first cause with slots, so we can just search
-			// the default library.
-			if (!gameType.getSlots().isEmpty()) {
-				type = gameType;
-				parameter.setTypes(ListOp.createList(type));
-				break;
+			for (GameType gameType : TranslatorManager.getInstance()
+					.getActiveDefaultLibrary().getGameTypes()) {
+				// We just need the first cause with slots, so we can just
+				// search
+				// the default library.
+				if (!gameType.getSlots().isEmpty()) {
+					type = gameType;
+					parameter.setTypes(ListOp.createList(type));
+					break;
+				}
 			}
-		}
 
-		if (type != null) {
-			final String slot = type.getSlots().iterator().next();
+			if (type != null) {
+				final String slot = type.getSlots().iterator().next();
 
-			codeBlock = new CodeBlockSource(subject, slot, parameters, library,
-					library.getNextID());
+				codeBlock = new CodeBlockSource(subject, slot, parameters,
+						library, library.getNextID());
 
-			newCause.addCodeBlock(codeBlock);
-			newCause.setDisplayText("When <" + subject + ">");
-			newCause.setVisible(true);
+				newCause.addCodeBlock(codeBlock);
+				newCause.setDisplayText("When <" + subject + ">");
+				newCause.setVisible(true);
 
-			library.add(newCause);
-			LibraryPanel.getInstance().navigateToComponent(newCause);
-		} else {
-			WindowFactory.getInstance().showWarningDialog(
-					"No Types With Slots Found",
-					"I couldn't find any game types with slots.\n\n"
-							+ "Add a type with a slot, or a slot to an\n"
-							+ "existing type before trying this again.");
+				library.add(newCause);
+				LibraryPanel.getInstance().navigateToComponent(newCause);
+			} else {
+				WindowFactory.getInstance().showWarningDialog(
+						"No Types With Slots Found",
+						"I couldn't find any game types with slots.\n\n"
+								+ "Add a type with a slot, or a slot to an\n"
+								+ "existing type before trying this again.");
+
+			}
 		}
 	}
 }

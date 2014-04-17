@@ -8,6 +8,7 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
+import scriptease.ScriptEase;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
@@ -64,23 +65,25 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		newActivityIt = new ActivityIt(library, library.getNextID(),
-				"New Activity");
-		newActivityIt.setVisible(true);
+		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+			newActivityIt = new ActivityIt(library, library.getNextID(),
+					"New Activity");
+			newActivityIt.setVisible(true);
 
-		types = ListOp.createList(GameType.DEFAULT_VOID_TYPE);
-		
-		formatRef = new ArrayList<AbstractFragment>();
-		formatRef.add(new FormatReferenceFragment("activityItChildren",
-				FormatReferenceType.NONE));
+			types = ListOp.createList(GameType.DEFAULT_VOID_TYPE);
 
-		codeBlock = new CodeBlockSource(library, library.getNextID());
-		codeBlock.setTypesByName(types);
-		codeBlock.setCode(formatRef);
+			formatRef = new ArrayList<AbstractFragment>();
+			formatRef.add(new FormatReferenceFragment("activityItChildren",
+					FormatReferenceType.NONE));
 
-		newActivityIt.addCodeBlock(codeBlock);
+			codeBlock = new CodeBlockSource(library, library.getNextID());
+			codeBlock.setTypesByName(types);
+			codeBlock.setCode(formatRef);
 
-		library.add(newActivityIt);
-		LibraryPanel.getInstance().navigateToComponent(newActivityIt);
+			newActivityIt.addCodeBlock(codeBlock);
+
+			library.add(newActivityIt);
+			LibraryPanel.getInstance().navigateToComponent(newActivityIt);
+		}
 	}
 }
