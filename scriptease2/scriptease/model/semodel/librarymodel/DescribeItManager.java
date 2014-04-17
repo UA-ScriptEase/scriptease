@@ -153,11 +153,13 @@ class DescribeItManager {
 	 * @param describeIt
 	 * @return
 	 */
-	protected KnowIt createKnowItForDescribeIt(DescribeIt describeIt) {
+	protected KnowIt createKnowItForDescribeIt(LibraryModel library,
+			DescribeIt describeIt) {
 		final ScriptIt initialBinding;
 		final KnowIt knowIt;
 
-		knowIt = new KnowIt(describeIt.getName(), describeIt.getTypes());
+		knowIt = new KnowIt(library, library.getNextID(), describeIt.getName(),
+				describeIt.getTypes());
 
 		initialBinding = describeIt.getScriptItForPath(describeIt
 				.getShortestPath());

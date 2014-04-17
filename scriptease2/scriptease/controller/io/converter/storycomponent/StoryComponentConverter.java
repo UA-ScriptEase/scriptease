@@ -2,8 +2,11 @@ package scriptease.controller.io.converter.storycomponent;
 
 import java.util.Collection;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
+import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.model.StoryComponent;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -25,6 +28,13 @@ public abstract class StoryComponentConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final StoryComponent comp = (StoryComponent) source;
+		final LibraryModel library = comp.getLibrary();
+
+		XMLAttribute.ID.write(writer, Integer.toString(comp.getID()));
+
+		if (library != LibraryModelConverter.currentLibrary) {
+			XMLAttribute.LIBRARY.write(writer, library.getTitle());
+		}
 
 		XMLNode.NAME.writeString(writer, comp.getDisplayText());
 		XMLNode.VISIBLE.writeBoolean(writer, comp.isVisible());
@@ -47,7 +57,22 @@ public abstract class StoryComponentConverter implements Converter {
 		final String enabled;
 		final Collection<String> labels;
 
-		comp = this.buildComponent(reader, context);
+		final String libraryStr = XMLAttribute.LIBRARY.read(reader);
+		final String idStr = XMLAttribute.ID.read(reader);
+
+		final LibraryModel library;
+		if (libraryStr == null)
+			library = LibraryModelConverter.currentLibrary;
+		else if (libraryStr.equals(LibraryModel.NON_LIBRARY_NAME))
+			library = LibraryModel.getNonLibrary();
+		else if (libraryStr.equals(LibraryModel.COMMON_LIBRARY_NAME))
+			library = LibraryModel.getCommonLibrary();
+		else
+			library = LibraryModelConverter.currentLibrary.getTranslator()
+					.findLibrary(libraryStr);
+
+		comp = this.buildComponent(reader, context, library,
+				Integer.parseInt(idStr));
 
 		displayText = XMLNode.NAME.readString(reader);
 		visibility = XMLNode.VISIBLE.readString(reader);
@@ -74,10 +99,14 @@ public abstract class StoryComponentConverter implements Converter {
 	 *            the reader to read from
 	 * @param context
 	 *            the context to read in
-	 * 
+	 * @param library
+	 *            the library that the story component belongs to
+	 * @param id
+	 *            the unique id of the story component referenced to the library
 	 * @return instance a StoryComponent subclass
 	 * @see #unmarshal(HierarchicalStreamReader, UnmarshallingContext)
 	 */
 	protected abstract StoryComponent buildComponent(
-			HierarchicalStreamReader reader, UnmarshallingContext context);
+			HierarchicalStreamReader reader, UnmarshallingContext context,
+			LibraryModel library, int id);
 }

@@ -1,9 +1,11 @@
 package scriptease.model.complex;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * This class is a structural asset that simply allows for the model to group
@@ -32,7 +34,7 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 	}
 
 	public StoryComponentContainer(String displayName) {
-		this.setDisplayText(displayName);
+		this(displayName, new ArrayList<Class<? extends StoryComponent>>());
 	}
 
 	public StoryComponentContainer(
@@ -42,14 +44,15 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 
 	public StoryComponentContainer(String displayName,
 			Collection<Class<? extends StoryComponent>> validTypes) {
-		this(displayName);
+		super(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID(),
+				displayName);
 
 		for (Class<? extends StoryComponent> validType : validTypes) {
 			registerChildType(validType,
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		}
 	}
-	
+
 	@Override
 	public StoryComponentContainer clone() {
 		return (StoryComponentContainer) super.clone();

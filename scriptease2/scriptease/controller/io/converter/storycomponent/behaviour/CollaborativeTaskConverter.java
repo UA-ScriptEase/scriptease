@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent.behaviour;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -30,7 +31,7 @@ public class CollaborativeTaskConverter extends TaskConverter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		
+
 		final String initiatorName = XMLAttribute.INITIATE.read(reader);
 		final String responderName = XMLAttribute.RESPOND.read(reader);
 
@@ -51,8 +52,8 @@ public class CollaborativeTaskConverter extends TaskConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		final CollaborativeTask task = new CollaborativeTask("", "");
+			UnmarshallingContext context, LibraryModel library, int id) {
+		final CollaborativeTask task = new CollaborativeTask(library, id);
 		// remove the default generated initiator and responder containers.
 		task.removeStoryChild(task.getInitiatorContainer());
 		task.removeStoryChild(task.getResponderContainer());

@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 
-import scriptease.ScriptEase;
 import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.gui.SEGraph.SEGraph.SelectionMode;
 import scriptease.gui.SEGraph.models.DescribeItNodeGraphModel;

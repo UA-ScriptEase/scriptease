@@ -12,6 +12,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A PickIt represents a ComplexStoryComponent {@link ComplexStoryComponent}
@@ -39,10 +40,11 @@ public class PickIt extends ComplexStoryComponent {
 	private int choiceCounter;
 
 	/**
-	 * Builds a new PickIt.
+	 * Builds a new PickIt. If you're adding a PickIt to a model in code, it's
+	 * recommended to use {@link LibraryModel#createPickIt()} instead.
 	 */
-	public PickIt() {
-		super("<Pick>");
+	public PickIt(LibraryModel library, int id) {
+		super(library, id, "<Pick>");
 
 		final List<Class<? extends StoryComponent>> choiceValidTypes;
 

@@ -15,7 +15,6 @@ import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
@@ -75,9 +74,9 @@ public final class StoryModel extends SEModel {
 	 * @param translator
 	 *            The Translator to use to interpret this story.
 	 */
-	public StoryModel(GameModule module, String title, String author, String description,
-			String compatibleVersion, Translator translator,
-			Collection<LibraryModel> optionalLibraries) {
+	public StoryModel(GameModule module, String title, String author,
+			String description, String compatibleVersion,
+			Translator translator, Collection<LibraryModel> optionalLibraries) {
 		super(title, author, description);
 
 		this.setRoot(new StoryPoint("Start"));
@@ -176,8 +175,8 @@ public final class StoryModel extends SEModel {
 		this.startPoint.removeStoryChildren(this.startPoint.getChildren());
 
 		this.startPoint
-				.addStoryChild(new Note(
-						"You can't put story components in here. Add a new story point instead!"));
+				.addStoryChild(LibraryModel
+						.createNote("You can't put story components in here. Add a new story point instead!"));
 	}
 
 	public StoryPoint getRoot() {
@@ -236,7 +235,7 @@ public final class StoryModel extends SEModel {
 
 					final CauseIt causeIt = (CauseIt) cause;
 					final KnowIt knowIt = isActiveDescription.clone();
-					final AskIt askIt = new AskIt();
+					final AskIt askIt = LibraryModel.createAskIt();
 
 					if (causeIt.getChildren().isEmpty()) {
 						causeIt.addStoryChild(knowIt);

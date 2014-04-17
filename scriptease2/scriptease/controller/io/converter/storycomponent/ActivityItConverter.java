@@ -12,6 +12,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -31,8 +32,8 @@ public class ActivityItConverter extends ScriptItConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new ActivityIt("");
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new ActivityIt(library, id, "");
 	}
 
 	@Override

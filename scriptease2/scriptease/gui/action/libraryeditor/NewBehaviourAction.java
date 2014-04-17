@@ -50,28 +50,25 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final LibraryModel libraryModel;
-
+		final LibraryModel library;
 		final Behaviour newBehaviour;
 		final CodeBlock codeBlock;
-		final int codeBlockID;
 		final String slot;
-		
-		libraryModel = (LibraryModel) SEModelManager.getInstance()
-				.getActiveModel();
-		
-		if(!libraryModel.getReadOnly() || ScriptEase.DEBUG_MODE){
-			newBehaviour = new Behaviour("New Behaviour");
-			codeBlockID = libraryModel.getNextCodeBlockID();
+
+		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
+
+		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+			newBehaviour = new Behaviour(library, library.getNextID(),
+					"New Behaviour");
 			slot = "onBehaviour";
-			
-			codeBlock = new CodeBlockSource(codeBlockID);
+
+			codeBlock = new CodeBlockSource(library, library.getNextID());
 			codeBlock.setSlot(slot);
-	
+
 			newBehaviour.addCodeBlock(codeBlock);
 			newBehaviour.setVisible(true);
-	
-			libraryModel.add(newBehaviour);
+
+			library.add(newBehaviour);
 			LibraryPanel.getInstance().navigateToComponent(newBehaviour);
 		}
 	}

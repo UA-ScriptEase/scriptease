@@ -5,6 +5,7 @@ import java.util.Collection;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * A graph model for tasks {@link Task}
@@ -13,7 +14,7 @@ import scriptease.model.complex.behaviours.Task;
  */
 public class TaskGraphModel extends SEGraphModel<Task> {
 
-	final Task start;
+	private final Task start;
 
 	public TaskGraphModel(Task start) {
 		super(start);
@@ -22,10 +23,12 @@ public class TaskGraphModel extends SEGraphModel<Task> {
 
 	@Override
 	public Task createNewNode() {
+		final LibraryModel library = start.getLibrary();
+
 		if (start instanceof IndependentTask)
-			return new IndependentTask("");
+			return new IndependentTask(library, library.getNextID());
 		else
-			return new CollaborativeTask("", "");
+			return new CollaborativeTask(library, library.getNextID());
 	}
 
 	@Override

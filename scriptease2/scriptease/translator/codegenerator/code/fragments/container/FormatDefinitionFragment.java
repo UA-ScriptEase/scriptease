@@ -6,8 +6,8 @@ import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
- * FormatFragment used to store a format in the Language Dictionary. TODO
- * mfchurch candidate for deletion. Is this class necessary?
+ * FormatFragment used to store a format in the Language Dictionary. Basic
+ * implementation of {@link AbstractContainerFragment}.
  * 
  * @author mfchurch
  */

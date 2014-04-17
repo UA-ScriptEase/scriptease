@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ControlIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -51,7 +52,7 @@ public class ControlItConverter extends ScriptItConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return new ControlIt("", ControlIt.ControlItFormat.NONE);
+			UnmarshallingContext context, LibraryModel library, int id) {
+		return new ControlIt(library, id, "", ControlIt.ControlItFormat.NONE);
 	}
 }

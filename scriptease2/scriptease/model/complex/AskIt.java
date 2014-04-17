@@ -12,6 +12,7 @@ import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType;
 
 /**
@@ -63,17 +64,19 @@ public final class AskIt extends ComplexStoryComponent {
 
 	/************* CONSTRUCTORS ********************/
 	/**
-	 * Builds a new AskIt.
+	 * Builds a new AskIt. If you're adding an AskIt to a model in code, it's
+	 * recommended to use {@link LibraryModel#createAskIt()} instead.
 	 * 
 	 */
-	public AskIt() {
-		super("<Question>");
+	public AskIt(LibraryModel library, int id) {
+		super(library, id, "<Question>");
 
 		final List<Class<? extends StoryComponent>> ifElseValidTypes;
 
 		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
 
-		this.setCondition(new KnowIt("Question", GameType.DEFAULT_BOOL_TYPE));
+		this.setCondition(new KnowIt(library, library.getNextID(), "Question",
+				GameType.DEFAULT_BOOL_TYPE));
 
 		// AskIts can have two children of type StoryComponentContainer. These
 		// function as containers for the If/Else blocks
@@ -89,7 +92,6 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(PickIt.class);
 		ifElseValidTypes.add(ActivityIt.class);
 		ifElseValidTypes.add(Behaviour.class);
-
 
 		// now we can Initialize the StoryComponentContainer
 		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);

@@ -63,25 +63,26 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 		final CodeBlock codeBlock;
 		final KnowIt parameter;
 		final Collection<KnowIt> parameters;
-
-		final String SUBJECT = "subject";
+		final String subject = "subject";
 
 		GameType type;
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		if(!library.getReadOnly() || ScriptEase.DEBUG_MODE){	
-			newCause = new CauseIt("When <" + SUBJECT + ">");
-	
+		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+			newCause = new CauseIt(library, library.getNextID(), "When <"
+					+ subject + ">");
+
 			type = null;
-			parameter = new KnowIt(SUBJECT);
+			parameter = new KnowIt(library, library.getNextID(), subject);
 			parameters = new ArrayList<KnowIt>();
-	
+
 			parameters.add(parameter);
-	
+
 			for (GameType gameType : TranslatorManager.getInstance()
 					.getActiveDefaultLibrary().getGameTypes()) {
-				// We just need the first cause with slots, so we can just search
+				// We just need the first cause with slots, so we can just
+				// search
 				// the default library.
 				if (!gameType.getSlots().isEmpty()) {
 					type = gameType;
@@ -89,17 +90,17 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 					break;
 				}
 			}
-	
+
 			if (type != null) {
-				final int id = library.getNextCodeBlockID();
 				final String slot = type.getSlots().iterator().next();
-	
-				codeBlock = new CodeBlockSource(SUBJECT, slot, parameters, id);
-	
+
+				codeBlock = new CodeBlockSource(subject, slot, parameters,
+						library, library.getNextID());
+
 				newCause.addCodeBlock(codeBlock);
-				newCause.setDisplayText("When <" + SUBJECT + ">");
+				newCause.setDisplayText("When <" + subject + ">");
 				newCause.setVisible(true);
-	
+
 				library.add(newCause);
 				LibraryPanel.getInstance().navigateToComponent(newCause);
 			} else {
@@ -108,6 +109,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 						"I couldn't find any game types with slots.\n\n"
 								+ "Add a type with a slot, or a slot to an\n"
 								+ "existing type before trying this again.");
+
 			}
 		}
 	}

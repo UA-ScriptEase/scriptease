@@ -9,6 +9,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -29,30 +30,27 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author remiller
  */
 public class CodeBlockReference extends CodeBlock {
-	private static class CodeBlockSourceNull extends CodeBlockSource {
-	}
-
-	// Used for a Null Object pattern. Avoids doing null checks everywhere.
-	private static final CodeBlockSource NULL_TARGET = new CodeBlockSourceNull();
-
 	private CodeBlockSource target;
 
 	/**
-	 * Creates a CodeBlockReference that points nowhere.
+	 * Creates a CodeBlockReference that points to a codeblock source in the
+	 * library. Note that you need to call {@link #setTarget(CodeBlockSource)}
+	 * to actually set this up properly. Thus, it's usually a better idea to
+	 * call the {@link #CodeBlockReference(CodeBlockSource)} constructor
+	 * instead. This one is primarily used to load from XML.
 	 */
-	public CodeBlockReference() {
-		this(CodeBlockReference.NULL_TARGET);
+	public CodeBlockReference(LibraryModel library, int id) {
+		super(library, id);
 	}
 
 	/**
-	 * Creates a new CodeBlockReference that points to the given target.
+	 * Creates a CodeBlockReference that points to the passed in CodeBlock.
 	 * 
-	 * @param target
-	 *            The target to point to.
+	 * @param codeBlock
 	 */
-	public CodeBlockReference(CodeBlockSource target) {
-		this.setTarget(target);
-		// don't set parameters here because setTarget does that for us.
+	public CodeBlockReference(CodeBlockSource codeBlock) {
+		super(codeBlock.getLibrary(), codeBlock.getID());
+		this.setTarget(codeBlock);
 	}
 
 	@Override
@@ -113,7 +111,8 @@ public class CodeBlockReference extends CodeBlock {
 		final CodeBlockSource oldTarget = this.getTarget();
 
 		if (newTarget == null)
-			newTarget = CodeBlockReference.NULL_TARGET;
+			throw new NullPointerException("Cannot set target of " + this
+					+ " to null.");
 
 		if (oldTarget == newTarget)
 			return;
@@ -244,7 +243,7 @@ public class CodeBlockReference extends CodeBlock {
 		int hashCode;
 
 		hashCode = super.hashCode();
-		hashCode += this.getTarget().getId();
+		hashCode += this.getID();
 
 		return hashCode;
 	}
@@ -298,11 +297,6 @@ public class CodeBlockReference extends CodeBlock {
 
 		this.setParameters(source.getParameters());
 		this.resetImplicits();
-	}
-
-	@Override
-	public int getId() {
-		return this.getTarget().getId();
 	}
 
 	/**

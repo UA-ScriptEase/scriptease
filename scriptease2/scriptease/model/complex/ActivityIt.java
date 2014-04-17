@@ -10,6 +10,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Represents a container of effects, descriptions, questions, and controls.
@@ -23,8 +24,8 @@ public class ActivityIt extends ScriptIt {
 	 * 
 	 * @param name
 	 */
-	public ActivityIt(String name) {
-		super(name);
+	public ActivityIt(LibraryModel library, int id, String name) {
+		super(library, id, name);
 
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
@@ -53,7 +54,7 @@ public class ActivityIt extends ScriptIt {
 		final ActivityIt activityIt = (ActivityIt) super.clone();
 
 		final List<StoryComponent> children = activityIt.getChildren();
-		
+
 		for (StoryComponent child : children) {
 
 			child.process(new StoryAdapter() {
