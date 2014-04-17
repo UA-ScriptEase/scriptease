@@ -141,7 +141,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		});
 
 		percent = new JLabel(" %");
-		percent.setForeground(Color.WHITE);
+		percent.setForeground(ScriptEaseUI.SE_BLACK);
 
 		WidgetDecorator.decorateJTextFieldForFocusEvents(initiatorField,
 				new Runnable() {
