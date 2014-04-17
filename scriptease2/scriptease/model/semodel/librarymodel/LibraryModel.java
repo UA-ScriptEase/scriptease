@@ -59,8 +59,8 @@ import scriptease.util.StringOp;
  * @author jyuen
  */
 public class LibraryModel extends SEModel implements StoryComponentObserver {
-	private static final String COMMON_LIBRARY_NAME = "ScriptEase";
-	private static final String NON_LIBRARY_NAME = "NO LIBRARY";
+	public static final String COMMON_LIBRARY_NAME = "ScriptEase";
+	public static final String NON_LIBRARY_NAME = "NO LIBRARY";
 
 	private static final int NON_UNIQUE_ID = -1;
 

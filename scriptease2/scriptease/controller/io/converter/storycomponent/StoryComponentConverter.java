@@ -29,10 +29,9 @@ public abstract class StoryComponentConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		final StoryComponent comp = (StoryComponent) source;
+		final LibraryModel library = comp.getLibrary();
 
 		XMLAttribute.ID.write(writer, Integer.toString(comp.getID()));
-
-		final LibraryModel library = comp.getLibrary();
 
 		if (library != LibraryModelConverter.currentLibrary) {
 			XMLAttribute.LIBRARY.write(writer, library.getTitle());
@@ -59,23 +58,22 @@ public abstract class StoryComponentConverter implements Converter {
 		final String enabled;
 		final Collection<String> labels;
 
-		final LibraryModel library;
-
-		// TODO Read the "id" and "library" attributes and create the story
-		// component with them.
 		final String libraryStr = XMLAttribute.LIBRARY.read(reader);
 		final String idStr = XMLAttribute.ID.read(reader);
-		final int id = Integer.parseInt(idStr);
 
-		if (libraryStr != null)
-			library = SEModelManager.getInstance().getLibraryByName(libraryStr);
-		else
+		final LibraryModel library;
+		if (libraryStr == null)
 			library = LibraryModelConverter.currentLibrary;
+		else if (libraryStr.equals(LibraryModel.NON_LIBRARY_NAME))
+			library = LibraryModel.getNonLibrary();
+		else if (libraryStr.equals(LibraryModel.COMMON_LIBRARY_NAME))
+			library = LibraryModel.getCommonLibrary();
+		else
+			library = LibraryModelConverter.currentLibrary.getTranslator()
+					.findLibrary(libraryStr);
 
-		if (library == null)
-			System.out.println("STAWP");
-
-		comp = this.buildComponent(reader, context, library, id);
+		comp = this.buildComponent(reader, context, library,
+				Integer.parseInt(idStr));
 
 		displayText = XMLNode.NAME.readString(reader);
 		visibility = XMLNode.VISIBLE.readString(reader);
