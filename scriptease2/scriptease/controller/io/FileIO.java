@@ -131,6 +131,7 @@ public class FileIO {
 	}
 
 	private IoMode mode;
+	private Translator translator;
 
 	/**
 	 * Reads a Story from disk.
@@ -163,6 +164,7 @@ public class FileIO {
 	public LibraryModel readLibrary(Translator translator, File location) {
 		final LibraryModel lib;
 
+		this.translator = translator;
 		lib = (LibraryModel) this.readData(location, IoMode.LIBRARY);
 
 		lib.setLocation(location);
@@ -170,6 +172,7 @@ public class FileIO {
 
 		BindingFixer.fixBindings(lib.getRoot());
 
+		this.translator = null;
 		return lib;
 	}
 
@@ -191,6 +194,7 @@ public class FileIO {
 			throw new IllegalStateException(
 					"Loop detected in LibraryModel Loading");
 		}
+
 		return this.readLibrary(translator, location);
 	}
 
@@ -623,6 +627,15 @@ public class FileIO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Gets the current translator getting read/written to.
+	 * 
+	 * @return
+	 */
+	public Translator getTranslator() {
+		return this.translator;
 	}
 
 	/**

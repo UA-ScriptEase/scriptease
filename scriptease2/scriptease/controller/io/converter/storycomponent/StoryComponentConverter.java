@@ -2,6 +2,7 @@ package scriptease.controller.io.converter.storycomponent;
 
 import java.util.Collection;
 
+import scriptease.controller.io.FileIO;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.LibraryModelConverter;
@@ -61,15 +62,18 @@ public abstract class StoryComponentConverter implements Converter {
 		final String idStr = XMLAttribute.ID.read(reader);
 
 		final LibraryModel library;
-		if (libraryStr == null)
+		if (libraryStr == null
+				|| libraryStr.equals(LibraryModelConverter.currentLibrary
+						.getTitle()))
 			library = LibraryModelConverter.currentLibrary;
 		else if (libraryStr.equals(LibraryModel.NON_LIBRARY_NAME))
 			library = LibraryModel.getNonLibrary();
 		else if (libraryStr.equals(LibraryModel.COMMON_LIBRARY_NAME))
 			library = LibraryModel.getCommonLibrary();
-		else
-			library = LibraryModelConverter.currentLibrary.getTranslator()
+		else {
+			library = FileIO.getInstance().getTranslator()
 					.findLibrary(libraryStr);
+		}
 
 		comp = this.buildComponent(reader, context, library,
 				Integer.parseInt(idStr));
