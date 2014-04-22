@@ -172,4 +172,12 @@ public class ListOp {
 		return (Collection<T>) createList(Arrays.copyOfRange(
 				collection.toArray(), 1, collection.size() - 1));
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T last(Collection<T> collection) {
+		if (collection.isEmpty())
+			return null;
+
+		return (T) collection.toArray()[collection.size() - 1];
+	}
 }

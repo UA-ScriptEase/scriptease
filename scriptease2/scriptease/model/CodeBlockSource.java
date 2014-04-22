@@ -52,7 +52,7 @@ public class CodeBlockSource extends CodeBlock {
 	private String slot;
 	private Collection<String> returnTypes;
 	private Collection<String> includes;
-	private Collection<AbstractFragment> code;
+	private List<AbstractFragment> code;
 	private Set<WeakReference<CodeBlockReference>> references;
 
 	/**
@@ -118,7 +118,7 @@ public class CodeBlockSource extends CodeBlock {
 	 */
 	public CodeBlockSource(String subject, String slot,
 			Collection<String> returnTypes, Collection<KnowIt> parameters,
-			Collection<String> includes, Collection<AbstractFragment> code,
+			Collection<String> includes, List<AbstractFragment> code,
 			LibraryModel library, int id) {
 		super(library, id);
 		super.init();
@@ -193,7 +193,7 @@ public class CodeBlockSource extends CodeBlock {
 		}
 		duplicate.setParameters(clonedParameters);
 
-		final Collection<AbstractFragment> clonedCode = new ArrayList<AbstractFragment>(
+		final List<AbstractFragment> clonedCode = new ArrayList<AbstractFragment>(
 				this.code.size());
 		for (AbstractFragment fragment : this.code) {
 			clonedCode.add(fragment.clone());
@@ -346,15 +346,15 @@ public class CodeBlockSource extends CodeBlock {
 	}
 
 	@Override
-	public void setCode(Collection<AbstractFragment> newCode) {
-		this.code = new ArrayList<AbstractFragment>(newCode);
+	public void setCode(List<AbstractFragment> newCode) {
+		this.code = newCode;
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
 	}
 
 	@Override
 	public List<AbstractFragment> getCode() {
-		return new ArrayList<AbstractFragment>(this.code);
+		return this.code;
 	}
 
 	/**

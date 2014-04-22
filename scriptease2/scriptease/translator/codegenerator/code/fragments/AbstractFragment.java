@@ -140,6 +140,7 @@ public abstract class AbstractFragment implements Cloneable {
 		return this.directive.hashCode();
 	}
 
+
 	/**
 	 * Clones and returns the given codeFragments in a List
 	 * 
