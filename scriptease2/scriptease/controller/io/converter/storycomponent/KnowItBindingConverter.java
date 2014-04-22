@@ -94,7 +94,7 @@ public class KnowItBindingConverter implements Converter {
 				} else {
 					XMLAttribute.FLAVOUR.write(writer, FLAVOUR_CONSTANT);
 					XMLNode.TYPE.writeString(writer,
-							ListOp.getFirst(value.getTypes()));
+							ListOp.head(value.getTypes()));
 					XMLNode.VALUE.writeString(writer, value.getCodeText());
 				}
 			}

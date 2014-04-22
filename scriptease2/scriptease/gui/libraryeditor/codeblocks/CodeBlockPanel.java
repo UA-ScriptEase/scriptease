@@ -536,16 +536,17 @@ public class CodeBlockPanel extends JPanel {
 				|| ScriptEase.DEBUG_MODE;
 
 		if (!isEditable) {
-			// So the actions have built-in components which update their
-			// enabled state when they gain or lose focus
-			// That code doesn't know about the read-only status of the Story
-			// Component being edited.
-			// So we just add a bunch of fake actions which override that code,
-			// if the current component isn't editable
-			// -zturchan
+			/*
+			 * So the actions have built-in components which update their
+			 * enabled state when they gain or lose focus. That code doesn't
+			 * know about the read-only status of the Story Component being
+			 * edited. So we just add a bunch of fake actions which override
+			 * that code if the current component isn't editable -zturchan
+			 */
 			class DisabledInsertAction extends AbstractInsertFragmentAction {
 				protected DisabledInsertAction(String name) {
 					super(name);
+					this.setEnabled(false);
 				}
 
 				@Override
@@ -561,6 +562,7 @@ public class CodeBlockPanel extends JPanel {
 			class DisabledMoveAction extends AbstractMoveFragmentAction {
 				protected DisabledMoveAction(String name) {
 					super(name);
+					this.setEnabled(false);
 				}
 
 				@Override
@@ -615,16 +617,6 @@ public class CodeBlockPanel extends JPanel {
 			downButton = ComponentFactory
 					.buildFlatButton(MoveFragmentDownAction.getInstance());
 		}
-
-		lineButton.setEnabled(isEditable);
-		indentButton.setEnabled(isEditable);
-		scopeButton.setEnabled(isEditable);
-		seriesButton.setEnabled(isEditable);
-		simpleButton.setEnabled(isEditable);
-		literalButton.setEnabled(isEditable);
-		referenceButton.setEnabled(isEditable);
-		upButton.setEnabled(isEditable);
-		downButton.setEnabled(isEditable);
 
 		buttons.add(lineButton);
 		buttons.add(indentButton);
@@ -814,7 +806,7 @@ public class CodeBlockPanel extends JPanel {
 					if (codeBlock.hasSlot())
 						slotBox.setSelectedItem(codeBlock.getSlot());
 					else
-						slotBox.setSelectedItem(ListOp.getFirst(slots));
+						slotBox.setSelectedItem(ListOp.head(slots));
 				}
 
 				slotBox.addActionListener(listener);

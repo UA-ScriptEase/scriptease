@@ -8,6 +8,7 @@ import scriptease.controller.FragmentVisitor;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * Special code generation token that abstractly represents a piece of the code
@@ -158,37 +159,91 @@ public abstract class AbstractFragment implements Cloneable {
 	}
 
 	/**
-	 * Takes the Collection of clonedFragments and returns the one equal to the
-	 * currently selected fragment. Returns null if a fragment equal to the
-	 * selectedFragment cannot be found in the given clonedFragments
+	 * Finds the position of the target fragment in the original fragments then
+	 * finds the fragment in the same position in the new fragments. This is
+	 * likely only used to find the same fragment in a cloned collection.
 	 * 
-	 * @param clonedFragments
+	 * @param target
+	 * @param origFragments
+	 * @param newFragments
 	 * @return
 	 */
-	public static final AbstractFragment getClonedSelectedFragment(
-			final AbstractFragment selectedFragment,
-			final Collection<AbstractFragment> clonedFragments) {
-		AbstractFragment clonedSelectedFragment = null;
+	public static AbstractFragment getInSamePosition(AbstractFragment target,
+			List<AbstractFragment> origFragments,
+			List<AbstractFragment> newFragments) {
+		return AbstractFragment
+				.getFromPath(AbstractFragment.getPathTo(target, origFragments),
+						newFragments);
+	}
 
-		if (selectedFragment != null) {
-			for (AbstractFragment fragment : clonedFragments) {
-				if (fragment.equals(selectedFragment)) {
-					clonedSelectedFragment = fragment;
-					break;
-				} else if (fragment instanceof AbstractContainerFragment) {
-					final AbstractFragment clonedSubFragment;
-					clonedSubFragment = getClonedSelectedFragment(
-							selectedFragment,
-							((AbstractContainerFragment) fragment)
-									.getSubFragments());
-					if (clonedSubFragment != null) {
-						clonedSelectedFragment = clonedSubFragment;
+	/**
+	 * Gets a component based on a path. Assumes a valid path.
+	 * 
+	 * @param selectionPath
+	 * @param fragments
+	 * @return
+	 */
+	public static AbstractFragment getFromPath(List<Integer> selectionPath,
+			List<AbstractFragment> fragments) {
+		AbstractFragment fragment = null;
+
+		List<AbstractFragment> subFragments = fragments;
+
+		for (int position : selectionPath) {
+			fragment = subFragments.get(position);
+
+			if (fragment instanceof AbstractContainerFragment)
+				subFragments = ((AbstractContainerFragment) fragment)
+						.getSubFragments();
+			else
+				return fragment;
+		}
+
+		return fragment;
+	}
+
+	/**
+	 * Returns a path to the target fragment. Will return an empty list if no
+	 * path is found. Could be expensive if we ever have something with a ton of
+	 * code.
+	 * 
+	 * @param target
+	 * @param origFragments
+	 * @return
+	 */
+	public static List<Integer> getPathTo(AbstractFragment target,
+			List<AbstractFragment> origFragments) {
+
+		final List<AbstractFragment> fragments;
+		final List<Integer> selectionPath;
+		final int originalIndex;
+
+		selectionPath = new ArrayList<Integer>();
+		fragments = new IdentityArrayList<AbstractFragment>(origFragments);
+		originalIndex = fragments.indexOf(target);
+
+		if (originalIndex > -1) {
+			selectionPath.add(originalIndex);
+		} else {
+			for (AbstractFragment fragment : fragments) {
+				if (fragment instanceof AbstractContainerFragment) {
+					final List<AbstractFragment> subFragments;
+					final List<Integer> subSearch;
+
+					subFragments = ((AbstractContainerFragment) fragment)
+							.getSubFragments();
+
+					subSearch = getPathTo(target, subFragments);
+
+					if (!subSearch.isEmpty()) {
+						selectionPath.add(fragments.indexOf(fragment));
+						selectionPath.addAll(subSearch);
 						break;
 					}
 				}
 			}
 		}
-		return clonedSelectedFragment;
+		return selectionPath;
 	}
 
 	/**

@@ -16,6 +16,7 @@ import scriptease.gui.libraryeditor.codeblocks.CodeFragmentPanel;
 import scriptease.model.CodeBlock;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
+import sun.awt.util.IdentityArrayList;
 
 /**
  * This class contains all of the methods that can move FormatFragments in code
@@ -58,10 +59,13 @@ public abstract class AbstractMoveFragmentAction extends
 	 * @param parentFragment
 	 * @return
 	 */
-	private void moveFragment(
-			final List<AbstractFragment> topLevelFormatFragments,
+	private void moveFragment(final List<AbstractFragment> topLevelFragments,
 			final AbstractFragment selectedFragment,
 			final AbstractContainerFragment parentFragment) {
+		final List<AbstractFragment> topLevelFormatFragments;
+
+		topLevelFormatFragments = new IdentityArrayList<AbstractFragment>(
+				topLevelFragments);
 
 		if (topLevelFormatFragments.contains(selectedFragment)) {
 			final int currentIndex;
@@ -77,7 +81,9 @@ public abstract class AbstractMoveFragmentAction extends
 						selectedFragment);
 
 				if (parentFragment != null)
-					parentFragment.setSubFragments(topLevelFormatFragments);
+					parentFragment
+							.setSubFragments(new ArrayList<AbstractFragment>(
+									topLevelFormatFragments));
 
 			}
 		} else {
@@ -111,20 +117,25 @@ public abstract class AbstractMoveFragmentAction extends
 	public void actionPerformed(ActionEvent arg0) {
 		final CodeFragmentPanel panel;
 		final CodeBlock codeBlock;
-		final List<AbstractFragment> fragments;
+		final List<AbstractFragment> originalFragments;
+		final List<AbstractFragment> clonedFragments;
 		final AbstractFragment selectedFragment;
 
 		panel = (CodeFragmentPanel) SEFocusManager.getInstance().getFocus();
-		codeBlock = panel.getCodeBlock();
 
-		fragments = AbstractFragment.cloneFragments(codeBlock.getCode());
-		selectedFragment = AbstractFragment.getClonedSelectedFragment(
-				panel.getFragment(), fragments);
+		codeBlock = panel.getCodeBlock();
+		originalFragments = codeBlock.getCode();
+		clonedFragments = AbstractFragment.cloneFragments(originalFragments);
+
+		selectedFragment = AbstractFragment.getInSamePosition(
+				panel.getFragment(), originalFragments, clonedFragments);
+
 		if (selectedFragment != null) {
-			this.moveFragment(fragments, selectedFragment, null);
+			this.moveFragment(clonedFragments, selectedFragment, null);
 			UndoManager.getInstance().startUndoableAction(
-					"Setting CodeBlock " + codeBlock + " code to " + fragments);
-			codeBlock.setCode(fragments);
+					"Setting CodeBlock " + codeBlock + " code to "
+							+ clonedFragments);
+			codeBlock.setCode(clonedFragments);
 			UndoManager.getInstance().endUndoableAction();
 		}
 	}

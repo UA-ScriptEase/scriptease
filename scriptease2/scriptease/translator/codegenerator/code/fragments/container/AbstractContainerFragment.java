@@ -1,7 +1,6 @@
 package scriptease.translator.codegenerator.code.fragments.container;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
@@ -21,7 +20,7 @@ public abstract class AbstractContainerFragment extends AbstractFragment {
 		this.subFragments = new ArrayList<AbstractFragment>(subFragments);
 	}
 
-	public Collection<AbstractFragment> getSubFragments() {
+	public List<AbstractFragment> getSubFragments() {
 		return new ArrayList<AbstractFragment>(this.subFragments);
 	}
 
