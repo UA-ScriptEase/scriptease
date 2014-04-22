@@ -1,7 +1,5 @@
 package scriptease.gui.SEGraph.renderers;
 
-import java.awt.Color;
-
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;

@@ -16,7 +16,6 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.ActivityIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.io.model.GameType;
@@ -74,7 +73,7 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 
 			formatRef = new ArrayList<AbstractFragment>();
 			formatRef.add(new FormatReferenceFragment("activityItChildren",
-					FormatReferenceType.NONE));
+					FormatReferenceFragment.Type.NONE));
 
 			codeBlock = new CodeBlockSource(library, library.getNextID());
 			codeBlock.setTypesByName(types);

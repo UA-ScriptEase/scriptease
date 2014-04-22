@@ -3,7 +3,6 @@ package scriptease.translator.codegenerator.code.fragments;
 import java.util.regex.Pattern;
 
 import scriptease.controller.FragmentVisitor;
-import scriptease.translator.codegenerator.CodeGenerationConstants.DataType;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.util.StringOp;
@@ -21,6 +20,10 @@ import scriptease.util.StringOp;
 public class SimpleDataFragment extends AbstractFragment {
 	private String defaultText = "";
 	private String legalRange = "";
+
+	public static enum Type {
+		CODE, CONDITION, CONTROLITFORMAT, ENABLED, FANIN, FORMATTEDVALUE, ID, INCLUDE, NAME, NOTE, PARENTNAME, SLOTCONDITIONAL, SPEAKER, SUBJECT, TEMPLATEID, TEXT, TYPE, UNIQUEID, UNIQUE32CHARNAME, DISPLAYTEXT, VALUE, CURRENTSTORYPOINT, TOTALCHOICEPROBABILITY, INDEX, CHOICEPROBABILITYLOWERBOUND, CHOICEPROBABILITYUPPERBOUND,
+	}
 
 	public SimpleDataFragment() {
 		super("");
@@ -70,10 +73,10 @@ public class SimpleDataFragment extends AbstractFragment {
 		super.resolve(context);
 		final String directiveText = this.getDirectiveText();
 
-		final DataType data;
+		final Type data;
 
 		try {
-			data = DataType.valueOf(directiveText.toUpperCase());
+			data = Type.valueOf(directiveText.toUpperCase());
 		} catch (IllegalArgumentException e) {
 			System.out.println("Couldn't find the value of : " + directiveText);
 			return null;

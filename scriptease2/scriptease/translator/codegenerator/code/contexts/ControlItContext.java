@@ -5,7 +5,6 @@ import java.util.Collection;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
-import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 
 /**
@@ -58,7 +57,7 @@ public class ControlItContext extends ScriptItContext {
 
 		reference = this.getComponent().getFormat().name();
 		fragment = new FormatReferenceFragment(reference,
-				FormatReferenceType.CONTROLIT);
+				FormatReferenceFragment.Type.CONTROLIT);
 
 		return fragment.resolve(this);
 	}

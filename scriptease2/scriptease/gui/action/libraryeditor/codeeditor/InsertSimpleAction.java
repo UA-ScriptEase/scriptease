@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.translator.codegenerator.CodeGenerationConstants;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
 
@@ -47,7 +46,7 @@ public final class InsertSimpleAction extends AbstractInsertFragmentAction {
 		final SimpleDataFragment fragment = new SimpleDataFragment();
 
 		// We use "Name" the most, so set it to that by default.
-		fragment.setDirectiveText(CodeGenerationConstants.DataType.NAME.name());
+		fragment.setDirectiveText(SimpleDataFragment.Type.NAME.name());
 
 		return fragment;
 	}

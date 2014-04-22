@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scriptease.controller.FragmentVisitor;
-import scriptease.translator.codegenerator.CodeGenerationConstants.ScopeType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 public class ScopeFragment extends AbstractContainerFragment {
+	public static enum Type {
+		ARGUMENT, ASKIT, AUDIO, BINDING, CAUSE, ELSECHILD, END, FIRSTCAUSE, IMAGE, IFCHILD, MAINCODEBLOCK, OWNER, SLOTPARAMETER, SCRIPTIT, START, SUBJECT, RESOURCE, TEMPLATEID
+	}
+
 	private String nameRef = "";
 
 	public ScopeFragment() {
-		super("", new ArrayList<AbstractFragment>());
+		super(Type.ARGUMENT.name(), new ArrayList<AbstractFragment>());
 		this.nameRef = "";
 	}
 
@@ -68,11 +71,11 @@ public class ScopeFragment extends AbstractContainerFragment {
 	 * @return
 	 */
 	private Object getScope(Context context) {
-		final ScopeType scope;
+		final Type scope;
 
 		final String directiveText = this.getDirectiveText();
 		try {
-			scope = ScopeType.valueOf(directiveText.toUpperCase());
+			scope = Type.valueOf(directiveText.toUpperCase());
 		} catch (IllegalArgumentException e) {
 			System.out.println("Couldn't find the value of : " + directiveText);
 			return null;

@@ -132,12 +132,20 @@ public abstract class AbstractInsertFragmentAction extends
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		final Component focus = SEFocusManager.getInstance().getFocus();
 		final CodeFragmentPanel panel;
+
+		if (focus instanceof CodeFragmentPanel)
+			panel = (CodeFragmentPanel) focus;
+		else
+			// Sometimes we hit this for some reason. We shouldn't, but we can,
+			// so we check for it instead of exceptioning.
+			return;
+
 		final CodeBlock codeBlock;
 		final List<AbstractFragment> fragments;
 		final AbstractFragment selectedFragment;
 
-		panel = (CodeFragmentPanel) SEFocusManager.getInstance().getFocus();
 		codeBlock = panel.getCodeBlock();
 
 		fragments = AbstractFragment.cloneFragments(codeBlock.getCode());

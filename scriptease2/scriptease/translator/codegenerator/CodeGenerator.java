@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.swing.UIManager;
 
@@ -68,15 +66,6 @@ public class CodeGenerator {
 
 	private final static CodeGenerator instance = new CodeGenerator();
 
-	private enum ThreadMode {
-		SINGLE, MULTI
-	}
-
-	// XXX Change this to ThreadMode.MULTI to enable multi-threading.
-	// This has been disabled due to race conditions. See
-	// compileMultiThread(...) for more info.
-	private static ThreadMode THREAD_MODE = ThreadMode.SINGLE;
-
 	/**
 	 * Returns the sole instance of CodeGenerator.
 	 * 
@@ -129,7 +118,7 @@ public class CodeGenerator {
 
 		this.generatingStoryPoints.clear();
 		this.generatingStoryPoints.addAll(root.getStoryPointDescendants());
-		
+
 		// do the first pass (semantic analysis) for the given story
 		analyzer = new SemanticAnalyzer(this.generatingStoryPoints);
 
@@ -153,12 +142,7 @@ public class CodeGenerator {
 							this.generatingStoryPoints));
 
 			if (scriptBuckets.size() > 0) {
-				if (CodeGenerator.THREAD_MODE == ThreadMode.SINGLE)
-					scriptInfos.addAll(this.compileSingleThread(scriptBuckets,
-							model));
-				else if (CodeGenerator.THREAD_MODE == ThreadMode.MULTI)
-					scriptInfos.addAll(this.compileMultiThread(scriptBuckets,
-							model));
+				scriptInfos.addAll(this.compile(scriptBuckets, model));
 			}
 
 			// Remove the automatics from the story again.
@@ -179,9 +163,7 @@ public class CodeGenerator {
 					+ " could not be found.");
 		}
 
-		final long secondsToWrite;
-
-		secondsToWrite = System.currentTimeMillis() - initialTime;
+		final long secondsToWrite = System.currentTimeMillis() - initialTime;
 
 		System.out.println("It took " + secondsToWrite
 				+ " milliseconds to write code.");
@@ -242,129 +224,41 @@ public class CodeGenerator {
 	}
 
 	/**
-	 * Compiles the script buckets in multi threaded mode.
+	 * Compiles the script buckets. Note that multithreading was tried at one
+	 * point but ultimately led to more problems than we could fix.
 	 * 
-	 * @param scriptBuckets
-	 * @param analyzer
-	 * @param translator
-	 * @deprecated Use
-	 *             {@link #compileSingleThread(Collection, SemanticAnalyzer, Translator)}
-	 *             until this is fixed.
-	 * @return
-	 */
-	private Collection<ScriptInfo> compileMultiThread(
-			Collection<Set<CodeBlock>> scriptBuckets, final StoryModel model) {
-
-		final Collection<ScriptInfo> scriptInfos;
-
-		scriptInfos = new ArrayList<ScriptInfo>();
-		// Multithreaded
-
-		// XXX Multi-threading has been disabled. There is a race
-		// condition somewhere that causes code to compile wrong the
-		// first time through on larger stories.
-		final ExecutorService executor;
-
-		executor = Executors.newFixedThreadPool(scriptBuckets.size());
-
-		/*
-		 * This method is called so that we load the Language Dictionary if it
-		 * has not been loaded before. Otherwise, the following multithreaded
-		 * code will attempt to load the language dictionary in each thread,
-		 * creating a race condition.
-		 */
-		model.getTranslator().getLanguageDictionary();
-
-		/*
-		 * A note on debugging:
-		 * 
-		 * If for some reason we are running into issues with multithreading,
-		 * make sure you do not print out or debug inside of the multithreaded
-		 * code. This will slow down function calls, which may make everything
-		 * work fine and give the false appearance that the bug is fixed.
-		 * Instead, debug or print out debug statements after the multiple
-		 * threads are finished.
-		 */
-		for (final Set<CodeBlock> bucket : scriptBuckets) {
-			// Spawn a new thread to compile the code
-			Runnable worker = new Runnable() {
-				@Override
-				public void run() {
-					final CodeBlock codeBlock;
-					final LocationInformation locationInfo;
-					final Context context;
-					final ScriptInfo generated;
-
-					// All CodeBlocks of a given bucket share slot and
-					// subject, so we can just use the first one
-					codeBlock = bucket.iterator().next();
-					locationInfo = new LocationInformation(codeBlock);
-					context = CodeGenerator.this.buildFileContext(model,
-							locationInfo);
-					generated = generateScript(context);
-
-					scriptInfos.add(generated);
-				}
-			};
-			executor.execute(worker);
-		}
-		// This will make the executor accept no new threads and finish
-		// all existing threads in the queue
-		// executor.shutdown();
-		// Wait until all threads are finish before continuing.
-		while (!executor.isTerminated())
-			;
-
-		return scriptInfos;
-	}
-
-	/**
-	 * Compiles the script buckets in single threaded mode.
-	 * 
-	 * @param scriptBuckets
+	 * @param scriptSets
 	 * @param analyzer
 	 * @param translator
 	 * @return
 	 */
-	private Collection<ScriptInfo> compileSingleThread(
-			Collection<Set<CodeBlock>> scriptBuckets, StoryModel model) {
+	private Collection<ScriptInfo> compile(
+			Collection<Set<CodeBlock>> scriptSets, StoryModel story) {
 
 		final Collection<ScriptInfo> scriptInfos = new ArrayList<ScriptInfo>();
 		/*
 		 * This method is called so that we load the Language Dictionary if it
 		 * has not been loaded before.
 		 */
-		model.getTranslator().getLanguageDictionary();
+		story.getTranslator().getLanguageDictionary();
 
-		for (final Set<CodeBlock> bucket : scriptBuckets) {
+		for (final Set<CodeBlock> bucket : scriptSets) {
 			final CodeBlock codeBlock;
-			final LocationInformation locationInfo;
+			final LocationInformation location;
 			final Context context;
 			final ScriptInfo generated;
 
 			// All CodeBlocks of a given bucket share slot and
 			// subject, so we can just use the first one
 			codeBlock = bucket.iterator().next();
-			locationInfo = new LocationInformation(codeBlock);
-			context = this.buildFileContext(model, locationInfo);
+			location = new LocationInformation(codeBlock);
+			context = new FileContext(story, this.generatingStoryPoints,
+					location);
 			generated = this.generateScript(context);
 
 			scriptInfos.add(generated);
 		}
 
 		return scriptInfos;
-	}
-
-	/**
-	 * Builds the initial file context for the script file.
-	 * 
-	 * @param root
-	 * @param translator
-	 * @param locationInfo
-	 * @return
-	 */
-	private Context buildFileContext(StoryModel model,
-			LocationInformation locationInfo) {
-		return new FileContext(model, this.generatingStoryPoints, locationInfo);
 	}
 }
