@@ -1,6 +1,7 @@
 package scriptease.controller.undo;
 
 import java.util.Collection;
+import java.util.List;
 
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.CodeBlock;
@@ -808,10 +809,10 @@ public aspect Undo {
 		this.addModification(mod);
 	}
 
-	before(final CodeBlock codeBlock, final Collection<AbstractFragment> code): settingCodeBlockCode() && args(code) && this(codeBlock) {
-		Modification mod = new FieldModification<Collection<AbstractFragment>>(
+	before(final CodeBlock codeBlock, final List<AbstractFragment> code): settingCodeBlockCode() && args(code) && this(codeBlock) {
+		Modification mod = new FieldModification<List<AbstractFragment>>(
 				code, codeBlock.getCode()) {
-			public void setOp(Collection<AbstractFragment> newCode) {
+			public void setOp(List<AbstractFragment> newCode) {
 				codeBlock.setCode(newCode);
 			};
 

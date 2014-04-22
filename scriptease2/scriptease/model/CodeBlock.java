@@ -184,7 +184,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	 */
 	public abstract void setIncludes(Collection<String> includes);
 
-	public abstract void setCode(Collection<AbstractFragment> code);
+	public abstract void setCode(List<AbstractFragment> code);
 
 	/**
 	 * CodeBlocks can only be owned by ScriptIts

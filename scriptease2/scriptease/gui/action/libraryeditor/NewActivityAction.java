@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
@@ -60,7 +61,7 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 		final ActivityIt newActivityIt;
 		final CodeBlock codeBlock;
 		final Collection<String> types;
-		final Collection<AbstractFragment> formatRef;
+		final List<AbstractFragment> formatRef;
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 

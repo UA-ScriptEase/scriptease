@@ -129,14 +129,22 @@ public abstract class AbstractMoveFragmentAction extends
 
 		selectedFragment = AbstractFragment.getInSamePosition(
 				panel.getFragment(), originalFragments, clonedFragments);
-
-		if (selectedFragment != null) {
-			this.moveFragment(clonedFragments, selectedFragment, null);
-			UndoManager.getInstance().startUndoableAction(
-					"Setting CodeBlock " + codeBlock + " code to "
-							+ clonedFragments);
-			codeBlock.setCode(clonedFragments);
-			UndoManager.getInstance().endUndoableAction();
+		
+		for(AbstractFragment fragment : originalFragments) {
+			if(fragment instanceof AbstractContainerFragment) {
+				if(((AbstractContainerFragment) fragment).moveSubFragment(panel.getFragment(), delta()))
+					break;
+			}
 		}
+		
+//
+//		if (selectedFragment != null) {
+//			this.moveFragment(clonedFragments, selectedFragment, null);
+//			UndoManager.getInstance().startUndoableAction(
+//					"Setting CodeBlock " + codeBlock + " code to "
+//							+ clonedFragments);
+//			codeBlock.setCode(clonedFragments);
+//			UndoManager.getInstance().endUndoableAction();
+//		}
 	}
 }

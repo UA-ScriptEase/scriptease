@@ -2,6 +2,7 @@ package scriptease.controller.io.converter.storycomponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import scriptease.controller.io.FileIO;
 import scriptease.controller.io.XMLNode;
@@ -72,7 +73,7 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 		String slot = "";
 		final Collection<String> includes;
 		final Collection<KnowIt> parameters;
-		final Collection<AbstractFragment> code;
+		final List<AbstractFragment> code;
 		final Collection<String> types;
 
 		final FileIO.IoMode mode = FileIO.getInstance().getMode();

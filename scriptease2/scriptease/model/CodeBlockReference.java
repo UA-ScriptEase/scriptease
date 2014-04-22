@@ -279,7 +279,7 @@ public class CodeBlockReference extends CodeBlock {
 	}
 
 	@Override
-	public void setCode(Collection<AbstractFragment> code) {
+	public void setCode(List<AbstractFragment> code) {
 		this.getTarget().setCode(code);
 	}
 
