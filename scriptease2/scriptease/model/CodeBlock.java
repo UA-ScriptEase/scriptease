@@ -370,7 +370,7 @@ public abstract class CodeBlock extends StoryComponent implements
 	 * 
 	 * @return the code block's code.
 	 */
-	public abstract Collection<AbstractFragment> getCode();
+	public abstract List<AbstractFragment> getCode();
 
 	@Override
 	public void componentChanged(StoryComponentEvent event) {

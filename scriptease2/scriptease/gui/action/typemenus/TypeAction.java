@@ -161,7 +161,7 @@ public final class TypeAction extends AbstractAction {
 			name = "All Types";
 		} else if (selectedCount == 1) {
 			// show just the first one
-			name = ListOp.getFirst(this.typeBuilder.getSelectedTypes())
+			name = ListOp.head(this.typeBuilder.getSelectedTypes())
 					.getName();
 		} else {
 			// show the number of selected types

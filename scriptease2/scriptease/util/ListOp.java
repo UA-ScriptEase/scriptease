@@ -1,6 +1,7 @@
 package scriptease.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -138,7 +139,7 @@ public class ListOp {
 	 * @param contents
 	 * @return
 	 */
-	public static <T> ArrayList<T> createList(T... contents) {
+	public static <T> Collection<T> createList(T... contents) {
 		final ArrayList<T> list = new ArrayList<T>();
 
 		for (T content : contents) {
@@ -156,11 +157,19 @@ public class ListOp {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getFirst(Collection<T> collection) {
-		if (collection.isEmpty()) {
+	public static <T> T head(Collection<T> collection) {
+		if (collection.isEmpty())
 			return null;
-		}
 
 		return (T) collection.toArray()[0];
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Collection<T> tail(Collection<T> collection) {
+		if (collection.size() < 2)
+			return null;
+
+		return (Collection<T>) createList(Arrays.copyOfRange(
+				collection.toArray(), 1, collection.size() - 1));
 	}
 }

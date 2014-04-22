@@ -143,14 +143,15 @@ public abstract class AbstractInsertFragmentAction extends
 			return;
 
 		final CodeBlock codeBlock;
+		final List<AbstractFragment> origFragments;
 		final List<AbstractFragment> fragments;
 		final AbstractFragment selectedFragment;
 
 		codeBlock = panel.getCodeBlock();
-
-		fragments = AbstractFragment.cloneFragments(codeBlock.getCode());
-		selectedFragment = AbstractFragment.getClonedSelectedFragment(
-				panel.getFragment(), fragments);
+		origFragments = codeBlock.getCode();
+		fragments = AbstractFragment.cloneFragments(origFragments);
+		selectedFragment = AbstractFragment.getInSamePosition(
+				panel.getFragment(), origFragments, fragments);
 
 		if (selectedFragment != null) {
 			if (selectedFragment instanceof AbstractContainerFragment) {

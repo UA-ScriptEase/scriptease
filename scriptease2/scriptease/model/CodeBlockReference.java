@@ -284,7 +284,7 @@ public class CodeBlockReference extends CodeBlock {
 	}
 
 	@Override
-	public Collection<AbstractFragment> getCode() {
+	public List<AbstractFragment> getCode() {
 		return this.getTarget().getCode();
 	}
 

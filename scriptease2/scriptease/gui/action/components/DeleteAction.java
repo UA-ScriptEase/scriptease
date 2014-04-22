@@ -151,8 +151,9 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			}
 		} else if (focusOwner instanceof StoryComponentPanelJList
 				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel
-				&& (!((LibraryModel)SEModelManager.getInstance().getActiveModel()).getReadOnly() || ScriptEase.DEBUG_MODE))	{
-			
+				&& (!((LibraryModel) SEModelManager.getInstance()
+						.getActiveModel()).getReadOnly() || ScriptEase.DEBUG_MODE)) {
+
 			/*
 			 * TODO Needs undoability
 			 * 
@@ -212,13 +213,14 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			final CodeBlock codeBlock = panel.getCodeBlock();
 
 			if (codeBlock != null) {
+				final List<AbstractFragment> origFragments;
 				final List<AbstractFragment> fragments;
 				final AbstractFragment selectedFragment;
 
-				fragments = AbstractFragment
-						.cloneFragments(codeBlock.getCode());
-				selectedFragment = AbstractFragment.getClonedSelectedFragment(
-						panel.getFragment(), fragments);
+				origFragments = codeBlock.getCode();
+				fragments = AbstractFragment.cloneFragments(origFragments);
+				selectedFragment = AbstractFragment.getInSamePosition(
+						panel.getFragment(), origFragments, fragments);
 
 				if (selectedFragment != null) {
 					this.deleteFragment(fragments, selectedFragment, null);
