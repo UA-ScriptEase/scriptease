@@ -1,8 +1,8 @@
 package scriptease.controller.io.converter.fragment;
 
 import scriptease.controller.io.XMLAttribute;
-import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
+import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -28,9 +28,9 @@ public class FormatReferenceFragmentConverter implements Converter {
 
 		final FormatReferenceFragment reference;
 
-		if (data != null && !data.isEmpty()) {
+		if (StringOp.exists(data)) {
 			reference = new FormatReferenceFragment(ref,
-					FormatReferenceType.valueOf(data.toUpperCase()));
+					FormatReferenceFragment.Type.valueOf(data.toUpperCase()));
 		} else
 			reference = new FormatReferenceFragment(ref);
 

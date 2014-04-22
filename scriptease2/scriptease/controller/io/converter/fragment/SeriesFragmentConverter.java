@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scriptease.controller.io.XMLAttribute;
-import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.container.SeriesFragment;
 import scriptease.util.StringOp;
@@ -30,7 +29,8 @@ public class SeriesFragmentConverter implements Converter {
 			XMLAttribute.UNIQUE.write(writer, "true");
 
 		if (StringOp.exists(filterType)
-				&& !filterType.equals(SeriesFilterType.NONE.toString()))
+				&& !filterType
+						.equals(SeriesFragment.FilterType.NONE.toString()))
 			XMLAttribute.FILTERBY.write(writer, filterType);
 
 		if (StringOp.exists(filterValue))
@@ -49,12 +49,12 @@ public class SeriesFragmentConverter implements Converter {
 			UnmarshallingContext context) {
 		final String data = XMLAttribute.DATA.read(reader);
 		final String uniqueString = XMLAttribute.UNIQUE.read(reader);
-		final String filterTypeString = XMLAttribute.FILTERBY.read(reader);
+		final String filterTypeStr = XMLAttribute.FILTERBY.read(reader);
 		final String filter = XMLAttribute.FILTER.read(reader);
 		final String separator = XMLAttribute.SEPARATOR.read(reader);
 
 		final boolean isUnique;
-		final SeriesFilterType filterType;
+		final SeriesFragment.FilterType filterType;
 		final List<AbstractFragment> subFragments = new ArrayList<AbstractFragment>();
 
 		if (StringOp.exists(uniqueString)
@@ -63,13 +63,11 @@ public class SeriesFragmentConverter implements Converter {
 		else
 			isUnique = false;
 
-		if (SeriesFilterType.NAME.name().equalsIgnoreCase(filterTypeString))
-			filterType = SeriesFilterType.NAME;
-		else if (SeriesFilterType.SLOT.name()
-				.equalsIgnoreCase(filterTypeString))
-			filterType = SeriesFilterType.SLOT;
+		if (StringOp.exists(filterTypeStr))
+			filterType = SeriesFragment.FilterType.valueOf(filterTypeStr
+					.toUpperCase());
 		else
-			filterType = SeriesFilterType.NONE;
+			filterType = SeriesFragment.FilterType.NONE;
 
 		if (reader.hasMoreChildren()) {
 			subFragments.addAll((List<AbstractFragment>) context

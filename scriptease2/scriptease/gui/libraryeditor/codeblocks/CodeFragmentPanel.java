@@ -27,10 +27,6 @@ import scriptease.gui.SEFocusManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
-import scriptease.translator.codegenerator.CodeGenerationConstants;
-import scriptease.translator.codegenerator.CodeGenerationConstants.ScopeType;
-import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
-import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesType;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
@@ -55,14 +51,15 @@ public class CodeFragmentPanel extends JPanel {
 	private final CodeBlock codeBlock;
 	private final AbstractFragment fragment;
 	private final boolean isEditable;
-	
+
 	public CodeFragmentPanel(final CodeBlock codeBlock,
 			AbstractFragment fragment) {
 		this.codeBlock = codeBlock;
 		this.fragment = fragment;
 
-		isEditable = ScriptEase.DEBUG_MODE  || !codeBlock.ownerComponent.getLibrary().getReadOnly();
-		
+		isEditable = ScriptEase.DEBUG_MODE
+				|| !codeBlock.ownerComponent.getLibrary().getReadOnly();
+
 		this.setOpaque(true);
 		this.setBackground(Color.WHITE);
 
@@ -237,7 +234,8 @@ public class CodeFragmentPanel extends JPanel {
 	 *            completely new ScopeFragment.
 	 * @return
 	 */
-	private void buildScopePanel(final ScopeFragment scopeFragment, final boolean isEditable) {
+	private void buildScopePanel(final ScopeFragment scopeFragment,
+			final boolean isEditable) {
 		final JLabel directiveLabel = new JLabel("Data");
 		final JLabel nameRefLabel = new JLabel("NameRef");
 
@@ -249,8 +247,8 @@ public class CodeFragmentPanel extends JPanel {
 		directiveBox = new JComboBox();
 		nameRefField = new JTextField(scopeFragment.getNameRef());
 
-		for (ScopeType directiveType : ScopeType.values())
-			directiveBox.addItem(directiveType.name());
+		for (ScopeFragment.Type type : ScopeFragment.Type.values())
+			directiveBox.addItem(type.name());
 
 		directiveBox.setSelectedItem(scopeFragment.getDirectiveText()
 				.toUpperCase());
@@ -258,8 +256,9 @@ public class CodeFragmentPanel extends JPanel {
 		directiveBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				scopeFragment.setDirectiveText((String) directiveBox
-						.getSelectedItem());
+				final String arg = (String) directiveBox.getSelectedItem();
+
+				scopeFragment.setDirectiveText(arg);
 			}
 		});
 
@@ -277,7 +276,7 @@ public class CodeFragmentPanel extends JPanel {
 
 		directiveBox.setEnabled(isEditable);
 		nameRefField.setEnabled(isEditable);
-		
+
 		scopeComponentPanel.add(directiveLabel);
 		scopeComponentPanel.add(directiveBox);
 		scopeComponentPanel.add(nameRefLabel);
@@ -292,7 +291,8 @@ public class CodeFragmentPanel extends JPanel {
 	 * @param seriesFragment
 	 * @return
 	 */
-	private void buildSeriesPanel(final SeriesFragment seriesFragment, final boolean isEditable) {
+	private void buildSeriesPanel(final SeriesFragment seriesFragment,
+			final boolean isEditable) {
 		final JLabel directiveLabel = new JLabel("Data");
 		final JLabel separatorLabel = new JLabel("Separator");
 		final JLabel uniqueLabel = new JLabel("Unique");
@@ -317,7 +317,7 @@ public class CodeFragmentPanel extends JPanel {
 		filterField = new JTextField(seriesFragment.getFilter());
 		filterTypeBox = new JComboBox();
 
-		for (SeriesType directiveType : SeriesType.values())
+		for (SeriesFragment.Type directiveType : SeriesFragment.Type.values())
 			directiveBox.addItem(directiveType.name());
 
 		directiveBox.setSelectedItem(seriesFragment.getDirectiveText()
@@ -354,7 +354,8 @@ public class CodeFragmentPanel extends JPanel {
 					}
 				});
 
-		for (SeriesFilterType filterType : SeriesFilterType.values()) {
+		for (SeriesFragment.FilterType filterType : SeriesFragment.FilterType
+				.values()) {
 			filterTypeBox.addItem(filterType);
 		}
 
@@ -363,8 +364,9 @@ public class CodeFragmentPanel extends JPanel {
 		filterTypeBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				seriesFragment.setFilterType((SeriesFilterType) filterTypeBox
-						.getSelectedItem());
+				seriesFragment
+						.setFilterType((SeriesFragment.FilterType) filterTypeBox
+								.getSelectedItem());
 			}
 		});
 
@@ -376,10 +378,10 @@ public class CodeFragmentPanel extends JPanel {
 		directiveBox.setEnabled(isEditable);
 		separatorField.setEnabled(isEditable);
 		uniqueCheckBox.setEnabled(isEditable);
-		
+
 		filterField.setEnabled(isEditable);
 		filterTypeBox.setEnabled(isEditable);
-		
+
 		seriesComponentPanel.add(directiveLabel);
 		seriesComponentPanel.add(directiveBox);
 		seriesComponentPanel.add(separatorLabel);
@@ -402,7 +404,8 @@ public class CodeFragmentPanel extends JPanel {
 	 * @param fragment
 	 * @return
 	 */
-	private void buildTextEditorPanel(final AbstractFragment fragment, final boolean isEditable) {
+	private void buildTextEditorPanel(final AbstractFragment fragment,
+			final boolean isEditable) {
 		final JTextField field;
 
 		field = new JTextField(fragment.getDirectiveText());
@@ -417,7 +420,7 @@ public class CodeFragmentPanel extends JPanel {
 		});
 
 		field.setEnabled(isEditable);
-		
+
 		this.add(field);
 	}
 
@@ -427,18 +430,18 @@ public class CodeFragmentPanel extends JPanel {
 	 * @param simpleFragment
 	 * @return
 	 */
-	private void buildSimplePanel(final SimpleDataFragment simpleFragment, final boolean isEditable) {
+	private void buildSimplePanel(final SimpleDataFragment simpleFragment,
+			final boolean isEditable) {
 		final JLabel directiveLabel = new JLabel("Data");
 		final JLabel legalRangeLabel = new JLabel("LegalRange");
 
 		final JComboBox directiveBox;
 		final JTextField legalRangeField;
-		
+
 		directiveBox = new JComboBox();
 		legalRangeField = new JTextField(simpleFragment.getLegalRange());
 
-		for (CodeGenerationConstants.DataType value : CodeGenerationConstants.DataType
-				.values())
+		for (SimpleDataFragment.Type value : SimpleDataFragment.Type.values())
 			directiveBox.addItem(value.name());
 
 		directiveBox.setSelectedItem(simpleFragment.getDirectiveText()
@@ -461,7 +464,7 @@ public class CodeFragmentPanel extends JPanel {
 
 		directiveBox.setEnabled(isEditable);
 		legalRangeField.setEnabled(isEditable);
-		
+
 		this.add(directiveLabel);
 		this.add(directiveBox);
 		this.add(legalRangeLabel);

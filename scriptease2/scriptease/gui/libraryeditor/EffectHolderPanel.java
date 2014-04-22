@@ -73,10 +73,10 @@ public class EffectHolderPanel extends JPanel {
 			return false;
 
 		/*
-		 * TODO FIXME XXX We're doing this backwards. We should be listening to
-		 * changes to the DescribeIt, not the other way around. That way, this
-		 * should automatically not accept invalid types, etc. We shouldn't be
-		 * checking for that stuff in the View classes!
+		 * TODO We're doing this backwards. We should be listening to changes to
+		 * the DescribeIt, not the other way around. That way, this should
+		 * automatically not accept invalid types, etc. We shouldn't be checking
+		 * for that stuff in the View classes!
 		 * 
 		 * Ticket: 48085701
 		 */
@@ -86,17 +86,16 @@ public class EffectHolderPanel extends JPanel {
 		final JPanel panel;
 		final JButton removeEffectButton;
 		final boolean isEditable;
-		
+
 		removeEffectButton = ComponentFactory.buildFlatButton(
 				ScriptEaseUI.SE_BURGUNDY, "Remove Effect");
-		
 
 		if (effect != null) {
-			isEditable = ScriptEase.DEBUG_MODE || !effect.getLibrary().getReadOnly();
+			isEditable = ScriptEase.DEBUG_MODE
+					|| !effect.getLibrary().getReadOnly();
 			panel = StoryComponentPanelFactory.getInstance()
 					.buildStoryComponentPanel(effect);
-		}
-		else {
+		} else {
 			isEditable = true;
 			panel = new JPanel();
 			panel.add(new JLabel("No Effect"));
@@ -118,7 +117,7 @@ public class EffectHolderPanel extends JPanel {
 		this.add(new JLabel(new ImageIcon(image)));
 
 		removeEffectButton.setEnabled(isEditable);
-		
+
 		this.add(removeEffectButton);
 
 		// Notify observers

@@ -15,8 +15,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesFilterType;
-import scriptease.translator.codegenerator.CodeGenerationConstants.SeriesType;
 import scriptease.translator.codegenerator.code.contexts.AskItContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
@@ -39,15 +37,23 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  * @author jyuen
  */
 public class SeriesFragment extends AbstractContainerFragment {
+	public static enum Type {
+		ARGUMENTS, CAUSES, CHILDLINES, CHILDREN, CHILDRENNODES, CODEBLOCKS, DIALOGUEROOTS, IDENTICALCAUSES, IMPLICITS, INCLUDES, PARAMETERS, PARENTNODES, SLOTPARAMETERS, VARIABLES, PARAMETERSWITHSLOT, ORDEREDDIALOGUELINES, ORDEREDSTORYPOINTS, STORYNODES, STORYPOINTS, ORDEREDSTORYNODES, CHOICES
+	}
+
+	public static enum FilterType {
+		NAME, SLOT, NONE,
+	}
+
 	private String separator;
 	private SeriesFilter seriesFilter;
 	private boolean isUnique;
 	private String filter;
-	private SeriesFilterType filterType;
+	private FilterType filterType;
 
 	public SeriesFragment() {
-		this("", "", new ArrayList<AbstractFragment>(), "",
-				SeriesFilterType.NONE, false);
+		this("", "", new ArrayList<AbstractFragment>(), "", FilterType.NONE,
+				false);
 	}
 
 	/**
@@ -67,7 +73,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 */
 	public SeriesFragment(String data, String separator,
 			List<AbstractFragment> format, String filter,
-			SeriesFilterType filterType, boolean isUnique) {
+			FilterType filterType, boolean isUnique) {
 		super(data, format);
 		if (separator != null)
 			this.separator = separator;
@@ -113,15 +119,15 @@ public class SeriesFragment extends AbstractContainerFragment {
 		setSeriesFilter(filter, this.filterType);
 	}
 
-	public void setSeriesFilter(String filter, SeriesFilterType filterType) {
+	public void setSeriesFilter(String filter, FilterType filterType) {
 		this.seriesFilter = new SeriesFilter(filter, filterType);
 	}
 
-	public SeriesFilterType getFilterType() {
+	public FilterType getFilterType() {
 		return this.filterType;
 	}
 
-	public void setFilterType(SeriesFilterType filterType) {
+	public void setFilterType(FilterType filterType) {
 		this.filterType = filterType;
 		this.seriesFilter = new SeriesFilter(this.filter, this.filterType);
 	}
@@ -197,10 +203,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 	private Collection<? extends Object> getData(Context context) {
 		final String directiveText = this.getDirectiveText();
 
-		final SeriesType series;
+		final Type series;
 
 		try {
-			series = SeriesType.valueOf(directiveText.toUpperCase());
+			series = Type.valueOf(directiveText.toUpperCase());
 		} catch (IllegalArgumentException e) {
 			System.out.println("Couldn't find the value of : " + directiveText);
 			return null;
@@ -309,18 +315,18 @@ public class SeriesFragment extends AbstractContainerFragment {
 	 */
 	public class SeriesFilter extends StoryAdapter {
 		private final String value;
-		private final SeriesFilterType type;
+		private final FilterType type;
 		private ArrayList<Object> filtered;
 
 		public String getValue() {
 			return this.value;
 		}
 
-		public SeriesFilterType getType() {
+		public FilterType getType() {
 			return this.type;
 		}
 
-		public SeriesFilter(String value, SeriesFilterType type) {
+		public SeriesFilter(String value, FilterType type) {
 			if (value != null)
 				this.value = new String(value);
 			else
@@ -336,7 +342,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 		public Iterator<? extends Object> applyFilter(
 				Iterator<? extends Object> toFilter) {
 			// Do nothing if there is no filter
-			if (this.type.equals(SeriesFilterType.NONE))
+			if (this.type.equals(FilterType.NONE))
 				return toFilter;
 
 			this.filtered = new ArrayList<Object>();
@@ -374,7 +380,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 		}
 
 		private void processStoryComponent(StoryComponent component) {
-			if (this.type.equals(SeriesFilterType.NAME))
+			if (this.type.equals(FilterType.NAME))
 				if (passesFilter(component.getDisplayText()))
 					this.filtered.add(component);
 		}
@@ -387,7 +393,7 @@ public class SeriesFragment extends AbstractContainerFragment {
 
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
-			if (this.type.equals(SeriesFilterType.SLOT)) {
+			if (this.type.equals(FilterType.SLOT)) {
 				for (CodeBlock codeBlock : scriptIt.getCodeBlocks()) {
 					if (passesFilter(codeBlock.getSlot())) {
 						this.filtered.add(scriptIt);

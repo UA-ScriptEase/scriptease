@@ -6,12 +6,11 @@ import scriptease.controller.FragmentVisitor;
 import scriptease.controller.StoryAdapter;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
-import scriptease.translator.codegenerator.CodeGenerationConstants.FormatReferenceType;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
 
@@ -23,10 +22,14 @@ import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
  * @author kschenk
  */
 public class FormatReferenceFragment extends AbstractFragment {
-	private FormatReferenceType type;
+	public static enum Type {
+		NONE, ASKIT, KNOWIT, NOTE, SCRIPTIT, CONTROLIT, PICKIT, ACTIVITYIT
+	}
+
+	private Type type;
 
 	public FormatReferenceFragment(String text) {
-		this(text, FormatReferenceType.NONE);
+		this(text, Type.NONE);
 	}
 
 	/**
@@ -36,7 +39,7 @@ public class FormatReferenceFragment extends AbstractFragment {
 	 * @param text
 	 *            The format reference label.
 	 */
-	public FormatReferenceFragment(String text, FormatReferenceType type) {
+	public FormatReferenceFragment(String text, Type type) {
 		super(text);
 		this.type = type;
 	}
@@ -49,11 +52,11 @@ public class FormatReferenceFragment extends AbstractFragment {
 		return clone;
 	}
 
-	public FormatReferenceType getType() {
+	public Type getType() {
 		return this.type;
 	}
 
-	public void setType(FormatReferenceType type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 
@@ -89,11 +92,11 @@ public class FormatReferenceFragment extends AbstractFragment {
 	 */
 	private class TypeChecker extends StoryAdapter {
 		private boolean typeMatches;
-		private FormatReferenceType type;
+		private Type type;
 
 		private TypeChecker(Context context) {
 			this.type = FormatReferenceFragment.this.type;
-			this.typeMatches = this.type == FormatReferenceType.NONE;
+			this.typeMatches = this.type == Type.NONE;
 
 			if (!this.typeMatches && context instanceof StoryComponentContext) {
 				((StoryComponentContext) context).getComponent().process(this);
@@ -103,37 +106,37 @@ public class FormatReferenceFragment extends AbstractFragment {
 
 		@Override
 		public void processAskIt(AskIt questionIt) {
-			this.typeMatches = this.type == FormatReferenceType.ASKIT;
+			this.typeMatches = this.type == Type.ASKIT;
 		}
-		
+
 		@Override
 		public void processPickIt(PickIt pickIt) {
-			this.typeMatches = this.type == FormatReferenceType.PICKIT;
+			this.typeMatches = this.type == Type.PICKIT;
 		}
 
 		@Override
 		public void processActivityIt(ActivityIt activityIt) {
-			this.typeMatches = this.type == FormatReferenceType.ACTIVITYIT;
+			this.typeMatches = this.type == Type.ACTIVITYIT;
 		}
-		
+
 		@Override
 		public void processNote(Note note) {
-			this.typeMatches = this.type == FormatReferenceType.NOTE;
+			this.typeMatches = this.type == Type.NOTE;
 		}
 
 		@Override
 		public void processControlIt(ControlIt controlIt) {
-			this.typeMatches = this.type == FormatReferenceType.CONTROLIT;
+			this.typeMatches = this.type == Type.CONTROLIT;
 		}
 
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
-			this.typeMatches = this.type == FormatReferenceType.SCRIPTIT;
+			this.typeMatches = this.type == Type.SCRIPTIT;
 		}
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
-			this.typeMatches = this.type == FormatReferenceType.KNOWIT;
+			this.typeMatches = this.type == Type.KNOWIT;
 		}
 
 		private boolean getResult() {
