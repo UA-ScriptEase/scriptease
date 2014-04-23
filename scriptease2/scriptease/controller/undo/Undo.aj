@@ -246,7 +246,7 @@ public aspect Undo {
 		within (CodeBlock+) && execution(* removeType(String));
 
 	public pointcut settingCodeBlockCode():
-		within(CodeBlock+) && execution(* setCode(Collection<AbstractFragment>));
+		within(CodeBlock+) && execution(* setCode(List<AbstractFragment>));
 
 	public pointcut settingCodeBlockSubject():
 		within (CodeBlock+) && execution(* setSubject(String));

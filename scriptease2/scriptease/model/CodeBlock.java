@@ -349,6 +349,9 @@ public abstract class CodeBlock extends StoryComponent implements
 		}
 	}
 
+	public abstract boolean moveCodeFragment(AbstractFragment fragment,
+			int delta);
+
 	/**
 	 * Gets the slot that this code block is set to exist on. If this code block
 	 * does not have a slot itself, <code>getSlot()</code> will return the slot

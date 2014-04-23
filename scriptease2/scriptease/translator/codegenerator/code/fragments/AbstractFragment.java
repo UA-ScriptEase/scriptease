@@ -145,6 +145,7 @@ public abstract class AbstractFragment implements Cloneable {
 	 * Clones and returns the given codeFragments in a List
 	 * 
 	 * @param codeFragments
+	 * @deprecated need to replace this. kschenk will.
 	 * @return
 	 */
 	public static final List<AbstractFragment> cloneFragments(
