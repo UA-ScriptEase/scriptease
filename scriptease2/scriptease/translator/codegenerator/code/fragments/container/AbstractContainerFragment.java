@@ -1,11 +1,9 @@
 package scriptease.translator.codegenerator.code.fragments.container;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
-import sun.awt.util.IdentityArrayList;
 
 /**
  * An abstract class for fragments that can contain sub fragments.
@@ -60,9 +58,24 @@ public abstract class AbstractContainerFragment extends AbstractFragment {
 	 * @return
 	 */
 	public boolean moveSubFragment(final AbstractFragment subFragment, int delta) {
+		return AbstractContainerFragment.moveFragmentInList(subFragment,
+				this.subFragments, delta);
+	}
+
+	/**
+	 * Moves the fragment in a list of fragments. Returns true if it was found.
+	 * Note that the list is directly edited by this method.
+	 * 
+	 * @param subFragment
+	 * @param list
+	 * @param delta
+	 * @return
+	 */
+	public static boolean moveFragmentInList(AbstractFragment subFragment,
+			List<AbstractFragment> list, int delta) {
 		boolean found = false;
 		int index = 0;
-		for (AbstractFragment fragment : this.subFragments) {
+		for (AbstractFragment fragment : list) {
 			if (fragment == subFragment) {
 				found = true;
 				break;
@@ -72,24 +85,24 @@ public abstract class AbstractContainerFragment extends AbstractFragment {
 
 		if (found) {
 			final int newIndex = index + delta;
-			
-			if (newIndex >= 0 && newIndex < this.subFragments.size()) {
-				this.subFragments.remove(index);
-				this.subFragments.add(newIndex, subFragment);
+
+			if (newIndex >= 0 && newIndex < list.size()) {
+				list.remove(index);
+				list.add(newIndex, subFragment);
 
 			}
-			return true;
 		} else {
-			for (AbstractFragment formatFragment : this.subFragments) {
+			for (AbstractFragment formatFragment : list) {
 				if (formatFragment instanceof AbstractContainerFragment) {
 					if (((AbstractContainerFragment) formatFragment)
-							.moveSubFragment(subFragment, delta))
+							.moveSubFragment(subFragment, delta)) {
+						found = true;
 						break;
+					}
 				}
 			}
 		}
 
-		return false;
+		return found;
 	}
-
 }

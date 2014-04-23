@@ -233,6 +233,11 @@ public class CodeBlockReference extends CodeBlock {
 	}
 
 	@Override
+	public boolean moveCodeFragment(AbstractFragment fragment, int delta) {
+		return this.target.moveCodeFragment(fragment, delta);
+	}
+
+	@Override
 	public boolean equals(Object other) {
 		return other instanceof CodeBlockReference
 				&& this.hashCode() == other.hashCode();
