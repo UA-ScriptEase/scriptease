@@ -116,11 +116,15 @@ public class StoryComponentPanelFactory {
 							// so draw a red border, else draw a normal gray
 							// one.
 							boolean found = false;
+							final StoryComponent panelComp;
+
+							panelComp = panel.getStoryComponent();
+
 							for (StoryComponentPanel selectedPanel : LibraryPanel
 									.getInstance().getSelected()) {
 
-								if (selectedPanel.getStoryComponent().getID() == panel
-										.getStoryComponent().getID()) {
+								if (selectedPanel.getStoryComponent().equals(
+										panelComp)) {
 									found = true;
 									break;
 								}

@@ -32,7 +32,7 @@ import scriptease.translator.codegenerator.LocationInformation;
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		StoryComponentObserver {
 
-	protected Collection<CodeBlock> codeBlocks;
+	protected List<CodeBlock> codeBlocks;
 
 	public ScriptIt(LibraryModel library, int id, String name) {
 		super(library, id, name);
@@ -43,7 +43,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 				new ArrayList<Class<? extends StoryComponent>>(), 0);
 	}
 
-	public Collection<CodeBlock> getCodeBlocks() {
+	public List<CodeBlock> getCodeBlocks() {
 		return new ArrayList<CodeBlock>(this.codeBlocks);
 	}
 
