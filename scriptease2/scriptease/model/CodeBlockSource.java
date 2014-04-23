@@ -14,6 +14,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.container.AbstractContainerFragment;
 
 /**
  * Concrete representation of a specific code block in the LibraryModel.
@@ -201,6 +202,27 @@ public class CodeBlockSource extends CodeBlock {
 		duplicate.setCode(clonedCode);
 
 		return duplicate;
+	}
+
+	/**
+	 * Move the currently selected format fragment an amount determined by the
+	 * delta.
+	 * 
+	 * @param topLevelFormatFragments
+	 * @param subFragment
+	 * @param parentFragment
+	 * @return
+	 */
+	public boolean moveCodeFragment(final AbstractFragment subFragment,
+			int delta) {
+		final boolean found = AbstractContainerFragment.moveFragmentInList(
+				subFragment, this.code, delta);
+
+		if (found)
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+
+		return found;
 	}
 
 	/**
