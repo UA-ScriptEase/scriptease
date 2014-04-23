@@ -7,6 +7,7 @@ import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
@@ -59,6 +60,8 @@ public class CollaborativeTask extends Task {
 		taskContainerTypes.add(ControlIt.class);
 		taskContainerTypes.add(PickIt.class);
 		taskContainerTypes.add(AskIt.class);
+		taskContainerTypes.add(ActivityIt.class);
+
 
 		initiatorContainer = new StoryComponentContainer(taskContainerTypes);
 		initiatorContainer.setDisplayText("Initiator:");
