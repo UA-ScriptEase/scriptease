@@ -422,7 +422,8 @@ public class LibraryEditorPanelFactory {
 
 					if (panel.getComponentCount() > 0
 							&& panel.getComponent(0) instanceof JScrollPane
-							|| panel.getComponent(0) instanceof JSplitPane) {
+							|| panel.getComponent(0) instanceof JSplitPane
+							|| panel.getComponent(0) instanceof JLabel) {
 						behaviourPanel.remove(lastComponent);
 					}
 				}
@@ -430,7 +431,7 @@ public class LibraryEditorPanelFactory {
 				// Set up the effects panel for the task we selected.
 				final Task task = nodes.iterator().next();
 
-				if (task instanceof IndependentTask) {
+				if (task instanceof IndependentTask && task != behaviour.getStartTask()) {
 
 					final StoryComponentPanelTree storyComponentPanelTree;
 
@@ -447,7 +448,7 @@ public class LibraryEditorPanelFactory {
 
 					taskPanel.add(storyComponentPanelTree);
 
-				} else if (task instanceof CollaborativeTask) {
+				} else if (task instanceof CollaborativeTask && task != behaviour.getStartTask()) {
 
 					final StoryComponentPanelTree initiatorPanelTree;
 					final StoryComponentPanelTree responderPanelTree;
@@ -489,6 +490,13 @@ public class LibraryEditorPanelFactory {
 
 					taskPanel.add(splitPane);
 
+				} else {
+					//Here is what we do for start task nodes 
+					
+					final JLabel startLabel;
+					
+					startLabel = new JLabel("You cannot add any components to the start task node!");
+					taskPanel.add(startLabel);
 				}
 
 				behaviourPanel.add(taskPanel);
