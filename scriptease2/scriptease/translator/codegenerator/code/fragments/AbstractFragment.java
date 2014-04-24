@@ -140,26 +140,6 @@ public abstract class AbstractFragment implements Cloneable {
 		return this.directive.hashCode();
 	}
 
-
-	/**
-	 * Clones and returns the given codeFragments in a List
-	 * 
-	 * @param codeFragments
-	 * @deprecated need to replace this. kschenk will.
-	 * @return
-	 */
-	public static final List<AbstractFragment> cloneFragments(
-			final Collection<AbstractFragment> codeFragments) {
-		final ArrayList<AbstractFragment> fragments;
-
-		fragments = new ArrayList<AbstractFragment>(codeFragments.size());
-
-		for (AbstractFragment fragment : codeFragments) {
-			fragments.add(fragment.clone());
-		}
-		return fragments;
-	}
-
 	/**
 	 * Finds the position of the target fragment in the original fragments then
 	 * finds the fragment in the same position in the new fragments. This is

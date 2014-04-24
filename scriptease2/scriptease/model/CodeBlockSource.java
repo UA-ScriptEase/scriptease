@@ -205,10 +205,40 @@ public class CodeBlockSource extends CodeBlock {
 	 * @param parentFragment
 	 * @return
 	 */
-	public boolean moveCodeFragment(final AbstractFragment subFragment,
-			int delta) {
-		final boolean found = AbstractContainerFragment.moveFragmentInList(
-				subFragment, this.code, delta);
+	public boolean moveCodeFragment(final AbstractFragment fragment, int delta) {
+		final boolean found;
+
+		found = AbstractContainerFragment.moveFragmentInList(fragment,
+				this.code, delta);
+
+		if (found)
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+
+		return found;
+	}
+
+	@Override
+	public boolean deleteCodeFragment(AbstractFragment fragment) {
+		final boolean found;
+
+		found = AbstractContainerFragment.deleteFragmentFromList(fragment,
+				this.code);
+
+		if (found)
+			this.notifyObservers(new StoryComponentEvent(this,
+					StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE));
+
+		return found;
+	}
+
+	@Override
+	public boolean insertCodeFragment(AbstractFragment fragment,
+			AbstractFragment previousFragment) {
+		final boolean found;
+
+		found = AbstractContainerFragment.insertFragmentIntoList(fragment,
+				previousFragment, this.code);
 
 		if (found)
 			this.notifyObservers(new StoryComponentEvent(this,
