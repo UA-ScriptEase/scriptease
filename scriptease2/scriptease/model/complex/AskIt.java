@@ -68,14 +68,14 @@ public final class AskIt extends ComplexStoryComponent {
 	 * recommended to use {@link LibraryModel#createAskIt()} instead.
 	 * 
 	 */
-	public AskIt(LibraryModel library, int id) {
-		super(library, id, "<Question>");
+	public AskIt(LibraryModel library) {
+		super(library, "<Question>");
 
 		final List<Class<? extends StoryComponent>> ifElseValidTypes;
 
 		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
 
-		this.setCondition(new KnowIt(library, library.getNextID(), "Question",
+		this.setCondition(new KnowIt(library, "Question",
 				GameType.DEFAULT_BOOL_TYPE));
 
 		// AskIts can have two children of type StoryComponentContainer. These

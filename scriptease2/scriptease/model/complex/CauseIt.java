@@ -23,8 +23,8 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public class CauseIt extends ScriptIt {
-	public CauseIt(LibraryModel library, int id, String name) {
-		super(library, id, name);
+	public CauseIt(LibraryModel library, String name) {
+		super(library, name);
 		final List<Class<? extends StoryComponent>> validTypes = new ArrayList<Class<? extends StoryComponent>>();
 
 		validTypes.add(ScriptIt.class);

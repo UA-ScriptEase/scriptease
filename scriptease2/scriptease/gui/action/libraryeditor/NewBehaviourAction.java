@@ -58,11 +58,10 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
 		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
-			newBehaviour = new Behaviour(library, library.getNextID(),
-					"New Behaviour");
+			newBehaviour = new Behaviour(library, "New Behaviour");
 			slot = "onBehaviour";
 
-			codeBlock = new CodeBlockSource(library, library.getNextID());
+			codeBlock = new CodeBlockSource(library);
 			codeBlock.setSlot(slot);
 
 			newBehaviour.addCodeBlock(codeBlock);

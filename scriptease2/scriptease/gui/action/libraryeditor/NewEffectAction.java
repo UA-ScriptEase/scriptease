@@ -58,8 +58,8 @@ public class NewEffectAction extends ActiveModelSensitiveAction {
 
 		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
 
-			newEffect = new ScriptIt(library, library.getNextID(), "New Effect");
-			codeBlock = new CodeBlockSource(library, library.getNextID());
+			newEffect = new ScriptIt(library, "New Effect");
+			codeBlock = new CodeBlockSource(library);
 
 			newEffect.addCodeBlock(codeBlock);
 			newEffect.setVisible(true);

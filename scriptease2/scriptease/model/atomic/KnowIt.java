@@ -35,6 +35,7 @@ import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
+import scriptease.util.ListOp;
 
 /**
  * Represents a piece of data within the script, and can be thought of as a
@@ -73,7 +74,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @param name
 	 */
 	public KnowIt(String name) {
-		this(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID(), name);
+		this(LibraryModel.getNonLibrary(), name);
 	}
 
 	/**
@@ -82,20 +83,15 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @param name
 	 */
 	public KnowIt(String name, String type) {
-		this(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID(), name,
-				type);
+		this(LibraryModel.getNonLibrary(), name, type);
 	}
 
 	public KnowIt(LibraryModel library) {
-		this(library, library.getNextID());
+		this(library, "");
 	}
 
-	public KnowIt(LibraryModel library, int id) {
-		this(library, id, "");
-	}
-
-	public KnowIt(LibraryModel library, int id, String name) {
-		this(library, id, name, new ArrayList<String>());
+	public KnowIt(LibraryModel library, String name) {
+		this(library, name, new ArrayList<String>());
 
 	}
 
@@ -105,13 +101,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @param name
 	 * @param type
 	 */
-	@SuppressWarnings("serial")
-	public KnowIt(LibraryModel library, int id, String name, final String type) {
-		this(library, id, name, new ArrayList<String>() {
-			{
-				this.add(type);
-			}
-		});
+	public KnowIt(LibraryModel library, String name, final String type) {
+		this(library, name, ListOp.createList(type));
 	}
 
 	/**
@@ -123,9 +114,8 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @param types
 	 *            The types of the <code>KnowIt</code>.
 	 */
-	public KnowIt(LibraryModel library, int id, String name,
-			Collection<String> types) {
-		super(library, id, name);
+	public KnowIt(LibraryModel library, String name, Collection<String> types) {
+		super(library, name);
 		// null binding by default
 		this.types = new HashSet<String>();
 		this.knowItBinding = new KnowItBindingNull();

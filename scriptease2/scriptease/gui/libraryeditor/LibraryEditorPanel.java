@@ -147,7 +147,7 @@ public class LibraryEditorPanel extends JPanel {
 
 							final LibraryModel library = scriptIt.getLibrary();
 							final CodeBlock codeBlock = new CodeBlockSource(
-									library, library.getNextID());
+									library);
 
 							scriptIt.addCodeBlock(codeBlock);
 

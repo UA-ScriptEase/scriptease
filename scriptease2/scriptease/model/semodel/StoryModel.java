@@ -415,7 +415,8 @@ public final class StoryModel extends SEModel {
 
 		for (StoryComponent cause : defaultLibrary.getCausesCategory()
 				.getChildren()) {
-			if (cause.getDisplayText().toLowerCase().contains("is activated")) {
+			if (cause.getDisplayText().toLowerCase()
+					.equalsIgnoreCase("when <story point> is activated")) {
 				final CauseIt storyPointEnabled;
 
 				storyPointEnabled = ((CauseIt) cause).clone();
@@ -429,8 +430,8 @@ public final class StoryModel extends SEModel {
 
 				for (StoryComponent effect : defaultLibrary
 						.getEffectsCategory().getChildren()) {
-					if (effect.getDisplayText().toLowerCase()
-							.contains("succeed")) {
+					if (effect.getDisplayText().equalsIgnoreCase(
+							"succeed <story point>")) {
 						final ScriptIt succeedStoryPoint;
 
 						succeedStoryPoint = ((ScriptIt) effect).clone();

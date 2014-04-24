@@ -52,8 +52,8 @@ public class CollaborativeTaskConverter extends TaskConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		final CollaborativeTask task = new CollaborativeTask(library, id);
+			UnmarshallingContext context, LibraryModel library) {
+		final CollaborativeTask task = new CollaborativeTask(library);
 		// remove the default generated initiator and responder containers.
 		task.removeStoryChild(task.getInitiatorContainer());
 		task.removeStoryChild(task.getResponderContainer());

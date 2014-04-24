@@ -31,8 +31,6 @@ public abstract class StoryComponentConverter implements Converter {
 		final StoryComponent comp = (StoryComponent) source;
 		final LibraryModel library = comp.getLibrary();
 
-		XMLAttribute.ID.write(writer, Integer.toString(comp.getID()));
-
 		if (library != LibraryModelConverter.currentLibrary) {
 			XMLAttribute.LIBRARY.write(writer, library.getTitle());
 		}
@@ -59,7 +57,6 @@ public abstract class StoryComponentConverter implements Converter {
 		final Collection<String> labels;
 
 		final String libraryStr = XMLAttribute.LIBRARY.read(reader);
-		final String idStr = XMLAttribute.ID.read(reader);
 
 		final LibraryModel library;
 		if (libraryStr == null
@@ -75,8 +72,7 @@ public abstract class StoryComponentConverter implements Converter {
 					.findLibrary(libraryStr);
 		}
 
-		comp = this.buildComponent(reader, context, library,
-				Integer.parseInt(idStr));
+		comp = this.buildComponent(reader, context, library);
 
 		displayText = XMLNode.NAME.readString(reader);
 		visibility = XMLNode.VISIBLE.readString(reader);
@@ -112,5 +108,5 @@ public abstract class StoryComponentConverter implements Converter {
 	 */
 	protected abstract StoryComponent buildComponent(
 			HierarchicalStreamReader reader, UnmarshallingContext context,
-			LibraryModel library, int id);
+			LibraryModel library);
 }

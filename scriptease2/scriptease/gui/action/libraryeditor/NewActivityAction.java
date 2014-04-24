@@ -66,8 +66,7 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
 		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
-			newActivityIt = new ActivityIt(library, library.getNextID(),
-					"New Activity");
+			newActivityIt = new ActivityIt(library, "New Activity");
 			newActivityIt.setVisible(true);
 
 			types = ListOp.createList(GameType.DEFAULT_VOID_TYPE);
@@ -76,7 +75,7 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 			formatRef.add(new FormatReferenceFragment("activityItChildren",
 					FormatReferenceFragment.Type.NONE));
 
-			codeBlock = new CodeBlockSource(library, library.getNextID());
+			codeBlock = new CodeBlockSource(library);
 			codeBlock.setTypesByName(types);
 			codeBlock.setCode(formatRef);
 

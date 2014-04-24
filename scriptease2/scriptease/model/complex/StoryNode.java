@@ -25,7 +25,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 public abstract class StoryNode extends ComplexStoryComponent {
 
 	public StoryNode() {
-		super(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID());
+		super(LibraryModel.getNonLibrary());
 	}
 
 	private static int storyNodeCounter = 1;

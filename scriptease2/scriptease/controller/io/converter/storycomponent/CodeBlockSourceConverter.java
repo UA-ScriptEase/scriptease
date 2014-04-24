@@ -152,8 +152,8 @@ public class CodeBlockSourceConverter extends StoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		return new CodeBlockSource(library, id);
+			UnmarshallingContext context, LibraryModel library) {
+		return new CodeBlockSource(library);
 	}
 
 	@SuppressWarnings("rawtypes")
