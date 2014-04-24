@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 
 import scriptease.controller.observer.SEFocusObserver;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveTranslatorSensitiveAction;
 import scriptease.gui.libraryeditor.codeblocks.CodeFragmentPanel;
@@ -58,7 +59,10 @@ public abstract class AbstractMoveFragmentAction extends
 
 		panel = (CodeFragmentPanel) SEFocusManager.getInstance().getFocus();
 		codeBlock = panel.getCodeBlock();
-		
+
+		if (!UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().startUndoableAction("Move Code Fragment");
 		codeBlock.moveCodeFragment(panel.getFragment(), delta());
+		UndoManager.getInstance().endUndoableAction();
 	}
 }
