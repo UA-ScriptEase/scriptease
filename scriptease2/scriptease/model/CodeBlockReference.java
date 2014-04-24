@@ -39,8 +39,8 @@ public class CodeBlockReference extends CodeBlock {
 	 * call the {@link #CodeBlockReference(CodeBlockSource)} constructor
 	 * instead. This one is primarily used to load from XML.
 	 */
-	public CodeBlockReference(LibraryModel library, int id) {
-		super(library, id);
+	public CodeBlockReference(LibraryModel library) {
+		super(library);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class CodeBlockReference extends CodeBlock {
 	 * @param codeBlock
 	 */
 	public CodeBlockReference(CodeBlockSource codeBlock) {
-		super(codeBlock.getLibrary(), codeBlock.getID());
+		super(codeBlock.getLibrary());
 		this.setTarget(codeBlock);
 	}
 
@@ -248,11 +248,11 @@ public class CodeBlockReference extends CodeBlock {
 		int hashCode;
 
 		hashCode = super.hashCode();
-		hashCode += this.getID();
+		hashCode += this.target.hashCode();
 
 		return hashCode;
 	}
-
+	
 	public Collection<String> getIncludes() {
 		return this.getTarget().getIncludes();
 	}
@@ -302,6 +302,18 @@ public class CodeBlockReference extends CodeBlock {
 
 		this.setParameters(source.getParameters());
 		this.resetImplicits();
+	}
+
+	/**
+	 * Returns the index of the target in the list of codeblocks.
+	 * 
+	 * @return
+	 */
+	public int getID() {
+		final ScriptIt owner = this.target.getOwner();
+		final int id = owner.getCodeBlocks().indexOf(this.target);
+
+		return id;
 	}
 
 	/**

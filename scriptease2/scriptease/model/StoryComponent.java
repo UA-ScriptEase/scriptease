@@ -51,8 +51,6 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public abstract class StoryComponent implements Cloneable {
-
-	private final int id;
 	private String displayText;
 	private Set<String> labels;
 	private Boolean isVisible;
@@ -69,18 +67,13 @@ public abstract class StoryComponent implements Cloneable {
 	public static final String DISABLE_TEXT = "DISABLED";
 
 	protected StoryComponent(LibraryModel library) {
-		this(library, library.getNextID());
+		this(library, StoryComponent.BLANK_TEXT);
 	}
 
-	protected StoryComponent(LibraryModel library, int id) {
-		this(library, id, StoryComponent.BLANK_TEXT);
-	}
-
-	protected StoryComponent(LibraryModel library, int id, String name) {
+	protected StoryComponent(LibraryModel library, String name) {
 		this.init();
 		this.displayText = name;
 		this.library = library;
-		this.id = id;
 	}
 
 	/**
@@ -162,10 +155,6 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public String getDisplayText() {
 		return this.displayText;
-	}
-
-	public int getID() {
-		return this.id;
 	}
 
 	/**
@@ -389,6 +378,17 @@ public abstract class StoryComponent implements Cloneable {
 
 	@Override
 	public boolean equals(Object other) {
+		return this.isEquivalent(other);
+	}
+
+	/**
+	 * Returns whether the two story components have attributes. Not as picky as
+	 * {@link #equals(Object)}.
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean isEquivalent(Object other) {
 		StoryComponent comp;
 		boolean equal = (this == other);
 
@@ -397,7 +397,6 @@ public abstract class StoryComponent implements Cloneable {
 				&& (other.getClass().equals(this.getClass()))) {
 			comp = (StoryComponent) other;
 			equal = comp.getDisplayText().equals(this.displayText);
-			equal &= comp.id == this.id;
 			equal &= comp.library == this.library;
 			equal &= comp.isVisible == this.isVisible;
 			for (String label : comp.getLabels()) {
@@ -406,16 +405,6 @@ public abstract class StoryComponent implements Cloneable {
 		}
 
 		return equal;
-	}
-
-	/**
-	 * Returns whether the two story components have matching IDs and libraries.
-	 * 
-	 * @param other
-	 * @return
-	 */
-	public boolean isEquivalent(StoryComponent other) {
-		return this.id == other.id && this.library == other.library;
 	}
 
 	/**

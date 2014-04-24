@@ -52,7 +52,7 @@ public class ControlItConverter extends ScriptItConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		return new ControlIt(library, id, "", ControlIt.ControlItFormat.NONE);
+			UnmarshallingContext context, LibraryModel library) {
+		return new ControlIt(library, "", ControlIt.ControlItFormat.NONE);
 	}
 }

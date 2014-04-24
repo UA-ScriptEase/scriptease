@@ -24,8 +24,8 @@ public class IndependentTask extends Task {
 
 	private StoryComponentContainer initiatorContainer;
 
-	public IndependentTask(LibraryModel library, int id) {
-		this(library, id, "");
+	public IndependentTask(LibraryModel library) {
+		this(library, "");
 	}
 
 	/**
@@ -33,8 +33,8 @@ public class IndependentTask extends Task {
 	 * 
 	 * @param name
 	 */
-	public IndependentTask(LibraryModel library, int id, String name) {
-		super(library, id, name);
+	public IndependentTask(LibraryModel library, String name) {
+		super(library, name);
 
 		final List<Class<? extends StoryComponent>> taskContainerTypes;
 

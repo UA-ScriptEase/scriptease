@@ -44,9 +44,8 @@ public class ControlIt extends ScriptIt {
 	 * @param name
 	 * @param format
 	 */
-	public ControlIt(LibraryModel library, int id, String name,
-			ControlItFormat format) {
-		super(library, id, name);
+	public ControlIt(LibraryModel library, String name, ControlItFormat format) {
+		super(library, name);
 		this.allowableChildMap.clear();
 
 		this.format = format;

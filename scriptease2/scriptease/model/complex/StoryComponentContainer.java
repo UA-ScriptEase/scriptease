@@ -44,8 +44,7 @@ public class StoryComponentContainer extends ComplexStoryComponent {
 
 	public StoryComponentContainer(String displayName,
 			Collection<Class<? extends StoryComponent>> validTypes) {
-		super(LibraryModel.getNonLibrary(), LibraryModel.getNonUniqueID(),
-				displayName);
+		super(LibraryModel.getNonLibrary(), displayName);
 
 		for (Class<? extends StoryComponent> validType : validTypes) {
 			registerChildType(validType,

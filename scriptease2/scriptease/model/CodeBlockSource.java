@@ -57,20 +57,13 @@ public class CodeBlockSource extends CodeBlock {
 	private Set<WeakReference<CodeBlockReference>> references;
 
 	/**
-	 * Creates a new CodeBlockSource with default properties.
-	 */
-	public CodeBlockSource(LibraryModel library) {
-		this(library, library.getNextID());
-	}
-
-	/**
 	 * Creates a new CodeBlockSource with the given property.
 	 * 
 	 * @param id
 	 *            The unique ID of this codeblock.
 	 */
-	public CodeBlockSource(LibraryModel library, int id) {
-		this("", "", new ArrayList<KnowIt>(), library, id);
+	public CodeBlockSource(LibraryModel library) {
+		this("", "", new ArrayList<KnowIt>(), library);
 	}
 
 	/**
@@ -89,10 +82,10 @@ public class CodeBlockSource extends CodeBlock {
 	 *            The unique ID of this codeblock.
 	 */
 	public CodeBlockSource(String subject, String slot,
-			Collection<KnowIt> parameters, LibraryModel library, int id) {
+			Collection<KnowIt> parameters, LibraryModel library) {
 		this(subject, slot, new ArrayList<String>(), parameters,
 				new ArrayList<String>(), new ArrayList<AbstractFragment>(),
-				library, id);
+				library);
 	}
 
 	/**
@@ -120,8 +113,8 @@ public class CodeBlockSource extends CodeBlock {
 	public CodeBlockSource(String subject, String slot,
 			Collection<String> returnTypes, Collection<KnowIt> parameters,
 			Collection<String> includes, List<AbstractFragment> code,
-			LibraryModel library, int id) {
-		super(library, id);
+			LibraryModel library) {
+		super(library);
 		super.init();
 
 		this.subjectName = "";
@@ -180,8 +173,7 @@ public class CodeBlockSource extends CodeBlock {
 	 * @return
 	 */
 	public CodeBlockSource duplicate(LibraryModel library) {
-		final CodeBlockSource duplicate = new CodeBlockSource(library,
-				library.getNextID());
+		final CodeBlockSource duplicate = new CodeBlockSource(library);
 
 		duplicate.setSubject(this.subjectName);
 		duplicate.setSlot(this.slot);

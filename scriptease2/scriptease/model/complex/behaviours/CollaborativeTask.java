@@ -28,8 +28,8 @@ public class CollaborativeTask extends Task {
 	private StoryComponentContainer initiatorContainer;
 	private StoryComponentContainer responderContainer;
 
-	public CollaborativeTask(LibraryModel library, int id) {
-		this(library, id, "", "");
+	public CollaborativeTask(LibraryModel library) {
+		this(library, "", "");
 	}
 
 	/**
@@ -38,9 +38,9 @@ public class CollaborativeTask extends Task {
 	 * @param initiatorName
 	 * @param responderName
 	 */
-	public CollaborativeTask(LibraryModel library, int id,
-			String initiatorName, String responderName) {
-		super(library, id, initiatorName + ":" + responderName);
+	public CollaborativeTask(LibraryModel library, String initiatorName,
+			String responderName) {
+		super(library, initiatorName + ":" + responderName);
 
 		final List<Class<? extends StoryComponent>> taskContainerTypes;
 

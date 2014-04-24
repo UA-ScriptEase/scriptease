@@ -158,7 +158,7 @@ class DescribeItManager {
 		final ScriptIt initialBinding;
 		final KnowIt knowIt;
 
-		knowIt = new KnowIt(library, library.getNextID(), describeIt.getName(),
+		knowIt = new KnowIt(library, describeIt.getName(),
 				describeIt.getTypes());
 
 		initialBinding = describeIt.getScriptItForPath(describeIt

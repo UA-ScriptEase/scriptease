@@ -108,8 +108,8 @@ public class PickItConverter extends ComplexStoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		final PickIt pickIt = new PickIt(library, id);
+			UnmarshallingContext context, LibraryModel library) {
+		final PickIt pickIt = new PickIt(library);
 
 		// Remove the default generated choices.
 		for (StoryComponent child : pickIt.getChildren())

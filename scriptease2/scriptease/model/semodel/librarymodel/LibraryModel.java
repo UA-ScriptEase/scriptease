@@ -9,13 +9,12 @@ import scriptease.controller.BindingAdapter;
 import scriptease.controller.BindingVisitor;
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.StoryAdapter;
-import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.model.CodeBlock;
+import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -62,8 +61,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public static final String COMMON_LIBRARY_NAME = "ScriptEase";
 	public static final String NON_LIBRARY_NAME = "NO LIBRARY";
 
-	private static final int NON_UNIQUE_ID = -1;
-
 	private String defaultSlotFormat = "";
 
 	private final ObserverManager<LibraryObserver> observerManager;
@@ -77,6 +74,8 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private final Collection<GameType> gameTypes;
 	private final TypeConverter typeConverter;
 
+	private final CodeBlockFinder finder = new CodeBlockFinder();
+
 	private boolean readOnly;
 	private File location;
 	private Translator translator;
@@ -88,9 +87,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	private StoryComponentContainer activitiesCategory;
 	private StoryComponentContainer noteContainer;
 	private StoryComponentContainer modelRoot;
-
-	// Initialized to 0. It changes if we add things to the library.
-	private int nextID = 0;
 
 	private static final LibraryModel COMMON_LIBRARY;
 	private static final LibraryModel NON_LIBRARY;
@@ -105,9 +101,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		NON_LIBRARY = new LibraryModel(NON_LIBRARY_NAME, NON_LIBRARY_NAME,
 				NON_LIBRARY_NAME);
 
-		COMMON_ASKIT = new AskIt(COMMON_LIBRARY, COMMON_LIBRARY.getNextID());
-		COMMON_PICKIT = new PickIt(COMMON_LIBRARY, COMMON_LIBRARY.getNextID());
-		COMMON_NOTE = new Note(COMMON_LIBRARY, COMMON_LIBRARY.getNextID());
+		COMMON_ASKIT = new AskIt(COMMON_LIBRARY);
+		COMMON_PICKIT = new PickIt(COMMON_LIBRARY);
+		COMMON_NOTE = new Note(COMMON_LIBRARY);
 
 		COMMON_LIBRARY.add(COMMON_ASKIT);
 		COMMON_LIBRARY.add(COMMON_PICKIT);
@@ -151,10 +147,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		note.setDisplayText(text);
 
 		return note;
-	}
-
-	public static int getNonUniqueID() {
-		return NON_UNIQUE_ID;
 	}
 
 	/**
@@ -233,86 +225,59 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.categoryAdder = new StoryAdapter() {
 			final LibraryModel model = LibraryModel.this;
 
+			private boolean addToCategory(StoryComponent component,
+					StoryComponentContainer category) {
+				final boolean added = category.addStoryChild(component);
+
+				if (added)
+					component.addStoryComponentObserver(this.model);
+
+				return added;
+			}
+
 			@Override
 			public void processBehaviour(Behaviour behaviour) {
-				final boolean success = this.model.behavioursCategory
-						.addStoryChild(behaviour);
-				if (success)
-					behaviour.addStoryComponentObserver(this.model);
+				this.addToCategory(behaviour, this.model.behavioursCategory);
 			}
 
 			@Override
 			public void processActivityIt(ActivityIt activityIt) {
-				final boolean success = this.model.activitiesCategory
-						.addStoryChild(activityIt);
-				if (success)
-					activityIt.addStoryComponentObserver(this.model);
+				this.addToCategory(activityIt, this.model.activitiesCategory);
 			}
 
 			@Override
 			public void processScriptIt(ScriptIt scriptIt) {
-				for (StoryComponent child : this.model.effectsCategory
-						.getChildren()) {
-					final ScriptIt scriptItChild = (ScriptIt) child;
-
-					if (scriptIt.getMainCodeBlock().getID() == scriptItChild
-							.getMainCodeBlock().getID())
-						return;
-				}
-
-				final boolean success = this.model.effectsCategory
-						.addStoryChild(scriptIt);
-				if (success)
-					scriptIt.addStoryComponentObserver(this.model);
+				this.addToCategory(scriptIt, this.model.effectsCategory);
 			}
 
 			@Override
 			public void processAskIt(AskIt askIt) {
-				final boolean success = this.model.controllersCategory
-						.addStoryChild(askIt);
-				if (success)
-					askIt.addStoryComponentObserver(this.model);
+				this.addToCategory(askIt, this.model.controllersCategory);
 			}
 
 			@Override
 			public void processPickIt(PickIt pickIt) {
-				final boolean success = this.model.controllersCategory
-						.addStoryChild(pickIt);
-				if (success)
-					pickIt.addStoryComponentObserver(this.model);
+				this.addToCategory(pickIt, this.model.controllersCategory);
 			}
 
 			@Override
 			public void processControlIt(ControlIt controlIt) {
-				final boolean success = this.model.controllersCategory
-						.addStoryChild(controlIt);
-				if (success)
-					controlIt.addStoryComponentObserver(this.model);
+				this.addToCategory(controlIt, this.model.controllersCategory);
 			}
 
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
-				final boolean success = this.model.causesCategory
-						.addStoryChild(causeIt);
-				if (success)
-					causeIt.addStoryComponentObserver(this.model);
+				this.addToCategory(causeIt, this.model.causesCategory);
 			}
 
 			@Override
 			public void processNote(Note note) {
-				final boolean success = this.model.noteContainer
-						.addStoryChild(note);
-				if (success)
-					note.addStoryComponentObserver(this.model);
+				this.addToCategory(note, this.model.noteContainer);
 			}
 
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
-				final boolean success = this.model.descriptionsCategory
-						.addStoryChild(knowIt);
-				if (success) {
-					knowIt.addStoryComponentObserver(this.model);
-
+				if (this.addToCategory(knowIt, this.model.descriptionsCategory)) {
 					final KnowItBinding binding = knowIt.getBinding();
 					binding.process(new BindingAdapter() {
 						@Override
@@ -328,16 +293,9 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			@Override
 			public void processStoryComponentContainer(
 					StoryComponentContainer container) {
-				final boolean success = this.model.controllersCategory
-						.addStoryChild(container);
-				if (success)
-					container.addStoryComponentObserver(this.model);
+				this.addToCategory(container, this.model.controllersCategory);
 			}
 		};
-	}
-
-	public int getNextID() {
-		return this.nextID;
 	}
 
 	private void registerCategoryChildTypes() {
@@ -570,27 +528,10 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	public void add(StoryComponent component) {
 		component.process(this.categoryAdder);
 
-		if (component instanceof ComplexStoryComponent) {
-			// If only we had Java 8, then we could do this more efficiently
-			// with lambdas...
-			for (StoryComponent descendant : StoryComponentUtils
-					.getAllDescendants((ComplexStoryComponent) component)) {
-				this.setMaxID(descendant.getID());
-
-				if (descendant instanceof ScriptIt) {
-					for (CodeBlock block : ((ScriptIt) descendant)
-							.getCodeBlocks()) {
-						this.setMaxID(block.getID());
-					}
-				}
-			}
-		}
+		// TODO Could just make "categoryadder" a method or something in
+		// here..."
 
 		this.notifyChange(component, LibraryEvent.Type.ADDITION);
-	}
-
-	private void setMaxID(int id) {
-		this.nextID = Math.max(id + 1, this.nextID);
 	}
 
 	public void remove(StoryComponent component) {
@@ -756,128 +697,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	@Override
 	public void process(ModelVisitor processController) {
 		processController.processLibraryModel(this);
-	}
-
-	/**
-	 * Finds a CodeBlockSource by its ID number.
-	 * 
-	 * @param targetId
-	 *            The ID number of the CodeBlockSource to locate.
-	 * 
-	 * @return The CodeBlockSource that has the given id.
-	 */
-	public CodeBlockSource getCodeBlockByID(int targetId) {
-		final CodeBlockFinder finder = new CodeBlockFinder();
-		CodeBlockSource found;
-
-		found = finder.findByID(targetId);
-
-		return found;
-	}
-
-	private class CodeBlockFinder extends StoryAdapter {
-		private CodeBlockSource found = null;
-		private int targetId;
-
-		/**
-		 * Finds a CodeBlockSource by ID.
-		 * 
-		 * @param targetId
-		 *            The ID to search by.
-		 * @param dictionary
-		 *            The dictionary to search in.
-		 * 
-		 * @return The source with the given id.
-		 */
-		public CodeBlockSource findByID(int targetId) {
-			this.targetId = targetId;
-
-			// let's start snooping about. Quick, someone play Pink Panther or
-			// Mission Impossible! - remiller
-			LibraryModel.this.getRoot().process(this);
-
-			// not in the library. Try the slots next?
-			if (this.found == null) {
-				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
-
-				for (Slot slot : LibraryModel.this.getSlots()) {
-					// gotta collect 'em together first.
-					knowIts.addAll(slot.getImplicits());
-					knowIts.addAll(slot.getParameters());
-
-					for (KnowIt knowIt : knowIts) {
-						knowIt.process(this);
-
-						if (this.found != null) {
-							return this.found;
-						}
-					}
-					// keep looking
-					knowIts.clear();
-				}
-			}
-
-			return this.found;
-		}
-
-		@Override
-		public void processScriptIt(ScriptIt scriptIt) {
-			if (this.found != null)
-				return;
-
-			super.processScriptIt(scriptIt);
-
-			for (CodeBlock block : scriptIt.getCodeBlocks()) {
-				if (block.getID() == this.targetId
-						&& block instanceof CodeBlockSource) {
-					this.found = (CodeBlockSource) block;
-					return;
-				}
-			}
-		}
-
-		@Override
-		public void processKnowIt(KnowIt knowIt) {
-			if (this.found != null)
-				return;
-
-			super.processKnowIt(knowIt);
-
-			final CodeBlockFinder searcher = this;
-			final BindingVisitor bindingSearcher;
-
-			bindingSearcher = new BindingAdapter() {
-				@Override
-				public void processFunction(KnowItBindingFunction function) {
-					function.getValue().process(searcher);
-				}
-
-				@Override
-				public void processReference(KnowItBindingReference reference) {
-					reference.getValue().process(searcher);
-				}
-
-				@Override
-				public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
-					storyPoint.getValue().process(searcher);
-				}
-			};
-
-			knowIt.getBinding().process(bindingSearcher);
-		}
-
-		@Override
-		protected void defaultProcessComplex(ComplexStoryComponent complex) {
-			super.defaultProcessComplex(complex);
-
-			for (StoryComponent child : complex.getChildren()) {
-				child.process(this);
-
-				// Found it. All craft, pull up!
-				if (this.found != null)
-					return;
-			}
-		}
 	}
 
 	/**
@@ -1110,4 +929,131 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 		this.readOnly = read;
 	}
 
+	/**
+	 * Finds the nth CodeBlockSource in a scriptit. The scriptit can be one from
+	 * a story, as this is what the method is for.
+	 * 
+	 * @param owner
+	 * @param targetId
+	 * @return
+	 */
+	public CodeBlockSource findCodeBlockSource(ScriptIt owner, int targetId) {
+		return this.finder.findByID(owner, targetId);
+	}
+
+	private class CodeBlockFinder extends StoryAdapter {
+		private CodeBlockSource found = null;
+		private ScriptIt owner = null;
+		private int targetId;
+
+		/**
+		 * Finds a CodeBlockSource by ID.
+		 * 
+		 * @param targetId
+		 *            The ID to search by.
+		 * @param dictionary
+		 *            The dictionary to search in.
+		 * 
+		 * @return The source with the given id.
+		 */
+		private CodeBlockSource findByID(ScriptIt owner, int targetId) {
+			this.targetId = targetId;
+			this.owner = owner;
+			this.found = null;
+
+			// let's start snooping about. Quick, someone play Pink Panther or
+			// Mission Impossible! - remiller
+			LibraryModel.this.getRoot().process(this);
+
+			// not in the library. Try the slots next?
+			if (this.found == null) {
+				final Collection<KnowIt> knowIts = new ArrayList<KnowIt>();
+
+				for (Slot slot : LibraryModel.this.getSlots()) {
+					// SLOTS SLOTS SLOTS SLOTS EVERYBODY SLOTS SLOT SLOTS SLOTS
+					// gotta collect 'em together first.
+					knowIts.addAll(slot.getImplicits());
+					knowIts.addAll(slot.getParameters());
+
+					for (KnowIt knowIt : knowIts) {
+						knowIt.process(this);
+
+						if (this.found != null) {
+							return this.found;
+						}
+					}
+					// keep looking
+					knowIts.clear();
+				}
+			}
+
+			if (this.found == null) {
+				final String msg = "Failed to find CodeBlock #" + targetId
+						+ " in \"" + owner + "\" in the library, "
+						+ LibraryModel.this + ", nulling the reference.";
+				System.err.println(msg);
+				WindowFactory.getInstance().showWarningDialog("Library Error",
+						msg);
+			}
+
+			return this.found;
+		}
+
+		@Override
+		public void processScriptIt(ScriptIt scriptIt) {
+			if (this.found != null)
+				return;
+
+			super.processScriptIt(scriptIt);
+
+			if (owner.isEquivalent(scriptIt)) {
+				this.found = (CodeBlockSource) scriptIt.getCodeBlocks().get(
+						this.targetId);
+				return;
+			}
+		}
+
+		@Override
+		public void processKnowIt(KnowIt knowIt) {
+			if (this.found != null)
+				return;
+
+			super.processKnowIt(knowIt);
+
+			final CodeBlockFinder searcher = this;
+			final BindingVisitor bindingSearcher;
+
+			bindingSearcher = new BindingAdapter() {
+				@Override
+				public void processFunction(KnowItBindingFunction function) {
+					function.getValue().process(searcher);
+				}
+
+				@Override
+				public void processReference(KnowItBindingReference reference) {
+					reference.getValue().process(searcher);
+				}
+
+				@Override
+				public void processStoryPoint(KnowItBindingStoryPoint storyPoint) {
+					storyPoint.getValue().process(searcher);
+				}
+			};
+
+			knowIt.getBinding().process(bindingSearcher);
+		}
+
+		@Override
+		protected void defaultProcessComplex(ComplexStoryComponent complex) {
+			super.defaultProcessComplex(complex);
+
+			for (StoryComponent child : complex.getChildren()) {
+				child.process(this);
+
+				// Found it. All craft, pull up!
+				if (this.found != null)
+					return;
+			}
+		}
+	}
 }
