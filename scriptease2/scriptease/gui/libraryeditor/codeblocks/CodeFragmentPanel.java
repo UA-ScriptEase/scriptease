@@ -99,6 +99,12 @@ public class CodeFragmentPanel extends JPanel {
 	public void redraw(final boolean isEditable) {
 		this.removeAll();
 
+		final Component focus = SEFocusManager.getInstance().getFocus();
+
+		if ((focus instanceof CodeFragmentPanel)
+				&& (((CodeFragmentPanel) focus).getFragment() == this.fragment))
+			this.setBackground(GUIOp.scaleWhite(Color.GRAY, 1.7));
+
 		if (this.fragment == null) {
 			this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
