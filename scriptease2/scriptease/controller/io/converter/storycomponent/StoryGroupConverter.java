@@ -58,7 +58,7 @@ public class StoryGroupConverter extends StoryNodeConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
+			UnmarshallingContext context, LibraryModel library) {
 		return new StoryGroup();
 	}
 }

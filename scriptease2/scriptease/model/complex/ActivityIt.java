@@ -24,8 +24,8 @@ public class ActivityIt extends ScriptIt {
 	 * 
 	 * @param name
 	 */
-	public ActivityIt(LibraryModel library, int id, String name) {
-		super(library, id, name);
+	public ActivityIt(LibraryModel library, String name) {
+		super(library, name);
 
 		this.registerChildType(ScriptIt.class,
 				ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);

@@ -23,7 +23,7 @@ public class NoteConverter extends StoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		return new Note(library, id, "");
+			UnmarshallingContext context, LibraryModel library) {
+		return new Note(library);
 	}
 }

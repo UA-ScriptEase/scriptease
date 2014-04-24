@@ -37,7 +37,7 @@ public class StoryComponentContainerConverter extends
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
+			UnmarshallingContext context, LibraryModel library) {
 		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
 
 		final StoryComponentContainer container;

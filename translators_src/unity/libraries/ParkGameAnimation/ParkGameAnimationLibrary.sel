@@ -31,7 +31,7 @@
   <Slots defaultFormat="SECause"/>
   <Causes/>
   <Effects>
-    <ScriptIt library="ParkGameAnimationLibrary" id="0">
+    <ScriptIt>
       <Name>Play nod head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -40,14 +40,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="1">
+        <CodeBlockSource>
           <Name>Play nod head animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="2">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -69,7 +69,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="3">
+    <ScriptIt>
       <Name>&lt;Play&gt; run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -78,14 +78,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="4">
+        <CodeBlockSource>
           <Name>&lt;Play&gt; run animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="5">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -94,7 +94,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="6">
+            <KnowIt>
               <Name>Speed</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -103,7 +103,7 @@
                 <Type>Number</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="7">
+            <KnowIt>
               <Name>Play</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -156,7 +156,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="8">
+    <ScriptIt>
       <Name>&lt;Play&gt; sit animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -165,14 +165,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="9">
+        <CodeBlockSource>
           <Name>&lt;Play&gt; sit animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="10">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -181,7 +181,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="11">
+            <KnowIt>
               <Name>Play</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -211,7 +211,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="12">
+    <ScriptIt>
       <Name>&lt;Play&gt; wave animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -220,14 +220,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="13">
+        <CodeBlockSource>
           <Name>&lt;Play&gt; wave animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="14">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -236,7 +236,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="15">
+            <KnowIt>
               <Name>Play</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -266,7 +266,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="16">
+    <ScriptIt>
       <Name>Play kick animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -275,14 +275,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="17">
+        <CodeBlockSource>
           <Name>Play kick animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="18">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -304,7 +304,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="19">
+    <ScriptIt>
       <Name>Play startle animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -313,14 +313,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="20">
+        <CodeBlockSource>
           <Name>Play startle animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="21">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -342,7 +342,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="22">
+    <ScriptIt>
       <Name>Play pick up animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -351,14 +351,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="23">
+        <CodeBlockSource>
           <Name>Play pick up animation for &lt;Character&gt; holding &lt;Object&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="24">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -367,7 +367,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="25">
+            <KnowIt>
               <Name>Object</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -400,7 +400,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="26">
+    <ScriptIt>
       <Name>&lt;Enable&gt; shake head animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -409,14 +409,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="27">
+        <CodeBlockSource>
           <Name>&lt;Enable&gt; shake head animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="28">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -425,7 +425,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="29">
+            <KnowIt>
               <Name>Enable</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -472,7 +472,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="30">
+    <ScriptIt>
       <Name>Play check animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -481,14 +481,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="31">
+        <CodeBlockSource>
           <Name>Play check animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="32">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -510,7 +510,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="33">
+    <ScriptIt>
       <Name>Play talk animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -519,14 +519,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="34">
+        <CodeBlockSource>
           <Name>Play talk animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="35">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -548,7 +548,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="36">
+    <ScriptIt>
       <Name>Set &lt;Character&gt;&apos;s emotion to &lt;Emotion&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -557,14 +557,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="37">
+        <CodeBlockSource>
           <Name>Set &lt;Character&gt;&apos;s emotion to &lt;Emotion&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="38">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -573,7 +573,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="39">
+            <KnowIt>
               <Name>Emotion</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -781,7 +781,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="40">
+    <ScriptIt>
       <Name>Perform &lt;AngryHappy&gt; kick animation for &lt;Character&gt; with &lt;LeftRight&gt; foot</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -790,14 +790,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="41">
+        <CodeBlockSource>
           <Name>Perform &lt;AngryHappy&gt; kick animation for &lt;Character&gt; with &lt;LeftRight&gt; foot</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="42">
+            <KnowIt>
               <Name>AngryHappy</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -810,7 +810,7 @@
                 <Value>2</Value>
               </Binding>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="43">
+            <KnowIt>
               <Name>LeftRight</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -823,7 +823,7 @@
                 <Value>2</Value>
               </Binding>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="44">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -903,7 +903,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="45">
+    <ScriptIt>
       <Name>While &lt;Character&gt; is sitting, play talk animation to the character on your &lt;LeftRight&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -912,14 +912,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="46">
+        <CodeBlockSource>
           <Name>While &lt;Character&gt; is sitting, play talk animation to the character on your &lt;LeftRight&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="47">
+            <KnowIt>
               <Name>LeftRight</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -932,7 +932,7 @@
                 <Value>2</Value>
               </Binding>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="48">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -990,7 +990,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="49">
+    <ScriptIt>
       <Name>&lt;Play&gt; drink animation for &lt;Character&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -999,14 +999,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="50">
+        <CodeBlockSource>
           <Name>&lt;Play&gt; drink animation for &lt;Character&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="51">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1015,7 +1015,7 @@
                 <Type>GameObject</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="52">
+            <KnowIt>
               <Name>Play</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1069,7 +1069,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="53">
+    <ScriptIt>
       <Name>Drop the item that &lt;Character&gt; is currently holding</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -1078,14 +1078,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="54">
+        <CodeBlockSource>
           <Name>Drop the item that &lt;Character&gt; is currently holding</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="55">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1114,7 +1114,7 @@
         </CodeBlockSource>
       </CodeBlocks>
     </ScriptIt>
-    <ScriptIt library="ParkGameAnimationLibrary" id="56">
+    <ScriptIt>
       <Name>Play walk animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
       <Visible>true</Visible>
       <Enabled>true</Enabled>
@@ -1123,14 +1123,14 @@
       </Labels>
       <Children/>
       <CodeBlocks>
-        <CodeBlockSource library="ParkGameAnimationLibrary" id="57">
+        <CodeBlockSource>
           <Name>Play walk animation for &lt;Character&gt; at speed &lt;Speed&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
           <Types/>
           <Parameters>
-            <KnowIt library="ParkGameAnimationLibrary" id="58">
+            <KnowIt>
               <Name>Speed</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>
@@ -1139,7 +1139,7 @@
                 <Type>Number</Type>
               </Types>
             </KnowIt>
-            <KnowIt library="ParkGameAnimationLibrary" id="59">
+            <KnowIt>
               <Name>Character</Name>
               <Visible>true</Visible>
               <Enabled>true</Enabled>

@@ -70,11 +70,10 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
 		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
-			newCause = new CauseIt(library, library.getNextID(), "When <"
-					+ subject + ">");
+			newCause = new CauseIt(library, "When <" + subject + ">");
 
 			type = null;
-			parameter = new KnowIt(library, library.getNextID(), subject);
+			parameter = new KnowIt(library, subject);
 			parameters = new ArrayList<KnowIt>();
 
 			parameters.add(parameter);
@@ -95,7 +94,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 				final String slot = type.getSlots().iterator().next();
 
 				codeBlock = new CodeBlockSource(subject, slot, parameters,
-						library, library.getNextID());
+						library);
 
 				newCause.addCodeBlock(codeBlock);
 				newCause.setDisplayText("When <" + subject + ">");

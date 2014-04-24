@@ -32,8 +32,8 @@ public class ActivityItConverter extends ScriptItConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		return new ActivityIt(library, id, "");
+			UnmarshallingContext context, LibraryModel library) {
+		return new ActivityIt(library, "");
 	}
 
 	@Override

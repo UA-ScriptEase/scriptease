@@ -32,10 +32,10 @@ import scriptease.translator.codegenerator.LocationInformation;
 public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		StoryComponentObserver {
 
-	protected Collection<CodeBlock> codeBlocks;
+	protected List<CodeBlock> codeBlocks;
 
-	public ScriptIt(LibraryModel library, int id, String name) {
-		super(library, id, name);
+	public ScriptIt(LibraryModel library, String name) {
+		super(library, name);
 		this.codeBlocks = new ArrayList<CodeBlock>();
 
 		// Only classes that extend ScriptIts should be able to have children.
@@ -43,7 +43,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 				new ArrayList<Class<? extends StoryComponent>>(), 0);
 	}
 
-	public Collection<CodeBlock> getCodeBlocks() {
+	public List<CodeBlock> getCodeBlocks() {
 		return new ArrayList<CodeBlock>(this.codeBlocks);
 	}
 
@@ -84,6 +84,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 	}
 
 	/**
+	 * Returns whether the codeblocks of one ScriptIt are equal to another.
 	 * 
 	 * @param other
 	 * @return
@@ -101,7 +102,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 				boolean isInOther = false;
 
 				for (CodeBlock otherBlock : otherBlocks) {
-					if (thisBlock.getID() == otherBlock.getID()) {
+					if (thisBlock.isEquivalent(otherBlock)) {
 						isInOther = true;
 					}
 				}

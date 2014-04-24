@@ -2,9 +2,12 @@ package scriptease.controller.io.converter.storycomponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import scriptease.controller.io.XMLNode;
 import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockReference;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -25,6 +28,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @see ComplexStoryComponentConverter
  */
 public class ScriptItConverter extends ComplexStoryComponentConverter {
+	protected static final Map<CodeBlockReference, Integer> refMap = new HashMap<CodeBlockReference, Integer>();
+
 	@Override
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
@@ -50,8 +55,12 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 					XMLNode.CODEBLOCKS.getName())) {
 				final Collection<CodeBlock> codeBlocks;
 
+				CodeBlockReferenceConverter.owner = scriptIt;
+				
 				codeBlocks = ((Collection<CodeBlock>) context.convertAnother(
 						scriptIt, ArrayList.class));
+				
+				CodeBlockReferenceConverter.owner = null;
 
 				if (codeBlocks.isEmpty())
 					throw new IllegalStateException(
@@ -65,6 +74,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 		return scriptIt;
 	}
 
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
@@ -73,7 +83,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		return new ScriptIt(library, id, "");
+			UnmarshallingContext context, LibraryModel library) {
+		return new ScriptIt(library, "");
 	}
 }

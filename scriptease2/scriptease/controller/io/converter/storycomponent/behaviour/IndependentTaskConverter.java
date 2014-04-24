@@ -21,8 +21,8 @@ public class IndependentTaskConverter extends TaskConverter {
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		final IndependentTask task = new IndependentTask(library, id);
+			UnmarshallingContext context, LibraryModel library) {
+		final IndependentTask task = new IndependentTask(library);
 		// remove the default generated initiator container.
 		task.removeStoryChild(task.getInitiatorContainer());
 		return task;
