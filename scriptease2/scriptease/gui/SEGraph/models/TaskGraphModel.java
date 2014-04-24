@@ -26,9 +26,9 @@ public class TaskGraphModel extends SEGraphModel<Task> {
 		final LibraryModel library = start.getLibrary();
 
 		if (start instanceof IndependentTask)
-			return new IndependentTask(library, library.getNextID());
+			return new IndependentTask(library);
 		else
-			return new CollaborativeTask(library, library.getNextID());
+			return new CollaborativeTask(library);
 	}
 
 	@Override

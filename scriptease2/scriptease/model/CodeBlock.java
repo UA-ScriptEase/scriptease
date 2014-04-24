@@ -38,10 +38,6 @@ public abstract class CodeBlock extends StoryComponent implements
 		super(library);
 	}
 
-	protected CodeBlock(LibraryModel library, int id) {
-		super(library, id);
-	}
-
 	/*
 	 * Only instance-specific information may be stored in this parent class.
 	 * Anything that is translator-only must be stored in CodeBlockSource,

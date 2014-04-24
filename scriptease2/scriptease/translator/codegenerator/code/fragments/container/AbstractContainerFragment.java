@@ -102,7 +102,6 @@ public abstract class AbstractContainerFragment extends AbstractFragment {
 				}
 			}
 		}
-
 		return found;
 	}
 }

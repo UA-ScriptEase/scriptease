@@ -29,8 +29,8 @@ public class Behaviour extends ScriptIt {
 		INDEPENDENT, COLLABORATIVE
 	}
 
-	public Behaviour(LibraryModel library, int id, String displayText) {
-		this(library, id, displayText, Type.INDEPENDENT, 0);
+	public Behaviour(LibraryModel library, String displayText) {
+		this(library, displayText, Type.INDEPENDENT, 0);
 	}
 
 	/**
@@ -46,19 +46,19 @@ public class Behaviour extends ScriptIt {
 	 *            the priority of this behaviour - higher priority means higher
 	 *            order of execution.
 	 */
-	public Behaviour(LibraryModel library, int id, String displayText,
+	public Behaviour(LibraryModel library, String displayText,
 			Behaviour.Type type, int priority) {
-		super(library, id, displayText);
+		super(library, displayText);
 
 		this.priority = priority;
 		this.type = type;
 
 		if (type == Type.INDEPENDENT) {
-			this.startTask = new IndependentTask(library, library.getNextID());
+			this.startTask = new IndependentTask(library);
 			this.registerChildType(IndependentTask.class,
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		} else {
-			this.startTask = new CollaborativeTask(library, library.getNextID());
+			this.startTask = new CollaborativeTask(library);
 			this.registerChildType(CollaborativeTask.class,
 					ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 		}

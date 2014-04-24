@@ -3,13 +3,15 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
-import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -30,6 +32,10 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class CodeBlockReferenceConverter extends StoryComponentConverter
 		implements Converter {
+
+	// Sorry about this awful, terrible hack, but we had no other choice.
+	protected static ScriptIt owner = null;
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean canConvert(Class type) {
@@ -42,6 +48,11 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		final CodeBlockReference codeBlock = (CodeBlockReference) source;
 		final Collection<KnowIt> parameters = codeBlock.getParameters();
 
+		final int id = codeBlock.getID();
+
+		if (id > 0)
+			XMLAttribute.ID.write(writer, Integer.toString(id));
+
 		super.marshal(source, writer, context);
 
 		if (!parameters.isEmpty()) {
@@ -52,27 +63,22 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+		final String idStr = XMLAttribute.ID.read(reader);
 
-		final CodeBlockReference block;
-		final LibraryModel library;
+		final int id;
+		final CodeBlockReference ref;
+		final CodeBlockSource target;
 
-		block = (CodeBlockReference) super.unmarshal(reader, context);
-		library = block.getLibrary();
+		ref = (CodeBlockReference) super.unmarshal(reader, context);
 
-		CodeBlockSource target = null;
-		if (library != null) {
-			target = library.getCodeBlockByID(block.getID());
-		}
+		if (StringOp.exists(idStr))
+			id = Integer.parseInt(idStr);
+		else
+			id = 0;
 
-		if (target == null) {
-			final String msg = "Failed to read target information for \""
-					+ block + "\" in the library, " + library
-					+ ", nulling the reference.";
-			System.err.println(msg);
-			WindowFactory.getInstance().showWarningDialog("Library Error", msg);
-		}
+		target = ref.getLibrary().findCodeBlockSource(owner, id);
 
-		block.setTarget(target);
+		ref.setTarget(target);
 
 		if (reader.hasMoreChildren()) {
 			final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
@@ -80,15 +86,17 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 			parameters.addAll(XMLNode.PARAMETERS.readCollection(XMLNode.KNOWIT,
 					reader, context, KnowIt.class));
 
-			block.setParameters(parameters);
+			ref.setParameters(parameters);
 		}
 
-		return block;
+		return ref;
 	}
+	
+
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
-			UnmarshallingContext context, LibraryModel library, int id) {
-		return new CodeBlockReference(library, id);
+			UnmarshallingContext context, LibraryModel library) {
+		return new CodeBlockReference(library);
 	}
 }

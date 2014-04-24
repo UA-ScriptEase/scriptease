@@ -362,7 +362,9 @@ public class StoryComponentPanelManager {
 	 */
 	private void displayPanelSelection(final StoryComponentPanel panel,
 			final Boolean isSelected) {
-		if (panel.getStoryComponent() instanceof StoryPoint) {
+		final StoryComponent component = panel.getStoryComponent();
+		
+		if (component instanceof StoryPoint) {
 			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 			return;
 		}
@@ -384,8 +386,6 @@ public class StoryComponentPanelManager {
 
 			final Collection<StoryComponentPanel> selectedPanels = LibraryPanel
 					.getInstance().getSelected();
-			final int id = panel.getStoryComponent().getID();
-
 			/**
 			 * This loop is somewhat awkward. We want to check whether or not
 			 * the panel is contained in the list of currently selected panels,
@@ -401,15 +401,13 @@ public class StoryComponentPanelManager {
 			 */
 			boolean isPanelSelected = false;
 			for (StoryComponentPanel p : selectedPanels) {
-				if (p.getStoryComponent().getID() == id) {
+				if (p.getStoryComponent().equals(component)) {
 					isPanelSelected = true;
 				}
 			}
 			final boolean isActive = isPanelSelected;
 
-			final StoryComponent panelComponent;
-			panelComponent = panel.getStoryComponent();
-			panelComponent.process(new StoryAdapter() {
+			component.process(new StoryAdapter() {
 				@Override
 				protected void defaultProcessComplex(
 						ComplexStoryComponent complex) {

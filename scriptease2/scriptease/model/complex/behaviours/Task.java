@@ -30,8 +30,8 @@ public abstract class Task extends ComplexStoryComponent {
 	 * 
 	 * @param name
 	 */
-	protected Task(LibraryModel library, int id, String name) {
-		super(library, id, name);
+	protected Task(LibraryModel library, String name) {
+		super(library, name);
 
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();

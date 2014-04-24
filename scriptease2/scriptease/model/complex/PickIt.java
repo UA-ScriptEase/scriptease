@@ -43,8 +43,8 @@ public class PickIt extends ComplexStoryComponent {
 	 * Builds a new PickIt. If you're adding a PickIt to a model in code, it's
 	 * recommended to use {@link LibraryModel#createPickIt()} instead.
 	 */
-	public PickIt(LibraryModel library, int id) {
-		super(library, id, "<Pick>");
+	public PickIt(LibraryModel library) {
+		super(library, "<Pick>");
 
 		final List<Class<? extends StoryComponent>> choiceValidTypes;
 

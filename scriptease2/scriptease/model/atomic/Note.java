@@ -20,8 +20,8 @@ public final class Note extends StoryComponent {
 	 * @param library
 	 * @param id
 	 */
-	public Note(LibraryModel library, int id) {
-		this(library, id, "");
+	public Note(LibraryModel library) {
+		this(library, "");
 	}
 
 	/**
@@ -31,8 +31,8 @@ public final class Note extends StoryComponent {
 	 * @param library
 	 * @param id
 	 */
-	public Note(LibraryModel library, int id, String string) {
-		super(library, id, "");
+	public Note(LibraryModel library, String string) {
+		super(library, string);
 	}
 
 	@Override

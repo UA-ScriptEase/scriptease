@@ -386,9 +386,9 @@ public class LibraryEditorPanelFactory {
 		} else {
 			// Else create a new one.
 			if (type == ScriptEaseKeywords.INDEPENDENT)
-				startTask = new IndependentTask(library, library.getNextID());
+				startTask = new IndependentTask(library);
 			else
-				startTask = new CollaborativeTask(library, library.getNextID());
+				startTask = new CollaborativeTask(library);
 
 			behaviour.setStartTask(startTask);
 		}
@@ -592,8 +592,8 @@ public class LibraryEditorPanelFactory {
 		implicitList.add(initiatorImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
-			final KnowIt initiator = new KnowIt(library, library.getNextID());
-			final KnowIt priority = new KnowIt(library, library.getNextID());
+			final KnowIt initiator = new KnowIt(library);
+			final KnowIt priority = new KnowIt(library);
 
 			behaviour
 					.setDisplayText("<Initiator> does action with priority <Priority>");
@@ -640,9 +640,9 @@ public class LibraryEditorPanelFactory {
 		implicitList.add(responderImplicit);
 
 		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
-			final KnowIt initiator = new KnowIt(library, library.getNextID());
-			final KnowIt responder = new KnowIt(library, library.getNextID());
-			final KnowIt priority = new KnowIt(library, library.getNextID());
+			final KnowIt initiator = new KnowIt(library);
+			final KnowIt responder = new KnowIt(library);
+			final KnowIt priority = new KnowIt(library);
 
 			behaviour
 					.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");

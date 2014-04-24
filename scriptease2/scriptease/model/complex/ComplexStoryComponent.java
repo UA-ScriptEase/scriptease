@@ -24,12 +24,12 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 	protected List<StoryComponent> childComponents;
 
 	/************* CONSTRUCTORS ********************/
-	public ComplexStoryComponent(LibraryModel library, int id) {
-		this(library, id, "");
+	public ComplexStoryComponent(LibraryModel library) {
+		this(library, "");
 	}
 
-	protected ComplexStoryComponent(LibraryModel library, int id, String name) {
-		super(library, id, name);
+	protected ComplexStoryComponent(LibraryModel library, String name) {
+		super(library, name);
 		this.init();
 	}
 
