@@ -413,6 +413,9 @@ public final class StoryModel extends SEModel {
 		// Generate the auto - succeed for root story point.
 		final LibraryModel defaultLibrary = this.translator.getLibrary();
 
+		// TODO This is beyond awful. We are going through the entire library,
+		// snooping for effects with this specific name? What if that doesn't
+		// exist..!? Gross.
 		for (StoryComponent cause : defaultLibrary.getCausesCategory()
 				.getChildren()) {
 			if (cause.getDisplayText().toLowerCase()
@@ -443,6 +446,7 @@ public final class StoryModel extends SEModel {
 											.getActiveRoot()));
 
 						storyPointEnabled.addStoryChild(succeedStoryPoint);
+						break;
 					}
 				}
 

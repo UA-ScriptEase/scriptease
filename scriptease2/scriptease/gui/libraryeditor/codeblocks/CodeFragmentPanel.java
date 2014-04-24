@@ -95,7 +95,7 @@ public class CodeFragmentPanel extends JPanel {
 	public CodeBlock getCodeBlock() {
 		return codeBlock;
 	}
-
+	
 	public void redraw(final boolean isEditable) {
 		this.removeAll();
 
