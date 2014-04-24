@@ -83,7 +83,12 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			}
 		});
 
-		nameField = new JTextField(task.getDisplayText());
+		if (task.getParents().size() == 0){
+			nameField = new JTextField("Start Node");
+			nameField.setEnabled(false);
+		} else {
+			nameField = new JTextField(task.getDisplayText());
+		}
 
 		percent = new JLabel(" %");
 		percent.setForeground(ScriptEaseUI.SE_BLACK);
@@ -123,8 +128,17 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		namePanel = new JPanel();
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
-		initiatorField = new JTextField(task.getInitiatorName());
-		reactorField = new JTextField(task.getResponderName());
+		
+		if(task.getParents().size() == 0){
+			initiatorField = new JTextField("Start Node");
+			reactorField = new JTextField("Start Node");
+			initiatorField.setEnabled(false);
+			reactorField.setEnabled(false);
+		} else {
+			initiatorField = new JTextField(task.getInitiatorName());
+			reactorField = new JTextField(task.getResponderName());
+		}
+
 
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
