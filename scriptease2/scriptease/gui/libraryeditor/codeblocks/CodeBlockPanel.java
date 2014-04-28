@@ -27,6 +27,7 @@ import scriptease.controller.observer.CodeBlockPanelObserver;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.ParameterPanelObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
@@ -643,11 +644,15 @@ public class CodeBlockPanel extends JPanel {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
 
-				final Rectangle visible = codeEditorScrollPane.getVisibleRect();
+				if (event.getType() == StoryComponentChangeEnum.CHANGE_CODEBLOCK_CODE) {
+					final Rectangle visible;
 
-				codePanel.redraw(isEditable);
+					visible = codeEditorScrollPane.getVisibleRect();
 
-				codeEditorScrollPane.scrollRectToVisible(visible);
+					codePanel.redraw(isEditable);
+
+					codeEditorScrollPane.scrollRectToVisible(visible);
+				}
 			}
 		});
 

@@ -23,6 +23,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.EditableResource;
 import scriptease.translator.io.model.Resource;
+import scriptease.util.ListOp;
 
 /**
  * This aspect inserts Undo-specific code into any model object that must
@@ -253,6 +254,15 @@ public aspect Undo {
 
 	public pointcut settingCodeBlockSlot():
 		within (CodeBlock+) && execution(* setSlot(String));
+
+	public pointcut movingCodeFragment():
+		within (CodeBlock+) && execution(* moveCodeFragment(AbstractFragment+, int));
+
+	public pointcut deletingCodeFragment():
+		within (CodeBlock+) && execution(* deleteCodeFragment(AbstractFragment+));
+
+	public pointcut insertingCodeFragment():
+		within (CodeBlock+) && execution(* insertCodeFragment(AbstractFragment+, AbstractFragment+));
 
 	/**
 	 * Defines the Add Story Child operation in ComplexStoryComponents.
@@ -810,8 +820,8 @@ public aspect Undo {
 	}
 
 	before(final CodeBlock codeBlock, final List<AbstractFragment> code): settingCodeBlockCode() && args(code) && this(codeBlock) {
-		Modification mod = new FieldModification<List<AbstractFragment>>(
-				code, codeBlock.getCode()) {
+		Modification mod = new FieldModification<List<AbstractFragment>>(code,
+				codeBlock.getCode()) {
 			public void setOp(List<AbstractFragment> newCode) {
 				codeBlock.setCode(newCode);
 			};
@@ -841,6 +851,87 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "adding " + parameter + " parameter to " + codeBlock;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final AbstractFragment fragment,
+			final int delta): movingCodeFragment() && args(fragment, delta) && this(codeBlock) {
+		Modification mod = new Modification() {
+			@Override
+			public void redo() {
+				codeBlock.moveCodeFragment(fragment, delta);
+			}
+
+			@Override
+			public void undo() {
+				int newDelta = delta * -1;
+				codeBlock.moveCodeFragment(fragment, newDelta);
+			}
+
+			public String toString() {
+				return "moving " + fragment + " by " + delta + " in "
+						+ codeBlock;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final AbstractFragment fragment): deletingCodeFragment() && args(fragment) && this(codeBlock) {
+		final List<Integer> path;
+		final Integer last;
+		final AbstractFragment adjacent;
+		final List<AbstractFragment> code;
+
+		code = codeBlock.getCode();
+		path = AbstractFragment.getPathTo(fragment, code);
+		last = ListOp.last(path);
+
+		path.remove(path.size() - 1);
+
+		if (last > 0) {
+			path.add(last - 1);
+		}
+
+		adjacent = AbstractFragment.getFromPath(path, code);
+
+		Modification mod = new Modification() {
+			@Override
+			public void redo() {
+				codeBlock.deleteCodeFragment(fragment);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.insertCodeFragment(fragment, adjacent);
+			}
+
+			@Override
+			public String toString() {
+				return "deleting " + fragment + " from " + codeBlock;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final CodeBlock codeBlock, final AbstractFragment fragment,
+			final AbstractFragment previousFragment): insertingCodeFragment() && args(fragment, previousFragment) && this(codeBlock) {
+		Modification mod = new Modification() {
+			@Override
+			public void redo() {
+				codeBlock.insertCodeFragment(fragment, previousFragment);
+			}
+
+			@Override
+			public void undo() {
+				codeBlock.deleteCodeFragment(fragment);
+			}
+
+			@Override
+			public String toString() {
+				return "inserting " + fragment + " into " + codeBlock
+						+ " beside " + previousFragment;
 			}
 		};
 		this.addModification(mod);
