@@ -84,10 +84,10 @@ public class LibraryModelConverter implements Converter {
 				library.getDescribeIts());
 		XMLNode.CONTROLITS.writeObject(writer, context, library
 				.getControllersCategory().getChildren());
-		XMLNode.BEHAVIOURS.writeObject(writer, context, library
-				.getBehavioursCategory().getChildren());
 		XMLNode.ACTIVITYITS.writeObject(writer, context, library
 				.getActivitysCategory().getChildren());
+		XMLNode.BEHAVIOURS.writeObject(writer, context, library
+				.getBehavioursCategory().getChildren());
 		XMLNode.TYPECONVERTERS.writeObject(writer, context, library
 				.getTypeConverter().getConverterDoIts());
 
@@ -170,17 +170,18 @@ public class LibraryModelConverter implements Converter {
 		// we need to load them after assigning the library to the static
 		// variable.
 
-		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
-				Behaviour.class);
-
 		activities = XMLNode.ACTIVITYITS.readCollection(reader, context,
 				ActivityIt.class);
+		
+		library.addAll(activities);
+
+		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
+				Behaviour.class);
 
 		typeConvertors = XMLNode.TYPECONVERTERS.readCollection(reader, context,
 				ScriptIt.class);
 
 		library.addAll(behaviours);
-		library.addAll(activities);
 
 		library.getTypeConverter().addConverterScriptIts(typeConvertors);
 

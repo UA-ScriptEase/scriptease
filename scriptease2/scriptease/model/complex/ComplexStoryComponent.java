@@ -102,7 +102,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 			StoryComponent sibling) {
 		int siblingIndex = -1;
 		final StoryComponent previousOwner = newChild.getOwner();
-
+		
 		if (!this.canAcceptChild(newChild)) {
 			System.err.println("ComplexStoryComponent '"
 					+ this.getDisplayText() + "' has rejected '" + newChild

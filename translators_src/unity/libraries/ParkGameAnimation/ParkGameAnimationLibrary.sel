@@ -1174,7 +1174,7 @@
   </Effects>
   <DescribeIts/>
   <ControlIts/>
-  <Behaviours/>
   <ActivityIts/>
+  <Behaviours/>
   <TypeConverters/>
 </LibraryModel>

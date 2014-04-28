@@ -34,8 +34,8 @@
 			<xsd:element name="Effects" type="EffectList_Type" />
 			<xsd:element name="DescribeIts" type="DescribeItList_Type" />
 			<xsd:element name="ControlIts" type="ControlItList_Type" />
-			<xsd:element name="Behaviours" type="BehaviourList_Type" />
 			<xsd:element name="ActivityIts" type="ActivityList_Type" />
+			<xsd:element name="Behaviours" type="BehaviourList_Type" />
 			<xsd:element name="TypeConverters" type="TypeConverterList_Type" />
 		</xsd:sequence>
 		<xsd:attribute name="name" type="xsd:string" use="required" />
