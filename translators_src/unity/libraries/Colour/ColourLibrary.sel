@@ -933,7 +933,7 @@
     </DescribeIt>
   </DescribeIts>
   <ControlIts/>
+  <ActivityIts/>  
   <Behaviours/>
-  <ActivityIts/>
   <TypeConverters/>
 </LibraryModel>

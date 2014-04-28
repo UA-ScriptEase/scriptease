@@ -409,10 +409,6 @@ public class LibraryEditorPanelFactory {
 				taskPanel.setBorder(BorderFactory
 						.createTitledBorder("Task Panel"));
 
-				// Debug code
-				final Component testPanel = behaviourPanel
-						.getComponent(behaviourPanel.getComponents().length - 1);
-
 				// Remove the previous task's effects panel if there is one.
 				final Component lastComponent = behaviourPanel
 						.getComponent(behaviourPanel.getComponents().length - 1);

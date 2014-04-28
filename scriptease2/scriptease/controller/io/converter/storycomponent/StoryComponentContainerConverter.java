@@ -3,6 +3,7 @@ package scriptease.controller.io.converter.storycomponent;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
@@ -50,6 +51,7 @@ public class StoryComponentContainerConverter extends
 		container.registerChildType(AskIt.class, max);
 		container.registerChildType(Note.class, max);
 		container.registerChildType(ControlIt.class, max);
+		container.registerChildType(ActivityIt.class, max);
 
 		return container;
 	}
