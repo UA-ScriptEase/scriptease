@@ -27679,6 +27679,7 @@
       </CodeBlocks>
     </ControlIt>
   </ControlIts>
+  <ActivityIts/>
   <Behaviours>
     <Behaviour type="INDEPENDENT" priority="0">
       <Name>&lt;Initiator&gt; tests behaviours with priority &lt;Priority&gt;</Name>
@@ -27775,6 +27776,5 @@
       <StartTask reference="/LibraryModel/Behaviours/Behaviour/Children/IndependentTask"/>
     </Behaviour>
   </Behaviours>
-  <ActivityIts/>
   <TypeConverters/>
 </LibraryModel>
