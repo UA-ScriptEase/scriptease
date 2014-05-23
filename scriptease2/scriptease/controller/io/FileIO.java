@@ -442,13 +442,27 @@ public class FileIO {
 	}
 
 	private Object readData(File location, IoMode mode) {
-		final String title = "Problems reading Story File";
-		final String messageBrief = "ScriptEase has encountered problems parsing the story file.";
-		final String message = "Sorry, ScriptEase is unable to open your story file. <br>Would you like to help make ScriptEase better by reporting the problem?";
+		final String title;
+		final String messageBrief;
+		final String message;
 		final Icon icon = UIManager.getIcon("OptionPane.warningIcon");
-
+			
 		final IoMode prevMode = this.mode;
 		this.mode = mode;
+		
+		if (mode == IoMode.LIBRARY){
+			title = "Problems reading Library File";
+			messageBrief = "ScriptEase has encountered problems parsing the library file.";
+			message = "Sorry, ScriptEase is unable to open your library file. <br>Would you like to help make ScriptEase better by reporting the problem?";
+		} else if (mode == IoMode.STORY){
+			title = "Problems reading Story File";
+			messageBrief = "ScriptEase has encountered problems parsing the story file.";
+			message = "Sorry, ScriptEase is unable to open your story file. <br>Would you like to help make ScriptEase better by reporting the problem?";
+		} else {
+			title = "Problems reading File";
+			messageBrief = "ScriptEase has encountered problems parsing the file.";
+			message = "Sorry, ScriptEase is unable to open your file. <br>Would you like to help make ScriptEase better by reporting the problem?";
+		}
 
 		InputStream fileIn = null;
 		Object dataModel = null;
