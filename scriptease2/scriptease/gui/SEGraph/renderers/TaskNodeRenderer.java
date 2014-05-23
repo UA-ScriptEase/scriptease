@@ -84,7 +84,9 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			}
 		});
 
-		if (task.getOwner() != null &&((Behaviour) task.getOwner()).getStartTask() == task){
+		//Tasks with non-null owners are the first tasks in the graph.  Subsequent tasks
+		//have null owners.  
+		if(task.getOwner() != null) {
 			nameField = new JTextField("Start Node");
 			nameField.setEnabled(false);
 		} else {
