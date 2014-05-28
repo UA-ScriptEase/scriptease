@@ -485,7 +485,7 @@ public class StoryComponentPanelFactory {
 		return new StoryAdapter() {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
-				final String tutorialUri = "https://sites.google.com/a/ualberta.ca/scriptease/development/scriptease2/tutorials";
+				final String tutorialUri = "http://webdocs.cs.ualberta.ca/~script/nwntutorials/";
 				final String tutorialText = "Click here to access tutorials and other information on the ScriptEase II web site.";
 				final String welcomeText = "Welcome to ScriptEase II!";
 				final String getStartedText = "Add some nodes to the start node to get started. If you don't know how, use the help menu.";
