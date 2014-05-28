@@ -12,7 +12,9 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.border.EtchedBorder;
 
@@ -140,21 +142,21 @@ public class BehaviourEditorPanel extends JPanel {
 			@Override
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 180;
+				dimension.height = 245;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMaximumSize() {
 				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 180;
+				dimension.height = 245;
 				return dimension;
 			}
 
 			@Override
 			public Dimension getMinimumSize() {
 				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 180;
+				dimension.height = 245;
 				return dimension;
 			}
 		};
@@ -164,8 +166,10 @@ public class BehaviourEditorPanel extends JPanel {
 
 		startTask = behaviour.getStartTask();
 
-		graph = SEGraphFactory.buildTaskGraph(startTask, true);
-		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
+		graph = SEGraphFactory.buildTaskGraph(startTask, false);
+		graph.setAlignmentY(JPanel.CENTER_ALIGNMENT);
+		
+		graphPanel.add(graph.getToolBar());
 
 		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {
 
@@ -191,7 +195,7 @@ public class BehaviourEditorPanel extends JPanel {
 				// Set up the effects panel for the task we selected.
 				final Task task = nodes.iterator().next();
 				
-				if (task instanceof IndependentTask) {
+				if (task instanceof IndependentTask  && task != behaviour.getStartTask()) {
 									
 					final StoryComponentPanelTree storyComponentPanelTree;
 
@@ -208,7 +212,7 @@ public class BehaviourEditorPanel extends JPanel {
 					
 					taskPanel.add(storyComponentPanelTree);
 
-				} else if (task instanceof CollaborativeTask) {
+				} else if (task instanceof CollaborativeTask  && task != behaviour.getStartTask()) {
 					
 					final StoryComponentPanelTree initiatorPanelTree;
 					final StoryComponentPanelTree responderPanelTree;
@@ -247,6 +251,12 @@ public class BehaviourEditorPanel extends JPanel {
 					
 					taskPanel.add(splitPane);
 					
+				} else {
+					//Here is what we do for start task nodes 
+					final JLabel startLabel;
+					
+					startLabel = new JLabel("You cannot add any components to the start task node!");
+					taskPanel.add(startLabel);
 				}
 
 				layoutPanel.add(taskPanel);
