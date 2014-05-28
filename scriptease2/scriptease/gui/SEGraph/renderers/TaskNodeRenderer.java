@@ -84,9 +84,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			}
 		});
 
-		//Tasks with non-null owners are the first tasks in the graph.  Subsequent tasks
-		//have null owners.  
-		if(task.getOwner() != null) {
+		if(graph.getStartNode() == task) {
 			nameField = new JTextField("Start Node");
 			nameField.setEnabled(false);
 		} else {
@@ -132,7 +130,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		namePanel = new JPanel();
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
 		
-		if(task.getParents().size() == 0){
+		if(graph.getStartNode() == task){
 			initiatorField = new JTextField("Start Node");
 			reactorField = new JTextField("Start Node");
 			initiatorField.setEnabled(false);
