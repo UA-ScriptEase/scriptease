@@ -84,6 +84,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			}
 		});
 
+
 		if(graph.getStartNode() == task) {
 			nameField = new JTextField("Start Node");
 			nameField.setEnabled(false);
@@ -104,6 +105,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 						graph.revalidate();
 						graph.repaint();
 					}
+
 				});
 
 		if (graph.isReadOnly()) {

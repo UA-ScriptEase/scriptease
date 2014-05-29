@@ -59,7 +59,7 @@ class TypeDialogBuilder {
 	private static final Dimension MAX_SCROLLPANE_SIZE;
 
 	static {
-		PANEL_WIDTH = 450;
+		PANEL_WIDTH = 485;
 		MAX_PANEL_SIZE = new Dimension(PANEL_WIDTH, 5000);
 		MIN_PANEL_SIZE = new Dimension(PANEL_WIDTH, 150);
 		MAX_SCROLLPANE_SIZE = new Dimension(PANEL_WIDTH + 100, 500);
@@ -208,6 +208,7 @@ class TypeDialogBuilder {
 
 		typeDialog.setContentPane(content);
 		typeDialog.pack();
+		typeDialog.setSize(TypeDialogBuilder.PANEL_WIDTH, typeDialog.getSize().height);
 		typeDialog.setResizable(false);
 		typeDialog.setLocationRelativeTo(typeDialog.getParent());
 
