@@ -727,7 +727,6 @@ public class GenericFileFormat {
 		if (label.equals("OnClick"))
 			return null;
 
-		System.out.println(label + " " + fieldList);
 		// this can happen if it is called on the incorrect list, or with a
 		// label that doens't exist.
 		throw new IllegalStateException("Failed to locate field " + label);

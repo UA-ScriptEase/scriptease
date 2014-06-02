@@ -534,7 +534,7 @@ public final class FileManager {
 
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(model.getIncludes());
-
+		
 		this.saveScriptInOutput(scriptInfos, model);
 
 		// now save that code to the module
