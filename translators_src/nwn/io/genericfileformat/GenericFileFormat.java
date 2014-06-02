@@ -400,7 +400,7 @@ public class GenericFileFormat {
 			// Stupid special case. I think they added it in a patch or
 			// something, because some placeables don't have it, and it's not
 			// mentioned in the official docs. But it's definitely there.
-			if (field == null && this.getScriptEaseType().equals("placeable"))
+			if (field == null && this.getScriptEaseType().equalsIgnoreCase("placeable"))
 				continue;
 			else if (field == null) {
 				throw new NullPointerException("Null Field found for " + this
@@ -727,6 +727,7 @@ public class GenericFileFormat {
 		if (label.equals("OnClick"))
 			return null;
 
+		System.out.println(label + " " + fieldList);
 		// this can happen if it is called on the incorrect list, or with a
 		// label that doens't exist.
 		throw new IllegalStateException("Failed to locate field " + label);
