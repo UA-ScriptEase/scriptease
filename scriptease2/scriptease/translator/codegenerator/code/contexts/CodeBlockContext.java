@@ -195,28 +195,36 @@ public class CodeBlockContext extends Context {
 		return null;
 	}
 
+	private boolean isIdenticalCause(StoryComponent component) {
+		final CauseIt cause = this.codeBlock.getCause();
+
+		return component instanceof CauseIt
+				&& cause.isEquivalent(component)
+				&& cause.getParameters().equals(
+						((CauseIt) component).getParameters());
+	}
+
 	@Override
 	public Collection<CauseIt> getIdenticalCauses() {
 		if (this.identicalCauses == null) {
-			final CauseIt causeIt;
-
-			causeIt = this.codeBlock.getCause();
+			// Lazy loading!
 			this.identicalCauses = new ArrayList<CauseIt>();
 
 			for (StoryNode node : this.getStoryNodes()) {
 				for (StoryComponent child : node.getChildren()) {
 					if (child instanceof StoryPoint) {
+						// This exists because of Story Groups, I think...
+
 						for (StoryComponent storyPointChild : ((StoryPoint) child)
 								.getChildren()) {
-							if (storyPointChild instanceof CauseIt
-									&& causeIt.isEquivalent(storyPointChild))
+
+							if (this.isIdenticalCause(storyPointChild))
 								this.identicalCauses
 										.add((CauseIt) storyPointChild);
+
 						}
-					} else if (child instanceof CauseIt
-							&& causeIt.isEquivalent(child)) {
+					} else if (this.isIdenticalCause(child))
 						this.identicalCauses.add((CauseIt) child);
-					}
 				}
 			}
 		}
