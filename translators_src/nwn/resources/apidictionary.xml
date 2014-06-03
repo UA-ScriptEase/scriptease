@@ -23570,14 +23570,14 @@
       </CodeBlocks>
     </ScriptIt>
     <ScriptIt>
-      <Name>a random number with maximum &lt;Maximum&gt;</Name>
+     <Name>a random number between &lt;Minimum&gt; and &lt;Maximum&gt;</Name>
       <Visible>false</Visible>
       <Enabled>true</Enabled>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>a random number with maximum &lt;Maximum&gt;</Name>
+          <Name>a random number between &lt;Minimum&gt; and &lt;Maximum&gt;</Name>
           <Visible>true</Visible>
           <Enabled>true</Enabled>
           <Labels/>
@@ -23585,6 +23585,15 @@
             <Type>Number</Type>
           </Types>
           <Parameters>
+             <KnowIt>
+              <Name>Minimum</Name>
+              <Visible>true</Visible>
+              <Enabled>true</Enabled>
+              <Labels/>
+              <Types>
+                <Type>Number</Type>
+              </Types>
+            </KnowIt>
             <KnowIt>
               <Name>Maximum</Name>
               <Visible>true</Visible>
@@ -23597,11 +23606,19 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>return IntToFloat(Random(FloatToInt(</Literal>
+              <Literal>return Random(FloatToInt(</Literal>
               <Scope data="ARGUMENT" ref="Maximum">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>)));</Literal>
+              <Literal> - </Literal>
+              <Scope data="ARGUMENT" ref="Minimum">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>)) + </Literal>
+              <Scope data="ARGUMENT" ref="Minimum">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>;</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
