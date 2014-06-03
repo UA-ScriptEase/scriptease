@@ -69,6 +69,7 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.Translator;
 import scriptease.translator.io.model.Resource;
 import scriptease.util.BiHashMap;
 
@@ -97,11 +98,10 @@ class SEModelTabbedPane extends JTabbedPane {
 		this.modelToComponent = new BiHashMap<SEModel, Component>();
 
 		// Register a mouse listener for the tabs to listen for title changes
-		TabTitleChangeListener titleListener = new TabTitleChangeListener(this);
+		TabTitleChangeListener titleListener = new TabTitleChangeListener();
+
 		this.addMouseListener(titleListener);
 		this.addChangeListener(titleListener);
-		UndoManager.getInstance().addUndoManagerObserver(
-				SEModelManager.getInstance().getActiveModel(), titleListener);
 
 		SEModelManager.getInstance().addSEModelObserver(this,
 				new SEModelObserver() {
@@ -129,6 +129,10 @@ class SEModelTabbedPane extends JTabbedPane {
 				});
 		this.setUI(ComponentFactory.buildFlatTabUI());
 		this.setBackground(ScriptEaseUI.SECONDARY_UI);
+	}
+
+	private SEModel getSelectedModel() {
+		return this.modelToComponent.getKey(this.getSelectedComponent());
 	}
 
 	/**
@@ -210,16 +214,10 @@ class SEModelTabbedPane extends JTabbedPane {
 	private void buildTab(final String title, final SEModel model,
 			final JComponent tabContents) {
 		final CloseableModelTab newTab;
-		final Icon icon;
 
-		if (model.getTranslator() != null)
-			icon = model.getTranslator().getIcon();
-		else
-			icon = null;
+		this.addTab(title, tabContents);
 
-		this.addTab(title, icon, tabContents);
-
-		newTab = new CloseableModelTab(this, model, icon, tabContents);
+		newTab = new CloseableModelTab(model, tabContents);
 
 		this.setTabComponentAt(this.indexOfComponent(tabContents), newTab);
 
@@ -496,59 +494,75 @@ class SEModelTabbedPane extends JTabbedPane {
 		 * 
 		 * @param parent
 		 *            the JTabbedPane to be added to.
-		 * @param icon
-		 *            The icon to display in the tab. Passing <code>null</code>
-		 *            will show no icon.
 		 */
-		private CloseableModelTab(final JTabbedPane parent,
-				final SEModel model, Icon icon, final Component component) {
+		private CloseableModelTab(final SEModel model, final Component component) {
 			// unset the annoying gaps that come with default FlowLayout
 			super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-			if (parent == null)
-				throw new NullPointerException("TabbedPane is null");
+			final UndoManager undoManager = UndoManager.getInstance();
+			final JTabbedPane parent = SEModelTabbedPane.this;
+			final Translator translator = model.getTranslator();
 
+			final JLabel unsaved = new JLabel("*");
 			final JLabel iconLabel;
 			final TabButton closeButton;
-			final JLabel label;
+			final JLabel nameLabel;
 
 			this.setOpaque(false);
 
 			// make JLabel read titles from JTabbedPane
-			label = new JLabel() {
+			nameLabel = new JLabel() {
 				public String getText() {
 					return model.getTitle();
 				}
 			};
 
-			if (icon != null) {
-				iconLabel = new JLabel(" ");
-				iconLabel.setIcon(icon);
-				this.add(iconLabel);
-			}
+			final Icon icon;
 
-			this.add(label);
+			if (translator != null)
+				icon = translator.getIcon();
+			else
+				icon = null;
+
+			iconLabel = new JLabel(" ");
+			closeButton = new TabButton(new CloseModelAction(model));
+
+			iconLabel.setIcon(icon);
+
+			unsaved.setVisible(false);
+
+			undoManager.addUndoManagerObserver(model,
+					new UndoManagerObserver() {
+						@Override
+						public void stackChanged() {
+							unsaved.setVisible(!undoManager.isSaved(model));
+							SEModelTabbedPane.this.repaint();
+						}
+					});
 
 			// add more space between the label and the button
-			label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+			nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
 			if (parent.getSelectedComponent() == component)
-				label.setForeground(ScriptEaseUI.SECONDARY_UI);
+				nameLabel.setForeground(ScriptEaseUI.SECONDARY_UI);
 			else
-				label.setForeground(ScriptEaseUI.PRIMARY_UI);
+				nameLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
 
 			parent.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					if (parent.getSelectedComponent() == component)
-						label.setForeground(ScriptEaseUI.SECONDARY_UI);
+						nameLabel.setForeground(ScriptEaseUI.SECONDARY_UI);
 					else
-						label.setForeground(ScriptEaseUI.PRIMARY_UI);
+						nameLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
 				}
 			});
 
-			closeButton = new TabButton(new CloseModelAction(model));
 			closeButton.setHideActionText(true);
+
+			this.add(iconLabel);
+			this.add(unsaved);
+			this.add(nameLabel);
 			this.add(closeButton);
 
 			// add more space to the top of the component
@@ -646,23 +660,29 @@ class SEModelTabbedPane extends JTabbedPane {
 	 * @author jyuen
 	 */
 	private class TabTitleChangeListener extends MouseAdapter implements
-			ChangeListener, UndoManagerObserver {
+			ChangeListener {
 
 		private final JTextField editor;
-		private final JTabbedPane tabbedPane;
+		private final SEModelTabbedPane tabbedPane;
 
-		public TabTitleChangeListener(final JTabbedPane tabbedPane) {
-			this.tabbedPane = tabbedPane;
+		private int editingIndex = -1;
+		private int length = -1;
+		private Dimension dimension;
+		private Component tabComponent = null;
+
+		public TabTitleChangeListener() {
+			this.tabbedPane = SEModelTabbedPane.this;
+
 			this.editor = new JTextField();
 
-			editor.setBorder(BorderFactory.createEmptyBorder());
-			editor.addFocusListener(new FocusAdapter() {
+			this.editor.setBorder(BorderFactory.createEmptyBorder());
+			this.editor.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
 					renameTabTitle();
 				}
 			});
-			editor.addKeyListener(new KeyAdapter() {
+			this.editor.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyPressed(KeyEvent e) {
 					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -682,34 +702,10 @@ class SEModelTabbedPane extends JTabbedPane {
 		public void stateChanged(ChangeEvent e) {
 			cancelEditing();
 
-			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
-			final SEModel model = SEModelTabbedPane.this.modelToComponent
-					.getKey(tab);
+			final SEModel model = this.tabbedPane.getSelectedModel();
 
-			if (tab != null && model != null) {
+			if (model != null) {
 				SEModelManager.getInstance().activate(model);
-			}
-		}
-
-		@Override
-		public void stackChanged() {
-			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
-			final SEModel model = SEModelTabbedPane.this.modelToComponent
-					.getKey(tab);
-
-			if (tab != null && model != null) {
-				if (UndoManager.getInstance().isSaved(model)) {
-					if (model.getTitle().charAt(0) == '*') {
-						model.setTitle(model.getTitle().substring(1));
-						tab.setName(model.getTitle().substring(1));
-					}
-				} else {
-					if (model.getTitle().charAt(0) != '*') {
-						model.setTitle("*" + model.getTitle());
-						tab.setName("*" + model.getTitle());
-					}
-				}
-				SEModelTabbedPane.this.repaint();
 			}
 		}
 
@@ -717,12 +713,12 @@ class SEModelTabbedPane extends JTabbedPane {
 		public void mouseClicked(MouseEvent e) {
 			final Rectangle rect;
 
-			int index = tabbedPane.getSelectedIndex();
+			int index = this.tabbedPane.getSelectedIndex();
 
 			if (index == -1)
 				return;
 
-			rect = tabbedPane.getUI().getTabBounds(tabbedPane, index);
+			rect = this.tabbedPane.getUI().getTabBounds(this.tabbedPane, index);
 			if (rect != null && rect.contains(e.getPoint())
 					&& e.getClickCount() == 2) {
 				startEditing();
@@ -731,29 +727,16 @@ class SEModelTabbedPane extends JTabbedPane {
 			}
 		}
 
-		private int editingIndex = -1;
-		private int length = -1;
-		private Dimension dimension;
-		private Component tabComponent = null;
-
 		private void startEditing() {
-			editingIndex = tabbedPane.getSelectedIndex();
+			this.editingIndex = this.tabbedPane.getSelectedIndex();
 
 			if (editingIndex < 0)
 				return;
 
-			tabComponent = tabbedPane.getTabComponentAt(editingIndex);
-			tabbedPane.setTabComponentAt(editingIndex, editor);
-			editor.setVisible(true);
-
-			final Component tab = SEModelTabbedPane.this.getSelectedComponent();
-			final SEModel model = SEModelTabbedPane.this.modelToComponent
-					.getKey(tab);
-
-			if (model.getTitle().charAt(0) != '*')
-				editor.setText(model.getTitle());
-			else
-				editor.setText(model.getTitle().substring(1));
+			this.tabComponent = tabbedPane.getTabComponentAt(editingIndex);
+			this.tabbedPane.setTabComponentAt(editingIndex, editor);
+			this.editor.setVisible(true);
+			this.editor.setText(this.tabbedPane.getSelectedModel().getTitle());
 
 			editor.selectAll();
 			editor.requestFocusInWindow();
@@ -763,35 +746,26 @@ class SEModelTabbedPane extends JTabbedPane {
 		}
 
 		private void cancelEditing() {
-			if (editingIndex >= 0) {
-				tabbedPane.setTabComponentAt(editingIndex, tabComponent);
-				editor.setVisible(false);
-				editingIndex = -1;
-				length = -1;
-				tabComponent = null;
-				editor.setPreferredSize(null);
-				tabbedPane.requestFocusInWindow();
+			if (this.editingIndex >= 0) {
+				this.tabbedPane.setTabComponentAt(editingIndex, tabComponent);
+				this.editor.setVisible(false);
+				this.editingIndex = -1;
+				this.length = -1;
+				this.tabComponent = null;
+				this.editor.setPreferredSize(null);
+				this.tabbedPane.requestFocusInWindow();
 			}
 		}
 
 		private void renameTabTitle() {
-			String title = editor.getText().trim();
-			if (editingIndex >= 0 && !title.isEmpty()) {
-				final Component tab = SEModelTabbedPane.this
-						.getSelectedComponent();
-				final SEModel model = SEModelTabbedPane.this.modelToComponent
-						.getKey(tab);
+			final String title = editor.getText().trim();
 
-				// Musn't use * as first char - reserved for isSaved!
-				if (title.length() > 0 && !(title.charAt(0) == '*')) {
-					if (model != null) {
-						if (UndoManager.getInstance().isSaved(model)) {
-							model.setTitle(title);
-						} else {
-							model.setTitle("*" + title);
-						}
-					}
-				}
+			if (editingIndex >= 0 && !title.isEmpty()) {
+				final SEModel model = this.tabbedPane.getSelectedModel();
+
+				if (title.length() > 0)
+					if (model != null)
+						model.setTitle(title);
 			}
 
 			cancelEditing();
