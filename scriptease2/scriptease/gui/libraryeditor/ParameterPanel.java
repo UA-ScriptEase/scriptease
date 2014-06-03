@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -68,7 +69,7 @@ public class ParameterPanel extends JPanel {
 	private final KnowIt knowIt;
 
 	private ArrayList<String> selectedTypes = new ArrayList<String>();
-	
+
 	/**
 	 * Creates a new ParameterComponent with the passed in KnowIt parameter.
 	 */
@@ -76,14 +77,15 @@ public class ParameterPanel extends JPanel {
 			final KnowIt knowIt) {
 		this(scriptIt, codeBlock, knowIt, true);
 	}
-	
+
 	/**
-	 * Creates a new ParameterPanel with just the KnowIt, used for behaviour implicits. 
+	 * Creates a new ParameterPanel with just the KnowIt, used for behaviour
+	 * implicits.
 	 */
-	public ParameterPanel(final KnowIt knowIt){
+	public ParameterPanel(final KnowIt knowIt) {
 		this(null, null, knowIt, false);
 	}
-	
+
 	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
 			final KnowIt knowIt, boolean removable) {
 		super(new FlowLayout(FlowLayout.LEADING));
@@ -101,7 +103,7 @@ public class ParameterPanel extends JPanel {
 		final JPanel bindingPanel;
 
 		final boolean isEditable;
-		
+
 		this.observerManager = new ObserverManager<ParameterPanelObserver>();
 
 		typeAction = new TypeAction();
@@ -113,18 +115,22 @@ public class ParameterPanel extends JPanel {
 
 		defaultTypeBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		bindingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		
-		//Behaviours currently use a null ScriptIt to generate their parameter panel
-		//So we have to account for that when checking read only.  When behaviours 
-		//are more implemented this will probably need to be reworked. (currently 
-		//-zturchan
+
+		// Behaviours currently use a null ScriptIt to generate their parameter
+		// panel
+		// So we have to account for that when checking read only. When
+		// behaviours
+		// are more implemented this will probably need to be reworked.
+		// (currently
+		// -zturchan
 		if (scriptIt != null) {
-			isEditable = ScriptEase.DEBUG_MODE  || !scriptIt.getLibrary().getReadOnly();
+			isEditable = ScriptEase.DEBUG_MODE
+					|| !scriptIt.getLibrary().getReadOnly();
 		} else {
 			isEditable = true;
-			//isEditable = ScriptEase.DEBUG_MODE;
+			// isEditable = ScriptEase.DEBUG_MODE;
 		}
-		
+
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setBackground(GUIOp.scaleColour(Color.GRAY, 1.9));
 
@@ -154,23 +160,26 @@ public class ParameterPanel extends JPanel {
 				knowIt.setTypes(typeAction.getSelectedTypes());
 
 				final String initialDefaultType;
+				final List<String> types;
+
 				initialDefaultType = (String) defaultTypeBox.getSelectedItem();
+				types = new ArrayList<String>(knowIt.getTypes());
 
 				defaultTypeBox.removeAllItems();
 
-				for (String type : knowIt.getTypes()) {
+				Collections.sort(types);
+
+				for (String type : types) {
 					defaultTypeBox.addItem(type);
 				}
 
-				
-				
 				defaultTypeBox.setSelectedItem(initialDefaultType);
 
 				defaultTypeBox.revalidate();
 
-				if (scriptIt != null){
+				if (scriptIt != null) {
 					scriptIt.notifyObservers(new StoryComponentEvent(scriptIt,
-							StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));					
+							StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE));
 				}
 
 				notifyChange();
@@ -196,7 +205,7 @@ public class ParameterPanel extends JPanel {
 					for (String type : types) {
 						if (!type.equals(selectedType))
 							newTypeList.add(type);
-							selectedTypes.add(type);
+						selectedTypes.add(type);
 					}
 					knowIt.setTypesByName(newTypeList);
 					updateBindingConstantComponent(bindingConstantComponent);
@@ -204,7 +213,8 @@ public class ParameterPanel extends JPanel {
 			}
 		});
 
-		if ((scriptIt != null && codeBlock != null ) && !this.isSubjectInCause(scriptIt, codeBlock)) {
+		if ((scriptIt != null && codeBlock != null)
+				&& !this.isSubjectInCause(scriptIt, codeBlock)) {
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -221,7 +231,6 @@ public class ParameterPanel extends JPanel {
 			deleteButton.setVisible(false);
 		}
 
-		
 		defaultTypeBoxPanel.add(new JLabel("First Type:"));
 		defaultTypeBox.setEnabled(isEditable);
 		defaultTypeBoxPanel.add(defaultTypeBox);
@@ -241,7 +250,7 @@ public class ParameterPanel extends JPanel {
 		defaultTypeBoxPanel.setEnabled(isEditable);
 		deleteButton.setEnabled(isEditable);
 		bindingPanel.setEnabled(isEditable);
-		
+
 		if (scriptIt != null && codeBlock != null) {
 			nameField = this.buildNameField(scriptIt, codeBlock);
 			nameField.setEnabled(isEditable);
@@ -250,7 +259,7 @@ public class ParameterPanel extends JPanel {
 		this.getPreferredSize();
 		this.add(typesButton);
 		this.add(defaultTypeBoxPanel);
-		if (scriptIt != null && codeBlock != null){
+		if (scriptIt != null && codeBlock != null) {
 			this.add(bindingPanel);
 			this.add(Box.createHorizontalGlue());
 			this.add(deleteButton);
@@ -351,7 +360,7 @@ public class ParameterPanel extends JPanel {
 		inactiveTextField.setEnabled(false);
 
 		isEditable = ScriptEase.DEBUG_MODE || !library.getReadOnly();
-		
+
 		bindingConstantComponent.removeAll();
 
 		if (defaultTypeGuiType == null)
@@ -430,15 +439,18 @@ public class ParameterPanel extends JPanel {
 				break;
 			case JCOMBOBOX:
 				final Map<String, String> map;
+				final List<String> values;
 				final JComboBox bindingBox;
 
 				map = library.getType(defaultType).getEnumMap();
 				bindingBox = new JComboBox();
+				values = new ArrayList<String>(map.values());
+
+				Collections.sort(values);
 
 				bindingBox.addItem(null);
-
-				for (String key : map.keySet())
-					bindingBox.addItem(map.get(key));
+				for (String value : values)
+					bindingBox.addItem(value);
 
 				if (bindingText.equals("null"))
 					bindingBox.setSelectedItem(null);
@@ -548,20 +560,22 @@ public class ParameterPanel extends JPanel {
 			observer.parameterPanelChanged();
 		}
 	}
-	
+
 	/**
 	 * Returns the list of types for the current KnowIt
+	 * 
 	 * @return
 	 */
-	public ArrayList<String> getSelectedTypes(){
+	public ArrayList<String> getSelectedTypes() {
 		return this.selectedTypes;
 	}
-	
+
 	/**
 	 * returns the KnowIt that the ParameterPanel modifies.
+	 * 
 	 * @return
 	 */
-	public KnowIt getKnowIt(){
+	public KnowIt getKnowIt() {
 		return this.knowIt;
 	}
 }
