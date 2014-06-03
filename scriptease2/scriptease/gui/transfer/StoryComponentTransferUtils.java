@@ -260,8 +260,6 @@ public class StoryComponentTransferUtils {
 		final StoryComponent clone = child.clone();
 		final boolean success;
 
-		// clone.revalidateKnowItBindings();
-
 		StoryComponent sibling = parent.getChildAt(insertionIndex);
 		if (sibling != null) {
 			// add in the middle
