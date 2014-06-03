@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -302,14 +303,13 @@ public class MenuFactory {
 		final JMenuItem preferencesItem;
 		final JMenuItem translatorPreferencesItem;
 		final JMenuItem storyPropertiesItem;
-		
+
 		editMenu = new JMenu(Il8nResources.getString("Edit"));
 		preferencesItem = new JMenuItem(Il8nResources.getString("Preferences")
 				+ "...");
 		translatorPreferencesItem = new JMenuItem(
 				TranslatorPreferencesAction.getInstance());
-		storyPropertiesItem = new JMenuItem(
-				StoryPropertiesAction.getInstance());
+		storyPropertiesItem = new JMenuItem(StoryPropertiesAction.getInstance());
 		// Set up the edit menu item
 		editMenu.setMnemonic(KeyEvent.VK_E);
 
@@ -450,10 +450,12 @@ public class MenuFactory {
 	 */
 	private static JMenu buildLibraryMenu() {
 		final JMenu menu = new JMenu(MenuFactory.LIBRARY);
-
 		final SEModel activeModel;
+		final List<Translator> translators;
 
 		activeModel = SEModelManager.getInstance().getActiveModel();
+		translators = new ArrayList<Translator>(TranslatorManager.getInstance()
+				.getTranslators());
 
 		if (activeModel instanceof StoryModel) {
 			final StoryModel model = (StoryModel) activeModel;
@@ -577,8 +579,15 @@ public class MenuFactory {
 			menu.add(removeLibrary);
 		}
 
-		for (Translator translator : TranslatorManager.getInstance()
-				.getTranslators()) {
+		Collections.sort(translators, new Comparator<Translator>() {
+			@Override
+			public int compare(Translator t1, Translator t2) {
+				return t1.getName().compareTo(t2.getName());
+			}
+
+		});
+
+		for (Translator translator : translators) {
 			final OpenLibraryEditorAction action;
 			final JMenuItem translatorItem;
 
