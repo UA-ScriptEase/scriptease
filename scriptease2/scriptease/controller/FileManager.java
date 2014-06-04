@@ -35,6 +35,7 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.GameCompilerException;
+import scriptease.translator.LanguageDictionary;
 import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.codegenerator.CodeGenerator;
@@ -724,6 +725,19 @@ public final class FileManager {
 		SEModelManager.getInstance().addAndActivate(story);
 
 		this.notifyModelObservers(story, location);
+	}
+
+	public LanguageDictionary openLanguageDictionary(Translator translator) {
+		final LanguageDictionary dictionary;
+		final File location;
+
+		// load the languageDictionary
+		location = translator
+				.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH);
+
+		dictionary = FileIO.getInstance().readLanguageDictionary(location);
+
+		return dictionary;
 	}
 
 	public LibraryModel openDefaultLibrary(Translator translator) {
