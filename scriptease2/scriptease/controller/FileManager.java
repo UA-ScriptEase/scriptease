@@ -534,8 +534,12 @@ public final class FileManager {
 
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(model.getIncludes());
-		
-		this.saveScriptInOutput(scriptInfos, model);
+
+		// Make this true if you want to write scripts to the output directory
+		// as well.
+		final boolean outputScripts = false;
+		if (outputScripts)
+			this.saveScriptInOutput(scriptInfos, model);
 
 		// now save that code to the module
 		compile &= problems.isEmpty();
@@ -748,7 +752,7 @@ public final class FileManager {
 	}
 
 	/**
-	 * Loads the tutorials for the provided translator. 
+	 * Loads the tutorials for the provided translator.
 	 * 
 	 * @param translator
 	 * @return
