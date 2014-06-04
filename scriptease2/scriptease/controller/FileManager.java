@@ -535,11 +535,7 @@ public final class FileManager {
 		module.addScripts(scriptInfos);
 		module.addIncludeFiles(model.getIncludes());
 
-		// Make this true if you want to write scripts to the output directory
-		// as well.
-		final boolean outputScripts = false;
-		if (outputScripts)
-			this.saveScriptInOutput(scriptInfos, model);
+		this.saveScriptInOutput(scriptInfos, model, false);
 
 		// now save that code to the module
 		compile &= problems.isEmpty();
@@ -604,7 +600,7 @@ public final class FileManager {
 	 * @param translator
 	 */
 	private void saveScriptInOutput(Collection<ScriptInfo> scriptInfos,
-			StoryModel model) {
+			StoryModel model, boolean writeIncludeFiles) {
 		final String outputDir;
 
 		final String storyName = model.getTitle();
@@ -628,12 +624,13 @@ public final class FileManager {
 
 			seWriter.close();
 
-			// Copy necessary include files
-			for (File include : model.getIncludes()) {
-				File includeFile = new File(outputDir + storyName + "/"
-						+ include.getName());
-				FileOp.copyFile(include, includeFile);
-			}
+			if (writeIncludeFiles)
+				// Copy necessary include files
+				for (File include : model.getIncludes()) {
+					File includeFile = new File(outputDir + storyName + "/"
+							+ include.getName());
+					FileOp.copyFile(include, includeFile);
+				}
 		} catch (Throwable e) {
 			System.err.println("Exception - Unable to save to output folder!\n"
 					+ e);
