@@ -65,7 +65,8 @@ public class TranslatorManager {
 		this.observerManager = new ObserverManager<TranslatorObserver>();
 
 		// scan for translators in the translators folder
-		this.fillTranslatorPool();
+
+		fillTranslatorPool();
 
 		final SEModelObserver observer;
 
@@ -138,8 +139,7 @@ public class TranslatorManager {
 
 				if (contents != null && contents.length > 0) {
 					// We use only the first "translator.ini"
-					final File translatorInfo = contents[0];
-					this.addTranslator(translatorInfo);
+					this.addTranslator(contents[0]);
 				}
 			}
 		}
@@ -332,12 +332,6 @@ public class TranslatorManager {
 		final String message = translator + " activated.";
 
 		StatusManager.getInstance().setTemp(message);
-
-		if (translator != null) {
-			// We have this here so we don't run into issues later if the
-			translator.getLibrary();
-			translator.getOptionalLibraries();
-		}
 
 		this.notifyObservers();
 	}

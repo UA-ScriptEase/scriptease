@@ -283,8 +283,10 @@ public final class WindowFactory {
 	 * @see #hideProgressBar()
 	 */
 	public static void showProgressBar(final String text, final Runnable run) {
-		WindowFactory.getInstance().getCurrentFrame()
-				.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		final JFrame frame = WindowFactory.getInstance().getCurrentFrame();
+
+		if (frame != null)
+			frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 		final JProgressBar progressBar;
 		final JDialog progressBarDialog;
@@ -308,8 +310,8 @@ public final class WindowFactory {
 			protected void done() {
 				StatusManager.getInstance().clear(text);
 				progressBarDialog.setVisible(false);
-				WindowFactory.getInstance().getCurrentFrame()
-						.setCursor(Cursor.getDefaultCursor());
+				if (frame != null)
+					frame.setCursor(Cursor.getDefaultCursor());
 			}
 		};
 
@@ -916,20 +918,21 @@ public final class WindowFactory {
 		newLibrary = "New...";
 
 		content.setLayout(layout);
-		
-		LibraryModel defaultLibrary = translator.getLibrary();		
-		
-		//If we decide we want to not allow people to even look at read-only libraries in the editor, uncomment these lines
-		//-zturchan
-		
-		//if(defaultLibrary.getReadOnly() == false || ScriptEase.DEBUG_MODE){
-			libraryChoice.addItem(defaultLibrary);
-		//}
+
+		LibraryModel defaultLibrary = translator.getLibrary();
+
+		// If we decide we want to not allow people to even look at read-only
+		// libraries in the editor, uncomment these lines
+		// -zturchan
+
+		// if(defaultLibrary.getReadOnly() == false || ScriptEase.DEBUG_MODE){
+		libraryChoice.addItem(defaultLibrary);
+		// }
 
 		for (LibraryModel library : translator.getOptionalLibraries()) {
-			//if(library.getReadOnly() == false  || ScriptEase.DEBUG_MODE){
-				libraryChoice.addItem(library);
-			//}
+			// if(library.getReadOnly() == false || ScriptEase.DEBUG_MODE){
+			libraryChoice.addItem(library);
+			// }
 		}
 
 		libraryChoice.addItem(newLibrary);

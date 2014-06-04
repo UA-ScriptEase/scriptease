@@ -14,6 +14,9 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.Icon;
@@ -29,6 +32,7 @@ import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameModule;
 import scriptease.util.FileOp;
+import scriptease.util.ListOp;
 
 /**
  * a ScriptEase Game Translator. Translators are defined by a
@@ -103,20 +107,14 @@ public class Translator {
 
 	// data loaded from the translator.ini file
 	private final Class<? extends GameModule> gameModuleClass;
-	private LibraryModel defaultLibrary;
-	private LanguageDictionary languageDictionary;
+	private final LanguageDictionary languageDictionary;
+	private final Collection<LibraryModel> libraries;
 
 	private final Collection<String> legalExtensions;
-
-	// special class loader that knows to look in the translators for their
-	// GameModule implementation and required java libaries.
-	private final ClassLoader loader;
 
 	// either the location of the jar, or the location of the description file.
 	private final File location;
 
-	private Collection<LibraryModel> optionalLibraries;
-	
 	private final Collection<File> tutorials;
 
 	/**
@@ -138,12 +136,18 @@ public class Translator {
 
 		this.properties = new Properties();
 		this.legalExtensions = new ArrayList<String>();
+		this.libraries = new ArrayList<LibraryModel>();
 
 		this.location = descriptionFile;
 
 		final String extensionsString;
 		final Reader descriptionReader;
 		final String gameModuleClassLocation;
+
+		final String loadingLibraryText = "Loading Library...";
+		final String loadingOptionalText = "Loading Optional Libraries...";
+
+		final ClassLoader loader;
 
 		// load up the properties
 		descriptionReader = new BufferedReader(new FileReader(descriptionFile));
@@ -161,7 +165,7 @@ public class Translator {
 			}
 		}
 
-		this.loader = this.initClassloader(this.location);
+		loader = this.initClassloader(this.location);
 
 		gameModuleClassLocation = toBinaryName(this
 				.getProperty(DescriptionKeys.GAME_MODULE_PATH.toString()));
@@ -183,8 +187,35 @@ public class Translator {
 			System.err.println(gmClass == null ? "null" : gmClass.getName()
 					+ " is not an instance of GameModule");
 		}
-		
+
 		this.tutorials = FileManager.getInstance().loadTutorials(this);
+		this.languageDictionary = FileManager.getInstance()
+				.openLanguageDictionary(this);
+
+		if (this.languageDictionary == null)
+			throw new IllegalStateException(
+					"Unable to load the LanguageDictionary.");
+
+		WindowFactory.showProgressBar(loadingLibraryText, new Runnable() {
+			@Override
+			public void run() {
+				libraries.add(FileManager.getInstance().openDefaultLibrary(
+						Translator.this));
+			}
+		});
+
+		if (this.libraries.isEmpty())
+			// If it's empty, something crazy is going on.
+			throw new IllegalStateException("Unable to load the Library.");
+
+		WindowFactory.showProgressBar(loadingOptionalText, new Runnable() {
+			@Override
+			public void run() {
+				libraries.addAll(FileManager.getInstance()
+						.openOptionalLibraries(Translator.this));
+			}
+
+		});
 	}
 
 	/**
@@ -263,8 +294,7 @@ public class Translator {
 	 * @return
 	 */
 	public Collection<LibraryModel> getOptionalLibraries() {
-		this.initializeOptionalLibraries();
-		return this.optionalLibraries;
+		return ListOp.tail(libraries);
 	}
 
 	/**
@@ -273,58 +303,7 @@ public class Translator {
 	 * @param library
 	 */
 	public void addOptionalLibrary(LibraryModel library) {
-		this.initializeOptionalLibraries();
-		this.optionalLibraries.add(library);
-	}
-
-	/**
-	 * This needs to get called here so we don't accidentally load the library
-	 * at the same time as the translator itself is loading.
-	 */
-	private void initializeOptionalLibraries() {
-		if (this.optionalLibraries == null) {
-			final String PROGRESS_BAR_TEXT = "Loading Optional Libraries...";
-
-			final Translator translator = this;
-
-			WindowFactory.showProgressBar(PROGRESS_BAR_TEXT, new Runnable() {
-				@Override
-				public void run() {
-					translator.optionalLibraries = FileManager.getInstance()
-							.openOptionalLibraries(translator);
-				}
-			});
-
-			if (this.optionalLibraries == null) {
-				// If it's still null, something crazy is going on.
-				throw new IllegalStateException(
-						"Unable to load the Optional Libraries.");
-			}
-		}
-	}
-
-	/**
-	 * This loads the default library if it isn't already loaded.
-	 */
-	private void initializeDefaultLibrary() {
-		if (this.defaultLibrary == null) {
-			final String PROGRESS_BAR_TEXT = "Loading Library...";
-
-			final Translator translator = this;
-
-			WindowFactory.showProgressBar(PROGRESS_BAR_TEXT, new Runnable() {
-				@Override
-				public void run() {
-					translator.defaultLibrary = FileManager.getInstance()
-							.openDefaultLibrary(translator);
-
-				}
-			});
-
-			if (this.defaultLibrary == null)
-				// If it's still null, something crazy is going on.
-				throw new IllegalStateException("Unable to load the Library.");
-		}
+		this.libraries.add(library);
 	}
 
 	/**
@@ -339,12 +318,7 @@ public class Translator {
 		if (name == null)
 			return null;
 
-		final LibraryModel defaultLibrary = this.getLibrary();
-
-		if (defaultLibrary.getTitle().equals(name))
-			return defaultLibrary;
-
-		for (LibraryModel library : this.getOptionalLibraries()) {
+		for (LibraryModel library : this.getLibraries()) {
 			if (library.getTitle().equals(name))
 				return library;
 		}
@@ -636,44 +610,12 @@ public class Translator {
 	}
 
 	/**
-	 * Returns whether the Library is loaded.
-	 * 
-	 * @return <code>true</code> if the Library is in memory.
-	 */
-	public boolean defaultLibraryIsLoaded() {
-		return this.defaultLibrary != null;
-	}
-
-	public void unloadTranslator() {
-		this.defaultLibrary = null;
-		this.languageDictionary = null;
-	}
-
-	/**
-	 * Gets the Language Dictionary for this translator. If there is no Language
-	 * Dictionary assigned to the translator yet, this method will attempt to
-	 * open one.
+	 * Gets the Language Dictionary for this translator.
 	 * 
 	 * @return the languageDictionary
 	 */
 	public LanguageDictionary getLanguageDictionary() {
-		if (this.languageDictionary == null) {
-			final FileIO xmlReader;
-			final File languageFile;
-			xmlReader = FileIO.getInstance();
-			// load the languageDictionary
-			languageFile = this
-					.getPathProperty(DescriptionKeys.LANGUAGE_DICTIONARY_PATH);
-
-			this.languageDictionary = xmlReader
-					.readLanguageDictionary(languageFile);
-		}
-
-		if (this.languageDictionary != null)
-			return this.languageDictionary;
-		else
-			throw new IllegalStateException(
-					"Unable to load the LanguageDictionary.");
+		return this.languageDictionary;
 	}
 
 	/**
@@ -848,15 +790,10 @@ public class Translator {
 	 * Note that this method does not return default libraries that should be
 	 * common across all translators.
 	 * 
-	 * The Library is lazy loaded because translator objects are created when
-	 * ScriptEase is run, whereas libraries only created when we load something
-	 * that needs it.
-	 * 
 	 * @return
 	 */
 	public LibraryModel getLibrary() {
-		this.initializeDefaultLibrary();
-		return this.defaultLibrary;
+		return ListOp.head(this.libraries);
 	}
 
 	/**
@@ -864,13 +801,8 @@ public class Translator {
 	 * 
 	 * @return
 	 */
-	public Collection<LibraryModel> getAllLibraries() {
-		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
-
-		libraries.add(this.getLibrary());
-		libraries.addAll(this.getOptionalLibraries());
-
-		return libraries;
+	public Collection<LibraryModel> getLibraries() {
+		return this.libraries;
 	}
 
 	/**
@@ -881,7 +813,7 @@ public class Translator {
 	 * @return
 	 */
 	public DescribeIt getDescribeIt(StoryComponent component) {
-		for (LibraryModel library : this.getAllLibraries()) {
+		for (LibraryModel library : this.getLibraries()) {
 			final DescribeIt describeIt = library.getDescribeIt(component);
 
 			if (describeIt != null)
@@ -889,6 +821,21 @@ public class Translator {
 		}
 
 		return null;
+	}
+
+	public static List<Translator> sort(Collection<Translator> translators) {
+		final List<Translator> translatorList;
+
+		translatorList = new ArrayList<Translator>(translators);
+
+		Collections.sort(translatorList, new Comparator<Translator>() {
+			@Override
+			public int compare(Translator t1, Translator t2) {
+				return t1.getName().compareTo(t2.getName());
+			}
+		});
+
+		return translatorList;
 	}
 
 	@Override

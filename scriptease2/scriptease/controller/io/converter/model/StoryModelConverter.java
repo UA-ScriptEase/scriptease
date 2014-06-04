@@ -9,7 +9,6 @@ import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.gui.WindowFactory;
 import scriptease.model.complex.StoryPoint;
-import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -159,9 +158,6 @@ public class StoryModelConverter implements Converter {
 		module = translator.loadModule(new File(modulePath));
 
 		if (module == null) {
-			if (!SEModelManager.getInstance().usingTranslator(translator))
-				translator.unloadTranslator();
-
 			TranslatorManager.getInstance().setActiveTranslator(null);
 			throw new IllegalStateException("Game module could not be loaded.");
 		}

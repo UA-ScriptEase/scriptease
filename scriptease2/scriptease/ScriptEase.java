@@ -180,8 +180,14 @@ public final class ScriptEase implements Runnable {
 
 		se.unpackRequiredLibs();
 
-		// pre-load the translatorManager to give functionality to the program
-		TranslatorManager.getInstance();
+		WindowFactory.showProgressBar("Loading ScriptEase...", new Runnable() {
+			@Override
+			public void run() {
+				// pre-load the translatorManager to give functionality to the
+				// program
+				TranslatorManager.getInstance();
+			}
+		});
 
 		se.run();
 	}

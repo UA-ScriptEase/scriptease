@@ -150,7 +150,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			// If we found no library, we go through the active libraries to
 			// find a describe it for this KnowIt.
 			for (LibraryModel foundLibrary : TranslatorManager.getInstance()
-					.getActiveTranslator().getAllLibraries()) {
+					.getActiveTranslator().getLibraries()) {
 				final DescribeIt describeIt;
 				describeIt = foundLibrary.getDescribeIt(this);
 
@@ -280,8 +280,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 				model = SEModelManager.getInstance().getActiveModel();
 
-				if (model != null
-						&& model.getTranslator().defaultLibraryIsLoaded()) {
+				if (model != null) {
 					for (String type : KnowIt.this.types) {
 						final GameType gameType = model.getType(type);
 
@@ -423,21 +422,19 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 	 * @return
 	 */
 	public Collection<String> getAcceptableTypes() {
-		final Translator translator = TranslatorManager.getInstance()
-				.getActiveTranslator();
+		final Translator translator = this.getLibrary().getTranslator();
 		final Collection<String> acceptedTypes = new ArrayList<String>();
 
 		// The KnowIts types are acceptable
 		acceptedTypes.addAll(this.types);
 
 		// Acceptable Types also include types that can be converted from
-		if (translator != null && translator.defaultLibraryIsLoaded()) {
-			for (LibraryModel library : translator.getAllLibraries()) {
-				final TypeConverter converter = library.getTypeConverter();
+		if (translator != null) {
+			final LibraryModel library = translator.getLibrary();
+			final TypeConverter converter = library.getTypeConverter();
 
-				for (String type : this.types) {
-					acceptedTypes.addAll(converter.getConvertableTypes(type));
-				}
+			for (String type : this.types) {
+				acceptedTypes.addAll(converter.getConvertableTypes(type));
 			}
 		}
 		return acceptedTypes;
