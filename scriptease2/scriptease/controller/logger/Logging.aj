@@ -44,33 +44,40 @@ public aspect Logging {
 		Logging.consoleLog.setUseParentHandlers(false);
 		Logging.outputLog.setLevel(Logging.OUTPUT_LEVEL);
 
+		final List<Handler> handlers = new ArrayList<Handler>();
+		final ScriptEaseFormatter formatter = new ScriptEaseFormatter();
+
 		// create handlers
-		Handler consoleHandler = new ConsoleHandler();
+		final Handler consoleHandler = new ConsoleHandler();
+		final Handler networkHandler = NetworkHandler.getInstance();
 		Handler fileHandler = null;
-		Handler networkHandler = null;
+
 		try {
 			fileHandler = new FileHandler(Logging.FILE_LOG);
 		} catch (IOException e) {
 			// how to handle?
 			System.out.println("Handler Error");
 		}
-		networkHandler = NetworkHandler.getInstance();
 
 		// set handlers level
 		consoleHandler.setLevel(Logging.CONSOLE_LEVEL);
 		fileHandler.setLevel(Logging.OUTPUT_LEVEL);
 		networkHandler.setLevel(Logging.OUTPUT_LEVEL);
 
-		List<Handler> handlers = new ArrayList<Handler>();
 		handlers.add(fileHandler);
 		handlers.add(networkHandler);
-		MultiHandler multiHandler = new MultiHandler(handlers);
+
+		final MultiHandler multiHandler;
+		final ScriptEaseMemoryHandler memoryHandler;
+
+		multiHandler = new MultiHandler(handlers);
+
 		multiHandler.setLevel(Logging.OUTPUT_LEVEL);
-		ScriptEaseMemoryHandler memoryHandler = new ScriptEaseMemoryHandler(
-				multiHandler, 1000, Level.SEVERE);
+
+		memoryHandler = new ScriptEaseMemoryHandler(multiHandler, 1000,
+				Level.SEVERE);
 
 		// set handler formatters
-		ScriptEaseFormatter formatter = new ScriptEaseFormatter();
 		consoleHandler.setFormatter(formatter);
 		fileHandler.setFormatter(formatter);
 		networkHandler.setFormatter(formatter);
