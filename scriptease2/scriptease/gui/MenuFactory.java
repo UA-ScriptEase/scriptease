@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -52,7 +53,6 @@ import scriptease.gui.action.libraryeditor.NewBehaviourAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
 import scriptease.gui.action.libraryeditor.NewDescriptionAction;
 import scriptease.gui.action.libraryeditor.NewEffectAction;
-import scriptease.gui.action.libraryeditor.OpenLibraryEditorAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.preferences.StoryPropertiesAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
@@ -573,17 +573,61 @@ public class MenuFactory {
 
 			menu.add(addLibrary);
 			menu.add(removeLibrary);
+			menu.addSeparator();
 		}
 
-		for (Translator translator : Translator.sort(TranslatorManager
+		for (final Translator translator : Translator.sort(TranslatorManager
 				.getInstance().getTranslators())) {
-			final OpenLibraryEditorAction action;
-			final JMenuItem translatorItem;
+			final List<LibraryModel> optionalLibraries;
+			final Collection<LibraryModel> libraries;
 
-			action = new OpenLibraryEditorAction(translator);
-			translatorItem = new JMenuItem(action);
+			final JMenu translatorMenu;
+			final JMenuItem newLibrary;
+			final JMenuItem mergeLibraries;
 
-			menu.add(translatorItem);
+			optionalLibraries = new ArrayList<LibraryModel>(
+					translator.getOptionalLibraries());
+			libraries = new ArrayList<LibraryModel>();
+
+			translatorMenu = new JMenu(translator.getName());
+			newLibrary = new JMenuItem("New...");
+			mergeLibraries = new JMenuItem("Merge Libraries...");
+			newLibrary.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					WindowFactory.getInstance().showNewLibraryWizardDialog(
+							translator);
+				}
+			});
+
+			translatorMenu.add(newLibrary);
+			translatorMenu.add(mergeLibraries);
+			translatorMenu.addSeparator();
+
+			Collections.sort(optionalLibraries, new Comparator<LibraryModel>() {
+				@Override
+				public int compare(LibraryModel l1, LibraryModel l2) {
+					return l1.getTitle().compareTo(l2.getTitle());
+				}
+			});
+
+			libraries.add(translator.getLibrary());
+			libraries.addAll(optionalLibraries);
+
+			for (final LibraryModel library : libraries) {
+				final JMenuItem editLibrary;
+
+				editLibrary = new JMenuItem("Edit " + library.getTitle());
+
+				editLibrary.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						SEModelManager.getInstance().addAndActivate(library);
+					}
+				});
+				translatorMenu.add(editLibrary);
+			}
+			menu.add(translatorMenu);
 		}
 
 		menu.setMnemonic(KeyEvent.VK_L);
