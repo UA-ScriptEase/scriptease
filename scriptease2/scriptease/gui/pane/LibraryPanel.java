@@ -124,7 +124,7 @@ public class LibraryPanel extends JTabbedPane {
 			@Override
 			public void modelChanged(LibraryModel changed, LibraryEvent event) {
 				final StoryComponent storyComponent = event.getSource();
-				
+
 				if (event.getEventType() == LibraryEvent.Type.CHANGE) {
 					updateElement(storyComponent);
 				} else if (event.getEventType() == LibraryEvent.Type.ADDITION) {
@@ -522,7 +522,7 @@ public class LibraryPanel extends JTabbedPane {
 				hideInvisible = false;
 				libraries.add(LibraryModel.getCommonLibrary());
 				libraries.add((LibraryModel) model);
-				//Adds the default library for use but not editing.
+				// Adds the default library for use but not editing.
 				libraries.add(translator.getLibrary());
 			} else {
 				hideInvisible = true;
@@ -585,15 +585,19 @@ public class LibraryPanel extends JTabbedPane {
 
 	/**
 	 * Returns all the story components that are selected
+	 * 
 	 * @return panels
 	 */
 	public Collection<StoryComponentPanel> getSelected() {
 		final Collection<StoryComponentPanel> panels = new ArrayList<StoryComponentPanel>();
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			 Object[] objects = list.getSelectedValues();
-			 for ( int i = 0; i < objects.length; i++){
-				 panels.add((StoryComponentPanel)objects[i]);
-			 }
+			Object[] objects = list.getSelectedValues();
+			for (int i = 0; i < objects.length; i++) {
+				final Object obj = objects[i];
+
+				if (obj instanceof StoryComponentPanel)
+					panels.add((StoryComponentPanel) obj);
+			}
 		}
 		return panels;
 	}

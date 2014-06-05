@@ -25,7 +25,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
-import scriptease.controller.io.FileIO;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.describeits.DescribeIt;

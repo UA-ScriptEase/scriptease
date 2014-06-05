@@ -78,8 +78,6 @@ public class ScriptEaseExceptionHandler implements UncaughtExceptionHandler {
 				System.exit(-1);
 			}
 		} else if (thrown instanceof java.lang.Exception) {
-			System.out.println("WE HIT THIS PART");
-			
 			WindowFactory.getInstance().showExceptionDialog(title,
 					messageBrief, message, icon, null);
 		} else {
