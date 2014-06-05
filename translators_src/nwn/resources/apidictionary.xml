@@ -5948,8 +5948,9 @@
               <Scope data="start">
                 <Fragment data="formattedValue"/>
               </Scope>
-              <Literal>, STORY_POINT_STATE_ENABLED);</Literal>
+              <Literal>, STORY_POINT_STATE_SUCCESS);</Literal>
             </Line>
+            
             <Line>
               <FormatRef data="NONE" ref="children"/>
             </Line>
