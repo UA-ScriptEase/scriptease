@@ -48,7 +48,7 @@ public class TranslatorFilter extends StoryComponentFilter {
 		public void processScriptIt(ScriptIt scriptIt) {
 			final LibraryModel library = scriptIt.getLibrary();
 
-			this.acceptable = TranslatorFilter.this.translator.getLibrary() == library;
+			this.acceptable = TranslatorFilter.this.translator.getLibraries().contains(library);
 
 			if (!this.acceptable) {
 				this.acceptable = TranslatorFilter.this.translator
