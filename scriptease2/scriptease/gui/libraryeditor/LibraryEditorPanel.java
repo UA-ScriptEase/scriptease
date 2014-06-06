@@ -256,7 +256,6 @@ public class LibraryEditorPanel extends JPanel {
 				typesLabel = new JLabel("Types: ");
 				readOnlyLabel = new JLabel(
 						"This element is from a read-only library and cannot be edited.");
-
 				commitText = new Runnable() {
 					@Override
 					public void run() {

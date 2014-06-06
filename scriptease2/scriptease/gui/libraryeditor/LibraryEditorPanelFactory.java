@@ -1165,7 +1165,7 @@ public class LibraryEditorPanelFactory {
 		visibleLabel = new JLabel("Visible: ");
 		readOnlyLabel = new JLabel(
 				"This element is from a read-only library and cannot be edited.");
-
+		
 		nameField = this.buildNameEditorPanel(component);
 		labelsField = this.buildLabelEditorField(component);
 		visibleBox = this.buildVisibleBox(component);
