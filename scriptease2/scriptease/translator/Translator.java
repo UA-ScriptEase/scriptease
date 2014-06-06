@@ -293,7 +293,12 @@ public class Translator {
 	 * @return
 	 */
 	public Collection<LibraryModel> getOptionalLibraries() {
-		return ListOp.tail(libraries);
+		final Collection<LibraryModel> tail = ListOp.tail(libraries);
+
+		if (tail != null)
+			return tail;
+		else
+			return new ArrayList<LibraryModel>();
 	}
 
 	/**
