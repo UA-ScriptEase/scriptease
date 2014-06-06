@@ -139,12 +139,13 @@ public class ListOp {
 	 * @param contents
 	 * @return
 	 */
-	public static <T> Collection<T> createList(T... contents) {
+	public static <T> List<T> createList(T... contents) {
 		final ArrayList<T> list = new ArrayList<T>();
 
-		for (T content : contents) {
-			list.add(content);
-		}
+		if (contents != null)
+			for (T content : contents) {
+				list.add(content);
+			}
 
 		return list;
 	}
