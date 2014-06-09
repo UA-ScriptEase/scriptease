@@ -8,7 +8,6 @@ import javax.swing.KeyStroke;
 
 import scriptease.ScriptEase;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.behaviours.Behaviour;
@@ -68,7 +67,6 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 			newBehaviour.setVisible(true);
 
 			library.add(newBehaviour);
-			LibraryPanel.getInstance().navigateToComponent(newBehaviour);
 		}
 	}
 }

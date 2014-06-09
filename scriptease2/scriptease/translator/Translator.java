@@ -14,9 +14,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Properties;
 
 import javax.swing.Icon;
@@ -74,7 +71,7 @@ import scriptease.util.ListOp;
  * @author kschenk
  * @author jyuen
  */
-public class Translator {
+public class Translator implements Comparable<Translator> {
 	/**
 	 * The expected file name of the Translator Description file.
 	 */
@@ -827,21 +824,6 @@ public class Translator {
 		return null;
 	}
 
-	public static List<Translator> sort(Collection<Translator> translators) {
-		final List<Translator> translatorList;
-
-		translatorList = new ArrayList<Translator>(translators);
-
-		Collections.sort(translatorList, new Comparator<Translator>() {
-			@Override
-			public int compare(Translator t1, Translator t2) {
-				return t1.getName().compareTo(t2.getName());
-			}
-		});
-
-		return translatorList;
-	}
-
 	@Override
 	public String toString() {
 		return "Translator [" + this.getName() + "]";
@@ -900,5 +882,10 @@ public class Translator {
 				this.errorMessage = "\n\n It might be corrupt.";
 			}
 		}
+	}
+
+	@Override
+	public int compareTo(Translator o) {
+		return this.getName().compareTo(o.getName());
 	}
 }

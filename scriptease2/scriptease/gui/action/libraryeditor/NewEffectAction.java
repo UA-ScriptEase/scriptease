@@ -8,7 +8,6 @@ import javax.swing.KeyStroke;
 
 import scriptease.ScriptEase;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.ScriptIt;
@@ -65,8 +64,6 @@ public class NewEffectAction extends ActiveModelSensitiveAction {
 			newEffect.setVisible(true);
 
 			library.add(newEffect);
-			LibraryPanel.getInstance().navigateToComponent(newEffect);
-
 		}
 	}
 }

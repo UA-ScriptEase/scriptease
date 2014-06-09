@@ -11,7 +11,6 @@ import javax.swing.KeyStroke;
 
 import scriptease.ScriptEase;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.ActivityIt;
@@ -83,7 +82,6 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 			newActivityIt.addCodeBlock(codeBlock);
 
 			library.add(newActivityIt);
-			LibraryPanel.getInstance().navigateToComponent(newActivityIt);
 		}
 	}
 }

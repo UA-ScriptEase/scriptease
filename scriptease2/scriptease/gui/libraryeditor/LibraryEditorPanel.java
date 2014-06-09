@@ -64,7 +64,7 @@ public class LibraryEditorPanel extends JPanel {
 
 		this.add(info);
 
-		LibraryPanel.getInstance().addStoryComponentPanelJListObserver(
+		LibraryPanel.getMainLibraryPanel().addStoryComponentPanelJListObserver(
 				new StoryComponentPanelJListObserver() {
 					@Override
 					public void componentSelected(StoryComponent component) {
