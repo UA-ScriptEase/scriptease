@@ -5948,7 +5948,7 @@
               <Scope data="start">
                 <Fragment data="formattedValue"/>
               </Scope>
-              <Literal>, STORY_POINT_STATE_ENABLED);</Literal>
+              <Literal>, STORY_POINT_STATE_SUCCESS);</Literal>
             </Line>
             <Line>
               <FormatRef data="NONE" ref="children"/>
@@ -6018,7 +6018,9 @@
                 <Literal>if(SE_REACHED_HOUR != SE_CURRENT_HOUR) {</Literal>
               </Line>
               <Indent>
-                <Literal>SE_REACHED_HOUR = SE_CURRENT_HOUR;</Literal>
+              	<Line>
+                	<Literal>SE_REACHED_HOUR = SE_CURRENT_HOUR;</Literal>
+                </Line>
                 <FormatRef data="NONE" ref="children"/>
               </Indent>
               <Line>
