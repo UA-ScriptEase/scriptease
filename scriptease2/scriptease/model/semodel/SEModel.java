@@ -15,7 +15,7 @@ import scriptease.translator.io.model.Slot;
  * @author remiller
  * @author kschenk
  */
-public abstract class SEModel {
+public abstract class SEModel implements Comparable<SEModel> {
 	private String title;
 	private String author;
 	private String description;
@@ -29,7 +29,7 @@ public abstract class SEModel {
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -128,6 +128,11 @@ public abstract class SEModel {
 	 *            PatternModel.
 	 */
 	public abstract void process(ModelVisitor visitor);
+
+	@Override
+	public int compareTo(SEModel o) {
+		return this.getTitle().compareTo(o.getTitle());
+	}
 
 	@Override
 	public String toString() {
