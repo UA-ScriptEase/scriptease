@@ -64,9 +64,8 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 		if (library == null)
 			return;
 
-		WindowFactory.getInstance()
-				.buildMergeLibraryChoiceDialog(library.getTranslator())
-				.setVisible(true);
+		WindowFactory.getInstance().buildMergeLibraryChoiceDialog(
+				library.getTranslator());
 	}
 
 	/**
