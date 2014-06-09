@@ -51,6 +51,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
+import scriptease.util.ListOp;
 
 /**
  * LibraryPane represents the JPanel used for managing, filtering and choosing
@@ -67,16 +68,85 @@ public class LibraryPanel extends JTabbedPane {
 			.storyComponentSorter();
 
 	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
+	private final Collection<LibraryModel> libraries;
 
-	private static final LibraryPanel instance = new LibraryPanel();
+	private static final LibraryPanel mainLibraryPanel;
+
+	static {
+		mainLibraryPanel = new LibraryPanel();
+
+		final SEModelObserver modelObserver;
+		final TranslatorObserver translatorObserver;
+
+		modelObserver = new SEModelObserver() {
+			/**
+			 * This listener checks for when the model is changed. This usually
+			 * happens when you load a model, or when you switch them by
+			 * switching tabs.
+			 */
+			@Override
+			public void modelChanged(SEModelEvent event) {
+				switch (event.getEventType()) {
+				case ADDED:
+					final SEModel model = event.getPatternModel();
+
+					model.process(new ModelAdapter() {
+						@Override
+						public void processLibraryModel(LibraryModel library) {
+							mainLibraryPanel.setLibraries(library);
+						}
+
+						@Override
+						public void processStoryModel(StoryModel story) {
+							mainLibraryPanel.setLibraries(story.getLibraries());
+
+							story.addStoryModelObserver(new StoryModelAdapter() {
+								@Override
+								public void libraryAdded(LibraryModel library) {
+									mainLibraryPanel.updateLists();
+								}
+
+								@Override
+								public void libraryRemoved(LibraryModel library) {
+									mainLibraryPanel.updateLists();
+								}
+							});
+						}
+					});
+					break;
+				case REMOVED:
+					if (SEModelManager.getInstance().getActiveModel() != null)
+						break;
+				case ACTIVATED:
+					mainLibraryPanel.updateLists();
+				default:
+					break;
+				}
+			}
+		};
+		translatorObserver = new TranslatorObserver() {
+
+			@Override
+			public void translatorLoaded(Translator newTranslator) {
+				if (newTranslator == null) {
+					mainLibraryPanel.updateLists();
+				}
+			}
+		};
+
+		SEModelManager.getInstance().addSEModelObserver(mainLibraryPanel,
+				modelObserver);
+		TranslatorManager.getInstance().addTranslatorObserver(mainLibraryPanel,
+				translatorObserver);
+	}
 
 	/**
 	 * Returns the only instance of LibraryPanel.
 	 * 
 	 * @return
 	 */
-	public static LibraryPanel getInstance() {
-		return instance;
+	public static LibraryPanel getMainLibraryPanel() {
+		return mainLibraryPanel;
 	}
 
 	/**
@@ -84,12 +154,9 @@ public class LibraryPanel extends JTabbedPane {
 	 * display. Also configures its listeners.
 	 * 
 	 */
-	private LibraryPanel() {
+	public LibraryPanel() {
 		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
-
-		final SEModelObserver modelObserver;
-		final LibraryObserver libraryObserver;
-		final TranslatorObserver translatorObserver;
+		this.libraries = new ArrayList<LibraryModel>();
 
 		final StoryComponentPanelJList causesList;
 		final StoryComponentPanelJList effectsList;
@@ -114,86 +181,6 @@ public class LibraryPanel extends JTabbedPane {
 				Category.ACTIVITIES));
 		blocksList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.BLOCKS));
-
-		libraryObserver = new LibraryObserver() {
-			/**
-			 * Keep the display of the library up to date with the changes to
-			 * Libraries. This listener is updates the library view when changes
-			 * are made in the Library Editor.
-			 */
-			@Override
-			public void modelChanged(LibraryModel changed, LibraryEvent event) {
-				final StoryComponent storyComponent = event.getSource();
-
-				if (event.getEventType() == LibraryEvent.Type.CHANGE) {
-					updateElement(storyComponent);
-				} else if (event.getEventType() == LibraryEvent.Type.ADDITION) {
-					addElement(storyComponent);
-				} else if (event.getEventType() == LibraryEvent.Type.REMOVAL) {
-					removeElement(storyComponent);
-				}
-			}
-		};
-
-		modelObserver = new SEModelObserver() {
-			/**
-			 * This listener checks for when the model is changed. This usually
-			 * happens when you load a model, or when you switch them by
-			 * switching tabs.
-			 */
-			@Override
-			public void modelChanged(SEModelEvent event) {
-				switch (event.getEventType()) {
-				case ADDED:
-					final SEModel model = event.getPatternModel();
-
-					model.process(new ModelAdapter() {
-						@Override
-						public void processLibraryModel(LibraryModel library) {
-							library.addLibraryChangeListener(library,
-									libraryObserver);
-						}
-
-						@Override
-						public void processStoryModel(StoryModel story) {
-							for (LibraryModel library : story.getLibraries()) {
-								library.addLibraryChangeListener(library,
-										libraryObserver);
-							}
-
-							story.addStoryModelObserver(new StoryModelAdapter() {
-								@Override
-								public void libraryAdded(LibraryModel library) {
-									LibraryPanel.this.updateLists();
-								}
-
-								@Override
-								public void libraryRemoved(LibraryModel library) {
-									LibraryPanel.this.updateLists();
-								}
-							});
-						}
-					});
-					break;
-				case REMOVED:
-					if (SEModelManager.getInstance().getActiveModel() != null)
-						break;
-				case ACTIVATED:
-					updateLists();
-				default:
-					break;
-				}
-			}
-		};
-		translatorObserver = new TranslatorObserver() {
-
-			@Override
-			public void translatorLoaded(Translator newTranslator) {
-				if (newTranslator == null) {
-					updateLists();
-				}
-			}
-		};
 
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
@@ -223,9 +210,43 @@ public class LibraryPanel extends JTabbedPane {
 		this.setUI(ComponentFactory.buildFlatTabUI());
 
 		this.setBackground(ScriptEaseUI.SECONDARY_UI);
-		SEModelManager.getInstance().addSEModelObserver(this, modelObserver);
-		TranslatorManager.getInstance().addTranslatorObserver(this,
-				translatorObserver);
+	}
+
+	public void setLibraries(LibraryModel... libraries) {
+		this.setLibraries(ListOp.createList(libraries));
+	}
+
+	public void setLibraries(Collection<LibraryModel> libraries) {
+		this.libraries.clear();
+		this.libraries.addAll(libraries);
+
+		final LibraryObserver libraryObserver;
+
+		libraryObserver = new LibraryObserver() {
+			/**
+			 * Keep the display of the library up to date with the changes to
+			 * Libraries. This listener is updates the library view when changes
+			 * are made in the Library Editor.
+			 */
+			@Override
+			public void modelChanged(LibraryModel changed, LibraryEvent event) {
+				final StoryComponent storyComponent = event.getSource();
+
+				if (event.getEventType() == LibraryEvent.Type.CHANGE) {
+					updateElement(storyComponent);
+				} else if (event.getEventType() == LibraryEvent.Type.ADDITION) {
+					addElement(storyComponent);
+				} else if (event.getEventType() == LibraryEvent.Type.REMOVAL) {
+					removeElement(storyComponent);
+				}
+			}
+		};
+
+		for (LibraryModel library : libraries) {
+			library.addLibraryChangeListener(library, libraryObserver);
+		}
+		
+		this.updateLists();
 	}
 
 	/**
@@ -380,7 +401,7 @@ public class LibraryPanel extends JTabbedPane {
 	 * 
 	 * @param component
 	 */
-	public void navigateToComponent(StoryComponent component) {
+	private void navigateToComponent(StoryComponent component) {
 		for (final StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			final int listIndex = list.getIndexOfStoryComponent(component);
 			if (listIndex != -1) {
@@ -402,6 +423,7 @@ public class LibraryPanel extends JTabbedPane {
 	private void addElement(StoryComponent storyComponent) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			list.addStoryComponent(storyComponent);
+			this.navigateToComponent(storyComponent);
 		}
 	}
 
@@ -510,13 +532,12 @@ public class LibraryPanel extends JTabbedPane {
 	private void updateList(StoryComponentPanelJList list) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		if (model != null
-				&& TranslatorManager.getInstance().getActiveTranslator() != null) {
-			final Translator translator = model.getTranslator();
+		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
+		final boolean hideInvisible;
+		final Translator translator;
 
-			final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
-			final boolean hideInvisible;
-
+		if (model != null) {
+			translator = model.getTranslator();
 			// Show invisible components if we're editing a library model.
 			if (model instanceof LibraryModel) {
 				hideInvisible = false;
@@ -529,46 +550,53 @@ public class LibraryPanel extends JTabbedPane {
 				libraries.addAll(((StoryModel) model).getLibraries());
 			}
 
-			list.updateFilter(new TranslatorFilter(translator));
-			list.updateFilter(new VisibilityFilter(hideInvisible));
+		} else if (!this.libraries.isEmpty()) {
+			hideInvisible = false;
 
-			final int index = this.storyComponentPanelJLists.indexOf(list);
+			// TODO can we just use the this.libraries instead of the collection
+			// in here?
 
-			for (LibraryModel libraryModel : libraries) {
-				final List<StoryComponent> components;
+			translator = ListOp.head(this.libraries).getTranslator();
 
-				if (index == 0) {
-					components = libraryModel.getCausesCategory().getChildren();
-				} else if (index == 1) {
-					components = libraryModel.getEffectsCategory()
-							.getChildren();
-				} else if (index == 2) {
-					components = libraryModel.getDescriptionsCategory()
-							.getChildren();
-				} else if (index == 3) {
-					components = libraryModel.getBehavioursCategory()
-							.getChildren();
-				} else if (index == 4) {
-					components = libraryModel.getControllersCategory()
-							.getChildren();
-				} else if (index == 5) {
-					components = libraryModel.getActivitysCategory()
-							.getChildren();
-				} else if (index == 6) {
-					components = libraryModel.getControllersCategory()
-							.getChildren();
-				} else {
-					throw new IllegalArgumentException(
-							"Invalid list in LibraryPanel: " + list);
-				}
+			libraries.addAll(this.libraries);
+			// TODO libraries here... Maybe change the libraries up there, too.
+		} else
+			return;
 
-				Collections.sort(components,
-						LibraryPanel.STORY_COMPONENT_COMPARATOR);
+		list.updateFilter(new TranslatorFilter(translator));
+		list.updateFilter(new VisibilityFilter(hideInvisible));
 
-				list.addStoryComponents(components);
+		final int index = this.storyComponentPanelJLists.indexOf(list);
+
+		for (LibraryModel libraryModel : libraries) {
+			final List<StoryComponent> components;
+
+			if (index == 0) {
+				components = libraryModel.getCausesCategory().getChildren();
+			} else if (index == 1) {
+				components = libraryModel.getEffectsCategory().getChildren();
+			} else if (index == 2) {
+				components = libraryModel.getDescriptionsCategory()
+						.getChildren();
+			} else if (index == 3) {
+				components = libraryModel.getBehavioursCategory().getChildren();
+			} else if (index == 4) {
+				components = libraryModel.getControllersCategory()
+						.getChildren();
+			} else if (index == 5) {
+				components = libraryModel.getActivitysCategory().getChildren();
+			} else if (index == 6) {
+				components = libraryModel.getControllersCategory()
+						.getChildren();
+			} else {
+				throw new IllegalArgumentException(
+						"Invalid list in LibraryPanel: " + list);
 			}
-		} else {
-			list.removeAllStoryComponents();
+
+			Collections.sort(components,
+					LibraryPanel.STORY_COMPONENT_COMPARATOR);
+
+			list.addStoryComponents(components);
 		}
 	}
 

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -377,21 +376,26 @@ public class MenuFactory {
 
 	private static JMenu buildHelpMenu() {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
+
 		menu.setMnemonic(KeyEvent.VK_H);
 
+		final List<Translator> translators;
 		final List<JMenuItem> translatorItems;
 		final JMenuItem sendFeedbackItem;
 		final JMenuItem sendBugReportItem;
 		final JMenuItem helpMenuItem;
 
+		translators = new ArrayList<Translator>(TranslatorManager.getInstance()
+				.getTranslators());
 		translatorItems = new ArrayList<JMenuItem>();
 		sendFeedbackItem = new JMenuItem("Send Feedback");
 		sendBugReportItem = new JMenuItem("Send Bug Report");
 		helpMenuItem = new JMenuItem(
 				Il8nResources.getString("About_ScriptEase"));
 
-		for (Translator translator : Translator.sort(TranslatorManager
-				.getInstance().getTranslators())) {
+		Collections.sort(translators);
+
+		for (Translator translator : translators) {
 			final JMenu translatorItem;
 			final Collection<File> tutorials;
 
@@ -449,9 +453,12 @@ public class MenuFactory {
 	 */
 	private static JMenu buildLibraryMenu() {
 		final JMenu menu = new JMenu(MenuFactory.LIBRARY);
+		final List<Translator> translators;
 		final SEModel activeModel;
 
 		activeModel = SEModelManager.getInstance().getActiveModel();
+		translators = new ArrayList<Translator>(TranslatorManager.getInstance()
+				.getTranslators());
 
 		if (activeModel instanceof StoryModel) {
 			final StoryModel model = (StoryModel) activeModel;
@@ -576,8 +583,9 @@ public class MenuFactory {
 			menu.addSeparator();
 		}
 
-		for (final Translator translator : Translator.sort(TranslatorManager
-				.getInstance().getTranslators())) {
+		Collections.sort(translators);
+
+		for (final Translator translator : translators) {
 			final List<LibraryModel> optionalLibraries;
 			final Collection<LibraryModel> libraries;
 
@@ -600,16 +608,20 @@ public class MenuFactory {
 				}
 			});
 
+			mergeLibraries.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					WindowFactory.getInstance()
+							.buildMergeLibraryChoiceDialog(translator)
+							.setVisible(true);
+					// TODO should set visible in window manager
+				};
+			});
+
 			translatorMenu.add(newLibrary);
 			translatorMenu.add(mergeLibraries);
 			translatorMenu.addSeparator();
 
-			Collections.sort(optionalLibraries, new Comparator<LibraryModel>() {
-				@Override
-				public int compare(LibraryModel l1, LibraryModel l2) {
-					return l1.getTitle().compareTo(l2.getTitle());
-				}
-			});
+			Collections.sort(optionalLibraries);
 
 			libraries.add(translator.getLibrary());
 			libraries.addAll(optionalLibraries);

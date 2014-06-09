@@ -8,7 +8,6 @@ import javax.swing.KeyStroke;
 
 import scriptease.ScriptEase;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
@@ -50,16 +49,14 @@ public class NewDescriptionAction extends ActiveModelSensitiveAction {
 		final KnowIt knowIt;
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
-		
-		if(!library.getReadOnly() || ScriptEase.DEBUG_MODE){
+
+		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
 			describeItNode = new DescribeItNode("Placeholder Node");
 			describeIt = new DescribeIt("New DescribeIt", describeItNode);
 			knowIt = library.createKnowItForDescribeIt(describeIt);
-	
+
 			library.add(knowIt);
 			library.addDescribeIt(describeIt, knowIt);
-	
-			LibraryPanel.getInstance().navigateToComponent(knowIt);
 		}
 	}
 }
