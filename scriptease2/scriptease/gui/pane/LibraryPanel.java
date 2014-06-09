@@ -212,6 +212,11 @@ public class LibraryPanel extends JTabbedPane {
 		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 	}
 
+	public void clearLibraries() {
+		this.libraries.clear();
+		this.updateLists();
+	}
+
 	public void setLibraries(LibraryModel... libraries) {
 		this.setLibraries(ListOp.createList(libraries));
 	}
@@ -245,7 +250,7 @@ public class LibraryPanel extends JTabbedPane {
 		for (LibraryModel library : libraries) {
 			library.addLibraryChangeListener(library, libraryObserver);
 		}
-		
+
 		this.updateLists();
 	}
 

@@ -610,10 +610,8 @@ public class MenuFactory {
 
 			mergeLibraries.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					WindowFactory.getInstance()
-							.buildMergeLibraryChoiceDialog(translator)
-							.setVisible(true);
-					// TODO should set visible in window manager
+					WindowFactory.getInstance().buildMergeLibraryChoiceDialog(
+							translator);
 				};
 			});
 

@@ -6015,11 +6015,11 @@
                 <Literal>int SE_REACHED_HOUR = GetLocalInt(GetModule(), &quot;SE_HOUR_&quot; + IntToString(SE_CURRENT_HOUR));</Literal>
               </Line>
               <Line>
-                <Literal>if(SE_REACHED_HOUR != SE_CURRENT_HOUR) {</Literal>
+                <Literal>if(SE_REACHED_HOUR != 1) {</Literal>
               </Line>
               <Indent>
               	<Line>
-                	<Literal>SetLocalInt(GetModule(),  &quot;SE_HOUR_&quot; + IntToString(SE_CURRENT_HOUR), SE_CURRENT_HOUR);</Literal>
+                	<Literal>SetLocalInt(GetModule(),  &quot;SE_HOUR_&quot; + IntToString(SE_CURRENT_HOUR), 1);</Literal>
                 </Line>
                 <FormatRef data="NONE" ref="children"/>
               </Indent>
@@ -6028,6 +6028,18 @@
               </Line>
             </Indent>
             <Line>
+              <Literal>} else {</Literal>
+            </Line>
+            <Indent>
+            	<Line>
+            		  <Literal>SetLocalInt(GetModule(),  &quot;SE_HOUR_&quot; + IntToString(FloatToInt(</Literal>
+           		       <Scope data="ARGUMENT" ref="Hour">
+        			        <Fragment data="NAME"/>
+		              </Scope>
+            		  <Literal>)), 0);</Literal>
+            	</Line>
+            </Indent>
+               <Line>
               <Literal>}</Literal>
             </Line>
           </Code>
