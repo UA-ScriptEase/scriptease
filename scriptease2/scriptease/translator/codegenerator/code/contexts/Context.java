@@ -286,57 +286,51 @@ public abstract class Context {
 					for (StoryComponent storyPointChild : ((StoryPoint) child)
 							.getChildren()) {
 
-						if (storyPointChild instanceof CauseIt) {
-							final CauseIt causeIt = (CauseIt) storyPointChild;
-
-							final Collection<CodeBlock> codeBlocks;
-
-							codeBlocks = causeIt
-									.getCodeBlocksForLocation(this.locationInfo);
-
-							if (!codeBlocks.isEmpty()) {
-								boolean causeExists = false;
-
-								for (CauseIt cause : causes) {
-									// Don't add equivalent causes to the list
-									if (cause.isEquivalent(causeIt)) {
-										causeExists = true;
-										break;
-									}
-								}
-
-								if (!causeExists)
-									causes.add(causeIt);
-							}
-						}
+						this.addComponentToCauses(storyPointChild, causes);
 					}
-				} else if (child instanceof CauseIt) {
-					final CauseIt causeIt = (CauseIt) child;
+				} else {
+					this.addComponentToCauses(child, causes);
 
-					final Collection<CodeBlock> codeBlocks;
-
-					codeBlocks = causeIt
-							.getCodeBlocksForLocation(this.locationInfo);
-
-					if (!codeBlocks.isEmpty()) {
-						boolean causeExists = false;
-
-						for (CauseIt cause : causes) {
-							// Don't add equivalent causes to the list
-							if (cause.isEquivalent(causeIt)) {
-								causeExists = true;
-								break;
-							}
-						}
-
-						if (!causeExists)
-							causes.add(causeIt);
-					}
 				}
 			}
 		}
 
 		return causes;
+	}
+
+	/**
+	 * Helper method for {@link #getCauses()}. If Java supported methods within
+	 * methods, this could be contained there. Alas, it does not.
+	 * 
+	 * @param component
+	 * @param causes
+	 */
+	private void addComponentToCauses(StoryComponent component,
+			Collection<CauseIt> causes) {
+		if (component instanceof CauseIt) {
+			final CauseIt causeIt = (CauseIt) component;
+
+			final Collection<CodeBlock> codeBlocks;
+
+			codeBlocks = causeIt.getCodeBlocksForLocation(this.locationInfo);
+
+			if (!codeBlocks.isEmpty()) {
+				boolean causeExists = false;
+
+				for (CauseIt cause : causes) {
+					// Don't add equivalent causes to the list
+					if (cause.isEquivalent(causeIt)
+							&& cause.getParameters().equals(
+									causeIt.getParameters())) {
+						causeExists = true;
+						break;
+					}
+				}
+
+				if (!causeExists)
+					causes.add(causeIt);
+			}
+		}
 	}
 
 	public Collection<StoryPoint> getStoryNodes() {

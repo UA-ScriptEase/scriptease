@@ -26,7 +26,6 @@ import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -38,11 +37,9 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
@@ -55,10 +52,10 @@ import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.ResourceTreeAdapter;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.SEModelObserver;
-import scriptease.gui.action.libraryeditor.MergeLibraryAction;
 import scriptease.gui.component.UserInformationPane;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.dialog.DialogBuilder;
+import scriptease.gui.dialog.LibraryMergeDialog;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.pane.ResourcePanel;
@@ -71,9 +68,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.util.StringOp;
 
 /**
@@ -793,209 +788,7 @@ public final class WindowFactory {
 	 * @param translator
 	 */
 	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
-		final String TITLE = "Library to Merge";
-
-		final JDialog dialog;
-
-		final JPanel content;
-		final JLabel message;
-		final JComboBox libraryChoice;
-		final JButton mergeButton;
-		final JButton cancelButton;
-
-		final GroupLayout layout;
-
-		dialog = this.buildDialog(TITLE);
-
-		content = new JPanel();
-		message = new JLabel("Which Library would you like to merge?");
-		libraryChoice = new JComboBox();
-		mergeButton = new JButton("Merge");
-		cancelButton = new JButton("Cancel");
-
-		layout = new GroupLayout(content);
-
-		content.setLayout(layout);
-
-		final SEModel currentLibrary = SEModelManager.getInstance()
-				.getActiveModel();
-
-		if (translator.getLibrary() != currentLibrary)
-			libraryChoice.addItem(translator.getLibrary());
-
-		for (LibraryModel library : translator.getOptionalLibraries()) {
-			if (library != currentLibrary)
-				libraryChoice.addItem(library);
-		}
-
-		mergeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final Object selectedItem = libraryChoice.getSelectedItem();
-
-				if (selectedItem instanceof LibraryModel) {
-					final LibraryModel library = (LibraryModel) selectedItem;
-					MergeLibraryAction.getInstance().mergeLibrary(library);
-				}
-
-				dialog.dispose();
-			}
-		});
-
-		cancelButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dialog.setVisible(false);
-				dialog.dispose();
-			}
-		});
-
-		final JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-
-		layout.setHorizontalGroup(layout
-				.createParallelGroup()
-				.addComponent(message)
-				.addComponent(libraryChoice)
-				.addComponent(separator)
-				.addGroup(
-						GroupLayout.Alignment.TRAILING,
-						layout.createSequentialGroup()
-								.addComponent(mergeButton)
-								.addComponent(cancelButton)));
-
-		layout.setVerticalGroup(layout
-				.createSequentialGroup()
-				.addComponent(message)
-				.addComponent(libraryChoice)
-				.addComponent(separator)
-				.addGroup(
-						layout.createParallelGroup().addComponent(mergeButton)
-								.addComponent(cancelButton)).addGap(0));
-
-		layout.setAutoCreateGaps(true);
-		layout.setAutoCreateContainerGaps(true);
-
-		dialog.setContentPane(content);
-		dialog.pack();
-		dialog.setResizable(false);
-		dialog.setLocationRelativeTo(dialog.getParent());
-
-		return dialog;
-	}
-
-	/**
-	 * Opens the Library Model that the user chooses from the libraries in the
-	 * translator.
-	 * 
-	 * @param translator
-	 * @return
-	 */
-	public JDialog buildLibraryEditorChoiceDialog(final Translator translator) {
-		final String TITLE = "Choose a Library";
-
-		final JDialog dialog;
-
-		final JPanel content;
-		final JLabel message;
-		final JComboBox libraryChoice;
-		final JButton sendButton;
-		final JButton cancelButton;
-
-		final GroupLayout layout;
-
-		final String newLibrary;
-
-		dialog = this.buildDialog(TITLE);
-
-		content = new JPanel();
-		message = new JLabel("Which Library would you like to edit?");
-		libraryChoice = new JComboBox();
-		sendButton = new JButton("Edit");
-		cancelButton = new JButton("Cancel");
-
-		layout = new GroupLayout(content);
-
-		newLibrary = "New...";
-
-		content.setLayout(layout);
-
-		LibraryModel defaultLibrary = translator.getLibrary();
-
-		// If we decide we want to not allow people to even look at read-only
-		// libraries in the editor, uncomment these lines
-		// -zturchan
-
-		// if(defaultLibrary.getReadOnly() == false || ScriptEase.DEBUG_MODE){
-		libraryChoice.addItem(defaultLibrary);
-		// }
-
-		for (LibraryModel library : translator.getOptionalLibraries()) {
-			// if(library.getReadOnly() == false || ScriptEase.DEBUG_MODE){
-			libraryChoice.addItem(library);
-			// }
-		}
-
-		libraryChoice.addItem(newLibrary);
-
-		sendButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final Object selectedItem = libraryChoice.getSelectedItem();
-
-				if (selectedItem == newLibrary) {
-					WindowFactory.getInstance().showNewLibraryWizardDialog(
-							translator);
-					dialog.dispose();
-				} else if (selectedItem instanceof LibraryModel) {
-					TranslatorManager.getInstance().setActiveTranslator(
-							translator);
-					SEModelManager.getInstance().addAndActivate(
-							(LibraryModel) selectedItem);
-					dialog.dispose();
-				}
-			}
-		});
-
-		cancelButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dialog.setVisible(false);
-				dialog.dispose();
-			}
-		});
-
-		final JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-
-		layout.setHorizontalGroup(layout
-				.createParallelGroup()
-				.addComponent(message)
-				.addComponent(libraryChoice)
-				.addComponent(separator)
-				.addGroup(
-						GroupLayout.Alignment.TRAILING,
-						layout.createSequentialGroup().addComponent(sendButton)
-								.addComponent(cancelButton)));
-
-		layout.setVerticalGroup(layout
-				.createSequentialGroup()
-				.addComponent(message)
-				.addComponent(libraryChoice)
-				.addComponent(separator)
-				.addGroup(
-						layout.createParallelGroup().addComponent(sendButton)
-								.addComponent(cancelButton))
-				// this removes the gap between buttons & bottom of dialog
-				.addGap(0));
-
-		layout.setAutoCreateGaps(true);
-		layout.setAutoCreateContainerGaps(true);
-
-		dialog.setContentPane(content);
-		dialog.pack();
-		dialog.setResizable(false);
-		dialog.setLocationRelativeTo(dialog.getParent());
-
-		return dialog;
+		return new LibraryMergeDialog(translator);
 	}
 
 	/**

@@ -18,7 +18,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -407,51 +406,6 @@ public final class StoryModel extends SEModel {
 						automatics.add(copy);
 					}
 				}
-			}
-		}
-
-		// Generate the auto - succeed for root story point.
-		final LibraryModel defaultLibrary = this.translator.getLibrary();
-
-		// TODO This is beyond awful. We are going through the entire library,
-		// snooping for effects with this specific name? What if that doesn't
-		// exist..!? Gross.
-		for (StoryComponent cause : defaultLibrary.getCausesCategory()
-				.getChildren()) {
-			if (cause.getDisplayText().toLowerCase()
-					.equalsIgnoreCase("when <story point> is activated")) {
-				final CauseIt storyPointEnabled;
-
-				storyPointEnabled = ((CauseIt) cause).clone();
-
-				storyPointEnabled.removeStoryChildren(storyPointEnabled
-						.getChildren());
-
-				for (KnowIt parameter : storyPointEnabled.getParameters())
-					parameter.setBinding(new KnowItBindingStoryPoint(
-							SEModelManager.getInstance().getActiveRoot()));
-
-				for (StoryComponent effect : defaultLibrary
-						.getEffectsCategory().getChildren()) {
-					if (effect.getDisplayText().equalsIgnoreCase(
-							"succeed <story point>")) {
-						final ScriptIt succeedStoryPoint;
-
-						succeedStoryPoint = ((ScriptIt) effect).clone();
-
-						for (KnowIt parameter : succeedStoryPoint
-								.getParameters())
-							parameter.setBinding(new KnowItBindingStoryPoint(
-									SEModelManager.getInstance()
-											.getActiveRoot()));
-
-						storyPointEnabled.addStoryChild(succeedStoryPoint);
-						break;
-					}
-				}
-
-				automatics.add(storyPointEnabled);
-				break;
 			}
 		}
 
