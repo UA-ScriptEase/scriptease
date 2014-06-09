@@ -11,7 +11,6 @@ import javax.swing.KeyStroke;
 import scriptease.ScriptEase;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
-import scriptease.gui.pane.LibraryPanel;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.atomic.KnowIt;
@@ -101,7 +100,6 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 				newCause.setVisible(true);
 
 				library.add(newCause);
-				LibraryPanel.getInstance().navigateToComponent(newCause);
 			} else {
 				WindowFactory.getInstance().showWarningDialog(
 						"No Types With Slots Found",

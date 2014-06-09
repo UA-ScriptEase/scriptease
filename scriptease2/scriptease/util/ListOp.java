@@ -171,7 +171,7 @@ public class ListOp {
 			return null;
 
 		return (Collection<T>) createList(Arrays.copyOfRange(
-				collection.toArray(), 1, collection.size() - 1));
+				collection.toArray(), 1, collection.size()));
 	}
 
 	@SuppressWarnings("unchecked")
