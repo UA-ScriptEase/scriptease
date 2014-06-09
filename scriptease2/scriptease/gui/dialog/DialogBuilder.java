@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -166,10 +165,10 @@ public class DialogBuilder {
 
 				TranslatorManager.getInstance().setActiveTranslator(translator);
 
-				model = new LibraryModel(title, author, description, translator);			
+				model = new LibraryModel(title, author, description, translator);
 
 				SEModelManager.getInstance().addAndActivate(model);
-				translator.addOptionalLibrary(model);				
+				translator.addOptionalLibrary(model);
 
 			}
 		};
@@ -199,7 +198,7 @@ public class DialogBuilder {
 		});
 
 		// Display the wizard
-		wizard.setVisible(true);		
+		wizard.setVisible(true);
 
 	}
 
@@ -268,7 +267,7 @@ public class DialogBuilder {
 				final String title = titleField.getText();
 				final String author = authorField.getText();
 				final String description = descriptionField.getText();
-				
+
 				final TranslatorManager translatorManager;
 				final Translator selectedTranslator;
 				final Translator oldTranslator;
@@ -450,12 +449,7 @@ public class DialogBuilder {
 		translators = new Vector<Translator>(TranslatorManager.getInstance()
 				.getTranslators());
 
-		Collections.sort(translators, new Comparator<Translator>() {
-			@Override
-			public int compare(Translator t1, Translator t2) {
-				return t1.getName().compareTo(t2.getName());
-			}
-		});
+		Collections.sort(translators);
 
 		translatorBox = new JComboBox(translators);
 
@@ -610,14 +604,14 @@ public class DialogBuilder {
 		final String CANCEL_TEXT = "Cancel";
 
 		final int TEXTFIELD_COLUMNS = 20;
-		
+
 		final JDialog dialog;
-		
+
 		final JPanel titlePanel;
 		final JPanel authorPanel;
 		final JPanel descriptionPanel;
 		final JPanel buttonPanel;
-		
+
 		final JTextField titleField;
 		final JTextField authorField;
 		final JTextField descriptionField;
@@ -625,43 +619,47 @@ public class DialogBuilder {
 		final JLabel titleLabel;
 		final JLabel authorLabel;
 		final JLabel descriptionLabel;
-		
+
 		final JButton okButton;
 		final JButton cancelButton;
-		
-		final StoryModel model = SEModelManager.getInstance().getActiveStoryModel();
-				
-		if (model == null) return;
-		
-		dialog = new JDialog(WindowFactory.getInstance().getCurrentFrame(), DIALOG_TITLE);
-		
+
+		final StoryModel model = SEModelManager.getInstance()
+				.getActiveStoryModel();
+
+		if (model == null)
+			return;
+
+		dialog = new JDialog(WindowFactory.getInstance().getCurrentFrame(),
+				DIALOG_TITLE);
+
 		titlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		authorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		
+
 		titleLabel = new JLabel(TITLE_TEXT);
 		authorLabel = new JLabel(AUTHOR_TEXT);
 		descriptionLabel = new JLabel(DESCRIPTION_TEXT);
 		okButton = new JButton(OKAY_TEXT);
 		cancelButton = new JButton(CANCEL_TEXT);
-		
+
 		titleField = new JTextField(model.getTitle(), TEXTFIELD_COLUMNS);
 		authorField = new JTextField(model.getAuthor(), TEXTFIELD_COLUMNS);
-		descriptionField = new JTextField(model.getDescription(),TEXTFIELD_COLUMNS);
+		descriptionField = new JTextField(model.getDescription(),
+				TEXTFIELD_COLUMNS);
 
 		titlePanel.add(titleLabel);
 		titlePanel.add(titleField);
-		
+
 		authorPanel.add(authorLabel);
 		authorPanel.add(authorField);
-		
+
 		descriptionPanel.add(descriptionLabel);
 		descriptionPanel.add(descriptionField);
-		
+
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
-		
+
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -671,7 +669,7 @@ public class DialogBuilder {
 				dialog.dispose();
 			}
 		});
-		
+
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -682,19 +680,19 @@ public class DialogBuilder {
 		dialog.setTitle(DIALOG_TITLE);
 		dialog.getContentPane().setLayout(
 				new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
-		
+
 		dialog.add(titlePanel);
 		dialog.add(authorPanel);
 		dialog.add(descriptionPanel);
 		dialog.add(buttonPanel);
-		
+
 		dialog.setResizable(false);
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 
 	}
-	
+
 	/**
 	 * Dialog box that allows the user to edit the NwN translator's compiler and
 	 * game directory path.

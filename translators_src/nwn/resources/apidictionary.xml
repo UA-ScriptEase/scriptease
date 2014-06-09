@@ -6019,7 +6019,7 @@
               </Line>
               <Indent>
               	<Line>
-                	<Literal>SE_REACHED_HOUR = SE_CURRENT_HOUR;</Literal>
+                	<Literal>SetLocalInt(GetModule(),  &quot;SE_HOUR_&quot; + IntToString(SE_CURRENT_HOUR), SE_CURRENT_HOUR);</Literal>
                 </Line>
                 <FormatRef data="NONE" ref="children"/>
               </Indent>

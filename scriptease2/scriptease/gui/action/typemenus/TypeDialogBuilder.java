@@ -116,7 +116,7 @@ class TypeDialogBuilder {
 
 		final Map<GameType, Boolean> previousSelected;
 
-		final GroupLayout groupLayout;
+		final GroupLayout layout;
 
 		typeDialog = WindowFactory.getInstance().buildDialog("Type Selection");
 
@@ -128,7 +128,7 @@ class TypeDialogBuilder {
 				ScriptEaseUI.SE_BURGUNDY, "Cancel");
 		separator = new JSeparator(SwingConstants.HORIZONTAL);
 
-		groupLayout = new GroupLayout(content);
+		layout = new GroupLayout(content);
 
 		previousSelected = new HashMap<GameType, Boolean>(this.typesToSelected);
 
@@ -137,8 +137,8 @@ class TypeDialogBuilder {
 		content.setBackground(ScriptEaseUI.SECONDARY_UI);
 		separator.setBackground(ScriptEaseUI.PRIMARY_UI);
 
-		groupLayout.setAutoCreateGaps(true);
-		groupLayout.setAutoCreateContainerGaps(true);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
 
 		// Set up the action listeners for the buttons.
 		okButton.addActionListener(new ActionListener() {
@@ -183,32 +183,33 @@ class TypeDialogBuilder {
 			}
 		});
 
-		content.setLayout(groupLayout);
+		content.setLayout(layout);
 
-		groupLayout.setHorizontalGroup(groupLayout
+		layout.setHorizontalGroup(layout
 				.createParallelGroup()
 				.addComponent(typesPanel)
 				.addComponent(separator)
 				.addGroup(
 						GroupLayout.Alignment.TRAILING,
-						groupLayout.createSequentialGroup()
+						layout.createSequentialGroup()
 								.addComponent(this.allButton)
 								.addComponent(cancelButton)
 								.addComponent(okButton)));
 
-		groupLayout.setVerticalGroup(groupLayout
+		layout.setVerticalGroup(layout
 				.createSequentialGroup()
 				.addComponent(typesPanel)
 				.addComponent(separator)
 				.addGroup(
-						groupLayout.createParallelGroup()
+						layout.createParallelGroup()
 								.addComponent(this.allButton)
 								.addComponent(cancelButton)
 								.addComponent(okButton)));
 
 		typeDialog.setContentPane(content);
 		typeDialog.pack();
-		typeDialog.setSize(TypeDialogBuilder.PANEL_WIDTH, typeDialog.getSize().height);
+		typeDialog.setSize(TypeDialogBuilder.PANEL_WIDTH,
+				typeDialog.getSize().height);
 		typeDialog.setResizable(false);
 		typeDialog.setLocationRelativeTo(typeDialog.getParent());
 

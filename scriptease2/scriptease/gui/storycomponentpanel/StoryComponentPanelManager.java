@@ -385,7 +385,7 @@ public class StoryComponentPanelManager {
 			panel.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
 
 			final Collection<StoryComponentPanel> selectedPanels = LibraryPanel
-					.getInstance().getSelected();
+					.getMainLibraryPanel().getSelected();
 			/**
 			 * This loop is somewhat awkward. We want to check whether or not
 			 * the panel is contained in the list of currently selected panels,
