@@ -71,7 +71,7 @@ public final class PanelFactory {
 
 		libraryPanel
 				.setLayout(new BoxLayout(libraryPanel, BoxLayout.PAGE_AXIS));
-		libraryPanel.add(LibraryPanel.getInstance());
+		libraryPanel.add(LibraryPanel.getMainLibraryPanel());
 
 		libraryPanel.add(this.buildNotePane());
 

@@ -48,7 +48,6 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.translator.TranslatorManager;
 import scriptease.util.GUIOp;
 
 /**
@@ -108,39 +107,46 @@ public class StoryComponentPanelFactory {
 			panel.setTransferHandler(StoryComponentPanelTransferHandler
 					.getInstance());
 
-			LibraryPanel.getInstance().addStoryComponentPanelJListObserver(
-					panel, new StoryComponentPanelJListObserver() {
-						@Override
-						public void componentSelected(StoryComponent component) {
-							// Check to see if our component is selected, and if
-							// so draw a red border, else draw a normal gray
-							// one.
-							boolean found = false;
-							final StoryComponent panelComp;
+			LibraryPanel.getMainLibraryPanel()
+					.addStoryComponentPanelJListObserver(panel,
+							new StoryComponentPanelJListObserver() {
+								@Override
+								public void componentSelected(
+										StoryComponent component) {
+									// Check to see if our component is
+									// selected, and if
+									// so draw a red border, else draw a normal
+									// gray
+									// one.
+									boolean found = false;
+									final StoryComponent panelComp;
 
-							panelComp = panel.getStoryComponent();
+									panelComp = panel.getStoryComponent();
 
-							for (StoryComponentPanel selectedPanel : LibraryPanel
-									.getInstance().getSelected()) {
+									for (StoryComponentPanel selectedPanel : LibraryPanel
+											.getMainLibraryPanel()
+											.getSelected()) {
 
-								if (selectedPanel.getStoryComponent().equals(
-										panelComp)) {
-									found = true;
-									break;
+										if (selectedPanel.getStoryComponent()
+												.equals(panelComp)) {
+											found = true;
+											break;
+										}
+									}
+
+									if (found) {
+										panel.setBorder(BorderFactory
+												.createLineBorder(
+														ScriptEaseUI.SE_RED, 2));
+									} else {
+										panel.setBorder(BorderFactory
+												.createLineBorder(
+														Color.LIGHT_GRAY, 1));
+									}
+
 								}
-							}
 
-							if (found) {
-								panel.setBorder(BorderFactory.createLineBorder(
-										ScriptEaseUI.SE_RED, 2));
-							} else {
-								panel.setBorder(BorderFactory.createLineBorder(
-										Color.LIGHT_GRAY, 1));
-							}
-
-						}
-
-					});
+							});
 
 			panel.setToolTipText(component.getLibrary() + " : "
 					+ component.getDisplayText());
@@ -681,9 +687,8 @@ public class StoryComponentPanelFactory {
 
 								final DescribeIt describeIt;
 
-								describeIt = TranslatorManager.getInstance()
-										.getActiveTranslator()
-										.getDescribeIt(knowIt);
+								describeIt = knowIt.getLibrary()
+										.getTranslator().getDescribeIt(knowIt);
 
 								if (describeIt != null) {
 									mainPanel.add(new DescribeItPanel(knowIt,
