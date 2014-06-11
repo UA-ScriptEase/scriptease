@@ -217,6 +217,10 @@ public class LibraryPanel extends JTabbedPane {
 		this.updateLists();
 	}
 
+	public Collection<LibraryModel> getLibraries() {
+		return this.libraries;
+	}
+
 	public void setLibraries(LibraryModel... libraries) {
 		this.setLibraries(ListOp.createList(libraries));
 	}

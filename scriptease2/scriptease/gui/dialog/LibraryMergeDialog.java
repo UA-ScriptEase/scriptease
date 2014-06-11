@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -25,15 +24,26 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.util.GUIOp;
+import scriptease.util.ListOp;
 
 @SuppressWarnings("serial")
 public class LibraryMergeDialog extends JDialog {
 	private static final String DEFAULT_BUTTON_TEXT = "Choose a Library";
 
+	private final LibraryChooser leftChooser;
+	private final LibraryChooser rightChooser;
+
 	public LibraryMergeDialog(final Translator translator) {
 		super(WindowFactory.getInstance().getCurrentFrame(), "Merge "
 				+ translator.getName() + " Libraries",
 				ModalityType.APPLICATION_MODAL);
+		final List<LibraryModel> libraries = new ArrayList<LibraryModel>(
+				translator.getLibraries());
+
+		Collections.sort(libraries);
+
+		this.leftChooser = new LibraryChooser(libraries);
+		this.rightChooser = new LibraryChooser(libraries);
 
 		final JPanel content = new JPanel();
 		final JPanel controlPanel = new JPanel();
@@ -43,9 +53,6 @@ public class LibraryMergeDialog extends JDialog {
 		final JButton saveButton;
 		final JButton closeButton;
 
-		final List<LibraryModel> libraries = new ArrayList<LibraryModel>(
-				translator.getLibraries());
-
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		saveButton = ComponentFactory.buildFlatButton(ScriptEaseUI.SE_GREEN,
@@ -53,10 +60,7 @@ public class LibraryMergeDialog extends JDialog {
 		closeButton = ComponentFactory.buildFlatButton(
 				ScriptEaseUI.SE_BURGUNDY, "Close");
 
-		Collections.sort(libraries);
-
 		closeButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Check for undoable changes.
@@ -64,8 +68,8 @@ public class LibraryMergeDialog extends JDialog {
 			}
 		});
 
-		splitPane.setTopComponent(this.buildLibraryChooser(libraries));
-		splitPane.setBottomComponent(this.buildLibraryChooser(libraries));
+		splitPane.setTopComponent(this.leftChooser);
+		splitPane.setBottomComponent(this.rightChooser);
 		splitPane.setOpaque(false);
 		splitPane.setResizeWeight(0.5);
 		splitPane.setBorder(null);
@@ -89,60 +93,71 @@ public class LibraryMergeDialog extends JDialog {
 		this.pack();
 	}
 
-	private JPanel buildLibraryChooser(final Collection<LibraryModel> libraries) {
-		final JPanel panel = new JPanel();
-		final JComboBox libraryChooser = new JComboBox();
-		final JButton copyButton;
+	private class LibraryChooser extends JPanel {
+		private final LibraryPanel libraryPanel;
 
-		final LibraryPanel leftList = new LibraryPanel();
+		public LibraryChooser(final Collection<LibraryModel> libraries) {
+			this.libraryPanel = new LibraryPanel();
 
-		copyButton = ComponentFactory.buildFlatButton(ScriptEaseUI.SE_ORANGE,
-				DEFAULT_BUTTON_TEXT);
-		copyButton.setEnabled(false);
+			final JComboBox libraryChooser = new JComboBox();
+			final JButton copyButton;
 
-		libraryChooser.addItem(null);
+			copyButton = ComponentFactory.buildFlatButton(
+					ScriptEaseUI.SE_ORANGE, DEFAULT_BUTTON_TEXT);
+			copyButton.setEnabled(false);
 
-		for (LibraryModel library : libraries) {
-			libraryChooser.addItem(library.getTitle());
-		}
+			libraryChooser.addItem(null);
 
-		libraryChooser.addActionListener(new ActionListener() {
+			for (LibraryModel library : libraries) {
+				libraryChooser.addItem(library.getTitle());
+			}
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				final Object selected = libraryChooser.getSelectedItem();
+			libraryChooser.addActionListener(new ActionListener() {
 
-				if (selected == null) {
-					copyButton.setEnabled(false);
-					copyButton.setText(DEFAULT_BUTTON_TEXT);
-					leftList.clearLibraries();
-					return;
-				}
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final Object selected = libraryChooser.getSelectedItem();
 
-				LibraryModel found = null;
+					if (selected == null) {
+						copyButton.setEnabled(false);
+						copyButton.setText(DEFAULT_BUTTON_TEXT);
+						libraryPanel.clearLibraries();
+						return;
+					}
 
-				for (LibraryModel library : libraries) {
-					if (library.getTitle().equals((String) selected)) {
-						found = library;
-						break;
+					LibraryModel found = null;
+
+					for (LibraryModel library : libraries) {
+						if (library.getTitle().equals((String) selected)) {
+							found = library;
+							break;
+						}
+					}
+
+					if (found != null) {
+						copyButton.setEnabled(true);
+						copyButton.setText("Copy Over");
+
+						libraryPanel.setLibraries(found);
 					}
 				}
+			});
 
-				if (found != null) {
-					copyButton.setEnabled(true);
-					copyButton.setText("Copy Over");
+			this.setLayout(new BorderLayout());
+			this.setOpaque(false);
+			this.add(libraryChooser, BorderLayout.NORTH);
+			this.add(this.libraryPanel, BorderLayout.CENTER);
+			this.add(copyButton, BorderLayout.SOUTH);
+		}
 
-					leftList.setLibraries(found);
-				}
-			}
-		});
-
-		panel.setLayout(new BorderLayout());
-		panel.setOpaque(false);
-		panel.add(libraryChooser, BorderLayout.NORTH);
-		panel.add(leftList, BorderLayout.CENTER);
-		panel.add(copyButton, BorderLayout.SOUTH);
-
-		return panel;
+		/**
+		 * Gets the library currently selected.
+		 * 
+		 * @return
+		 */
+		public LibraryModel getLibrary() {
+			return ListOp.head(this.libraryPanel.getLibraries());
+		}
 	}
+
 }
