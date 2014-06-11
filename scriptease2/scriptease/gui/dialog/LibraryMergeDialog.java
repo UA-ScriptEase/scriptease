@@ -16,10 +16,12 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import scriptease.controller.StoryComponentUtils;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
+import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
@@ -30,9 +32,6 @@ import scriptease.util.ListOp;
 public class LibraryMergeDialog extends JDialog {
 	private static final String DEFAULT_BUTTON_TEXT = "Choose a Library";
 
-	private final LibraryChooser leftChooser;
-	private final LibraryChooser rightChooser;
-
 	public LibraryMergeDialog(final Translator translator) {
 		super(WindowFactory.getInstance().getCurrentFrame(), "Merge "
 				+ translator.getName() + " Libraries",
@@ -42,8 +41,14 @@ public class LibraryMergeDialog extends JDialog {
 
 		Collections.sort(libraries);
 
-		this.leftChooser = new LibraryChooser(libraries);
-		this.rightChooser = new LibraryChooser(libraries);
+		final LibraryPanel leftLibraryPanel = new LibraryPanel();
+		final LibraryPanel rightLibraryPanel = new LibraryPanel();
+
+		final JPanel leftPanel = this.buildLibraryChooser(libraries,
+				leftLibraryPanel, rightLibraryPanel);
+
+		final JPanel rightPanel = this.buildLibraryChooser(libraries,
+				rightLibraryPanel, leftLibraryPanel);
 
 		final JPanel content = new JPanel();
 		final JPanel controlPanel = new JPanel();
@@ -68,8 +73,8 @@ public class LibraryMergeDialog extends JDialog {
 			}
 		});
 
-		splitPane.setTopComponent(this.leftChooser);
-		splitPane.setBottomComponent(this.rightChooser);
+		splitPane.setTopComponent(leftPanel);
+		splitPane.setBottomComponent(rightPanel);
 		splitPane.setOpaque(false);
 		splitPane.setResizeWeight(0.5);
 		splitPane.setBorder(null);
@@ -93,71 +98,82 @@ public class LibraryMergeDialog extends JDialog {
 		this.pack();
 	}
 
-	private class LibraryChooser extends JPanel {
-		private final LibraryPanel libraryPanel;
+	private JPanel buildLibraryChooser(
+			final Collection<LibraryModel> libraries,
+			final LibraryPanel thisLibraryPanel,
+			final LibraryPanel otherLibraryPanel) {
 
-		public LibraryChooser(final Collection<LibraryModel> libraries) {
-			this.libraryPanel = new LibraryPanel();
+		final JPanel panel = new JPanel();
 
-			final JComboBox libraryChooser = new JComboBox();
-			final JButton copyButton;
+		final JComboBox libraryChooser = new JComboBox();
+		final JButton copyButton;
 
-			copyButton = ComponentFactory.buildFlatButton(
-					ScriptEaseUI.SE_ORANGE, DEFAULT_BUTTON_TEXT);
-			copyButton.setEnabled(false);
+		copyButton = ComponentFactory.buildFlatButton(ScriptEaseUI.SE_ORANGE,
+				DEFAULT_BUTTON_TEXT);
+		copyButton.setEnabled(false);
 
-			libraryChooser.addItem(null);
+		libraryChooser.addItem(null);
 
-			for (LibraryModel library : libraries) {
-				libraryChooser.addItem(library.getTitle());
+		for (LibraryModel library : libraries) {
+			libraryChooser.addItem(library.getTitle());
+		}
+
+		copyButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final LibraryModel thisLibrary = ListOp.head(thisLibraryPanel
+						.getLibraries());
+				final LibraryModel otherLibrary = ListOp.head(otherLibraryPanel
+						.getLibraries());
+
+				for (StoryComponentPanel selected : thisLibraryPanel
+						.getSelected()) {
+					otherLibrary.add(selected.getStoryComponent().clone());
+					// TODO Copy selected to otherLibrary
+				}
 			}
+		});
 
-			libraryChooser.addActionListener(new ActionListener() {
+		libraryChooser.addActionListener(new ActionListener() {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					final Object selected = libraryChooser.getSelectedItem();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final Object selected = libraryChooser.getSelectedItem();
 
-					if (selected == null) {
-						copyButton.setEnabled(false);
-						copyButton.setText(DEFAULT_BUTTON_TEXT);
-						libraryPanel.clearLibraries();
-						return;
-					}
+				if (selected == null) {
+					copyButton.setEnabled(false);
+					copyButton.setText(DEFAULT_BUTTON_TEXT);
+					thisLibraryPanel.clearLibraries();
+					return;
+				}
 
-					LibraryModel found = null;
+				LibraryModel found = null;
 
-					for (LibraryModel library : libraries) {
-						if (library.getTitle().equals((String) selected)) {
-							found = library;
-							break;
-						}
-					}
-
-					if (found != null) {
-						copyButton.setEnabled(true);
-						copyButton.setText("Copy Over");
-
-						libraryPanel.setLibraries(found);
+				for (LibraryModel library : libraries) {
+					if (library.getTitle().equals((String) selected)) {
+						found = library;
+						break;
 					}
 				}
-			});
 
-			this.setLayout(new BorderLayout());
-			this.setOpaque(false);
-			this.add(libraryChooser, BorderLayout.NORTH);
-			this.add(this.libraryPanel, BorderLayout.CENTER);
-			this.add(copyButton, BorderLayout.SOUTH);
-		}
+				if (found != null) {
+					copyButton.setEnabled(true);
+					copyButton.setText("Copy Over");
 
-		/**
-		 * Gets the library currently selected.
-		 * 
-		 * @return
-		 */
-		public LibraryModel getLibrary() {
-			return ListOp.head(this.libraryPanel.getLibraries());
-		}
+					thisLibraryPanel.setLibraries(found);
+				}
+
+				// / TODO Need to be able to get the other's library chooser..
+				// maybe.
+			}
+		});
+
+		panel.setLayout(new BorderLayout());
+		panel.setOpaque(false);
+		panel.add(libraryChooser, BorderLayout.NORTH);
+		panel.add(thisLibraryPanel, BorderLayout.CENTER);
+		panel.add(copyButton, BorderLayout.SOUTH);
+		return panel;
 	}
-
 }
