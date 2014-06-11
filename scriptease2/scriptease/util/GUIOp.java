@@ -49,7 +49,8 @@ public class GUIOp {
 	public static int MAX_COLOUR_VALUE = 255;
 	public static int MIN_COLOUR_VALUE = 0;
 	public static Border emptyBorder = BorderFactory.createEmptyBorder();
-	public static Border whiteBorder = BorderFactory.createLineBorder(Color.WHITE);
+	public static Border whiteBorder = BorderFactory
+			.createLineBorder(Color.WHITE);
 
 	/**
 	 * Scales the given white value (but not alpha) by <code>factor</code>,
@@ -407,6 +408,19 @@ public class GUIOp {
 	}
 
 	/**
+	 * Adds all components passed in to the passed in parent in the order
+	 * supplied.
+	 * 
+	 * @param parent
+	 * @param components
+	 */
+	public static void addComponents(Container parent, Component... components) {
+		for (Component component : components) {
+			parent.add(component);
+		}
+	}
+
+	/**
 	 * Creates a cursor based on a name. Returns null if the file is not found.
 	 * We recommend using one of the constant cursors found in
 	 * {@link ScriptEaseUI} instead of this method, since all cursors should be
@@ -602,26 +616,32 @@ public class GUIOp {
 
 		return gradientPanel;
 	}
+
 	/**
-	 * Takes in a JComponent and resizes it's font using the same font style and family as before.
+	 * Takes in a JComponent and resizes it's font using the same font style and
+	 * family as before.
+	 * 
 	 * @param newFontSize
 	 * @param component
 	 */
-	public static void resizeFont(int newFontSize, JComponent component){
-		component.setFont(new Font(component.getFont().getFamily(), component.getFont().getStyle(), newFontSize));
+	public static void resizeFont(int newFontSize, JComponent component) {
+		component.setFont(new Font(component.getFont().getFamily(), component
+				.getFont().getStyle(), newFontSize));
 	}
-	
+
 	/**
-	 * Returns true if a given border has a null, empty, or white border 
+	 * Returns true if a given border has a null, empty, or white border
+	 * 
 	 * @param panel
 	 * @return
 	 */
-	public static boolean isPanelBorderEmpty (StoryComponentPanel panel){
+	public static boolean isPanelBorderEmpty(StoryComponentPanel panel) {
 		Border border = panel.getBorder();
-		if (border == null || border.equals(emptyBorder) || border.equals(whiteBorder)){
+		if (border == null || border.equals(emptyBorder)
+				|| border.equals(whiteBorder)) {
 			return true;
 		} else {
-			return false;			
+			return false;
 		}
 	}
 }
