@@ -30,6 +30,7 @@ import scriptease.gui.filters.VisibilityFilter;
 import scriptease.gui.transfer.StoryComponentPanelTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -418,11 +419,11 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				else if (!isSelected && isVisible)
 					valuePanel.setBackground(list.getBackground());
 
-				if (valueComponent instanceof CauseIt) {
+				if (valueComponent instanceof CauseIt || valueComponent instanceof ActivityIt) {
 					valuePanel.setShowChildren(false);
 					valuePanel.getExpansionButton().setCollapsed(true);
 				}
-
+				
 				valuePanel.setToolTipText(valueComponent.getLibrary() + " : "
 						+ valueComponent.getDisplayText());
 
