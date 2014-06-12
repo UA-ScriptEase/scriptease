@@ -139,6 +139,16 @@ public final class SEModelManager {
 	}
 
 	/**
+	 * Adds the model to the model pool.
+	 * 
+	 * @param model
+	 */
+	public void add(final SEModel model) {
+		if (this.models.add(model))
+			this.notifyChange(model, SEModelEvent.Type.ADDED);
+	}
+
+	/**
 	 * Adds the given <code>PatternModel</code> to the model pool and
 	 * immediately activates it.
 	 * 
@@ -146,8 +156,7 @@ public final class SEModelManager {
 	 *            The model to add.
 	 */
 	public void addAndActivate(final SEModel model) {
-		if (this.models.add(model))
-			this.notifyChange(model, SEModelEvent.Type.ADDED);
+		this.add(model);
 
 		// We need to wait for all observers to be notified before calling
 		// this, or we'll end up notifying them while they're being

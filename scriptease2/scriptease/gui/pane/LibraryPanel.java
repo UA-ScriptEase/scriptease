@@ -212,6 +212,15 @@ public class LibraryPanel extends JTabbedPane {
 		this.setBackground(ScriptEaseUI.SECONDARY_UI);
 	}
 
+	public void clearLibraries() {
+		this.libraries.clear();
+		this.updateLists();
+	}
+
+	public Collection<LibraryModel> getLibraries() {
+		return this.libraries;
+	}
+
 	public void setLibraries(LibraryModel... libraries) {
 		this.setLibraries(ListOp.createList(libraries));
 	}
@@ -239,13 +248,16 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (event.getEventType() == LibraryEvent.Type.REMOVAL) {
 					removeElement(storyComponent);
 				}
+
+				// TODO
+				// remove no results panel.
 			}
 		};
 
 		for (LibraryModel library : libraries) {
 			library.addLibraryChangeListener(library, libraryObserver);
 		}
-		
+
 		this.updateLists();
 	}
 

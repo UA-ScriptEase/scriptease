@@ -6,7 +6,6 @@ import java.util.Collection;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.Slot;
 import scriptease.util.StringOp;
 
@@ -31,8 +30,7 @@ public class SlotConverter implements Converter {
 		final Collection<KnowIt> implicits = slot.getImplicits();
 
 		if (!slot.getFormatKeyword().equals(
-				SEModelManager.getInstance().getActiveModel()
-						.getSlotDefaultFormat())) {
+				slot.getLibrary().getSlotDefaultFormat())) {
 			XMLAttribute.FORMAT.write(writer, slot.getFormatKeyword());
 		}
 
@@ -83,7 +81,8 @@ public class SlotConverter implements Converter {
 			reader.moveUp();
 		}
 
-		return new Slot(name, keyword, parameters, implicits, format, condition);
+		return new Slot(LibraryModelConverter.currentLibrary, name, keyword,
+				parameters, implicits, format, condition);
 	}
 
 	@SuppressWarnings("rawtypes")
