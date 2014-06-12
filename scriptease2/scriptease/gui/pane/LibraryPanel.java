@@ -248,8 +248,8 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (event.getEventType() == LibraryEvent.Type.REMOVAL) {
 					removeElement(storyComponent);
 				}
-				
-				// TODO 
+
+				// TODO
 				// remove no results panel.
 			}
 		};
