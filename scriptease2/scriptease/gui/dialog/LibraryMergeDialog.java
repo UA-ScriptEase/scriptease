@@ -16,13 +16,16 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import scriptease.controller.StoryComponentUtils;
+import scriptease.controller.FileManager;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.util.GUIOp;
@@ -64,6 +67,24 @@ public class LibraryMergeDialog extends JDialog {
 				"Save");
 		closeButton = ComponentFactory.buildFlatButton(
 				ScriptEaseUI.SE_BURGUNDY, "Close");
+
+		saveButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final SEModel leftModel;
+				final SEModel rightModel;
+
+				leftModel = ListOp.head(leftLibraryPanel.getLibraries());
+				rightModel = ListOp.head(rightLibraryPanel.getLibraries());
+
+				if (leftModel != null)
+					FileManager.getInstance().save(leftModel);
+
+				if (rightModel != null)
+					FileManager.getInstance().save(rightModel);
+			}
+		});
 
 		closeButton.addActionListener(new ActionListener() {
 			@Override
@@ -122,21 +143,25 @@ public class LibraryMergeDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final LibraryModel thisLibrary = ListOp.head(thisLibraryPanel
-						.getLibraries());
 				final LibraryModel otherLibrary = ListOp.head(otherLibraryPanel
 						.getLibraries());
 
+				if (!UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().startUndoableAction(
+							"Copying story component to library.");
+				
 				for (StoryComponentPanel selected : thisLibraryPanel
 						.getSelected()) {
+					// TODO Undoability.
 					otherLibrary.add(selected.getStoryComponent().clone());
-					// TODO Copy selected to otherLibrary
 				}
+
+				if (UndoManager.getInstance().hasOpenUndoableAction())
+					UndoManager.getInstance().endUndoableAction();
 			}
 		});
 
 		libraryChooser.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final Object selected = libraryChooser.getSelectedItem();
@@ -159,12 +184,13 @@ public class LibraryMergeDialog extends JDialog {
 
 				if (found != null) {
 					copyButton.setEnabled(true);
-					copyButton.setText("Copy Over");
+					copyButton.setText("Copy");
 
+					SEModelManager.getInstance().add(found);
 					thisLibraryPanel.setLibraries(found);
 				}
 
-				// / TODO Need to be able to get the other's library chooser..
+				// TODO Need to be able to get the other's library chooser..
 				// maybe.
 			}
 		});

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
  * Represents a game slot in Scriptease Each slot contains a unique keyword, a
@@ -15,6 +15,7 @@ import scriptease.model.semodel.SEModelManager;
  * @author jyuen
  */
 public class Slot {
+	private final LibraryModel library;
 	private String displayName;
 	private String keyword;
 	private String formatKeyword;
@@ -22,8 +23,10 @@ public class Slot {
 	private Collection<KnowIt> parameters;
 	private String condition;
 
-	public Slot(String name, String keyword, Collection<KnowIt> parameters,
-			Collection<KnowIt> implicits, String formatKeyword, String condition) {
+	public Slot(LibraryModel library, String name, String keyword,
+			Collection<KnowIt> parameters, Collection<KnowIt> implicits,
+			String formatKeyword, String condition) {
+		this.library = library;
 		this.displayName = name;
 		this.keyword = keyword;
 		this.implicits = new ArrayList<KnowIt>();
@@ -43,8 +46,8 @@ public class Slot {
 		for (KnowIt parameter : this.parameters)
 			parameters.add(parameter.clone());
 
-		return new Slot(this.displayName, this.keyword, parameters, implicits,
-				this.formatKeyword, this.condition);
+		return new Slot(this.library, this.displayName, this.keyword,
+				parameters, implicits, this.formatKeyword, this.condition);
 	}
 
 	/**
@@ -79,9 +82,12 @@ public class Slot {
 	 */
 	public String getFormatKeyword() {
 		if (this.formatKeyword == null || this.formatKeyword.isEmpty())
-			return SEModelManager.getInstance().getActiveModel()
-					.getSlotDefaultFormat();
+			return this.library.getSlotDefaultFormat();
 		return this.formatKeyword;
+	}
+
+	public LibraryModel getLibrary() {
+		return this.library;
 	}
 
 	public void setDisplayName(String displayName) {
