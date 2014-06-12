@@ -420,10 +420,12 @@ public class FileIO {
 			FileOp.copyFile(tempLocation, location);
 		} catch (Exception e) {
 			System.err.println("Patterns save problem: " + e);
+			e.printStackTrace();
 
-			boolean retry = WindowFactory.getInstance().showRetryProblemDialog(
-					"Save Patterns File",
-					"ScriptEase was unable save your story.");
+			final boolean retry;
+
+			retry = WindowFactory.getInstance().showRetryProblemDialog(
+					"Save File", "ScriptEase was unable save.");
 
 			if (retry)
 				this.writeData(dataModel, location, mode, false);
@@ -446,15 +448,15 @@ public class FileIO {
 		final String messageBrief;
 		final String message;
 		final Icon icon = UIManager.getIcon("OptionPane.warningIcon");
-			
+
 		final IoMode prevMode = this.mode;
 		this.mode = mode;
-		
-		if (mode == IoMode.LIBRARY){
+
+		if (mode == IoMode.LIBRARY) {
 			title = "Problems reading Library File";
 			messageBrief = "ScriptEase has encountered problems parsing the library file.";
 			message = "Sorry, ScriptEase is unable to open your library file. <br>Would you like to help make ScriptEase better by reporting the problem?";
-		} else if (mode == IoMode.STORY){
+		} else if (mode == IoMode.STORY) {
 			title = "Problems reading Story File";
 			messageBrief = "ScriptEase has encountered problems parsing the story file.";
 			message = "Sorry, ScriptEase is unable to open your story file. <br>Would you like to help make ScriptEase better by reporting the problem?";
