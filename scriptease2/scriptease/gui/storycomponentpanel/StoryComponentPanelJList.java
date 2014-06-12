@@ -135,9 +135,11 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				StoryComponentPanel panel;
 				StoryComponent selectedComponent;
 				componentList = (JList) e.getSource();
-				
-				//When a user clicks, ctrl-clicks, shift-clicks, etc in the Library panel, we want to notify observers of all the 
-				//selected StoryComponentPanels so they do not lose their selected border.
+
+				// When a user clicks, ctrl-clicks, shift-clicks, etc in the
+				// Library panel, we want to notify observers of all the
+				// selected StoryComponentPanels so they do not lose their
+				// selected border.
 				selectedValues = componentList.getSelectedValues();
 				for (Object selectedValue : selectedValues) {
 					if (selectedValue instanceof StoryComponentPanel) {
@@ -185,10 +187,10 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			selectBg = ScriptEaseUI.SELECTED_COLOUR;
 		else
 			selectBg = Color.WHITE;
-		
+
 		this.setSelectionBackground(selectBg);
 		this.setBackground(ScriptEaseUI.UNSELECTED_COLOUR);
-		
+
 		this.setDragEnabled(true);
 		this.setTransferHandler(StoryComponentPanelTransferHandler
 				.getInstance());
@@ -237,15 +239,33 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 			currentModel.addElement(noResultsPanel);
 	}
 
+	/**
+	 * Adds a single story component to the model. If adding multiple, it's
+	 * recommended to use {@link #addStoryComponents(Collection)} for
+	 * efficiency.
+	 * 
+	 * @param component
+	 */
 	public void addStoryComponent(StoryComponent component) {
-		this.addStoryComponent(component, (DefaultListModel) this.getModel());
+		final DefaultListModel listModel = (DefaultListModel) this.getModel();
+
+		listModel.removeElement(noResultsPanel);
+
+		this.addStoryComponent(component, listModel);
+
+		final DefaultListModel currentModel;
+
+		currentModel = (DefaultListModel) this.getModel();
+
+		if (currentModel.isEmpty())
+			currentModel.addElement(noResultsPanel);
 	}
 
 	private void addStoryComponent(StoryComponent component,
 			DefaultListModel listModel) {
 		if ((this.filterRule == null)
 				|| ((this.filterRule != null) && (this.filterRule
-						.isAcceptable(component)))) {
+						.isAcceptable(component))))
 			// Check if the element is already part of the list
 			if (getIndexOfStoryComponent(component) == -1) {
 				final StoryComponentPanel panel;
@@ -257,15 +277,13 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 					newPanel = StoryComponentPanelFactory.getInstance()
 							.buildStoryComponentPanel(component);
-					
+
 					panelMap.put(component, newPanel);
-					
+
 					listModel.addElement(newPanel);
-				} else {
+				} else
 					listModel.addElement(panel);
-				}
 			}
-		}
 	}
 
 	/**
@@ -405,9 +423,12 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 
 				valuePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1,
 						0, Color.LIGHT_GRAY));
-			
-				if (isVisible && valueComponent.getLibrary().getReadOnly() && !isSelected 
-						&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel && !ScriptEase.DEBUG_MODE)
+
+				if (isVisible
+						&& valueComponent.getLibrary().getReadOnly()
+						&& !isSelected
+						&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel
+						&& !ScriptEase.DEBUG_MODE)
 					valuePanel.setBackground(ScriptEaseUI.TERTIARY_UI);
 				else if (isSelected && isVisible)
 					valuePanel.setBackground(list.getSelectionBackground());
