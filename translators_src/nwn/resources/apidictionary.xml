@@ -23666,7 +23666,7 @@
           </Parameters>
           <Code>
             <Line>
-              <Literal>return Random(FloatToInt(</Literal>
+              <Literal>return Random(1 + FloatToInt(</Literal>
               <Scope data="ARGUMENT" ref="Maximum">
                 <Fragment data="NAME"/>
               </Scope>
