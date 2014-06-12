@@ -149,7 +149,7 @@ public class LibraryMergeDialog extends JDialog {
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
 							"Copying story component to library.");
-				
+
 				for (StoryComponentPanel selected : thisLibraryPanel
 						.getSelected()) {
 					// TODO Undoability.
@@ -185,8 +185,8 @@ public class LibraryMergeDialog extends JDialog {
 				if (found != null) {
 					copyButton.setEnabled(true);
 					copyButton.setText("Copy");
-
-					SEModelManager.getInstance().add(found);
+					// TODO
+					// SEModelManager.getInstance().add(found);
 					thisLibraryPanel.setLibraries(found);
 				}
 

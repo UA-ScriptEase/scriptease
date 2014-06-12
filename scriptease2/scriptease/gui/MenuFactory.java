@@ -182,9 +182,7 @@ public class MenuFactory {
 		// in the menu. - remiller
 		menu.removeAll();
 
-		if (model == null || !(model instanceof LibraryModel))
-			menu.add(NewStoryModelAction.getInstance());
-		else {
+		if (model instanceof LibraryModel) {
 			final JMenu newMenu;
 			final JMenuItem newCause;
 			final JMenuItem newEffect;
@@ -212,13 +210,14 @@ public class MenuFactory {
 			newMenu.add(mergeLibrary);
 
 			menu.add(newMenu);
-		}
+		} else
+			menu.add(NewStoryModelAction.getInstance());
 
 		menu.add(OpenStoryModelAction.getInstance());
 		menu.add(CloseActiveModelAction.getInstance());
 		menu.addSeparator();
 
-		if (model == null || !(model instanceof LibraryModel)) {
+		if (model instanceof StoryModel) {
 			menu.add(TestStoryAction.getInstance());
 			menu.addSeparator();
 		}
