@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,6 +26,7 @@ import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.TranslatorModel;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -109,6 +112,16 @@ public class LibraryMergeDialog extends JDialog {
 		content.setLayout(new BorderLayout());
 		content.add(splitPane, BorderLayout.CENTER);
 		content.add(controlPanel, BorderLayout.SOUTH);
+
+		final TranslatorModel translatorModel = new TranslatorModel(translator);
+		SEModelManager.getInstance().addAndActivate(translatorModel);
+
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				SEModelManager.getInstance().remove(translatorModel);
+			}
+		});
 
 		this.setSize(800, 800);
 		this.setPreferredSize(new Dimension(800, 800));
