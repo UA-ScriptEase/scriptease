@@ -41,6 +41,7 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.TranslatorModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
@@ -93,7 +94,16 @@ public class LibraryPanel extends JTabbedPane {
 					model.process(new ModelAdapter() {
 						@Override
 						public void processLibraryModel(LibraryModel library) {
-							mainLibraryPanel.setLibraries(library);
+							final Collection<LibraryModel> libraries;
+
+							libraries = ListOp.createList(
+									LibraryModel.getCommonLibrary(),
+									(LibraryModel) model,
+									// Adds the default library for use but not
+									// editing.
+									model.getTranslator().getLibrary());
+
+							mainLibraryPanel.setLibraries(libraries);
 						}
 
 						@Override
@@ -248,9 +258,6 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (event.getEventType() == LibraryEvent.Type.REMOVAL) {
 					removeElement(storyComponent);
 				}
-
-				// TODO
-				// remove no results panel.
 			}
 		};
 
@@ -544,34 +551,21 @@ public class LibraryPanel extends JTabbedPane {
 	private void updateList(StoryComponentPanelJList list) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 		final boolean hideInvisible;
 		final Translator translator;
 
 		if (model != null) {
 			translator = model.getTranslator();
 			// Show invisible components if we're editing a library model.
-			if (model instanceof LibraryModel) {
+			if (model instanceof LibraryModel
+					|| model instanceof TranslatorModel) {
 				hideInvisible = false;
-				libraries.add(LibraryModel.getCommonLibrary());
-				libraries.add((LibraryModel) model);
-				// Adds the default library for use but not editing.
-				libraries.add(translator.getLibrary());
-			} else {
+			} else if (model instanceof StoryModel) {
 				hideInvisible = true;
-				libraries.addAll(((StoryModel) model).getLibraries());
-			}
-
-		} else if (!this.libraries.isEmpty()) {
-			hideInvisible = false;
-
-			// TODO can we just use the this.libraries instead of the collection
-			// in here?
-
-			translator = ListOp.head(this.libraries).getTranslator();
-
-			libraries.addAll(this.libraries);
-			// TODO libraries here... Maybe change the libraries up there, too.
+			} else
+				throw new IllegalArgumentException(
+						"Undefined behaviour for model " + model + " of class "
+								+ model.getClass());
 		} else
 			return;
 
@@ -580,7 +574,7 @@ public class LibraryPanel extends JTabbedPane {
 
 		final int index = this.storyComponentPanelJLists.indexOf(list);
 
-		for (LibraryModel libraryModel : libraries) {
+		for (LibraryModel libraryModel : this.libraries) {
 			final List<StoryComponent> components;
 
 			if (index == 0) {
