@@ -118,11 +118,6 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 				&& ((model instanceof Translator) || (model instanceof LibraryModel && (!((LibraryModel) model)
 						.getReadOnly() || ScriptEase.DEBUG_MODE)))) {
 
-			/*
-			 * TODO Needs undoability
-			 * 
-			 * Ticket: 48089063
-			 */
 			final boolean alreadyUndoing = UndoManager.getInstance()
 					.hasOpenUndoableAction();
 			if (!alreadyUndoing) {
