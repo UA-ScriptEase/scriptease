@@ -148,11 +148,10 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 				}
 
 				library.remove(selectedComponent);
-
-				if (!alreadyUndoing) {
-					UndoManager.getInstance().endUndoableAction();
-				}
 			}
+
+			if (UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().endUndoableAction();
 		} else if (focusOwner instanceof SEGraph) {
 			// Raw types here, but the way Graphs are set up, these should work
 			final SEGraph graph;

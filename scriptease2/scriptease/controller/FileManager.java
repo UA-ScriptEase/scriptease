@@ -397,6 +397,7 @@ public final class FileManager {
 				for (LibraryModel library : translator.getLibraries()) {
 					FileManager.this.saveWithoutCode(library);
 				}
+				FileManager.this.notifyModelObservers(model, location);
 			}
 		});
 	}
