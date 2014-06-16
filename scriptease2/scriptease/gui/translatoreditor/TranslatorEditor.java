@@ -21,15 +21,19 @@ import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.ui.ScriptEaseUI;
-import scriptease.model.TranslatorModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.Translator;
 import scriptease.util.ListOp;
 
 @SuppressWarnings("serial")
 public class TranslatorEditor extends JPanel {
-	private static final String DEFAULT_BUTTON_TEXT = "Choose a Library";
 
-	public TranslatorEditor(TranslatorModel translator) {
+	/**
+	 * Creates the translator editor for a translator.
+	 * 
+	 * @param translator
+	 */
+	public TranslatorEditor(Translator translator) {
 		final List<LibraryModel> libraries = new ArrayList<LibraryModel>(
 				translator.getLibraries());
 
@@ -38,11 +42,20 @@ public class TranslatorEditor extends JPanel {
 		final LibraryPanel leftLibraryPanel = new LibraryPanel();
 		final LibraryPanel rightLibraryPanel = new LibraryPanel();
 
-		final JPanel leftPanel = this.buildLibraryChooser(libraries,
-				leftLibraryPanel, rightLibraryPanel, false);
+		final JButton rightCopyButton;
+		final JButton leftCopyButton;
+		final JPanel leftPanel;
+		final JPanel rightPanel;
 
-		final JPanel rightPanel = this.buildLibraryChooser(libraries,
-				rightLibraryPanel, leftLibraryPanel, true);
+		rightCopyButton = ComponentFactory
+				.buildRightArrowButton(ScriptEaseUI.SE_ORANGE);
+		leftCopyButton = ComponentFactory
+				.buildLeftArrowButton(ScriptEaseUI.SE_ORANGE);
+
+		leftPanel = this.buildLibraryChooser(libraries, leftLibraryPanel,
+				rightLibraryPanel, rightCopyButton, leftCopyButton);
+		rightPanel = this.buildLibraryChooser(libraries, rightLibraryPanel,
+				leftLibraryPanel, leftCopyButton, rightCopyButton);
 
 		final JPanel controlPanel = new JPanel();
 
@@ -69,23 +82,15 @@ public class TranslatorEditor extends JPanel {
 	private JPanel buildLibraryChooser(
 			final Collection<LibraryModel> libraries,
 			final LibraryPanel thisLibraryPanel,
-			final LibraryPanel otherLibraryPanel, boolean left) {
+			final LibraryPanel otherLibraryPanel, final JButton thisCopyButton,
+			final JButton otherCopyButton) {
 
 		final JPanel panel = new JPanel();
 
 		final JComboBox libraryChooser = new JComboBox();
-		final JButton copyButton;
 
-		// TODO need a nicer way to determine which way the arrow should point
-		if (left)
-			copyButton = ComponentFactory
-					.buildLeftArrowButton(ScriptEaseUI.SE_ORANGE);
-		else
-			copyButton = ComponentFactory
-					.buildRightArrowButton(ScriptEaseUI.SE_ORANGE);
-		copyButton.setEnabled(false);
-
-		copyButton.setPreferredSize(new Dimension(1, 25));
+		thisCopyButton.setEnabled(false);
+		thisCopyButton.setPreferredSize(new Dimension(1, 25));
 
 		libraryChooser.addItem(null);
 
@@ -93,7 +98,7 @@ public class TranslatorEditor extends JPanel {
 			libraryChooser.addItem(library.getTitle());
 		}
 
-		copyButton.addActionListener(new ActionListener() {
+		thisCopyButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -106,7 +111,6 @@ public class TranslatorEditor extends JPanel {
 
 				for (StoryComponentPanel selected : thisLibraryPanel
 						.getSelected()) {
-					// TODO Undoability.
 					otherLibrary.add(selected.getStoryComponent().clone());
 				}
 
@@ -120,13 +124,10 @@ public class TranslatorEditor extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				final Object selected = libraryChooser.getSelectedItem();
 
-				// TODO Need more checks to see if we can copy stuff over, like
-				// if a library is selected in the other panel, etc. Disable
-				// button until it's safe to do so
-
 				if (selected == null) {
-					copyButton.setEnabled(false);
-					// copyButton.setText(DEFAULT_BUTTON_TEXT);
+					thisCopyButton.setEnabled(false);
+					otherCopyButton.setEnabled(false);
+
 					thisLibraryPanel.clearLibraries();
 					return;
 				}
@@ -141,15 +142,14 @@ public class TranslatorEditor extends JPanel {
 				}
 
 				if (found != null) {
-					copyButton.setEnabled(true);
-					// copyButton.setText("Copy");
-					// TODO
-					// SEModelManager.getInstance().add(found);
 					thisLibraryPanel.setLibraries(found);
-				}
 
-				// TODO Need to be able to get the other's library chooser..
-				// maybe.
+					final boolean enable = !otherLibraryPanel.getLibraries()
+							.isEmpty();
+
+					thisCopyButton.setEnabled(enable);
+					otherCopyButton.setEnabled(enable);
+				}
 			}
 		});
 
@@ -157,7 +157,7 @@ public class TranslatorEditor extends JPanel {
 		panel.setOpaque(false);
 		panel.add(libraryChooser, BorderLayout.NORTH);
 		panel.add(thisLibraryPanel, BorderLayout.CENTER);
-		panel.add(copyButton, BorderLayout.SOUTH);
+		panel.add(thisCopyButton, BorderLayout.SOUTH);
 		return panel;
 	}
 

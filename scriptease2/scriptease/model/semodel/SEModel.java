@@ -37,7 +37,7 @@ public abstract class SEModel implements Comparable<SEModel> {
 	/**
 	 * @return The title of the Model
 	 */
-	public final String getTitle() {
+	public String getTitle() {
 		return this.title;
 	}
 

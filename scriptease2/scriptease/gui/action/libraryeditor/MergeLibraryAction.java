@@ -8,7 +8,6 @@ import java.util.Collection;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import scriptease.gui.WindowFactory;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockSource;
@@ -63,9 +62,6 @@ public class MergeLibraryAction extends ActiveModelSensitiveAction {
 
 		if (library == null)
 			return;
-
-		WindowFactory.getInstance().buildMergeLibraryChoiceDialog(
-				library.getTranslator());
 	}
 
 	/**

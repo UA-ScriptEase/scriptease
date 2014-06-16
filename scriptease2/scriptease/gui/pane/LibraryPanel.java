@@ -41,7 +41,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
-import scriptease.model.TranslatorModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
@@ -120,7 +119,7 @@ public class LibraryPanel extends JTabbedPane {
 						}
 
 						@Override
-						public void processTranslatorModel(TranslatorModel model) {
+						public void processTranslator(Translator model) {
 							// We don't do anything for this because it gets
 							// hidden.
 						}
@@ -559,8 +558,7 @@ public class LibraryPanel extends JTabbedPane {
 		if (model != null) {
 			translator = model.getTranslator();
 			// Show invisible components if we're editing a library model.
-			if (model instanceof LibraryModel
-					|| model instanceof TranslatorModel) {
+			if (model instanceof LibraryModel || model instanceof Translator) {
 				hideInvisible = false;
 			} else if (model instanceof StoryModel) {
 				hideInvisible = true;

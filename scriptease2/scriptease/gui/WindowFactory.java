@@ -56,7 +56,6 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.component.UserInformationPane;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.dialog.DialogBuilder;
-import scriptease.gui.dialog.LibraryMergeDialog;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.pane.ResourcePanel;
@@ -65,7 +64,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.translatoreditor.TranslatorEditor;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
-import scriptease.model.TranslatorModel;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
@@ -785,16 +783,6 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Creates a dialog that lets the user choose which library they would like
-	 * to merge into the existing one.
-	 * 
-	 * @param translator
-	 */
-	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
-		return new LibraryMergeDialog(translator);
-	}
-
-	/**
 	 * Create a dialog with the provided panel.
 	 * 
 	 * @param title
@@ -1106,8 +1094,7 @@ public final class WindowFactory {
 
 		leftPanel = new JPanel(new CardLayout());
 		emptyPanel = new JPanel();
-		translatorEditorChoices = TranslatorEditor
-				.buildTranslatorEditorPanel();
+		translatorEditorChoices = TranslatorEditor.buildTranslatorEditorPanel();
 		libraryPane = PanelFactory.getInstance().buildLibrarySplitPane();
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();
@@ -1162,7 +1149,7 @@ public final class WindowFactory {
 										+ " ] - ";
 							cards.show(leftPanel, LIBRARY_PANE);
 						} else {
-							if (activeModel instanceof TranslatorModel)
+							if (activeModel instanceof Translator)
 								cards.show(leftPanel, TRANSLATOR_CHOICES);
 							else
 								cards.show(leftPanel, LIBRARY_PANE);
