@@ -61,7 +61,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.translatoreditor.TranslatorEditor;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
-import scriptease.model.TranslatorModel;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
