@@ -15,12 +15,14 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.StoryComponent;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.util.ListOp;
@@ -107,7 +109,8 @@ public class TranslatorEditor extends JPanel {
 
 				for (StoryComponentPanel selected : thisLibraryPanel
 						.getSelected()) {
-					otherLibrary.add(selected.getStoryComponent().clone());
+					StoryComponentUtils.duplicate(selected.getStoryComponent(),
+							otherLibrary);
 				}
 
 				if (UndoManager.getInstance().hasOpenUndoableAction())
