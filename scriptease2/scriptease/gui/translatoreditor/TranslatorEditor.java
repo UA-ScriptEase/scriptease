@@ -42,6 +42,9 @@ public class TranslatorEditor extends JPanel {
 		final LibraryPanel leftLibraryPanel = new LibraryPanel();
 		final LibraryPanel rightLibraryPanel = new LibraryPanel();
 
+		final JPanel controlPanel = new JPanel();
+		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+
 		final JButton rightCopyButton;
 		final JButton leftCopyButton;
 		final JPanel leftPanel;
@@ -56,12 +59,6 @@ public class TranslatorEditor extends JPanel {
 				rightLibraryPanel, rightCopyButton, leftCopyButton);
 		rightPanel = this.buildLibraryChooser(libraries, rightLibraryPanel,
 				leftLibraryPanel, leftCopyButton, rightCopyButton);
-
-		final JPanel controlPanel = new JPanel();
-
-		final JSplitPane splitPane;
-
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		splitPane.setTopComponent(leftPanel);
 		splitPane.setBottomComponent(rightPanel);
@@ -99,7 +96,6 @@ public class TranslatorEditor extends JPanel {
 		}
 
 		thisCopyButton.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final LibraryModel otherLibrary = ListOp.head(otherLibraryPanel
