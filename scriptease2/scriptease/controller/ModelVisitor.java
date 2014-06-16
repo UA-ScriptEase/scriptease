@@ -1,9 +1,9 @@
 package scriptease.controller;
 
-import scriptease.model.TranslatorModel;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.Translator;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to
@@ -27,5 +27,5 @@ public interface ModelVisitor {
 	
 	public void processLibraryModel(LibraryModel libraryModel);
 	
-	public void processTranslatorModel(TranslatorModel translatorModel);
+	public void processTranslator(Translator translator);
 }

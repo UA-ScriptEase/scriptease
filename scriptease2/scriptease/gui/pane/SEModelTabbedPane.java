@@ -257,7 +257,7 @@ class SEModelTabbedPane extends JTabbedPane {
 				}
 
 				@Override
-				public void processTranslatorModel(TranslatorModel model) {
+				public void processTranslator(Translator model) {
 					final JComponent panel;
 
 					panel = new TranslatorEditor(model);

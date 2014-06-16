@@ -1,9 +1,9 @@
 package scriptease.controller;
 
-import scriptease.model.TranslatorModel;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.Translator;
 
 /**
  * Default implementation of ModelVisitor that does nothing. Ever. <br>
@@ -34,7 +34,7 @@ public abstract class ModelAdapter implements ModelVisitor {
 	}
 
 	@Override
-	public void processTranslatorModel(TranslatorModel translatorModel) {
+	public void processTranslator(Translator translatorModel) {
 		this.defaultProcess(translatorModel);
 	}
 
