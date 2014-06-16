@@ -61,6 +61,7 @@ import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.TranslatorModel;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -609,8 +610,10 @@ public class MenuFactory {
 
 			mergeLibraries.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					WindowFactory.getInstance().buildMergeLibraryChoiceDialog(
-							translator);
+					SEModelManager.getInstance().addAndActivate(
+							new TranslatorModel(translator));
+					// WindowFactory.getInstance().buildMergeLibraryChoiceDialog(
+					// translator);
 				};
 			});
 

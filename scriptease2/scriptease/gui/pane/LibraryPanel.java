@@ -94,16 +94,12 @@ public class LibraryPanel extends JTabbedPane {
 					model.process(new ModelAdapter() {
 						@Override
 						public void processLibraryModel(LibraryModel library) {
-							final Collection<LibraryModel> libraries;
-
-							libraries = ListOp.createList(
+							mainLibraryPanel.setLibraries(ListOp.createList(
 									LibraryModel.getCommonLibrary(),
 									(LibraryModel) model,
 									// Adds the default library for use but not
 									// editing.
-									model.getTranslator().getLibrary());
-
-							mainLibraryPanel.setLibraries(libraries);
+									model.getTranslator().getLibrary()));
 						}
 
 						@Override
@@ -121,6 +117,12 @@ public class LibraryPanel extends JTabbedPane {
 									mainLibraryPanel.updateLists();
 								}
 							});
+						}
+
+						@Override
+						public void processTranslatorModel(TranslatorModel model) {
+							// We don't do anything for this because it gets
+							// hidden.
 						}
 					});
 					break;
