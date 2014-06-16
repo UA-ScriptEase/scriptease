@@ -369,24 +369,34 @@ public final class FileManager {
 	 * @see #save(SEModel)
 	 * @see #saveAs(StoryModel)
 	 */
-	public void saveWithoutCode(SEModel model) {
+	public void saveWithoutCode(final SEModel model) {
 		final File location = this.openFiles.getKey(model);
-
-		if (location == null) {
-			FileManager.this.saveAs(model);
-			return;
-		}
 
 		model.process(new ModelAdapter() {
 			@Override
 			public void processLibraryModel(final LibraryModel library) {
-				FileManager.this.writeLibraryModelFile(library, location);
+				if (location == null) {
+					FileManager.this.saveAs(model);
+					return;
+				} else
+					FileManager.this.writeLibraryModelFile(library, location);
 			}
 
 			@Override
 			public void processStoryModel(StoryModel storyModel) {
-				FileManager.this.writeStoryModelFile(storyModel, location,
-						true, true);
+				if (location == null) {
+					FileManager.this.saveAs(model);
+					return;
+				} else
+					FileManager.this.writeStoryModelFile(storyModel, location,
+							true, true);
+			}
+
+			@Override
+			public void processTranslator(Translator translator) {
+				for (LibraryModel library : translator.getLibraries()) {
+					FileManager.this.saveWithoutCode(library);
+				}
 			}
 		});
 	}
