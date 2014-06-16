@@ -58,8 +58,10 @@ import scriptease.gui.action.file.CloseModelAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.libraryeditor.LibraryEditorPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
+import scriptease.gui.translatoreditor.TranslatorEditor;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.TranslatorModel;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
@@ -251,6 +253,17 @@ class SEModelTabbedPane extends JTabbedPane {
 						modelTitle = "<Untitled>";
 
 					SEModelTabbedPane.this.buildTab(modelTitle, storyModel,
+							panel);
+				}
+
+				@Override
+				public void processTranslatorModel(TranslatorModel model) {
+					final JComponent panel;
+
+					panel = new TranslatorEditor(model);
+
+					SEModelTabbedPane.this.modelToComponent.put(model, panel);
+					SEModelTabbedPane.this.buildTab(model.getTitle(), model,
 							panel);
 				}
 			});

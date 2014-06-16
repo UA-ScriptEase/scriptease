@@ -1,5 +1,6 @@
 package scriptease.controller;
 
+import scriptease.model.TranslatorModel;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -32,6 +33,11 @@ public abstract class ModelAdapter implements ModelVisitor {
 		this.defaultProcess(libraryModel);
 	}
 
+	@Override
+	public void processTranslatorModel(TranslatorModel translatorModel) {
+		this.defaultProcess(translatorModel);
+	}
+
 	/**
 	 * The default process method that is called by every
 	 * process<i>Z</i>(<i>Z</i> <i>z</i>) method in this class' standard
@@ -41,7 +47,7 @@ public abstract class ModelAdapter implements ModelVisitor {
 	 * for every non-overridden process<i>Z</i> method. Unless it is overridden,
 	 * it does nothing.
 	 * 
-	 * @param model 
+	 * @param model
 	 *            The PatternModel to process with a default behaviour.
 	 */
 	protected void defaultProcess(SEModel model) {

@@ -1,5 +1,6 @@
 package scriptease.controller;
 
+import scriptease.model.TranslatorModel;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -25,4 +26,6 @@ public interface ModelVisitor {
 	public void processStoryModel(StoryModel storyModel);
 	
 	public void processLibraryModel(LibraryModel libraryModel);
+	
+	public void processTranslatorModel(TranslatorModel translatorModel);
 }

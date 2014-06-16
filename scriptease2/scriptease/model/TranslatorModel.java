@@ -11,13 +11,34 @@ import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
 import scriptease.util.StringOp;
 
+/**
+ * Provides a model interface to a translator, allowing us to load translators
+ * as regular models. This is mainly used to edit translators.
+ * 
+ * @author kschenk
+ * 
+ */
 public class TranslatorModel extends SEModel {
 	final Translator translator;
 
+	/**
+	 * Creates the model from a translator.
+	 * 
+	 * @param translator
+	 */
 	public TranslatorModel(Translator translator) {
 		super(translator.getName(), translator.getLocation().toString(), "");
 
 		this.translator = translator;
+	}
+
+	/**
+	 * Forwarding method to get all libraries from a translator.
+	 * 
+	 * @return
+	 */
+	public Collection<LibraryModel> getLibraries() {
+		return this.translator.getLibraries();
 	}
 
 	@Override
@@ -79,7 +100,7 @@ public class TranslatorModel extends SEModel {
 
 	@Override
 	public void process(ModelVisitor visitor) {
-		// TODO
+		visitor.processTranslatorModel(this);
 	}
 
 }
