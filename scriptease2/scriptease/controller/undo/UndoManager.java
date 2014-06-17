@@ -108,11 +108,15 @@ public final class UndoManager {
 		fileObserver = new FileManagerObserver() {
 			@Override
 			public void fileReferenced(SEModel model, File location) {
-				History history = UndoManager.this.findHistoryForModel(model);
+				final History history;
 
-				history.markSaved();
+				history = UndoManager.this.findHistoryForModel(model);
 
-				UndoManager.this.notifyObservers();
+				if (history != null) {
+					history.markSaved();
+
+					UndoManager.this.notifyObservers();
+				}
 			}
 		};
 
@@ -219,8 +223,8 @@ public final class UndoManager {
 	 */
 	public void endUndoableAction() {
 		final History activeHistory = this.getActiveHistory();
-		
-		if (activeHistory == null) 
+
+		if (activeHistory == null)
 			return;
 
 		String model = "";

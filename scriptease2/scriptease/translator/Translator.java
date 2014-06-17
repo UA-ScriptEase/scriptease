@@ -22,13 +22,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
+import scriptease.controller.ModelVisitor;
 import scriptease.gui.WindowFactory;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameModule;
+import scriptease.translator.io.model.GameType;
+import scriptease.translator.io.model.Slot;
 import scriptease.util.FileOp;
 import scriptease.util.ListOp;
+import scriptease.util.StringOp;
 
 /**
  * a ScriptEase Game Translator. Translators are defined by a
@@ -71,7 +76,7 @@ import scriptease.util.ListOp;
  * @author kschenk
  * @author jyuen
  */
-public class Translator implements Comparable<Translator> {
+public class Translator extends SEModel {
 	/**
 	 * The expected file name of the Translator Description file.
 	 */
@@ -123,6 +128,8 @@ public class Translator implements Comparable<Translator> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected Translator(File descriptionFile) throws IOException {
+		super("", "", "");
+
 		if (descriptionFile == null
 				|| !descriptionFile.getName().equalsIgnoreCase(
 						Translator.TRANSLATOR_DESCRIPTION_FILE_NAME)) {
@@ -885,7 +892,75 @@ public class Translator implements Comparable<Translator> {
 	}
 
 	@Override
-	public int compareTo(Translator o) {
-		return this.getName().compareTo(o.getName());
+	public Collection<GameType> getTypes() {
+		final Collection<GameType> types = new ArrayList<GameType>();
+
+		for (LibraryModel library : this.getLibraries()) {
+			types.addAll(library.getTypes());
+		}
+
+		return types;
+	}
+
+	@Override
+	public void setTitle(String title) {
+		// TODO doesn't do anything yet
+	}
+
+	@Override
+	public String getTitle() {
+		// TODO should probably do this in a different way.
+		return this.getName();
+	}
+
+	@Override
+	public GameType getType(String keyword) {
+		for (GameType type : this.getTypes()) {
+			if (type.getName().equals(keyword))
+				return type;
+		}
+
+		return null;
+	}
+
+	@Override
+	public Translator getTranslator() {
+		return this;
+	}
+
+	@Override
+	public String getSlotDefaultFormat() {
+		for (LibraryModel library : this.getLibraries()) {
+			final String defaultFormat = library.getSlotDefaultFormat();
+
+			if (StringOp.exists(defaultFormat))
+				return defaultFormat;
+		}
+
+		return "";
+	}
+
+	private Collection<Slot> getSlots() {
+		final Collection<Slot> slots = new ArrayList<Slot>();
+
+		for (LibraryModel library : this.getLibraries()) {
+			slots.addAll(library.getSlots());
+		}
+
+		return slots;
+	}
+
+	@Override
+	public Slot getSlot(String name) {
+		for (Slot slot : this.getSlots()) {
+			if (slot.getDisplayName().equals(name))
+				return slot;
+		}
+		return null;
+	}
+
+	@Override
+	public void process(ModelVisitor visitor) {
+		visitor.processTranslator(this);
 	}
 }
