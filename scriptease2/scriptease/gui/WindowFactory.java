@@ -1,5 +1,6 @@
 package scriptease.gui;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dialog;
@@ -55,12 +56,12 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.component.UserInformationPane;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.dialog.DialogBuilder;
-import scriptease.gui.dialog.LibraryMergeDialog;
 import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.gui.translatoreditor.TranslatorEditorFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -782,16 +783,6 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Creates a dialog that lets the user choose which library they would like
-	 * to merge into the existing one.
-	 * 
-	 * @param translator
-	 */
-	public JDialog buildMergeLibraryChoiceDialog(final Translator translator) {
-		return new LibraryMergeDialog(translator);
-	}
-
-	/**
 	 * Create a dialog with the provided panel.
 	 * 
 	 * @param title
@@ -1062,13 +1053,21 @@ public final class WindowFactory {
 		final int MIN_HEIGHT = 480;
 		final int MIN_WIDTH = 640;
 
+		final String LIBRARY_PANE = "LibraryPane";
+		final String TRANSLATOR_CHOICES = "TranslatorOptions";
+		final String EMPTY_PANEL = "EmptyPanel";
+
 		final JFrame frame;
 
 		final JPanel content;
 		final JPanel middlePane;
 
 		final JSplitPane middleSplit;
-		final JSplitPane librarySplit;
+
+		final JPanel leftPanel;
+		final JPanel emptyPanel;
+		final JPanel translatorEditorChoices;
+		final JSplitPane libraryPane;
 
 		final JComponent statusBar;
 		final GroupLayout contentLayout;
@@ -1092,7 +1091,11 @@ public final class WindowFactory {
 
 		middleSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		middleSplit.setDividerLocation(320);
-		librarySplit = PanelFactory.getInstance().buildLibrarySplitPane();
+
+		leftPanel = new JPanel(new CardLayout());
+		emptyPanel = new JPanel();
+		translatorEditorChoices = TranslatorEditorFactory.buildTranslatorEditorPanel();
+		libraryPane = PanelFactory.getInstance().buildLibrarySplitPane();
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();
 
@@ -1107,8 +1110,8 @@ public final class WindowFactory {
 				// Sometimes. Sometimes it works, though. It may depend on the
 				// moon cycle.
 				final double thisShouldntBeNecessary = 0.5d;
-				librarySplit.setResizeWeight(thisShouldntBeNecessary);
-				librarySplit.setDividerLocation(thisShouldntBeNecessary);
+				libraryPane.setResizeWeight(thisShouldntBeNecessary);
+				libraryPane.setDividerLocation(thisShouldntBeNecessary);
 			}
 		};
 
@@ -1126,6 +1129,7 @@ public final class WindowFactory {
 						|| (eventType == SEModelEvent.Type.TITLECHANGED)) {
 
 					final JMenuBar bar;
+					final CardLayout cards = (CardLayout) leftPanel.getLayout();
 
 					bar = MenuFactory.createMainMenuBar(activeModel);
 					frame.setJMenuBar(bar);
@@ -1133,7 +1137,7 @@ public final class WindowFactory {
 					// Create the title for the frame
 					String newTitle = "";
 					if (activeModel != null) {
-						String modelTitle = activeModel.getTitle();
+						final String modelTitle = activeModel.getTitle();
 						String moduleTitle = "";
 
 						if (activeModel instanceof StoryModel) {
@@ -1143,11 +1147,20 @@ public final class WindowFactory {
 							if (!modelTitle.isEmpty() && !moduleTitle.isEmpty())
 								newTitle += modelTitle + " [" + moduleTitle
 										+ " ] - ";
+							cards.show(leftPanel, LIBRARY_PANE);
 						} else {
+							if (activeModel instanceof Translator)
+								cards.show(leftPanel, TRANSLATOR_CHOICES);
+							else
+								cards.show(leftPanel, LIBRARY_PANE);
+
 							if (!modelTitle.isEmpty())
 								newTitle += modelTitle + " - ";
 						}
+					} else {
+						cards.show(leftPanel, EMPTY_PANEL);
 					}
+
 					newTitle += ScriptEase.TITLE + " "
 							+ ScriptEase.getInstance().getVersion();
 
@@ -1177,8 +1190,13 @@ public final class WindowFactory {
 		middlePane.add(PanelFactory.getInstance().buildModelTabPanel());
 
 		content.setLayout(contentLayout);
+		emptyPanel.setBackground(ScriptEaseUI.SECONDARY_UI);
 
-		middleSplit.setTopComponent(librarySplit);
+		leftPanel.add(emptyPanel, EMPTY_PANEL);
+		leftPanel.add(libraryPane, LIBRARY_PANE);
+		leftPanel.add(translatorEditorChoices, TRANSLATOR_CHOICES);
+
+		middleSplit.setTopComponent(leftPanel);
 		middleSplit.setBottomComponent(middlePane);
 		middleSplit.setBorder(BorderFactory.createEmptyBorder());
 

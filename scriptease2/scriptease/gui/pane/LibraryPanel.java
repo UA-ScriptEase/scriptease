@@ -93,7 +93,12 @@ public class LibraryPanel extends JTabbedPane {
 					model.process(new ModelAdapter() {
 						@Override
 						public void processLibraryModel(LibraryModel library) {
-							mainLibraryPanel.setLibraries(library);
+							mainLibraryPanel.setLibraries(ListOp.createList(
+									LibraryModel.getCommonLibrary(),
+									(LibraryModel) model,
+									// Adds the default library for use but not
+									// editing.
+									model.getTranslator().getLibrary()));
 						}
 
 						@Override
@@ -111,6 +116,12 @@ public class LibraryPanel extends JTabbedPane {
 									mainLibraryPanel.updateLists();
 								}
 							});
+						}
+
+						@Override
+						public void processTranslator(Translator model) {
+							// We don't do anything for this because it gets
+							// hidden.
 						}
 					});
 					break;
@@ -248,9 +259,6 @@ public class LibraryPanel extends JTabbedPane {
 				} else if (event.getEventType() == LibraryEvent.Type.REMOVAL) {
 					removeElement(storyComponent);
 				}
-
-				// TODO
-				// remove no results panel.
 			}
 		};
 
@@ -338,9 +346,10 @@ public class LibraryPanel extends JTabbedPane {
 					public void modelChanged(SEModelEvent event) {
 						if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 							final SEModel model = event.getPatternModel();
+							final boolean enable = model != null
+									&& model.getTranslator() != null;
 
-							searchField.setEnabled(model != null
-									&& model.getTranslator() != null);
+							searchField.setEnabled(enable);
 						}
 					}
 				});
@@ -544,34 +553,20 @@ public class LibraryPanel extends JTabbedPane {
 	private void updateList(StoryComponentPanelJList list) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
-		final Collection<LibraryModel> libraries = new ArrayList<LibraryModel>();
 		final boolean hideInvisible;
 		final Translator translator;
 
 		if (model != null) {
 			translator = model.getTranslator();
 			// Show invisible components if we're editing a library model.
-			if (model instanceof LibraryModel) {
+			if (model instanceof LibraryModel || model instanceof Translator) {
 				hideInvisible = false;
-				libraries.add(LibraryModel.getCommonLibrary());
-				libraries.add((LibraryModel) model);
-				// Adds the default library for use but not editing.
-				libraries.add(translator.getLibrary());
-			} else {
+			} else if (model instanceof StoryModel) {
 				hideInvisible = true;
-				libraries.addAll(((StoryModel) model).getLibraries());
-			}
-
-		} else if (!this.libraries.isEmpty()) {
-			hideInvisible = false;
-
-			// TODO can we just use the this.libraries instead of the collection
-			// in here?
-
-			translator = ListOp.head(this.libraries).getTranslator();
-
-			libraries.addAll(this.libraries);
-			// TODO libraries here... Maybe change the libraries up there, too.
+			} else
+				throw new IllegalArgumentException(
+						"Undefined behaviour for model " + model + " of class "
+								+ model.getClass());
 		} else
 			return;
 
@@ -580,7 +575,7 @@ public class LibraryPanel extends JTabbedPane {
 
 		final int index = this.storyComponentPanelJLists.indexOf(list);
 
-		for (LibraryModel libraryModel : libraries) {
+		for (LibraryModel libraryModel : this.libraries) {
 			final List<StoryComponent> components;
 
 			if (index == 0) {
