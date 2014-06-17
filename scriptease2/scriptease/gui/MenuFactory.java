@@ -46,7 +46,6 @@ import scriptease.gui.action.file.SaveModelWithoutCodeAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
 import scriptease.gui.action.library.RemoveLibraryFromStoryModelAction;
-import scriptease.gui.action.libraryeditor.MergeLibraryAction;
 import scriptease.gui.action.libraryeditor.NewActivityAction;
 import scriptease.gui.action.libraryeditor.NewBehaviourAction;
 import scriptease.gui.action.libraryeditor.NewCauseAction;
@@ -55,7 +54,6 @@ import scriptease.gui.action.libraryeditor.NewEffectAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.preferences.StoryPropertiesAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
-import scriptease.gui.action.translator.TranslatorPreferencesAction;
 import scriptease.gui.action.tutorials.OpenTutorialAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
@@ -189,7 +187,6 @@ public class MenuFactory {
 			final JMenuItem newDescription;
 			final JMenuItem newBehaviour;
 			final JMenuItem newActivity;
-			final JMenuItem mergeLibrary;
 
 			newMenu = new JMenu(MenuFactory.NEW);
 			newCause = new JMenuItem(NewCauseAction.getInstance());
@@ -197,7 +194,6 @@ public class MenuFactory {
 			newDescription = new JMenuItem(NewDescriptionAction.getInstance());
 			newBehaviour = new JMenuItem(NewBehaviourAction.getInstance());
 			newActivity = new JMenuItem(NewActivityAction.getInstance());
-			mergeLibrary = new JMenuItem(MergeLibraryAction.getInstance());
 
 			newMenu.add(NewStoryModelAction.getInstance());
 			newMenu.addSeparator();
@@ -207,7 +203,6 @@ public class MenuFactory {
 			newMenu.add(newBehaviour);
 			newMenu.add(newActivity);
 			newMenu.addSeparator();
-			newMenu.add(mergeLibrary);
 
 			menu.add(newMenu);
 		} else
@@ -298,14 +293,11 @@ public class MenuFactory {
 		// Create the Edit menu to return.
 		final JMenu editMenu;
 		final JMenuItem preferencesItem;
-		final JMenuItem translatorPreferencesItem;
 		final JMenuItem storyPropertiesItem;
 
 		editMenu = new JMenu(Il8nResources.getString("Edit"));
 		preferencesItem = new JMenuItem(Il8nResources.getString("Preferences")
 				+ "...");
-		translatorPreferencesItem = new JMenuItem(
-				TranslatorPreferencesAction.getInstance());
 		storyPropertiesItem = new JMenuItem(StoryPropertiesAction.getInstance());
 		// Set up the edit menu item
 		editMenu.setMnemonic(KeyEvent.VK_E);
@@ -336,7 +328,6 @@ public class MenuFactory {
 		preferencesItem.setMnemonic(KeyEvent.VK_R);
 
 		editMenu.add(preferencesItem);
-		editMenu.add(translatorPreferencesItem);
 		editMenu.add(storyPropertiesItem);
 
 		// Return the Edit menu.
@@ -597,8 +588,8 @@ public class MenuFactory {
 			libraries = new ArrayList<LibraryModel>();
 
 			translatorMenu = new JMenu(translator.getName());
-			newLibrary = new JMenuItem("New...");
-			mergeLibraries = new JMenuItem("Merge Libraries...");
+			newLibrary = new JMenuItem("New Library...");
+			mergeLibraries = new JMenuItem("Edit Translator");
 			newLibrary.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -613,9 +604,9 @@ public class MenuFactory {
 				};
 			});
 
-			translatorMenu.add(newLibrary);
 			translatorMenu.add(mergeLibraries);
 			translatorMenu.addSeparator();
+			translatorMenu.add(newLibrary);
 
 			Collections.sort(optionalLibraries);
 
