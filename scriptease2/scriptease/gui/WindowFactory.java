@@ -61,7 +61,7 @@ import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
-import scriptease.gui.translatoreditor.TranslatorEditor;
+import scriptease.gui.translatoreditor.TranslatorEditorFactory;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -1094,7 +1094,7 @@ public final class WindowFactory {
 
 		leftPanel = new JPanel(new CardLayout());
 		emptyPanel = new JPanel();
-		translatorEditorChoices = TranslatorEditor.buildTranslatorEditorPanel();
+		translatorEditorChoices = TranslatorEditorFactory.buildTranslatorEditorPanel();
 		libraryPane = PanelFactory.getInstance().buildLibrarySplitPane();
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();

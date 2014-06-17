@@ -19,7 +19,7 @@ import scriptease.model.semodel.StoryModel;
 @SuppressWarnings("serial")
 public class StoryPropertiesAction extends ActiveModelSensitiveAction {
 
-	private static final String STORY_PROPERTIES = "Story Properties";
+	private static final String STORY_PROPERTIES = "Story Properties...";
 
 	// Singleton
 	private static StoryPropertiesAction instance = null;

@@ -346,9 +346,10 @@ public class LibraryPanel extends JTabbedPane {
 					public void modelChanged(SEModelEvent event) {
 						if (event.getEventType() == SEModelEvent.Type.ACTIVATED) {
 							final SEModel model = event.getPatternModel();
+							final boolean enable = model != null
+									&& model.getTranslator() != null;
 
-							searchField.setEnabled(model != null
-									&& model.getTranslator() != null);
+							searchField.setEnabled(enable);
 						}
 					}
 				});
