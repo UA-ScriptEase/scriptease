@@ -25,7 +25,6 @@ import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.semodel.SEModel;
-import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.util.GUIOp;

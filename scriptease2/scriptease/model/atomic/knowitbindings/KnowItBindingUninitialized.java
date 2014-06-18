@@ -14,7 +14,6 @@ import scriptease.model.atomic.KnowIt;
  */
 public class KnowItBindingUninitialized extends KnowItBinding {
 	private final KnowItBindingReference reference;
-
 	/**
 	 * Builds a reference to the given KnowIt.
 	 * 
@@ -23,7 +22,7 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	 */
 	public KnowItBindingUninitialized(KnowItBindingReference reference) {
 		this.reference = reference;
-
+		
 		if (reference == null)
 			return;
 	}

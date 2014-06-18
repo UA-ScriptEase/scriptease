@@ -112,7 +112,6 @@ public class KnowItBindingReference extends KnowItBinding {
 						|| thisValue.getDisplayText().equals(
 								"Responder"))
 					return true;
-
 				for (KnowIt scope : ScopeVisitor.getScope(knowIt))
 					// We can't use equals() because it's not the exact knowit.
 					if (scope == thisValue)
