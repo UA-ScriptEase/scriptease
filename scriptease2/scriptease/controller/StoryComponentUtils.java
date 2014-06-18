@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import scriptease.model.CodeBlock;
+import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
@@ -14,6 +17,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryNode;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.Resource;
 
 /**
@@ -128,6 +132,49 @@ public class StoryComponentUtils {
 		return scriptIts;
 	}
 
+	public static void duplicate(final StoryComponent component,
+			final LibraryModel library) {
+
+		component.process(new StoryAdapter() {
+
+			// Clone ScriptIts, then replace the referenced codeBlocks
+			// with modifiable duplicates since we want them to be
+			// unique
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				final ScriptIt clone = scriptIt.clone();
+				final Collection<CodeBlock> codeBlocks = clone.getCodeBlocks();
+				for (CodeBlock codeBlock : codeBlocks) {
+					clone.removeCodeBlock(codeBlock);
+					codeBlock.process(new StoryAdapter() {
+
+						@Override
+						public void processCodeBlockSource(
+								CodeBlockSource codeBlockSource) {
+							clone.addCodeBlock(codeBlockSource
+									.duplicate(library));
+						}
+
+						@Override
+						public void processCodeBlockReference(
+								CodeBlockReference codeBlockReference) {
+							codeBlockReference.getTarget().process(this);
+						}
+					});
+				}
+				clone.setLibrary(library);
+				library.add(clone);
+			}
+
+			@Override
+			protected void defaultProcess(StoryComponent component) {
+				final StoryComponent clone = component.clone();
+				clone.setLibrary(library);
+				library.add(clone);
+			}
+		});
+	}
+
 	/**
 	 * Returns all of the decendant StoryComponents of a given
 	 * ComplexStoryComponent. This is quite computationally expensive,
@@ -213,4 +260,3 @@ class DescendantCollector extends StoryAdapter {
 		}
 	}
 }
-

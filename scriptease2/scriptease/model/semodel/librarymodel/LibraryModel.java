@@ -960,7 +960,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			this.targetId = targetId;
 			this.owner = owner;
 			this.found = null;
-			
+
 			// let's start snooping about. Quick, someone play Pink Panther or
 			// Mission Impossible! - remiller
 			LibraryModel.this.getRoot().process(this);
@@ -1056,4 +1056,5 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 			}
 		}
 	}
+
 }
