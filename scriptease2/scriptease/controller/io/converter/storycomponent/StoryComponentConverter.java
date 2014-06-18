@@ -7,6 +7,7 @@ import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.LibraryModelConverter;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -84,6 +85,10 @@ public abstract class StoryComponentConverter implements Converter {
 		comp.addLabels(labels);
 		comp.setVisible(visibility.equalsIgnoreCase("true"));
 		comp.setEnabled(enabled.equalsIgnoreCase("true"));
+		
+		if (comp instanceof KnowIt){
+			((KnowIt) comp).setOriginalDisplayText(displayText);
+		}
 
 		return comp;
 	}
