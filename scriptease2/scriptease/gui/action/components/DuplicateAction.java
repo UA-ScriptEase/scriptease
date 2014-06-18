@@ -4,24 +4,19 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Collection;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 import scriptease.ScriptEase;
-import scriptease.controller.StoryAdapter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.observer.SEFocusObserver;
 import scriptease.gui.SEFocusManager;
 import scriptease.gui.action.ActiveModelSensitiveAction;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
-import scriptease.model.CodeBlock;
-import scriptease.model.CodeBlockReference;
-import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -121,54 +116,15 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 				final StoryComponentPanel selectedPanel = (StoryComponentPanel) selectedObject;
 				final StoryComponent selectedComponent = selectedPanel
 						.getStoryComponent();
+				final LibraryModel library = (LibraryModel) SEModelManager
+						.getInstance().getActiveModel();
 				// We want to add the new component to the current library
 				// For example if I want to make my own variant of a component
 				// that belongs to a read only library
 				// We should make a new, editable component if we're working in
 				// an editable library.
 				// -zturchan
-				// final LibraryModel libraryModel =
-				// selectedComponent.getLibrary();
-				final LibraryModel library = (LibraryModel) SEModelManager
-						.getInstance().getActiveModel();
-				selectedComponent.process(new StoryAdapter() {
-
-					// Clone ScriptIts, then replace the referenced codeBlocks
-					// with modifiable duplicates since we want them to be
-					// unique
-					@Override
-					public void processScriptIt(ScriptIt scriptIt) {
-						final ScriptIt clone = scriptIt.clone();
-						final Collection<CodeBlock> codeBlocks = clone
-								.getCodeBlocks();
-						for (CodeBlock codeBlock : codeBlocks) {
-							clone.removeCodeBlock(codeBlock);
-							codeBlock.process(new StoryAdapter() {
-
-								@Override
-								public void processCodeBlockSource(
-										CodeBlockSource codeBlockSource) {
-									clone.addCodeBlock(codeBlockSource
-											.duplicate(library));
-								}
-
-								@Override
-								public void processCodeBlockReference(
-										CodeBlockReference codeBlockReference) {
-									codeBlockReference.getTarget()
-											.process(this);
-								}
-							});
-						}
-						library.add(clone);
-					}
-
-					@Override
-					protected void defaultProcess(StoryComponent component) {
-						final StoryComponent clone = component.clone();
-						library.add(clone);
-					}
-				});
+				StoryComponentUtils.duplicate(selectedComponent, library);
 			}
 		}
 

@@ -12,8 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
@@ -22,9 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-
 import java.io.IOException;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -314,6 +312,10 @@ public final class ComponentFactory {
 		NEUTRAL, CLICK, HOVER, TOGGLED
 	}
 
+	private enum ButtonArrow {
+		NONE, LEFT, RIGHT
+	}
+
 	public static JButton buildFlatButton(Action action) {
 		return ComponentFactory.buildFlatButton(action, ScriptEaseUI.SE_BLACK);
 	}
@@ -323,16 +325,37 @@ public final class ComponentFactory {
 	}
 
 	public static JButton buildFlatButton(Color color, String text) {
-		return ComponentFactory.buildFlatButton(null, text, color);
+		return ComponentFactory.buildFlatButton(null, text, color,
+				ButtonArrow.NONE);
 	}
 
 	public static JButton buildFlatButton(Action action, Color color) {
-		return ComponentFactory.buildFlatButton(action, null, color);
+		return ComponentFactory.buildFlatButton(action, null, color,
+				ButtonArrow.NONE);
 	}
 
+	public static JButton buildLeftArrowButton(Color color) {
+		return ComponentFactory.buildFlatButton(null, "", color,
+				ButtonArrow.LEFT);
+	}
+
+	public static JButton buildRightArrowButton(Color color) {
+		return ComponentFactory.buildFlatButton(null, "", color,
+				ButtonArrow.RIGHT);
+	}
+
+	/**
+	 * This is private because we should provide simpler methods to make stuff
+	 * using the parameters in this.
+	 * 
+	 * @param action
+	 * @param text
+	 * @param color
+	 * @return
+	 */
 	@SuppressWarnings("serial")
-	public static JButton buildFlatButton(Action action, String text,
-			final Color color) {
+	private static JButton buildFlatButton(Action action, String text,
+			final Color color, final ButtonArrow arrow) {
 		final JButton button = new JButton() {
 			private ButtonState state;
 			private ButtonState previousState;
@@ -372,7 +395,13 @@ public final class ComponentFactory {
 
 			@Override
 			protected void paintComponent(Graphics g) {
+				final Graphics2D g2d = (Graphics2D) g;
 				final Color fillColor;
+				final int width;
+				final int height;
+				final int middleY;
+				final int offset;
+				final int arrowSize;
 
 				if (this.isEnabled())
 					switch (this.state) {
@@ -389,8 +418,42 @@ public final class ComponentFactory {
 				else
 					fillColor = Color.LIGHT_GRAY;
 
-				g.setColor(fillColor);
-				g.fillRect(0, 0, getSize().width, getSize().height);
+				width = getSize().width;
+				height = getSize().height;
+
+				middleY = height / 2;
+
+				offset = width / 3;
+				arrowSize = 6;
+
+				g2d.setStroke(new BasicStroke(3));
+
+				g2d.setColor(fillColor);
+				g2d.fillRect(0, 0, width, height);
+
+				if (arrow != ButtonArrow.NONE) {
+					g2d.setColor(Color.WHITE);
+					g2d.drawLine(offset, middleY, width - offset, middleY);
+
+					final int[] xcoords;
+					final int[] ycoords;
+
+					if (arrow == ButtonArrow.LEFT) {
+						xcoords = new int[] { offset - arrowSize, offset,
+								offset };
+						ycoords = new int[] { middleY, middleY - arrowSize,
+								middleY + arrowSize };
+					} else if (arrow == ButtonArrow.RIGHT) {
+						xcoords = new int[] { width - offset + arrowSize,
+								width - offset, width - offset };
+						ycoords = new int[] { middleY, middleY - arrowSize,
+								middleY + arrowSize };
+					} else
+						throw new IllegalArgumentException(
+								"Undefined ButtonArrow type: " + arrow);
+
+					g2d.fillPolygon(xcoords, ycoords, 3);
+				}
 
 				super.paintComponent(g);
 			}
@@ -642,10 +705,10 @@ public final class ComponentFactory {
 		button.setBorderPainted(false);
 		button.setBorder(null);
 		button.setOpaque(false);
-		button.setMargin(new Insets(0,0,0,0));
+		button.setMargin(new Insets(0, 0, 0, 0));
 		button.setToolTipText(link);
 		button.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {

@@ -21,8 +21,10 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.Translator;
 
 /**
  * Represents and performs the Delete command, as well as encapsulates its
@@ -75,15 +77,15 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 	 * current selection.
 	 */
 	protected boolean isLegal() {
-		final Component focusOwner;
-		focusOwner = SEFocusManager.getInstance().getFocus();
+		final Component focusOwner = SEFocusManager.getInstance().getFocus();
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
 
 		if (focusOwner instanceof StoryComponentPanel) {
 			return super.isLegal()
 					&& ((StoryComponentPanel) focusOwner).isRemovable();
 		} else if (focusOwner instanceof StoryComponentPanelJList) {
 			return super.isLegal()
-					&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel;
+					&& ((model instanceof LibraryModel) || (model instanceof Translator));
 		} else if (focusOwner instanceof SEGraph) {
 			return super.isLegal() && !((SEGraph<?>) focusOwner).isReadOnly();
 		} else if (focusOwner instanceof CodeFragmentPanel) {
@@ -96,6 +98,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
 		final Component focusOwner;
 
 		focusOwner = SEFocusManager.getInstance().getFocus();
@@ -112,15 +115,9 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 				manager.deleteSelected();
 			}
 		} else if (focusOwner instanceof StoryComponentPanelJList
-				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel
-				&& (!((LibraryModel) SEModelManager.getInstance()
-						.getActiveModel()).getReadOnly() || ScriptEase.DEBUG_MODE)) {
+				&& ((model instanceof Translator) || (model instanceof LibraryModel && (!((LibraryModel) model)
+						.getReadOnly() || ScriptEase.DEBUG_MODE)))) {
 
-			/*
-			 * TODO Needs undoability
-			 * 
-			 * Ticket: 48089063
-			 */
 			final boolean alreadyUndoing = UndoManager.getInstance()
 					.hasOpenUndoableAction();
 			if (!alreadyUndoing) {
@@ -134,28 +131,27 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			for (Object value : list.getSelectedValues()) {
 				final StoryComponent selectedComponent;
 
-				final LibraryModel libraryModel;
+				final LibraryModel library;
 
 				selectedComponent = ((StoryComponentPanel) value)
 						.getStoryComponent();
 
-				libraryModel = selectedComponent.getLibrary();
+				library = selectedComponent.getLibrary();
 
 				if (selectedComponent instanceof KnowIt) {
 					final DescribeIt describeIt;
 
-					describeIt = libraryModel.getDescribeIt(selectedComponent);
+					describeIt = library.getDescribeIt(selectedComponent);
 
 					if (describeIt != null)
-						libraryModel.removeDescribeIt(describeIt);
+						library.removeDescribeIt(describeIt);
 				}
 
-				libraryModel.remove(selectedComponent);
-
-				if (!alreadyUndoing) {
-					UndoManager.getInstance().endUndoableAction();
-				}
+				library.remove(selectedComponent);
 			}
+
+			if (UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().endUndoableAction();
 		} else if (focusOwner instanceof SEGraph) {
 			// Raw types here, but the way Graphs are set up, these should work
 			final SEGraph graph;
