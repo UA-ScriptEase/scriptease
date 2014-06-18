@@ -103,7 +103,8 @@ public final class WindowFactory {
 			+ "<b>Contributors:</b><br>"
 			+ "<br><b>Professors:</b> Mike Carbonaro, Jonathan Schaeffer, Duane Szafron"
 			+ "<br><b>Ph.D. Students:</b> Neesha Desai, Richard Zhao"
-			+ "<br><b>Programmer Analysts:</b> Matthew Church, Jason Duncan, Eric Graves, Adel Lari, Robin Miller, Kevin Schenk, Jessica Yuen"
+			+ "<br><b>Programmer Analysts:</b> Matthew Church, Jason Duncan, Eric Graves, Adel Lari, Robin Miller,"
+			+ "<br>Kevin Schenk, Jessica Yuen, Zak Turchansky, Elyse Hill "
 			+ "<br><b>Artists:</b> Wei Li, Jamie Schmitt"
 			+ "<br><b>Interns:</b> Delia Cormier, Alex Czeto, Kirsten Svidal"
 			+ "<br><br>Visit us online at http://www.cs.ualberta.ca/~script/<br></html>";
