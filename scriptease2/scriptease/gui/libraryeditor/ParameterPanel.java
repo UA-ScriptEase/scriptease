@@ -320,6 +320,9 @@ public class ParameterPanel extends JPanel {
 				final String newInput;
 				newInput = nameField.getText();
 
+				//Update the original text for the parameter so we can dynamically update their usage's text
+				knowIt.setOriginalDisplayText(newInput);
+				
 				// TODO This probably doesn't do what we want it to.
 				if (codeBlock.hasSubject()) {
 					KnowIt subject = codeBlock.getSubject();

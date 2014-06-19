@@ -124,6 +124,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 	 */
 	public void setBinding(KnowItBinding binding) {
 		this.binding = binding;
+		this.updateBackgroundColour(this.binding);
 	}
 
 	/**
@@ -188,8 +189,8 @@ public class BindingWidget extends JPanel implements Cloneable {
 
 			@Override
 			public void processUninitialized(
-					KnowItBindingUninitialized unitialized) {
-				updateBackground(ScriptEaseUI.COLOUR_KNOWIT_UNINITIALIZED);				
+					KnowItBindingUninitialized uninitialized) {
+						updateBackground(ScriptEaseUI.COLOUR_KNOWIT_UNINITIALIZED);		
 			}
 
 			@Override
@@ -211,7 +212,7 @@ public class BindingWidget extends JPanel implements Cloneable {
 			public void processStoryGroup(KnowItBindingStoryGroup storyGroup) {
 				updateBackground(ScriptEaseUI.COLOUR_KNOWN_OBJECT);
 			}
-
+			
 			private void updateBackground(Color color) {
 				// only update the BG if the chosen colour is different.
 				if (!color.equals(BindingWidget.this.getBackground()))
