@@ -55,8 +55,8 @@ public class NewDescriptionAction extends ActiveModelSensitiveAction {
 			describeIt = new DescribeIt("New DescribeIt", describeItNode);
 			knowIt = library.createKnowItForDescribeIt(describeIt);
 
-			library.add(knowIt);
 			library.addDescribeIt(describeIt, knowIt);
+			library.add(knowIt);
 		}
 	}
 }
