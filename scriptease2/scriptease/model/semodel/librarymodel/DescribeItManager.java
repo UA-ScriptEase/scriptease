@@ -97,6 +97,8 @@ class DescribeItManager {
 
 				weakComponent = ref.get();
 
+				if(weakComponent.getDisplayText().equals("New DescribeIt"))
+					System.out.println("Break");
 				if (weakComponent == component)
 					return entry.getKey();
 			}
