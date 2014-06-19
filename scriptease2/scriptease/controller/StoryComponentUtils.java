@@ -83,6 +83,30 @@ public class StoryComponentUtils {
 	}
 
 	/**
+	 * Gets all code blocks from descendants of and from the root component.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public static Collection<CodeBlock> getCodeBlocks(StoryComponent component) {
+		final Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
+
+		final DescendantCollector collector = new DescendantCollector() {
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				super.processScriptIt(scriptIt);
+
+				if (!codeBlocks.contains(codeBlocks))
+					codeBlocks.addAll(scriptIt.getCodeBlocks());
+			}
+		};
+
+		component.process(collector);
+
+		return codeBlocks;
+	}
+
+	/**
 	 * Returns all knowits bound to the value of a particular resource
 	 * 
 	 * @param selected

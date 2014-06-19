@@ -3,6 +3,8 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import scriptease.controller.io.FileIO;
+import scriptease.controller.io.FileIO.IoMode;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.model.CodeBlockReference;
@@ -11,6 +13,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.Translator;
 import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -68,6 +71,7 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		final int id;
 		final CodeBlockReference ref;
 		final CodeBlockSource target;
+		final LibraryModel library;
 
 		ref = (CodeBlockReference) super.unmarshal(reader, context);
 
@@ -76,9 +80,27 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 		else
 			id = 0;
 
-		target = ref.getLibrary().findCodeBlockSource(owner, id);
+		library = ref.getLibrary();
+		target = library.findCodeBlockSource(owner, id);
 
-		ref.setTarget(target);
+		if (target == null) {
+			CodeBlockSource newTarget = null;
+
+			if (FileIO.getInstance().getMode() == IoMode.STORY) {
+				final Translator translator = library.getTranslator();
+				newTarget = translator.findSimilarTarget(owner, id);
+			} // TODO May have to do something here if we have missing
+				// references in a different mode.
+
+			if (newTarget == null) {
+				throw new NullPointerException("Could not find CodeBlock "
+						+ ref.getDisplayText() + " in \"" + owner + "\" in "
+						+ library);
+			}
+
+			ref.setTarget(newTarget);
+		} else
+			ref.setTarget(target);
 
 		if (reader.hasMoreChildren()) {
 			final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
@@ -91,8 +113,6 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 		return ref;
 	}
-	
-
 
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
