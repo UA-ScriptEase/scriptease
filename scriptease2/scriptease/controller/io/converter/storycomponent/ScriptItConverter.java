@@ -6,11 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import scriptease.controller.io.XMLNode;
+import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.Note;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -45,9 +48,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final ScriptIt scriptIt;
-
-		scriptIt = (ScriptIt) super.unmarshal(reader, context);
+		final ScriptIt scriptIt = (ScriptIt) super.unmarshal(reader, context);
 
 		reader.moveDown();
 		if (reader.hasMoreChildren()) {
@@ -56,16 +57,57 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 				final Collection<CodeBlock> codeBlocks;
 
 				CodeBlockReferenceConverter.owner = scriptIt;
-				
+
 				codeBlocks = ((Collection<CodeBlock>) context.convertAnother(
 						scriptIt, ArrayList.class));
-				
+
 				CodeBlockReferenceConverter.owner = null;
 
 				if (codeBlocks.isEmpty())
 					throw new IllegalStateException(
 							"Unable to read CodeBlocks for " + scriptIt);
 
+				// This checks if the code blocks all belong to the scriptIt's
+				// library. May need to add more cases as we go on.
+				for (CodeBlock codeBlock : codeBlocks) {
+					final LibraryModel codeBlockLibrary;
+					final LibraryModel scriptItLibrary;
+
+					scriptItLibrary = scriptIt.getLibrary();
+					codeBlockLibrary = codeBlock.getLibrary();
+
+					if (scriptItLibrary != codeBlockLibrary
+							&& codeBlock instanceof CodeBlockReference
+							&& ((CodeBlockReference) codeBlock).getTarget()
+									.getOwner().isEquivalent(scriptIt)) {
+						final String scriptItName;
+						scriptItName = scriptIt.getDisplayText();
+
+						if (WindowFactory
+								.getInstance()
+								.showYesNoConfirmDialog(
+										"<html>The story component <b>\""
+												+ StringOp
+														.makeXMLSafe(scriptItName)
+												+ "\"</b> was not found in <b>"
+												+ scriptItLibrary
+												+ "</b>. <br>However, a component with the same name was found in <b>"
+												+ codeBlockLibrary
+												+ "</b>.<br><br> Would you like to replace the missing component with this one? "
+												+ "<br>"
+												+ codeBlockLibrary
+												+ " will be added to your story if it is not already attached.</html>",
+										"Component Not Found"))
+
+							scriptIt.setLibrary(codeBlockLibrary);
+						else {
+							reader.moveUp();
+							return new Note(LibraryModel.getNonLibrary(),
+									"Missing Component in Library: "
+											+ scriptIt.getDisplayText());
+						}
+					}
+				}
 				scriptIt.setCodeBlocks(codeBlocks);
 			}
 		}
@@ -73,7 +115,6 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 		return scriptIt;
 	}
-
 
 	@SuppressWarnings("rawtypes")
 	@Override

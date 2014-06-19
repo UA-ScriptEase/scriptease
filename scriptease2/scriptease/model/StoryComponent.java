@@ -397,7 +397,6 @@ public abstract class StoryComponent implements Cloneable {
 				&& (other.getClass().equals(this.getClass()))) {
 			comp = (StoryComponent) other;
 			equal = comp.getDisplayText().equals(this.getDisplayText());
-			equal &= comp.library == this.library;
 			equal &= comp.isVisible == this.isVisible;
 			for (String label : comp.getLabels()) {
 				equal &= this.labels.contains(label);
