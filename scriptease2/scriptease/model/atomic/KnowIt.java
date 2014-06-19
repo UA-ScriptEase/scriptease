@@ -67,6 +67,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		StoryComponentObserver {
 	private KnowItBinding knowItBinding;
 	private Collection<String> types;
+	private String originalDisplayText;
 
 	/**
 	 * Creates a non unique KnowIt with the passed in name.
@@ -118,6 +119,7 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 		super(library, name);
 		// null binding by default
 		this.types = new HashSet<String>();
+		this.originalDisplayText = "";
 		this.knowItBinding = new KnowItBindingNull();
 		this.clearBinding();
 
@@ -692,5 +694,24 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 					scriptIt.setEnabled(false);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Gets the original display text for a knowit.  Used for dynamic updating
+	 * of activity parameters.
+	 * @return
+	 */
+	public String getOriginalDisplayText(){
+		return this.originalDisplayText;
+	}
+	
+	
+	/**
+	 * Sets the original display text for a knowit.  Used when activity parameters are changed.
+	 * @param text
+	 */
+	public void setOriginalDisplayText(String text){
+		this.originalDisplayText = text;
 	}
 }

@@ -78,7 +78,7 @@ public class ActivityIt extends ScriptIt {
 						KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
 
 						for (KnowIt activityParam : activityIt.getParameters()) {
-							if (uninitialized.getValue().getDisplayText()
+							if (uninitialized.getValue().getOriginalDisplayText()
 									.equals(activityParam.getDisplayText())) {
 								uninitialized = new KnowItBindingUninitialized(
 										new KnowItBindingReference(

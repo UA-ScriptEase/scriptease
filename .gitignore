@@ -46,3 +46,5 @@ scriptease2/translators/
 
 # ignore the sloccount directory. 
 sloccount-2.26/
+
+build.xml

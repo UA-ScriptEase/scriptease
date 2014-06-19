@@ -155,11 +155,10 @@ public class BindingWidgetUI extends ComponentUI {
 	public void paint(Graphics g, JComponent comp) {
 		final BindingWidget widget = (BindingWidget) comp;
 		final Color base = widget.getBackground();
-
 		final Graphics2D g2d;
 		final Shape labelShape;
 		final Border borderRenderer;
-
+		
 		// clone the other graphics so that we don't disturb its settings.
 		g2d = (g == null) ? null : (Graphics2D) g.create();
 
@@ -212,7 +211,7 @@ public class BindingWidgetUI extends ComponentUI {
 	private void paintType(Graphics2D g, BindingWidget comp) {
 		final Color bgColor = comp.getBackground();
 		final CellRendererPane renderer = new CellRendererPane();
-
+		
 		int i = 0;
 		// This is for BindingWidgets....
 		for (String type : comp.getBinding().getTypes()) {
@@ -240,6 +239,7 @@ public class BindingWidgetUI extends ComponentUI {
 
 	private Paint determineLinePaint(BindingWidget label, boolean isUp) {
 		final Color base = label.getBackground();
+		
 		final Color specularHue;
 		final Color diffuseHue;
 		final Color shadowHue;

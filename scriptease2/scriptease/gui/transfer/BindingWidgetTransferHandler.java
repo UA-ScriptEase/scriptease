@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.BindingAdapter;
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
@@ -21,10 +22,14 @@ import scriptease.gui.component.SlotPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -98,10 +103,13 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			// Get the KnowIt for the Widget.
 			final KnowIt toRemove = (KnowIt) ScriptWidgetFactory
 					.getEditedStoryComponent(component.getParent());
-
+			
 			if (toRemove == null)
 				return;
 
+			//Revert the display text to the name of the parameter
+			toRemove.setDisplayText(toRemove.getOriginalDisplayText());
+			
 			if (!UndoManager.getInstance().hasOpenUndoableAction())
 				UndoManager.getInstance().startUndoableAction(
 						"Remove " + toRemove.getBinding() + " Binding");
@@ -213,7 +221,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	@Override
 	public boolean importData(TransferSupport support) {
 		final BindingWidget destinationComponent;
-		KnowIt destinationKnowIt;
+		final KnowIt destinationKnowIt;
 
 		// Make sure this import is legal.
 		if (!canImport(support)) {
@@ -238,6 +246,61 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// Get the source data from the Transferable.
 		sourceBinding = this.extractBinding(support);
 
+		//Update the text of all usages of this if it's an Activity Parameter
+		if (destinationKnowIt.getOwner().getOwner() instanceof ActivityIt){
+			final ActivityIt activityIt = (ActivityIt) destinationKnowIt.getOwner().getOwner();			
+			final List<StoryComponent> children = activityIt.getChildren();
+			
+			for (StoryComponent child : children) {
+				child.process(new StoryAdapter() {
+				
+					@Override
+					public void processScriptIt(ScriptIt scriptIt) {
+						this.defaultProcessComplex(scriptIt);
+						scriptIt.processParameters(this);
+					}
+
+					@Override
+					public void processKnowIt(KnowIt knowIt) {
+						final KnowItBinding binding = knowIt.getBinding();
+
+						if (binding instanceof KnowItBindingFunction) {
+							final KnowItBindingFunction function = (KnowItBindingFunction) binding;
+
+							function.getValue().process(this);
+
+						} else if (binding instanceof KnowItBindingUninitialized) {
+							KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
+
+							for (KnowIt activityParam : activityIt.getParameters()) {
+								if (uninitialized.getValue().getOriginalDisplayText()
+										.equals(activityParam.getOriginalDisplayText())) {
+									//We need to handle both KnowItBindingResources (Game Objects)
+									//And KnowItBindingReferences (Implicits et al.)									
+									if(sourceBinding instanceof KnowItBindingResource){
+										uninitialized.getValue().setDisplayText(((KnowItBindingResource) sourceBinding).getName());
+										break;
+									} else if (sourceBinding instanceof KnowItBindingReference){
+										KnowItBindingReference ref = (KnowItBindingReference) sourceBinding;
+										uninitialized.getValue().setDisplayText(ref.getValue().getDisplayText());
+										break;
+									}
+								}
+							}
+						} 
+					}
+
+					@Override
+					protected void defaultProcessComplex(
+							ComplexStoryComponent complex) {
+						for (StoryComponent child : complex.getChildren()) {
+							child.process(this);
+						}
+					}
+				});
+			}
+		}
+		
 		// Set the history to the active model
 		UndoManager.getInstance().setActiveHistory(
 				SEModelManager.getInstance().getActiveModel());

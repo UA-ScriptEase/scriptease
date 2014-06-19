@@ -8,13 +8,19 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.SlotPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
+import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -92,7 +98,7 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 			// Get the destination KnowIt
 			slotPanel = (SlotPanel) destinationComponent;
 			knowIt = slotPanel.getKnowIt();
-
+			
 			// Special case for KnowItBindingUninitialized - they
 			// shouldn't be dragged into their own referenced KnowIt
 			if (sourceBinding instanceof KnowItBindingUninitialized) {
@@ -165,12 +171,64 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 		final SlotPanel slotPanel;
 		final KnowIt knowIt;
 		final KnowItBinding sourceBinding;
-
+		
 		slotPanel = (SlotPanel) support.getComponent();
 		knowIt = slotPanel.getKnowIt();
 
 		// Get the KnowItBindingWidget being transferred.
 		sourceBinding = this.extractBinding(support);
+		
+		//Update the text of all usages of the imported KnowIt if it is an Activity Parameter
+		if (knowIt.getOwner().getOwner() instanceof ActivityIt){
+			final ActivityIt activityIt = (ActivityIt) knowIt.getOwner().getOwner();			
+			final List<StoryComponent> children = activityIt.getChildren();
+			
+			for (StoryComponent child : children) {
+				child.process(new StoryAdapter() {
+					
+					@Override
+					public void processScriptIt(ScriptIt scriptIt) {
+						this.defaultProcessComplex(scriptIt);
+						scriptIt.processParameters(this);
+					}
+
+					@Override
+					public void processKnowIt(KnowIt childKnowIt) {
+						final KnowItBinding binding = childKnowIt.getBinding();
+
+						if (binding instanceof KnowItBindingFunction) {
+							final KnowItBindingFunction function = (KnowItBindingFunction) binding;
+
+							function.getValue().process(this);
+
+						} else if (binding instanceof KnowItBindingUninitialized) {
+							KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
+
+							for (KnowIt activityParam : activityIt.getParameters()) {
+								if (uninitialized.getValue().getOriginalDisplayText()
+										.equals(activityParam.getOriginalDisplayText())) {									
+									if(sourceBinding instanceof KnowItBindingResource){										
+										uninitialized.getValue().setDisplayText(((KnowItBindingResource) sourceBinding).getName());
+										break;
+									} else if (sourceBinding instanceof KnowItBindingReference){
+										KnowItBindingReference ref = (KnowItBindingReference) sourceBinding;
+										uninitialized.getValue().setDisplayText(ref.getValue().getDisplayText());										
+									}
+								}
+							}
+						}
+					}
+
+					@Override
+					protected void defaultProcessComplex(
+							ComplexStoryComponent complex) {
+						for (StoryComponent child : complex.getChildren()) {
+							child.process(this);
+						}
+					}
+				});
+			}
+		}
 
 		// Set the history to the active model
 		UndoManager.getInstance().setActiveHistory(
