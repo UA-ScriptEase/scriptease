@@ -88,6 +88,7 @@ public class LibraryPanel extends JTabbedPane {
 			public void modelChanged(SEModelEvent event) {
 				switch (event.getEventType()) {
 				case ADDED:
+				case ACTIVATED:
 					final SEModel model = event.getPatternModel();
 
 					model.process(new ModelAdapter() {
@@ -128,8 +129,6 @@ public class LibraryPanel extends JTabbedPane {
 				case REMOVED:
 					if (SEModelManager.getInstance().getActiveModel() != null)
 						break;
-				case ACTIVATED:
-					mainLibraryPanel.updateLists();
 				default:
 					break;
 				}
