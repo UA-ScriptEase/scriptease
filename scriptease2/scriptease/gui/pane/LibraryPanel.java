@@ -103,18 +103,20 @@ public class LibraryPanel extends JTabbedPane {
 						}
 
 						@Override
-						public void processStoryModel(StoryModel story) {
+						public void processStoryModel(final StoryModel story) {
 							mainLibraryPanel.setLibraries(story.getLibraries());
 
 							story.addStoryModelObserver(new StoryModelAdapter() {
 								@Override
 								public void libraryAdded(LibraryModel library) {
-									mainLibraryPanel.updateLists();
+									mainLibraryPanel.setLibraries(story
+											.getLibraries());
 								}
 
 								@Override
 								public void libraryRemoved(LibraryModel library) {
-									mainLibraryPanel.updateLists();
+									mainLibraryPanel.setLibraries(story
+											.getLibraries());
 								}
 							});
 						}
