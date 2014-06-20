@@ -33,6 +33,7 @@ import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
+import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.filters.StoryComponentSearchFilter;
 import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.TypeFilter;
@@ -360,6 +361,8 @@ public class LibraryPanel extends JTabbedPane {
 			public void run() {
 				list.updateFilter(new TypeFilter(typeAction.getSelectedTypes()));
 
+				list.removeAllStoryComponents();
+
 				updateList(list);
 			}
 		});
@@ -402,6 +405,16 @@ public class LibraryPanel extends JTabbedPane {
 			StoryComponentPanelJListObserver observer) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			list.addObserver(object, observer);
+		}
+	}
+
+	public void updateFilter(StoryComponentFilter filter) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.updateFilter(filter);
+
+			list.removeAllStoryComponents();
+
+			updateList(list);
 		}
 	}
 
