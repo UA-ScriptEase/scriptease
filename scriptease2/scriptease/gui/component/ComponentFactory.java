@@ -473,8 +473,13 @@ public final class ComponentFactory {
 		return button;
 	}
 
-	@SuppressWarnings("serial")
 	public static JToggleButton buildFlatToggleButton(final Color color) {
+		return ComponentFactory.buildFlatToggleButton(color, "");
+	}
+
+	@SuppressWarnings("serial")
+	public static JToggleButton buildFlatToggleButton(final Color color,
+			String text) {
 		final JToggleButton button = new JToggleButton() {
 			private ButtonState state;
 			private ButtonState previousState;
@@ -537,9 +542,11 @@ public final class ComponentFactory {
 						fillColor = GUIOp.scaleWhite(color, 1.6);
 						break;
 					case TOGGLED:
+						this.setForeground(color);
 						fillColor = GUIOp.scaleWhite(color, 2.0);
 						break;
 					default:
+						this.setForeground(Color.white);
 						fillColor = color;
 						break;
 					}
@@ -554,9 +561,16 @@ public final class ComponentFactory {
 		};
 
 		button.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		button.setForeground(Color.white);
+
+		if (button.isSelected())
+			button.setForeground(color);
+		else
+			button.setForeground(Color.white);
 
 		button.setContentAreaFilled(false);
+
+		if (StringOp.exists(text))
+			button.setText(text);
 
 		return button;
 	}
