@@ -236,14 +236,15 @@ public class CodeBlockReference extends CodeBlock {
 	public boolean moveCodeFragment(AbstractFragment fragment, int delta) {
 		return this.target.moveCodeFragment(fragment, delta);
 	}
-	
+
 	@Override
 	public boolean deleteCodeFragment(AbstractFragment fragment) {
 		return this.target.deleteCodeFragment(fragment);
 	}
-	
+
 	@Override
-	public boolean insertCodeFragment(AbstractFragment fragment, AbstractFragment previousFragment) {
+	public boolean insertCodeFragment(AbstractFragment fragment,
+			AbstractFragment previousFragment) {
 		return this.target.insertCodeFragment(fragment, previousFragment);
 	}
 
@@ -262,7 +263,7 @@ public class CodeBlockReference extends CodeBlock {
 
 		return hashCode;
 	}
-	
+
 	public Collection<String> getIncludes() {
 		return this.getTarget().getIncludes();
 	}

@@ -14,6 +14,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -311,6 +312,12 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 				final KnowIt knowIt = uninitialized.getValue();
 				addObservers(knowIt);
+			}
+
+			@Override
+			public void processAutomatic(KnowItBindingAutomatic automatic) {
+				defaultProcess(automatic);
+				automatic.setOwner(KnowIt.this);
 			}
 
 			@Override

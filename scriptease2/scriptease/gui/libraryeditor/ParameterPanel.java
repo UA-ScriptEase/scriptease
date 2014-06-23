@@ -243,7 +243,7 @@ public class ParameterPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (automaticCheckBox.isSelected()) {
-					knowIt.setBinding(new KnowItBindingAutomatic());
+					knowIt.setBinding(new KnowItBindingAutomatic(knowIt));
 				} else {
 					knowIt.clearBinding();
 				}

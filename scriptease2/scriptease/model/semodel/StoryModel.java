@@ -218,7 +218,7 @@ public final class StoryModel extends SEModel {
 
 					if (description instanceof KnowIt
 							&& description.getDisplayText().contains(
-									"Is Active")) {
+									"Current Active")) {
 						isActiveDescription = (KnowIt) description;
 						break outer;
 					}
