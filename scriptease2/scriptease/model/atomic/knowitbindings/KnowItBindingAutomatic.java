@@ -5,10 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import scriptease.controller.BindingVisitor;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
 
@@ -22,13 +24,23 @@ import scriptease.translator.io.model.SimpleResource;
  * @see {@link scriptease.model.atomic.KnowIt}
  */
 public class KnowItBindingAutomatic extends KnowItBinding {
+	private KnowIt owner = null;
 
-	public KnowItBindingAutomatic() {
+	public KnowItBindingAutomatic(KnowIt owner) {
+		this.owner = owner;
 	}
 
 	@Override
 	public String getScriptValue() {
 		return "<automatic!>";
+	}
+
+	public void setOwner(KnowIt knowIt) {
+		this.owner = knowIt;
+	}
+
+	public KnowIt getOwner() {
+		return this.owner;
 	}
 
 	/**
@@ -41,22 +53,27 @@ public class KnowItBindingAutomatic extends KnowItBinding {
 	 * do anything.
 	 */
 	@Override
-	public Resource getValue() {
-		final List<Resource> automatics = new ArrayList<Resource>();
+	public Object getValue() {
+		if (this.getFirstType().equals(GameType.STORY_POINT_TYPE)) {
+			return StoryComponentUtils.getParentStoryPoint(this.owner);
+		} else {
+			final List<Resource> automatics = new ArrayList<Resource>();
 
-		final SEModel seModel = SEModelManager.getInstance().getActiveModel();
+			final SEModel seModel = SEModelManager.getInstance()
+					.getActiveModel();
 
-		if (seModel instanceof StoryModel) {
-			StoryModel storyModel = (StoryModel) seModel;
-			automatics.addAll(storyModel.getModule().getAutomaticHandlers()
-					.get("automatic"));
+			if (seModel instanceof StoryModel) {
+				StoryModel storyModel = (StoryModel) seModel;
+				automatics.addAll(storyModel.getModule().getAutomaticHandlers()
+						.get("automatic"));
+			}
+
+			if (automatics.isEmpty())
+				return new SimpleResource(new ArrayList<String>(),
+						"No Automatic Handlers");
+			else
+				return automatics.get(0);
 		}
-
-		if (automatics.isEmpty())
-			return new SimpleResource(new ArrayList<String>(),
-					"No Automatic Handlers");
-		else
-			return automatics.get(0);
 	}
 
 	@Override
@@ -66,17 +83,26 @@ public class KnowItBindingAutomatic extends KnowItBinding {
 
 	@Override
 	public Collection<String> getTypes() {
-		return new ArrayList<String>(0);
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		return other instanceof KnowItBindingAutomatic;
+		if (this.owner != null)
+			return this.owner.getTypes();
+		else
+			return new ArrayList<String>(0);
 	}
 
 	@Override
 	public int hashCode() {
-		return 0;
+		int hashCode = super.hashCode();
+
+		if (this.owner != null)
+			hashCode += this.owner.hashCode();
+
+		return hashCode;
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		return other instanceof KnowItBindingAutomatic
+				&& this.hashCode() == other.hashCode();
 	}
 
 	/**

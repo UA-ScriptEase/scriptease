@@ -169,7 +169,7 @@ public class KnowItBindingConverter implements Converter {
 		else if (flavour.equalsIgnoreCase(FLAVOUR_UNINITIALIZED))
 			binding = this.unmarshallUninitializedBinding(reader, context);
 		else if (flavour.equalsIgnoreCase(FLAVOUR_AUTOMATIC))
-			binding = new KnowItBindingAutomatic();
+			binding = new KnowItBindingAutomatic(null);
 		else if (flavour.equalsIgnoreCase(FLAVOUR_STORY_POINT))
 			binding = this.unmarshallStoryPointBinding(reader, context);
 		else if (flavour.equalsIgnoreCase(FLAVOUR_STORY_GROUP))
