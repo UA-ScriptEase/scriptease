@@ -411,19 +411,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 				destinationKnowIt.setBinding(sourceBinding);
 
-				
-				//My gut says this if block is unnecessary, doesn't seem to impact functionality from what I've tested.
-/*				if (sourceBinding.getValue() instanceof KnowItBindingResource) {
-					KnowItBindingReference ref = (KnowItBindingReference) sourceBinding
-							.getValue();
-					destinationKnowIt.setOriginalDisplayText(ref.getValue()
-							.getOriginalDisplayText());
-				} else if (sourceBinding.getValue() instanceof KnowItBindingReference) {
-					KnowItBindingResource res = (KnowItBindingResource) sourceBinding
-							.getValue();
-					destinationKnowIt.setOriginalDisplayText(res.getName());
-				}*/
-
 				// Check if the source binding is disabled. If it is, we should
 				// disable this component too.
 				if (this.isWidgetOwnerDisabled(support)) {
