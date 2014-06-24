@@ -24,6 +24,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -189,7 +190,7 @@ public final class ScriptEase implements Runnable {
 			}
 		});
 
-		se.run();
+		SwingUtilities.invokeLater(se);
 	}
 
 	/**
