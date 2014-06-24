@@ -23,11 +23,6 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public abstract class StoryNode extends ComplexStoryComponent {
-
-	public StoryNode() {
-		super(LibraryModel.getNonLibrary());
-	}
-
 	private static int storyNodeCounter = 1;
 
 	/**
@@ -39,6 +34,12 @@ public abstract class StoryNode extends ComplexStoryComponent {
 
 	protected Set<StoryNode> successors;
 	protected Set<StoryNode> parents;
+
+	private boolean hasProblems = false;
+
+	public StoryNode() {
+		super(LibraryModel.getNonLibrary());
+	}
 
 	/**
 	 * Adds a successor to the StoryNode
@@ -72,6 +73,17 @@ public abstract class StoryNode extends ComplexStoryComponent {
 			return true;
 		}
 		return false;
+	}
+
+	public void setHasProblems(boolean hasProblems) {
+		this.hasProblems = hasProblems;
+
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.STORY_NODE_PROBLEMS_SET));
+	}
+
+	public boolean hasProblems() {
+		return this.hasProblems;
 	}
 
 	/**

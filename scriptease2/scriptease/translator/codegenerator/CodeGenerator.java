@@ -148,6 +148,7 @@ public class CodeGenerator {
 			// Remove the automatics from the story again.
 			root.removeStoryChildren(automaticCauses);
 		} else {
+			
 			WindowFactory.getInstance().showCompileProblems(problems);
 		}
 
