@@ -57,9 +57,13 @@ public class SemanticAnalyzer extends StoryAdapter {
 		// Get all the StoryNodes in the model
 		for (StoryPoint storyPoint : storyPoints) {
 			// Process all the components from each StoryPoint
+			final int initialSize = this.problems.size();
+
 			for (StoryComponent child : storyPoint.getChildren()) {
 				child.process(this);
 			}
+
+			storyPoint.setHasProblems(this.problems.size() > initialSize);
 		}
 	}
 
@@ -92,10 +96,10 @@ public class SemanticAnalyzer extends StoryAdapter {
 	public void processBehaviour(Behaviour behaviour) {
 		this.processScriptIt(behaviour);
 
-		//final Task startTask = behaviour.getStartTask();
-		//startTask.process(this);
-		//for (Task task : startTask.getSuccessors())
-		//	task.process(this);
+		// final Task startTask = behaviour.getStartTask();
+		// startTask.process(this);
+		// for (Task task : startTask.getSuccessors())
+		// task.process(this);
 	}
 
 	@Override

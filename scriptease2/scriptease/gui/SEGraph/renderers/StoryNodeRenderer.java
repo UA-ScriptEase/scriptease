@@ -1,5 +1,7 @@
 package scriptease.gui.SEGraph.renderers;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
@@ -11,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
@@ -46,32 +49,34 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 	@Override
 	protected void configureInternalComponents(final JComponent component,
 			final StoryNode node) {
+		component.setLayout(new BoxLayout(component, BoxLayout.LINE_AXIS));
+		node.process(new StoryAdapter() {
+			@Override
+			public void processStoryPoint(StoryPoint storyPoint) {
+				final StoryComponentObserver fanInObserver;
 
-		if (node instanceof StoryPoint) {
-			final StoryComponentObserver fanInObserver;
-
-			fanInObserver = new StoryComponentObserver() {
-				@Override
-				public void componentChanged(StoryComponentEvent event) {
-					if (event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN) {
-						StoryNodeRenderer.this.updateComponents(component,
-								(StoryPoint) node);
+				fanInObserver = new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getType() == StoryComponentChangeEnum.CHANGE_FAN_IN) {
+							StoryNodeRenderer.this.updateComponents(component,
+									(StoryPoint) node);
+						}
 					}
-				}
-			};
+				};
 
-			if (node != null) {
-				this.weakStoryNodesToObservers.put(node, fanInObserver);
-				node.addStoryComponentObserver(fanInObserver);
+				if (node != null) {
+					weakStoryNodesToObservers.put(node, fanInObserver);
+					node.addStoryComponentObserver(fanInObserver);
+				}
+
+				updateComponents(component, storyPoint);
 			}
 
-			component.setLayout(new BoxLayout(component, BoxLayout.LINE_AXIS));
-			this.updateComponents(component, (StoryPoint) node);
-
-		} else if (node instanceof StoryGroup) {
-			component.setLayout(new BoxLayout(component, BoxLayout.LINE_AXIS));
-			this.updateComponents(component, (StoryGroup) node);
-		}
+			public void processStoryGroup(StoryGroup storyGroup) {
+				updateComponents(component, storyGroup);
+			};
+		});
 	}
 
 	/**
@@ -229,6 +234,28 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 					component);
 		}
 
+		final JLabel problemLabel = new JLabel("!");
+
+		problemLabel.setForeground(Color.RED);
+		problemLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+
+		problemLabel.setVisible(storyPoint.hasProblems());
+
+		storyPoint.addStoryComponentObserver(component,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						if (event.getSource() == storyPoint)
+							if (event.getType() == StoryComponentChangeEnum.STORY_NODE_PROBLEMS_SET) {
+								problemLabel.setVisible(storyPoint
+										.hasProblems());
+							}
+					}
+				});
+
+		component.add(problemLabel);
+		this.createBufferRectangle(VERTICAL_MARGIN, HORIZONTAL_MARGIN,
+				component);
 		component.revalidate();
 	}
 

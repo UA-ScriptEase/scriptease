@@ -72,6 +72,12 @@ public class StoryComponentUtils {
 			public void processScriptIt(ScriptIt scriptIt) {
 				scriptIt.processParameters(this);
 			}
+			
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				super.processCauseIt(causeIt);
+				this.defaultProcessComplex(causeIt);
+			}
 
 			@Override
 			protected void defaultProcessComplex(ComplexStoryComponent complex) {
