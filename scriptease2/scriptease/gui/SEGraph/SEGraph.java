@@ -416,7 +416,7 @@ public class SEGraph<E> extends JComponent {
 			}
 
 			this.renderer.resetAppearances();
-			
+
 			return true;
 		}
 
@@ -716,34 +716,38 @@ public class SEGraph<E> extends JComponent {
 		}
 		return component;
 	}
-	
+
 	/**
 	 * Returns whether or not the given node is a group.
+	 * 
 	 * @param node
 	 * @return
 	 */
-	public boolean isGroup(E node){
+	public boolean isGroup(E node) {
 		return this.model.isGroup(node);
 	}
-	
+
 	/**
-	 * Returns the nodes in a group if node is a group.  Otherwise returns the empty set.
+	 * Returns the nodes in a group if node is a group. Otherwise returns the
+	 * empty set.
+	 * 
 	 * @param node
 	 * @return
 	 */
-	public Collection<E> getGroupMembers (E node){
+	public Collection<E> getGroupMembers(E node) {
 		return this.model.getGroupMembers(node);
 	}
-	
+
 	/**
 	 * Get all the leaf nodes in a given node
+	 * 
 	 * @param node
 	 * @return
 	 */
-	public Collection<? extends E> getSubGroupMembers (E node){
+	public Collection<? extends E> getSubGroupMembers(E node) {
 		return this.model.getSubGroupMembers(node);
-	}	
-	
+	}
+
 	/**
 	 * The class that handles the actual laying out of GraphNodes. The logic is
 	 * fairly basic, and should probably be updated to handle more cases.
@@ -1198,6 +1202,7 @@ public class SEGraph<E> extends JComponent {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			final UndoManager undo = UndoManager.getInstance();
 			final SEGraph<E> graph = SEGraph.this;
 
 			final JComponent source;
@@ -1231,7 +1236,7 @@ public class SEGraph<E> extends JComponent {
 					graph.selectNodesUntil(node);
 
 					for (E selectedNode : graph.getSelectedNodes()) {
-					//for (E selectedNode : graph.getNodes()) {
+						// for (E selectedNode : graph.getNodes()) {
 
 						graph.renderer.reconfigureAppearance(
 								graph.nodesToComponents.getValue(selectedNode),
@@ -1243,30 +1248,33 @@ public class SEGraph<E> extends JComponent {
 
 					nodes.add(node);
 
+					if (!undo.hasOpenUndoableAction())
+						undo.startUndoableAction("Select " + nodes);
+						
 					graph.setSelectedNodes(nodes);
+					
+					undo.endUndoableAction();
 				}
 				source.requestFocusInWindow();
 			} else if (mode == Mode.INSERT && !graph.isReadOnly) {
 				if (this.lastEnteredNode != null)
 					if (this.lastEnteredNode == node) {
-						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-							UndoManager.getInstance().startUndoableAction(
-									"Add new node to " + node);
+						if (!undo.hasOpenUndoableAction()) {
+							undo.startUndoableAction("Add new node to " + node);
 
 							graph.addNewNodeTo(node);
 
-							UndoManager.getInstance().endUndoableAction();
+							undo.endUndoableAction();
 						}
 					} else {
-						if (!UndoManager.getInstance().hasOpenUndoableAction()) {
-							UndoManager.getInstance().startUndoableAction(
-									"Add " + node + " between "
-											+ this.lastEnteredNode + " and "
-											+ node);
+						if (!undo.hasOpenUndoableAction()) {
+							undo.startUndoableAction("Add " + node
+									+ " between " + this.lastEnteredNode
+									+ " and " + node);
 
 							graph.addNewNodeBetween(this.lastEnteredNode, node);
 
-							UndoManager.getInstance().endUndoableAction();
+							undo.endUndoableAction();
 						}
 					}
 
@@ -1280,39 +1288,36 @@ public class SEGraph<E> extends JComponent {
 								.unformGroup((StoryGroup) node);
 					}
 				} else {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Remove " + node);
+					if (!undo.hasOpenUndoableAction())
+						undo.startUndoableAction("Remove " + node);
 
 					graph.removeNode(node);
 					graph.repaint();
 
-					UndoManager.getInstance().endUndoableAction();
+					undo.endUndoableAction();
 				}
 			} else if (mode == Mode.CONNECT && !graph.isReadOnly) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node
 						&& this.lastExitedNode != this.lastEnteredNode) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Connect " + this.lastEnteredNode + " to "
-										+ node);
+					if (!undo.hasOpenUndoableAction())
+						undo.startUndoableAction("Connect "
+								+ this.lastEnteredNode + " to " + node);
 
 					graph.connectNodes(this.lastEnteredNode, node);
 
-					UndoManager.getInstance().endUndoableAction();
+					undo.endUndoableAction();
 				}
 			} else if (mode == Mode.DISCONNECT && !graph.isReadOnly) {
 				if (this.lastEnteredNode != null
 						&& this.lastEnteredNode != node) {
-					if (!UndoManager.getInstance().hasOpenUndoableAction())
-						UndoManager.getInstance().startUndoableAction(
-								"Disconnect " + this.lastEnteredNode + " from "
-										+ node);
+					if (!undo.hasOpenUndoableAction())
+						undo.startUndoableAction("Disconnect "
+								+ this.lastEnteredNode + " from " + node);
 
 					graph.disconnectNodes(this.lastEnteredNode, node);
 
-					UndoManager.getInstance().endUndoableAction();
+					undo.endUndoableAction();
 				}
 			}
 
