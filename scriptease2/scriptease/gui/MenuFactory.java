@@ -453,123 +453,67 @@ public class MenuFactory {
 		if (activeModel instanceof StoryModel) {
 			final StoryModel model = (StoryModel) activeModel;
 
-			final Collection<LibraryModel> translatorOptionalLibraries;
-			final Collection<LibraryModel> modelOptionalLibraries;
-			final JMenu addLibrary;
-			final JMenu removeLibrary;
+			final JMenu addMenu;
+			final JMenu removeMenu;
 
-			addLibrary = new JMenu("Add Library");
-			removeLibrary = new JMenu("Remove Library");
+			addMenu = new JMenu("Add Library");
+			removeMenu = new JMenu("Remove Library");
 
-			translatorOptionalLibraries = model.getTranslator()
-					.getOptionalLibraries();
-			modelOptionalLibraries = model.getOptionalLibraries();
+			final Runnable rebuildLibraryAddRemoveMenus = new Runnable() {
+				@Override
+				public void run() {
+					addMenu.removeAll();
+					removeMenu.removeAll();
 
-			addLibrary.setEnabled(!translatorOptionalLibraries.isEmpty());
-			removeLibrary.setEnabled(!modelOptionalLibraries.isEmpty());
+					final List<LibraryModel> translatorLibraries;
+					final List<LibraryModel> modelLibraries;
 
-			for (LibraryModel library : translatorOptionalLibraries) {
-				final AddLibraryToStoryModelAction addLibraryAction;
+					translatorLibraries = new ArrayList<LibraryModel>();
+					modelLibraries = new ArrayList<LibraryModel>(
+							model.getOptionalLibraries());
 
-				addLibraryAction = new AddLibraryToStoryModelAction(library);
+					for (LibraryModel lib : model.getTranslator()
+							.getOptionalLibraries()) {
+						if (!modelLibraries.contains(lib))
+							translatorLibraries.add(lib);
+					}
 
-				addLibrary.add(addLibraryAction);
-				// disable all library actions with libraries that have already
-				// been added.
-				if (modelOptionalLibraries.contains(library))
-					addLibraryAction.setEnabled(false);
-			}
+					addMenu.setEnabled(!translatorLibraries.isEmpty());
+					removeMenu.setEnabled(!modelLibraries.isEmpty());
 
-			for (LibraryModel library : modelOptionalLibraries) {
-				removeLibrary
-						.add(new RemoveLibraryFromStoryModelAction(library));
-			}
+					Collections.sort(translatorLibraries);
+					Collections.sort(modelLibraries);
+
+					for (LibraryModel lib : translatorLibraries) {
+						addMenu.add(new AddLibraryToStoryModelAction(lib));
+					}
+
+					for (LibraryModel lib : modelLibraries) {
+						removeMenu.add(new RemoveLibraryFromStoryModelAction(
+								lib));
+					}
+				}
+			};
+
+			rebuildLibraryAddRemoveMenus.run();
 
 			// Listen for add / remove library changes.
 			model.addStoryModelObserver(new StoryModelAdapter() {
 
 				@Override
 				public void libraryAdded(LibraryModel library) {
+					rebuildLibraryAddRemoveMenus.run();
 
-					// disable add library action for the library that was
-					// added.
-					for (Component libraryMenu : addLibrary.getMenuComponents()) {
-						if (libraryMenu instanceof JMenuItem) {
-
-							final JMenuItem item = (JMenuItem) libraryMenu;
-
-							if (item.getAction() instanceof AddLibraryToStoryModelAction) {
-								final AddLibraryToStoryModelAction action;
-
-								action = (AddLibraryToStoryModelAction) item
-										.getAction();
-
-								if (action.getLibrary() == library) {
-									action.setEnabled(false);
-									break;
-								}
-							}
-						}
-					}
-
-					// add a action for this library to be removed.
-					removeLibrary.add(new RemoveLibraryFromStoryModelAction(
-							library));
-					if (!removeLibrary.isEnabled())
-						removeLibrary.setEnabled(true);
 				}
 
 				@Override
 				public void libraryRemoved(LibraryModel library) {
-
-					// enable add library action for the library that was
-					// removed.
-					for (Component libraryMenu : addLibrary.getMenuComponents()) {
-						if (libraryMenu instanceof JMenuItem) {
-
-							final JMenuItem item = (JMenuItem) libraryMenu;
-
-							if (item.getAction() instanceof AddLibraryToStoryModelAction) {
-								final AddLibraryToStoryModelAction action;
-
-								action = (AddLibraryToStoryModelAction) item
-										.getAction();
-
-								if (action.getLibrary() == library) {
-									action.setEnabled(true);
-									break;
-								}
-							}
-						}
-					}
-
-					// remove the action for this library to be removed.
-					for (Component libraryMenu : removeLibrary
-							.getMenuComponents()) {
-						if (libraryMenu instanceof JMenuItem) {
-
-							final JMenuItem item = (JMenuItem) libraryMenu;
-
-							if (item.getAction() instanceof RemoveLibraryFromStoryModelAction) {
-								final RemoveLibraryFromStoryModelAction action;
-
-								action = (RemoveLibraryFromStoryModelAction) item
-										.getAction();
-
-								if (action.getLibrary() == library) {
-									removeLibrary.remove(item);
-									if (model.getOptionalLibraries().isEmpty())
-										removeLibrary.setEnabled(false);
-									break;
-								}
-							}
-						}
-					}
+					rebuildLibraryAddRemoveMenus.run();
 				}
 			});
 
-			menu.add(addLibrary);
-			menu.add(removeLibrary);
+			menu.add(addMenu);
+			menu.add(removeMenu);
 			menu.addSeparator();
 		}
 

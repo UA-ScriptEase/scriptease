@@ -24,8 +24,10 @@ import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
 import scriptease.controller.ModelVisitor;
 import scriptease.gui.WindowFactory;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
+import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameModule;
@@ -911,6 +913,14 @@ public class Translator extends SEModel {
 	public String getTitle() {
 		// TODO should probably do this in a different way.
 		return this.getName();
+	}
+
+	public CodeBlockSource findSimilarTarget(ScriptIt owner, int id) {
+		CodeBlockSource src = null;
+		for (LibraryModel library : this.getLibraries()) {
+			src = library.findCodeBlockSource(owner, id);
+		}
+		return src;
 	}
 
 	@Override

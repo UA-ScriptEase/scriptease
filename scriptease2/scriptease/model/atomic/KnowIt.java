@@ -14,6 +14,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
@@ -31,7 +32,6 @@ import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.Translator;
-import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.SimpleResource;
@@ -148,19 +148,6 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 			if (describeIt != null)
 				library.addDescribeIt(describeIt, clone);
-		} else {
-			// If we found no library, we go through the active libraries to
-			// find a describe it for this KnowIt.
-			for (LibraryModel foundLibrary : TranslatorManager.getInstance()
-					.getActiveTranslator().getLibraries()) {
-				final DescribeIt describeIt;
-				describeIt = foundLibrary.getDescribeIt(this);
-
-				if (describeIt != null) {
-					foundLibrary.addDescribeIt(describeIt, clone);
-					break;
-				}
-			}
 		}
 
 		return clone;
@@ -325,6 +312,12 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 				final KnowIt knowIt = uninitialized.getValue();
 				addObservers(knowIt);
+			}
+
+			@Override
+			public void processAutomatic(KnowItBindingAutomatic automatic) {
+				defaultProcess(automatic);
+				automatic.setOwner(KnowIt.this);
 			}
 
 			@Override
@@ -695,23 +688,24 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * Gets the original display text for a knowit.  Used for dynamic updating
-	 * of activity parameters.
+	 * Gets the original display text for a knowit. Used for dynamic updating of
+	 * activity parameters.
+	 * 
 	 * @return
 	 */
-	public String getOriginalDisplayText(){
+	public String getOriginalDisplayText() {
 		return this.originalDisplayText;
 	}
-	
-	
+
 	/**
-	 * Sets the original display text for a knowit.  Used when activity parameters are changed.
+	 * Sets the original display text for a knowit. Used when activity
+	 * parameters are changed.
+	 * 
 	 * @param text
 	 */
-	public void setOriginalDisplayText(String text){
+	public void setOriginalDisplayText(String text) {
 		this.originalDisplayText = text;
 	}
 }

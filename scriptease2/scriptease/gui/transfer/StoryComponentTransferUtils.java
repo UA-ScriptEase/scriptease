@@ -4,12 +4,14 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.TransferHandler;
 import javax.swing.TransferHandler.TransferSupport;
 
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -268,12 +270,42 @@ public class StoryComponentTransferUtils {
 			success = parent.addStoryChild(clone);
 		}
 
-		clone.revalidateKnowItBindings();
-
 		if (!success)
 			throw new IllegalStateException("Was unable to add " + child
 					+ " to " + parent
 					+ ". This should have been prevented by canImport.");
+
+		clone.revalidateKnowItBindings();
+
+		if (clone instanceof KnowIt
+				// We don't want to do this if we're just moving things around.
+				// Only for copying from the library.
+				&& StoryComponentUtils.getParentStoryPoint(child) == null
+				&& clone.getLibrary().getDescribeIt(clone) != null) {
+			final String originalName = clone.getDisplayText();
+
+			final Collection<KnowIt> descriptions;
+			final Collection<String> descriptionNames;
+
+			descriptions = StoryComponentUtils
+					.getDescendantDescriptions(StoryComponentUtils
+							.getParentStoryPoint(clone));
+			descriptionNames = new ArrayList<String>();
+
+			for (KnowIt knowIt : descriptions) {
+				if (knowIt != clone)
+					descriptionNames.add(knowIt.getDisplayText());
+			}
+
+			String name = originalName;
+			int index = 1;
+			while (descriptionNames.contains(name)) {
+				name = originalName + " " + index++;
+			}
+
+			if (!name.equals(originalName))
+				clone.setDisplayText(name);
+		}
 
 		return clone;
 	}

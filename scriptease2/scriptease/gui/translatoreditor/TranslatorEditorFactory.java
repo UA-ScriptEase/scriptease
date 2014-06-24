@@ -1,18 +1,24 @@
 package scriptease.gui.translatoreditor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -22,6 +28,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.controller.StoryComponentUtils;
@@ -30,6 +38,7 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.WindowFactory;
 import scriptease.gui.component.ComponentFactory;
+import scriptease.gui.filters.SimilarFilter;
 import scriptease.gui.pane.LibraryPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -58,11 +67,14 @@ public class TranslatorEditorFactory {
 				translator.getLibraries());
 
 		Collections.sort(libraries);
+		final Color toolbarColour = ScriptEaseUI.SE_BLUE;
+		final Color arrowColour = ScriptEaseUI.SE_ORANGE;
 
 		final JPanel editor = new JPanel();
 		final LibraryPanel leftLibraryPanel = new LibraryPanel();
 		final LibraryPanel rightLibraryPanel = new LibraryPanel();
 
+		final JPanel toolbarPanel = new JPanel();
 		final JPanel controlPanel = new JPanel();
 		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -74,10 +86,24 @@ public class TranslatorEditorFactory {
 		final JPanel leftPanel;
 		final JPanel rightPanel;
 
-		rightCopyButton = ComponentFactory
-				.buildRightArrowButton(ScriptEaseUI.SE_ORANGE);
-		leftCopyButton = ComponentFactory
-				.buildLeftArrowButton(ScriptEaseUI.SE_ORANGE);
+		final JToolBar toolbar = new JToolBar();
+		final ButtonGroup buttons = new ButtonGroup();
+		final JToggleButton normalButton;
+		final JToggleButton showSimilarWithinButton;
+		final JToggleButton showSimilarBetweenButton;
+		final JToggleButton showDifferentButton;
+
+		normalButton = ComponentFactory.buildFlatToggleButton(toolbarColour,
+				"Normal");
+		showSimilarWithinButton = ComponentFactory.buildFlatToggleButton(
+				toolbarColour, "Similar Within");
+		showSimilarBetweenButton = ComponentFactory.buildFlatToggleButton(
+				toolbarColour, "Similar Between");
+		showDifferentButton = ComponentFactory.buildFlatToggleButton(
+				toolbarColour, "Different Between");
+
+		rightCopyButton = ComponentFactory.buildRightArrowButton(arrowColour);
+		leftCopyButton = ComponentFactory.buildLeftArrowButton(arrowColour);
 
 		leftPanel = buildLibraryChooser(libraries, leftLibraryPanel,
 				rightLibraryPanel, leftComboBox, rightComboBox,
@@ -86,6 +112,75 @@ public class TranslatorEditorFactory {
 				leftLibraryPanel, rightComboBox, leftComboBox, leftCopyButton,
 				rightCopyButton);
 
+		normalButton.setSelected(true);
+
+		buttons.add(normalButton);
+		buttons.add(showSimilarWithinButton);
+		buttons.add(showSimilarBetweenButton);
+		buttons.add(showDifferentButton);
+
+		normalButton.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+				final int state = ev.getStateChange();
+
+				if (state == ItemEvent.SELECTED) {
+					leftLibraryPanel.updateFilter(SimilarFilter
+							.buildEmptySimilarFilter());
+					rightLibraryPanel.updateFilter(SimilarFilter
+							.buildEmptySimilarFilter());
+
+				}
+			}
+		});
+
+		showSimilarWithinButton.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+				final int state = ev.getStateChange();
+
+				if (state == ItemEvent.SELECTED) {
+					leftLibraryPanel.updateFilter(SimilarFilter
+							.buildSimilarWithinFilter(getLibrary(leftLibraryPanel)));
+					rightLibraryPanel.updateFilter(SimilarFilter
+							.buildSimilarWithinFilter(getLibrary(rightLibraryPanel)));
+				}
+			}
+		});
+
+		showSimilarBetweenButton.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+				final int state = ev.getStateChange();
+
+				if (state == ItemEvent.SELECTED) {
+					leftLibraryPanel.updateFilter(SimilarFilter
+							.buildSimilarBetweenFilter(getLibrary(rightLibraryPanel)));
+					rightLibraryPanel.updateFilter(SimilarFilter
+							.buildSimilarBetweenFilter(getLibrary(leftLibraryPanel)));
+				}
+			}
+		});
+
+		showDifferentButton.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+				final int state = ev.getStateChange();
+
+				if (state == ItemEvent.SELECTED) {
+					leftLibraryPanel.updateFilter(SimilarFilter
+							.buildDifferenceFilter(getLibrary(rightLibraryPanel)));
+					rightLibraryPanel.updateFilter(SimilarFilter
+							.buildDifferenceFilter(getLibrary(leftLibraryPanel)));
+				}
+			}
+		});
+
+		for (Enumeration<AbstractButton> button = buttons.getElements(); button
+				.hasMoreElements();) {
+			toolbar.add(button.nextElement());
+			toolbar.add(ComponentFactory.buildSpacer(1, 4));
+		}
+
+		toolbar.setFloatable(false);
+		toolbar.setOpaque(false);
+
 		splitPane.setTopComponent(leftPanel);
 		splitPane.setBottomComponent(rightPanel);
 		splitPane.setOpaque(false);
@@ -93,17 +188,37 @@ public class TranslatorEditorFactory {
 		splitPane.setBorder(null);
 		WidgetDecorator.setSimpleDivider(splitPane);
 
-		controlPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		// The multiple JPanels are so Swing does what we want it to do.
+		toolbarPanel.add(toolbar);
+		toolbarPanel.setOpaque(false);
+		controlPanel.setLayout(new BorderLayout());
 		controlPanel.setOpaque(false);
+		controlPanel.add(toolbarPanel, BorderLayout.CENTER);
+		controlPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1,
+				ScriptEaseUI.PRIMARY_UI));
 
-		editor.setBackground(ScriptEaseUI.SECONDARY_UI);
+		editor.setBackground(ScriptEaseUI.PRIMARY_UI);
 		editor.setLayout(new BorderLayout());
+		editor.add(controlPanel, BorderLayout.NORTH);
 		editor.add(splitPane, BorderLayout.CENTER);
-		editor.add(controlPanel, BorderLayout.SOUTH);
 
 		return editor;
 	}
 
+	/**
+	 * This method creates the left and right library panels. They need to know
+	 * about each other's stuff, so that's why they look a bit ugly.
+	 * 
+	 * 
+	 * @param libraries
+	 * @param thisLibraryPanel
+	 * @param otherLibraryPanel
+	 * @param thisComboBox
+	 * @param otherComboBox
+	 * @param thisCopyButton
+	 * @param otherCopyButton
+	 * @return
+	 */
 	private static JPanel buildLibraryChooser(
 			final Collection<LibraryModel> libraries,
 			final LibraryPanel thisLibraryPanel,
@@ -111,13 +226,14 @@ public class TranslatorEditorFactory {
 			final JComboBox otherComboBox, final JButton thisCopyButton,
 			final JButton otherCopyButton) {
 
-		final JPanel panel = new JPanel();
+		final JPanel panel = new JPanel(new BorderLayout());
 
 		thisCopyButton.setEnabled(false);
 		thisCopyButton.setPreferredSize(new Dimension(1, 25));
+		thisCopyButton.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,
+				ScriptEaseUI.SE_BLACK));
 
 		thisComboBox.addItem(null);
-
 		for (LibraryModel library : libraries) {
 			thisComboBox.addItem(library.getTitle());
 		}
@@ -125,8 +241,7 @@ public class TranslatorEditorFactory {
 		thisCopyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final LibraryModel otherLibrary = ListOp.head(otherLibraryPanel
-						.getLibraries());
+				final LibraryModel otherLibrary = getLibrary(otherLibraryPanel);
 
 				if (!UndoManager.getInstance().hasOpenUndoableAction())
 					UndoManager.getInstance().startUndoableAction(
@@ -184,8 +299,15 @@ public class TranslatorEditorFactory {
 				otherComboBox.removeAllItems();
 				otherComboBox.addItem(null);
 				for (LibraryModel library : libraries) {
-					if (library != found)
+					if (library != found) {
+						final LibraryModel otherLibrary = ListOp
+								.head(otherLibraryPanel.getLibraries());
 						otherComboBox.addItem(library.getTitle());
+
+						if (otherLibrary != null)
+							otherComboBox.setSelectedItem(otherLibrary
+									.getTitle());
+					}
 				}
 
 				for (ActionListener listener : listeners) {
@@ -194,12 +316,23 @@ public class TranslatorEditorFactory {
 			}
 		});
 
-		panel.setLayout(new BorderLayout());
 		panel.setOpaque(false);
 		panel.add(thisComboBox, BorderLayout.NORTH);
 		panel.add(thisLibraryPanel, BorderLayout.CENTER);
 		panel.add(thisCopyButton, BorderLayout.SOUTH);
+
 		return panel;
+	}
+
+	/**
+	 * Library Panels usually represent more than one library. This lets us grab
+	 * the first one with a simple method call.
+	 * 
+	 * @param panel
+	 * @return
+	 */
+	private static LibraryModel getLibrary(LibraryPanel panel) {
+		return ListOp.head(panel.getLibraries());
 	}
 
 	/**

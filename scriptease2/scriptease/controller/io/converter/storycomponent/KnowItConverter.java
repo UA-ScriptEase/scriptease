@@ -9,6 +9,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.complex.ScriptIt;
@@ -82,7 +83,8 @@ public class KnowItConverter extends StoryComponentConverter {
 						}
 					}
 				}
-			}
+			} else if (binding instanceof KnowItBindingAutomatic)
+				((KnowItBindingAutomatic) binding).setOwner(knowIt);
 		} else
 			binding = null;
 
