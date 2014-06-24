@@ -20,12 +20,14 @@ import scriptease.translator.io.model.SimpleResource;
  */
 public class KnowItBindingResource extends KnowItBinding {
 	private final Resource resource;
-
+	private String originalParameterText;
+	
 	public KnowItBindingResource(Resource resource) {
 		if (resource == null)
 			throw new IllegalStateException(
 					"GameConstant's cannot be set to null in a KnowItBindingConstant.");
 		this.resource = resource;
+		this.originalParameterText = resource.getName();
 	}
 
 	@Override
@@ -35,6 +37,14 @@ public class KnowItBindingResource extends KnowItBinding {
 
 	public String getName() {
 		return this.resource.getName();
+	}
+	
+	public String getOriginalParameterText(){
+		return this.originalParameterText;
+	}
+	
+	public void setOriginalParameterText(String text){
+		this.originalParameterText = text;
 	}
 
 	public String getTag() {
