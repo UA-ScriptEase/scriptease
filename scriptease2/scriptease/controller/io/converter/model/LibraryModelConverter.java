@@ -212,7 +212,7 @@ public class LibraryModelConverter implements Converter {
 			for (StoryComponent description : library.getDescriptionsCategory()
 					.getChildren()) {
 				if (description instanceof KnowIt
-						&& description.getDisplayText().contains("Is Active")) {
+						&& description.getDisplayText().contains("Current Active")) {
 					final KnowIt knowIt = ((KnowIt) description).clone();
 					final AskIt askIt = LibraryModel.createAskIt();
 

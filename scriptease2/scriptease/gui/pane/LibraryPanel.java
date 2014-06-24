@@ -33,6 +33,7 @@ import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.filters.CategoryFilter;
 import scriptease.gui.filters.CategoryFilter.Category;
+import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.filters.StoryComponentSearchFilter;
 import scriptease.gui.filters.TranslatorFilter;
 import scriptease.gui.filters.TypeFilter;
@@ -88,6 +89,7 @@ public class LibraryPanel extends JTabbedPane {
 			public void modelChanged(SEModelEvent event) {
 				switch (event.getEventType()) {
 				case ADDED:
+				case ACTIVATED:
 					final SEModel model = event.getPatternModel();
 
 					model.process(new ModelAdapter() {
@@ -102,18 +104,20 @@ public class LibraryPanel extends JTabbedPane {
 						}
 
 						@Override
-						public void processStoryModel(StoryModel story) {
+						public void processStoryModel(final StoryModel story) {
 							mainLibraryPanel.setLibraries(story.getLibraries());
 
 							story.addStoryModelObserver(new StoryModelAdapter() {
 								@Override
 								public void libraryAdded(LibraryModel library) {
-									mainLibraryPanel.updateLists();
+									mainLibraryPanel.setLibraries(story
+											.getLibraries());
 								}
 
 								@Override
 								public void libraryRemoved(LibraryModel library) {
-									mainLibraryPanel.updateLists();
+									mainLibraryPanel.setLibraries(story
+											.getLibraries());
 								}
 							});
 						}
@@ -128,8 +132,6 @@ public class LibraryPanel extends JTabbedPane {
 				case REMOVED:
 					if (SEModelManager.getInstance().getActiveModel() != null)
 						break;
-				case ACTIVATED:
-					mainLibraryPanel.updateLists();
 				default:
 					break;
 				}
@@ -359,6 +361,8 @@ public class LibraryPanel extends JTabbedPane {
 			public void run() {
 				list.updateFilter(new TypeFilter(typeAction.getSelectedTypes()));
 
+				list.removeAllStoryComponents();
+
 				updateList(list);
 			}
 		});
@@ -401,6 +405,16 @@ public class LibraryPanel extends JTabbedPane {
 			StoryComponentPanelJListObserver observer) {
 		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
 			list.addObserver(object, observer);
+		}
+	}
+
+	public void updateFilter(StoryComponentFilter filter) {
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			list.updateFilter(filter);
+
+			list.removeAllStoryComponents();
+
+			updateList(list);
 		}
 	}
 

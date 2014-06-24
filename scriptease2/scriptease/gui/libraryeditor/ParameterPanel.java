@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -39,6 +40,7 @@ import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -93,12 +95,14 @@ public class ParameterPanel extends JPanel {
 
 		final TypeAction typeAction;
 		final ArrayList<String> types;
+		final JCheckBox automaticCheckBox;
 		final JButton typesButton;
 		final JComboBox defaultTypeBox;
 		final JButton deleteButton;
 		final JComponent bindingConstantComponent;
 		final JTextField nameField;
 
+		final JPanel automaticPanel;
 		final JPanel defaultTypeBoxPanel;
 		final JPanel bindingPanel;
 
@@ -112,16 +116,16 @@ public class ParameterPanel extends JPanel {
 		defaultTypeBox = new JComboBox();
 		deleteButton = ComponentFactory.buildRemoveButton();
 		bindingConstantComponent = new JPanel();
+		automaticCheckBox = new JCheckBox();
 
 		defaultTypeBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		automaticPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		bindingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
 		// Behaviours currently use a null ScriptIt to generate their parameter
-		// panel
-		// So we have to account for that when checking read only. When
-		// behaviours
-		// are more implemented this will probably need to be reworked.
-		// (currently
+		// panel, so we have to account for that when checking read only. When
+		// behaviours are more implemented this will probably need to be
+		// reworked.
 		// -zturchan
 		if (scriptIt != null) {
 			isEditable = ScriptEase.DEBUG_MODE
@@ -231,9 +235,30 @@ public class ParameterPanel extends JPanel {
 			deleteButton.setVisible(false);
 		}
 
+		automaticCheckBox
+				.setSelected(knowIt.getBinding() instanceof KnowItBindingAutomatic);
+
+		automaticCheckBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (automaticCheckBox.isSelected()) {
+					knowIt.setBinding(new KnowItBindingAutomatic(knowIt));
+				} else {
+					knowIt.clearBinding();
+				}
+
+				updateBindingConstantComponent(bindingConstantComponent);
+			}
+		});
+
 		defaultTypeBoxPanel.add(new JLabel("First Type:"));
 		defaultTypeBox.setEnabled(isEditable);
 		defaultTypeBoxPanel.add(defaultTypeBox);
+
+		automaticPanel.add(new JLabel("Bind Automatically"));
+		automaticCheckBox.setEnabled(isEditable);
+		automaticPanel.add(automaticCheckBox);
 
 		bindingPanel.add(new JLabel("Default Value:"));
 		bindingConstantComponent.setEnabled(isEditable);
@@ -260,6 +285,7 @@ public class ParameterPanel extends JPanel {
 		this.add(typesButton);
 		this.add(defaultTypeBoxPanel);
 		if (scriptIt != null && codeBlock != null) {
+			this.add(automaticPanel);
 			this.add(bindingPanel);
 			this.add(Box.createHorizontalGlue());
 			this.add(deleteButton);
@@ -366,7 +392,10 @@ public class ParameterPanel extends JPanel {
 
 		bindingConstantComponent.removeAll();
 
-		if (defaultTypeGuiType == null)
+		if (this.knowIt.getBinding() instanceof KnowItBindingAutomatic) {
+			inactiveTextField.setText("Binding will be added automatically.");
+			bindingConstantComponent.add(inactiveTextField);
+		} else if (defaultTypeGuiType == null)
 			bindingConstantComponent.add(inactiveTextField);
 		else {
 			final String bindingText;

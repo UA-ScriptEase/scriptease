@@ -218,14 +218,7 @@ public abstract class SEGraphModel<E> {
 		} else if (this.getDescendants(parent).contains(child)) {
 			connected = this.addChild(child, parent);
 		} else {
-			final int childDepth = this.getDepthMap().get(child);
-			final int parentDepth = this.getDepthMap().get(parent);
-
-			if (childDepth >= parentDepth) {
-				connected = this.addChild(child, parent);
-			} else {
-				connected = false;
-			}
+			connected = this.addChild(child, parent);
 		}
 
 		if (connected)

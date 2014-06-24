@@ -14,7 +14,6 @@ import scriptease.controller.observer.library.LibraryEvent;
 import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
-import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -985,15 +984,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 					// keep looking
 					knowIts.clear();
 				}
-			}
-
-			if (this.found == null) {
-				final String msg = "Failed to find CodeBlock #" + targetId
-						+ " in \"" + owner + "\" in the library, "
-						+ LibraryModel.this + ", nulling the reference.";
-				System.err.println(msg);
-				WindowFactory.getInstance().showWarningDialog("Library Error",
-						msg);
 			}
 
 			return this.found;

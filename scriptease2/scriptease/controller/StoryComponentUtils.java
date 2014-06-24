@@ -17,6 +17,7 @@ import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryNode;
+import scriptease.model.complex.StoryPoint;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.Resource;
 
@@ -83,6 +84,46 @@ public class StoryComponentUtils {
 	}
 
 	/**
+	 * Returns the story point that contains the parent somewhere.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public static StoryPoint getParentStoryPoint(StoryComponent component) {
+		StoryComponent parent = component.getOwner();
+
+		while (parent != null && !(parent instanceof StoryPoint)) {
+			parent = parent.getOwner();
+		}
+
+		return (StoryPoint) parent;
+	}
+
+	/**
+	 * Gets all code blocks from descendants of and from the root component.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public static Collection<CodeBlock> getCodeBlocks(StoryComponent component) {
+		final Collection<CodeBlock> codeBlocks = new ArrayList<CodeBlock>();
+
+		final DescendantCollector collector = new DescendantCollector() {
+			@Override
+			public void processScriptIt(ScriptIt scriptIt) {
+				super.processScriptIt(scriptIt);
+
+				if (!codeBlocks.contains(codeBlocks))
+					codeBlocks.addAll(scriptIt.getCodeBlocks());
+			}
+		};
+
+		component.process(collector);
+
+		return codeBlocks;
+	}
+
+	/**
 	 * Returns all knowits bound to the value of a particular resource
 	 * 
 	 * @param selected
@@ -130,6 +171,30 @@ public class StoryComponentUtils {
 		complex.process(collector);
 
 		return scriptIts;
+	}
+
+	/**
+	 * Returns all knowIts with descriptions descended from the
+	 * ComplexStoryComponent passed in.
+	 * 
+	 * @param complex
+	 * @return
+	 */
+	public static Collection<KnowIt> getDescendantDescriptions(
+			ComplexStoryComponent complex) {
+		final Collection<KnowIt> knowIts = new HashSet<KnowIt>();
+		final DescendantCollector collector = new DescendantCollector() {
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				super.processKnowIt(knowIt);
+				if (knowIt.getLibrary().getDescribeIt(knowIt) != null)
+					knowIts.add(knowIt);
+			}
+		};
+
+		complex.process(collector);
+
+		return knowIts;
 	}
 
 	public static void duplicate(final StoryComponent component,

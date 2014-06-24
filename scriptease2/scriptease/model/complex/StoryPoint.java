@@ -3,15 +3,10 @@ package scriptease.model.complex;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
-import scriptease.controller.BindingAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
-import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.GameType;
 import scriptease.util.StringOp;
@@ -64,36 +59,6 @@ public class StoryPoint extends StoryNode {
 	@Override
 	public StoryPoint clone() {
 		return (StoryPoint) super.clone();
-	}
-
-	@Override
-	public boolean addStoryChildBefore(StoryComponent newChild,
-			StoryComponent sibling) {
-		final boolean accepted = super.addStoryChildBefore(newChild, sibling);
-
-		if (accepted && newChild instanceof CauseIt) {
-			for (StoryComponent child : ((CauseIt) newChild).getChildren())
-				if (child instanceof KnowIt
-						&& child.getDisplayText().contains("Is Active")) {
-					((KnowIt) child).getBinding().process(new BindingAdapter() {
-						@Override
-						public void processFunction(
-								KnowItBindingFunction function) {
-							for (KnowIt param : function.getValue()
-									.getParameters()) {
-								if (param.getBinding() instanceof KnowItBindingNull
-										&& param.getTypes().contains(
-												GameType.STORY_POINT_TYPE)) {
-									param.setBinding(StoryPoint.this);
-								}
-							}
-						}
-					});
-
-				}
-		}
-
-		return accepted;
 	}
 
 	/**
@@ -174,15 +139,16 @@ public class StoryPoint extends StoryNode {
 	public int hashCode() {
 		return super.hashCode() + this.getUniqueID();
 	}
-	
+
 	/**
-	 * Checks if the story point is the root node by checking if it has no parents 
-	 * and if it has no owner component (I.e. it's not in a group)
-	 * We can do this because the start node can't be in a group.
+	 * Checks if the story point is the root node by checking if it has no
+	 * parents and if it has no owner component (I.e. it's not in a group) We
+	 * can do this because the start node can't be in a group.
+	 * 
 	 * @return
 	 */
 	public boolean isRoot() {
 		return this.getParents().isEmpty() && this.ownerComponent == null;
 	}
-		
+
 }

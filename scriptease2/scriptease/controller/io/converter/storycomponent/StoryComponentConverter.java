@@ -3,9 +3,11 @@ package scriptease.controller.io.converter.storycomponent;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
+import scriptease.controller.io.FileIO.IoMode;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.LibraryModelConverter;
+import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -69,8 +71,17 @@ public abstract class StoryComponentConverter implements Converter {
 		else if (libraryStr.equals(LibraryModel.COMMON_LIBRARY_NAME))
 			library = LibraryModel.getCommonLibrary();
 		else {
-			library = FileIO.getInstance().getTranslator()
-					.findLibrary(libraryStr);
+			final IoMode ioMode = FileIO.getInstance().getMode();
+
+			if (ioMode == IoMode.LIBRARY)
+				library = FileIO.getInstance().getTranslator()
+						.findLibrary(libraryStr);
+			else if (ioMode == IoMode.STORY)
+				library = StoryModelConverter.currentStory.getTranslator()
+						.findLibrary(libraryStr);
+			else
+				throw new IllegalStateException("Unsupported IOMode " + ioMode
+						+ ". Could not find a library called " + libraryStr);
 		}
 
 		comp = this.buildComponent(reader, context, library);
