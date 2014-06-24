@@ -199,6 +199,7 @@ public final class AskIt extends ComplexStoryComponent {
 		ifElseValidTypes.add(ControlIt.class);
 		ifElseValidTypes.add(PickIt.class);
 		ifElseValidTypes.add(ActivityIt.class);
+		ifElseValidTypes.add(Behaviour.class);
 
 		if (success) {
 			final StoryComponentContainer container = (StoryComponentContainer) newChild;
