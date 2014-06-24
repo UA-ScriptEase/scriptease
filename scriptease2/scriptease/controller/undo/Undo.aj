@@ -6,7 +6,6 @@ import java.util.List;
 
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.SEGraph.SEGraph;
-import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -302,9 +301,6 @@ public aspect Undo {
 	 */
 	public pointcut settingLibraryModelRoot():
 		within(LibraryModel+) && execution(* setRoot(StoryComponent+));
-
-	 public pointcut settingStoryTreeRoot():
-	 within(StoryComponentPanelTree+) && execution(* setRoot(StoryNode+));
 
 	public pointcut settingSelectedNodes():
 		within(SEGraph) && execution(* setSelectedNodes(LinkedHashSet+));
@@ -720,22 +716,6 @@ public aspect Undo {
 				newRoot, owner.getRoot()) {
 			@Override
 			public void setOp(StoryComponentContainer value) {
-				owner.setRoot(value);
-			}
-
-			@Override
-			public String toString() {
-				return "setting " + owner + "'s root to" + newRoot;
-			}
-		};
-		this.addModification(mod);
-	}
-
-	before(final StoryComponentPanelTree owner, final StoryNode newRoot): settingStoryTreeRoot() && args(newRoot) && this(owner) {
-		Modification mod = new FieldModification<StoryNode>(newRoot,
-				owner.getRoot()) {
-			@Override
-			public void setOp(StoryNode value) {
 				owner.setRoot(value);
 			}
 
