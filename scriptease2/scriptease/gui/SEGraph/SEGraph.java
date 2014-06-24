@@ -39,6 +39,7 @@ import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.complex.StoryGroup;
 import scriptease.util.BiHashMap;
 import scriptease.util.GUIOp;
+import scriptease.util.ListOp;
 import sun.awt.util.IdentityArrayList;
 
 /**
@@ -390,12 +391,9 @@ public class SEGraph<E> extends JComponent {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean setSelectedNode(E node) {
-		final Collection<E> nodes = new ArrayList<E>();
-
-		nodes.add(node);
-
-		return this.setSelectedNodes(nodes);
+		return this.setSelectedNodes(ListOp.createList(node));
 	}
 
 	/**
@@ -527,10 +525,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return
 	 */
 	public E getFirstSelectedNode() {
-		for (E node : this.selectedNodes)
-			return node;
-
-		return null;
+		return ListOp.head(this.selectedNodes);
 	}
 
 	/**
@@ -539,13 +534,7 @@ public class SEGraph<E> extends JComponent {
 	 * @return
 	 */
 	public E getLastSelectedNode() {
-		E lastNode = this.getFirstSelectedNode();
-
-		for (E node : this.selectedNodes) {
-			lastNode = node;
-		}
-
-		return lastNode;
+		return ListOp.last(this.selectedNodes);
 	}
 
 	/**
@@ -1200,6 +1189,7 @@ public class SEGraph<E> extends JComponent {
 			this.lastExitedNode = SEGraph.this.nodesToComponents.getKey(exited);
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			final UndoManager undo = UndoManager.getInstance();
@@ -1236,24 +1226,13 @@ public class SEGraph<E> extends JComponent {
 					graph.selectNodesUntil(node);
 
 					for (E selectedNode : graph.getSelectedNodes()) {
-						// for (E selectedNode : graph.getNodes()) {
 
 						graph.renderer.reconfigureAppearance(
 								graph.nodesToComponents.getValue(selectedNode),
 								selectedNode);
 					}
 				} else {
-					// Default behaviour is to select individual nodes
-					final Collection<E> nodes = new ArrayList<E>();
-
-					nodes.add(node);
-
-					if (!undo.hasOpenUndoableAction())
-						undo.startUndoableAction("Select " + nodes);
-						
-					graph.setSelectedNodes(nodes);
-					
-					undo.endUndoableAction();
+					graph.setSelectedNodes(ListOp.createList(node));
 				}
 				source.requestFocusInWindow();
 			} else if (mode == Mode.INSERT && !graph.isReadOnly) {
