@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import scriptease.controller.io.FileIO;
 import scriptease.controller.io.XMLNode;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
@@ -76,7 +77,8 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 					scriptItLibrary = scriptIt.getLibrary();
 					codeBlockLibrary = codeBlock.getLibrary();
 
-					if (scriptItLibrary != codeBlockLibrary
+					if ((FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
+							&& scriptItLibrary != codeBlockLibrary
 							&& codeBlock instanceof CodeBlockReference
 							&& ((CodeBlockReference) codeBlock).getTarget()
 									.getOwner().isEquivalent(scriptIt)) {
@@ -86,7 +88,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 						if (WindowFactory
 								.getInstance()
 								.showYesNoConfirmDialog(
-										"<html>The story component <b>\""
+										"<html>The component <b>\""
 												+ StringOp
 														.makeXMLSafe(scriptItName)
 												+ "\"</b> was not found in <b>"
