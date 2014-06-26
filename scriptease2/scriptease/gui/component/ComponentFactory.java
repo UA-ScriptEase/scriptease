@@ -217,11 +217,11 @@ public final class ComponentFactory {
 				}
 
 				case PENCIL: {
-				//	g2d.drawString("edit", centerX-8, centerY+4);
-					
-				//	g2d.drawLine(centerX - 5, 17, centerX, 7);
-				//	g2d.drawLine(centerX - 5, 17, centerX + 5, 17);
-				//	g2d.drawLine(centerX + 5, 17, centerX, 7);
+					// g2d.drawString("edit", centerX-8, centerY+4);
+
+					// g2d.drawLine(centerX - 5, 17, centerX, 7);
+					// g2d.drawLine(centerX - 5, 17, centerX + 5, 17);
+					// g2d.drawLine(centerX + 5, 17, centerX, 7);
 					final double rotationAmount = Math.toRadians(-45);
 					final AffineTransform rotation = new AffineTransform();
 
@@ -248,29 +248,16 @@ public final class ComponentFactory {
 					// Top of square part
 					g2d.drawLine(leftX, squareTop, rightX, squareTop);
 
-					// Fill the wood part of the pencil
-					final int[] woodXs;
-					final int[] woodYs;
-					final int eraserOffset = 2;
-
-					woodXs = new int[] { leftX, leftX, rightX, rightX };
-					woodYs = new int[] { squareTop,
-							squareBottom - eraserOffset,
-							squareBottom - eraserOffset, squareTop };
-
-					// g2d.fillPolygon(woodXs, woodYs, woodXs.length);
-
 					// Draw the tip
-					final int tipY = squareTop -5;
+					final int tipY = squareTop - 5;
 					g2d.drawLine(leftX, squareTop, centerX, tipY);
 					g2d.drawLine(rightX, squareTop, centerX, tipY);
 
-			
+					final int eraserEnd = squareBottom - 2;
 					// Draw the eraser
-					g2d.drawLine(leftX, squareBottom - eraserOffset, rightX,
-							squareBottom - eraserOffset);
-					g2d.drawLine(centerX, squareTop, centerX, squareBottom
-							- eraserOffset);
+					g2d.drawLine(leftX, eraserEnd, rightX, eraserEnd);
+					// Draw a line down the middle
+					g2d.drawLine(centerX, squareTop, centerX, eraserEnd);
 					break;
 				}
 				case ADD:

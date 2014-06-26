@@ -45,8 +45,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -516,29 +514,6 @@ public class LibraryPanel extends JTabbedPane {
 						k2Widget = "";
 
 					compare = k1Widget.compareTo(k2Widget);
-
-				} else if (c1 instanceof CauseIt && c2 instanceof CauseIt) {
-					final ScriptIt s1 = (ScriptIt) c1;
-					final ScriptIt s2 = (ScriptIt) c2;
-
-					final Collection<KnowIt> params1 = s1.getParameters();
-					final Collection<KnowIt> params2 = s2.getParameters();
-
-					if (params1.isEmpty() && params2.isEmpty()) {
-						compare = 0;
-					} else if (params1.isEmpty()) {
-						compare = 1;
-					} else if (params2.isEmpty()) {
-						compare = -1;
-					} else {
-						final KnowIt p1 = params1.iterator().next();
-						final KnowIt p2 = params2.iterator().next();
-
-						if (p1 != null && p2 != null) {
-							compare = p1.getDefaultType().compareTo(
-									p2.getDefaultType());
-						}
-					}
 				}
 
 				if (compare == 0) {
@@ -675,7 +650,6 @@ public class LibraryPanel extends JTabbedPane {
 					break;
 				}
 			}
-
 		}
 		return panels;
 	}
