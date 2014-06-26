@@ -98,7 +98,9 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 												+ "</b>.<br><br> Would you like to replace the missing component with this one? "
 												+ "<br>"
 												+ codeBlockLibrary
-												+ " will be added to your story if it is not already attached.</html>",
+												+ " will be added to your story if it is not already attached."
+												+ "<br>If you click No, the component and everything it contains will be<br>"
+												+ "removed. This will not be saved until you press save.</html>",
 										"Component Not Found"))
 
 							scriptIt.setLibrary(codeBlockLibrary);
