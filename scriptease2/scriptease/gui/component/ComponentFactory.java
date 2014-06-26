@@ -78,7 +78,7 @@ public final class ComponentFactory {
 	}
 
 	private static enum ButtonType {
-		ADD, REMOVE, EDIT;
+		ADD, REMOVE, WRENCH, PENCIL;
 	}
 
 	public static JButton buildRemoveButton() {
@@ -90,7 +90,7 @@ public final class ComponentFactory {
 	}
 
 	public static JButton buildEditButton() {
-		return buildButton(ButtonType.EDIT);
+		return buildButton(ButtonType.PENCIL);
 	}
 
 	@SuppressWarnings("serial")
@@ -129,7 +129,8 @@ public final class ComponentFactory {
 					armedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_PRESSED;
 					hoverFillColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_HOVER_FILL;
 					unarmedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON;
-				} else if (type == ButtonType.EDIT) {
+				} else if (type == ButtonType.WRENCH
+						|| type == ButtonType.PENCIL) {
 					armedFillColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_PRESSED_FILL;
 					armedLineColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_PRESSED;
 					hoverFillColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_HOVER_FILL;
@@ -151,7 +152,7 @@ public final class ComponentFactory {
 
 				final int circleX = 3;
 				final int circleY = 3;
-				final int diameter = SIZEXY * 3 / 4;
+				final int diameter = SIZEXY * 5 / 6;
 				final int radius = diameter / 2;
 				final int centerX = circleX + radius;
 				final int centerY = circleY + radius;
@@ -191,7 +192,7 @@ public final class ComponentFactory {
 				g2d.drawOval(circleX, circleY, diameter, diameter);
 
 				switch (type) {
-				case EDIT:
+				case WRENCH: {
 					// Draw a rotated wrench
 
 					final int arcWidth = 4;
@@ -212,8 +213,66 @@ public final class ComponentFactory {
 					g2d.drawArc(arcX, 0, arcWidth, lineY1, 225, arcDegrees);
 					g2d.drawLine(centerX, lineY1, centerX, lineY2);
 					g2d.drawArc(arcX, lineY2, arcWidth, lineY1, 45, arcDegrees);
-
 					break;
+				}
+
+				case PENCIL: {
+				//	g2d.drawString("edit", centerX-8, centerY+4);
+					
+				//	g2d.drawLine(centerX - 5, 17, centerX, 7);
+				//	g2d.drawLine(centerX - 5, 17, centerX + 5, 17);
+				//	g2d.drawLine(centerX + 5, 17, centerX, 7);
+					final double rotationAmount = Math.toRadians(-45);
+					final AffineTransform rotation = new AffineTransform();
+
+					// Remember: this is all rotated, so our coords will look
+					// a little weird.
+					rotation.setToRotation(rotationAmount, centerX, centerY);
+
+					g2d.transform(rotation);
+
+					final int squareTop = centerY - 3;
+					final int squareBottom = diameter + 1;
+					final int offset = 2;
+					final int rightX = centerX + offset;
+					final int leftX = centerX - offset;
+
+					// Square part of pencil
+
+					// Right Side of Pencil
+					g2d.drawLine(rightX, squareTop, rightX, squareBottom);
+					// Left Side of Pencil
+					g2d.drawLine(leftX, squareTop, leftX, squareBottom);
+					// Bottom of square part
+					g2d.drawLine(leftX, squareBottom, rightX, squareBottom);
+					// Top of square part
+					g2d.drawLine(leftX, squareTop, rightX, squareTop);
+
+					// Fill the wood part of the pencil
+					final int[] woodXs;
+					final int[] woodYs;
+					final int eraserOffset = 2;
+
+					woodXs = new int[] { leftX, leftX, rightX, rightX };
+					woodYs = new int[] { squareTop,
+							squareBottom - eraserOffset,
+							squareBottom - eraserOffset, squareTop };
+
+					// g2d.fillPolygon(woodXs, woodYs, woodXs.length);
+
+					// Draw the tip
+					final int tipY = squareTop -5;
+					g2d.drawLine(leftX, squareTop, centerX, tipY);
+					g2d.drawLine(rightX, squareTop, centerX, tipY);
+
+			
+					// Draw the eraser
+					g2d.drawLine(leftX, squareBottom - eraserOffset, rightX,
+							squareBottom - eraserOffset);
+					g2d.drawLine(centerX, squareTop, centerX, squareBottom
+							- eraserOffset);
+					break;
+				}
 				case ADD:
 					// Draw a vertical line, which when combined with the line
 					// in Remove creates a plus sign
