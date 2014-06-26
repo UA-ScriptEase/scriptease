@@ -7,6 +7,7 @@ import scriptease.controller.io.FileIO;
 import scriptease.controller.io.FileIO.IoMode;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
+import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
@@ -93,12 +94,17 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 				// references in a different mode.
 
 			if (newTarget == null) {
-				throw new NullPointerException("Could not find CodeBlock "
-						+ ref.getDisplayText() + " in \"" + owner + "\" in "
-						+ library);
-			}
-
-			ref.setTarget(newTarget);
+				WindowFactory.getInstance().showProblemDialog(
+						"Component Not Found",
+						"<html>Could not find component <b>"
+								+ ref.getDisplayText() + "</b> in \"" + owner
+								+ "\" in " + library
+								+ " library or any other libaries in the "
+								+ library.getTranslator()
+								+ "translator. Removing from story.");
+				return ref;
+			} else
+				ref.setTarget(newTarget);
 		} else
 			ref.setTarget(target);
 
