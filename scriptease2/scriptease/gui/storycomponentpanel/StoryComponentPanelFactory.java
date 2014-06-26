@@ -801,8 +801,11 @@ public class StoryComponentPanelFactory {
 				probabilityField.setMinimumSize(new Dimension(5, 20));
 				probabilityField.setPreferredSize(new Dimension(5, 20));
 
-				probabilityField.setText(Integer.toString(owner.getChoices()
-						.get(complex)));
+				final Integer value = owner.getChoices().get(complex);
+
+				if (value != null) {
+					probabilityField.setText(Integer.toString(value));
+				}
 
 				probabilityField.addActionListener(new ActionListener() {
 

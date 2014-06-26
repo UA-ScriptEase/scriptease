@@ -30,7 +30,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 
 	protected ComplexStoryComponent(LibraryModel library, String name) {
 		super(library, name);
-		this.init();
+		this.childComponents = new IdentityArrayList<StoryComponent>();
 	}
 
 	/**
