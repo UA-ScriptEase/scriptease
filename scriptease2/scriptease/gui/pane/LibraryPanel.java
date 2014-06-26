@@ -1,5 +1,7 @@
 package scriptease.gui.pane;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,6 +54,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
+import scriptease.util.GUIOp;
 import scriptease.util.ListOp;
 
 /**
@@ -651,4 +654,29 @@ public class LibraryPanel extends JTabbedPane {
 		return panels;
 	}
 
+	/**
+	 * Returns all the story components that are selected in the selected tab
+	 * 
+	 * @return panels
+	 */
+	public Collection<StoryComponentPanel> getSelectedInActiveTab() {
+		final Collection<StoryComponentPanel> panels = new ArrayList<StoryComponentPanel>();
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			for (Component comp : GUIOp.getContainerComponents((Container) this
+					.getSelectedComponent())) {
+				if (comp == list) {
+					Object[] objects = list.getSelectedValues();
+					for (int i = 0; i < objects.length; i++) {
+						final Object obj = objects[i];
+
+						if (obj instanceof StoryComponentPanel)
+							panels.add((StoryComponentPanel) obj);
+					}
+					break;
+				}
+			}
+
+		}
+		return panels;
+	}
 }
