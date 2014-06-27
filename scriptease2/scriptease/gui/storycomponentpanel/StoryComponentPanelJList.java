@@ -426,7 +426,7 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 						0, Color.LIGHT_GRAY));
 
 				if (isVisible
-						&& valueComponent.getLibrary().getReadOnly()
+						&& valueComponent.getLibrary().isReadOnly()
 						&& !isSelected
 						&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel
 						&& !ScriptEase.DEBUG_MODE)

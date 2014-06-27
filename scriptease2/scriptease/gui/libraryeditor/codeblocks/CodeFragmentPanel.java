@@ -58,7 +58,7 @@ public class CodeFragmentPanel extends JPanel {
 		this.fragment = fragment;
 
 		isEditable = ScriptEase.DEBUG_MODE
-				|| !codeBlock.ownerComponent.getLibrary().getReadOnly();
+				|| !codeBlock.ownerComponent.getLibrary().isReadOnly();
 
 		this.setOpaque(true);
 		this.setBackground(Color.WHITE);

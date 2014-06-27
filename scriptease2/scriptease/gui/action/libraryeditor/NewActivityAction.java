@@ -64,7 +64,7 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+		if (!library.isReadOnly() || ScriptEase.DEBUG_MODE) {
 			newActivityIt = new ActivityIt(library, "New Activity");
 			newActivityIt.setVisible(true);  
 			newActivityIt.addLabel("ACT");

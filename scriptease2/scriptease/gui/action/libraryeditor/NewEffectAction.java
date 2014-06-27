@@ -55,7 +55,7 @@ public class NewEffectAction extends ActiveModelSensitiveAction {
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+		if (!library.isReadOnly() || ScriptEase.DEBUG_MODE) {
 
 			newEffect = new ScriptIt(library, "New Effect");
 			codeBlock = new CodeBlockSource(library);

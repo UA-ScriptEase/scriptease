@@ -116,7 +116,7 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 			}
 		} else if (focusOwner instanceof StoryComponentPanelJList
 				&& ((model instanceof Translator) || (model instanceof LibraryModel && (!((LibraryModel) model)
-						.getReadOnly() || ScriptEase.DEBUG_MODE)))) {
+						.isReadOnly() || ScriptEase.DEBUG_MODE)))) {
 
 			final boolean alreadyUndoing = UndoManager.getInstance()
 					.hasOpenUndoableAction();

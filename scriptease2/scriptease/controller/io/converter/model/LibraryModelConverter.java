@@ -70,7 +70,7 @@ public class LibraryModelConverter implements Converter {
 		XMLAttribute.AUTHOR.write(writer, library.getAuthor());
 		XMLAttribute.DESCRIPTION.write(writer, library.getDescription());
 		XMLAttribute.READONLY.write(writer,
-				String.valueOf(library.getReadOnly()));
+				String.valueOf(library.isReadOnly()));
 
 		XMLNode.INCLUDE_FILES.writeChildren(writer,
 				library.getIncludeFilePaths());
