@@ -53,7 +53,6 @@ public class KnowItConverter extends StoryComponentConverter {
 		final KnowItBinding binding;
 
 		knowIt = (KnowIt) super.unmarshal(reader, context);
-
 		typeNames = XMLNode.TYPES.readStringCollection(reader);
 
 		if (reader.hasMoreChildren()) {
@@ -91,7 +90,7 @@ public class KnowItConverter extends StoryComponentConverter {
 		// Set the allowable types of the binding.
 		knowIt.setTypesByName(typeNames);
 
-		if (binding != null) {
+		if (binding != null && knowIt.getLibrary() != null) {
 			knowIt.setBinding(binding);
 		}
 		// Stories are the only ones that care about nulls.
