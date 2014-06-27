@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.controller.io.FileIO.IoMode;
+import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
 import scriptease.gui.WindowFactory;
@@ -82,13 +83,18 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 			id = 0;
 
 		library = ref.getLibrary();
-		target = library.findCodeBlockSource(owner, id);
+
+		if (library != null)
+			target = library.findCodeBlockSource(owner, id);
+		else
+			target = null;
 
 		if (target == null) {
 			CodeBlockSource newTarget = null;
 
 			if (FileIO.getInstance().getMode() == IoMode.STORY) {
-				final Translator translator = library.getTranslator();
+				final Translator translator = StoryModelConverter.currentStory
+						.getTranslator();
 				newTarget = translator.findSimilarTarget(owner, id);
 			} // TODO May have to do something here if we have missing
 				// references in a different mode.
