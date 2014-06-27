@@ -78,7 +78,7 @@ public final class ComponentFactory {
 	}
 
 	private static enum ButtonType {
-		ADD, REMOVE, WRENCH, PENCIL;
+		ADD, REMOVE, WRENCH, PENCIL, EDIT;
 	}
 
 	public static JButton buildRemoveButton() {
@@ -90,7 +90,7 @@ public final class ComponentFactory {
 	}
 
 	public static JButton buildEditButton() {
-		return buildButton(ButtonType.PENCIL);
+		return buildButton(ButtonType.EDIT);
 	}
 
 	@SuppressWarnings("serial")
@@ -130,7 +130,7 @@ public final class ComponentFactory {
 					hoverFillColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON_HOVER_FILL;
 					unarmedLineColour = ScriptEaseUI.COLOUR_REMOVE_BUTTON;
 				} else if (type == ButtonType.WRENCH
-						|| type == ButtonType.PENCIL) {
+						|| type == ButtonType.PENCIL || type == ButtonType.EDIT) {
 					armedFillColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_PRESSED_FILL;
 					armedLineColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_PRESSED;
 					hoverFillColour = ScriptEaseUI.COLOUR_EDIT_BUTTON_HOVER_FILL;
@@ -217,11 +217,6 @@ public final class ComponentFactory {
 				}
 
 				case PENCIL: {
-					// g2d.drawString("edit", centerX-8, centerY+4);
-
-					// g2d.drawLine(centerX - 5, 17, centerX, 7);
-					// g2d.drawLine(centerX - 5, 17, centerX + 5, 17);
-					// g2d.drawLine(centerX + 5, 17, centerX, 7);
 					final double rotationAmount = Math.toRadians(-45);
 					final AffineTransform rotation = new AffineTransform();
 
@@ -260,6 +255,9 @@ public final class ComponentFactory {
 					g2d.drawLine(centerX, squareTop, centerX, eraserEnd);
 					break;
 				}
+				case EDIT:
+					g2d.drawString("edit", centerX - 8, centerY + 4);
+					break;
 				case ADD:
 					// Draw a vertical line, which when combined with the line
 					// in Remove creates a plus sign
