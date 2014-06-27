@@ -275,16 +275,13 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 
 							for (KnowIt activityParam : activityIt
 									.getParameters()) {
-								if (uninitialized
-										.getValue()
-										.getOriginalDisplayText()
-										.equals(activityParam
-												.getOriginalDisplayText())) {
+								if (uninitialized.getValue().getOriginalDisplayText().equals(activityParam.getOriginalDisplayText())) {
 									// We need to handle both
 									// KnowItBindingResources (Game Objects)
 									// And KnowItBindingReferences (Implicits et
 									// al.)
-									if (sourceBinding instanceof KnowItBindingResource) {
+									if (sourceBinding instanceof KnowItBindingResource &&
+										activityParam.getOriginalDisplayText().equals(destinationKnowIt.getOriginalDisplayText())	) {
 										uninitialized
 												.getValue()
 												.setDisplayText(
@@ -292,11 +289,13 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 																.getName());
 									} else if (sourceBinding instanceof KnowItBindingReference) {
 										KnowItBindingReference ref = (KnowItBindingReference) sourceBinding;
-										uninitialized
-												.getValue()
-												.setDisplayText(
-														ref.getValue()
-																.getDisplayText());
+										if(activityParam.getOriginalDisplayText().equals(destinationKnowIt.getOriginalDisplayText())){
+											uninitialized
+											.getValue()
+											.setDisplayText(
+													ref.getValue()
+															.getDisplayText());
+										}
 									}
 								}
 							}
