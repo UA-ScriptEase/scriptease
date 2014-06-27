@@ -5,10 +5,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import scriptease.controller.io.FileIO;
 import scriptease.controller.io.XMLNode;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
+import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.ScriptIt;
@@ -76,37 +78,52 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 					scriptItLibrary = scriptIt.getLibrary();
 					codeBlockLibrary = codeBlock.getLibrary();
 
-					if (scriptItLibrary != codeBlockLibrary
-							&& codeBlock instanceof CodeBlockReference
-							&& ((CodeBlockReference) codeBlock).getTarget()
-									.getOwner().isEquivalent(scriptIt)) {
-						final String scriptItName;
-						scriptItName = scriptIt.getDisplayText();
+					if (codeBlock instanceof CodeBlockReference) {
+						final CodeBlockReference ref;
+						final CodeBlockSource target;
 
-						if (WindowFactory
-								.getInstance()
-								.showYesNoConfirmDialog(
-										"<html>The story component <b>\""
-												+ StringOp
-														.makeXMLSafe(scriptItName)
-												+ "\"</b> was not found in <b>"
-												+ scriptItLibrary
-												+ "</b>. <br>However, a component with the same name was found in <b>"
-												+ codeBlockLibrary
-												+ "</b>.<br><br> Would you like to replace the missing component with this one? "
-												+ "<br>"
-												+ codeBlockLibrary
-												+ " will be added to your story if it is not already attached.</html>",
-										"Component Not Found"))
+						ref = (CodeBlockReference) codeBlock;
+						target = ref.getTarget();
 
-							scriptIt.setLibrary(codeBlockLibrary);
-						else {
+						if ((FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
+								&& scriptItLibrary != codeBlockLibrary
+								&& target.getOwner().isEquivalent(scriptIt)) {
+							if (WindowFactory
+									.getInstance()
+									.showYesNoConfirmDialog(
+											"<html>The component <b>\""
+													+ StringOp
+															.makeXMLSafe(scriptIt
+																	.getDisplayText())
+													+ "\"</b> was not found in <b>"
+													+ scriptItLibrary
+													+ "</b>. <br>However, a component with the same name was found in <b>"
+													+ codeBlockLibrary
+													+ "</b>.<br><br> Would you like to replace the missing component with this one? "
+													+ "<br>"
+													+ codeBlockLibrary
+													+ " will be added to your story if it is not already attached."
+													+ "<br>If you click No, the component and everything it contains will be<br>"
+													+ "removed. This will not be saved until you press save.</html>",
+											"Component Not Found"))
+
+								scriptIt.setLibrary(codeBlockLibrary);
+							else {
+								reader.moveUp();
+								return new Note(LibraryModel.getNonLibrary(),
+										"Missing Component in Library: "
+												+ scriptIt.getDisplayText());
+							}
+						}
+
+						if (target == null) {
 							reader.moveUp();
 							return new Note(LibraryModel.getNonLibrary(),
 									"Missing Component in Library: "
 											+ scriptIt.getDisplayText());
 						}
 					}
+
 				}
 				scriptIt.setCodeBlocks(codeBlocks);
 			}

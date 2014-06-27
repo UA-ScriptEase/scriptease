@@ -1,5 +1,7 @@
 package scriptease.gui.pane;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,8 +45,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
-import scriptease.model.complex.CauseIt;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -52,6 +52,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameType;
+import scriptease.util.GUIOp;
 import scriptease.util.ListOp;
 
 /**
@@ -513,29 +514,6 @@ public class LibraryPanel extends JTabbedPane {
 						k2Widget = "";
 
 					compare = k1Widget.compareTo(k2Widget);
-
-				} else if (c1 instanceof CauseIt && c2 instanceof CauseIt) {
-					final ScriptIt s1 = (ScriptIt) c1;
-					final ScriptIt s2 = (ScriptIt) c2;
-
-					final Collection<KnowIt> params1 = s1.getParameters();
-					final Collection<KnowIt> params2 = s2.getParameters();
-
-					if (params1.isEmpty() && params2.isEmpty()) {
-						compare = 0;
-					} else if (params1.isEmpty()) {
-						compare = 1;
-					} else if (params2.isEmpty()) {
-						compare = -1;
-					} else {
-						final KnowIt p1 = params1.iterator().next();
-						final KnowIt p2 = params2.iterator().next();
-
-						if (p1 != null && p2 != null) {
-							compare = p1.getDefaultType().compareTo(
-									p2.getDefaultType());
-						}
-					}
 				}
 
 				if (compare == 0) {
@@ -651,4 +629,28 @@ public class LibraryPanel extends JTabbedPane {
 		return panels;
 	}
 
+	/**
+	 * Returns all the story components that are selected in the selected tab
+	 * 
+	 * @return panels
+	 */
+	public Collection<StoryComponentPanel> getSelectedInActiveTab() {
+		final Collection<StoryComponentPanel> panels = new ArrayList<StoryComponentPanel>();
+		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+			for (Component comp : GUIOp.getContainerComponents((Container) this
+					.getSelectedComponent())) {
+				if (comp == list) {
+					Object[] objects = list.getSelectedValues();
+					for (int i = 0; i < objects.length; i++) {
+						final Object obj = objects[i];
+
+						if (obj instanceof StoryComponentPanel)
+							panels.add((StoryComponentPanel) obj);
+					}
+					break;
+				}
+			}
+		}
+		return panels;
+	}
 }
