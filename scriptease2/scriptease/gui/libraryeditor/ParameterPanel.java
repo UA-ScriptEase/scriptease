@@ -47,6 +47,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.GameType.GUIType;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
+import scriptease.util.ListOp;
 
 /**
  * ParameterPanels are JPanels used to represent and edit parameters. <br>
@@ -162,7 +163,10 @@ public class ParameterPanel extends JPanel {
 					defaultTypeBox.addItem(type);
 				}
 
-				defaultTypeBox.setSelectedItem(initialDefaultType);
+				if (types.contains(initialDefaultType))
+					defaultTypeBox.setSelectedItem(initialDefaultType);
+				else
+					defaultTypeBox.setSelectedItem(ListOp.head(types));
 
 				defaultTypeBox.revalidate();
 
@@ -305,9 +309,10 @@ public class ParameterPanel extends JPanel {
 				final String newInput;
 				newInput = nameField.getText();
 
-				//Update the original text for the parameter so we can dynamically update their usage's text
+				// Update the original text for the parameter so we can
+				// dynamically update their usage's text
 				knowIt.setOriginalDisplayText(newInput);
-				
+
 				// TODO This probably doesn't do what we want it to.
 				if (codeBlock.hasSubject()) {
 					KnowIt subject = codeBlock.getSubject();

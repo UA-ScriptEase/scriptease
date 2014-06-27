@@ -72,7 +72,7 @@ public class StoryComponentUtils {
 			public void processScriptIt(ScriptIt scriptIt) {
 				scriptIt.processParameters(this);
 			}
-			
+
 			@Override
 			public void processCauseIt(CauseIt causeIt) {
 				super.processCauseIt(causeIt);
@@ -207,6 +207,10 @@ public class StoryComponentUtils {
 			final LibraryModel library) {
 
 		component.process(new StoryAdapter() {
+			@Override
+			public void processKnowIt(KnowIt knowIt) {
+				knowIt.setLibrary(library);
+			}
 
 			// Clone ScriptIts, then replace the referenced codeBlocks
 			// with modifiable duplicates since we want them to be
@@ -233,6 +237,7 @@ public class StoryComponentUtils {
 						}
 					});
 				}
+				clone.processParameters(this);
 				clone.setLibrary(library);
 				library.add(clone);
 			}

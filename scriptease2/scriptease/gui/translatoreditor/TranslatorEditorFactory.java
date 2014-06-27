@@ -248,7 +248,7 @@ public class TranslatorEditorFactory {
 							"Copying story component to library.");
 
 				for (StoryComponentPanel selected : thisLibraryPanel
-						.getSelected()) {
+						.getSelectedInActiveTab()) {
 					StoryComponentUtils.duplicate(selected.getStoryComponent(),
 							otherLibrary);
 				}
