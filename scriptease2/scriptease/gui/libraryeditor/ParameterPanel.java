@@ -77,19 +77,19 @@ public class ParameterPanel extends JPanel {
 	 */
 	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
 			final KnowIt knowIt) {
-		this(scriptIt, codeBlock, knowIt, true);
+		this(scriptIt, codeBlock, knowIt, true, true);
 	}
 
 	/**
 	 * Creates a new ParameterPanel with just the KnowIt, used for behaviour
 	 * implicits.
 	 */
-	public ParameterPanel(final KnowIt knowIt) {
-		this(null, null, knowIt, false);
+	public ParameterPanel(final KnowIt knowIt, final boolean isEditable) {
+		this(null, null, knowIt, false, isEditable);
 	}
 
 	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
-			final KnowIt knowIt, boolean removable) {
+			final KnowIt knowIt, boolean removable, boolean isEditable) {
 		super(new FlowLayout(FlowLayout.LEADING));
 		this.knowIt = knowIt;
 
@@ -106,8 +106,6 @@ public class ParameterPanel extends JPanel {
 		final JPanel defaultTypeBoxPanel;
 		final JPanel bindingPanel;
 
-		final boolean isEditable;
-
 		this.observerManager = new ObserverManager<ParameterPanelObserver>();
 
 		typeAction = new TypeAction();
@@ -121,19 +119,6 @@ public class ParameterPanel extends JPanel {
 		defaultTypeBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		automaticPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		bindingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-
-		// Behaviours currently use a null ScriptIt to generate their parameter
-		// panel, so we have to account for that when checking read only. When
-		// behaviours are more implemented this will probably need to be
-		// reworked.
-		// -zturchan
-		if (scriptIt != null) {
-			isEditable = ScriptEase.DEBUG_MODE
-					|| !scriptIt.getLibrary().getReadOnly();
-		} else {
-			isEditable = true;
-			// isEditable = ScriptEase.DEBUG_MODE;
-		}
 
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setBackground(GUIOp.scaleColour(Color.GRAY, 1.9));
