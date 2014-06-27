@@ -32,6 +32,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import scriptease.ScriptEase;
 import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.observer.TranslatorObserver;
 import scriptease.controller.undo.UndoManager;
@@ -263,6 +264,7 @@ public class TranslatorEditorFactory {
 			public void actionPerformed(ActionEvent e) {
 				final Object selected = thisComboBox.getSelectedItem();
 				LibraryModel found = null;
+				final LibraryModel otherLibrary = getLibrary(otherLibraryPanel);
 
 				if (selected == null) {
 					thisCopyButton.setEnabled(false);
@@ -278,13 +280,17 @@ public class TranslatorEditorFactory {
 					}
 
 					if (found != null) {
+
 						thisLibraryPanel.setLibraries(found);
 
-						final boolean enable = !otherLibraryPanel
-								.getLibraries().isEmpty();
+						final boolean enableOther = otherLibrary != null
+								&& (!otherLibrary.isReadOnly() || ScriptEase.DEBUG_MODE);
 
-						thisCopyButton.setEnabled(enable);
-						otherCopyButton.setEnabled(enable);
+						final boolean enableThis = !found.isReadOnly()
+								|| ScriptEase.DEBUG_MODE;
+
+						thisCopyButton.setEnabled(enableThis);
+						otherCopyButton.setEnabled(enableOther);
 					}
 				}
 
@@ -300,8 +306,6 @@ public class TranslatorEditorFactory {
 				otherComboBox.addItem(null);
 				for (LibraryModel library : libraries) {
 					if (library != found) {
-						final LibraryModel otherLibrary = ListOp
-								.head(otherLibraryPanel.getLibraries());
 						otherComboBox.addItem(library.getTitle());
 
 						if (otherLibrary != null)

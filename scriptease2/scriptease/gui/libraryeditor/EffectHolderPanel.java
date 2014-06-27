@@ -92,7 +92,7 @@ public class EffectHolderPanel extends JPanel {
 
 		if (effect != null) {
 			isEditable = ScriptEase.DEBUG_MODE
-					|| !effect.getLibrary().getReadOnly();
+					|| !effect.getLibrary().isReadOnly();
 			panel = StoryComponentPanelFactory.getInstance()
 					.buildStoryComponentPanel(effect);
 		} else {

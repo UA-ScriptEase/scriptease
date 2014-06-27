@@ -122,7 +122,7 @@ public class LibraryEditorPanel extends JPanel {
 						codeBlockEditingPanel, BoxLayout.PAGE_AXIS));
 
 				isEditable = ScriptEase.DEBUG_MODE
-						|| !scriptIt.getLibrary().getReadOnly();
+						|| !scriptIt.getLibrary().isReadOnly();
 
 				if (!(scriptIt instanceof CauseIt)) {
 					final JPanel scriptItControlPanel;
@@ -248,7 +248,7 @@ public class LibraryEditorPanel extends JPanel {
 				describeIt = knowIt.getLibrary().getDescribeIt(knowIt);
 
 				isEditable = ScriptEase.DEBUG_MODE
-						|| !knowIt.getLibrary().getReadOnly();
+						|| !knowIt.getLibrary().isReadOnly();
 
 				nameField = new JTextField(describeIt.getName());
 

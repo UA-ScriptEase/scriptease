@@ -130,7 +130,7 @@ public class ParameterPanel extends JPanel {
 		// -zturchan
 		if (scriptIt != null) {
 			isEditable = ScriptEase.DEBUG_MODE
-					|| !scriptIt.getLibrary().getReadOnly();
+					|| !scriptIt.getLibrary().isReadOnly();
 		} else {
 			isEditable = true;
 			// isEditable = ScriptEase.DEBUG_MODE;
@@ -393,7 +393,7 @@ public class ParameterPanel extends JPanel {
 
 		inactiveTextField.setEnabled(false);
 
-		isEditable = ScriptEase.DEBUG_MODE || !library.getReadOnly();
+		isEditable = ScriptEase.DEBUG_MODE || !library.isReadOnly();
 
 		bindingConstantComponent.removeAll();
 

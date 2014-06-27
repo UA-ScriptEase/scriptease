@@ -107,7 +107,7 @@ public final class DuplicateAction extends ActiveModelSensitiveAction {
 		} else if (focusOwner instanceof StoryComponentPanelJList
 				&& SEModelManager.getInstance().getActiveModel() instanceof LibraryModel
 				&& (!((LibraryModel) SEModelManager.getInstance()
-						.getActiveModel()).getReadOnly() || ScriptEase.DEBUG_MODE)) {
+						.getActiveModel()).isReadOnly() || ScriptEase.DEBUG_MODE)) {
 			// Delete elements from StoryComponentPanelJList
 			final StoryComponentPanelJList list;
 			list = (StoryComponentPanelJList) focusOwner;
