@@ -22,13 +22,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -65,14 +63,15 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.translatoreditor.TranslatorEditorFactory;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
+import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
 /**
@@ -808,46 +807,29 @@ public final class WindowFactory {
 		return dialog;
 	}
 
-	public LibraryModel buildLibrarySelectionDialog(String description,
-			final Collection<LibraryModel> libraries) {
-		final JPanel content = new JPanel();
-		final JComboBox libraryChoiceBox = new JComboBox();
-		final JLabel descriptionLabel = new JLabel(description);
-		final JDialog dialog = this.buildDialog("Select Library", content,
-				false);
+	public CodeBlock buildCodeBlockSelectionDialog(String title,
+			String description, final Collection<? extends CodeBlock> codeBlocks) {
+		final Collection<String> names = new ArrayList<String>();
+		final String name;
 
-		for (LibraryModel library : libraries) {
-			libraryChoiceBox.addItem(library.getTitle());
+		names.add("None - Remove component");
+		
+		for (CodeBlock block : codeBlocks) {
+			names.add(block.getLibrary().getTitle() + ": "
+					+ block.getDisplayText());
 		}
-		LibraryModel choice;
 
-		libraryChoiceBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final String selected;
-				LibraryModel choice = null;
+		name = (String) JOptionPane.showInputDialog(this.mainFrame,
+				description, title, JOptionPane.PLAIN_MESSAGE, null,
+				names.toArray(), ListOp.head(names));
 
-				selected = (String) libraryChoiceBox.getSelectedItem();
+		if (StringOp.exists(name))
+			for (CodeBlock block : codeBlocks)
+				if ((block.getLibrary().getTitle() + ": " + block
+						.getDisplayText()).equals(name))
+					return block;
 
-				for (LibraryModel library : libraries) {
-					libraryChoiceBox.addItem(library.getTitle());
-				}
-				
-				
-
-			};
-		});
-
-		content.setLayout(new BoxLayout(content, BoxLayout.PAGE_AXIS));
-
-		content.add(descriptionLabel);
-		content.add(libraryChoiceBox);
-
-		dialog.setContentPane(content);
-		dialog.pack();
-		dialog.setVisible(true);
-
-		choice=null;
-		return choice;
+		return null;
 	}
 
 	/**

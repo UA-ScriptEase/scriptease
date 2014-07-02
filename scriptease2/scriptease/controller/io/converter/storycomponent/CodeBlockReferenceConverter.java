@@ -5,9 +5,9 @@ import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
 import scriptease.controller.io.FileIO.IoMode;
-import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.controller.io.XMLAttribute;
 import scriptease.controller.io.XMLNode;
+import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
@@ -16,7 +16,6 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
-import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -102,8 +101,26 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 
 				if (similar.isEmpty())
 					newTarget = null;
-				else
-					newTarget = ListOp.head(similar);
+				else {
+					newTarget = (CodeBlockSource) WindowFactory
+							.getInstance()
+							.buildCodeBlockSelectionDialog(
+									"Component Not Found",
+									// TODO Better text here
+									"<html>The component <b>\""
+											+ StringOp.makeXMLSafe(ref
+													.getDisplayText())
+											+ "\"</b> was not found in <b>"
+											+ library
+											+ "</b>. <br>However, components with the same name were found in other libraries."
+											+ "<br><br>"
+											+ "Please select a library to replace the component with. The library will be "
+											+ "<br>added to your story if it is not already attached."
+											+ "<br><br>If no library is selected, the component and everything it contains will"
+											+ "<br>be removed. This will not be saved until you press save."
+											+ "<br><br><b>Library:</b></html>",
+									similar);
+				}
 			} // TODO May have to do something here if we have missing
 				// references in a different mode.
 
