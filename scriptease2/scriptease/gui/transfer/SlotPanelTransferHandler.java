@@ -209,11 +209,14 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 							for (KnowIt activityParam : activityIt.getParameters()) {
 								if (uninitialized.getValue().getOriginalDisplayText()
 										.equals(activityParam.getOriginalDisplayText())) {									
-									if(sourceBinding instanceof KnowItBindingResource){										
+									if(sourceBinding instanceof KnowItBindingResource && activityParam.getOriginalDisplayText().equals(knowIt.getOriginalDisplayText())) {
+										
 										uninitialized.getValue().setDisplayText(((KnowItBindingResource) sourceBinding).getName());
 									} else if (sourceBinding instanceof KnowItBindingReference){
 										KnowItBindingReference ref = (KnowItBindingReference) sourceBinding;
-										uninitialized.getValue().setDisplayText(ref.getValue().getDisplayText());										
+										if (activityParam.getOriginalDisplayText().equals(knowIt.getOriginalDisplayText())){
+											uninitialized.getValue().setDisplayText(ref.getValue().getDisplayText());									
+										}
 									}
 								}
 							}
