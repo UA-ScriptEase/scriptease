@@ -67,8 +67,6 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			final IndependentTask task) {
 		final JTextField nameField;
 
-		final JLabel percent;
-
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
 		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().isReadOnly();
@@ -95,9 +93,6 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			nameField.setEnabled(isEditable);
 		}
 
-		percent = new JLabel(" %");
-		percent.setForeground(ScriptEaseUI.SE_BLACK);
-
 		WidgetDecorator.decorateJTextFieldForFocusEvents(nameField,
 				new Runnable() {
 
@@ -117,7 +112,6 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		component.add(nameField);
 		component.add(spinner);
-		component.add(percent);
 	}
 
 	private void updateCollaborativeComponent(final JComponent component,
