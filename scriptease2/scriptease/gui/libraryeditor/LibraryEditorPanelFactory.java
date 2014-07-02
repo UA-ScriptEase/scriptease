@@ -18,6 +18,7 @@ import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -63,6 +64,7 @@ import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
+import scriptease.util.GUIOp;
 import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
@@ -111,6 +113,7 @@ public class LibraryEditorPanelFactory {
 		final JPanel activityPanel;
 		final CodeBlockPanel codeBlockPanel;
 		final StoryComponentPanel transferPanel;
+		final boolean isEditable = !activityIt.getLibrary().getReadOnly() || ScriptEase.DEBUG_MODE;
 
 		activityPanel = new JPanel();
 		activityPanel.setLayout(new BoxLayout(activityPanel, BoxLayout.Y_AXIS));
@@ -124,7 +127,14 @@ public class LibraryEditorPanelFactory {
 
 		activityPanel.add(codeBlockPanel);
 		activityPanel.add(this.buildActivityItImplicitPanel(activityIt));
-		activityPanel.add(new StoryComponentPanelTree(transferPanel));
+		
+		if(isEditable){
+			activityPanel.add(new StoryComponentPanelTree(transferPanel));
+		} else {
+			JPanel subPanel = new JPanel();
+			subPanel.add(new JLabel(new ImageIcon(GUIOp.getScreenshot(new StoryComponentPanelTree(transferPanel)))));
+			activityPanel.add(subPanel);
+		}
 
 		codeBlockPanel.addListener(new CodeBlockPanelObserver() {
 
@@ -241,12 +251,16 @@ public class LibraryEditorPanelFactory {
 	@SuppressWarnings("serial")
 	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour) {
 		final JPanel behaviourPanel;
-
 		final JPanel buttonsPanel;
+		
 		final JButton independentButton;
 		final JButton collaborativeButton;
+		
 		final JLabel warningLabel;
-
+		final JLabel readOnlyLabel;
+		
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		
 		behaviourPanel = new JPanel();
 		behaviourPanel
 				.setLayout(new BoxLayout(behaviourPanel, BoxLayout.Y_AXIS));
@@ -281,9 +295,18 @@ public class LibraryEditorPanelFactory {
 
 		independentButton = new JButton("Independent");
 		collaborativeButton = new JButton("Collaborative");
+		
+		independentButton.setEnabled(isEditable);
+		collaborativeButton.setEnabled(isEditable);
+		
 		warningLabel = new JLabel(
 				"Warning: By changing the behaviour type, you are removing any existing behaviour owner(s) and tasks.");
 		warningLabel.setForeground(Color.RED);
+		readOnlyLabel = new JLabel(
+				"This element is from a read-only library and cannot be edited.");
+		
+		readOnlyLabel.setFont(labelFont);
+		readOnlyLabel.setForeground(ScriptEaseUI.SE_BLUE);
 
 		independentButton.addActionListener(new ActionListener() {
 			@Override
@@ -319,6 +342,12 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 
+		if(!isEditable){
+			JPanel readOnlyPanel = new JPanel();
+			readOnlyPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			readOnlyPanel.add(readOnlyLabel);
+			behaviourPanel.add(readOnlyPanel);
+		}
 		buttonsPanel.add(independentButton);
 		buttonsPanel.add(collaborativeButton);
 		buttonsPanel.add(warningLabel);
@@ -333,12 +362,13 @@ public class LibraryEditorPanelFactory {
 					behaviour, behaviourPanel);
 		}
 
+
 		return behaviourPanel;
 	}
 
 	@SuppressWarnings("serial")
 	private JPanel buildBehaviourGraphPanel(String graphName,
-			SEGraph<Task> graph) {
+			SEGraph<Task> graph, boolean isEditable) {
 		final JPanel graphPanel;
 
 		// Create the graph panel.
@@ -367,8 +397,10 @@ public class LibraryEditorPanelFactory {
 
 		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
-
-		graphPanel.add(graph.getToolBar());
+		
+		if (isEditable){
+			graphPanel.add(graph.getToolBar());			
+		}
 		graphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
 		return graphPanel;
@@ -379,7 +411,8 @@ public class LibraryEditorPanelFactory {
 		final SEGraph<Task> graph;
 		final Task startTask;
 		final LibraryModel library = behaviour.getLibrary();
-
+		final boolean isEditable = !library.getReadOnly() || ScriptEase.DEBUG_MODE;
+		
 		if (behaviour.getStartTask() != null) {
 			// If behaviour is defined, build its existing task graph
 			startTask = behaviour.getStartTask();
@@ -442,7 +475,12 @@ public class LibraryEditorPanelFactory {
 					storyComponentPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
 
-					taskPanel.add(storyComponentPanelTree);
+					if (isEditable){
+						taskPanel.add(storyComponentPanelTree);
+					} else {
+						taskPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+						taskPanel.add(new JLabel(new ImageIcon(GUIOp.getScreenshot(storyComponentPanelTree))));
+					}
 
 				} else if (task instanceof CollaborativeTask && task != behaviour.getStartTask()) {
 
@@ -482,9 +520,14 @@ public class LibraryEditorPanelFactory {
 					// event at low resolutions.
 					Dimension minimumSize = new Dimension(500, 300);
 					splitPane.setMinimumSize(minimumSize);
-					splitPane.setPreferredSize(minimumSize);
+					//splitPane.setPreferredSize(minimumSize);
 
-					taskPanel.add(splitPane);
+					if (isEditable){
+						taskPanel.add(splitPane);
+					} else {
+						taskPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+						taskPanel.add(new JLabel(new ImageIcon(GUIOp.getScreenshot(splitPane))));
+					}
 
 				} else {
 					//Here is what we do for start task nodes 
@@ -515,7 +558,7 @@ public class LibraryEditorPanelFactory {
 		return graph;
 	}
 
-	private JPanel buildBehaviourImplicitPanel(final List<KnowIt> implicitList) {
+	private JPanel buildBehaviourImplicitPanel(final List<KnowIt> implicitList, boolean isEditable) {
 		final JPanel implicitPanel;
 
 		implicitPanel = new JPanel();
@@ -531,7 +574,7 @@ public class LibraryEditorPanelFactory {
 			subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			subPanel.add(bindingWidget);
 
-			parameterPanel = buildParameterPanel(implicit);
+			parameterPanel = buildParameterPanel(implicit, isEditable);
 			parameterPanel.addListener(new ParameterPanelObserver() {
 				@Override
 				public void parameterPanelChanged() {
@@ -559,6 +602,7 @@ public class LibraryEditorPanelFactory {
 
 				}
 			});
+			parameterPanel.setEnabled(isEditable);
 			subPanel.add(parameterPanel, false);
 
 			implicitPanel.add(subPanel, false);
@@ -582,6 +626,8 @@ public class LibraryEditorPanelFactory {
 		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
 				.next();
 		final LibraryModel library = behaviour.getLibrary();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+
 
 		graph.setBorder(BorderFactory.createEmptyBorder());
 
@@ -608,10 +654,11 @@ public class LibraryEditorPanelFactory {
 
 		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
-				graph));
-		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
+				graph, isEditable));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList, isEditable));
 
 		graph.setSelectedNode(graph.getStartNode());
+		
 
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
@@ -629,7 +676,9 @@ public class LibraryEditorPanelFactory {
 		final KnowIt initiatorImplicit = iterator.next();
 		final KnowIt responderImplicit = iterator.next();
 		final LibraryModel library = behaviour.getLibrary();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
 
+		
 		graph.setBorder(BorderFactory.createEmptyBorder());
 
 		implicitList.add(initiatorImplicit);
@@ -662,8 +711,8 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel
 				.add(this.buildCollaborativeBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
-				graph));
-		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList));
+				graph, isEditable));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList, isEditable));
 
 		graph.setSelectedNode(graph.getStartNode());
 
@@ -685,6 +734,8 @@ public class LibraryEditorPanelFactory {
 		final Runnable commitText;
 		final Runnable commitPriority;
 
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		
 		namePanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
@@ -727,6 +778,9 @@ public class LibraryEditorPanelFactory {
 		priorityField.setText(priority);
 		priorityField.setColumns(5);
 
+		actionField.setEnabled(isEditable);
+		priorityField.setEnabled(isEditable);
+		
 		// Add listeners for the text fields
 
 		commitText = new Runnable() {
@@ -790,7 +844,8 @@ public class LibraryEditorPanelFactory {
 
 		final Runnable commitText;
 		final Runnable commitPriority;
-
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		
 		namePanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
@@ -834,6 +889,9 @@ public class LibraryEditorPanelFactory {
 		priorityField.setText(priority);
 		priorityField.setColumns(5);
 
+		actionField.setEnabled(isEditable);
+		priorityField.setEnabled(isEditable);
+		
 		// Add listeners for the text fields
 
 		commitText = new Runnable() {
@@ -1320,7 +1378,7 @@ public class LibraryEditorPanelFactory {
 	 * @param knowIt
 	 * @return
 	 */
-	public ParameterPanel buildParameterPanel(KnowIt knowIt) {
-		return new ParameterPanel(knowIt);
+	public ParameterPanel buildParameterPanel(KnowIt knowIt, boolean isEditable) {
+		return new ParameterPanel(knowIt, isEditable);
 	}
 }

@@ -78,19 +78,19 @@ public class ParameterPanel extends JPanel {
 	 */
 	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
 			final KnowIt knowIt) {
-		this(scriptIt, codeBlock, knowIt, true);
+		this(scriptIt, codeBlock, knowIt, true, true);
 	}
 
 	/**
 	 * Creates a new ParameterPanel with just the KnowIt, used for behaviour
 	 * implicits.
 	 */
-	public ParameterPanel(final KnowIt knowIt) {
-		this(null, null, knowIt, false);
+	public ParameterPanel(final KnowIt knowIt, final boolean isEditable) {
+		this(null, null, knowIt, false, isEditable);
 	}
 
 	public ParameterPanel(final ScriptIt scriptIt, final CodeBlock codeBlock,
-			final KnowIt knowIt, boolean removable) {
+			final KnowIt knowIt, boolean removable, boolean isEditable) {
 		super(new FlowLayout(FlowLayout.LEADING));
 		this.knowIt = knowIt;
 
@@ -106,8 +106,6 @@ public class ParameterPanel extends JPanel {
 		final JPanel automaticPanel;
 		final JPanel defaultTypeBoxPanel;
 		final JPanel bindingPanel;
-
-		final boolean isEditable;
 
 		this.observerManager = new ObserverManager<ParameterPanelObserver>();
 
