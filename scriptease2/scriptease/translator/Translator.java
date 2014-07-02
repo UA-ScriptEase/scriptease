@@ -920,7 +920,7 @@ public class Translator extends SEModel {
 		for (LibraryModel library : this.getLibraries()) {
 			final CodeBlockSource src = library.findCodeBlockSource(owner, id);
 			if (src != null)
-				srcs.add(null);
+				srcs.add(src);
 		}
 		return srcs;
 	}
