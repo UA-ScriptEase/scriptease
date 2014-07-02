@@ -113,7 +113,7 @@ public class LibraryEditorPanelFactory {
 		final JPanel activityPanel;
 		final CodeBlockPanel codeBlockPanel;
 		final StoryComponentPanel transferPanel;
-		final boolean isEditable = !activityIt.getLibrary().getReadOnly() || ScriptEase.DEBUG_MODE;
+		final boolean isEditable = !activityIt.getLibrary().isReadOnly() || ScriptEase.DEBUG_MODE;
 
 		activityPanel = new JPanel();
 		activityPanel.setLayout(new BoxLayout(activityPanel, BoxLayout.Y_AXIS));
@@ -259,7 +259,7 @@ public class LibraryEditorPanelFactory {
 		final JLabel warningLabel;
 		final JLabel readOnlyLabel;
 		
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
 		
 		behaviourPanel = new JPanel();
 		behaviourPanel
@@ -411,7 +411,7 @@ public class LibraryEditorPanelFactory {
 		final SEGraph<Task> graph;
 		final Task startTask;
 		final LibraryModel library = behaviour.getLibrary();
-		final boolean isEditable = !library.getReadOnly() || ScriptEase.DEBUG_MODE;
+		final boolean isEditable = !library.isReadOnly() || ScriptEase.DEBUG_MODE;
 		
 		if (behaviour.getStartTask() != null) {
 			// If behaviour is defined, build its existing task graph
@@ -626,7 +626,7 @@ public class LibraryEditorPanelFactory {
 		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
 				.next();
 		final LibraryModel library = behaviour.getLibrary();
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
 
 
 		graph.setBorder(BorderFactory.createEmptyBorder());
@@ -676,7 +676,7 @@ public class LibraryEditorPanelFactory {
 		final KnowIt initiatorImplicit = iterator.next();
 		final KnowIt responderImplicit = iterator.next();
 		final LibraryModel library = behaviour.getLibrary();
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
 
 		
 		graph.setBorder(BorderFactory.createEmptyBorder());
@@ -734,7 +734,7 @@ public class LibraryEditorPanelFactory {
 		final Runnable commitText;
 		final Runnable commitPriority;
 
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
 		
 		namePanel = new JPanel() {
 			@Override
@@ -844,7 +844,7 @@ public class LibraryEditorPanelFactory {
 
 		final Runnable commitText;
 		final Runnable commitPriority;
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().getReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
 		
 		namePanel = new JPanel() {
 			@Override

@@ -71,7 +71,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().getReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().isReadOnly();
 
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
@@ -131,7 +131,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().getReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().isReadOnly();
 
 		
 		

@@ -846,8 +846,7 @@ public final class WindowFactory {
 		dialog.pack();
 		dialog.setVisible(true);
 
-		// TODO Not good.
-		choice= null;
+		choice=null;
 		return choice;
 	}
 
