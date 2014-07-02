@@ -16,6 +16,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
+import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.Converter;
@@ -95,7 +96,14 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 			if (FileIO.getInstance().getMode() == IoMode.STORY) {
 				final Translator translator = StoryModelConverter.currentStory
 						.getTranslator();
-				newTarget = translator.findSimilarTarget(owner, id);
+				final Collection<CodeBlockSource> similar;
+
+				similar = translator.findSimilarTargets(owner, id);
+
+				if (similar.isEmpty())
+					newTarget = null;
+				else
+					newTarget = ListOp.head(similar);
 			} // TODO May have to do something here if we have missing
 				// references in a different mode.
 
