@@ -915,12 +915,14 @@ public class Translator extends SEModel {
 		return this.getName();
 	}
 
-	public CodeBlockSource findSimilarTarget(ScriptIt owner, int id) {
-		CodeBlockSource src = null;
+	public Collection<CodeBlockSource> findSimilarTargets(ScriptIt owner, int id) {
+		final Collection<CodeBlockSource> srcs = new ArrayList<CodeBlockSource>();
 		for (LibraryModel library : this.getLibraries()) {
-			src = library.findCodeBlockSource(owner, id);
+			final CodeBlockSource src = library.findCodeBlockSource(owner, id);
+			if (src != null)
+				srcs.add(null);
 		}
-		return src;
+		return srcs;
 	}
 
 	@Override

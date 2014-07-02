@@ -121,6 +121,19 @@ public class ParameterPanel extends JPanel {
 		automaticPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		bindingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
+		// Behaviours currently use a null ScriptIt to generate their parameter
+		// panel, so we have to account for that when checking read only. When
+		// behaviours are more implemented this will probably need to be
+		// reworked.
+		// -zturchan
+		if (scriptIt != null) {
+			isEditable = ScriptEase.DEBUG_MODE
+					|| !scriptIt.getLibrary().isReadOnly();
+		} else {
+			isEditable = true;
+			// isEditable = ScriptEase.DEBUG_MODE;
+		}
+
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setBackground(GUIOp.scaleColour(Color.GRAY, 1.9));
 
@@ -378,7 +391,7 @@ public class ParameterPanel extends JPanel {
 
 		inactiveTextField.setEnabled(false);
 
-		isEditable = ScriptEase.DEBUG_MODE || !library.getReadOnly();
+		isEditable = ScriptEase.DEBUG_MODE || !library.isReadOnly();
 
 		bindingConstantComponent.removeAll();
 

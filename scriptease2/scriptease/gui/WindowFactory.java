@@ -22,11 +22,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -69,6 +71,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.util.StringOp;
 
@@ -805,6 +808,49 @@ public final class WindowFactory {
 		return dialog;
 	}
 
+	public LibraryModel buildLibrarySelectionDialog(String description,
+			final Collection<LibraryModel> libraries) {
+		final JPanel content = new JPanel();
+		final JComboBox libraryChoiceBox = new JComboBox();
+		final JLabel descriptionLabel = new JLabel(description);
+		final JDialog dialog = this.buildDialog("Select Library", content,
+				false);
+
+		for (LibraryModel library : libraries) {
+			libraryChoiceBox.addItem(library.getTitle());
+		}
+		LibraryModel choice;
+
+		libraryChoiceBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				final String selected;
+				LibraryModel choice = null;
+
+				selected = (String) libraryChoiceBox.getSelectedItem();
+
+				for (LibraryModel library : libraries) {
+					libraryChoiceBox.addItem(library.getTitle());
+				}
+				
+				
+
+			};
+		});
+
+		content.setLayout(new BoxLayout(content, BoxLayout.PAGE_AXIS));
+
+		content.add(descriptionLabel);
+		content.add(libraryChoiceBox);
+
+		dialog.setContentPane(content);
+		dialog.pack();
+		dialog.setVisible(true);
+
+		// TODO Not good.
+		choice= null;
+		return choice;
+	}
+
 	/**
 	 * Shows a send feedback dialog.
 	 * 
@@ -1095,7 +1141,8 @@ public final class WindowFactory {
 
 		leftPanel = new JPanel(new CardLayout());
 		emptyPanel = new JPanel();
-		translatorEditorChoices = TranslatorEditorFactory.buildTranslatorEditorPanel();
+		translatorEditorChoices = TranslatorEditorFactory
+				.buildTranslatorEditorPanel();
 		libraryPane = PanelFactory.getInstance().buildLibrarySplitPane();
 
 		statusBar = PanelFactory.getInstance().buildStatusPanel();

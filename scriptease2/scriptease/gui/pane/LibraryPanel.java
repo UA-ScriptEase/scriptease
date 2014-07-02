@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -269,7 +270,14 @@ public class LibraryPanel extends JTabbedPane {
 			library.addLibraryChangeListener(library, libraryObserver);
 		}
 
-		this.updateLists();
+		// This makes sure the library pane actually loads. Otherwise it
+		// sometimes refreshes to early or something.
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				updateLists();
+			}
+		});
 	}
 
 	/**

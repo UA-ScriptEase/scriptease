@@ -50,7 +50,7 @@ public class NewDescriptionAction extends ActiveModelSensitiveAction {
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+		if (!library.isReadOnly() || ScriptEase.DEBUG_MODE) {
 			describeItNode = new DescribeItNode("Placeholder Node");
 			describeIt = new DescribeIt("New DescribeIt", describeItNode);
 			knowIt = library.createKnowItForDescribeIt(describeIt);
