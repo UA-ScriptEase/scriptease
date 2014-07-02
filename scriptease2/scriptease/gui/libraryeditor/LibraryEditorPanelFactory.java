@@ -972,7 +972,7 @@ public class LibraryEditorPanelFactory {
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 
 		isEditable = ScriptEase.DEBUG_MODE
-				|| !knowIt.getLibrary().getReadOnly();
+				|| !knowIt.getLibrary().isReadOnly();
 
 		graph = SEGraphFactory.buildDescribeItEditorGraph(
 				describeIt.getStartNode(), isEditable);
@@ -1231,7 +1231,7 @@ public class LibraryEditorPanelFactory {
 		// Check whether or not this StoryComponent should be editable (debug
 		// mode, or not read-only)
 		isEditable = ScriptEase.DEBUG_MODE
-				|| !component.getLibrary().getReadOnly();
+				|| !component.getLibrary().isReadOnly();
 
 		// Set up the labels
 		nameLabel.setFont(labelFont);

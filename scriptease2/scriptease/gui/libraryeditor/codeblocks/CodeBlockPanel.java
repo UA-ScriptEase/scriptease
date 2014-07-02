@@ -142,7 +142,7 @@ public class CodeBlockPanel extends JPanel {
 		types = new ArrayList<String>(codeBlock.getTypes());
 
 		isEditable = ScriptEase.DEBUG_MODE
-				|| !scriptIt.getLibrary().getReadOnly();
+				|| !scriptIt.getLibrary().isReadOnly();
 
 		deleteCodeBlockButton.setEnabled(isEditable);
 		addParameterButton.setEnabled(isEditable);
@@ -534,7 +534,7 @@ public class CodeBlockPanel extends JPanel {
 		buttons = new JPanel();
 		codePanel = new CodeFragmentPanel(codeBlock, null);
 		codeEditorScrollPane = new JScrollPane(codePanel);
-		isEditable = !codeBlock.ownerComponent.getLibrary().getReadOnly()
+		isEditable = !codeBlock.ownerComponent.getLibrary().isReadOnly()
 				|| ScriptEase.DEBUG_MODE;
 
 		if (!isEditable) {

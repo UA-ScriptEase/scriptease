@@ -912,10 +912,11 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	}
 
 	/**
-	 * Returns the read only value of the library
+	 * Returns the read only value of the library. If ScriptEase is in Debug
+	 * Mode, this will be true.
 	 * 
 	 */
-	public boolean getReadOnly() {
+	public boolean isReadOnly() {
 		return this.readOnly;
 	}
 

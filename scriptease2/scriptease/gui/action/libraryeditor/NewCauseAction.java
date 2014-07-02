@@ -68,7 +68,7 @@ public class NewCauseAction extends ActiveModelSensitiveAction {
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
-		if (!library.getReadOnly() || ScriptEase.DEBUG_MODE) {
+		if (!library.isReadOnly() || ScriptEase.DEBUG_MODE) {
 			newCause = new CauseIt(library, "When <" + subject + ">");
 
 			type = null;

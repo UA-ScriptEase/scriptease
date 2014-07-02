@@ -237,7 +237,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		final JLabel problemLabel = new JLabel("!");
 
 		problemLabel.setForeground(Color.RED);
-		problemLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+		problemLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
 
 		problemLabel.setVisible(storyPoint.hasProblems());
 
