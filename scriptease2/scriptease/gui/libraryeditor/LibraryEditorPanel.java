@@ -202,12 +202,12 @@ public class LibraryEditorPanel extends JPanel {
 			@Override
 			public void processBehaviour(Behaviour behaviour) {
 				final JPanel panel;
-
 				panel = LibraryEditorPanelFactory.getInstance()
 						.buildBehaviourEditingPanel(behaviour);
-
+				
 				this.pane.removeAll();
 				this.pane.add(panel);
+
 				this.pane.repaint();
 				this.pane.revalidate();
 				// Should we add default process? I'm not realy sure how

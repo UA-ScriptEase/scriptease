@@ -10,6 +10,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import scriptease.ScriptEase;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.SEGraph.SEGraph;
 import scriptease.gui.ui.ScriptEaseUI;
@@ -70,25 +71,28 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-		
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().getReadOnly();
+
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
 		spinner.setValue(task.getChance());
 
 		spinner.addChangeListener(new ChangeListener() {
-
+		
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				task.setChance((Double) spinner.getValue());
 			}
 		});
 
-
+		spinner.setEnabled(isEditable);
+		
 		if(graph.getStartNode() == task) {
 			nameField = new JTextField("Start Node");
 			nameField.setEnabled(false);
 		} else {
 			nameField = new JTextField(task.getDisplayText());
+			nameField.setEnabled(isEditable);
 		}
 
 		percent = new JLabel(" %");
@@ -127,7 +131,10 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
+		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().getReadOnly();
 
+		
+		
 		namePanel = new JPanel();
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
 		
@@ -139,6 +146,8 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		} else {
 			initiatorField = new JTextField(task.getInitiatorName());
 			reactorField = new JTextField(task.getResponderName());
+			initiatorField.setEnabled(isEditable);
+			reactorField.setEnabled(isEditable);
 		}
 
 
@@ -153,6 +162,8 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 				task.setChance((Double) spinner.getValue());
 			}
 		});
+		
+		spinner.setEnabled(isEditable);
 
 		percent = new JLabel(" %");
 		percent.setForeground(ScriptEaseUI.SE_BLACK);
