@@ -246,7 +246,7 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 					@Override
 					public void componentChanged(StoryComponentEvent event) {
 						if (event.getSource() == storyPoint)
-							if (event.getType() == StoryComponentChangeEnum.STORY_NODE_PROBLEMS_SET) {
+							if (event.getType() == StoryComponentChangeEnum.CHANGE_PROBLEMS_SET) {
 								problemLabel.setVisible(storyPoint
 										.hasProblems());
 							}

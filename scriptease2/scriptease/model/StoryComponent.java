@@ -55,6 +55,7 @@ public abstract class StoryComponent implements Cloneable {
 	private Set<String> labels;
 	private Boolean isVisible;
 	private Boolean isEnabled;
+	private boolean hasProblems = false;
 
 	private LibraryModel library;
 
@@ -231,6 +232,17 @@ public abstract class StoryComponent implements Cloneable {
 		this.labels = labelSet;
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_LABELS_CHANGED));
+	}
+
+	public void setHasProblems(boolean hasProblems) {
+		this.hasProblems = hasProblems;
+
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_PROBLEMS_SET));
+	}
+
+	public boolean hasProblems() {
+		return this.hasProblems;
 	}
 
 	/**
