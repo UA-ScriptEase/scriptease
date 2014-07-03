@@ -48,7 +48,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public StoryComponent unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final ScriptIt scriptIt = (ScriptIt) super.unmarshal(reader, context);
 
