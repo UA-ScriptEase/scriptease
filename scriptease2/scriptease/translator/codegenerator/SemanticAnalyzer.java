@@ -142,7 +142,12 @@ public class SemanticAnalyzer extends StoryAdapter {
 
 	private void verifyRules(StoryComponent component) {
 		for (StoryRule rule : this.rules) {
-			this.problems.addAll(rule.validate(null, component));
+			final Collection<StoryProblem> problems;
+
+			problems = rule.validate(null, component);
+
+			this.problems.addAll(problems);
+			component.setHasProblems(!problems.isEmpty());
 		}
 	}
 }
