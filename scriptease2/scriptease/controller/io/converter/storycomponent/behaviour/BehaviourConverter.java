@@ -37,15 +37,19 @@ public class BehaviourConverter extends ScriptItConverter {
 	}
 
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public StoryComponent unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 
 		final String type = XMLAttribute.TYPE.read(reader);
 		final String priority = XMLAttribute.PRIORITY.read(reader);
 		Task startTask = null;
 
-		final Behaviour behaviour = (Behaviour) super
-				.unmarshal(reader, context);
+		final StoryComponent component = super.unmarshal(reader, context);
+
+		if (!(component instanceof Behaviour))
+			return component;
+
+		final Behaviour behaviour = (Behaviour) component;
 
 		if (reader.hasMoreChildren()) {
 			reader.moveDown();

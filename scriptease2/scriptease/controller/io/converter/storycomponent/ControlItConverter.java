@@ -30,13 +30,16 @@ public class ControlItConverter extends ScriptItConverter {
 	}
 
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public StoryComponent unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final String format = XMLAttribute.CONTROL.read(reader);
 
-		final ControlIt controlIt;
+		final StoryComponent component = super.unmarshal(reader, context);
 
-		controlIt = (ControlIt) super.unmarshal(reader, context);
+		if (!(component instanceof ControlIt))
+			return component;
+
+		final ControlIt controlIt = (ControlIt) component;
 
 		controlIt.setFormat(ControlIt.ControlItFormat.valueOf(format
 				.toUpperCase()));
