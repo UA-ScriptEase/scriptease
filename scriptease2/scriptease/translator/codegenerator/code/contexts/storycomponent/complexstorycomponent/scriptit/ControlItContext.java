@@ -1,10 +1,11 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit;
 
 import java.util.Collection;
 
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ControlIt.ControlItFormat;
+import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 
 /**

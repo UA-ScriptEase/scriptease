@@ -1,9 +1,10 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent;
 
 import java.util.Collection;
 
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.PickIt;
+import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
  * PickItContext is Context for a PickIt {@link PickIt} object.
