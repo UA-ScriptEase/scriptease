@@ -113,7 +113,8 @@ public class LibraryEditorPanelFactory {
 		final JPanel activityPanel;
 		final CodeBlockPanel codeBlockPanel;
 		final StoryComponentPanel transferPanel;
-		final boolean isEditable = !activityIt.getLibrary().isReadOnly() || ScriptEase.DEBUG_MODE;
+		final boolean isEditable = !activityIt.getLibrary().isReadOnly()
+				|| ScriptEase.DEBUG_MODE;
 
 		activityPanel = new JPanel();
 		activityPanel.setLayout(new BoxLayout(activityPanel, BoxLayout.Y_AXIS));
@@ -127,12 +128,13 @@ public class LibraryEditorPanelFactory {
 
 		activityPanel.add(codeBlockPanel);
 		activityPanel.add(this.buildActivityItImplicitPanel(activityIt));
-		
-		if(isEditable){
+
+		if (isEditable) {
 			activityPanel.add(new StoryComponentPanelTree(transferPanel));
 		} else {
 			JPanel subPanel = new JPanel();
-			subPanel.add(new JLabel(new ImageIcon(GUIOp.getScreenshot(new StoryComponentPanelTree(transferPanel)))));
+			subPanel.add(new JLabel(new ImageIcon(GUIOp
+					.getScreenshot(new StoryComponentPanelTree(transferPanel)))));
 			activityPanel.add(subPanel);
 		}
 
@@ -252,15 +254,16 @@ public class LibraryEditorPanelFactory {
 	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour) {
 		final JPanel behaviourPanel;
 		final JPanel buttonsPanel;
-		
+
 		final JButton independentButton;
 		final JButton collaborativeButton;
-		
+
 		final JLabel warningLabel;
 		final JLabel readOnlyLabel;
-		
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
-		
+
+		final boolean isEditable = ScriptEase.DEBUG_MODE
+				|| !behaviour.getLibrary().isReadOnly();
+
 		behaviourPanel = new JPanel();
 		behaviourPanel
 				.setLayout(new BoxLayout(behaviourPanel, BoxLayout.Y_AXIS));
@@ -295,16 +298,16 @@ public class LibraryEditorPanelFactory {
 
 		independentButton = new JButton("Independent");
 		collaborativeButton = new JButton("Collaborative");
-		
+
 		independentButton.setEnabled(isEditable);
 		collaborativeButton.setEnabled(isEditable);
-		
+
 		warningLabel = new JLabel(
 				"Warning: By changing the behaviour type, you are removing any existing behaviour owner(s) and tasks.");
 		warningLabel.setForeground(Color.RED);
 		readOnlyLabel = new JLabel(
 				"This element is from a read-only library and cannot be edited.");
-		
+
 		readOnlyLabel.setFont(labelFont);
 		readOnlyLabel.setForeground(ScriptEaseUI.SE_BLUE);
 
@@ -342,7 +345,7 @@ public class LibraryEditorPanelFactory {
 			}
 		});
 
-		if(!isEditable){
+		if (!isEditable) {
 			JPanel readOnlyPanel = new JPanel();
 			readOnlyPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			readOnlyPanel.add(readOnlyLabel);
@@ -361,7 +364,6 @@ public class LibraryEditorPanelFactory {
 			LibraryEditorPanelFactory.this.buildCollaborativeBehaviourPanel(
 					behaviour, behaviourPanel);
 		}
-
 
 		return behaviourPanel;
 	}
@@ -397,9 +399,9 @@ public class LibraryEditorPanelFactory {
 
 		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
-		
-		if (isEditable){
-			graphPanel.add(graph.getToolBar());			
+
+		if (isEditable) {
+			graphPanel.add(graph.getToolBar());
 		}
 		graphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
 
@@ -411,8 +413,9 @@ public class LibraryEditorPanelFactory {
 		final SEGraph<Task> graph;
 		final Task startTask;
 		final LibraryModel library = behaviour.getLibrary();
-		final boolean isEditable = !library.isReadOnly() || ScriptEase.DEBUG_MODE;
-		
+		final boolean isEditable = !library.isReadOnly()
+				|| ScriptEase.DEBUG_MODE;
+
 		if (behaviour.getStartTask() != null) {
 			// If behaviour is defined, build its existing task graph
 			startTask = behaviour.getStartTask();
@@ -460,7 +463,8 @@ public class LibraryEditorPanelFactory {
 				// Set up the effects panel for the task we selected.
 				final Task task = nodes.iterator().next();
 
-				if (task instanceof IndependentTask && task != behaviour.getStartTask()) {
+				if (task instanceof IndependentTask
+						&& task != behaviour.getStartTask()) {
 
 					final StoryComponentPanelTree storyComponentPanelTree;
 
@@ -475,14 +479,16 @@ public class LibraryEditorPanelFactory {
 					storyComponentPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
 
-					if (isEditable){
+					if (isEditable) {
 						taskPanel.add(storyComponentPanelTree);
 					} else {
 						taskPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-						taskPanel.add(new JLabel(new ImageIcon(GUIOp.getScreenshot(storyComponentPanelTree))));
+						taskPanel.add(new JLabel(new ImageIcon(GUIOp
+								.getScreenshot(storyComponentPanelTree))));
 					}
 
-				} else if (task instanceof CollaborativeTask && task != behaviour.getStartTask()) {
+				} else if (task instanceof CollaborativeTask
+						&& task != behaviour.getStartTask()) {
 
 					final StoryComponentPanelTree initiatorPanelTree;
 					final StoryComponentPanelTree responderPanelTree;
@@ -520,21 +526,23 @@ public class LibraryEditorPanelFactory {
 					// event at low resolutions.
 					Dimension minimumSize = new Dimension(500, 300);
 					splitPane.setMinimumSize(minimumSize);
-					//splitPane.setPreferredSize(minimumSize);
+					// splitPane.setPreferredSize(minimumSize);
 
-					if (isEditable){
+					if (isEditable) {
 						taskPanel.add(splitPane);
 					} else {
 						taskPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-						taskPanel.add(new JLabel(new ImageIcon(GUIOp.getScreenshot(splitPane))));
+						taskPanel.add(new JLabel(new ImageIcon(GUIOp
+								.getScreenshot(splitPane))));
 					}
 
 				} else {
-					//Here is what we do for start task nodes 
-					
+					// Here is what we do for start task nodes
+
 					final JLabel startLabel;
-					
-					startLabel = new JLabel("You cannot add any components to the start task node!");
+
+					startLabel = new JLabel(
+							"You cannot add any components to the start task node!");
 					taskPanel.add(startLabel);
 				}
 
@@ -558,7 +566,8 @@ public class LibraryEditorPanelFactory {
 		return graph;
 	}
 
-	private JPanel buildBehaviourImplicitPanel(final List<KnowIt> implicitList, boolean isEditable) {
+	private JPanel buildBehaviourImplicitPanel(final List<KnowIt> implicitList,
+			boolean isEditable) {
 		final JPanel implicitPanel;
 
 		implicitPanel = new JPanel();
@@ -626,8 +635,8 @@ public class LibraryEditorPanelFactory {
 		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
 				.next();
 		final LibraryModel library = behaviour.getLibrary();
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
-
+		final boolean isEditable = ScriptEase.DEBUG_MODE
+				|| !behaviour.getLibrary().isReadOnly();
 
 		graph.setBorder(BorderFactory.createEmptyBorder());
 
@@ -655,10 +664,10 @@ public class LibraryEditorPanelFactory {
 		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
 				graph, isEditable));
-		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList, isEditable));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList,
+				isEditable));
 
 		graph.setSelectedNode(graph.getStartNode());
-		
 
 		behaviourPanel.repaint();
 		behaviourPanel.revalidate();
@@ -676,9 +685,9 @@ public class LibraryEditorPanelFactory {
 		final KnowIt initiatorImplicit = iterator.next();
 		final KnowIt responderImplicit = iterator.next();
 		final LibraryModel library = behaviour.getLibrary();
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE
+				|| !behaviour.getLibrary().isReadOnly();
 
-		
 		graph.setBorder(BorderFactory.createEmptyBorder());
 
 		implicitList.add(initiatorImplicit);
@@ -712,7 +721,8 @@ public class LibraryEditorPanelFactory {
 				.add(this.buildCollaborativeBehaviourNamePanel(behaviour));
 		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
 				graph, isEditable));
-		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList, isEditable));
+		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList,
+				isEditable));
 
 		graph.setSelectedNode(graph.getStartNode());
 
@@ -734,8 +744,9 @@ public class LibraryEditorPanelFactory {
 		final Runnable commitText;
 		final Runnable commitPriority;
 
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
-		
+		final boolean isEditable = ScriptEase.DEBUG_MODE
+				|| !behaviour.getLibrary().isReadOnly();
+
 		namePanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
@@ -780,7 +791,7 @@ public class LibraryEditorPanelFactory {
 
 		actionField.setEnabled(isEditable);
 		priorityField.setEnabled(isEditable);
-		
+
 		// Add listeners for the text fields
 
 		commitText = new Runnable() {
@@ -844,8 +855,9 @@ public class LibraryEditorPanelFactory {
 
 		final Runnable commitText;
 		final Runnable commitPriority;
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !behaviour.getLibrary().isReadOnly();
-		
+		final boolean isEditable = ScriptEase.DEBUG_MODE
+				|| !behaviour.getLibrary().isReadOnly();
+
 		namePanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
@@ -891,7 +903,7 @@ public class LibraryEditorPanelFactory {
 
 		actionField.setEnabled(isEditable);
 		priorityField.setEnabled(isEditable);
-		
+
 		// Add listeners for the text fields
 
 		commitText = new Runnable() {
@@ -971,8 +983,7 @@ public class LibraryEditorPanelFactory {
 
 		effectHolder = new EffectHolderPanel(describeIt.getTypes());
 
-		isEditable = ScriptEase.DEBUG_MODE
-				|| !knowIt.getLibrary().isReadOnly();
+		isEditable = ScriptEase.DEBUG_MODE || !knowIt.getLibrary().isReadOnly();
 
 		graph = SEGraphFactory.buildDescribeItEditorGraph(
 				describeIt.getStartNode(), isEditable);
@@ -1158,6 +1169,58 @@ public class LibraryEditorPanelFactory {
 	}
 
 	/**
+	 * Builds a JTextField used to edit the labels of a story component.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	private JTextField buildDescriptionEditorField(
+			final StoryComponent component) {
+		final JTextField descriptionField;
+		final String labelToolTip;
+		final Runnable commitText;
+
+		descriptionField = new JTextField(component.getDescription());
+		labelToolTip = "<html>The <b>Description</b> shows up when<br>"
+				+ "the user hovers over this component.</html>";
+
+		commitText = new Runnable() {
+			@Override
+			public void run() {
+				if (!UndoManager.getInstance().hasOpenUndoableAction()) {
+					final String description = descriptionField.getText();
+
+					UndoManager.getInstance().startUndoableAction(
+							"Setting " + component + "'s description to "
+									+ description);
+					component.setDescription(description);
+					UndoManager.getInstance().endUndoableAction();
+				}
+			}
+		};
+
+		WidgetDecorator.decorateJTextFieldForFocusEvents(descriptionField,
+				commitText, false);
+
+		descriptionField.setToolTipText(labelToolTip);
+
+		descriptionField.setHorizontalAlignment(JTextField.LEADING);
+
+		component.addStoryComponentObserver(descriptionField,
+				new StoryComponentObserver() {
+					@Override
+					public void componentChanged(StoryComponentEvent event) {
+						StoryComponentChangeEnum eventType = event.getType();
+						if (eventType == StoryComponentChangeEnum.CHANGE_TEXT_DESCRIPTION) {
+							descriptionField.setText(component.getDescription());
+						}
+					}
+				});
+
+		return descriptionField;
+	}
+
+	/**
 	 * Builds a JCheckBox to set a component's visibility.
 	 * 
 	 * @param component
@@ -1206,11 +1269,15 @@ public class LibraryEditorPanelFactory {
 
 		final JLabel nameLabel;
 		final JLabel labelLabel;
+		final JLabel descriptionLabel;
+
 		final JLabel visibleLabel;
 		final JLabel readOnlyLabel;
 
 		final JTextField nameField;
 		final JTextField labelsField;
+		final JTextField descriptionField;
+
 		final JCheckBox visibleBox;
 
 		final boolean isEditable;
@@ -1221,11 +1288,15 @@ public class LibraryEditorPanelFactory {
 		nameLabel = new JLabel("Name: ");
 		labelLabel = new JLabel("Labels: ");
 		visibleLabel = new JLabel("Visible: ");
+		descriptionLabel = new JLabel("Description: ");
+
 		readOnlyLabel = new JLabel(
 				"This element is from a read-only library and cannot be edited.");
-		
+
 		nameField = this.buildNameEditorPanel(component);
 		labelsField = this.buildLabelEditorField(component);
+		descriptionField = this.buildDescriptionEditorField(component);
+
 		visibleBox = this.buildVisibleBox(component);
 
 		// Check whether or not this StoryComponent should be editable (debug
@@ -1237,10 +1308,12 @@ public class LibraryEditorPanelFactory {
 		nameLabel.setFont(labelFont);
 		labelLabel.setFont(labelFont);
 		visibleLabel.setFont(labelFont);
+		descriptionLabel.setFont(labelFont);
 		readOnlyLabel.setFont(labelFont);
 		readOnlyLabel.setForeground(ScriptEaseUI.SE_BLUE);
 
 		labelLabel.setToolTipText(labelsField.getToolTipText());
+		descriptionLabel.setToolTipText(descriptionField.getToolTipText());
 
 		// Set up the descriptorPanel
 		descriptorPanel.setLayout(descriptorPanelLayout);
@@ -1250,108 +1323,63 @@ public class LibraryEditorPanelFactory {
 		descriptorPanelLayout.setAutoCreateContainerGaps(true);
 		descriptorPanelLayout.setHonorsVisibility(true);
 
-		// Add JComponents to DescriptorPanel using GroupLayout
-		if (isEditable) {
-			descriptorPanelLayout
-					.setHorizontalGroup(descriptorPanelLayout
-							.createParallelGroup()
-							.addGroup(
-									descriptorPanelLayout
-											.createSequentialGroup()
-											.addGroup(
-													descriptorPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	nameLabel)
-															.addComponent(
-																	visibleLabel)
-															.addComponent(
-																	labelLabel))
-											.addGroup(
-													descriptorPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	visibleBox)
-															.addComponent(
-																	nameField)
-															.addComponent(
-																	labelsField))));
+		descriptorPanelLayout.setHorizontalGroup(descriptorPanelLayout
+				.createParallelGroup().addGroup(
+						descriptorPanelLayout
+								.createSequentialGroup()
+								.addGroup(
+										descriptorPanelLayout
+												.createParallelGroup()
+												.addComponent(nameLabel)
+												.addComponent(descriptionLabel)
+												.addComponent(visibleLabel)
+												.addComponent(labelLabel))
+								.addGroup(
+										descriptorPanelLayout
+												.createParallelGroup()
+												.addComponent(visibleBox)
+												.addComponent(nameField)
+												.addComponent(descriptionField)
+												.addComponent(labelsField))));
 
-			descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
-					.createSequentialGroup()
-					.addGroup(
-							descriptorPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(visibleLabel)
-									.addComponent(visibleBox))
-					.addGroup(
-							descriptorPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(nameLabel)
-									.addComponent(nameField))
-					.addGroup(
-							descriptorPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(labelLabel)
-									.addComponent(labelsField)));
-		} else {
+		descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
+				.createSequentialGroup()
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(visibleLabel)
+								.addComponent(visibleBox))
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(nameLabel)
+								.addComponent(nameField))
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(descriptionLabel)
+								.addComponent(descriptionField))
+				.addGroup(
+						descriptorPanelLayout
+								.createParallelGroup(
+										GroupLayout.Alignment.BASELINE)
+								.addComponent(labelLabel)
+								.addComponent(labelsField)));
+		if (!isEditable) {
+			final JPanel containerPanel = new JPanel(new BorderLayout());
+
+			containerPanel.add(readOnlyLabel, BorderLayout.NORTH);
+			containerPanel.add(descriptorPanel, BorderLayout.CENTER);
+
 			visibleBox.setEnabled(false);
 			nameField.setEnabled(false);
 			labelsField.setEnabled(false);
-			descriptorPanelLayout
-					.setHorizontalGroup(descriptorPanelLayout
-							.createParallelGroup()
-							.addGroup(
-									descriptorPanelLayout
-											.createSequentialGroup()
-											.addGroup(
-													descriptorPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	nameLabel)
-															.addComponent(
-																	visibleLabel)
-															.addComponent(
-																	labelLabel))
-											.addGroup(
-													descriptorPanelLayout
-															.createParallelGroup()
-															.addComponent(
-																	readOnlyLabel)
-															.addComponent(
-																	visibleBox)
-															.addComponent(
-																	nameField)
-															.addComponent(
-																	labelsField))));
+			descriptionField.setEnabled(false);
 
-			descriptorPanelLayout.setVerticalGroup(descriptorPanelLayout
-					.createSequentialGroup()
-					.addGroup(
-							descriptorPanelLayout.createParallelGroup(
-									GroupLayout.Alignment.BASELINE)
-									.addComponent(readOnlyLabel))
-					.addGroup(
-							descriptorPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(visibleLabel)
-									.addComponent(visibleBox))
-					.addGroup(
-							descriptorPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(nameLabel)
-									.addComponent(nameField))
-					.addGroup(
-							descriptorPanelLayout
-									.createParallelGroup(
-											GroupLayout.Alignment.BASELINE)
-									.addComponent(labelLabel)
-									.addComponent(labelsField)));
+			return containerPanel;
 		}
 
 		return descriptorPanel;

@@ -51,6 +51,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public abstract class StoryComponent implements Cloneable {
+	private String description;
 	private String displayText;
 	private Set<String> labels;
 	private Boolean isVisible;
@@ -93,6 +94,7 @@ public abstract class StoryComponent implements Cloneable {
 	protected void init() {
 		this.ownerComponent = null;
 		this.observerManager = new ObserverManager<StoryComponentObserver>();
+		this.description = StoryComponent.BLANK_TEXT;
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new HashSet<String>();
 		this.isVisible = true;
@@ -156,6 +158,16 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public String getDisplayText() {
 		return this.displayText;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_TEXT_DESCRIPTION));
+	}
+
+	public String getDescription() {
+		return this.description;
 	}
 
 	/**
@@ -371,6 +383,7 @@ public abstract class StoryComponent implements Cloneable {
 
 		// make them the same again, now that they're less conjoined.
 		clone.setDisplayText(new String(this.displayText));
+		clone.setDescription(new String(this.description));
 		clone.setVisible(this.isVisible);
 		clone.setOwner(this.ownerComponent);
 		clone.setLibrary(this.library);
