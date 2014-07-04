@@ -96,6 +96,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	protected void exportDone(JComponent component, Transferable transferable,
 			int action) {
 
+		KnowIt activityParameter = null;
+		String parameterName = "";
 		// Only un-bind the source KnowIt if it was not a move operation (NONE
 		// action)
 		if (action == TransferHandler.NONE) {
@@ -108,15 +110,51 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 				return;
 
 			//Revert the display text to the name of the parameter
-			toRemove.setDisplayText(toRemove.getOriginalDisplayText());
+			String removedOriginalDisplayText = toRemove.getOriginalDisplayText();
+			toRemove.setDisplayText(removedOriginalDisplayText);
 
 			if (!UndoManager.getInstance().hasOpenUndoableAction())
 				UndoManager.getInstance().startUndoableAction(
 						"Remove " + toRemove.getBinding() + " Binding");
 
-			// Set the KnowItBinding to null.
-			toRemove.clearBinding();
-
+	
+			
+			//Check if we're an activity parameter usage
+			if(toRemove.ownerComponent.ownerComponent.ownerComponent != null &&
+					toRemove.ownerComponent.ownerComponent.ownerComponent instanceof ActivityIt){
+				//Get the parameter from that activity which matches the thing we removed
+				ActivityIt activityIt = (ActivityIt) toRemove.ownerComponent.ownerComponent.ownerComponent;
+ 				for (KnowIt activityParam : activityIt.getParameters()) {					
+					if (toRemove.getBinding() instanceof KnowItBindingResource){
+						parameterName = ((KnowItBindingResource) toRemove.getBinding()).getOriginalParameterText();
+					} else if (toRemove.getBinding() instanceof KnowItBindingReference){
+						KnowItBindingReference ref = (KnowItBindingReference) toRemove.getBinding();
+						parameterName = ref.getValue().getOriginalDisplayText();
+					} else if (toRemove.getBinding() instanceof KnowItBindingUninitialized){
+						parameterName = toRemove.getOriginalDisplayText();
+					}
+					
+					if (activityParam.getOriginalDisplayText().equals(parameterName)){
+						activityParameter = activityParam;
+						break;
+					}
+				}
+				
+				if (activityParameter != null){
+					BindingWidget uninitializedWidget = ScriptWidgetFactory
+							.buildBindingWidget(new KnowItBindingUninitialized(
+									new KnowItBindingReference(
+											activityParameter)));
+					KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) uninitializedWidget.getBinding();
+					uninitialized.getValue().setOriginalDisplayText(activityParameter.getOriginalDisplayText());
+					uninitialized.getValue().setDisplayText(activityParameter.getDisplayText());
+					toRemove.setBinding(uninitialized);
+				}
+			} else {
+				// Set the KnowItBinding to null.
+				toRemove.clearBinding();
+			}
+			
 			this.repopulateParentOf(component);
 
 			if (UndoManager.getInstance().hasOpenUndoableAction())
@@ -388,10 +426,11 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			
 			if (sourceBinding instanceof KnowItBindingResource) {
 				((KnowItBindingResource)sourceBinding).setOriginalParameterText(pastOriginalDisplayText);
+				
+				
 			} else if (sourceBinding instanceof KnowItBindingReference) {
 				((KnowItBindingReference)sourceBinding).getValue().setOriginalDisplayText(pastOriginalDisplayText);
-			}
-
+			}	
 		}
 
 		// Set the history to the active model
