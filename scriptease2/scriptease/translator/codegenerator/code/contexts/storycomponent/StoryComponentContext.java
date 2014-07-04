@@ -1,4 +1,4 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +8,8 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.PickIt;
+import scriptease.translator.codegenerator.code.contexts.Context;
+import scriptease.translator.codegenerator.code.contexts.FileContext;
 
 /**
  * StoryComponentContext is Context for a StoryComponent. Story Component

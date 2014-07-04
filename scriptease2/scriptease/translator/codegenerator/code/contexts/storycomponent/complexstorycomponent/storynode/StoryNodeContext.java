@@ -1,6 +1,8 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.storynode;
 
 import scriptease.model.complex.StoryNode;
+import scriptease.translator.codegenerator.code.contexts.Context;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.ComplexStoryComponentContext;
 
 /**
  * Context representing a StoryNode

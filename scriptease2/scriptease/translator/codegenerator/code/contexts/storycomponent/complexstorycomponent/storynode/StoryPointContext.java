@@ -1,4 +1,4 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.storynode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +8,7 @@ import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
 

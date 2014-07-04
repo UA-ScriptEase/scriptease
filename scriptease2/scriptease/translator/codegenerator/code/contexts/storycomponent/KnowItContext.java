@@ -1,4 +1,4 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent;
 
 import java.util.Collection;
 
@@ -11,6 +11,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
+import scriptease.translator.codegenerator.code.contexts.Context;
+import scriptease.translator.codegenerator.code.contexts.ContextFactory;
 
 /**
  * KnowItContext is Context for a KnowIt object.

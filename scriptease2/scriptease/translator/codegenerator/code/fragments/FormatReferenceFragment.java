@@ -12,7 +12,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.StoryComponentContext;
 
 /**
  * Represents a code location where another format from the format dictionary is

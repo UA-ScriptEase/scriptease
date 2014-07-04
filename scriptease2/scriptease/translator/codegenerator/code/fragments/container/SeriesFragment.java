@@ -15,12 +15,12 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
-import scriptease.translator.codegenerator.code.contexts.AskItContext;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
-import scriptease.translator.codegenerator.code.contexts.KnowItContext;
-import scriptease.translator.codegenerator.code.contexts.ScriptItContext;
-import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.AskItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.KnowItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.StoryComponentContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.ScriptItContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
