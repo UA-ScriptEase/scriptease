@@ -1,5 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.io.FileIO;
@@ -33,15 +34,26 @@ public abstract class StoryComponentConverter implements Converter {
 			MarshallingContext context) {
 		final StoryComponent comp = (StoryComponent) source;
 		final LibraryModel library = comp.getLibrary();
+		final String description = comp.getDescription();
+		final boolean visible = comp.isVisible();
+		final boolean enabled = comp.isEnabled();
+		final Collection<String> labels = comp.getLabels();
 
 		if (library != LibraryModelConverter.currentLibrary) {
 			XMLAttribute.LIBRARY.write(writer, library.getTitle());
 		}
 
 		XMLNode.NAME.writeString(writer, comp.getDisplayText());
-		XMLNode.VISIBLE.writeBoolean(writer, comp.isVisible());
-		XMLNode.ENABLED.writeBoolean(writer, comp.isEnabled());
-		XMLNode.LABELS.writeChildren(writer, comp.getLabels());
+
+		if (!description.isEmpty())
+			XMLNode.DESCRIPTION.writeString(writer, description);
+		if (!visible)
+			XMLNode.VISIBLE.writeBoolean(writer, visible);
+		if (!enabled)
+			XMLNode.ENABLED.writeBoolean(writer, enabled);
+		
+		// We need to write these so we break at the right moment when we load.
+		XMLNode.LABELS.writeChildren(writer, labels);
 	}
 
 	/**
@@ -54,11 +66,14 @@ public abstract class StoryComponentConverter implements Converter {
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final StoryComponent comp;
-		final String displayText;
-		final String visibility;
-		final String enabled;
-		final Collection<String> labels;
 
+		String displayText = "";
+		String description = "";
+
+		boolean visible = true;
+		boolean enabled = true;
+
+		final Collection<String> labels = new ArrayList<String>();
 		final String libraryStr = XMLAttribute.LIBRARY.read(reader);
 
 		final LibraryModel library;
@@ -86,18 +101,49 @@ public abstract class StoryComponentConverter implements Converter {
 
 		comp = this.buildComponent(reader, context, library);
 
-		displayText = XMLNode.NAME.readString(reader);
-		visibility = XMLNode.VISIBLE.readString(reader);
-		enabled = XMLNode.ENABLED.readString(reader);
-		labels = XMLNode.LABELS.readStringCollection(reader);
+		while (reader.hasMoreChildren()) {
+			reader.moveDown();
+
+			String node = reader.getNodeName();
+			if (node.equals(XMLNode.NAME.getName())) {
+				displayText = reader.getValue();
+			}
+
+			if (node.equals(XMLNode.VISIBLE.getName())) {
+				visible = reader.getValue().equalsIgnoreCase("true");
+			}
+
+			if (node.equals(XMLNode.ENABLED.getName())) {
+				enabled = reader.getValue().equalsIgnoreCase("true");
+			}
+
+			if (node.equals(XMLNode.DESCRIPTION.getName())) {
+				description = reader.getValue();
+			}
+
+			if (node.equals(XMLNode.LABELS.getName())) {
+				while (reader.hasMoreChildren()) {
+					reader.moveDown();
+					labels.add(reader.getValue());
+					reader.moveUp();
+				}
+
+				// Labels are always the last element and are always present.
+				reader.moveUp();
+				break;
+			}
+
+			reader.moveUp();
+		}
 
 		// Actually init the StoryComponent.
 		comp.setDisplayText(displayText);
+		comp.setDescription(description);
 		comp.addLabels(labels);
-		comp.setVisible(visibility.equalsIgnoreCase("true"));
-		comp.setEnabled(enabled.equalsIgnoreCase("true"));
-		
-		if (comp instanceof KnowIt){
+		comp.setVisible(visible);
+		comp.setEnabled(enabled);
+
+		if (comp instanceof KnowIt) {
 			((KnowIt) comp).setOriginalDisplayText(displayText);
 		}
 

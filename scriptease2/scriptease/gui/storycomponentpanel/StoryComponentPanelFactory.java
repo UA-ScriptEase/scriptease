@@ -148,8 +148,7 @@ public class StoryComponentPanelFactory {
 
 							});
 
-			panel.setToolTipText(component.getLibrary() + " : "
-					+ component.getDisplayText());
+			panel.setToolTipText(component.getDescription());
 		}
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);

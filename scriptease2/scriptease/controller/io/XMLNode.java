@@ -40,6 +40,8 @@ public enum XMLNode {
 
 	CONTROLITS("ControlIts", CONTROLIT),
 
+	DESCRIPTION("Description"),
+
 	TASK("Task"),
 
 	TASKS("Tasks", TASK),
@@ -63,9 +65,9 @@ public enum XMLNode {
 	CHOICE_COUNTER("ChoiceCounter"),
 
 	COLLABORATIVE_TASK("CollaborativeTask"),
-	
+
 	CODEBLOCKREFERENCE("CodeBlockReference"),
-	
+
 	CODEBLOCKSOURCE("CodeBlockSource"),
 
 	CODE("Code"),
@@ -81,11 +83,11 @@ public enum XMLNode {
 	EFFECTS("Effects", SCRIPTIT),
 
 	ENABLED("Enabled"),
-	
+
 	ASKIT("AskIt"),
 
 	PICKIT("PickIt"),
-	
+
 	ENUM("Enum"),
 
 	ENTRY("Entry"),
@@ -105,7 +107,7 @@ public enum XMLNode {
 	FORMAT("Format"),
 
 	FORMATS("Formats", FORMAT),
-	
+
 	FUNCTION_CALL_FORMAT("FunctionCallFormat"),
 
 	GAME_MODULE("GameModule"),
@@ -127,7 +129,7 @@ public enum XMLNode {
 	INCLUDE_FILES("IncludeFiles", INCLUDE_FILE),
 
 	INDENT_STRING("IndentString"),
-	
+
 	LINE_BREAK("LineBreak"),
 
 	KEYWORD("Keyword"),
@@ -143,7 +145,7 @@ public enum XMLNode {
 	NAME("Name"),
 
 	NOTE("Note"),
-	
+
 	OPTIONAL_LIBRARY("OptionalLibrary"),
 
 	OPTIONAL_LIBRARIES("OptionalLibraries", OPTIONAL_LIBRARY),
@@ -155,7 +157,7 @@ public enum XMLNode {
 	PARAMETERS("Parameters"),
 
 	READONLY("ReadOnly"),
-	
+
 	RESERVED_WORD("Word"),
 
 	RESERVED_WORDS("ReservedWords", RESERVED_WORD),
@@ -169,7 +171,7 @@ public enum XMLNode {
 	START_STORY_POINT("StartStoryPoint"),
 
 	START_NODE("StartNode"),
-	
+
 	STORY_COMPONENT_CONTAINER("StoryComponentContainer"),
 
 	EXIT_NODE("ExitNode"),
