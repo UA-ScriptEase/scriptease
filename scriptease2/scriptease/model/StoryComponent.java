@@ -51,10 +51,12 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public abstract class StoryComponent implements Cloneable {
+	private String description;
 	private String displayText;
 	private Set<String> labels;
 	private Boolean isVisible;
 	private Boolean isEnabled;
+	private boolean hasProblems = false;
 
 	private LibraryModel library;
 
@@ -92,6 +94,7 @@ public abstract class StoryComponent implements Cloneable {
 	protected void init() {
 		this.ownerComponent = null;
 		this.observerManager = new ObserverManager<StoryComponentObserver>();
+		this.description = StoryComponent.BLANK_TEXT;
 		this.displayText = StoryComponent.BLANK_TEXT;
 		this.labels = new HashSet<String>();
 		this.isVisible = true;
@@ -155,6 +158,16 @@ public abstract class StoryComponent implements Cloneable {
 	 */
 	public String getDisplayText() {
 		return this.displayText;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_TEXT_DESCRIPTION));
+	}
+
+	public String getDescription() {
+		return this.description;
 	}
 
 	/**
@@ -231,6 +244,17 @@ public abstract class StoryComponent implements Cloneable {
 		this.labels = labelSet;
 		this.notifyObservers(new StoryComponentEvent(this,
 				StoryComponentChangeEnum.CHANGE_LABELS_CHANGED));
+	}
+
+	public void setHasProblems(boolean hasProblems) {
+		this.hasProblems = hasProblems;
+
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_PROBLEMS_SET));
+	}
+
+	public boolean hasProblems() {
+		return this.hasProblems;
 	}
 
 	/**
@@ -359,6 +383,7 @@ public abstract class StoryComponent implements Cloneable {
 
 		// make them the same again, now that they're less conjoined.
 		clone.setDisplayText(new String(this.displayText));
+		clone.setDescription(new String(this.description));
 		clone.setVisible(this.isVisible);
 		clone.setOwner(this.ownerComponent);
 		clone.setLibrary(this.library);

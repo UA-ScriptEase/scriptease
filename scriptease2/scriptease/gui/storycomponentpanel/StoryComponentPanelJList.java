@@ -440,13 +440,11 @@ public class StoryComponentPanelJList extends JList implements Filterable {
 				else if (!isSelected && isVisible)
 					valuePanel.setBackground(list.getBackground());
 
-				if (valueComponent instanceof CauseIt || valueComponent instanceof ActivityIt) {
+				if (valueComponent instanceof CauseIt
+						|| valueComponent instanceof ActivityIt) {
 					valuePanel.setShowChildren(false);
 					valuePanel.getExpansionButton().setCollapsed(true);
 				}
-
-				valuePanel.setToolTipText(valueComponent.getLibrary() + " : "
-						+ valueComponent.getDisplayText());
 
 				return valuePanel;
 			} else if (value instanceof JPanel) {

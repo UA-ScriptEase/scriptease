@@ -7,6 +7,7 @@ import java.util.Map;
 
 import scriptease.controller.io.FileIO;
 import scriptease.controller.io.XMLNode;
+import scriptease.controller.io.converter.model.StoryModelConverter;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
@@ -15,7 +16,6 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -48,7 +48,7 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public StoryComponent unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final ScriptIt scriptIt = (ScriptIt) super.unmarshal(reader, context);
 
@@ -88,32 +88,22 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 						if ((FileIO.getInstance().getMode() == FileIO.IoMode.STORY)
 								&& scriptItLibrary != codeBlockLibrary
 								&& target.getOwner().isEquivalent(scriptIt)) {
-							if (WindowFactory
-									.getInstance()
-									.showYesNoConfirmDialog(
-											"<html>The component <b>\""
-													+ StringOp
-															.makeXMLSafe(scriptIt
-																	.getDisplayText())
-													+ "\"</b> was not found in <b>"
-													+ scriptItLibrary
-													+ "</b>. <br>However, a component with the same name was found in <b>"
-													+ codeBlockLibrary
-													+ "</b>.<br><br> Would you like to replace the missing component with this one? "
-													+ "<br>"
-													+ codeBlockLibrary
-													+ " will be added to your story if it is not already attached."
-													+ "<br>If you click No, the component and everything it contains will be<br>"
-													+ "removed. This will not be saved until you press save.</html>",
-											"Component Not Found"))
+							WindowFactory.getInstance().showInformationDialog(
+									"Replaced library",
+									"<html>Replaced <b>\""
+											+ scriptIt.getDisplayText()
+											+ "\"</b>'s library, <b>"
+											+ scriptItLibrary
+											+ "</b>, with <b>"
+											+ codeBlockLibrary
+											+ "</b>.<br><br></html>");
 
-								scriptIt.setLibrary(codeBlockLibrary);
-							else {
-								reader.moveUp();
-								return new Note(LibraryModel.getNonLibrary(),
-										"Missing Component in Library: "
-												+ scriptIt.getDisplayText());
-							}
+							scriptIt.setLibrary(codeBlockLibrary);
+
+							if (StoryModelConverter.currentStory != null)
+								StoryModelConverter.currentStory
+										.addLibrary(codeBlockLibrary);
+
 						}
 
 						if (target == null) {

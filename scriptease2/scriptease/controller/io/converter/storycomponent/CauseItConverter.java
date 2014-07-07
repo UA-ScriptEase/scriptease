@@ -31,9 +31,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 public class CauseItConverter extends ScriptItConverter {
 
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public StoryComponent unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final CauseIt causeIt = (CauseIt) super.unmarshal(reader, context);
+		final StoryComponent component = super.unmarshal(reader, context);
+
+		if (!(component instanceof CauseIt))
+			return component;
+
+		final CauseIt causeIt = (CauseIt) component;
 
 		// Search for KnowItBindingReferences.
 		if (FileIO.getInstance().getMode() == FileIO.IoMode.STORY) {
