@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -32,9 +33,14 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import scriptease.ScriptEase;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
+import scriptease.model.StoryComponent;
+import scriptease.model.atomic.Note;
+import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.StoryNode;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -566,24 +572,61 @@ public class DialogBuilder {
 	/**
 	 * Warns the user that a library is about to be removed.
 	 */
-	public void showRemoveLibraryInfoDialog(final LibraryModel library) {
+	public void showRemoveLibraryInfoDialog(final LibraryModel library,
+			StoryModel story) {
 		final String REMOVE_LIBRARY = "Are you sure you want to remove "
 				+ library.getTitle() + "?";
-
 		final String message;
 
-		message = "<html>You are about to remove the library: <b>"
-				+ library.getTitle()
-				+ "</b>.<br><br><b>IMPORTANT:</b><br>Removing this library WON'T affect story components that are currently<br>being used in the story model. You will have to remove them manually.<br><br>Are you sure you want to proceed?";
+		final Collection<StoryComponent> inLibrary = new ArrayList<StoryComponent>();
 
-		if (WindowFactory.getInstance().showYesNoConfirmDialog(message,
-				REMOVE_LIBRARY)) {
-			final StoryModel model;
-
-			model = (StoryModel) SEModelManager.getInstance().getActiveModel();
-
-			model.removeLibrary(library);
+		for (StoryNode node : story.getRoot().getDescendants()) {
+			for (StoryComponent component : StoryComponentUtils
+					.getAllDescendants(node))
+				if (component.getLibrary() == library)
+					inLibrary.add(component);
 		}
+
+		if (!inLibrary.isEmpty()) {
+			String componentList = "";
+
+			for (StoryComponent component : inLibrary) {
+				componentList += component.getDisplayText() + "<br>";
+			}
+
+			message = "<html>You are about to remove the library: <b>"
+					+ library.getTitle()
+					+ "</b>.<br><br><b>WARNING:</b><br>Removing this library will remove the following story components and their contents from the story:<br><br>"
+					+ componentList + "<br>Are you sure you want to proceed?";
+
+			if (WindowFactory.getInstance().showYesNoConfirmDialog(message,
+					REMOVE_LIBRARY)) {
+				story.removeLibrary(library);
+				for (StoryComponent component : inLibrary) {
+					final StoryComponent compOwner = component.getOwner();
+
+					if (compOwner instanceof ComplexStoryComponent
+							&& compOwner.getLibrary() != library) {
+						final ComplexStoryComponent owner;
+						final StoryComponent sibling;
+
+						owner = (ComplexStoryComponent) compOwner;
+
+						sibling = owner.getChildAfter(component);
+
+						owner.removeStoryChild(component);
+						owner.addStoryChildBefore(
+								new Note(LibraryModel.getNonLibrary(),
+										"Removed component: "
+												+ component.getDisplayText()),
+								sibling);
+					}
+				}
+			}
+		} else
+			// We don't need to show the dialogue since no components are in the
+			// library.
+			story.removeLibrary(library);
 	}
 
 	/**

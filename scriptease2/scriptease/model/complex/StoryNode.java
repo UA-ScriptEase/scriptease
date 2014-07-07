@@ -35,8 +35,6 @@ public abstract class StoryNode extends ComplexStoryComponent {
 	protected Set<StoryNode> successors;
 	protected Set<StoryNode> parents;
 
-	private boolean hasProblems = false;
-
 	public StoryNode() {
 		super(LibraryModel.getNonLibrary());
 	}
@@ -75,16 +73,6 @@ public abstract class StoryNode extends ComplexStoryComponent {
 		return false;
 	}
 
-	public void setHasProblems(boolean hasProblems) {
-		this.hasProblems = hasProblems;
-
-		this.notifyObservers(new StoryComponentEvent(this,
-				StoryComponentChangeEnum.STORY_NODE_PROBLEMS_SET));
-	}
-
-	public boolean hasProblems() {
-		return this.hasProblems;
-	}
 
 	/**
 	 * Adds the descendants to the passed in collection. You should use

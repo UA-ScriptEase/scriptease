@@ -149,8 +149,7 @@ public class StoryComponentPanelFactory {
 
 							});
 
-			panel.setToolTipText(component.getLibrary() + " : "
-					+ component.getDisplayText());
+			panel.setToolTipText(component.getDescription());
 		}
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -178,14 +177,13 @@ public class StoryComponentPanelFactory {
 			}
 			if (child instanceof JLabel) {
 				final JLabel label = (JLabel) child;
+				final Color bg = label.getBackground();
 
 				// Terrible way to identify labels but it's the only way to
 				// distinguish them from other JLabels right now
-				if ((label.getBackground().equals(
-						ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR) || label
-						.getBackground().equals(ScriptEaseUI.COLOUR_DISABLED))
-						&& label.getForeground().equals(
-								ScriptWidgetFactory.LABEL_TEXT_COLOUR)) {
+				if ((bg.equals(ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR)
+						|| bg.equals(ScriptEaseUI.COLOUR_DISABLED) || bg
+							.equals(Color.RED))) {
 
 					mainPanel.remove(child);
 					isSpacer = true;
@@ -200,6 +198,8 @@ public class StoryComponentPanelFactory {
 
 			if (label.equals(StoryComponent.DISABLE_TEXT))
 				bgColour = ScriptEaseUI.COLOUR_DISABLED;
+			else if (component.hasProblems())
+				bgColour = Color.RED;
 			else
 				bgColour = ScriptWidgetFactory.LABEL_BACKGROUND_COLOUR;
 

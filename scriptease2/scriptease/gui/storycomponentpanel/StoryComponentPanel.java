@@ -30,7 +30,9 @@ import scriptease.gui.pane.DescribeItPanel;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.util.GUIOp;
+import scriptease.util.StringOp;
 
 /**
  * JPanel used to properly observe and redraw its component. Can be editable and
@@ -221,6 +223,23 @@ public class StoryComponentPanel extends JPanel implements
 		return descendants;
 	}
 
+	@Override
+	public void setToolTipText(String text) {
+		final String libraryName = this.component.getLibrary().getTitle();
+		final String toolTip;
+
+		if (StringOp.exists(text))
+			if (libraryName.equals(LibraryModel.NON_LIBRARY_NAME)
+					|| libraryName.equals(LibraryModel.COMMON_LIBRARY_NAME))
+				toolTip = text;
+			else
+				toolTip = libraryName + ": " + text;
+		else
+			toolTip = libraryName;
+
+		super.setToolTipText(toolTip);
+	}
+
 	/**
 	 * StoryComponentPanel is listening to the model for changes such as:
 	 * adding, removing, binding and changes in text for potential adding,
@@ -246,8 +265,12 @@ public class StoryComponentPanel extends JPanel implements
 			}
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_VISIBILITY)) {
 			this.setVisible(component.isVisible());
-		} else if (type.equals(StoryComponentChangeEnum.CHANGE_LABELS_CHANGED)) {
+		} else if (type.equals(StoryComponentChangeEnum.CHANGE_LABELS_CHANGED)
+				|| type.equals(StoryComponentChangeEnum.CHANGE_PROBLEMS_SET)) {
 			StoryComponentPanelFactory.getInstance().rebuildLabels(this);
+		} else if (type
+				.equals(StoryComponentChangeEnum.CHANGE_TEXT_DESCRIPTION)) {
+			this.setToolTipText(component.getDescription());
 		} else if (type.equals(StoryComponentChangeEnum.CHANGE_DISABILITY)) {
 
 			// Change the font color to orange if disabled

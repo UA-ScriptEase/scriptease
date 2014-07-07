@@ -38,10 +38,7 @@ public class RemoveLibraryFromStoryModelAction extends
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		DialogBuilder.getInstance().showRemoveLibraryInfoDialog(this.library);
-	}
-	
-	public LibraryModel getLibrary() {
-		return library;
+		DialogBuilder.getInstance().showRemoveLibraryInfoDialog(this.library,
+				SEModelManager.getInstance().getActiveStoryModel());
 	}
 }

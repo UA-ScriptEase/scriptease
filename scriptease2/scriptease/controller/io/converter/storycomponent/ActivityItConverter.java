@@ -37,11 +37,14 @@ public class ActivityItConverter extends ScriptItConverter {
 	}
 
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public StoryComponent unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final ActivityIt activity;
-
-		activity = (ActivityIt) super.unmarshal(reader, context);
+		final StoryComponent component = super.unmarshal(reader, context);
+		
+		if(!(component instanceof ActivityIt))
+			return component;
+		
+		final ActivityIt activity = (ActivityIt) component;
 
 		// we must go through all of its descendants that have a
 		// KnowItBindingUninitialized and change its KnowIt reference to the

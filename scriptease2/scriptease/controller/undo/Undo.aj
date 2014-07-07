@@ -169,6 +169,12 @@ public aspect Undo {
 		within(StoryComponent+) && execution(* setDisplayText(String));
 
 	/**
+	 * Defines set description operations in StoryComponents.
+	 */
+	public pointcut settingDescription():
+		within(StoryComponent+) && execution(* setDescription(String));
+
+	/**
 	 * This is duplicated because just implementing for CodeBlock will end up
 	 * firing twice as the subclasses call super causing the pointcut twice
 	 */
@@ -423,6 +429,23 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "setting " + owner + "'s name to " + newName;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final StoryComponent owner, final String newDescription): settingDescription() && args(newDescription) && this(owner){
+		Modification mod = new FieldModification<String>(newDescription,
+				owner.getDescription()) {
+			@Override
+			public void setOp(String value) {
+				owner.setDescription(value);
+			}
+
+			@Override
+			public String toString() {
+				return "setting " + owner + "'s description to "
+						+ newDescription;
 			}
 		};
 		this.addModification(mod);
