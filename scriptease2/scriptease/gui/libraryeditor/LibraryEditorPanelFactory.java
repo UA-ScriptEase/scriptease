@@ -126,16 +126,16 @@ public class LibraryEditorPanelFactory {
 		codeBlockPanel = new CodeBlockPanel(activityIt.getMainCodeBlock(),
 				activityIt, true);
 
-		activityPanel.add(codeBlockPanel);
-		activityPanel.add(this.buildActivityItImplicitPanel(activityIt));
+		activityPanel.add(codeBlockPanel, 0);
+		activityPanel.add(this.buildActivityItImplicitPanel(activityIt), 1);
 
 		if (isEditable) {
-			activityPanel.add(new StoryComponentPanelTree(transferPanel));
+			activityPanel.add(new StoryComponentPanelTree(transferPanel), 2);
 		} else {
 			JPanel subPanel = new JPanel();
 			subPanel.add(new JLabel(new ImageIcon(GUIOp
 					.getScreenshot(new StoryComponentPanelTree(transferPanel)))));
-			activityPanel.add(subPanel);
+			activityPanel.add(subPanel, 2);
 		}
 
 		codeBlockPanel.addListener(new CodeBlockPanelObserver() {
@@ -148,18 +148,22 @@ public class LibraryEditorPanelFactory {
 						.getInstance().buildStoryComponentPanel(activityIt);
 
 				// Should always be able to remove the tree regardless
-				activityPanel.remove(2);
-				activityPanel.add(buildActivityItImplicitPanel(activityIt), 2);
+				if (activityPanel.getComponentCount() > 1
+						&& activityPanel.getComponent(1) != null) {
+					activityPanel.remove(1);
+				}
+
+				activityPanel.add(buildActivityItImplicitPanel(activityIt), 1);
 
 				// Checking if getComponent(3) is null results in an out of
 				// bounds exception so we have to make sure we list is big
 				// enough before doing our null check
-				if (activityPanel.getComponentCount() > 3
-						&& activityPanel.getComponent(3) != null) {
-					activityPanel.remove(3);
+				if (activityPanel.getComponentCount() > 2
+						&& activityPanel.getComponent(2) != null) {
+					activityPanel.remove(2);
 				}
 				activityPanel.add(
-						new StoryComponentPanelTree(newTransferPanel), 3);
+						new StoryComponentPanelTree(newTransferPanel), 2);
 				activityPanel.repaint();
 				activityPanel.revalidate();
 			}
@@ -176,21 +180,21 @@ public class LibraryEditorPanelFactory {
 									.getInstance().buildStoryComponentPanel(
 											activityIt);
 
-							if (activityPanel.getComponents().length >= 3
-									&& activityPanel.getComponent(2) != null) {
-								activityPanel.remove(2);
+							if (activityPanel.getComponents().length >= 1
+									&& activityPanel.getComponent(1) != null) {
+								activityPanel.remove(1);
 							}
 
 							activityPanel
 									.add(buildActivityItImplicitPanel(activityIt),
-											2);
+											1);
 
-							if (activityPanel.getComponents().length >= 4
-									&& activityPanel.getComponent(3) != null) {
-								activityPanel.remove(3);
+							if (activityPanel.getComponents().length >= 2
+									&& activityPanel.getComponent(2) != null) {
+								activityPanel.remove(2);
 							}
 							activityPanel.add(new StoryComponentPanelTree(
-									newTransferPanel), 3);
+									newTransferPanel), 2);
 
 							activityPanel.repaint();
 							activityPanel.revalidate();
