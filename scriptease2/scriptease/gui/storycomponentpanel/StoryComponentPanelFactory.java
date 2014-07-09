@@ -48,6 +48,7 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.util.GUIOp;
 
 /**
