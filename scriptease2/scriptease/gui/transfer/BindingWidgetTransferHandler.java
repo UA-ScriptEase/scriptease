@@ -209,7 +209,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 					final ComplexStoryComponent complex = (ComplexStoryComponent) owner;
 
 					final List<StoryComponent> descendants = complex
-							.getDescendents();
+							.getDescendentStoryComponents();
 
 					StoryComponent destOwner = destinationKnowIt.getOwner();
 					while (!(destOwner instanceof ComplexStoryComponent))

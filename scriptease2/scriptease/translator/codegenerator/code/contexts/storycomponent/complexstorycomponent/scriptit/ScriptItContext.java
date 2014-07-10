@@ -91,7 +91,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 * @see CodeBlock#getCause()
 	 */
 	@Override
-	public ScriptIt getCause() {
+	public CauseIt getCause() {
 		return this.getMainCodeBlock().getCause();
 	}
 

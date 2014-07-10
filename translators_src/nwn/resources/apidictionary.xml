@@ -24556,7 +24556,9 @@
           <Name>&lt;Initiator&gt; tests behaviours with priority &lt;Priority&gt;</Name>
           <Labels/>
           <Slot>onBehaviour</Slot>
-          <Types/>
+          <Types>
+          	<Type>Void</Type>
+          </Types>
           <Parameters>
             <KnowIt>
               <Name>Initiator</Name>
@@ -24577,7 +24579,10 @@
               </Binding>
             </KnowIt>
           </Parameters>
-          <Code/>
+          <Code>
+          					<FormatRef ref="behaviour" />
+          	
+          </Code>
         </CodeBlockSource>
       </CodeBlocks>
       <StartTask reference="/LibraryModel/Behaviours/Behaviour/Children/IndependentTask"/>

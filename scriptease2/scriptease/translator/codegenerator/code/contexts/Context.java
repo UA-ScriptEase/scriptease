@@ -17,6 +17,8 @@ import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.Translator;
@@ -61,6 +63,7 @@ public abstract class Context {
 	 * method.
 	 */
 	private Collection<CodeBlock> codeBlocks = null;
+	private Collection<Behaviour> behaviours = null;
 
 	protected LocationInformation locationInfo;
 
@@ -175,6 +178,38 @@ public abstract class Context {
 		return this.codeBlocks;
 	}
 
+	/**
+	 * Returns all of the codeBlocks associated with the Context's current slot.
+	 * These are lazy loaded.
+	 * 
+	 * @return
+	 */
+	public Collection<Behaviour> getBehaviours() {
+		if (this.behaviours == null) {
+
+			this.behaviours = new ArrayList<Behaviour>();
+
+			// for each story point
+			for (StoryNode point : this.storyPoints) {
+				for (Behaviour behaviour : StoryComponentUtils
+						.getDescendantBehaviours(point)) {
+					// final Collection<CodeBlock> codeBlocksForSlot;
+
+					// codeBlocksForSlot = scriptIt
+					// .getCodeBlocksForLocation(this.locationInfo);
+
+					// TODO Does this actually work?
+					if (!behaviour.getCodeBlocksForLocation(locationInfo)
+							.isEmpty())
+						this.behaviours.add(behaviour);
+					// this.behaviours.addAll(codeBlocksForSlot);
+				}
+			}
+		}
+
+		return this.behaviours;
+	}
+
 	public CodeBlock getMainCodeBlock() {
 		unimplemented("getMainCodeBlock");
 		return null;
@@ -192,6 +227,11 @@ public abstract class Context {
 
 	public StoryComponentContainer getIfChild() {
 		unimplemented("getIfChild");
+		return null;
+	}
+
+	public Collection<Task> getTasks() {
+		unimplemented("getTasks");
 		return null;
 	}
 
@@ -551,8 +591,13 @@ public abstract class Context {
 		return null;
 	}
 
-	public Object getCause() {
+	public CauseIt getCause() {
 		unimplemented("getCause");
+		return null;
+	}
+
+	public Behaviour getBehaviour() {
+		unimplemented("getBehaviour");
 		return null;
 	}
 
@@ -646,4 +691,15 @@ public abstract class Context {
 		unimplemented("getIndex");
 		return null;
 	}
+
+	public String getProbabilityCount() {
+		unimplemented("getProbabilityCount");
+		return null;
+	}
+	
+	public Collection<Task> getTaskChildren() {
+		unimplemented("getProbabilities");
+		return null;
+	}
 }
+

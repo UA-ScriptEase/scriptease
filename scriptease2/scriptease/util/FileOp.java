@@ -285,7 +285,7 @@ public class FileOp {
 		final FileChannel srcChannel = src.getChannel();
 		final FileChannel dstChannel = dest.getChannel();
 		dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
-		
+
 		src.close();
 		dest.close();
 		srcChannel.close();

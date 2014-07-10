@@ -120,7 +120,7 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 					final ComplexStoryComponent complex = (ComplexStoryComponent) owner;
 
 					final List<StoryComponent> descendants = complex
-							.getDescendents();
+							.getDescendentStoryComponents();
 
 					StoryComponent destOwner = knowIt.getOwner();
 					while (!(destOwner instanceof ComplexStoryComponent))

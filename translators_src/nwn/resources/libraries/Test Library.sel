@@ -1,4 +1,4 @@
-<LibraryModel name="Test Library" author="" description="" readonly="false">
+<LibraryModel name="Behaviour Test Library" author="" description="" readonly="false">
   <IncludeFiles/>
   <Types/>
   <Slots defaultFormat="file"/>
@@ -9,14 +9,10 @@
   <ActivityIts>
     <ActivityIt>
       <Name>Lets Break ScriptEase 12345 &lt;Bob&gt;</Name>
-      <Visible>true</Visible>
-      <Enabled>true</Enabled>
       <Labels/>
       <Children>
         <ScriptIt library="DefaultNWNLibrary">
           <Name>&lt;Attacker&gt; attacks &lt;Target&gt;</Name>
-          <Visible>true</Visible>
-          <Enabled>true</Enabled>
           <Labels>
             <Label>TODO</Label>
           </Labels>
@@ -24,14 +20,10 @@
           <CodeBlocks>
             <CodeBlockReference library="DefaultNWNLibrary">
               <Name>&lt;Attacker&gt; attacks &lt;Target&gt;</Name>
-              <Visible>true</Visible>
-              <Enabled>true</Enabled>
               <Labels/>
               <Parameters>
                 <KnowIt library="DefaultNWNLibrary">
                   <Name>Attacker</Name>
-                  <Visible>true</Visible>
-                  <Enabled>true</Enabled>
                   <Labels/>
                   <Types>
                     <Type>Creature</Type>
@@ -39,8 +31,6 @@
                   <Binding flavour="uninitialized">
                     <KnowIt>
                       <Name>Bob</Name>
-                      <Visible>true</Visible>
-                      <Enabled>true</Enabled>
                       <Labels/>
                       <Types>
                         <Type>Creature</Type>
@@ -50,15 +40,15 @@
                 </KnowIt>
                 <KnowIt library="DefaultNWNLibrary">
                   <Name>Target</Name>
-                  <Visible>true</Visible>
-                  <Enabled>true</Enabled>
                   <Labels/>
                   <Types>
                     <Type>Creature</Type>
                     <Type>Door</Type>
                     <Type>Placeable</Type>
                   </Types>
-                  <Binding reference="/LibraryModel/ActivityIts/ActivityIt/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                  <Binding flavour="uninitialized">
+                    <KnowIt reference="/LibraryModel/ActivityIts/ActivityIt/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
+                  </Binding>
                 </KnowIt>
               </Parameters>
             </CodeBlockReference>
@@ -68,8 +58,6 @@
       <CodeBlocks>
         <CodeBlockSource>
           <Name>Lets Break ScriptEase 12345 &lt;Bob&gt;</Name>
-          <Visible>true</Visible>
-          <Enabled>true</Enabled>
           <Labels/>
           <Types>
             <Type>Void</Type>
@@ -84,6 +72,119 @@
       </CodeBlocks>
     </ActivityIt>
   </ActivityIts>
-  <Behaviours/>
+  <Behaviours>
+    <Behaviour type="INDEPENDENT" priority="0">
+      <Name>&lt;Initiator&gt; walks around with priority &lt;Priority&gt;</Name>
+      <Labels/>
+      <Children>
+        <IndependentTask>
+          <Name></Name>
+          <Labels/>
+          <Children>
+            <StoryComponentContainer library="NO LIBRARY">
+              <Name>Initiator:</Name>
+              <Labels/>
+              <Children/>
+            </StoryComponentContainer>
+          </Children>
+          <Chance>100.0</Chance>
+          <Successors>
+            <IndependentTask>
+              <Name>Walk Around</Name>
+              <Labels/>
+              <Children>
+                <StoryComponentContainer library="NO LIBRARY">
+                  <Name>Initiator:</Name>
+                  <Labels/>
+                  <Children>
+                    <ScriptIt library="DefaultNWNLibrary">
+                      <Name>&lt;Walker&gt; walks randomly</Name>
+                      <Labels>
+                        <Label>TODO</Label>
+                      </Labels>
+                      <Children/>
+                      <CodeBlocks>
+                        <CodeBlockReference library="DefaultNWNLibrary">
+                          <Name>&lt;Walker&gt; walks randomly</Name>
+                          <Labels/>
+                          <Parameters>
+                            <KnowIt library="DefaultNWNLibrary">
+                              <Name>Walker</Name>
+                              <Labels/>
+                              <Types>
+                                <Type>Creature</Type>
+                              </Types>
+                              <Binding flavour="reference">
+                                <KnowIt library="DefaultNWNLibrary">
+                                  <Name>Initiator</Name>
+                                  <Labels/>
+                                  <Types>
+                                    <Type>Creature</Type>
+                                  </Types>
+                                  <Binding flavour="function">
+                                    <ScriptIt library="DefaultNWNLibrary">
+                                      <Name>Initiator</Name>
+                                      <Labels/>
+                                      <Children/>
+                                      <CodeBlocks>
+                                        <CodeBlockReference library="DefaultNWNLibrary">
+                                          <Name>Initiator</Name>
+                                          <Labels/>
+                                        </CodeBlockReference>
+                                      </CodeBlocks>
+                                    </ScriptIt>
+                                  </Binding>
+                                </KnowIt>
+                              </Binding>
+                            </KnowIt>
+                          </Parameters>
+                        </CodeBlockReference>
+                      </CodeBlocks>
+                    </ScriptIt>
+                  </Children>
+                </StoryComponentContainer>
+              </Children>
+              <Chance>100.0</Chance>
+              <Successors/>
+            </IndependentTask>
+          </Successors>
+        </IndependentTask>
+      </Children>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>&lt;Initiator&gt; walks around with priority &lt;Priority&gt;</Name>
+          <Labels/>
+          <Slot/>
+          <Types>
+          	<Type>Void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>Initiator</Name>
+              <Labels/>
+              <Types>
+                <Type>Creature</Type>
+              </Types>
+            </KnowIt>
+            <KnowIt>
+              <Name>Priority</Name>
+              <Labels/>
+              <Types>
+                <Type>Number</Type>
+              </Types>
+              <Binding flavour="constant">
+                <Type>Number</Type>
+                <Value>0.0</Value>
+              </Binding>
+            </KnowIt>
+          </Parameters>
+          <Code> 
+          	<FormatRef ref="behaviour"/>
+		  </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+      <StartTask reference="/LibraryModel/Behaviours/Behaviour/Children/IndependentTask"/>
+    </Behaviour>
+  </Behaviours>
   <TypeConverters/>
 </LibraryModel>
