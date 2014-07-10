@@ -15,6 +15,8 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
@@ -147,8 +149,18 @@ public class CodeBlockContext extends Context {
 	}
 
 	@Override
-	public ScriptIt getCause() {
+	public CauseIt getCause() {
 		return this.codeBlock.getCause();
+	}
+
+	@Override
+	public Behaviour getBehaviour() {
+		final StoryComponent owner = this.codeBlock.getOwner();
+
+		if (owner instanceof Behaviour)
+			return (Behaviour) owner;
+		else
+			return super.getBehaviour();
 	}
 
 	/**
@@ -230,6 +242,12 @@ public class CodeBlockContext extends Context {
 		}
 
 		return this.identicalCauses;
+	}
+
+	@Override
+	public Collection<Task> getTasks() {
+		return ((Behaviour) this.codeBlock.getOwner()).getStartTask()
+				.getDescendants();
 	}
 
 	/**

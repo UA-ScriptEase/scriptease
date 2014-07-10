@@ -18,6 +18,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.Resource;
 
@@ -177,6 +178,30 @@ public class StoryComponentUtils {
 		complex.process(collector);
 
 		return scriptIts;
+	}
+	
+	/**
+	 * Returns all scriptIts descended from the ComplexStoryComponent passed in.
+	 * 
+	 * @param complex
+	 * @return
+	 */
+	public static Collection<Behaviour> getDescendantBehaviours(
+			ComplexStoryComponent complex) {
+		final Collection<Behaviour> behaviours = new HashSet<Behaviour>();
+		final DescendantCollector collector = new DescendantCollector() {
+			
+			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				super.processBehaviour(behaviour);
+				if (!behaviours.contains(behaviour))
+					behaviours.add(behaviour);
+			}
+		};
+
+		complex.process(collector);
+
+		return behaviours;
 	}
 
 	/**

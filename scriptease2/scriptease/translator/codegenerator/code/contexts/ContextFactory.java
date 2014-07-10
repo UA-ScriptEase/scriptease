@@ -24,6 +24,8 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.CodeGenerationException;
 import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingAutomaticContext;
@@ -45,6 +47,8 @@ import scriptease.translator.codegenerator.code.contexts.storycomponent.complexs
 import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.ControlItContext;
 import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.ScriptItContext;
 import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.storynode.StoryPointContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.task.CollaborativeTaskContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.task.IndependentTaskContext;
 import scriptease.translator.io.model.Resource;
 
 /**
@@ -245,6 +249,18 @@ public class ContextFactory {
 			public void processStoryComponentContainer(
 					StoryComponentContainer container) {
 				this.defaultProcessComplex(container);
+			}
+
+			@Override
+			public void processCollaborativeTask(CollaborativeTask task) {
+				ContextFactory.this.activeContext = new CollaborativeTaskContext(
+						pastContext, task);
+			}
+
+			@Override
+			public void processIndependentTask(IndependentTask task) {
+				ContextFactory.this.activeContext = new IndependentTaskContext(
+						pastContext, task);
 			}
 
 			/* ATOMIC TYPES */

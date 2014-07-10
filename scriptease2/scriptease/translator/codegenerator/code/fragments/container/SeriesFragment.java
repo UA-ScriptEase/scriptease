@@ -38,7 +38,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class SeriesFragment extends AbstractContainerFragment {
 	public static enum Type {
-		ARGUMENTS, CAUSES, CHILDLINES, CHILDREN, CHILDRENNODES, CODEBLOCKS, DIALOGUEROOTS, IDENTICALCAUSES, IMPLICITS, INCLUDES, PARAMETERS, PARENTNODES, SLOTPARAMETERS, VARIABLES, PARAMETERSWITHSLOT, ORDEREDDIALOGUELINES, ORDEREDSTORYPOINTS, STORYNODES, STORYPOINTS, ORDEREDSTORYNODES, CHOICES
+		ARGUMENTS, CAUSES, CHILDLINES, CHILDREN, CHILDRENNODES, CODEBLOCKS, DIALOGUEROOTS, IDENTICALCAUSES, IMPLICITS, INCLUDES, PARAMETERS, PARENTNODES, SLOTPARAMETERS, VARIABLES, PARAMETERSWITHSLOT, ORDEREDDIALOGUELINES, ORDEREDSTORYPOINTS, STORYNODES, STORYPOINTS, ORDEREDSTORYNODES, CHOICES, BEHAVIOURS, TASKS, CHILDRENTASKS
 	}
 
 	public static enum FilterType {
@@ -243,6 +243,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getStoryPointParents();
 		case CHILDRENNODES:
 			return context.getStoryPointChildren();
+		case CHILDRENTASKS:
+			return context.getTaskChildren();
 		case IDENTICALCAUSES:
 			return context.getIdenticalCauses();
 		case DIALOGUEROOTS:
@@ -253,6 +255,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getChildLines();
 		case CHOICES:
 			return context.getChoices();
+		case TASKS:
+			return context.getTasks();
+		case BEHAVIOURS:
+			return context.getBehaviours();
 		default:
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "
