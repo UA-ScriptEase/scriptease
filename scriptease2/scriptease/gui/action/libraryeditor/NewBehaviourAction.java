@@ -2,6 +2,8 @@ package scriptease.gui.action.libraryeditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.KeyStroke;
@@ -13,6 +15,10 @@ import scriptease.model.CodeBlockSource;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
+import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
+import scriptease.translator.io.model.GameType;
+import scriptease.util.ListOp;
 
 /**
  * Inserts a new Behaviour into the Library. Each Behaviour codeblock has a slot
@@ -49,20 +55,23 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		final List<AbstractFragment> code;
 		final LibraryModel library;
 		final Behaviour newBehaviour;
 		final CodeBlock codeBlock;
-		final String slot;
 
 		library = (LibraryModel) SEModelManager.getInstance().getActiveModel();
 
 		if (!library.isReadOnly() || ScriptEase.DEBUG_MODE) {
+			code = new ArrayList<AbstractFragment>(1);
 			newBehaviour = new Behaviour(library, "New Behaviour");
-			slot = "onBehaviour";
 
 			codeBlock = new CodeBlockSource(library);
-			codeBlock.setSlot(slot);
 
+			code.add(new FormatReferenceFragment("behaviour"));
+			codeBlock.setCode(code);
+			codeBlock.setTypesByName(ListOp
+					.createList(GameType.DEFAULT_VOID_TYPE));
 			newBehaviour.addCodeBlock(codeBlock);
 			newBehaviour.setVisible(true);
 

@@ -1,10 +1,15 @@
 package scriptease.model.complex.behaviours;
 
 import scriptease.controller.StoryVisitor;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent;
+import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.translator.io.model.SimpleResource;
 
 /**
  * A Behaviour represents a series of Tasks {@link Task}. A Behaviour can be
@@ -19,6 +24,7 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public class Behaviour extends ScriptIt {
+	public static final String PRIORITY_TEXT = "Priority";
 
 	private Task startTask;
 	private Type type;
@@ -112,11 +118,49 @@ public class Behaviour extends ScriptIt {
 	}
 
 	/**
+	 * Changes the behaviour to a Collaborative or Independent behaviour. Note
+	 * that this removes everything in the Behaviour.
+	 * 
 	 * @param type
 	 *            the type to set
 	 */
 	public void setType(Type type) {
+		if (this.type == type)
+			return;
+
 		this.type = type;
+		this.setStartTask(null);
+
+		final CodeBlock main = this.getMainCodeBlock();
+		final LibraryModel lib = this.getLibrary();
+		// TODO TRANSLATOR DEPENDENCY ALERT FOR TYPES!
+		final KnowIt initiator = new KnowIt(lib, "Initiator", "Creature");
+		final KnowIt priority = new KnowIt(lib, "Priority", "Number");
+
+		main.clearParameters();
+
+		priority.setBinding(new SimpleResource(priority.getTypes(), Integer
+				.toString(this.getPriority())));
+
+		main.addParameter(initiator);
+
+		if (type == Type.COLLABORATIVE) {
+
+			this.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");
+
+			// TODO CREATURE TYPE ISTRANSLATOR DEPENDENT!!!!
+			main.addParameter(new KnowIt(lib, "Responder", "Creature"));
+		} else if (type == Type.INDEPENDENT) {
+			this.setDisplayText("<Initiator> does action with priority <Priority>");
+
+		} else
+			throw new IllegalStateException("Invalid type for Behaviour "
+					+ type + " set.");
+
+		main.addParameter(priority);
+
+		this.notifyObservers(new StoryComponentEvent(this,
+				StoryComponentChangeEnum.CHANGE_BEHAVIOUR_TYPE));
 	}
 
 	@Override

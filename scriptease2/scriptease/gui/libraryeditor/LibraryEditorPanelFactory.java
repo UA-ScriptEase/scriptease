@@ -11,8 +11,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -49,23 +47,19 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.CodeBlock;
-import scriptease.model.CodeBlockReference;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.atomic.describeits.DescribeItNode;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
-import scriptease.model.semodel.ScriptEaseKeywords;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
-import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
 /**
@@ -127,7 +121,7 @@ public class LibraryEditorPanelFactory {
 				activityIt, true);
 
 		activityPanel.add(codeBlockPanel, 0);
-		activityPanel.add(this.buildActivityItImplicitPanel(activityIt), 1);
+		activityPanel.add(this.buildActivityItParameterPanel(activityIt), 1);
 
 		if (isEditable) {
 			activityPanel.add(new StoryComponentPanelTree(transferPanel), 2);
@@ -153,7 +147,7 @@ public class LibraryEditorPanelFactory {
 					activityPanel.remove(1);
 				}
 
-				activityPanel.add(buildActivityItImplicitPanel(activityIt), 1);
+				activityPanel.add(buildActivityItParameterPanel(activityIt), 1);
 
 				// Checking if getComponent(3) is null results in an out of
 				// bounds exception so we have to make sure we list is big
@@ -185,9 +179,9 @@ public class LibraryEditorPanelFactory {
 								activityPanel.remove(1);
 							}
 
-							activityPanel
-									.add(buildActivityItImplicitPanel(activityIt),
-											1);
+							activityPanel.add(
+									buildActivityItParameterPanel(activityIt),
+									1);
 
 							if (activityPanel.getComponents().length >= 2
 									&& activityPanel.getComponent(2) != null) {
@@ -206,14 +200,14 @@ public class LibraryEditorPanelFactory {
 	}
 
 	@SuppressWarnings("serial")
-	private JPanel buildActivityItImplicitPanel(final ActivityIt activityIt) {
-		final JPanel implicitPanel;
+	private JPanel buildActivityItParameterPanel(final ActivityIt activityIt) {
+		final JPanel parameterPanel;
 
 		/*
 		 * Sets a fixed height for panels. Probably not the cleanest way to do
 		 * this. Refactor if necessary.
 		 */
-		implicitPanel = new JPanel() {
+		parameterPanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
@@ -236,16 +230,16 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		parameterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		final CodeBlock codeBlock = activityIt.getMainCodeBlock();
 
 		for (KnowIt parameter : codeBlock.getParameters()) {
-			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,
-					false));
+			parameterPanel.add(ScriptWidgetFactory.buildBindingWidget(
+					parameter, false));
 		}
 
-		return implicitPanel;
+		return parameterPanel;
 	}
 
 	/**
@@ -315,19 +309,29 @@ public class LibraryEditorPanelFactory {
 		readOnlyLabel.setFont(labelFont);
 		readOnlyLabel.setForeground(ScriptEaseUI.SE_BLUE);
 
+		behaviour.addStoryComponentObserver(new StoryComponentObserver() {
+
+			@Override
+			public void componentChanged(StoryComponentEvent event) {
+				final StoryComponentChangeEnum type = event.getType();
+
+				if (type == StoryComponentChangeEnum.CHANGE_BEHAVIOUR_TYPE) {
+					for (Component component : behaviourPanel.getComponents()) {
+						if (component != buttonsPanel)
+							behaviourPanel.remove(component);
+					}
+
+					LibraryEditorPanelFactory.this
+							.buildChangeableBehaviourPanel(behaviour,
+									behaviourPanel);
+				}
+			}
+		});
+
 		independentButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (Component component : behaviourPanel.getComponents()) {
-					if (component != buttonsPanel)
-						behaviourPanel.remove(component);
-				}
-
 				behaviour.setType(Behaviour.Type.INDEPENDENT);
-				behaviour.setStartTask(null);
-				behaviour.getMainCodeBlock().clearParameters();
-				LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(
-						behaviour, behaviourPanel);
 			}
 		});
 
@@ -335,17 +339,7 @@ public class LibraryEditorPanelFactory {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (Component component : behaviourPanel.getComponents()) {
-					if (component != buttonsPanel)
-						behaviourPanel.remove(component);
-				}
-
 				behaviour.setType(Behaviour.Type.COLLABORATIVE);
-				behaviour.setStartTask(null);
-				behaviour.getMainCodeBlock().clearParameters();
-				LibraryEditorPanelFactory.this
-						.buildCollaborativeBehaviourPanel(behaviour,
-								behaviourPanel);
 			}
 		});
 
@@ -361,20 +355,15 @@ public class LibraryEditorPanelFactory {
 
 		behaviourPanel.add(buttonsPanel);
 
-		if (behaviour.getType() == Behaviour.Type.INDEPENDENT) {
-			LibraryEditorPanelFactory.this.buildIndependentBehaviourPanel(
-					behaviour, behaviourPanel);
-		} else {
-			LibraryEditorPanelFactory.this.buildCollaborativeBehaviourPanel(
-					behaviour, behaviourPanel);
-		}
+		LibraryEditorPanelFactory.this.buildChangeableBehaviourPanel(behaviour,
+				behaviourPanel);
 
 		return behaviourPanel;
 	}
 
 	@SuppressWarnings("serial")
-	private JPanel buildBehaviourGraphPanel(String graphName,
-			SEGraph<Task> graph, boolean isEditable) {
+	private JPanel buildBehaviourGraphPanel(SEGraph<Task> graph,
+			boolean isEditable) {
 		final JPanel graphPanel;
 
 		// Create the graph panel.
@@ -401,7 +390,6 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		graphPanel.setBorder(BorderFactory.createTitledBorder(graphName));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 
 		if (isEditable) {
@@ -413,7 +401,7 @@ public class LibraryEditorPanelFactory {
 	}
 
 	private SEGraph<Task> buildBehaviourGraph(final Behaviour behaviour,
-			final JPanel behaviourPanel, final String type) {
+			final JPanel behaviourPanel, final Behaviour.Type type) {
 		final SEGraph<Task> graph;
 		final Task startTask;
 		final LibraryModel library = behaviour.getLibrary();
@@ -425,7 +413,7 @@ public class LibraryEditorPanelFactory {
 			startTask = behaviour.getStartTask();
 		} else {
 			// Else create a new one.
-			if (type == ScriptEaseKeywords.INDEPENDENT)
+			if (type == Behaviour.Type.INDEPENDENT)
 				startTask = new IndependentTask(library);
 			else
 				startTask = new CollaborativeTask(library);
@@ -456,11 +444,13 @@ public class LibraryEditorPanelFactory {
 				if (lastComponent instanceof JPanel) {
 					final JPanel panel = (JPanel) lastComponent;
 
-					if (panel.getComponentCount() > 0
-							&& panel.getComponent(0) instanceof JScrollPane
-							|| panel.getComponent(0) instanceof JSplitPane
-							|| panel.getComponent(0) instanceof JLabel) {
-						behaviourPanel.remove(lastComponent);
+					if (panel.getComponentCount() > 0) {
+						final Component comp = panel.getComponent(0);
+
+						if (comp instanceof JScrollPane
+								|| comp instanceof JSplitPane
+								|| comp instanceof JLabel)
+							behaviourPanel.remove(lastComponent);
 					}
 				}
 
@@ -570,162 +560,73 @@ public class LibraryEditorPanelFactory {
 		return graph;
 	}
 
-	private JPanel buildBehaviourImplicitPanel(final List<KnowIt> implicitList,
+	private JPanel buildBehaviourParameterPanel(final Behaviour behaviour,
 			boolean isEditable) {
-		final JPanel implicitPanel;
+		final JPanel paramPanel;
+		final Collection<KnowIt> parameters = behaviour.getParameters();
 
-		implicitPanel = new JPanel();
-		implicitPanel.setBorder(BorderFactory.createTitledBorder("Implicits"));
-		implicitPanel.setLayout(new BoxLayout(implicitPanel, BoxLayout.Y_AXIS));
+		paramPanel = new JPanel();
+		paramPanel.setBorder(BorderFactory.createTitledBorder("Parameters"));
+		paramPanel.setLayout(new BoxLayout(paramPanel, BoxLayout.Y_AXIS));
 
-		for (final KnowIt implicit : implicitList) {
+		for (final KnowIt parameter : parameters) {
 			final BindingWidget bindingWidget = ScriptWidgetFactory
-					.buildBindingWidget(implicit, false);
+					.buildBindingWidget(parameter, false);
 			final JPanel subPanel = new JPanel();
 			final ParameterPanel parameterPanel;
 
 			subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			subPanel.add(bindingWidget);
 
-			parameterPanel = buildParameterPanel(implicit, isEditable);
-			parameterPanel.addListener(new ParameterPanelObserver() {
-				@Override
-				public void parameterPanelChanged() {
+			if (!parameter.getDisplayText().equals(Behaviour.PRIORITY_TEXT)) {
+				parameterPanel = buildParameterPanel(parameter, isEditable);
 
-					/**
-					 * So this chunk is to make sure that the binding's code
-					 * block itself has it's types updated in addition to just
-					 * the KnowIt (which is not done by the ParameterPanel, but
-					 * is what's sued when drawing the BindingWidget).
-					 */
+				parameterPanel.addListener(new ParameterPanelObserver() {
+					@Override
+					public void parameterPanelChanged() {
+						subPanel.remove(0);
+						subPanel.add(ScriptWidgetFactory.buildBindingWidget(
+								parameter, false), 0);
+						subPanel.revalidate();
+					}
+				});
 
-					final KnowItBinding implicitBinding = implicit.getBinding();
-					final ScriptIt implicitBindingValue = (ScriptIt) implicitBinding
-							.getValue();
-					final CodeBlockReference implicitCodeBlock = (CodeBlockReference) ListOp
-							.head(implicitBindingValue.getCodeBlocks());
+				parameterPanel.setEnabled(isEditable);
+				subPanel.add(parameterPanel, false);
+			}
 
-					implicitCodeBlock.setTypesByName(implicit.getTypes());
-
-					BindingWidget updatedWidget = ScriptWidgetFactory
-							.buildBindingWidget(implicit, false);
-					subPanel.removeAll();
-					subPanel.add(updatedWidget);
-					subPanel.add(parameterPanel);
-
-				}
-			});
-			parameterPanel.setEnabled(isEditable);
-			subPanel.add(parameterPanel, false);
-
-			implicitPanel.add(subPanel, false);
+			paramPanel.add(subPanel, false);
 		}
 
-		final Dimension dimension = implicitPanel.getPreferredSize();
-		dimension.height = implicitList.size() * 90;
-		dimension.width = implicitPanel.getMaximumSize().width;
-		implicitPanel.setMaximumSize(dimension);
+		final Dimension dimension = paramPanel.getPreferredSize();
+		dimension.height = parameters.size() * 90;
+		dimension.width = paramPanel.getMaximumSize().width;
+		paramPanel.setMaximumSize(dimension);
 
-		return implicitPanel;
+		return paramPanel;
 	}
 
-	private void buildIndependentBehaviourPanel(final Behaviour behaviour,
+	private void buildChangeableBehaviourPanel(final Behaviour behaviour,
 			final JPanel behaviourPanel) {
+		final Behaviour.Type type = behaviour.getType();
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
-				behaviourPanel, ScriptEaseKeywords.INDEPENDENT);
+				behaviourPanel, type);
 
-		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
-
-		final KnowIt initiatorImplicit = behaviour.getImplicits().iterator()
-				.next();
-		final LibraryModel library = behaviour.getLibrary();
 		final boolean isEditable = ScriptEase.DEBUG_MODE
 				|| !behaviour.getLibrary().isReadOnly();
 
 		graph.setBorder(BorderFactory.createEmptyBorder());
 
-		implicitList.add(initiatorImplicit);
-
-		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
-			final KnowIt initiator = new KnowIt(library);
-			final KnowIt priority = new KnowIt(library);
-
-			behaviour
-					.setDisplayText("<Initiator> does action with priority <Priority>");
-
-			initiator.setDisplayText("Initiator");
-			initiator.addType("Creature");
-
-			priority.setDisplayText("Priority");
-			priority.addType("Number");
-			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
-					.toString(behaviour.getPriority())));
-
-			behaviour.getMainCodeBlock().addParameter(initiator);
-			behaviour.getMainCodeBlock().addParameter(priority);
+		if (type == Behaviour.Type.INDEPENDENT) {
+			behaviourPanel.add(this
+					.buildIndependentBehaviourNamePanel(behaviour));
+		} else if (type == Behaviour.Type.COLLABORATIVE) {
+			behaviourPanel.add(this
+					.buildCollaborativeBehaviourNamePanel(behaviour));
 		}
 
-		behaviourPanel.add(this.buildIndependentBehaviourNamePanel(behaviour));
-		behaviourPanel.add(this.buildBehaviourGraphPanel("Independent Graph",
-				graph, isEditable));
-		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList,
-				isEditable));
-
-		graph.setSelectedNode(graph.getStartNode());
-
-		behaviourPanel.repaint();
-		behaviourPanel.revalidate();
-	}
-
-	private void buildCollaborativeBehaviourPanel(final Behaviour behaviour,
-			final JPanel behaviourPanel) {
-		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,
-				behaviourPanel, ScriptEaseKeywords.COLLABORATIVE);
-
-		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
-
-		final Iterator<KnowIt> iterator = behaviour.getImplicits().iterator();
-
-		final KnowIt initiatorImplicit = iterator.next();
-		final KnowIt responderImplicit = iterator.next();
-		final LibraryModel library = behaviour.getLibrary();
-		final boolean isEditable = ScriptEase.DEBUG_MODE
-				|| !behaviour.getLibrary().isReadOnly();
-
-		graph.setBorder(BorderFactory.createEmptyBorder());
-
-		implicitList.add(initiatorImplicit);
-		implicitList.add(responderImplicit);
-
-		if (behaviour.getMainCodeBlock().getParameters().isEmpty()) {
-			final KnowIt initiator = new KnowIt(library);
-			final KnowIt responder = new KnowIt(library);
-			final KnowIt priority = new KnowIt(library);
-
-			behaviour
-					.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");
-
-			initiator.setDisplayText("Initiator");
-			initiator.addType("Creature");
-
-			responder.setDisplayText("Responder");
-			responder.addType("Creature");
-
-			priority.setDisplayText("Priority");
-			priority.addType("Number");
-			priority.setBinding(new SimpleResource(priority.getTypes(), Integer
-					.toString(behaviour.getPriority())));
-
-			behaviour.getMainCodeBlock().addParameter(initiator);
-			behaviour.getMainCodeBlock().addParameter(responder);
-			behaviour.getMainCodeBlock().addParameter(priority);
-		}
-
-		behaviourPanel
-				.add(this.buildCollaborativeBehaviourNamePanel(behaviour));
-		behaviourPanel.add(this.buildBehaviourGraphPanel("Collaborative Graph",
-				graph, isEditable));
-		behaviourPanel.add(this.buildBehaviourImplicitPanel(implicitList,
+		behaviourPanel.add(this.buildBehaviourGraphPanel(graph, isEditable));
+		behaviourPanel.add(this.buildBehaviourParameterPanel(behaviour,
 				isEditable));
 
 		graph.setSelectedNode(graph.getStartNode());
