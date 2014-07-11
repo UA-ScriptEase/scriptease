@@ -3328,61 +3328,6 @@
       </Implicits>
     </Slot>
     <Slot>
-      <Name>onBehaviour</Name>
-      <Keyword>onBehaviour</Keyword>
-      <Parameters/>
-      <Implicits>
-        <KnowIt>
-          <Name>Initiator</Name>
-          <Labels/>
-          <Types>
-            <Type>Creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Initiator</Name>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Initiator</Name>
-                  <Labels/>
-                  <Types>
-                    <Type>Creature</Type>
-                  </Types>
-                  <Code/>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-        <KnowIt>
-          <Name>Responder</Name>
-          <Labels/>
-          <Types>
-            <Type>Creature</Type>
-          </Types>
-          <Binding flavour="function">
-            <ScriptIt>
-              <Name>Responder</Name>
-              <Labels/>
-              <Children/>
-              <CodeBlocks>
-                <CodeBlockSource>
-                  <Name>Responder</Name>
-                  <Labels/>
-                  <Types>
-                    <Type>Creature</Type>
-                  </Types>
-                  <Code/>
-                </CodeBlockSource>
-              </CodeBlocks>
-            </ScriptIt>
-          </Binding>
-        </KnowIt>
-      </Implicits>
-    </Slot>
-    <Slot>
       <Name>OnRested</Name>
       <Keyword>ScriptRested</Keyword>
       <Parameters/>
@@ -24555,7 +24500,7 @@
         <CodeBlockSource>
           <Name>&lt;Initiator&gt; tests behaviours with priority &lt;Priority&gt;</Name>
           <Labels/>
-          <Slot>onBehaviour</Slot>
+          <Slot/>
           <Types>
           	<Type>Void</Type>
           </Types>
@@ -24580,8 +24525,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-          					<FormatRef ref="behaviour" />
-          	
+         	 <FormatRef ref="behaviour" />  	
           </Code>
         </CodeBlockSource>
       </CodeBlocks>

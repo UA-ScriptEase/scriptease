@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -272,8 +273,8 @@ public class SEGraphNodeRenderer<E> {
 			if (graph.equals(SEFocusManager.getInstance().getFocus())) {
 				initialColour = ScriptEaseUI.SELECTED_COLOUR;
 			} else {
-				initialColour = GUIOp.scaleWhite(
-						ScriptEaseUI.SELECTED_COLOUR, 1.2);
+				initialColour = GUIOp.scaleWhite(ScriptEaseUI.SELECTED_COLOUR,
+						1.2);
 			}
 
 			if (this.pressedComponent == component) {
@@ -326,7 +327,12 @@ public class SEGraphNodeRenderer<E> {
 
 			}
 		}
+	}
 
+	protected void createBufferRectangle(int verticalMargin,
+			int horizontalMargin, JComponent component) {
+		component.add(Box.createVerticalStrut(verticalMargin));
+		component.add(Box.createHorizontalStrut(horizontalMargin));
 	}
 
 }
