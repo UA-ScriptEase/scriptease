@@ -64,16 +64,18 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 
 		if (!library.isReadOnly() || ScriptEase.DEBUG_MODE) {
 			code = new ArrayList<AbstractFragment>(1);
-			newBehaviour = new Behaviour(library, "New Behaviour");
+			newBehaviour = new Behaviour(library);
 
 			codeBlock = new CodeBlockSource(library);
 
 			code.add(new FormatReferenceFragment("behaviour"));
+
 			codeBlock.setCode(code);
 			codeBlock.setTypesByName(ListOp
 					.createList(GameType.DEFAULT_VOID_TYPE));
+
 			newBehaviour.addCodeBlock(codeBlock);
-			newBehaviour.setVisible(true);
+			newBehaviour.resetBehaviour();
 
 			library.add(newBehaviour);
 		}
