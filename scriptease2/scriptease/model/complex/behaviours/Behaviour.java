@@ -7,7 +7,6 @@ import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
-import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
@@ -59,6 +58,10 @@ public class Behaviour extends ScriptIt {
 
 		this.priority = priority;
 		this.type = type;
+
+		this.registerChildType(Task.class, MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(IndependentTask.class, MAX_NUM_OF_ONE_TYPE);
+		this.registerChildType(CollaborativeTask.class, MAX_NUM_OF_ONE_TYPE);
 	}
 
 	// ******************* GETTERS AND SETTERS **********************//
@@ -99,19 +102,13 @@ public class Behaviour extends ScriptIt {
 		if (startTask == null) {
 			if (type == Type.INDEPENDENT) {
 				this.startTask = new IndependentTask(this.getLibrary());
-				this.registerChildType(IndependentTask.class,
-						ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 			} else {
 				this.startTask = new CollaborativeTask(this.getLibrary());
-				this.registerChildType(CollaborativeTask.class,
-						ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE);
 			}
-
 		} else
 			this.startTask = startTask;
 
-		if (startTask != null)
-			this.addStoryChild(startTask);
+		this.addStoryChild(this.startTask);
 	}
 
 	/**
