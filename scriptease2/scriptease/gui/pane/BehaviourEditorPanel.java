@@ -4,10 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -98,15 +95,7 @@ public class BehaviourEditorPanel extends JPanel {
 		final SEGraph<Task> graph;
 		final Task startTask;
 
-		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
-		final Iterator<KnowIt> iterator = behaviour.getImplicits().iterator();
-
-		if (behaviour.getType() == Behaviour.Type.INDEPENDENT) {
-			implicitList.add(iterator.next());
-		} else {
-			implicitList.add(iterator.next());
-			implicitList.add(iterator.next());
-		}
+		final Collection<KnowIt> parameterList = behaviour.getParameters();
 
 		this.layoutPanel.removeAll();
 
@@ -293,7 +282,7 @@ public class BehaviourEditorPanel extends JPanel {
 
 		this.layoutPanel.add(namePanel);
 		this.layoutPanel.add(graphPanel);
-		this.layoutPanel.add(this.buildBehaviourImplicitPanel(implicitList));
+		this.layoutPanel.add(this.buildBehaviourParameterPanel(parameterList));
 
 		graph.setSelectedNode(startTask);
 
@@ -301,10 +290,10 @@ public class BehaviourEditorPanel extends JPanel {
 		this.revalidate();
 	}
 
-	private JPanel buildBehaviourImplicitPanel(List<KnowIt> implicitList) {
-		final JPanel implicitPanel;
+	private JPanel buildBehaviourParameterPanel(Collection<KnowIt> implicitList) {
+		final JPanel parameterPanel;
 
-		implicitPanel = new JPanel() {
+		parameterPanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
@@ -327,15 +316,16 @@ public class BehaviourEditorPanel extends JPanel {
 			}
 		};
 
-		implicitPanel.setBorder(BorderFactory.createTitledBorder("Implicits"));
-		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		parameterPanel
+				.setBorder(BorderFactory.createTitledBorder("Parameters"));
+		parameterPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		for (KnowIt implicit : implicitList) {
-			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(implicit,
+			parameterPanel.add(ScriptWidgetFactory.buildBindingWidget(implicit,
 					false));
 		}
 
-		return implicitPanel;
+		return parameterPanel;
 	}
 
 	public StoryComponentPanelManager getPanelManager() {

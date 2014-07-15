@@ -19,8 +19,6 @@ import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
-import scriptease.model.complex.behaviours.CollaborativeTask;
-import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.Resource;

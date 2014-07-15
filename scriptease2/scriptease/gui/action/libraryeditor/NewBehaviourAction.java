@@ -66,6 +66,8 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 			code = new ArrayList<AbstractFragment>(1);
 			newBehaviour = new Behaviour(library);
 
+			newBehaviour.addLabel("B");
+
 			codeBlock = new CodeBlockSource(library);
 
 			code.add(new FormatReferenceFragment("behaviour"));
