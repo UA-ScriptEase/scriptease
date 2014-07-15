@@ -121,7 +121,7 @@ public class LibraryEditorPanelFactory {
 		activityPanel.setOpaque(false);
 
 		transferPanel = StoryComponentPanelFactory.getInstance()
-				.buildStoryComponentPanel(activityIt);
+				.buildStoryComponentPanel(activityIt, true);
 
 		codeBlockPanel = new CodeBlockPanel(activityIt.getMainCodeBlock(),
 				activityIt, true);
@@ -145,7 +145,7 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public void codeBlockPanelChanged() {
 				final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
-						.getInstance().buildStoryComponentPanel(activityIt);
+						.getInstance().buildStoryComponentPanel(activityIt, true);
 
 				// Should always be able to remove the tree regardless
 				if (activityPanel.getComponentCount() > 1
@@ -178,7 +178,7 @@ public class LibraryEditorPanelFactory {
 								|| event.getType() == StoryComponentChangeEnum.CHANGE_PARAMETER_TYPE) {
 							final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
 									.getInstance().buildStoryComponentPanel(
-											activityIt);
+											activityIt, true);
 
 							if (activityPanel.getComponents().length >= 1
 									&& activityPanel.getComponent(1) != null) {
@@ -208,6 +208,11 @@ public class LibraryEditorPanelFactory {
 	@SuppressWarnings("serial")
 	private JPanel buildActivityItImplicitPanel(final ActivityIt activityIt) {
 		final JPanel implicitPanel;
+		final String delimiters;
+		final String[] displayTextWords;
+		final CodeBlock codeBlock;
+		final String displayText;
+		boolean parameterAdded;
 
 		/*
 		 * Sets a fixed height for panels. Probably not the cleanest way to do
@@ -238,13 +243,30 @@ public class LibraryEditorPanelFactory {
 
 		implicitPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		final CodeBlock codeBlock = activityIt.getMainCodeBlock();
-
-		for (KnowIt parameter : codeBlock.getParameters()) {
-			implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,
-					false));
+		codeBlock = activityIt.getMainCodeBlock();
+		delimiters = "[<>]";
+		displayText = activityIt.getDisplayText();
+		displayTextWords = 	displayText.split(delimiters);
+		
+		//What we want the implicit panel to be is the display text of
+		//the activity but with parameters replaced by BindingWidgets
+		//Idea: delimit the display text by <>, then check word by word
+		//and replace any that 
+		for(String word: displayTextWords){
+			parameterAdded = false;
+			for (KnowIt parameter : codeBlock.getParameters()) {
+				if (parameter.getDisplayText().equals(word)){
+					implicitPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,
+							false));
+					parameterAdded = true;
+					break;
+				}
+			}
+			if (!parameterAdded){
+				implicitPanel.add(new JLabel(word));
+			}
 		}
-
+		
 		return implicitPanel;
 	}
 
