@@ -11,8 +11,9 @@ import scriptease.model.complex.AskIt;
 import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.StoryComponentContext;
 
 /**
  * Represents a code location where another format from the format dictionary is
@@ -23,7 +24,7 @@ import scriptease.translator.codegenerator.code.contexts.StoryComponentContext;
  */
 public class FormatReferenceFragment extends AbstractFragment {
 	public static enum Type {
-		NONE, ASKIT, KNOWIT, NOTE, SCRIPTIT, CONTROLIT, PICKIT, ACTIVITYIT
+		NONE, ASKIT, KNOWIT, NOTE, SCRIPTIT, CONTROLIT, PICKIT, ACTIVITYIT, BEHAVIOUR
 	}
 
 	private Type type;
@@ -132,6 +133,11 @@ public class FormatReferenceFragment extends AbstractFragment {
 		@Override
 		public void processScriptIt(ScriptIt scriptIt) {
 			this.typeMatches = this.type == Type.SCRIPTIT;
+		}
+
+		@Override
+		public void processBehaviour(Behaviour behaviour) {
+			this.typeMatches = this.type == Type.BEHAVIOUR;
 		}
 
 		@Override

@@ -1,7 +1,8 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit;
 
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
+import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
  * CauseItContexts are contexts for CauseIts.

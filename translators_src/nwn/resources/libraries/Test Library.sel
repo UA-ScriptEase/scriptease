@@ -1,4 +1,4 @@
-<LibraryModel name="Test Library" author="" description="" readonly="false">
+<LibraryModel name="Behaviour Test Library" author="" description="" readonly="false">
   <IncludeFiles/>
   <Types/>
   <Slots defaultFormat="file"/>
@@ -9,14 +9,10 @@
   <ActivityIts>
     <ActivityIt>
       <Name>Lets Break ScriptEase 12345 &lt;Bob&gt;</Name>
-      <Visible>true</Visible>
-      <Enabled>true</Enabled>
       <Labels/>
       <Children>
         <ScriptIt library="DefaultNWNLibrary">
           <Name>&lt;Attacker&gt; attacks &lt;Target&gt;</Name>
-          <Visible>true</Visible>
-          <Enabled>true</Enabled>
           <Labels>
             <Label>TODO</Label>
           </Labels>
@@ -24,14 +20,10 @@
           <CodeBlocks>
             <CodeBlockReference library="DefaultNWNLibrary">
               <Name>&lt;Attacker&gt; attacks &lt;Target&gt;</Name>
-              <Visible>true</Visible>
-              <Enabled>true</Enabled>
               <Labels/>
               <Parameters>
                 <KnowIt library="DefaultNWNLibrary">
                   <Name>Attacker</Name>
-                  <Visible>true</Visible>
-                  <Enabled>true</Enabled>
                   <Labels/>
                   <Types>
                     <Type>Creature</Type>
@@ -39,8 +31,6 @@
                   <Binding flavour="uninitialized">
                     <KnowIt>
                       <Name>Bob</Name>
-                      <Visible>true</Visible>
-                      <Enabled>true</Enabled>
                       <Labels/>
                       <Types>
                         <Type>Creature</Type>
@@ -50,15 +40,15 @@
                 </KnowIt>
                 <KnowIt library="DefaultNWNLibrary">
                   <Name>Target</Name>
-                  <Visible>true</Visible>
-                  <Enabled>true</Enabled>
                   <Labels/>
                   <Types>
                     <Type>Creature</Type>
                     <Type>Door</Type>
                     <Type>Placeable</Type>
                   </Types>
-                  <Binding reference="/LibraryModel/ActivityIts/ActivityIt/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                  <Binding flavour="uninitialized">
+                    <KnowIt reference="/LibraryModel/ActivityIts/ActivityIt/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding/KnowIt"/>
+                  </Binding>
                 </KnowIt>
               </Parameters>
             </CodeBlockReference>
@@ -68,8 +58,6 @@
       <CodeBlocks>
         <CodeBlockSource>
           <Name>Lets Break ScriptEase 12345 &lt;Bob&gt;</Name>
-          <Visible>true</Visible>
-          <Enabled>true</Enabled>
           <Labels/>
           <Types>
             <Type>Void</Type>

@@ -295,9 +295,4 @@ public class StoryNodeRenderer extends SEGraphNodeRenderer<StoryNode> {
 		return false;
 	}
 
-	private void createBufferRectangle(int verticalMargin,
-			int horizontalMargin, JComponent component) {
-		component.add(Box.createVerticalStrut(verticalMargin));
-		component.add(Box.createHorizontalStrut(horizontalMargin));
-	}
 }

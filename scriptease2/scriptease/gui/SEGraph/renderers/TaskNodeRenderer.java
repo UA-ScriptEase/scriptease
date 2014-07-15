@@ -66,17 +66,20 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 	private void updateIndependentComponent(final JComponent component,
 			final IndependentTask task) {
 		final JTextField nameField;
+		final int verticalMargin = 10;
+		final int horizontalMargin = 20;
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().isReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE
+				|| !task.getLibrary().isReadOnly();
 
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
 		spinner.setValue(task.getChance());
 
 		spinner.addChangeListener(new ChangeListener() {
-		
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				task.setChance((Double) spinner.getValue());
@@ -84,8 +87,8 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 		});
 
 		spinner.setEnabled(isEditable);
-		
-		if(graph.getStartNode() == task) {
+
+		if (graph.getStartNode() == task) {
 			nameField = new JTextField("Start Node");
 			nameField.setEnabled(false);
 		} else {
@@ -110,8 +113,10 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			nameField.setEditable(false);
 		}
 
+		this.createBufferRectangle(verticalMargin, horizontalMargin, component);
 		component.add(nameField);
 		component.add(spinner);
+		this.createBufferRectangle(verticalMargin, horizontalMargin, component);
 	}
 
 	private void updateCollaborativeComponent(final JComponent component,
@@ -125,14 +130,13 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 		final SpinnerNumberModel model;
 		final JSpinner spinner;
-		final boolean isEditable = ScriptEase.DEBUG_MODE|| !task.getLibrary().isReadOnly();
+		final boolean isEditable = ScriptEase.DEBUG_MODE
+				|| !task.getLibrary().isReadOnly();
 
-		
-		
 		namePanel = new JPanel();
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
-		
-		if(graph.getStartNode() == task){
+
+		if (graph.getStartNode() == task) {
 			initiatorField = new JTextField("Start Node");
 			reactorField = new JTextField("Start Node");
 			initiatorField.setEnabled(false);
@@ -143,7 +147,6 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 			initiatorField.setEnabled(isEditable);
 			reactorField.setEnabled(isEditable);
 		}
-
 
 		model = new SpinnerNumberModel(100, 0.0f, 100f, 1.0f);
 		spinner = new JSpinner(model);
@@ -156,7 +159,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 				task.setChance((Double) spinner.getValue());
 			}
 		});
-		
+
 		spinner.setEnabled(isEditable);
 
 		percent = new JLabel(" %");

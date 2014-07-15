@@ -26,7 +26,7 @@ public interface StoryModelObserver {
 	 * @param library
 	 */
 	public void libraryRemoved(LibraryModel library);
-	
+
 	/**
 	 * Fired when a dialogue root is added to the story model.
 	 * 
@@ -54,11 +54,11 @@ public interface StoryModelObserver {
 	 * @param library
 	 */
 	public void dialogueChildRemoved(DialogueLine removed, DialogueLine parent);
-	
+
 	/**
-	 * Fired when the behaviour is edited in the story model.
+	 * Fired when the edit button is clicked on a behaviour.
 	 * 
 	 * @param behaviour
 	 */
-	public void behaviourEdited(Behaviour behaviour);
+	public void behaviourEditPressed(Behaviour behaviour);
 }

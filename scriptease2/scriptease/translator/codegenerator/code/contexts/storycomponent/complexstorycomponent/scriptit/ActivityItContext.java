@@ -1,6 +1,7 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit;
 
 import scriptease.model.complex.ActivityIt;
+import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
  * Context for {@link ActivityIt}

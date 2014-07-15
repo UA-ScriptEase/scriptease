@@ -1,4 +1,4 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent;
 
 import java.util.Collection;
 
@@ -6,6 +6,7 @@ import scriptease.controller.StoryComponentUtils;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.translator.codegenerator.code.contexts.Context;
 
 /**
  * AskItContext is Context for a AskIt object.

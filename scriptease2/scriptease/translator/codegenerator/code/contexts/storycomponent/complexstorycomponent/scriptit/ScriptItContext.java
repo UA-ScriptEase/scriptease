@@ -1,4 +1,4 @@
-package scriptease.translator.codegenerator.code.contexts;
+package scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +10,10 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
+import scriptease.translator.codegenerator.code.contexts.CodeBlockContext;
+import scriptease.translator.codegenerator.code.contexts.Context;
+import scriptease.translator.codegenerator.code.contexts.ContextFactory;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.ComplexStoryComponentContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 /**
@@ -87,7 +91,7 @@ public class ScriptItContext extends ComplexStoryComponentContext {
 	 * @see CodeBlock#getCause()
 	 */
 	@Override
-	public ScriptIt getCause() {
+	public CauseIt getCause() {
 		return this.getMainCodeBlock().getCause();
 	}
 

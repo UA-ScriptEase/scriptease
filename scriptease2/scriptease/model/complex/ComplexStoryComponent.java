@@ -229,7 +229,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		return new ArrayList<StoryComponent>(this.childComponents);
 	}
 
-	public List<StoryComponent> getDescendents() {
+	public List<StoryComponent> getDescendentStoryComponents() {
 		final List<StoryComponent> descendents = new ArrayList<StoryComponent>();
 
 		for (StoryComponent child : this.childComponents) {
@@ -237,7 +237,7 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 
 			if (child instanceof ComplexStoryComponent) {
 				descendents.addAll(((ComplexStoryComponent) child)
-						.getDescendents());
+						.getDescendentStoryComponents());
 			}
 		}
 

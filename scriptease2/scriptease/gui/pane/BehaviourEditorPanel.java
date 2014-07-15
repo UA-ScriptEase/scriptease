@@ -97,7 +97,7 @@ public class BehaviourEditorPanel extends JPanel {
 
 		final SEGraph<Task> graph;
 		final Task startTask;
-		
+
 		final List<KnowIt> implicitList = new ArrayList<KnowIt>();
 		final Iterator<KnowIt> iterator = behaviour.getImplicits().iterator();
 
@@ -107,7 +107,7 @@ public class BehaviourEditorPanel extends JPanel {
 			implicitList.add(iterator.next());
 			implicitList.add(iterator.next());
 		}
-		
+
 		this.layoutPanel.removeAll();
 
 		// create the name panel.
@@ -167,7 +167,7 @@ public class BehaviourEditorPanel extends JPanel {
 
 		graph = SEGraphFactory.buildTaskGraph(startTask, false);
 		graph.setAlignmentY(JPanel.CENTER_ALIGNMENT);
-		
+
 		graphPanel.add(graph.getToolBar());
 
 		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {
@@ -193,9 +193,10 @@ public class BehaviourEditorPanel extends JPanel {
 
 				// Set up the effects panel for the task we selected.
 				final Task task = nodes.iterator().next();
-				
-				if (task instanceof IndependentTask  && task != behaviour.getStartTask()) {
-									
+
+				if (task instanceof IndependentTask
+						&& task != behaviour.getStartTask()) {
+
 					final StoryComponentPanelTree storyComponentPanelTree;
 
 					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
@@ -208,11 +209,12 @@ public class BehaviourEditorPanel extends JPanel {
 
 					storyComponentPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
-					
+
 					taskPanel.add(storyComponentPanelTree);
 
-				} else if (task instanceof CollaborativeTask  && task != behaviour.getStartTask()) {
-					
+				} else if (task instanceof CollaborativeTask
+						&& task != behaviour.getStartTask()) {
+
 					final StoryComponentPanelTree initiatorPanelTree;
 					final StoryComponentPanelTree responderPanelTree;
 
@@ -236,25 +238,32 @@ public class BehaviourEditorPanel extends JPanel {
 					responderPanelTree.setBorder(BorderFactory
 							.createEmptyBorder());
 
-					taskPanel.setLayout(new BoxLayout(taskPanel,BoxLayout.PAGE_AXIS));
+					taskPanel.setLayout(new BoxLayout(taskPanel,
+							BoxLayout.PAGE_AXIS));
 
-					JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,initiatorPanelTree, responderPanelTree);
+					JSplitPane splitPane = new JSplitPane(
+							JSplitPane.VERTICAL_SPLIT, initiatorPanelTree,
+							responderPanelTree);
 					splitPane.setResizeWeight(0.5);
-					taskPanel.setLayout(new BoxLayout(taskPanel,BoxLayout.X_AXIS));
-					
-					//Provide minimum sizes for the two components in the split pane
-					//Should be enough space for each panel to have 3 effects event at low resolutions.
+					taskPanel.setLayout(new BoxLayout(taskPanel,
+							BoxLayout.X_AXIS));
+
+					// Provide minimum sizes for the two components in the split
+					// pane
+					// Should be enough space for each panel to have 3 effects
+					// event at low resolutions.
 					Dimension minimumSize = new Dimension(500, 300);
 					splitPane.setMinimumSize(minimumSize);
 					splitPane.setPreferredSize(minimumSize);
-					
+
 					taskPanel.add(splitPane);
-					
+
 				} else {
-					//Here is what we do for start task nodes 
+					// Here is what we do for start task nodes
 					final JLabel startLabel;
-					
-					startLabel = new JLabel("You cannot add any components to the start task node!");
+
+					startLabel = new JLabel(
+							"You cannot add any components to the start task node!");
 					taskPanel.add(startLabel);
 				}
 
@@ -291,7 +300,7 @@ public class BehaviourEditorPanel extends JPanel {
 		this.repaint();
 		this.revalidate();
 	}
-	
+
 	private JPanel buildBehaviourImplicitPanel(List<KnowIt> implicitList) {
 		final JPanel implicitPanel;
 
