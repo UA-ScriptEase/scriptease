@@ -71,10 +71,10 @@ import scriptease.util.GUIOp;
  */
 public class StoryComponentPanelFactory {
 	public static final String CURRENT_STORY_POINT_TAG = "#currentStoryPoint";
-
 	private static final StoryComponentPanelFactory instance = new StoryComponentPanelFactory();
 	private static final ImageIcon noteIcon;
-
+	private boolean isEditingActivity;
+	
 	static {
 		java.net.URL imgURL = StoryComponentPanelFactory.getInstance()
 				.getClass()
@@ -90,19 +90,31 @@ public class StoryComponentPanelFactory {
 	public static StoryComponentPanelFactory getInstance() {
 		return instance;
 	}
-
+	
 	/**
 	 * Creates, populates and returns a StoryComponentPanel visually
-	 * representing the current state of the StoryComponent.
-	 * 
+	 * representing the current state of the StoryComponent.  This will be 
+	 * called any time we build a story component panel that is not in the context
+	 * of editing an activity.
+	 */
+	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component){
+		return buildStoryComponentPanel(component, false);
+	}
+	
+	/**
+	 * Creates, populates and returns a StoryComponentPanel visually
+	 * representing the current state of the StoryComponent.  If we're 
+	 * editing an activity, then we don't render the title line to avoid confusion
+	 * This information will be contained in the implicit panel.
 	 * @param component
 	 * @param editable
 	 * @param collapsed
 	 * @return
 	 */
-	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component) {
+	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component, boolean isEditingActivity) {
 		final StoryComponentPanel panel = new StoryComponentPanel(component);
-
+		this.isEditingActivity = isEditingActivity;
+		
 		if (component != null) {
 			component.process(componentProcessor(panel));
 			panel.setTransferHandler(StoryComponentPanelTransferHandler
@@ -614,8 +626,12 @@ public class StoryComponentPanelFactory {
 
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
+				
+				if (!(StoryComponentPanelFactory.this.isEditingActivity)){
+					//Right here is where we want to detect if we're currently editing an activity.
+					parseDisplayText(mainPanel, complex, true);
+				}
 
-				parseDisplayText(mainPanel, complex, true);
 
 				// Add a label for the complex story component
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
