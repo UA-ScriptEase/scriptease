@@ -67,7 +67,7 @@ public class NewActivityAction extends ActiveModelSensitiveAction {
 		if (!library.isReadOnly() || ScriptEase.DEBUG_MODE) {
 			newActivityIt = new ActivityIt(library, "New Activity");
 			newActivityIt.setVisible(true);  
-			newActivityIt.addLabel("ACT");
+			newActivityIt.addLabel("A");
 
 			types = ListOp.createList(GameType.DEFAULT_VOID_TYPE);
 
