@@ -18,6 +18,7 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
+import scriptease.model.complex.behaviours.Task;
 
 /**
  * Generic controller object that is a collection of double dispatch methods to
@@ -41,37 +42,39 @@ import scriptease.model.complex.behaviours.IndependentTask;
 public interface StoryVisitor {
 	/** COMPLEX TYPES **/
 	public void processActivityIt(ActivityIt activityIt);
-	
+
 	public void processBehaviour(Behaviour behaviour);
-	
+
 	public void processIndependentTask(IndependentTask task);
-	
+
 	public void processCollaborativeTask(CollaborativeTask task);
-	
+
 	public void processStoryNode(StoryNode storyNode);
-	
+
 	public void processStoryGroup(StoryGroup storyGroup);
-	
+
 	public void processStoryPoint(StoryPoint storyPoint);
-	
+
 	public void processScriptIt(ScriptIt scriptIt);
 
 	public void processStoryComponentContainer(
 			StoryComponentContainer storyComponentContainer);
 
 	public void processAskIt(AskIt askIt);
-	
+
 	public void processPickIt(PickIt pickIt);
-	
+
 	public void processControlIt(ControlIt controlIt);
-	
+
 	public void processCauseIt(CauseIt causeIt);
+
+	public void processTask(Task task);
 
 	/** ATOMIC TYPES **/
 	public void processKnowIt(KnowIt knowIt);
 
 	public void processCodeBlockSource(CodeBlockSource codeBlockSource);
-	
+
 	public void processCodeBlockReference(CodeBlockReference codeBlockReference);
 
 	public void processNote(Note note);

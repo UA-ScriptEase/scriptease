@@ -19,6 +19,7 @@ import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
+import scriptease.model.complex.behaviours.Task;
 
 /**
  * Default implementation of StoryVisitor that does nothing. Ever. <br>
@@ -56,12 +57,12 @@ public abstract class StoryAdapter implements StoryVisitor {
 
 	@Override
 	public void processIndependentTask(IndependentTask task) {
-		this.defaultProcessComplex(task);
+		this.processTask(task);
 	}
 
 	@Override
 	public void processCollaborativeTask(CollaborativeTask task) {
-		this.defaultProcessComplex(task);
+		this.processTask(task);
 	}
 
 	@Override
@@ -106,6 +107,12 @@ public abstract class StoryAdapter implements StoryVisitor {
 	public void processPickIt(PickIt pickIt) {
 		this.defaultProcessComplex(pickIt);
 	}
+
+	@Override
+	public void processTask(Task task) {
+		this.defaultProcessComplex(task);
+	}
+	
 
 	/*
 	 * ============ ATOMIC TYPES ============
