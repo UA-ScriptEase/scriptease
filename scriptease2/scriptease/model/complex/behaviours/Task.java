@@ -120,6 +120,38 @@ public abstract class Task extends ComplexStoryComponent {
 	}
 
 	/**
+	 * Adds descendants to a collection to return them.
+	 * 
+	 * @param descendants
+	 * @return
+	 */
+	protected <E extends Collection<Task>> E addDescendants(E descendants) {
+		descendants.add(this);
+
+		for (Task successor : this.getSuccessors()) {
+			/*
+			 * This check prevents us from going over paths twice, which saves a
+			 * ton of time in complex stories. Note that the contains
+			 * implementation in Sets is much faster, which is why
+			 * getDescendants is faster than getOrderedDescendants.
+			 */
+			if (!descendants.contains(successor))
+				successor.addDescendants(descendants);
+		}
+
+		return descendants;
+	}
+
+	/**
+	 * Returns all descendant tasks in an unordered collection.
+	 * 
+	 * @return
+	 */
+	public Collection<Task> getDescendants() {
+		return this.addDescendants(new HashSet<Task>());
+	}
+
+	/**
 	 * @param successors
 	 *            the successors to set
 	 */

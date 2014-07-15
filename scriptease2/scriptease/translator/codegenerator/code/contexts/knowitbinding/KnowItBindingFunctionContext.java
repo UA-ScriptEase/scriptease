@@ -1,4 +1,4 @@
-package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
+package scriptease.translator.codegenerator.code.contexts.knowitbinding;
 
 import java.util.List;
 

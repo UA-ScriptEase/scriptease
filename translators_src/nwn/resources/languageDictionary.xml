@@ -200,6 +200,7 @@
 				<FormatRef data="note" ref="noteFormat" />
 				<FormatRef data="controlIt" ref="controlItCall" />
 				<FormatRef data="activityIt" ref="activityItCall" />
+				<FormatRef data="behaviour" ref="functionCall" />				
 			</Series>
 		</Format>
 		<!-- Gets the appropriate format for the type -->
@@ -312,7 +313,107 @@
 				<Literal>}</Literal>
 			</Line>
 		</Format>
+		
+		<Format id="behaviourDefinition">
+			<Line>
+				<FormatRef ref="functionSignature" />
+				<Literal> {</Literal>
+			</Line>
+			<Indent>
+				<FormatRef ref="behaviour"/>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>	
+	</Format>
+		
+		<!-- Format for Behaviour methods -->
+		<Format id="behaviour">
+			<Line>
+				<Literal>if(GetLocalint(OBJECT_SELF, "SE2_LOOPING_</Literal>
+				<Scope data="behaviour">
+					<Fragment data="uniqueID"/>
+				</Scope>
+				<Literal>") {</Literal>
+			</Line>
+			<Indent>
+				<!-- Everything that happens if we're looping. -->
+				<Line>
+					<Literal>int SE2_CurrentTask = GetLocalInt(OBJECT_SELF, "SE2_CURRENT_TASK_</Literal>
+					<Scope data="behaviour">
+						<Fragment data="uniqueID"/>
+					</Scope>
+					<Literal>");</Literal>
+				</Line>
+				
+				<Series data="tasks" unique="true" separator=" else ">
+					<Line> 
+						<Literal>if (SE2_CurrentTask == </Literal>
+						<Fragment data = "uniqueID"/>
+						<Literal>) {</Literal>
+					</Line>	
+					<Indent>
+						<Line>
+							<FormatRef ref="childrenWithoutImplicits" />
+						</Line>
+						
+						<Line>
+							<Literal>int SE2_RANDOM_NUMBER = Random(</Literal>
+							<Fragment data="probabilitycount"/>
+							<Literal>);</Literal>
+						</Line>
 
+						<Series data="childrenTasks" unique="true" separator=" else ">
+							<Line>
+								<!-- If UpperBound > RandomNumber >= LowerBound -->
+								<Literal>if(SE2_RANDOMNUMBER &lt; </Literal>
+								<Fragment data="probableUpper"/>
+								<Literal> &amp;&amp; SE2_RANDOMNUMBER &gt;= </Literal>
+								<Fragment data="probableLower" />
+								<Literal>) { </Literal>
+							</Line>
+							<Indent>
+								<Line>
+									<Literal>SetLocalInt(OBJECT_SELF, "SE2_CURRENT_TASK_</Literal>
+									<Scope data="behaviour">
+										<Fragment data="uniqueID"/>
+									</Scope>
+									<Literal>", </Literal>
+									<Fragment data = "uniqueID"/>
+									<Literal>);</Literal>
+								</Line>
+							</Indent>
+							<Line>
+								<Literal>}</Literal>
+							</Line>
+						</Series>
+						
+					</Indent>
+					<Line>
+						<Literal>}</Literal>
+					</Line>
+				</Series>
+				
+				<!-- This always gets called. -->
+				<Line>
+					<Literal>DelayCommand(0.5, </Literal>
+					<FormatRef ref="functionHeader" />
+					<Literal>);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>} else {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>ClearAllAction();</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		
 		<!-- Format for askIts -->
 		<Format id="askItConditional">
 			<Line>
@@ -403,6 +504,12 @@
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDeclaration" />
 			</Series>
+			<Line>
+				<Literal>// Behaviour Declarations</Literal>
+			</Line>
+<!--	TODO		<Series data="behaviours" unique="true">-->
+<!--				<FormatRef ref="functionDeclaration" />-->
+<!--			</Series>-->
 			<Line />
 			<Line>
 				<Literal>// Main</Literal>
@@ -416,6 +523,12 @@
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDefinition" />
 			</Series>
+			<Line>
+				<Literal>// Behaviour Definitions</Literal>
+			</Line>
+<!--	TODO		<Series data="behaviours" unique="true">-->
+<!--				<FormatRef ref="functionDefinition" />-->
+<!--			</Series>-->
 			<Line />
 			<!-- NWN likes a blank line all by itself. I think it's a C-ism that they 
 				seem to want to keep? -->

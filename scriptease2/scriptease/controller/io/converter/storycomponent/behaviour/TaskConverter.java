@@ -8,6 +8,7 @@ import scriptease.controller.io.converter.storycomponent.ComplexStoryComponentCo
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
+import scriptease.util.StringOp;
 
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -76,7 +77,8 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 			reader.moveUp();
 		}
 
-		task.setChance(Double.parseDouble(chance));
+		if (StringOp.exists(chance))
+			task.setChance(Double.parseDouble(chance));
 		task.setSuccessors(successors);
 		return task;
 	}

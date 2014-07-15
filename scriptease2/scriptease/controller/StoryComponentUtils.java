@@ -18,6 +18,10 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.Resource;
 
@@ -180,6 +184,30 @@ public class StoryComponentUtils {
 	}
 
 	/**
+	 * Returns all scriptIts descended from the ComplexStoryComponent passed in.
+	 * 
+	 * @param complex
+	 * @return
+	 */
+	public static Collection<Behaviour> getDescendantBehaviours(
+			ComplexStoryComponent complex) {
+		final Collection<Behaviour> behaviours = new HashSet<Behaviour>();
+		final DescendantCollector collector = new DescendantCollector() {
+
+			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				super.processBehaviour(behaviour);
+				if (!behaviours.contains(behaviour))
+					behaviours.add(behaviour);
+			}
+		};
+
+		complex.process(collector);
+
+		return behaviours;
+	}
+
+	/**
 	 * Returns all knowIts with descriptions descended from the
 	 * ComplexStoryComponent passed in.
 	 * 
@@ -333,6 +361,17 @@ class DescendantCollector extends StoryAdapter {
 		if (!this.children.contains(questionIt)) {
 			questionIt.getCondition().process(this);
 			this.defaultProcessComplex(questionIt);
+		}
+	}
+
+	@Override
+	public void processTask(Task task) {
+		if (!this.children.contains(task)) {
+			for (Task successor : task.getSuccessors()) {
+				if (!this.children.contains(task))
+					this.processTask(successor);
+			}
+			this.defaultProcessComplex(task);
 		}
 	}
 }

@@ -14,25 +14,41 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryGroup;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.complex.behaviours.CollaborativeTask;
+import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.semodel.dialogue.DialogueLine;
 import scriptease.translator.codegenerator.CodeGenerationException;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingAutomaticContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingFunctionContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingNullContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingReferenceContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingResourceContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryGroupContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingStoryPointContext;
-import scriptease.translator.codegenerator.code.contexts.knowitbindingcontext.KnowItBindingUninitializedContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingAutomaticContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingFunctionContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingNullContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingReferenceContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingResourceContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingStoryGroupContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingStoryPointContext;
+import scriptease.translator.codegenerator.code.contexts.knowitbinding.KnowItBindingUninitializedContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.AskItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.KnowItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.PickItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.StoryComponentContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.ComplexStoryComponentContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.ActivityItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.BehaviourContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.CauseItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.ControlItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.scriptit.ScriptItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.storynode.StoryPointContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.task.CollaborativeTaskContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.task.IndependentTaskContext;
 import scriptease.translator.io.model.Resource;
 
 /**
@@ -200,6 +216,12 @@ public class ContextFactory {
 			}
 
 			@Override
+			public void processBehaviour(Behaviour behaviour) {
+				ContextFactory.this.activeContext = new BehaviourContext(
+						pastContext, behaviour);
+			}
+
+			@Override
 			public void processActivityIt(ActivityIt activityIt) {
 				ContextFactory.this.activeContext = new ActivityItContext(
 						pastContext, activityIt);
@@ -227,6 +249,18 @@ public class ContextFactory {
 			public void processStoryComponentContainer(
 					StoryComponentContainer container) {
 				this.defaultProcessComplex(container);
+			}
+
+			@Override
+			public void processCollaborativeTask(CollaborativeTask task) {
+				ContextFactory.this.activeContext = new CollaborativeTaskContext(
+						pastContext, task);
+			}
+
+			@Override
+			public void processIndependentTask(IndependentTask task) {
+				ContextFactory.this.activeContext = new IndependentTaskContext(
+						pastContext, task);
 			}
 
 			/* ATOMIC TYPES */

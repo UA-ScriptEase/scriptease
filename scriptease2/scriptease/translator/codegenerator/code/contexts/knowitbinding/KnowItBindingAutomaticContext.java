@@ -1,4 +1,4 @@
-package scriptease.translator.codegenerator.code.contexts.knowitbindingcontext;
+package scriptease.translator.codegenerator.code.contexts.knowitbinding;
 
 import java.util.Collection;
 
@@ -6,7 +6,7 @@ import scriptease.controller.StoryComponentUtils;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.complex.StoryPoint;
 import scriptease.translator.codegenerator.code.contexts.Context;
-import scriptease.translator.codegenerator.code.contexts.KnowItContext;
+import scriptease.translator.codegenerator.code.contexts.storycomponent.KnowItContext;
 import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;

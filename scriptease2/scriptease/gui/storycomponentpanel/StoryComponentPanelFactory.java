@@ -48,7 +48,6 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
-import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.util.GUIOp;
 
 /**
@@ -559,13 +558,13 @@ public class StoryComponentPanelFactory {
 				parseDisplayText(mainPanel, behaviour, true);
 
 				// Add a modification button
-				final JButton modificationButton;
+				final JButton behaviourEditButton;
 				mainPanel.add(Box.createHorizontalStrut(3));
-				modificationButton = ComponentFactory.buildEditButton();
-				mainPanel.add(modificationButton);
+				behaviourEditButton = ComponentFactory.buildEditButton();
+				mainPanel.add(behaviourEditButton);
 
 				// Add a listener for the modification button
-				modificationButton.addActionListener(new ActionListener() {
+				behaviourEditButton.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -574,7 +573,7 @@ public class StoryComponentPanelFactory {
 
 						if (model instanceof StoryModel) {
 							((StoryModel) model)
-									.notifyBehaviourEdited(behaviour);
+									.notifyBehaviourEditPressed(behaviour);
 						}
 					}
 				});

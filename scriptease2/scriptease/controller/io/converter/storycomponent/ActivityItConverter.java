@@ -40,10 +40,10 @@ public class ActivityItConverter extends ScriptItConverter {
 	public StoryComponent unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final StoryComponent component = super.unmarshal(reader, context);
-		
-		if(!(component instanceof ActivityIt))
+
+		if (!(component instanceof ActivityIt))
 			return component;
-		
+
 		final ActivityIt activity = (ActivityIt) component;
 
 		// we must go through all of its descendants that have a
@@ -74,12 +74,11 @@ public class ActivityItConverter extends ScriptItConverter {
 					} else if (binding instanceof KnowItBindingUninitialized) {
 						KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
 
-						for (KnowIt activityParam : activity.getParameters()) {
+						for (KnowIt parameter : activity.getParameters()) {
 							if (uninitialized.getValue().getDisplayText()
-									.equals(activityParam.getDisplayText())) {
+									.equals(parameter.getDisplayText())) {
 								uninitialized = new KnowItBindingUninitialized(
-										new KnowItBindingReference(
-												activityParam));
+										new KnowItBindingReference(parameter));
 
 								knowIt.setBinding(uninitialized);
 								break;

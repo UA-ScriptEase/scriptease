@@ -86,6 +86,6 @@ public class BehaviourConverter extends ScriptItConverter {
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context, LibraryModel library) {
-		return new Behaviour(library, "");
+		return new Behaviour(library);
 	}
 }

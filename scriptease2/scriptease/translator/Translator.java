@@ -767,8 +767,7 @@ public class Translator extends SEModel {
 			WindowFactory.getInstance().showProblemDialog(
 					"Problem loading Game Module",
 					"I couldn't find a Game File at \"" + location + "\"."
-							+ loader.getErrorMessage()
-							+ "\n\nPlease tell me a new location to use.");
+							+ loader.getErrorMessage());
 			final File newLocation = this.requestNewLocation();
 
 			return this.loadModule(newLocation);
@@ -879,16 +878,28 @@ public class Translator extends SEModel {
 				module.load(false);
 				loadSuccess = true;
 			} catch (FileNotFoundException e) {
-				// This should only actually be called if module is read only.
 				e.printStackTrace();
-				System.err.println("Module not found at "
-						+ module.getLocation());
-				this.errorMessage = " It may no longer exist or be in use.";
+				if (module.getLocation().exists()) {
+					System.err.println("Module in use at "
+							+ module.getLocation());
+					this.errorMessage = " \nThe module is currently in use by another program."
+							+ "\n\nPlease either choose a different module for "
+							+ "the story or close it in the other program.";
+				} else {
+					System.err.println("Module not found at "
+							+ module.getLocation());
+					this.errorMessage = " \nThe module file does not exist. "
+							+ "\n\nPlease either choose a different module for "
+							+ "the story or add it to the module directory.";
+				}
+				// This should only actually be called if module is read only.
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.err.println("Possibly corrupt module at "
 						+ module.getLocation());
-				this.errorMessage = "\n\n It might be corrupt.";
+				this.errorMessage = "\n\n It might be corrupt. "
+						+ "\n\nPlease either choose a different module for the "
+						+ "story or fix the corrupt module.";
 			}
 		}
 	}

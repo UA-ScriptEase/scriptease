@@ -152,9 +152,9 @@ public final class StoryModel extends SEModel {
 		}
 	}
 
-	public void notifyBehaviourEdited(Behaviour behaviour) {
+	public void notifyBehaviourEditPressed(Behaviour behaviour) {
 		for (StoryModelObserver observer : this.observerManager.getObservers()) {
-			observer.behaviourEdited(behaviour);
+			observer.behaviourEditPressed(behaviour);
 		}
 	}
 
