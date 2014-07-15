@@ -321,9 +321,8 @@ public class LibraryEditorPanelFactory {
 							behaviourPanel.remove(component);
 					}
 
-					LibraryEditorPanelFactory.this
-							.buildChangeableBehaviourPanel(behaviour,
-									behaviourPanel);
+					LibraryEditorPanelFactory.this.addChangeableBehaviourPanel(
+							behaviour, behaviourPanel);
 				}
 			}
 		});
@@ -355,7 +354,7 @@ public class LibraryEditorPanelFactory {
 
 		behaviourPanel.add(buttonsPanel);
 
-		LibraryEditorPanelFactory.this.buildChangeableBehaviourPanel(behaviour,
+		LibraryEditorPanelFactory.this.addChangeableBehaviourPanel(behaviour,
 				behaviourPanel);
 
 		return behaviourPanel;
@@ -462,7 +461,9 @@ public class LibraryEditorPanelFactory {
 
 					final StoryComponentPanelTree storyComponentPanelTree;
 
-					StoryComponentPanel initiatorTaskPanel = StoryComponentPanelFactory
+					final StoryComponentPanel initiatorTaskPanel;
+
+					initiatorTaskPanel = StoryComponentPanelFactory
 							.getInstance().buildStoryComponentPanel(
 									((IndependentTask) task)
 											.getInitiatorContainer());
@@ -606,7 +607,7 @@ public class LibraryEditorPanelFactory {
 		return paramPanel;
 	}
 
-	private void buildChangeableBehaviourPanel(final Behaviour behaviour,
+	private void addChangeableBehaviourPanel(final Behaviour behaviour,
 			final JPanel behaviourPanel) {
 		final Behaviour.Type type = behaviour.getType();
 		final SEGraph<Task> graph = this.buildBehaviourGraph(behaviour,

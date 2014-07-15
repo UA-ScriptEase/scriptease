@@ -37,6 +37,6 @@ public abstract class StoryModelAdapter implements StoryModelObserver {
 	}
 
 	@Override
-	public void behaviourEdited(Behaviour behaviour) {
+	public void behaviourEditPressed(Behaviour behaviour) {
 	}
 }

@@ -505,7 +505,7 @@ class SEModelTabbedPane extends JTabbedPane {
 			}
 
 			@Override
-			public void behaviourEdited(Behaviour behaviour) {
+			public void behaviourEditPressed(Behaviour behaviour) {
 				if (behaviour != null) {
 					layout.show(topLevelPane, BEHAVIOUR_EDITOR);
 					behaviourEditor.setBehaviour(behaviour);

@@ -3,12 +3,14 @@ package scriptease.gui.transfer;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
 import scriptease.gui.component.ScriptWidgetFactory;
@@ -100,7 +102,7 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 			// Get the destination KnowIt
 			slotPanel = (SlotPanel) destinationComponent;
 			knowIt = slotPanel.getKnowIt();
-			
+
 			// Special case for KnowItBindingUninitialized - they
 			// shouldn't be dragged into their own referenced KnowIt
 			if (sourceBinding instanceof KnowItBindingUninitialized) {
@@ -119,8 +121,9 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 				if (owner instanceof ComplexStoryComponent) {
 					final ComplexStoryComponent complex = (ComplexStoryComponent) owner;
 
-					final List<StoryComponent> descendants = complex
-							.getDescendentStoryComponents();
+					final Collection<StoryComponent> descendants;
+					descendants = StoryComponentUtils
+							.getAllDescendants(complex);
 
 					StoryComponent destOwner = knowIt.getOwner();
 					while (!(destOwner instanceof ComplexStoryComponent))
@@ -173,21 +176,23 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 		final SlotPanel slotPanel;
 		final KnowIt knowIt;
 		final KnowItBinding sourceBinding;
-		
+
 		slotPanel = (SlotPanel) support.getComponent();
 		knowIt = slotPanel.getKnowIt();
 
 		// Get the KnowItBindingWidget being transferred.
 		sourceBinding = this.extractBinding(support);
-		
-		//Update the text of all usages of the imported KnowIt if it is an Activity Parameter
-		if (knowIt.getOwner().getOwner() instanceof ActivityIt){
-			final ActivityIt activityIt = (ActivityIt) knowIt.getOwner().getOwner();			
+
+		// Update the text of all usages of the imported KnowIt if it is an
+		// Activity Parameter
+		if (knowIt.getOwner().getOwner() instanceof ActivityIt) {
+			final ActivityIt activityIt = (ActivityIt) knowIt.getOwner()
+					.getOwner();
 			final List<StoryComponent> children = activityIt.getChildren();
-			
+
 			for (StoryComponent child : children) {
 				child.process(new StoryAdapter() {
-					
+
 					@Override
 					public void processScriptIt(ScriptIt scriptIt) {
 						this.defaultProcessComplex(scriptIt);
@@ -206,16 +211,35 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 						} else if (binding instanceof KnowItBindingUninitialized) {
 							KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
 
-							for (KnowIt activityParam : activityIt.getParameters()) {
-								if (uninitialized.getValue().getOriginalDisplayText()
-										.equals(activityParam.getOriginalDisplayText())) {									
-									if(sourceBinding instanceof KnowItBindingResource && activityParam.getOriginalDisplayText().equals(knowIt.getOriginalDisplayText())) {
-										
-										uninitialized.getValue().setDisplayText(((KnowItBindingResource) sourceBinding).getName());
-									} else if (sourceBinding instanceof KnowItBindingReference){
+							for (KnowIt activityParam : activityIt
+									.getParameters()) {
+								if (uninitialized
+										.getValue()
+										.getOriginalDisplayText()
+										.equals(activityParam
+												.getOriginalDisplayText())) {
+									if (sourceBinding instanceof KnowItBindingResource
+											&& activityParam
+													.getOriginalDisplayText()
+													.equals(knowIt
+															.getOriginalDisplayText())) {
+
+										uninitialized
+												.getValue()
+												.setDisplayText(
+														((KnowItBindingResource) sourceBinding)
+																.getName());
+									} else if (sourceBinding instanceof KnowItBindingReference) {
 										KnowItBindingReference ref = (KnowItBindingReference) sourceBinding;
-										if (activityParam.getOriginalDisplayText().equals(knowIt.getOriginalDisplayText())){
-											uninitialized.getValue().setDisplayText(ref.getValue().getDisplayText());									
+										if (activityParam
+												.getOriginalDisplayText()
+												.equals(knowIt
+														.getOriginalDisplayText())) {
+											uninitialized
+													.getValue()
+													.setDisplayText(
+															ref.getValue()
+																	.getDisplayText());
 										}
 									}
 								}
@@ -228,51 +252,81 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 										.getOriginalDisplayText()
 										.equals(activityParam
 												.getOriginalDisplayText())) {
-									// Construct a new KnowItBindingUninitialized we will use for the activity
+									// Construct a new
+									// KnowItBindingUninitialized we will use
+									// for the activity
 									BindingWidget uninitializedWidget = ScriptWidgetFactory
 											.buildBindingWidget(new KnowItBindingUninitialized(
 													new KnowItBindingReference(
 															activityParam)));
-									KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) uninitializedWidget.getBinding();
-									uninitialized.getValue().setOriginalDisplayText(activityParam.getOriginalDisplayText());
+									KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) uninitializedWidget
+											.getBinding();
+									uninitialized
+											.getValue()
+											.setOriginalDisplayText(
+													activityParam
+															.getOriginalDisplayText());
 
-									if (sourceBinding instanceof KnowItBindingReference){
+									if (sourceBinding instanceof KnowItBindingReference) {
 										KnowItBindingReference sourceRef = (KnowItBindingReference) sourceBinding;
-										uninitialized.getValue().setDisplayText(sourceRef.getValue().getDisplayText());
+										uninitialized
+												.getValue()
+												.setDisplayText(
+														sourceRef
+																.getValue()
+																.getDisplayText());
 
-									} else if (sourceBinding instanceof KnowItBindingResource){
+									} else if (sourceBinding instanceof KnowItBindingResource) {
 										KnowItBindingResource sourceRes = (KnowItBindingResource) sourceBinding;
-										uninitialized.getValue().setDisplayText(sourceRes.getName());
+										uninitialized.getValue()
+												.setDisplayText(
+														sourceRes.getName());
 									}
-									
+
 									childKnowIt.setBinding(uninitialized);
 								}
 							}
 						} else if (binding instanceof KnowItBindingResource) {
 							KnowItBindingResource res = (KnowItBindingResource) binding;
-							for (KnowIt activityParam : activityIt.getParameters()) {
-								if(res.getOriginalParameterText().equals(activityParam.getOriginalDisplayText())){
-									// Construct a new KnowItBindingUninitialized we will use for the activity
+							for (KnowIt activityParam : activityIt
+									.getParameters()) {
+								if (res.getOriginalParameterText().equals(
+										activityParam.getOriginalDisplayText())) {
+									// Construct a new
+									// KnowItBindingUninitialized we will use
+									// for the activity
 									BindingWidget uninitializedWidget = ScriptWidgetFactory
 											.buildBindingWidget(new KnowItBindingUninitialized(
 													new KnowItBindingReference(
 															activityParam)));
-									KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) uninitializedWidget.getBinding();
-									uninitialized.getValue().setOriginalDisplayText(activityParam.getOriginalDisplayText());
-									
-									if (sourceBinding instanceof KnowItBindingReference){
-										KnowItBindingReference sourceRef = (KnowItBindingReference) sourceBinding;
-										uninitialized.getValue().setDisplayText(sourceRef.getValue().getDisplayText());
+									KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) uninitializedWidget
+											.getBinding();
+									uninitialized
+											.getValue()
+											.setOriginalDisplayText(
+													activityParam
+															.getOriginalDisplayText());
 
-									} else if (sourceBinding instanceof KnowItBindingResource){
+									if (sourceBinding instanceof KnowItBindingReference) {
+										KnowItBindingReference sourceRef = (KnowItBindingReference) sourceBinding;
+										uninitialized
+												.getValue()
+												.setDisplayText(
+														sourceRef
+																.getValue()
+																.getDisplayText());
+
+									} else if (sourceBinding instanceof KnowItBindingResource) {
 										KnowItBindingResource sourceRes = (KnowItBindingResource) sourceBinding;
-										uninitialized.getValue().setDisplayText(sourceRes.getName());
+										uninitialized.getValue()
+												.setDisplayText(
+														sourceRes.getName());
 									}
-									
+
 									childKnowIt.setBinding(uninitialized);
-									
+
 								}
-								
+
 							}
 						}
 					}
@@ -287,29 +341,37 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 				});
 			}
 		} else {
-			//If we're dragging an object into something that's not an Activity parameter
-			//Then we should update the new object's original display text to match whatever used to be there.
-			//This will allow us to put real binding widgets into activities and let them be overwritten if one re-adds the parameter
-			
-			
+			// If we're dragging an object into something that's not an Activity
+			// parameter
+			// Then we should update the new object's original display text to
+			// match whatever used to be there.
+			// This will allow us to put real binding widgets into activities
+			// and let them be overwritten if one re-adds the parameter
+
 			String pastOriginalDisplayText = "";
-			
-			if (knowIt.getBinding() instanceof KnowItBindingUninitialized){
-				//This is the case where we're dragging on top of an Activity Parameter Usage
+
+			if (knowIt.getBinding() instanceof KnowItBindingUninitialized) {
+				// This is the case where we're dragging on top of an Activity
+				// Parameter Usage
 				KnowIt pastKnowIt = (KnowIt) knowIt.getBinding().getValue();
 				pastOriginalDisplayText = pastKnowIt.getOriginalDisplayText();
-			} else if (knowIt.getBinding() instanceof KnowItBindingResource){
-				KnowItBindingResource res = (KnowItBindingResource) knowIt.getBinding();
+			} else if (knowIt.getBinding() instanceof KnowItBindingResource) {
+				KnowItBindingResource res = (KnowItBindingResource) knowIt
+						.getBinding();
 				pastOriginalDisplayText = res.getOriginalParameterText();
-			} else if (knowIt.getBinding() instanceof KnowItBindingReference){
-				KnowItBindingReference ref = (KnowItBindingReference) knowIt.getBinding();
-				pastOriginalDisplayText = ref.getValue().getOriginalDisplayText();
+			} else if (knowIt.getBinding() instanceof KnowItBindingReference) {
+				KnowItBindingReference ref = (KnowItBindingReference) knowIt
+						.getBinding();
+				pastOriginalDisplayText = ref.getValue()
+						.getOriginalDisplayText();
 			}
-			
+
 			if (sourceBinding instanceof KnowItBindingResource) {
-				((KnowItBindingResource)sourceBinding).setOriginalParameterText(pastOriginalDisplayText);
+				((KnowItBindingResource) sourceBinding)
+						.setOriginalParameterText(pastOriginalDisplayText);
 			} else if (sourceBinding instanceof KnowItBindingReference) {
-				((KnowItBindingReference)sourceBinding).getValue().setOriginalDisplayText(pastOriginalDisplayText);
+				((KnowItBindingReference) sourceBinding).getValue()
+						.setOriginalDisplayText(pastOriginalDisplayText);
 			}
 
 		}
