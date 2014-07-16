@@ -29,7 +29,7 @@ public class CollaborativeTaskConverter extends TaskConverter {
 	}
 
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public CollaborativeTask unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 
 		final String initiatorName = XMLAttribute.INITIATE.read(reader);

@@ -33,7 +33,7 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 	}
 
 	@Override
-	public Object unmarshal(HierarchicalStreamReader reader,
+	public Task unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
 		final Task task = (Task) super.unmarshal(reader, context);
 

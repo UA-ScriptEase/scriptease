@@ -5,6 +5,9 @@ import java.util.Collection;
 
 import scriptease.controller.StoryVisitor;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 /**
@@ -31,6 +34,18 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
 public class StoryComponentContainer extends ComplexStoryComponent {
 	public StoryComponentContainer() {
 		this("");
+		
+		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
+		
+		this.registerChildType(AskIt.class, max);
+		this.registerChildType(ScriptIt.class, max);
+		this.registerChildType(KnowIt.class, max);
+		this.registerChildType(StoryComponentContainer.class, max);
+		this.registerChildType(Note.class, max);
+		this.registerChildType(ControlIt.class, max);
+		this.registerChildType(ActivityIt.class, max);
+		this.registerChildType(Behaviour.class, max);
+		this.registerChildType(PickIt.class, max);
 	}
 
 	public StoryComponentContainer(String displayName) {

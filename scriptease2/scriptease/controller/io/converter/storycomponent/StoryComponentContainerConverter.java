@@ -1,13 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.Note;
-import scriptease.model.complex.ActivityIt;
-import scriptease.model.complex.AskIt;
-import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ControlIt;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
@@ -39,20 +32,6 @@ public class StoryComponentContainerConverter extends
 	@Override
 	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context, LibraryModel library) {
-		final int max = ComplexStoryComponent.MAX_NUM_OF_ONE_TYPE;
-
-		final StoryComponentContainer container;
-
-		container = new StoryComponentContainer();
-
-		container.registerChildType(StoryComponentContainer.class, max);
-		container.registerChildType(KnowIt.class, max);
-		container.registerChildType(ScriptIt.class, max);
-		container.registerChildType(AskIt.class, max);
-		container.registerChildType(Note.class, max);
-		container.registerChildType(ControlIt.class, max);
-		container.registerChildType(ActivityIt.class, max);
-
-		return container;
+		return new StoryComponentContainer();
 	}
 }
