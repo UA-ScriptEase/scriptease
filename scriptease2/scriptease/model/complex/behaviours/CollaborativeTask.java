@@ -62,7 +62,6 @@ public class CollaborativeTask extends Task {
 		taskContainerTypes.add(AskIt.class);
 		taskContainerTypes.add(ActivityIt.class);
 
-
 		initiatorContainer = new StoryComponentContainer(taskContainerTypes);
 		initiatorContainer.setDisplayText("Initiator:");
 		responderContainer = new StoryComponentContainer(taskContainerTypes);

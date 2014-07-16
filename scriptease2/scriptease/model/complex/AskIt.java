@@ -71,10 +71,6 @@ public final class AskIt extends ComplexStoryComponent {
 	public AskIt(LibraryModel library) {
 		super(library, "<Question>");
 
-		final List<Class<? extends StoryComponent>> ifElseValidTypes;
-
-		ifElseValidTypes = new ArrayList<Class<? extends StoryComponent>>();
-
 		this.setCondition(new KnowIt(library, "Question",
 				GameType.DEFAULT_BOOL_TYPE));
 
@@ -82,21 +78,10 @@ public final class AskIt extends ComplexStoryComponent {
 		// function as containers for the If/Else blocks
 		this.registerChildType(StoryComponentContainer.class, 2);
 
-		// Define the valid types for the two sub-groups
-		ifElseValidTypes.add(AskIt.class);
-		ifElseValidTypes.add(ScriptIt.class);
-		ifElseValidTypes.add(KnowIt.class);
-		ifElseValidTypes.add(StoryComponentContainer.class);
-		ifElseValidTypes.add(Note.class);
-		ifElseValidTypes.add(ControlIt.class);
-		ifElseValidTypes.add(PickIt.class);
-		ifElseValidTypes.add(ActivityIt.class);
-		ifElseValidTypes.add(Behaviour.class);
-
 		// now we can Initialize the StoryComponentContainer
-		this.ifBlock = new StoryComponentContainer(ifElseValidTypes);
+		this.ifBlock = new StoryComponentContainer();
 		this.ifBlock.setDisplayText("Yes:");
-		this.elseBlock = new StoryComponentContainer(ifElseValidTypes);
+		this.elseBlock = new StoryComponentContainer();
 		this.elseBlock.setDisplayText("No:");
 
 		this.addStoryChild(this.ifBlock);
