@@ -163,8 +163,11 @@ public abstract class Context {
 
 			// for each story point
 			for (StoryNode point : this.storyPoints) {
-				for (ScriptIt scriptIt : StoryComponentUtils
-						.getDescendantScriptIts(point)) {
+				final Collection<ScriptIt> scriptIts;
+
+				scriptIts = StoryComponentUtils.getDescendantScriptIts(point);
+
+				for (ScriptIt scriptIt : scriptIts) {
 					final Collection<CodeBlock> codeBlocksForSlot;
 
 					codeBlocksForSlot = scriptIt
@@ -601,13 +604,18 @@ public abstract class Context {
 		return null;
 	}
 
+	public Task getStartTask() {
+		unimplemented("getStartTask");
+		return null;
+	}
+
 	public String getSlotConditional() {
 		unimplemented("getSlotConditional");
 		return null;
 	}
 
 	public Collection<KnowIt> getParametersWithSlot() {
-		unimplemented("getParameteresWithImplicits");
+		unimplemented("getParametersWithSlots");
 		return null;
 	}
 
@@ -696,10 +704,9 @@ public abstract class Context {
 		unimplemented("getProbabilityCount");
 		return null;
 	}
-	
+
 	public Collection<Task> getTaskChildren() {
-		unimplemented("getProbabilities");
+		unimplemented("getTaskChildren");
 		return null;
 	}
 }
-

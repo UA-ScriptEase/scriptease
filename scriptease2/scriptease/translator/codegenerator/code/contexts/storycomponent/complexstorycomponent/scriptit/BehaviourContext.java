@@ -22,8 +22,19 @@ public class BehaviourContext extends ScriptItContext {
 	}
 
 	@Override
+	public Task getStartTask() {
+		return this.getComponent().getStartTask();
+	}
+
+	@Override
 	public Collection<Task> getTasks() {
-		return this.getComponent().getStartTask().getDescendants();
+		return this.getStartTask().getDescendants();
+	}
+	
+	@Override
+	public String getProbabilityCount() {
+		// TODO Auto-generated method stub
+		return this.getProbabilityCount();
 	}
 
 	@Override

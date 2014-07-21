@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -15,7 +16,10 @@ import scriptease.model.StoryComponent;
 import scriptease.model.TypedComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.codegenerator.LocationInformation;
 
@@ -140,6 +144,61 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 		component.codeBlocks = new ArrayList<CodeBlock>(this.codeBlocks.size());
 		for (CodeBlock codeBlock : this.codeBlocks) {
 			component.addCodeBlock(codeBlock.clone());
+		}
+
+		for (StoryComponent child : component.getChildren()) {
+
+			child.process(new StoryAdapter() {
+
+				@Override
+				public void processTask(Task task) {
+					super.processTask(task);
+
+					for (Task successor : task.getSuccessors())
+						successor.process(this);
+				}
+
+				@Override
+				public void processScriptIt(ScriptIt scriptIt) {
+					this.defaultProcessComplex(scriptIt);
+					scriptIt.processParameters(this);
+				}
+
+				@Override
+				public void processKnowIt(KnowIt knowIt) {
+					final KnowItBinding binding = knowIt.getBinding();
+
+					if (binding instanceof KnowItBindingFunction) {
+						final KnowItBindingFunction function = (KnowItBindingFunction) binding;
+
+						function.getValue().process(this);
+
+					} else if (binding instanceof KnowItBindingUninitialized) {
+						KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
+
+						for (KnowIt activityParam : component.getParameters()) {
+							if (uninitialized.getValue()
+									.getOriginalDisplayText()
+									.equals(activityParam.getDisplayText())) {
+								uninitialized = new KnowItBindingUninitialized(
+										new KnowItBindingReference(
+												activityParam));
+
+								knowIt.setBinding(uninitialized);
+								break;
+							}
+						}
+					}
+				}
+
+				@Override
+				protected void defaultProcessComplex(
+						ComplexStoryComponent complex) {
+					for (StoryComponent child : complex.getChildren()) {
+						child.process(this);
+					}
+				}
+			});
 		}
 
 		return component;

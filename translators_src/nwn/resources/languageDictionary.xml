@@ -4,7 +4,7 @@
 	author="ScriptEase2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/LanguageDictionarySchema.xsd'>
 	<!-- Four space characters. Space = ASCII 32 -->
-	<IndentString>&#32;&#32;&#32;&#32;</IndentString>
+<IndentString>&#32;&#32;&#32;&#32;</IndentString>
 	<LineBreak>
 	</LineBreak>
 	<ReservedWords>
@@ -273,6 +273,9 @@
 			<Line>
 				<Literal>#include "i_se_aux"</Literal>
 			</Line>
+			<Line>
+				<Literal>#include "i_se_behav2"</Literal>
+			</Line>
 			<Series data="includes" unique="true">
 				<FormatRef ref="include" />
 			</Series>
@@ -325,93 +328,44 @@
 			<Line>
 				<Literal>}</Literal>
 			</Line>	
-	</Format>
+		</Format>
+	
 		
-		<!-- Format for Behaviour methods -->
-		<Format id="behaviour">
+		<Format id="queueLatentTask">
 			<Line>
-				<Literal>if(GetLocalint(OBJECT_SELF, "SE2_LOOPING_</Literal>
-				<Scope data="behaviour">
-					<Fragment data="uniqueID"/>
-				</Scope>
-				<Literal>") {</Literal>
+				<Literal>SCEZ_Behav_AddToIndependentProactiveQueue(OBJECT_SELF, &quot;</Literal>
+							<Fragment data = "uniqueID"/>
+				<Literal>&quot;);</Literal>		
 			</Line>
-			<Indent>
-				<!-- Everything that happens if we're looping. -->
-				<Line>
-					<Literal>int SE2_CurrentTask = GetLocalInt(OBJECT_SELF, "SE2_CURRENT_TASK_</Literal>
-					<Scope data="behaviour">
-						<Fragment data="uniqueID"/>
-					</Scope>
-					<Literal>");</Literal>
-				</Line>
-				
-				<Series data="tasks" unique="true" separator=" else ">
-					<Line> 
-						<Literal>if (SE2_CurrentTask == </Literal>
-						<Fragment data = "uniqueID"/>
-						<Literal>) {</Literal>
-					</Line>	
-					<Indent>
-						<Line>
-							<FormatRef ref="childrenWithoutImplicits" />
-						</Line>
-						
-						<Line>
-							<Literal>int SE2_RANDOM_NUMBER = Random(</Literal>
-							<Fragment data="probabilitycount"/>
-							<Literal>);</Literal>
-						</Line>
-
-						<Series data="childrenTasks" unique="true" separator=" else ">
-							<Line>
-								<!-- If UpperBound > RandomNumber >= LowerBound -->
-								<Literal>if(SE2_RANDOMNUMBER &lt; </Literal>
-								<Fragment data="probableUpper"/>
-								<Literal> &amp;&amp; SE2_RANDOMNUMBER &gt;= </Literal>
-								<Fragment data="probableLower" />
-								<Literal>) { </Literal>
-							</Line>
-							<Indent>
-								<Line>
-									<Literal>SetLocalInt(OBJECT_SELF, "SE2_CURRENT_TASK_</Literal>
-									<Scope data="behaviour">
-										<Fragment data="uniqueID"/>
-									</Scope>
-									<Literal>", </Literal>
-									<Fragment data = "uniqueID"/>
-									<Literal>);</Literal>
-								</Line>
-							</Indent>
-							<Line>
-								<Literal>}</Literal>
-							</Line>
-						</Series>
-						
-					</Indent>
-					<Line>
-						<Literal>}</Literal>
-					</Line>
-				</Series>
-				
-				<!-- This always gets called. -->
-				<Line>
-					<Literal>DelayCommand(0.5, </Literal>
-					<FormatRef ref="functionHeader" />
-					<Literal>);</Literal>
-				</Line>
-			</Indent>
+			
 			<Line>
-				<Literal>} else {</Literal>
+				<Literal>int SE2_RANDOM_NUMBER = Random(</Literal>
+					<Fragment data="probabilitycount"/>
+				<Literal>);</Literal>
 			</Line>
-			<Indent>
+					
+			<Series data="childrenTasks" unique="true" separator=" else ">
 				<Line>
-					<Literal>ClearAllAction();</Literal>
+					<!-- If UpperBound > RandomNumber >= LowerBound -->
+					<Literal>if(SE2_RANDOM_NUMBER &lt; </Literal>
+					<Fragment data="CHOICEPROBABILITYUPPERBOUND"/>
+					<Literal> &amp;&amp; SE2_RANDOM_NUMBER &gt;= </Literal>
+					<Fragment data="CHOICEPROBABILITYLOWERBOUND" />
+					<Literal>) { </Literal>
 				</Line>
-			</Indent>
-			<Line>
-				<Literal>}</Literal>
-			</Line>
+				<Indent>
+					<FormatRef ref="queueLatentTask"/>
+				</Indent>
+				<Line>
+					<Literal>}</Literal>
+				</Line>
+			</Series>
+		</Format>
+		
+		<Format id="queueLatentBehaviour">
+			<Scope data="startTask">
+				<FormatRef ref="queueLatentTask"/>
+			</Scope>
 		</Format>
 		
 		<!-- Format for askIts -->

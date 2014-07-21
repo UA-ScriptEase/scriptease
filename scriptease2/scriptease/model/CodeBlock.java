@@ -323,6 +323,7 @@ public abstract class CodeBlock extends StoryComponent implements
 		 * It's not a valid cause-codeblock while in that state, but this is as
 		 * close as we can get. - remiller
 		 */
+		StoryComponent prevOwner = this;
 		StoryComponent owner = this.getOwner();
 
 		if (owner instanceof CauseIt) {
@@ -331,14 +332,16 @@ public abstract class CodeBlock extends StoryComponent implements
 			while (owner != null) {
 				if (owner instanceof CauseIt)
 					break;
+
+				prevOwner = owner;
 				owner = owner.getOwner();
 			}
 
 			if (owner == null) {
-				// this.getCause();
 				throw new IllegalStateException(
 						"Failed to locate enclosing Cause for CodeBlock "
-								+ this.toString());
+								+ this.toString()
+								+ ". Couldn't find owner for " + prevOwner);
 			}
 
 			return (CauseIt) owner;

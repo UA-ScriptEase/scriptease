@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.io.FileIO;
 import scriptease.controller.io.XMLNode;
 import scriptease.controller.io.converter.model.StoryModelConverter;
@@ -119,6 +120,12 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 			}
 		}
 		reader.moveUp();
+
+		// we must go through all of its descendants that have a
+		// KnowItBindingUninitialized and change its KnowIt reference to the
+		// activity parameter KnowIt otherwise KnowItBindingUnitialized's don't
+		// reference their correct slot.
+		StoryComponentUtils.bindUninitialized(scriptIt);
 
 		return scriptIt;
 	}

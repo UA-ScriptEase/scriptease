@@ -8,6 +8,20 @@ void debug (string msg);
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //////////// STRING ARRAY ///////////////////
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+int SCEZ_Struct_ArrayGetSize(object owner, string arrayName);
+void SCEZ_Struct_ArrayClear(object owner, string arrayName);
+int SCEZ_Struct_ArraySetElementAtIndex (object owner, string arrayName, int index, string element);
+string SCEZ_Struct_ArrayGetElementAtIndex (object owner, string arrayName, int index);
+string SCEZ_Struct_ArrayRemoveElementAtIndex (object owner, string arrayName, int index);
+int SCEZ_Struct_ArrayFindElement(object owner, string arrayName, string element);
+string SCEZ_Struct_ArrayRemoveElement(object owner, string arrayName, string element);
+int SCEZ_Struct_ArrayAppendElement(object owner, string arrayName, string element);
+void SCEZ_Struct_ArrayInsertElement(object owner, string arrayName, string element, int index);
+string SCEZ_Struct_ArrayGetRandomElement(object owner, string arrayName);
+// swaps the element at index A with element at index B in the given array
+void SCEZ_Struct_ArraySwap(object actor, string arrayName, int a, int b);
+void SCEZ_Struct_ArrayShuffle(object actor, string arrayName, int seed);
+
 // The name says it all
 int SCEZ_Struct_ArrayGetSize(object owner, string arrayName) {
   return GetLocalInt( owner, arrayName+SIZE_STRING );
@@ -71,7 +85,7 @@ string SCEZ_Struct_ArrayRemoveElement(object owner, string arrayName, string ele
   int i = SCEZ_Struct_ArrayFindElement(owner, arrayName, element);
 
   if(i < 0) {
-	return "";
+    return "";
   } else {
     return SCEZ_Struct_ArrayRemoveElementAtIndex(owner, arrayName, i);
   }
@@ -241,6 +255,13 @@ void SCEZ_Struct_ObjectArrayShuffle(object actor, string arrayName, int seed) {
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ////////////// QUEUE ////////////////////////
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+int SCEZ_Struct_QueueIsEmpty(object owner, string queueName);
+string SCEZ_Struct_QueuePeek(object owner, string queueName);
+string SCEZ_Struct_QueuePop(object owner, string queueName);
+void SCEZ_Struct_QueueAdd(object actor, string queue, string element);
+int SCEZ_Struct_QueueClear( object owner, string queueName );
+
 int SCEZ_Struct_QueueIsEmpty(object owner, string queueName) {
 //  debug("Checking bounds for: "+ queueName +" HEAD: "+ IntToString(GetLocalInt(owner, queueName+HEAD_STRING)) +" TAIL: "+ IntToString(GetLocalInt(owner, queueName+TAIL_STRING)));
   return GetLocalInt(owner, queueName+HEAD_STRING) >= GetLocalInt(owner, queueName+TAIL_STRING);
