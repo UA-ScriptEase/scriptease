@@ -23,8 +23,6 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	public KnowItBindingUninitialized(KnowItBindingReference reference) {
 		this.reference = reference;
 		
-		if (reference == null)
-			return;
 	}
 
 	@Override

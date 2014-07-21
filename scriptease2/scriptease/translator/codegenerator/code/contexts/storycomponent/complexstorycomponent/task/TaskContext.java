@@ -2,6 +2,8 @@ package scriptease.translator.codegenerator.code.contexts.storycomponent.complex
 
 import java.util.Collection;
 
+import scriptease.model.CodeBlock;
+import scriptease.model.StoryComponent;
 import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.translator.codegenerator.code.contexts.Context;
@@ -39,6 +41,14 @@ public class TaskContext extends ComplexStoryComponentContext {
 
 	@Override
 	public Behaviour getBehaviour() {
-		return (Behaviour) this.getOwner();
+		StoryComponent owner = this.getOwner();
+
+		while (owner != null)
+			if (owner instanceof Behaviour)
+				return (Behaviour) owner;
+			else
+				owner = owner.getOwner();
+
+		return null;
 	}
 }

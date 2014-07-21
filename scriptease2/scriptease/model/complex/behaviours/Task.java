@@ -10,6 +10,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.util.ListOp;
 
 /**
  * A task is a series of effects. Each task has a probability of execution
@@ -59,6 +60,8 @@ public abstract class Task extends ComplexStoryComponent {
 			return false;
 
 		this.successors.add(successor);
+
+		successor.setOwner(this);
 		successor.parents.add(this);
 
 		this.notifyObservers(new StoryComponentEvent(successor,
@@ -155,44 +158,43 @@ public abstract class Task extends ComplexStoryComponent {
 	 * @param successors
 	 *            the successors to set
 	 */
-	public void setSuccessors(Set<Task> successors) {
-		this.successors = successors;
+	public void setSuccessors(Collection<Task> successors) {
+		for (Task successor : new ArrayList<Task>(this.successors))
+			this.removeSuccessor(successor);
+
+		for (Task successor : successors) {
+			this.addSuccessor(successor);
+		}
 	}
 
 	/**
 	 * @return the parents
 	 */
 	public Set<Task> getParents() {
-		return parents;
-	}
-
-	/**
-	 * @param parents
-	 *            the parents to set
-	 */
-	public void setParents(Set<Task> parents) {
-		this.parents = parents;
+		return this.parents;
 	}
 
 	@Override
 	public Task clone() {
-		final Task component = (Task) super.clone();
+		final Task clone = (Task) super.clone();
 
-		component.chance = this.chance;
-
-		component.successors = new HashSet<Task>(this.successors.size());
-		component.parents = new HashSet<Task>(this.parents.size());
+		clone.chance = this.chance;
 
 		// clone the successors
+		final Collection<Task> successors = new ArrayList<Task>();
+		
 		for (Task task : this.successors) {
-			component.successors.add(task.clone());
+			successors.add(task.clone());
 		}
 
-		// clone the parents
-		for (Task task : this.parents) {
-			component.parents.add(task.clone());
-		}
+		clone.setSuccessors(successors);
+		
+		System.out.println(clone);
+		return clone;
+	}
 
-		return component;
+	@Override
+	public String toString() {
+		return "Task [ Children: [" + this.getChildren() + "] Successors: [" + this.getSuccessors() + "]]";
 	}
 }

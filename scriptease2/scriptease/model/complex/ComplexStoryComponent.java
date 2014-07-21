@@ -146,6 +146,10 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		return true;
 	}
 
+	public void clearStoryChildren() {
+		this.removeStoryChildren(this.getChildren());
+	}
+	
 	public void removeStoryChildren(Collection<StoryComponent> children) {
 		for (StoryComponent child : children) {
 			this.removeStoryChild(child);

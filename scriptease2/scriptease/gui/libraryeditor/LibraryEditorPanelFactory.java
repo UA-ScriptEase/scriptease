@@ -713,7 +713,7 @@ public class LibraryEditorPanelFactory {
 				displayText.indexOf(" <Responder>"));
 		actionField = new JTextField(actionName, 15);
 
-		final String priority = Integer.toString(behaviour.getPriority());
+		final String priority = Float.toString(behaviour.getPriority());
 		priorityField = ComponentFactory.buildNumberTextField();
 		priorityField.setText(priority);
 		priorityField.setColumns(5);
@@ -752,7 +752,7 @@ public class LibraryEditorPanelFactory {
 						.getParameters().get(2);
 				final String priority = priorityField.getText();
 
-				behaviour.setPriority(Integer.parseInt(priority));
+				behaviour.setPriority(Float.parseFloat(priority));
 
 				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
 						.getTypes(), priority));
@@ -825,7 +825,7 @@ public class LibraryEditorPanelFactory {
 				displayText.indexOf(" with priority"));
 		actionField = new JTextField(actionName, 15);
 
-		final String priority = Integer.toString(behaviour.getPriority());
+		final String priority = Float.toString(behaviour.getPriority());
 		priorityField = ComponentFactory.buildNumberTextField();
 		priorityField.setText(priority);
 		priorityField.setColumns(5);
@@ -863,7 +863,7 @@ public class LibraryEditorPanelFactory {
 						.getParameters().get(1);
 				final String priority = priorityField.getText();
 
-				behaviour.setPriority(Integer.parseInt(priority));
+				behaviour.setPriority(Float.parseFloat(priority));
 
 				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
 						.getTypes(), priority));

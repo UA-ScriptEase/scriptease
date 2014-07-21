@@ -10,7 +10,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
 
 public class ScopeFragment extends AbstractContainerFragment {
 	public static enum Type {
-		ARGUMENT, ASKIT, AUDIO, BINDING, BEHAVIOUR, CAUSE, ELSECHILD, END, FIRSTCAUSE, IMAGE, IFCHILD, MAINCODEBLOCK, OWNER, SLOTPARAMETER, SCRIPTIT, START, SUBJECT, RESOURCE, TEMPLATEID
+		ARGUMENT, ASKIT, AUDIO, BINDING, BEHAVIOUR, CAUSE, ELSECHILD, END, FIRSTCAUSE, IMAGE, IFCHILD, MAINCODEBLOCK, OWNER, SLOTPARAMETER, SCRIPTIT, START, SUBJECT, RESOURCE, TEMPLATEID, STARTTASK
 	}
 
 	private String nameRef = "";
@@ -119,6 +119,8 @@ public class ScopeFragment extends AbstractContainerFragment {
 			return context.getImage();
 		case BEHAVIOUR:
 			return context.getBehaviour();
+		case STARTTASK:
+			return context.getStartTask();
 		default:
 			System.err.println("Unrecognizable Scope tag : " + scope.name());
 			return null;

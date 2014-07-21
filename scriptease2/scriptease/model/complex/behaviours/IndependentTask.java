@@ -99,11 +99,4 @@ public class IndependentTask extends Task {
 			child.revalidateKnowItBindings();
 		}
 	}
-
-	@Override
-	public IndependentTask clone() {
-		final IndependentTask component = (IndependentTask) super.clone();
-
-		return component;
-	}
 }

@@ -28,7 +28,6 @@ public class BehaviourConverter extends ScriptItConverter {
 		final Behaviour behaviour = (Behaviour) source;
 
 		XMLAttribute.TYPE.write(writer, behaviour.getType().toString());
-		XMLAttribute.PRIORITY.write(writer, behaviour.getPriority().toString());
 
 		super.marshal(source, writer, context);
 
@@ -41,7 +40,6 @@ public class BehaviourConverter extends ScriptItConverter {
 			UnmarshallingContext context) {
 
 		final String type = XMLAttribute.TYPE.read(reader);
-		final String priority = XMLAttribute.PRIORITY.read(reader);
 		Task startTask = null;
 
 		final StoryComponent component = super.unmarshal(reader, context);
@@ -71,7 +69,6 @@ public class BehaviourConverter extends ScriptItConverter {
 		}
 
 		behaviour.setType(Behaviour.Type.valueOf(type.toUpperCase()));
-		behaviour.setPriority(new Integer(priority));
 		behaviour.setStartTask(startTask);
 
 		return behaviour;

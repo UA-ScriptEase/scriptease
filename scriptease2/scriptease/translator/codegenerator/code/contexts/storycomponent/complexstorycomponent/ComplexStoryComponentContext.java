@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import scriptease.controller.StoryComponentUtils;
+import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -54,5 +55,11 @@ public class ComplexStoryComponentContext extends StoryComponentContext {
 	@Override
 	public ComplexStoryComponent getComponent() {
 		return (ComplexStoryComponent) super.getComponent();
+	}
+	
+	@Override
+	public CodeBlock getMainCodeBlock() {
+		// TODO Auto-generated method stub
+		return super.getMainCodeBlock();
 	}
 }
