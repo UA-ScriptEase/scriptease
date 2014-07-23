@@ -46,9 +46,11 @@ import scriptease.util.FileOp;
  * @author mfchurch
  */
 public final class ScriptEase implements Runnable {
+	private static final boolean SE250RELEASE = true;
+ 
 	// property and configuration keys
 	public static final String LOOK_AND_FEEL_KEY = "UseJavaUI";
-	public static final String TITLE = "ScriptEase II Beta";
+	public static final String TITLE = "ScriptEase II";
 	public static final String NO_VERSION_INFORMATION = "(No version information available)";
 
 	private final String version;
@@ -171,6 +173,10 @@ public final class ScriptEase implements Runnable {
 	 */
 	public static ScriptEase getInstance() {
 		return ScriptEase.instance;
+	}
+	
+	public static boolean is250Release() {
+		return SE250RELEASE;
 	}
 
 	/**
