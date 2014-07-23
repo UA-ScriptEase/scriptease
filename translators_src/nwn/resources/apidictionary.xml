@@ -5162,38 +5162,39 @@
 	          	<FormatRef data="NONE" ref="children"/>
 			</Indent>
 			<Line> 
-				<Literal>} else if (SCEZ_Behav_IndependentProactiveQueueIsEmpty(OBJECT_SELF) > 0) {</Literal>
+				<Literal>} else if (SCEZ_Behav_IndependentProactiveQueueIsEmpty(OBJECT_SELF) == 0) {</Literal>
 			</Line>
 			<Indent>
 				<!-- Do things in the independent proactive queue. -->
 				<FormatRef ref="variablesDeclaration"/>
 				<FormatRef ref="variablesDefinition"/>
 
-				<Line>
-					<Literal>string SE2_CurrentTask = SCEZ_Behav_PeekIndependentProactiveQueue(OBJECT_SELF);</Literal>
-				</Line>
-				
 				<Line />
 				
-				<Indent>
-					<Line>
+				<Line>
 					<Series data="tasks" unique="true" separator=" else ">
+						<Indent>
 						
 						<Literal>if(SCEZ_Behav_IsCurrentIndependentProactive(OBJECT_SELF, &quot;</Literal>
 						<Fragment data="uniqueID"/>
 						<Literal>&quot;)) {</Literal>
-
-						
-						<Line />
-						<Series data="children" unique="true">
-							<FormatRef ref = "childrenWithoutImplicits"/>
-						</Series>
+	
+						<Indent>
+							<Line />
+							<Series data="children" unique="true">
+								<FormatRef ref = "childrenWithoutImplicits"/>
+							</Series>
+						</Indent>
 						<Line>
 							<Literal>}</Literal>
 						</Line>
+						</Indent>
 					</Series>
-					</Line>
-				</Indent>
+				</Line>
+				
+				<Line>
+					<Literal>SCEZ_Behav_PopIndependentProactiveQueue(OBJECT_SELF);</Literal>
+				</Line>
 			</Indent>
 			<Line>
 				<Literal>}</Literal>
@@ -24600,7 +24601,7 @@
   </ControlIts>
   <ActivityIts/>
   <Behaviours>
-    <Behaviour type="INDEPENDENT" priority="0.0">
+    <Behaviour type="INDEPENDENT">
       <Name>&lt;Initiator&gt; tests behaviours with priority &lt;Priority&gt;</Name>
       <Labels/>
       <Children>
@@ -24608,7 +24609,7 @@
           <Name>Start</Name>
           <Labels/>
           <Children/>
-          <Chance>100.0</Chance>
+          <Chance>100</Chance>
           <Successors>
             <IndependentTask>
               <Name>Show Text</Name>
@@ -24688,7 +24689,7 @@
                   </Children>
                 </StoryComponentContainer>
               </Children>
-              <Chance>100.0</Chance>
+              <Chance>100</Chance>
               <Successors/>
             </IndependentTask>
           </Successors>
@@ -24711,7 +24712,7 @@
               </Types>
               <Binding flavour="constant">
                 <Type>Number</Type>
-                <Value>0</Value>
+                <Value>0.0</Value>
               </Binding>
             </KnowIt>
           </Parameters>
@@ -24722,7 +24723,7 @@
       </CodeBlocks>
       <StartTask reference="/LibraryModel/Behaviours/Behaviour/Children/IndependentTask"/>
     </Behaviour>
-    <Behaviour type="INDEPENDENT" priority="0.0">
+    <Behaviour type="INDEPENDENT">
       <Name>&lt;Initiator&gt; does action with priority &lt;Priority&gt;</Name>
       <Labels>
         <Label>B</Label>
@@ -24738,7 +24739,7 @@
               <Children/>
             </StoryComponentContainer>
           </Children>
-          <Chance>100.0</Chance>
+          <Chance>100</Chance>
           <Successors>
             <IndependentTask>
               <Name></Name>
@@ -24782,7 +24783,7 @@
                   </Children>
                 </StoryComponentContainer>
               </Children>
-              <Chance>100.0</Chance>
+              <Chance>100</Chance>
               <Successors/>
             </IndependentTask>
           </Successors>
@@ -24805,7 +24806,7 @@
               </Types>
               <Binding flavour="constant">
                 <Type>Number</Type>
-                <Value>0</Value>
+                <Value>0.0</Value>
               </Binding>
             </KnowIt>
           </Parameters>

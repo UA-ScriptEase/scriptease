@@ -35,7 +35,7 @@ import scriptease.translator.io.model.Resource;
  * 
  */
 public class StoryComponentUtils {
-	public static void bindUninitialized(final ScriptIt scriptIt ) {
+	public static void bindUninitialized(final ScriptIt scriptIt) {
 		final List<StoryComponent> children = scriptIt.getChildren();
 
 		for (StoryComponent child : children) {
@@ -83,6 +83,7 @@ public class StoryComponentUtils {
 			});
 		}
 	}
+
 	/**
 	 * Get all variables for the component.
 	 * 

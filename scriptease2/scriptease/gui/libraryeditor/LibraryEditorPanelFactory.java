@@ -139,7 +139,8 @@ public class LibraryEditorPanelFactory {
 			@Override
 			public void codeBlockPanelChanged() {
 				final StoryComponentPanel newTransferPanel = StoryComponentPanelFactory
-						.getInstance().buildStoryComponentPanel(activityIt, true);
+						.getInstance().buildStoryComponentPanel(activityIt,
+								true);
 
 				// Should always be able to remove the tree regardless
 				if (activityPanel.getComponentCount() > 1
@@ -208,7 +209,6 @@ public class LibraryEditorPanelFactory {
 		final String displayText;
 		boolean parameterAdded;
 
-
 		/*
 		 * Sets a fixed height for panels. Probably not the cleanest way to do
 		 * this. Refactor if necessary.
@@ -240,27 +240,27 @@ public class LibraryEditorPanelFactory {
 		codeBlock = activityIt.getMainCodeBlock();
 		delimiters = "[<>]";
 		displayText = activityIt.getDisplayText();
-		displayTextWords = 	displayText.split(delimiters);
-		
-		//What we want the implicit panel to be is the display text of
-		//the activity but with parameters replaced by BindingWidgets
-		//Idea: delimit the display text by <>, then check word by word
-		//and replace any that 
-		for(String word: displayTextWords){
+		displayTextWords = displayText.split(delimiters);
+
+		// What we want the implicit panel to be is the display text of
+		// the activity but with parameters replaced by BindingWidgets
+		// Idea: delimit the display text by <>, then check word by word
+		// and replace any that
+		for (String word : displayTextWords) {
 			parameterAdded = false;
 			for (KnowIt parameter : codeBlock.getParameters()) {
-				if (parameter.getDisplayText().equals(word)){
-					parameterPanel.add(ScriptWidgetFactory.buildBindingWidget(parameter,
-							false));
+				if (parameter.getDisplayText().equals(word)) {
+					parameterPanel.add(ScriptWidgetFactory.buildBindingWidget(
+							parameter, false));
 					parameterAdded = true;
 					break;
 				}
 			}
-			if (!parameterAdded){
+			if (!parameterAdded) {
 				parameterPanel.add(new JLabel(word));
 			}
 		}
-		
+
 		return parameterPanel;
 
 	}
@@ -713,7 +713,7 @@ public class LibraryEditorPanelFactory {
 				displayText.indexOf(" <Responder>"));
 		actionField = new JTextField(actionName, 15);
 
-		final String priority = Float.toString(behaviour.getPriority());
+		final String priority = Double.toString(behaviour.getPriority());
 		priorityField = ComponentFactory.buildNumberTextField();
 		priorityField.setText(priority);
 		priorityField.setColumns(5);
@@ -752,7 +752,7 @@ public class LibraryEditorPanelFactory {
 						.getParameters().get(2);
 				final String priority = priorityField.getText();
 
-				behaviour.setPriority(Float.parseFloat(priority));
+				behaviour.setPriority(Double.parseDouble(priority));
 
 				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
 						.getTypes(), priority));
@@ -825,7 +825,7 @@ public class LibraryEditorPanelFactory {
 				displayText.indexOf(" with priority"));
 		actionField = new JTextField(actionName, 15);
 
-		final String priority = Float.toString(behaviour.getPriority());
+		final String priority = Double.toString(behaviour.getPriority());
 		priorityField = ComponentFactory.buildNumberTextField();
 		priorityField.setText(priority);
 		priorityField.setColumns(5);
@@ -863,7 +863,7 @@ public class LibraryEditorPanelFactory {
 						.getParameters().get(1);
 				final String priority = priorityField.getText();
 
-				behaviour.setPriority(Float.parseFloat(priority));
+				behaviour.setPriority(Double.parseDouble(priority));
 
 				priorityKnowIt.setBinding(new SimpleResource(priorityKnowIt
 						.getTypes(), priority));

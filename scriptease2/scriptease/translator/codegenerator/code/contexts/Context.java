@@ -694,6 +694,16 @@ public abstract class Context {
 		unimplemented("getChoiceProbabilityUpperBound");
 		return null;
 	}
+	
+	public String getTaskProbabilityLowerBound() {
+		unimplemented("getTaskProbabilityLowerBound");
+		return null;
+	}
+
+	public String getTaskProbabilityUpperBound() {
+		unimplemented("getTaskProbabilityUpperBound");
+		return null;
+	}
 
 	public String getIndex() {
 		unimplemented("getIndex");

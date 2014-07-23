@@ -10,7 +10,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.util.ListOp;
 
 /**
  * A task is a series of effects. Each task has a probability of execution
@@ -19,12 +18,15 @@ import scriptease.util.ListOp;
  * @author jyuen
  * 
  */
-public abstract class Task extends ComplexStoryComponent {
+public abstract class Task extends ComplexStoryComponent implements
+		Comparable<Task> {
+	private static int uniqueIDCounter = 0;
+	private final int uniqueID;
 
 	private Set<Task> successors;
 	private Set<Task> parents;
 
-	private double chance;
+	private int chance;
 
 	/**
 	 * Constructor. Creates a new task with the given name.
@@ -37,6 +39,8 @@ public abstract class Task extends ComplexStoryComponent {
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();
 		this.chance = 100;
+
+		this.uniqueID = uniqueIDCounter++;
 
 		// Tasks don't need to have childrens - yet.
 		this.registerChildTypes(
@@ -103,7 +107,7 @@ public abstract class Task extends ComplexStoryComponent {
 	/**
 	 * @return the chance
 	 */
-	public Double getChance() {
+	public int getChance() {
 		return chance;
 	}
 
@@ -111,7 +115,7 @@ public abstract class Task extends ComplexStoryComponent {
 	 * @param chance
 	 *            the chance to set
 	 */
-	public void setChance(double chance) {
+	public void setChance(int chance) {
 		this.chance = chance;
 	}
 
@@ -182,19 +186,30 @@ public abstract class Task extends ComplexStoryComponent {
 
 		// clone the successors
 		final Collection<Task> successors = new ArrayList<Task>();
-		
+
 		for (Task task : this.successors) {
 			successors.add(task.clone());
 		}
 
 		clone.setSuccessors(successors);
-		
+
 		System.out.println(clone);
 		return clone;
 	}
 
 	@Override
 	public String toString() {
-		return "Task [ Children: [" + this.getChildren() + "] Successors: [" + this.getSuccessors() + "]]";
+		return "Task [ Children: [" + this.getChildren() + "] Successors: ["
+				+ this.getSuccessors() + "]]";
+	}
+
+	@Override
+	public int compareTo(Task o) {
+		return Integer.valueOf(this.getChance()).compareTo(
+				Integer.valueOf(o.getChance()));
+	}
+
+	public int getUniqueID() {
+		return this.uniqueID;
 	}
 }

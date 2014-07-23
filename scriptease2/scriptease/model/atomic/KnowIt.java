@@ -607,8 +607,9 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 							if (scriptIt.getParameters().contains(value)) {
 								break;
 							}
-						} else
-							owner = owner.getOwner();
+						}
+	
+						owner = owner.getOwner();
 					}
 
 					if (owner == null)

@@ -82,7 +82,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				task.setChance((Double) spinner.getValue());
+				task.setChance((Integer) spinner.getValue());
 			}
 		});
 
@@ -156,7 +156,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				task.setChance((Double) spinner.getValue());
+				task.setChance((Integer) spinner.getValue());
 			}
 		});
 
