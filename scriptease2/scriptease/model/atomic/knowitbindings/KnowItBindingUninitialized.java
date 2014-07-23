@@ -23,8 +23,6 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 	public KnowItBindingUninitialized(KnowItBindingReference reference) {
 		this.reference = reference;
 		
-		if (reference == null)
-			return;
 	}
 
 	@Override
@@ -48,11 +46,6 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 				&& ((KnowItBindingUninitialized) other).reference
 						.equals(this.reference);
 	}
-
-//	@Override
-//	public boolean compatibleWith(KnowIt knowIt) {
-//		return true;
-//	}
 
 	/**
 	 * Determines the deepest non-reference KnowItBinding of the

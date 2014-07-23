@@ -25,6 +25,7 @@ public class KnowItBindingUninitializedContext extends KnowItBindingContext {
 	public String getValue() {
 		Context knowItContext = ContextFactory.getInstance().createContext(
 				this, ((KnowItBindingUninitialized) this.binding).getValue());
+
 		return knowItContext.getName();
 	}
 }

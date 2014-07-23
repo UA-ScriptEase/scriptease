@@ -163,6 +163,11 @@ public class CodeBlockContext extends Context {
 			return super.getBehaviour();
 	}
 
+	@Override
+	public Task getStartTask() {
+		return this.getBehaviour().getStartTask();
+	}
+
 	/**
 	 * Get the Collection of FormatFragments which represent the method body
 	 */
@@ -246,8 +251,24 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public Collection<Task> getTasks() {
-		return ((Behaviour) this.codeBlock.getOwner()).getStartTask()
-				.getDescendants();
+		final Collection<Task> tasks = new ArrayList<Task>();
+		final StoryComponent owner = this.codeBlock.getOwner();
+
+		if (owner instanceof Behaviour) {
+			tasks.addAll(((Behaviour) owner).getStartTask().getDescendants());
+		} else if (owner instanceof CauseIt) {
+			for (Behaviour behaviour : StoryComponentUtils
+					.getDescendantBehaviours((CauseIt) owner)) {
+				tasks.addAll(behaviour.getStartTask().getDescendants());
+			}
+		} else {
+			System.err
+					.println("GetTasks not implemented for CodeBlocks with owner "
+							+ this.getOwner());
+			return super.getTasks();
+		}
+
+		return tasks;
 	}
 
 	/**

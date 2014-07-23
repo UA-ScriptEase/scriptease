@@ -1,17 +1,6 @@
 package scriptease.controller.io.converter.storycomponent;
 
-import java.util.List;
-
-import scriptease.controller.StoryAdapter;
-import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.ActivityIt;
-import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -31,72 +20,14 @@ public class ActivityItConverter extends ScriptItConverter {
 	}
 
 	@Override
-	protected StoryComponent buildComponent(HierarchicalStreamReader reader,
+	protected ActivityIt buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context, LibraryModel library) {
 		return new ActivityIt(library, "");
 	}
 
 	@Override
-	public StoryComponent unmarshal(HierarchicalStreamReader reader,
+	public ActivityIt unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		final StoryComponent component = super.unmarshal(reader, context);
-
-		if (!(component instanceof ActivityIt))
-			return component;
-
-		final ActivityIt activity = (ActivityIt) component;
-
-		// we must go through all of its descendants that have a
-		// KnowItBindingUninitialized and change its KnowIt reference to the
-		// activity parameter KnowIt otherwise KnowItBindingUnitialized's don't
-		// reference their correct slot.
-		final List<StoryComponent> children = activity.getChildren();
-
-		for (StoryComponent child : children) {
-
-			child.process(new StoryAdapter() {
-
-				@Override
-				public void processScriptIt(ScriptIt scriptIt) {
-					this.defaultProcessComplex(scriptIt);
-					scriptIt.processParameters(this);
-				}
-
-				@Override
-				public void processKnowIt(KnowIt knowIt) {
-					final KnowItBinding binding = knowIt.getBinding();
-
-					if (binding instanceof KnowItBindingFunction) {
-						final KnowItBindingFunction function = (KnowItBindingFunction) binding;
-
-						function.getValue().process(this);
-
-					} else if (binding instanceof KnowItBindingUninitialized) {
-						KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
-
-						for (KnowIt parameter : activity.getParameters()) {
-							if (uninitialized.getValue().getDisplayText()
-									.equals(parameter.getDisplayText())) {
-								uninitialized = new KnowItBindingUninitialized(
-										new KnowItBindingReference(parameter));
-
-								knowIt.setBinding(uninitialized);
-								break;
-							}
-						}
-					}
-				}
-
-				@Override
-				protected void defaultProcessComplex(
-						ComplexStoryComponent complex) {
-					for (StoryComponent child : complex.getChildren()) {
-						child.process(this);
-					}
-				}
-			});
-		}
-
-		return activity;
+		return (ActivityIt) super.unmarshal(reader, context);
 	}
 }

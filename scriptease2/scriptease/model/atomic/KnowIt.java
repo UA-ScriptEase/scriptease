@@ -21,7 +21,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -598,21 +597,23 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 				@Override
 				public void processUninitialized(
 						KnowItBindingUninitialized uninitialized) {
+					final KnowIt value = uninitialized.getValue();
+
 					StoryComponent owner = getOwner();
-					while (!(owner instanceof ActivityIt) && owner != null)
-						owner = owner.getOwner();
+					while (owner != null) {
+						if (owner instanceof ScriptIt) {
+							final ScriptIt scriptIt = (ScriptIt) owner;
 
-					if (owner instanceof ActivityIt) {
-						final ActivityIt activity = (ActivityIt) owner;
-
-						if (!activity.getParameters().contains(
-								uninitialized.getValue())) {
-							setBinding(new KnowItBindingNull());
+							if (scriptIt.getParameters().contains(value)) {
+								break;
+							}
 						}
-
-					} else {
-						setBinding(new KnowItBindingNull());
+	
+						owner = owner.getOwner();
 					}
+
+					if (owner == null)
+						setBinding(new KnowItBindingNull());
 				}
 			});
 	}

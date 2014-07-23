@@ -13,5 +13,4 @@ public class IndependentTaskContext extends TaskContext {
 	public IndependentTask getComponent() {
 		return (IndependentTask) super.getComponent();
 	}
-
 }

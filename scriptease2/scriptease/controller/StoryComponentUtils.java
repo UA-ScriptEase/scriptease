@@ -3,15 +3,18 @@ package scriptease.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
+import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -32,6 +35,54 @@ import scriptease.translator.io.model.Resource;
  * 
  */
 public class StoryComponentUtils {
+	public static void bindUninitialized(final ScriptIt scriptIt) {
+		final List<StoryComponent> children = scriptIt.getChildren();
+
+		for (StoryComponent child : children) {
+
+			child.process(new StoryAdapter() {
+
+				@Override
+				public void processScriptIt(ScriptIt scriptIt) {
+					this.defaultProcessComplex(scriptIt);
+					scriptIt.processParameters(this);
+				}
+
+				@Override
+				public void processKnowIt(KnowIt knowIt) {
+					final KnowItBinding binding = knowIt.getBinding();
+
+					if (binding instanceof KnowItBindingFunction) {
+						final KnowItBindingFunction function = (KnowItBindingFunction) binding;
+
+						function.getValue().process(this);
+
+					} else if (binding instanceof KnowItBindingUninitialized) {
+						KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
+
+						for (KnowIt parameter : scriptIt.getParameters()) {
+							if (uninitialized.getValue().getDisplayText()
+									.equals(parameter.getDisplayText())) {
+								uninitialized = new KnowItBindingUninitialized(
+										new KnowItBindingReference(parameter));
+
+								knowIt.setBinding(uninitialized);
+								break;
+							}
+						}
+					}
+				}
+
+				@Override
+				protected void defaultProcessComplex(
+						ComplexStoryComponent complex) {
+					for (StoryComponent child : complex.getChildren()) {
+						child.process(this);
+					}
+				}
+			});
+		}
+	}
 
 	/**
 	 * Get all variables for the component.

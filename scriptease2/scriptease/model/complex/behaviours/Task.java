@@ -18,12 +18,15 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  * 
  */
-public abstract class Task extends ComplexStoryComponent {
+public abstract class Task extends ComplexStoryComponent implements
+		Comparable<Task> {
+	private static int uniqueIDCounter = 0;
+	private final int uniqueID;
 
 	private Set<Task> successors;
 	private Set<Task> parents;
 
-	private double chance;
+	private int chance;
 
 	/**
 	 * Constructor. Creates a new task with the given name.
@@ -36,6 +39,8 @@ public abstract class Task extends ComplexStoryComponent {
 		this.successors = new HashSet<Task>();
 		this.parents = new HashSet<Task>();
 		this.chance = 100;
+
+		this.uniqueID = uniqueIDCounter++;
 
 		// Tasks don't need to have childrens - yet.
 		this.registerChildTypes(
@@ -59,6 +64,8 @@ public abstract class Task extends ComplexStoryComponent {
 			return false;
 
 		this.successors.add(successor);
+
+		successor.setOwner(this);
 		successor.parents.add(this);
 
 		this.notifyObservers(new StoryComponentEvent(successor,
@@ -100,7 +107,7 @@ public abstract class Task extends ComplexStoryComponent {
 	/**
 	 * @return the chance
 	 */
-	public Double getChance() {
+	public int getChance() {
 		return chance;
 	}
 
@@ -108,7 +115,7 @@ public abstract class Task extends ComplexStoryComponent {
 	 * @param chance
 	 *            the chance to set
 	 */
-	public void setChance(double chance) {
+	public void setChance(int chance) {
 		this.chance = chance;
 	}
 
@@ -155,44 +162,54 @@ public abstract class Task extends ComplexStoryComponent {
 	 * @param successors
 	 *            the successors to set
 	 */
-	public void setSuccessors(Set<Task> successors) {
-		this.successors = successors;
+	public void setSuccessors(Collection<Task> successors) {
+		for (Task successor : new ArrayList<Task>(this.successors))
+			this.removeSuccessor(successor);
+
+		for (Task successor : successors) {
+			this.addSuccessor(successor);
+		}
 	}
 
 	/**
 	 * @return the parents
 	 */
 	public Set<Task> getParents() {
-		return parents;
-	}
-
-	/**
-	 * @param parents
-	 *            the parents to set
-	 */
-	public void setParents(Set<Task> parents) {
-		this.parents = parents;
+		return this.parents;
 	}
 
 	@Override
 	public Task clone() {
-		final Task component = (Task) super.clone();
+		final Task clone = (Task) super.clone();
 
-		component.chance = this.chance;
-
-		component.successors = new HashSet<Task>(this.successors.size());
-		component.parents = new HashSet<Task>(this.parents.size());
+		clone.chance = this.chance;
 
 		// clone the successors
+		final Collection<Task> successors = new ArrayList<Task>();
+
 		for (Task task : this.successors) {
-			component.successors.add(task.clone());
+			successors.add(task.clone());
 		}
 
-		// clone the parents
-		for (Task task : this.parents) {
-			component.parents.add(task.clone());
-		}
+		clone.setSuccessors(successors);
 
-		return component;
+		System.out.println(clone);
+		return clone;
+	}
+
+	@Override
+	public String toString() {
+		return "Task [ Children: [" + this.getChildren() + "] Successors: ["
+				+ this.getSuccessors() + "]]";
+	}
+
+	@Override
+	public int compareTo(Task o) {
+		return Integer.valueOf(this.getChance()).compareTo(
+				Integer.valueOf(o.getChance()));
+	}
+
+	public int getUniqueID() {
+		return this.uniqueID;
 	}
 }

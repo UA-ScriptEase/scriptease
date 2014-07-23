@@ -10,6 +10,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
+import scriptease.util.ListOp;
 
 /**
  * A Behaviour represents a series of Tasks {@link Task}. A Behaviour can be
@@ -30,14 +31,12 @@ public class Behaviour extends ScriptIt {
 	private Task startTask;
 	private Type type;
 
-	private int priority;
-
 	public enum Type {
 		INDEPENDENT, COLLABORATIVE
 	}
 
 	public Behaviour(LibraryModel library) {
-		this(library, Type.INDEPENDENT, 0);
+		this(library, Type.INDEPENDENT);
 	}
 
 	/**
@@ -49,14 +48,10 @@ public class Behaviour extends ScriptIt {
 	 *            the type of the behaviour - Independent or Collaborative
 	 * @param startTask
 	 *            the start task for this behaviour
-	 * @param priority
-	 *            the priority of this behaviour - higher priority means higher
-	 *            order of execution.
 	 */
-	public Behaviour(LibraryModel library, Behaviour.Type type, int priority) {
+	public Behaviour(LibraryModel library, Behaviour.Type type) {
 		super(library, INDEPENDENT_DISPLAY_TEXT);
 
-		this.priority = priority;
 		this.type = type;
 
 		this.registerChildType(Task.class, MAX_NUM_OF_ONE_TYPE);
@@ -69,19 +64,31 @@ public class Behaviour extends ScriptIt {
 	/**
 	 * @return the priority
 	 */
-	public Integer getPriority() {
-		return priority;
+	public Double getPriority() {
+		return Double.parseDouble(((SimpleResource) this
+				.getParameter("Priority").getBinding().getValue())
+				.getCodeText());
 	}
+
+	@Override
+	public boolean addStoryChild(StoryComponent newChild) {
+		// TODO Auto-generated method stub
+		return super.addStoryChild(newChild);
+	}
+
+	public boolean addStoryChildBefore(StoryComponent newChild,
+			StoryComponent sibling) {
+		return super.addStoryChildBefore(newChild, sibling);
+	};
 
 	/**
 	 * @param priority
 	 *            the priority to set
 	 */
-	public void setPriority(Integer priority) {
+	public void setPriority(Double priority) {
 		this.getParameter("Priority").setBinding(
 				new KnowItBindingResource(SimpleResource.buildSimpleResource(
 						"Number", priority + "")));
-		this.priority = priority;
 	}
 
 	/**
@@ -96,8 +103,11 @@ public class Behaviour extends ScriptIt {
 	 *            the startTask to set
 	 */
 	public void setStartTask(Task startTask) {
+		if (startTask == this.startTask)
+			return;
+
 		// remove old start task child
-		this.removeStoryChild(this.startTask);
+		this.clearStoryChildren();
 
 		if (startTask == null) {
 			if (type == Type.INDEPENDENT) {
@@ -151,7 +161,7 @@ public class Behaviour extends ScriptIt {
 
 		main.clearParameters();
 
-		priority.setBinding(new SimpleResource(priority.getTypes(), Integer
+		priority.setBinding(new SimpleResource(priority.getTypes(), Double
 				.toString(this.getPriority())));
 
 		main.addParameter(initiator);
@@ -177,8 +187,7 @@ public class Behaviour extends ScriptIt {
 		final Behaviour component = (Behaviour) super.clone();
 
 		component.type = this.type;
-		component.priority = this.priority;
-		component.startTask = this.startTask.clone();
+		component.setStartTask((Task) ListOp.head(component.getChildren()));
 
 		return component;
 	}
