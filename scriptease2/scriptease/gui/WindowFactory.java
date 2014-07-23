@@ -56,7 +56,6 @@ import scriptease.controller.observer.SEModelObserver;
 import scriptease.gui.component.UserInformationPane;
 import scriptease.gui.component.UserInformationPane.UserInformationType;
 import scriptease.gui.dialog.DialogBuilder;
-import scriptease.gui.dialog.PreferencesDialog;
 import scriptease.gui.pane.PanelFactory;
 import scriptease.gui.pane.ResourcePanel;
 import scriptease.gui.storycomponentpanel.StoryComponentPanel;
@@ -763,15 +762,6 @@ public final class WindowFactory {
 	}
 
 	/**
-	 * Shows the Preferences dialog.
-	 */
-	public void showPreferencesDialog() {
-		PreferencesDialog preferencesDialog = new PreferencesDialog(
-				this.mainFrame);
-		preferencesDialog.display();
-	}
-
-	/**
 	 * Creates a new, empty dialog.
 	 * 
 	 * @param title
@@ -813,7 +803,7 @@ public final class WindowFactory {
 		final String name;
 
 		names.add("None - Remove component");
-		
+
 		for (CodeBlock block : codeBlocks) {
 			names.add(block.getLibrary().getTitle() + ": "
 					+ block.getDisplayText());
