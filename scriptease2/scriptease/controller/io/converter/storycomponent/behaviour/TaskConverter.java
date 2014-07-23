@@ -28,7 +28,7 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 		final Task task = (Task) source;
 		super.marshal(source, writer, context);
 
-		XMLNode.CHANCE.writeString(writer, task.getChance().toString());
+		XMLNode.CHANCE.writeInteger(writer, task.getChance());
 		XMLNode.SUCCESSORS.writeObject(writer, context, task.getSuccessors());
 	}
 
@@ -78,7 +78,7 @@ public abstract class TaskConverter extends ComplexStoryComponentConverter {
 		}
 
 		if (StringOp.exists(chance))
-			task.setChance(Double.parseDouble(chance));
+			task.setChance(Integer.parseInt(chance));
 		task.setSuccessors(successors);
 		return task;
 	}

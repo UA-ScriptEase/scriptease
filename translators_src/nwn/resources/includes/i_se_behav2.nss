@@ -43,7 +43,7 @@ int SCEZ_Behav_GetCollaborativeQueueListSize(object actor);
 int SCEZ_Behav_IsIdle(object actor) {
   return SCEZ_Behav_GetLatentQueueListSize(actor) == 0
             && SCEZ_Behav_GetCollaborativeQueueListSize(actor) == 0
-            && SCEZ_Behav_IndependentProactiveQueueIsEmpty(actor) == 0;
+            && SCEZ_Behav_IndependentProactiveQueueIsEmpty(actor) == 1;
 }
 
 string SCEZ_Behav_GetIndependentProactiveQueueName(object actor) {

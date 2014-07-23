@@ -237,7 +237,6 @@
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>
-		<xsd:attribute name="priority" type="xsd:string" use="required" />
 		<xsd:attribute name="library" type="xsd:string" use="optional" />
 		<xsd:attribute name="id" type="xsd:string"/>
 		<xsd:attribute name="reference" type="xsd:string" use="optional" />

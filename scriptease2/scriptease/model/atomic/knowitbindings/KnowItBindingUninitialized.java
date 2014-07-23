@@ -47,11 +47,6 @@ public class KnowItBindingUninitialized extends KnowItBinding {
 						.equals(this.reference);
 	}
 
-//	@Override
-//	public boolean compatibleWith(KnowIt knowIt) {
-//		return true;
-//	}
-
 	/**
 	 * Determines the deepest non-reference KnowItBinding of the
 	 * KnowItBindingReference chain.

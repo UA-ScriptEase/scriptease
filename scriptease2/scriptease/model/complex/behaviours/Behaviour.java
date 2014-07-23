@@ -36,7 +36,7 @@ public class Behaviour extends ScriptIt {
 	}
 
 	public Behaviour(LibraryModel library) {
-		this(library, Type.INDEPENDENT, 0);
+		this(library, Type.INDEPENDENT);
 	}
 
 	/**
@@ -48,11 +48,8 @@ public class Behaviour extends ScriptIt {
 	 *            the type of the behaviour - Independent or Collaborative
 	 * @param startTask
 	 *            the start task for this behaviour
-	 * @param priority
-	 *            the priority of this behaviour - higher priority means higher
-	 *            order of execution.
 	 */
-	public Behaviour(LibraryModel library, Behaviour.Type type, int priority) {
+	public Behaviour(LibraryModel library, Behaviour.Type type) {
 		super(library, INDEPENDENT_DISPLAY_TEXT);
 
 		this.type = type;
@@ -67,9 +64,10 @@ public class Behaviour extends ScriptIt {
 	/**
 	 * @return the priority
 	 */
-	public Float getPriority() {
-		return Float.parseFloat(((SimpleResource) this.getParameter("Priority")
-				.getBinding().getValue()).getCodeText());
+	public Double getPriority() {
+		return Double.parseDouble(((SimpleResource) this
+				.getParameter("Priority").getBinding().getValue())
+				.getCodeText());
 	}
 
 	@Override
@@ -87,7 +85,7 @@ public class Behaviour extends ScriptIt {
 	 * @param priority
 	 *            the priority to set
 	 */
-	public void setPriority(Float priority) {
+	public void setPriority(Double priority) {
 		this.getParameter("Priority").setBinding(
 				new KnowItBindingResource(SimpleResource.buildSimpleResource(
 						"Number", priority + "")));
@@ -163,7 +161,7 @@ public class Behaviour extends ScriptIt {
 
 		main.clearParameters();
 
-		priority.setBinding(new SimpleResource(priority.getTypes(), Float
+		priority.setBinding(new SimpleResource(priority.getTypes(), Double
 				.toString(this.getPriority())));
 
 		main.addParameter(initiator);

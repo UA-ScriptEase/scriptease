@@ -348,9 +348,7 @@
 				<Line>
 					<!-- If UpperBound > RandomNumber >= LowerBound -->
 					<Literal>if(SE2_RANDOM_NUMBER &lt; </Literal>
-					<Fragment data="CHOICEPROBABILITYUPPERBOUND"/>
-					<Literal> &amp;&amp; SE2_RANDOM_NUMBER &gt;= </Literal>
-					<Fragment data="CHOICEPROBABILITYLOWERBOUND" />
+					<Fragment data="taskProbabilityUpperBound"/>
 					<Literal>) { </Literal>
 				</Line>
 				<Indent>
