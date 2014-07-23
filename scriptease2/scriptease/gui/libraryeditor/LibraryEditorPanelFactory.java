@@ -383,41 +383,21 @@ public class LibraryEditorPanelFactory {
 		return behaviourPanel;
 	}
 
-	@SuppressWarnings("serial")
 	private JPanel buildBehaviourGraphPanel(SEGraph<Task> graph,
 			boolean isEditable) {
 		final JPanel graphPanel;
+		final JScrollPane scrollPane; 
 
 		// Create the graph panel.
-		graphPanel = new JPanel() {
-			@Override
-			public Dimension getPreferredSize() {
-				final Dimension dimension = super.getPreferredSize();
-				dimension.height = 245;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMaximumSize() {
-				final Dimension dimension = super.getMaximumSize();
-				dimension.height = 245;
-				return dimension;
-			}
-
-			@Override
-			public Dimension getMinimumSize() {
-				final Dimension dimension = super.getMinimumSize();
-				dimension.height = 245;
-				return dimension;
-			}
-		};
-
+		graphPanel = new JPanel();
+		scrollPane = new JScrollPane(graph);
+		scrollPane.setPreferredSize(new Dimension(245,245));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
 
 		if (isEditable) {
 			graphPanel.add(graph.getToolBar());
 		}
-		graphPanel.add(new JScrollPane(graph), BorderLayout.CENTER);
+		graphPanel.add(scrollPane, BorderLayout.CENTER);
 
 		return graphPanel;
 	}
