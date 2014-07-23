@@ -287,12 +287,9 @@ public class MenuFactory {
 	private static JMenu buildEditMenu() {
 		// Create the Edit menu to return.
 		final JMenu editMenu;
-		final JMenuItem preferencesItem;
 		final JMenuItem storyPropertiesItem;
 
 		editMenu = new JMenu(Il8nResources.getString("Edit"));
-		preferencesItem = new JMenuItem(Il8nResources.getString("Preferences")
-				+ "...");
 		storyPropertiesItem = new JMenuItem(StoryPropertiesAction.getInstance());
 		// Set up the edit menu item
 		editMenu.setMnemonic(KeyEvent.VK_E);
@@ -312,17 +309,6 @@ public class MenuFactory {
 
 		editMenu.addSeparator();
 
-		// Create and add the preferences item.
-		preferencesItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				WindowFactory.getInstance().showPreferencesDialog();
-			}
-		});
-		preferencesItem.setMnemonic(KeyEvent.VK_R);
-
-		editMenu.add(preferencesItem);
 		editMenu.add(storyPropertiesItem);
 
 		// Return the Edit menu.
