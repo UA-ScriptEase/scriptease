@@ -65,21 +65,15 @@ public class Behaviour extends ScriptIt {
 	 * @return the priority
 	 */
 	public Double getPriority() {
-		return Double.parseDouble(((SimpleResource) this
-				.getParameter("Priority").getBinding().getValue())
-				.getCodeText());
-	}
+		final KnowIt priority = this.getParameter("Priority");
 
-	@Override
-	public boolean addStoryChild(StoryComponent newChild) {
-		// TODO Auto-generated method stub
-		return super.addStoryChild(newChild);
-	}
+		if (priority != null) {
+			return Double.parseDouble(((SimpleResource) priority.getBinding()
+					.getValue()).getCodeText());
+		}
 
-	public boolean addStoryChildBefore(StoryComponent newChild,
-			StoryComponent sibling) {
-		return super.addStoryChildBefore(newChild, sibling);
-	};
+		return 0.0;
+	}
 
 	/**
 	 * @param priority

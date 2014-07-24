@@ -9,6 +9,26 @@
     <IncludeFile>includes/i_se_structs.nss</IncludeFile>
   </IncludeFiles>
   <Types>
+   <Type>
+      <Name>Creature</Name>
+      <CodeSymbol>object</CodeSymbol>
+      <Slots>
+        <Slot>ScriptAttacked</Slot>
+        <Slot>ScriptDamaged</Slot>
+        <Slot>ScriptDeath</Slot>
+        <Slot>ScriptDialogue</Slot>
+        <Slot>ScriptDisturbed</Slot>
+        <Slot>ScriptEndRound</Slot>
+        <Slot>ScriptHeartbeat</Slot>
+        <Slot>ScriptOnBlocked</Slot>
+        <Slot>ScriptOnNotice</Slot>
+        <Slot>ScriptRested</Slot>
+        <Slot>ScriptSpawn</Slot>
+        <Slot>ScriptSpellAt</Slot>
+        <Slot>ScriptUserDefine</Slot>
+      </Slots>
+      <WidgetName>C</WidgetName>
+    </Type>
     <Type>
       <Name>CameraMode</Name>
       <CodeSymbol>int</CodeSymbol>
@@ -446,26 +466,6 @@
       <CodeSymbol>int</CodeSymbol>
       <Enum>FALSE&lt;Walk&gt;|TRUE&lt;Run&gt;</Enum>
       <GUI>JCOMBOBOX</GUI>
-    </Type>
-    <Type>
-      <Name>Creature</Name>
-      <CodeSymbol>object</CodeSymbol>
-      <Slots>
-        <Slot>ScriptAttacked</Slot>
-        <Slot>ScriptDamaged</Slot>
-        <Slot>ScriptDeath</Slot>
-        <Slot>ScriptDialogue</Slot>
-        <Slot>ScriptDisturbed</Slot>
-        <Slot>ScriptEndRound</Slot>
-        <Slot>ScriptHeartbeat</Slot>
-        <Slot>ScriptOnBlocked</Slot>
-        <Slot>ScriptOnNotice</Slot>
-        <Slot>ScriptRested</Slot>
-        <Slot>ScriptSpawn</Slot>
-        <Slot>ScriptSpellAt</Slot>
-        <Slot>ScriptUserDefine</Slot>
-      </Slots>
-      <WidgetName>C</WidgetName>
     </Type>
     <Type>
       <Name>Speak</Name>
