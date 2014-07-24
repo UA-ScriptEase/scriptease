@@ -8,8 +8,8 @@ import java.io.IOError;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -789,14 +789,6 @@ public final class FileManager {
 		if (location == null)
 			return files;
 
-		final File[] fileArray = location.listFiles();
-		Arrays.sort(fileArray, new Comparator<File>() {
-
-			@Override
-			public int compare(File file1, File file2) {
-				return file1.getName().compareTo(file2.getName());
-			}
-		});
 
 		if (location.isDirectory()) {
 			for (File file : location.listFiles())
@@ -805,6 +797,14 @@ public final class FileManager {
 			throw new IllegalStateException(
 					"Tried to retrieve tutorials from an invalid directory: "
 							+ location.getAbsolutePath());
+
+		Collections.sort(files, new Comparator<File>() {
+			
+			@Override
+			public int compare(File file1, File file2) {
+				return file1.getName().compareTo(file2.getName());
+			}
+		});
 
 		return files;
 	}

@@ -1,14 +1,17 @@
 package scriptease.gui.pane;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -107,7 +110,7 @@ public class ResourcePanel extends JPanel {
 				this.resources.getPreferredSize().width, 0));
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		
+
 		this.add(filterPane);
 		this.add(treeScrollPane);
 		this.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1,
@@ -143,6 +146,27 @@ public class ResourcePanel extends JPanel {
 							// If a model is activated
 							panel.resources.fillTree();
 							panel.setVisible(event.getPatternModel() instanceof StoryModel);
+
+							// Another stupid hack we need because of
+							// JSplitPanes. Awful awful awful.
+							SwingUtilities.invokeLater(new Runnable() {
+
+								@Override
+								public void run() {
+									final Container parent = panel.getParent();
+
+									if (parent instanceof JSplitPane) {
+										final JSplitPane libraryPane = (JSplitPane) parent;
+
+										final double thisShouldntBeNecessary = 0.5d;
+										libraryPane
+												.setResizeWeight(thisShouldntBeNecessary);
+										libraryPane
+												.setDividerLocation(thisShouldntBeNecessary);
+									}
+
+								}
+							});
 						} else if (eventType == SEModelEvent.Type.REMOVED
 								&& SEModelManager.getInstance()
 										.getActiveModel() == null) {
@@ -207,12 +231,12 @@ public class ResourcePanel extends JPanel {
 	public void addObserver(Object object, ResourceTreeObserver observer) {
 		this.resources.addObserver(object, observer);
 	}
-	
+
 	/**
 	 * Returns the resource panel's currently selected resource
 	 * 
 	 */
-	public Resource getSelected(){
+	public Resource getSelected() {
 		return this.resources.getSelected();
 	}
 }
