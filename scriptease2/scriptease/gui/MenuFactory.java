@@ -15,18 +15,13 @@ import java.util.List;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicMenuBarUI;
 
 import scriptease.ScriptEase;
 import scriptease.controller.FileManager;
-import scriptease.controller.modelverifier.problem.StoryProblem;
 import scriptease.controller.observer.RecentFileObserver;
 import scriptease.controller.observer.StoryModelAdapter;
 import scriptease.gui.action.components.CopyAction;
@@ -43,6 +38,7 @@ import scriptease.gui.action.file.SaveModelAction;
 import scriptease.gui.action.file.SaveModelExplicitlyAction;
 import scriptease.gui.action.file.SaveModelPackageAction;
 import scriptease.gui.action.file.SaveModelWithoutCodeAction;
+import scriptease.gui.action.file.TestCodeAction;
 import scriptease.gui.action.file.TestStoryAction;
 import scriptease.gui.action.library.AddLibraryToStoryModelAction;
 import scriptease.gui.action.library.RemoveLibraryFromStoryModelAction;
@@ -65,8 +61,6 @@ import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.translator.TranslatorManager;
-import scriptease.translator.codegenerator.CodeGenerator;
-import scriptease.translator.codegenerator.ScriptInfo;
 import scriptease.util.FileOp;
 
 /**
@@ -213,6 +207,7 @@ public class MenuFactory {
 		menu.addSeparator();
 
 		if (model instanceof StoryModel) {
+			menu.add(TestCodeAction.getInstance());
 			menu.add(TestStoryAction.getInstance());
 			menu.addSeparator();
 		}
@@ -292,12 +287,9 @@ public class MenuFactory {
 	private static JMenu buildEditMenu() {
 		// Create the Edit menu to return.
 		final JMenu editMenu;
-		final JMenuItem preferencesItem;
 		final JMenuItem storyPropertiesItem;
 
 		editMenu = new JMenu(Il8nResources.getString("Edit"));
-		preferencesItem = new JMenuItem(Il8nResources.getString("Preferences")
-				+ "...");
 		storyPropertiesItem = new JMenuItem(StoryPropertiesAction.getInstance());
 		// Set up the edit menu item
 		editMenu.setMnemonic(KeyEvent.VK_E);
@@ -317,17 +309,6 @@ public class MenuFactory {
 
 		editMenu.addSeparator();
 
-		// Create and add the preferences item.
-		preferencesItem.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				WindowFactory.getInstance().showPreferencesDialog();
-			}
-		});
-		preferencesItem.setMnemonic(KeyEvent.VK_R);
-
-		editMenu.add(preferencesItem);
 		editMenu.add(storyPropertiesItem);
 
 		// Return the Edit menu.
@@ -602,7 +583,6 @@ public class MenuFactory {
 		final JMenu menu = new JMenu(MenuFactory.DEBUG);
 		final JMenuItem throwExceptionItem;
 		final JMenuItem throwErrorItem;
-		final JMenuItem generateCodeItem;
 		final JMenuItem consoleOutputItem;
 		final JMenuItem metricsItem;
 
@@ -612,7 +592,6 @@ public class MenuFactory {
 
 		throwExceptionItem = new JMenuItem("Throw Exception!");
 		throwErrorItem = new JMenuItem("Throw Error!");
-		generateCodeItem = new JMenuItem("Generate Code");
 		consoleOutputItem = new JMenuItem("Do Nothing");
 		metricsItem = new JMenuItem(MetricsAction.getInstance());
 
@@ -653,45 +632,6 @@ public class MenuFactory {
 			}
 		});
 
-		generateCodeItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						// Get the active model with which to generate code.
-						SEModel activeModel = SEModelManager.getInstance()
-								.getActiveModel();
-						if (activeModel != null
-								&& activeModel instanceof StoryModel) {
-							final Collection<StoryProblem> problems = new ArrayList<StoryProblem>();
-							final Collection<ScriptInfo> scriptInfos = CodeGenerator
-									.getInstance().generateCode(
-											(StoryModel) activeModel, problems);
-
-							String code = "";
-							for (ScriptInfo script : scriptInfos) {
-								code = code
-										+ "\n\n==== New script file for slot: "
-										+ script.getSlot() + " on object: "
-										+ script.getSubject() + " ====\n"
-										+ script.getCode();
-							}
-
-							JTextArea textArea = new JTextArea(code);
-							JScrollPane scrollPane = new JScrollPane(textArea);
-							JDialog dialog = WindowFactory.getInstance()
-									.buildDialog("Code Generation Results");
-							dialog.add(scrollPane);
-
-							dialog.pack();
-							dialog.setVisible(true);
-						}
-					}
-				});
-			}
-		});
-
 		consoleOutputItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -705,7 +645,6 @@ public class MenuFactory {
 		menu.add(throwExceptionItem);
 		menu.add(throwErrorItem);
 		menu.addSeparator();
-		menu.add(generateCodeItem);
 		menu.add(consoleOutputItem);
 		menu.addSeparator();
 		menu.add(metricsItem);
