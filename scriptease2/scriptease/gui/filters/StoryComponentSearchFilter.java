@@ -188,6 +188,7 @@ public class StoryComponentSearchFilter extends StoryComponentFilter {
 		protected void defaultProcess(StoryComponent component) {
 			this.searchData.add(component.getDisplayText());
 			this.searchData.addAll(component.getLabels());
+			this.searchData.add(component.getDescription());
 		}
 
 		@Override

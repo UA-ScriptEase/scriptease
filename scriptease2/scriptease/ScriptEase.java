@@ -46,7 +46,7 @@ import scriptease.util.FileOp;
  * @author mfchurch
  */
 public final class ScriptEase implements Runnable {
-	private static final boolean SE250RELEASE = true;
+	private static final boolean SE250RELEASE = false;
  
 	// property and configuration keys
 	public static final String LOOK_AND_FEEL_KEY = "UseJavaUI";
