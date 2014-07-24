@@ -617,7 +617,8 @@ public class DialogBuilder {
 						owner.removeStoryChild(component);
 						owner.addStoryChildBefore(
 								new Note(LibraryModel.getNonLibrary(),
-										"Removed component: "
+										"Removed component from " + library
+												+ " library: "
 												+ component.getDisplayText()),
 								sibling);
 					}

@@ -110,7 +110,8 @@ public class ScriptItConverter extends ComplexStoryComponentConverter {
 						if (target == null) {
 							reader.moveUp();
 							return new Note(LibraryModel.getNonLibrary(),
-									"Missing Component in Library: "
+									"Missing Component in " + scriptItLibrary
+											+ " Library: "
 											+ scriptIt.getDisplayText());
 						}
 					}

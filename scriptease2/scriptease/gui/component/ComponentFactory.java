@@ -256,7 +256,8 @@ public final class ComponentFactory {
 					break;
 				}
 				case EDIT:
-					g2d.drawString("edit", centerX - 8, centerY + 4);
+					g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
+					g2d.drawString("edit", centerX - 7, centerY + 4);
 					break;
 				case ADD:
 					// Draw a vertical line, which when combined with the line
