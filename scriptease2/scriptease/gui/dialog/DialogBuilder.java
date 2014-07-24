@@ -34,6 +34,7 @@ import javax.swing.event.DocumentListener;
 
 import scriptease.ScriptEase;
 import scriptease.controller.StoryComponentUtils;
+import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
@@ -563,9 +564,14 @@ public class DialogBuilder {
 				ADD_LIBRARY)) {
 			final StoryModel model;
 
-			model = (StoryModel) SEModelManager.getInstance().getActiveModel();
+			model = SEModelManager.getInstance().getActiveStoryModel();
 
+			if (!UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().startUndoableAction(
+						"Adding " + library + " to " + model);
 			model.addLibrary(library);
+			if (UndoManager.getInstance().hasOpenUndoableAction())
+				UndoManager.getInstance().endUndoableAction();
 		}
 	}
 
@@ -586,6 +592,10 @@ public class DialogBuilder {
 				if (component.getLibrary() == library)
 					inLibrary.add(component);
 		}
+
+		if (!UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().startUndoableAction(
+					"Removing " + library + " from " + story);
 
 		if (!inLibrary.isEmpty()) {
 			String componentList = "";
@@ -628,6 +638,9 @@ public class DialogBuilder {
 			// We don't need to show the dialogue since no components are in the
 			// library.
 			story.removeLibrary(library);
+
+		if (UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().endUndoableAction();
 	}
 
 	/**
