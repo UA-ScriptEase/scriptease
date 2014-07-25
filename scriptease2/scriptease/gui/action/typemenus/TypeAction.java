@@ -62,7 +62,6 @@ public final class TypeAction extends AbstractAction {
 
 					TypeAction.this.typeBuilder = new TypeDialogBuilder(
 							model.getTypes(), TypeAction.this.action);
-					TypeAction.this.updateName();
 				}
 			}
 		};
@@ -161,8 +160,7 @@ public final class TypeAction extends AbstractAction {
 			name = "All Types";
 		} else if (selectedCount == 1) {
 			// show just the first one
-			name = ListOp.head(this.typeBuilder.getSelectedTypes())
-					.getName();
+			name = ListOp.head(this.typeBuilder.getSelectedTypes()).getName();
 		} else {
 			// show the number of selected types
 			name = selectedCount + " Types";
