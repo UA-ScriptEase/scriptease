@@ -307,7 +307,7 @@ public class GUIOp {
 	 * <code>System.getProperty("user.home")
 				+ "/Desktop/image.png</code>
 	 * 
-	 * @deprecated This doesn't really work. 
+	 * @deprecated This doesn't really work.
 	 * @param component
 	 *            The component to draw to the path.
 	 * @param pathThe
@@ -324,12 +324,6 @@ public class GUIOp {
 		}
 
 		final File outputFile = new File(path);
-		try {
-			System.out.println(outputFile.getCanonicalPath());
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
 		try {
 			ImageIO.write(image, png, outputFile);
