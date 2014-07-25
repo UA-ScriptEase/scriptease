@@ -17,9 +17,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -44,7 +41,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scriptease.ScriptEase;
 import scriptease.controller.StoryAdapter;
@@ -829,7 +825,6 @@ public final class WindowFactory {
 	 */
 	public JDialog buildFeedbackDialog() {
 		final String TITLE = "Send Feedback";
-		final int MAX_ATTACHMENTS = 3;
 		final JDialog feedbackDialog;
 
 		final JPanel content;
@@ -839,8 +834,6 @@ public final class WindowFactory {
 		final JScrollPane areaScrollPane;
 		final JLabel emailLabel;
 		final JTextField emailField;
-		// final JLabel fileLabel;
-		final Map<JTextField, JButton> fileFields;
 		final GroupLayout layout;
 
 		feedbackDialog = this.buildDialog(TITLE);
@@ -852,30 +845,6 @@ public final class WindowFactory {
 		areaScrollPane = new JScrollPane(commentArea);
 		emailLabel = new JLabel("Email: ");
 		emailField = new JTextField();
-		// fileLabel = new JLabel("Story Files(Optional): ");
-		fileFields = new HashMap<JTextField, JButton>();
-
-		for (int i = 0; i < MAX_ATTACHMENTS; i++)
-			fileFields.put(new JTextField(), new JButton("Browse"));
-
-		for (final Entry<JTextField, JButton> fileField : fileFields.entrySet()) {
-			JButton browseButton = fileField.getValue();
-
-			browseButton.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					final File filePath;
-
-					filePath = WindowFactory.getInstance().showFileChooser(
-							"Select", "",
-							new FileNameExtensionFilter("ses", "ses"));
-
-					if (filePath != null)
-						fileField.getKey().setText(filePath.getAbsolutePath());
-				}
-			});
-		}
 
 		commentArea.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		commentArea.setLineWrap(true);
@@ -936,24 +905,6 @@ public final class WindowFactory {
 				.addGroup(
 						layout.createParallelGroup().addComponent(emailLabel)
 								.addComponent(emailField)).addGap(5);
-
-		/**
-		 * TODO: Uncomment once I get back to ticket 55016874
-		 */
-		// for (final Entry<JTextField, JButton> fileField :
-		// fileFields.entrySet()) {
-		// final JTextField field = fileField.getKey();
-		// final JButton button = fileField.getValue();
-		//
-		// parallelGroup = parallelGroup.addGroup(
-		// GroupLayout.Alignment.LEADING, layout
-		// .createSequentialGroup().addComponent(fileLabel)
-		// .addComponent(field).addComponent(button));
-		//
-		// sequentialGroup = sequentialGroup.addGroup(layout
-		// .createParallelGroup().addComponent(fileLabel)
-		// .addComponent(field).addComponent(button));
-		// }
 
 		parallelGroup = parallelGroup.addGroup(GroupLayout.Alignment.TRAILING,
 				layout.createSequentialGroup().addComponent(sendButton)
@@ -1016,6 +967,7 @@ public final class WindowFactory {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				NetworkHandler.getInstance().sendReport(commentArea.getText());
+
 				bugReportDialog.setVisible(false);
 				bugReportDialog.dispose();
 			}
