@@ -81,7 +81,7 @@ public class ExceptionDialog extends JDialog {
 			this.exceptionMessage = e.getMessage();
 			this.exceptionStackTrace = e.getStackTrace();
 		}
-		
+
 		this.buildGUI();
 		this.setupButtonListeners();
 	}
@@ -194,7 +194,7 @@ public class ExceptionDialog extends JDialog {
 					ExceptionDialog.this.showCommentBox();
 				else {
 					String trace = "";
-					if(ExceptionDialog.this.exceptionStackTrace != null){
+					if (ExceptionDialog.this.exceptionStackTrace != null) {
 						for (StackTraceElement element : ExceptionDialog.this.exceptionStackTrace)
 							trace += element + "\n";
 					}

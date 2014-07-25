@@ -13,8 +13,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import scriptease.ScriptEase;
 import scriptease.ScriptEase.ConfigurationKeys;
+import scriptease.controller.FileManager;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.WindowFactory;
+import scriptease.model.semodel.SEModel;
+import scriptease.model.semodel.SEModelManager;
 
 /**
  * NetworkHandler provides report handling for ScriptEase. It connects to the
@@ -98,12 +101,7 @@ public class NetworkHandler extends Handler {
 	 * @see ExceptionDialog
 	 */
 	public void sendReport(String comment) {
-		final String report;
-
-		this.connect();
-		report = this.generateReport(comment, "");
-
-		this.sendToServer(report);
+		this.sendReport(comment, "");
 	}
 
 	/**
@@ -121,7 +119,7 @@ public class NetworkHandler extends Handler {
 
 		this.sendToServer(report);
 	}
-	
+
 	/**
 	 * Connects to the server, creates a log and sends it to Httpclient.
 	 * serverlog.cgi is used server side to handle reporting.
@@ -130,7 +128,9 @@ public class NetworkHandler extends Handler {
 	 */
 	private void sendToServer(String servable) {
 		try {
+
 			this.post.setEntity(new StringEntity(servable));
+
 			HttpResponse response = this.client.execute(this.post);
 
 			// tell the user if the report was successfully sent and clear
@@ -180,6 +180,17 @@ public class NetworkHandler extends Handler {
 			report += (property + "\n");
 		}
 		report += ("\n");
+
+		final SEModel model = SEModelManager.getInstance().getActiveModel();
+
+		if (model != null) {
+			report += ("\n=== Current Model:\n\n");
+			report += model.getClass().getName();
+			report += FileManager.getInstance().getModelAsText(model);
+
+			report += ("\n");
+		}
+
 		return report;
 	}
 

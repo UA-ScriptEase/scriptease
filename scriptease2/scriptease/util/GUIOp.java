@@ -280,6 +280,8 @@ public class GUIOp {
 	 * @return
 	 */
 	public static BufferedImage getScreenshot(Component c) {
+		final Container original = c.getParent();
+
 		// Set it to it's preferred size. (optional)
 		c.setSize(c.getPreferredSize());
 		layoutComponent(c);
@@ -290,6 +292,11 @@ public class GUIOp {
 		CellRendererPane crp = new CellRendererPane();
 		crp.add(c);
 		crp.paintComponent(img.createGraphics(), c, crp, c.getBounds());
+
+		if (original != null) {
+			original.add(c);
+			original.repaint();
+		}
 		return img;
 	}
 
@@ -300,13 +307,15 @@ public class GUIOp {
 	 * <code>System.getProperty("user.home")
 				+ "/Desktop/image.png</code>
 	 * 
+	 * @deprecated This doesn't really work. 
 	 * @param component
 	 *            The component to draw to the path.
 	 * @param pathThe
 	 *            path must end with .png, or else an exception will be thrown.
 	 * 
 	 */
-	public static void saveScreenshot(final Component component, String path) {
+	@Deprecated
+	public static File saveScreenshot(final Component component, String path) {
 		final String png = "png";
 		final BufferedImage image = GUIOp.getScreenshot(component);
 
@@ -314,10 +323,16 @@ public class GUIOp {
 			throw new IllegalArgumentException("Path must end in ." + png);
 		}
 
-		final File outputfile = new File(path);
+		final File outputFile = new File(path);
+		try {
+			System.out.println(outputFile.getCanonicalPath());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		try {
-			ImageIO.write(image, png, outputfile);
+			ImageIO.write(image, png, outputFile);
 		} catch (IOException e) {
 			WindowFactory.getInstance().showExceptionDialog(
 					"Could Not Save Image",
@@ -326,6 +341,8 @@ public class GUIOp {
 							+ ".", UIManager.getIcon("OptionPane.warningIcon"),
 					e);
 		}
+
+		return outputFile;
 	}
 
 	// from the example of user489041

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -421,6 +422,24 @@ public final class FileManager {
 		this.notifyModelObservers(library, location);
 	}
 
+	public File getModelFile(SEModel model) {
+		return this.openFiles.getKey(model);
+	}
+
+	public String getModelAsText(SEModel model) {
+		String modelAsText = "";
+
+		if (model != null)
+			try {
+				modelAsText = new Scanner(this.getModelFile(model))
+						.useDelimiter("\\A").next();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+		return modelAsText;
+	}
+
 	/**
 	 * Saves the given model to the given location.
 	 * 
@@ -789,7 +808,6 @@ public final class FileManager {
 		if (location == null)
 			return files;
 
-
 		if (location.isDirectory()) {
 			for (File file : location.listFiles())
 				files.add(file);
@@ -799,7 +817,7 @@ public final class FileManager {
 							+ location.getAbsolutePath());
 
 		Collections.sort(files, new Comparator<File>() {
-			
+
 			@Override
 			public int compare(File file1, File file2) {
 				return file1.getName().compareTo(file2.getName());
