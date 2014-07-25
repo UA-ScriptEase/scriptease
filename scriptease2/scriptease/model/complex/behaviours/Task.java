@@ -193,7 +193,6 @@ public abstract class Task extends ComplexStoryComponent implements
 
 		clone.setSuccessors(successors);
 
-		System.out.println(clone);
 		return clone;
 	}
 
