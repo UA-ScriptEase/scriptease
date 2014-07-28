@@ -73,7 +73,7 @@ public class StoryComponentPanelFactory {
 	private static final StoryComponentPanelFactory instance = new StoryComponentPanelFactory();
 	private static final ImageIcon noteIcon;
 	private boolean isEditingActivity;
-	
+
 	static {
 		java.net.URL imgURL = StoryComponentPanelFactory.getInstance()
 				.getClass()
@@ -89,31 +89,33 @@ public class StoryComponentPanelFactory {
 	public static StoryComponentPanelFactory getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Creates, populates and returns a StoryComponentPanel visually
-	 * representing the current state of the StoryComponent.  This will be 
-	 * called any time we build a story component panel that is not in the context
-	 * of editing an activity.
+	 * representing the current state of the StoryComponent. This will be called
+	 * any time we build a story component panel that is not in the context of
+	 * editing an activity.
 	 */
-	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component){
+	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component) {
 		return buildStoryComponentPanel(component, false);
 	}
-	
+
 	/**
 	 * Creates, populates and returns a StoryComponentPanel visually
-	 * representing the current state of the StoryComponent.  If we're 
-	 * editing an activity, then we don't render the title line to avoid confusion
-	 * This information will be contained in the implicit panel.
+	 * representing the current state of the StoryComponent. If we're editing an
+	 * activity, then we don't render the title line to avoid confusion This
+	 * information will be contained in the implicit panel.
+	 * 
 	 * @param component
 	 * @param editable
 	 * @param collapsed
 	 * @return
 	 */
-	public StoryComponentPanel buildStoryComponentPanel(StoryComponent component, boolean isEditingActivity) {
+	public StoryComponentPanel buildStoryComponentPanel(
+			StoryComponent component, boolean isEditingActivity) {
 		final StoryComponentPanel panel = new StoryComponentPanel(component);
 		this.isEditingActivity = isEditingActivity;
-		
+
 		if (component != null) {
 			component.process(componentProcessor(panel));
 			panel.setTransferHandler(StoryComponentPanelTransferHandler
@@ -503,11 +505,11 @@ public class StoryComponentPanelFactory {
 		return new StoryAdapter() {
 			@Override
 			public void processStoryPoint(StoryPoint storyPoint) {
-				final String tutorialUri = "http://webdocs.cs.ualberta.ca/~script/nwntutorials/";
+				final String tutorialUri = "http://webdocs.cs.ualberta.ca/~script/";
 				final String tutorialText = "Click here to access tutorials and other information on the ScriptEase II web site.";
 				final String welcomeText = "Welcome to ScriptEase II!";
 				final String getStartedText = "Add some nodes to the start node to get started. If you don't know how, use the help menu.";
-				final String noAddText = "No Causes can be added to the Start Story Point.  Please select a different Story Point.";
+				final String noAddText = "No Causes can be added to the Start Story Point. Please select a different Story Point.";
 				final int fontSize = 18;
 
 				// Add an expansion button
@@ -530,24 +532,25 @@ public class StoryComponentPanelFactory {
 				// Add a BindingWidget for the StoryPoint
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
 
-				if (storyPoint.isRoot()
-						&& storyPoint.getSuccessors().size() == 0) {
+				if (storyPoint.isRoot()) {
 					mainPanel.setLayout(new BoxLayout(mainPanel,
 							BoxLayout.PAGE_AXIS));
 
-					mainPanel.add(welcomeLabel);
-					mainPanel.add(getStartedLabel);
+					if (storyPoint.getSuccessors().size() == 0) {
+						mainPanel.add(welcomeLabel);
+						mainPanel.add(Box.createVerticalStrut(10));
+						mainPanel.add(getStartedLabel);
+					} else {
+						mainPanel.add(noAddLabel);
+
+					}
+
+					mainPanel.add(Box.createVerticalStrut(10));
 					mainPanel.add(tutorialButton);
-
-				} else if (storyPoint.isRoot()) {
-					mainPanel.setLayout(new BoxLayout(mainPanel,
-							BoxLayout.PAGE_AXIS));
-					mainPanel.add(noAddLabel);
 				} else {
 					// Add the children panels
 					addChildrenPanels(storyPoint, panel);
 				}
-
 			}
 
 			@Override
@@ -625,12 +628,12 @@ public class StoryComponentPanelFactory {
 
 				final JPanel mainPanel;
 				mainPanel = new JPanel();
-				
-				if (!(StoryComponentPanelFactory.this.isEditingActivity)){
-					//Right here is where we want to detect if we're currently editing an activity.
+
+				if (!(StoryComponentPanelFactory.this.isEditingActivity)) {
+					// Right here is where we want to detect if we're currently
+					// editing an activity.
 					parseDisplayText(mainPanel, complex, true);
 				}
-
 
 				// Add a label for the complex story component
 				panel.add(mainPanel, StoryComponentPanelLayoutManager.MAIN);
