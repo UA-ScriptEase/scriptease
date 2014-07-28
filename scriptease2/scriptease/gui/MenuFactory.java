@@ -186,7 +186,6 @@ public class MenuFactory {
 			newCause = new JMenuItem(NewCauseAction.getInstance());
 			newEffect = new JMenuItem(NewEffectAction.getInstance());
 			newDescription = new JMenuItem(NewDescriptionAction.getInstance());
-			newBehaviour = new JMenuItem(NewBehaviourAction.getInstance());
 			newActivity = new JMenuItem(NewActivityAction.getInstance());
 
 			newMenu.add(NewStoryModelAction.getInstance());
@@ -194,7 +193,10 @@ public class MenuFactory {
 			newMenu.add(newCause);
 			newMenu.add(newEffect);
 			newMenu.add(newDescription);
-			newMenu.add(newBehaviour);
+			if (!ScriptEase.is250Release()) {
+				newBehaviour = new JMenuItem(NewBehaviourAction.getInstance());
+				newMenu.add(newBehaviour);
+			}
 			newMenu.add(newActivity);
 			newMenu.addSeparator();
 
