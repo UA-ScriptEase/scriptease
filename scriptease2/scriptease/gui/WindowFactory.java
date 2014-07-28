@@ -91,7 +91,7 @@ public final class WindowFactory {
 	private static final String ABOUT_SCRIPTEASE_TITLE = "About ScriptEase II";
 
 	public static final String ABOUT_SCRIPTEASE_MESSAGE = "<html><b><font size=\"4\">ScriptEase II</font></b><br>"
-			+ "<font size=\"2\">Version: Beta "
+			+ "<font size=\"2\">Version: "
 			+ ScriptEase.getInstance().getVersion()
 			+ "<br>Revision: "
 			+ ScriptEase.getInstance().getCommitHash()
