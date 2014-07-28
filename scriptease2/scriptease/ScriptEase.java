@@ -48,7 +48,7 @@ import scriptease.util.FileOp;
 public final class ScriptEase implements Runnable {
 	// Set to true to hide stuff we don't want people to see
 	private static final boolean SE250RELEASE = true;
- 
+
 	// property and configuration keys
 	public static final String LOOK_AND_FEEL_KEY = "UseJavaUI";
 	public static final String TITLE = "ScriptEase II";
@@ -175,7 +175,7 @@ public final class ScriptEase implements Runnable {
 	public static ScriptEase getInstance() {
 		return ScriptEase.instance;
 	}
-	
+
 	public static boolean is250Release() {
 		return SE250RELEASE;
 	}
