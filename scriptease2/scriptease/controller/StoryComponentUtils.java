@@ -15,6 +15,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -156,6 +157,22 @@ public class StoryComponentUtils {
 		}
 
 		return (StoryPoint) parent;
+	}
+
+	/**
+	 * Returns the activity that contains the component if one exists.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public static ActivityIt getActivityIt(StoryComponent component) {
+		StoryComponent parent = component.getOwner();
+
+		while (parent != null && !(parent instanceof ActivityIt)) {
+			parent = parent.getOwner();
+		}
+
+		return (ActivityIt) parent;
 	}
 
 	/**

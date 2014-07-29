@@ -177,8 +177,7 @@ public class ScriptIt extends ComplexStoryComponent implements TypedComponent,
 						KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
 
 						for (KnowIt activityParam : component.getParameters()) {
-							if (uninitialized.getValue()
-									.getOriginalDisplayText()
+							if (uninitialized.getValue().getDisplayText()
 									.equals(activityParam.getDisplayText())) {
 								uninitialized = new KnowItBindingUninitialized(
 										new KnowItBindingReference(

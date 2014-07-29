@@ -41,6 +41,8 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
@@ -152,7 +154,7 @@ public class ScriptWidgetFactory {
 	 * @return
 	 */
 	public static JComponent buildObservedNameLabel(
-			StoryComponent storyComponent) {
+			final StoryComponent storyComponent) {
 		final JLabel nameLabel;
 
 		nameLabel = ScriptWidgetFactory.buildLabel(storyComponent
@@ -168,6 +170,93 @@ public class ScriptWidgetFactory {
 				}
 			}
 		});
+
+		if (storyComponent instanceof KnowIt) {
+			final KnowIt knowIt = (KnowIt) storyComponent;
+			final KnowItBinding binding = knowIt.getBinding();
+
+			if (binding instanceof KnowItBindingUninitialized) {
+				final KnowItBindingUninitialized uninit;
+				final KnowIt refKnowIt;
+				final Runnable changeText;
+
+				uninit = (KnowItBindingUninitialized) binding;
+				refKnowIt = uninit.getValue();
+				changeText = new Runnable() {
+					@Override
+					public void run() {
+						final KnowItBinding srcBinding = refKnowIt.getBinding();
+
+						srcBinding.process(new BindingAdapter() {
+							@Override
+							public void processNull(
+									KnowItBindingNull nullBinding) {
+								nameLabel.setText(refKnowIt.getDisplayText());
+							}
+
+							@Override
+							public void processReference(
+									KnowItBindingReference reference) {
+								nameLabel.setText(reference.getValue()
+										.getDisplayText());
+							}
+
+							@Override
+							public void processResource(
+									KnowItBindingResource constant) {
+								nameLabel
+										.setText(constant.getValue().getName());
+							}
+
+							@Override
+							public void processAutomatic(
+									KnowItBindingAutomatic automatic) {
+								System.err.println("IDK HOW TO DO THIS dba31");
+							}
+
+							@Override
+							public void processFunction(
+									KnowItBindingFunction function) {
+								System.err.println("IDK HOW TO DO THIS dfa62");
+							}
+
+							public void processStoryGroup(
+									KnowItBindingStoryGroup storyGroup) {
+								nameLabel.setText(storyGroup.getValue()
+										.getDisplayText());
+							};
+
+							@Override
+							public void processStoryPoint(
+									KnowItBindingStoryPoint storyPoint) {
+								nameLabel.setText(storyPoint.getValue()
+										.getDisplayText());
+							}
+
+							public void processUninitialized(
+									KnowItBindingUninitialized uninitialized) {
+								nameLabel.setText(uninitialized.getValue()
+										.getDisplayText());
+							};
+						});
+
+					}
+				};
+
+				changeText.run();
+
+				refKnowIt
+						.addStoryComponentObserver(new StoryComponentObserver() {
+							@Override
+							public void componentChanged(
+									StoryComponentEvent event) {
+								if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+									changeText.run();
+								}
+							}
+						});
+			}
+		}
 
 		return nameLabel;
 	}
