@@ -24,10 +24,4 @@ public class ActivityItConverter extends ScriptItConverter {
 			UnmarshallingContext context, LibraryModel library) {
 		return new ActivityIt(library, "");
 	}
-
-	@Override
-	public ActivityIt unmarshal(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return (ActivityIt) super.unmarshal(reader, context);
-	}
 }
