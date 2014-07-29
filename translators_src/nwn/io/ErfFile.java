@@ -947,6 +947,9 @@ public final class ErfFile extends GameModule {
 			throw new FileNotFoundException("Missing nwmain.exe");
 
 		argsList = new ArrayList<String>();
+		
+		argsList.add("cmd");
+		argsList.add("/c");
 		argsList.add(nwnExec.getAbsolutePath());
 		argsList.add("+TestNewModule");
 		argsList.add(FileOp.removeExtension(this.location).getName());
