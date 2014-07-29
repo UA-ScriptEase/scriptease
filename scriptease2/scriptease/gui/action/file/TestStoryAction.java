@@ -113,13 +113,16 @@ public final class TestStoryAction extends ActiveModelSensitiveAction {
 					winMan.showProblemDialog("Missing Game Files",
 							"I can't run the game, because it seems to be missing a file. \n"
 									+ fnfEx.getMessage());
+					fnfEx.printStackTrace();
 				} catch (IOException ioEx) {
 					winMan.showProblemDialog("Game Died",
 							"There was a problem starting the game engine. Sorry about that.");
+					ioEx.printStackTrace();
 				} catch (UnsupportedOperationException nopeEx) {
 					winMan.showProblemDialog(
 							"I can't do that, Dave.",
 							"This translator doesn't actually support testing, sorry.\n\nThe translator author was supposed to tell me that in the translator.ini file.");
+					nopeEx.printStackTrace();
 				}
 				StatusManager.getInstance()
 						.setTemp("Finished testing " + title);
