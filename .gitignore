@@ -39,6 +39,7 @@ translators_src/*/bin
 translators_src/*/build
 translators_src/*/zip
 translators_src/*/*.zip
+translators_src/*/.settings/org.eclipse.jdt.core.prefs
 
 # and while we're at it, don't allow anything in the installed translators directory into the repo. 
 # Translator development stuff should go into translators_src
