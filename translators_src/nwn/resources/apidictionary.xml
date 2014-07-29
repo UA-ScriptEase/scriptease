@@ -24857,17 +24857,13 @@
                   <Types>
                     <Type>Text</Type>
                   </Types>
-                  <Binding flavour="reference">
+                  <Binding flavour="uninitialized">
                     <KnowIt>
                       <Name>Text</Name>
                       <Labels/>
                       <Types>
                         <Type>Text</Type>
                       </Types>
-                      <Binding flavour="constant">
-                        <Type>Text</Type>
-                        <Value></Value>
-                      </Binding>
                     </KnowIt>
                   </Binding>
                 </KnowIt>

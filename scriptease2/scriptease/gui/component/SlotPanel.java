@@ -179,7 +179,7 @@ public class SlotPanel extends JPanel {
 			public void processUninitialized(
 					KnowItBindingUninitialized uninitialized) {
 				bindingWidget.add(ScriptWidgetFactory
-						.buildObservedNameLabel(uninitialized.getValue()));
+						.buildObservedNameLabel(this.knowIt));
 			}
 
 			@Override

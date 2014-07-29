@@ -51,7 +51,7 @@ public abstract class StoryComponentConverter implements Converter {
 			XMLNode.VISIBLE.writeBoolean(writer, visible);
 		if (!enabled)
 			XMLNode.ENABLED.writeBoolean(writer, enabled);
-		
+
 		// We need to write these so we break at the right moment when we load.
 		XMLNode.LABELS.writeChildren(writer, labels);
 	}
@@ -142,10 +142,6 @@ public abstract class StoryComponentConverter implements Converter {
 		comp.addLabels(labels);
 		comp.setVisible(visible);
 		comp.setEnabled(enabled);
-
-		if (comp instanceof KnowIt) {
-			((KnowIt) comp).setOriginalDisplayText(displayText);
-		}
 
 		return comp;
 	}

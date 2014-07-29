@@ -4,27 +4,18 @@ import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
-import scriptease.controller.StoryAdapter;
 import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.undo.UndoManager;
-import scriptease.gui.component.BindingWidget;
-import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
-import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
-import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
-import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
-import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.ComplexStoryComponent;
-import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModelManager;
 
 /**
@@ -182,199 +173,6 @@ public class SlotPanelTransferHandler extends BindingWidgetTransferHandler {
 
 		// Get the KnowItBindingWidget being transferred.
 		sourceBinding = this.extractBinding(support);
-
-		// Update the text of all usages of the imported KnowIt if it is an
-		// Activity Parameter
-		if (knowIt.getOwner().getOwner() instanceof ActivityIt) {
-			final ActivityIt activityIt = (ActivityIt) knowIt.getOwner()
-					.getOwner();
-			final List<StoryComponent> children = activityIt.getChildren();
-
-			for (StoryComponent child : children) {
-				child.process(new StoryAdapter() {
-
-					@Override
-					public void processScriptIt(ScriptIt scriptIt) {
-						this.defaultProcessComplex(scriptIt);
-						scriptIt.processParameters(this);
-					}
-
-					@Override
-					public void processKnowIt(KnowIt childKnowIt) {
-						final KnowItBinding binding = childKnowIt.getBinding();
-
-						if (binding instanceof KnowItBindingFunction) {
-							final KnowItBindingFunction function = (KnowItBindingFunction) binding;
-
-							function.getValue().process(this);
-
-						} else if (binding instanceof KnowItBindingUninitialized) {
-							KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) binding;
-
-							for (KnowIt activityParam : activityIt
-									.getParameters()) {
-								if (uninitialized
-										.getValue()
-										.getOriginalDisplayText()
-										.equals(activityParam
-												.getOriginalDisplayText())) {
-									if (sourceBinding instanceof KnowItBindingResource
-											&& activityParam
-													.getOriginalDisplayText()
-													.equals(knowIt
-															.getOriginalDisplayText())) {
-
-										uninitialized
-												.getValue()
-												.setDisplayText(
-														((KnowItBindingResource) sourceBinding)
-																.getName());
-									} else if (sourceBinding instanceof KnowItBindingReference) {
-										KnowItBindingReference ref = (KnowItBindingReference) sourceBinding;
-										if (activityParam
-												.getOriginalDisplayText()
-												.equals(knowIt
-														.getOriginalDisplayText())) {
-											uninitialized
-													.getValue()
-													.setDisplayText(
-															ref.getValue()
-																	.getDisplayText());
-										}
-									}
-								}
-							}
-						} else if (binding instanceof KnowItBindingReference) {
-							KnowItBindingReference ref = (KnowItBindingReference) binding;
-							for (KnowIt activityParam : activityIt
-									.getParameters()) {
-								if (ref.getValue()
-										.getOriginalDisplayText()
-										.equals(activityParam
-												.getOriginalDisplayText())) {
-									// Construct a new
-									// KnowItBindingUninitialized we will use
-									// for the activity
-									BindingWidget uninitializedWidget = ScriptWidgetFactory
-											.buildBindingWidget(new KnowItBindingUninitialized(
-													new KnowItBindingReference(
-															activityParam)));
-									KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) uninitializedWidget
-											.getBinding();
-									uninitialized
-											.getValue()
-											.setOriginalDisplayText(
-													activityParam
-															.getOriginalDisplayText());
-
-									if (sourceBinding instanceof KnowItBindingReference) {
-										KnowItBindingReference sourceRef = (KnowItBindingReference) sourceBinding;
-										uninitialized
-												.getValue()
-												.setDisplayText(
-														sourceRef
-																.getValue()
-																.getDisplayText());
-
-									} else if (sourceBinding instanceof KnowItBindingResource) {
-										KnowItBindingResource sourceRes = (KnowItBindingResource) sourceBinding;
-										uninitialized.getValue()
-												.setDisplayText(
-														sourceRes.getName());
-									}
-
-									childKnowIt.setBinding(uninitialized);
-								}
-							}
-						} else if (binding instanceof KnowItBindingResource) {
-							KnowItBindingResource res = (KnowItBindingResource) binding;
-							for (KnowIt activityParam : activityIt
-									.getParameters()) {
-								if (res.getOriginalParameterText().equals(
-										activityParam.getOriginalDisplayText())) {
-									// Construct a new
-									// KnowItBindingUninitialized we will use
-									// for the activity
-									BindingWidget uninitializedWidget = ScriptWidgetFactory
-											.buildBindingWidget(new KnowItBindingUninitialized(
-													new KnowItBindingReference(
-															activityParam)));
-									KnowItBindingUninitialized uninitialized = (KnowItBindingUninitialized) uninitializedWidget
-											.getBinding();
-									uninitialized
-											.getValue()
-											.setOriginalDisplayText(
-													activityParam
-															.getOriginalDisplayText());
-
-									if (sourceBinding instanceof KnowItBindingReference) {
-										KnowItBindingReference sourceRef = (KnowItBindingReference) sourceBinding;
-										uninitialized
-												.getValue()
-												.setDisplayText(
-														sourceRef
-																.getValue()
-																.getDisplayText());
-
-									} else if (sourceBinding instanceof KnowItBindingResource) {
-										KnowItBindingResource sourceRes = (KnowItBindingResource) sourceBinding;
-										uninitialized.getValue()
-												.setDisplayText(
-														sourceRes.getName());
-									}
-
-									childKnowIt.setBinding(uninitialized);
-
-								}
-
-							}
-						}
-					}
-
-					@Override
-					protected void defaultProcessComplex(
-							ComplexStoryComponent complex) {
-						for (StoryComponent child : complex.getChildren()) {
-							child.process(this);
-						}
-					}
-				});
-			}
-		} else {
-			// If we're dragging an object into something that's not an Activity
-			// parameter
-			// Then we should update the new object's original display text to
-			// match whatever used to be there.
-			// This will allow us to put real binding widgets into activities
-			// and let them be overwritten if one re-adds the parameter
-
-			String pastOriginalDisplayText = "";
-
-			if (knowIt.getBinding() instanceof KnowItBindingUninitialized) {
-				// This is the case where we're dragging on top of an Activity
-				// Parameter Usage
-				KnowIt pastKnowIt = (KnowIt) knowIt.getBinding().getValue();
-				pastOriginalDisplayText = pastKnowIt.getOriginalDisplayText();
-			} else if (knowIt.getBinding() instanceof KnowItBindingResource) {
-				KnowItBindingResource res = (KnowItBindingResource) knowIt
-						.getBinding();
-				pastOriginalDisplayText = res.getOriginalParameterText();
-			} else if (knowIt.getBinding() instanceof KnowItBindingReference) {
-				KnowItBindingReference ref = (KnowItBindingReference) knowIt
-						.getBinding();
-				pastOriginalDisplayText = ref.getValue()
-						.getOriginalDisplayText();
-			}
-
-			if (sourceBinding instanceof KnowItBindingResource) {
-				((KnowItBindingResource) sourceBinding)
-						.setOriginalParameterText(pastOriginalDisplayText);
-			} else if (sourceBinding instanceof KnowItBindingReference) {
-				((KnowItBindingReference) sourceBinding).getValue()
-						.setOriginalDisplayText(pastOriginalDisplayText);
-			}
-
-		}
 
 		// Set the history to the active model
 		UndoManager.getInstance().setActiveHistory(
