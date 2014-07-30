@@ -181,6 +181,7 @@ public class LibraryPanel extends JTabbedPane {
 		final StoryComponentPanelJList controlsList;
 		final StoryComponentPanelJList blocksList;
 		final StoryComponentPanelJList activitiesList;
+		final StoryComponentPanelJList behavioursList;
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
@@ -189,7 +190,8 @@ public class LibraryPanel extends JTabbedPane {
 				Category.EFFECTS));
 		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.DESCRIPTIONS));
-
+		behavioursList = new StoryComponentPanelJList(new CategoryFilter(
+				Category.BEHAVIOURS));
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
 				Category.CONTROLS));
 		activitiesList = new StoryComponentPanelJList(new CategoryFilter(
@@ -200,7 +202,7 @@ public class LibraryPanel extends JTabbedPane {
 		this.storyComponentPanelJLists.add(causesList);
 		this.storyComponentPanelJLists.add(effectsList);
 		this.storyComponentPanelJLists.add(descriptionsList);
-
+		this.storyComponentPanelJLists.add(behavioursList);
 		this.storyComponentPanelJLists.add(controlsList);
 		this.storyComponentPanelJLists.add(activitiesList);
 		this.storyComponentPanelJLists.add(blocksList);
@@ -208,17 +210,8 @@ public class LibraryPanel extends JTabbedPane {
 		this.add("Causes", this.createTab(causesList));
 		this.add("Effects", this.createTab(effectsList));
 		this.add("Descriptions", this.createTab(descriptionsList));
-
-		if (!ScriptEase.is250Release()) {
-			final StoryComponentPanelJList behavioursList;
-
-			behavioursList = new StoryComponentPanelJList(new CategoryFilter(
-					Category.BEHAVIOURS));
-
-			this.storyComponentPanelJLists.add(behavioursList);
+		if (!ScriptEase.is250Release())
 			this.add("Behaviours", this.createTab(behavioursList));
-		}
-
 		this.add("Controls", this.createTab(controlsList));
 		this.add("Activities", this.createTab(activitiesList));
 		this.add("Blocks", this.createTab(blocksList));
@@ -230,7 +223,6 @@ public class LibraryPanel extends JTabbedPane {
 		this.setMnemonicAt(3, KeyEvent.VK_4);
 		this.setMnemonicAt(4, KeyEvent.VK_5);
 		this.setMnemonicAt(5, KeyEvent.VK_6);
-
 		if (!ScriptEase.is250Release())
 			this.setMnemonicAt(6, KeyEvent.VK_7);
 
@@ -598,38 +590,19 @@ public class LibraryPanel extends JTabbedPane {
 				components = libraryModel.getDescriptionsCategory()
 						.getChildren();
 			} else if (index == 3) {
-				if (ScriptEase.is250Release())
-					components = libraryModel.getControllersCategory()
-							.getChildren();
-				else
-					components = libraryModel.getBehavioursCategory()
-							.getChildren();
-
+				components = libraryModel.getBehavioursCategory().getChildren();
 			} else if (index == 4) {
-				if (ScriptEase.is250Release())
-					components = libraryModel.getActivitysCategory()
-							.getChildren();
-				else
-					components = libraryModel.getControllersCategory()
-							.getChildren();
-
+				components = libraryModel.getControllersCategory()
+						.getChildren();
 			} else if (index == 5) {
-				if (ScriptEase.is250Release())
-					components = libraryModel.getControllersCategory()
-							.getChildren();
-				else
-					components = libraryModel.getActivitysCategory()
-							.getChildren();
+				components = libraryModel.getActivitysCategory().getChildren();
 			} else if (index == 6) {
-				if (ScriptEase.is250Release())
-					throw new IllegalArgumentException(
-							"Invalid list in LibraryPanel: " + list);
-				else
-					components = libraryModel.getControllersCategory()
-							.getChildren();
-			} else
+				components = libraryModel.getControllersCategory()
+						.getChildren();
+			} else {
 				throw new IllegalArgumentException(
 						"Invalid list in LibraryPanel: " + list);
+			}
 
 			Collections.sort(components,
 					LibraryPanel.STORY_COMPONENT_COMPARATOR);
