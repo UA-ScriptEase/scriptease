@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -790,41 +788,6 @@ public final class FileManager {
 		this.openFiles.put(location, library);
 
 		return library;
-	}
-
-	/**
-	 * Loads the tutorials for the provided translator.
-	 * 
-	 * @param translator
-	 * @return
-	 */
-	public Collection<File> loadTutorials(Translator translator) {
-		final List<File> files = new ArrayList<File>();
-
-		final File location;
-
-		location = translator.getPathProperty(DescriptionKeys.TUTORIALS_PATH);
-
-		if (location == null)
-			return files;
-
-		if (location.isDirectory()) {
-			for (File file : location.listFiles())
-				files.add(file);
-		} else
-			throw new IllegalStateException(
-					"Tried to retrieve tutorials from an invalid directory: "
-							+ location.getAbsolutePath());
-
-		Collections.sort(files, new Comparator<File>() {
-
-			@Override
-			public int compare(File file1, File file2) {
-				return file1.getName().compareTo(file2.getName());
-			}
-		});
-
-		return files;
 	}
 
 	/**
