@@ -45,8 +45,8 @@ public class SaveModelWithoutCodeAction extends ActiveModelSensitiveAction {
 		this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
 		this.putValue(
 				Action.ACCELERATOR_KEY,
-				KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK
-						+ ActionEvent.SHIFT_MASK));
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK
+						+ ActionEvent.ALT_MASK));
 	}
 
 	@Override
