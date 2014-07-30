@@ -96,7 +96,7 @@ public class Translator extends SEModel {
 		// Mandatory keys
 		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH, VERSION,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH, TUTORIALS_PATH;
+		SUPPORTED_FILE_EXTENSIONS, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH;
 
 		public static final String FALSE = "false";
 		private static final String DIRECTORY = "directory";
@@ -117,8 +117,6 @@ public class Translator extends SEModel {
 
 	// either the location of the jar, or the location of the description file.
 	private final File location;
-
-	private final Collection<File> tutorials;
 
 	/**
 	 * Builds a new Translator from the given translator Jar or description
@@ -193,7 +191,6 @@ public class Translator extends SEModel {
 					+ " is not an instance of GameModule");
 		}
 
-		this.tutorials = FileManager.getInstance().loadTutorials(this);
 		this.languageDictionary = FileManager.getInstance()
 				.openLanguageDictionary(this);
 
@@ -282,15 +279,6 @@ public class Translator extends SEModel {
 		}
 
 		return new URLClassLoader(urlSourceLocations.toArray(new URL[0]));
-	}
-
-	/**
-	 * Returns the tutorials for this translator.
-	 * 
-	 * @return
-	 */
-	public Collection<File> getTutorials() {
-		return this.tutorials;
 	}
 
 	/**
