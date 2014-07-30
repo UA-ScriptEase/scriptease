@@ -70,7 +70,7 @@ public class NewBehaviourAction extends ActiveModelSensitiveAction {
 
 			codeBlock = new CodeBlockSource(library);
 
-			code.add(new FormatReferenceFragment("behaviour"));
+			code.add(new FormatReferenceFragment("queueLatentBehaviour"));
 
 			codeBlock.setCode(code);
 			codeBlock.setTypesByName(ListOp

@@ -16,7 +16,7 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.gui.pane.ResourcePanel;
-import scriptease.gui.transfer.SlotPanelTransferHandler;
+import scriptease.gui.transfer.BindingWidgetTransferHandler;
 import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
@@ -87,8 +87,9 @@ public class SlotPanel extends JPanel {
 	}
 
 	/**
-	 * Updates the border of a SlotPanel which corresponds to a specified Resource.
-	 * The border will be green if it matches and white (invisible) otherwise.
+	 * Updates the border of a SlotPanel which corresponds to a specified
+	 * Resource. The border will be green if it matches and white (invisible)
+	 * otherwise.
 	 */
 	public void updateSelectedResourceBorder(final Resource selected) {
 		knowIt.getBinding().process(new BindingAdapter() {
@@ -259,7 +260,7 @@ public class SlotPanel extends JPanel {
 		}
 
 		if (enabled) {
-			this.setTransferHandler(SlotPanelTransferHandler.getInstance());
+			this.setTransferHandler(BindingWidgetTransferHandler.getInstance());
 			this.removeMouseListener(MouseForwardingAdapter.getInstance());
 			this.removeMouseMotionListener(MouseForwardingAdapter.getInstance());
 		} else {
