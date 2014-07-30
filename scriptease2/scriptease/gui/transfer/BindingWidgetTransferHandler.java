@@ -56,6 +56,14 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 								+ BindingWidget.class.getCanonicalName());
 
 			} catch (ClassNotFoundException e) {
+				try {
+					KnowItBindingFlavor = new DataFlavor(
+							DataFlavor.javaJVMLocalObjectMimeType + ";class="
+									+ SlotPanel.class.getCanonicalName());
+				} catch (ClassNotFoundException e2) {
+					e2.printStackTrace();
+
+				}
 				e.printStackTrace();
 			}
 		}
@@ -76,12 +84,11 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	@Override
 	protected Transferable createTransferable(JComponent source) {
 		// component should be a BindingWidget.
-		if (!(source instanceof BindingWidget)) {
-			throw new IllegalArgumentException(
-					"The given JComponent was not a Widget.");
-		}
+		if (!(source instanceof BindingWidget)
+				&& !(source instanceof SlotPanel))
+			throw new IllegalArgumentException("The given JComponent, "
+					+ source + " was not compatible.");
 
-		// Return the binding for the BindingWidget.
 		return new BindingTransferable((BindingWidget) source);
 	}
 
@@ -130,31 +137,24 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// Check the destination.
 		// If the destination component is a BindingWidget, and the Transferable
 		// is a BindingTransferable.
-		final Component destinationComponent = support.getComponent();
+		final KnowIt knowIt = this.getKnowIt(support);
 
-		if (destinationComponent instanceof BindingWidget
+		if (knowIt != null
 				&& support.isDataFlavorSupported(KnowItBindingFlavor)) {
 			// Get the destination KnowIt
-			final KnowIt destinationKnowIt;
-			final KnowItBinding sourceBinding;
 
-			destinationKnowIt = (KnowIt) ScriptWidgetFactory
-					.getEditedStoryComponent(destinationComponent.getParent());
-			sourceBinding = this.extractBinding(support);
+			final KnowItBinding binding = this.extractBinding(support);
 
 			// Special case for KnowItBindingUninitialized - they
 			// shouldn't be dragged into their own referenced KnowIt
-			if (sourceBinding instanceof KnowItBindingUninitialized) {
-				final KnowItBindingUninitialized uninit = (KnowItBindingUninitialized) sourceBinding;
-				if (uninit.getValue() == destinationKnowIt)
+			if (binding instanceof KnowItBindingUninitialized) {
+				final KnowItBindingUninitialized uninit = (KnowItBindingUninitialized) binding;
+				if (uninit.getValue() == knowIt)
 					return false;
 
 				// the destinationKnowIt should also be a child of the component
 				// that has the value the KnowItBindingUninitialized is
 				// referencing.
-
-				// TODO ScriptIt KnowIts don't know their owners right
-				// now...can't do this.
 
 				StoryComponent owner = uninit.getValue().getOwner();
 				while (!(owner instanceof ComplexStoryComponent))
@@ -166,7 +166,7 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 					final List<StoryComponent> descendants = complex
 							.getDescendentStoryComponents();
 
-					StoryComponent destOwner = destinationKnowIt.getOwner();
+					StoryComponent destOwner = knowIt.getOwner();
 					while (!(destOwner instanceof ComplexStoryComponent))
 						destOwner = destOwner.getOwner();
 
@@ -176,25 +176,32 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 			}
 
 			// Check that the KnowItBinding type matches the destination KnowIt
-			if (sourceBinding != null && destinationKnowIt != null) {
-				if (sourceBinding.compatibleWith(destinationKnowIt)) {
+			if (binding != null && knowIt != null) {
+				if (binding.compatibleWith(knowIt)) {
 					canImport = true;
 				}
 			}
+
 		}
 
 		// Special case - to handle where effects, descriptions, and controls
 		// can be dragged over binding widgets in order to get re-directed to
 		// their parent block.
-		canImport |= StoryComponentTransferUtils.canImportToParent(support);
+		return canImport |= StoryComponentTransferUtils
+				.canImportToParent(support);
+	}
 
-		if (canImport) {
-			// TODO Set mouse pointer to normal
-		} else {
-			// TODO Set mouse pointer to invalid operation.
+	protected KnowIt getKnowIt(TransferSupport support) {
+		final Component destinationComponent = support.getComponent();
+
+		if (destinationComponent instanceof BindingWidget) {
+			return (KnowIt) ScriptWidgetFactory
+					.getEditedStoryComponent(destinationComponent.getParent());
+		} else if (destinationComponent instanceof SlotPanel) {
+			return ((SlotPanel) destinationComponent).getKnowIt();
 		}
 
-		return canImport;
+		return null;
 	}
 
 	protected static boolean lastDragShiftDown = false;
@@ -213,92 +220,82 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 	 */
 	@Override
 	public boolean importData(TransferSupport support) {
-		final BindingWidget destinationComponent;
-		final KnowIt destinationKnowIt;
-
 		// Make sure this import is legal.
 		if (!canImport(support)) {
 			return false;
-		}
-
-		// Some other component is being dragged over the binding widget
-		// but of course, it isn't a binding widget and shouldn't fit
-		// the slot - so lets handle it.
-		if (support
+		} else if (support
 				.isDataFlavorSupported(StoryComponentPanelTransferHandler.storyCompFlavour)) {
+			// Some other component is being dragged over the binding widget
+			// but of course, it isn't a binding widget and shouldn't fit
+			// the slot - so lets handle it.
 			return StoryComponentTransferUtils.importToParent(support);
 		}
 
-		// Get the destination component for the transfer.
-		destinationComponent = (BindingWidget) support.getComponent();
-		// Get the KnowIt for the destination.
-		destinationKnowIt = (KnowIt) ScriptWidgetFactory
-				.getEditedStoryComponent(destinationComponent.getParent());
+		final KnowIt knowIt;
 
-		final KnowItBinding sourceBinding;
-		// Get the source data from the Transferable.
-		sourceBinding = this.extractBinding(support);
+		knowIt = this.getKnowIt(support);
 
 		// Set the history to the active model
 		UndoManager.getInstance().setActiveHistory(
 				SEModelManager.getInstance().getActiveModel());
-		if (sourceBinding != null) {
-			// Bind the KnowIt with the source binding.
-			KnowItBinding binding = destinationKnowIt.getBinding();
-			if (binding != sourceBinding) {
-				if (!UndoManager.getInstance().hasOpenUndoableAction())
-					UndoManager.getInstance().startUndoableAction(
-							"Set Binding " + sourceBinding);
 
-				if (BindingWidgetTransferHandler.lastDragShiftDown)
-					setGroupBindings(sourceBinding, destinationKnowIt, binding);
+		final KnowItBinding sourceBinding = this.extractBinding(support);
+		final KnowItBinding binding = knowIt.getBinding();
 
-				final ActivityIt activity = StoryComponentUtils
-						.getActivityIt(destinationKnowIt);
+		if (sourceBinding == null || binding == sourceBinding)
+			return false;
 
-				if (activity != null) {
-					KnowIt existing = null;
-					// dest = activity
-					for (KnowIt param : activity.getParameters()) {
-						if (param.getBinding() == sourceBinding) {
-							existing = param;
-							break;
-						}
-					}
+		if (!UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().startUndoableAction(
+					"Set Binding " + sourceBinding);
 
-					if (existing != null) {
-						destinationKnowIt
-								.setBinding(new KnowItBindingUninitialized(
-										new KnowItBindingReference(existing)));
-					} else
-						destinationKnowIt.setBinding(sourceBinding);
+		if (BindingWidgetTransferHandler.lastDragShiftDown)
+			setGroupBindings(sourceBinding, knowIt, binding);
+
+		final ActivityIt activity = StoryComponentUtils.getActivityIt(knowIt);
+
+		if (activity != null) {
+			KnowIt existing = null;
+			// dest = activity
+			for (KnowIt param : activity.getParameters()) {
+				if (param.getBinding() == sourceBinding) {
+					existing = param;
+					break;
 				}
-
-				else
-					destinationKnowIt.setBinding(sourceBinding);
-
-				// Check if the source binding is disabled. If it is, we should
-				// disable this component too.
-				if (this.isWidgetOwnerDisabled(support)) {
-					destinationKnowIt.disableOwner();
-				}
-
-				this.repopulateParentOf(destinationComponent);
-
-				if (UndoManager.getInstance().hasOpenUndoableAction())
-					UndoManager.getInstance().endUndoableAction();
 			}
-			return true;
+
+			if (existing != null) {
+				knowIt.setBinding(new KnowItBindingUninitialized(
+						new KnowItBindingReference(existing)));
+			} else
+				knowIt.setBinding(sourceBinding);
+		} else
+			knowIt.setBinding(sourceBinding);
+
+		// Check if the source binding is disabled. If it is, we should
+		// disable this component too.
+		if (this.isWidgetOwnerDisabled(support)) {
+			knowIt.disableOwner();
 		}
-		return false;
+
+		repopulateParentOf((JComponent) support.getComponent());
+
+		if (UndoManager.getInstance().hasOpenUndoableAction())
+			UndoManager.getInstance().endUndoableAction();
+
+		return true;
 	}
 
 	protected void repopulateParentOf(JComponent destinationComponent) {
-		final Container parent;
-		parent = destinationComponent.getParent();
+		if (destinationComponent instanceof SlotPanel)
+			((SlotPanel) destinationComponent).populate();
+		else {
+			final Container parent;
+			parent = destinationComponent.getParent();
 
-		if (parent != null && parent instanceof SlotPanel) {
-			((SlotPanel) parent).populate();
+			if (parent != null && parent instanceof SlotPanel) {
+				((SlotPanel) parent).populate();
+			}
 		}
 	}
 
