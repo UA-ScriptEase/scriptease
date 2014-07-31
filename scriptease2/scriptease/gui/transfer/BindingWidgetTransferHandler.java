@@ -103,7 +103,6 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// Only un-bind the source KnowIt if it was not a move operation (NONE
 		// action)
 		if (action == TransferHandler.NONE) {
-
 			// Get the KnowIt for the Widget.
 			final KnowIt toRemove = (KnowIt) ScriptWidgetFactory
 					.getEditedStoryComponent(component.getParent());
