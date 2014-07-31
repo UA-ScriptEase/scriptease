@@ -50,14 +50,20 @@ public class KnowItConverter extends StoryComponentConverter {
 			UnmarshallingContext context) {
 		final KnowIt knowIt;
 		final Collection<String> typeNames;
-		final KnowItBinding binding;
+
+		KnowItBinding binding;
 
 		knowIt = (KnowIt) super.unmarshal(reader, context);
 		typeNames = XMLNode.TYPES.readStringCollection(reader);
 
 		if (reader.hasMoreChildren()) {
-			binding = XMLNode.BINDING.readObject(reader, context,
-					KnowItBinding.class);
+			try {
+				binding = XMLNode.BINDING.readObject(reader, context,
+						KnowItBinding.class);
+			} catch (Exception e) {
+				System.err.println("Binding read error for " + knowIt);
+				binding = null;
+			}
 
 			// Check if a DescribeIt exists for the binding. If so, map it
 			if (binding instanceof KnowItBindingFunction) {

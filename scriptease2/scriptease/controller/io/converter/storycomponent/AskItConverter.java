@@ -43,7 +43,6 @@ public class AskItConverter extends ComplexStoryComponentConverter {
 
 			condition = XMLNode.KNOWIT
 					.readObject(reader, context, KnowIt.class);
-
 			askIt.setCondition(condition);
 		} else {
 			System.err.println("Missing condition for AskIt \""
