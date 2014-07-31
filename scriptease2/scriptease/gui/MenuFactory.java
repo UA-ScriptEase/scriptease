@@ -1,12 +1,15 @@
 package scriptease.gui;
 
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +53,6 @@ import scriptease.gui.action.libraryeditor.NewEffectAction;
 import scriptease.gui.action.metrics.MetricsAction;
 import scriptease.gui.action.preferences.StoryPropertiesAction;
 import scriptease.gui.action.system.ExitScriptEaseAction;
-import scriptease.gui.action.tutorials.OpenTutorialAction;
 import scriptease.gui.action.undo.RedoAction;
 import scriptease.gui.action.undo.UndoAction;
 import scriptease.gui.internationalization.Il8nResources;
@@ -317,68 +319,26 @@ public class MenuFactory {
 		return editMenu;
 	}
 
-	/**
-	 * Adds menus for each of the tutorial files. If the file is a directory,
-	 * the files within it are recursively added.
-	 * 
-	 * @param tutorials
-	 * @param parentMenu
-	 */
-	private static void addTutorialMenus(Collection<File> tutorials,
-			JMenu parentMenu) {
-
-		for (final File tutorial : tutorials) {
-			if (tutorial.isDirectory()) {
-				final JMenu tutorialMenu;
-				tutorialMenu = new JMenu(tutorial.getName());
-
-				final List<File> tuts = new ArrayList<File>();
-				for (File tut : tutorial.listFiles()) {
-					tuts.add(tut);
-				}
-				Collections.sort(tuts);
-				MenuFactory.addTutorialMenus(tuts, tutorialMenu);
-				parentMenu.add(tutorialMenu);
-			} else {
-				final JMenuItem tutorialItem;
-				tutorialItem = new JMenuItem(new OpenTutorialAction(tutorial));
-				parentMenu.add(tutorialItem);
-			}
-		}
-	}
-
 	private static JMenu buildHelpMenu() {
 		final JMenu menu = new JMenu(MenuFactory.HELP);
 
 		menu.setMnemonic(KeyEvent.VK_H);
-
-		final List<Translator> translators;
-		final List<JMenuItem> translatorItems;
+		
 		final JMenuItem sendFeedbackItem;
 		final JMenuItem sendBugReportItem;
 		final JMenuItem helpMenuItem;
-
-		translators = new ArrayList<Translator>(TranslatorManager.getInstance()
-				.getTranslators());
-		translatorItems = new ArrayList<JMenuItem>();
+		final JMenuItem nwnTutorialsItem;
+		final JMenuItem unityTutorialsItem;
+		final String nwnTutorialsUri = "http://webdocs.cs.ualberta.ca/~script/nwntutorials/";
+		final String unityTutorialsUri = "http://webdocs.cs.ualberta.ca/~script/unity-tutorials/";
+		
 		sendFeedbackItem = new JMenuItem("Send Feedback");
 		sendBugReportItem = new JMenuItem("Send Bug Report");
 		helpMenuItem = new JMenuItem(
 				Il8nResources.getString("About_ScriptEase"));
+		nwnTutorialsItem = new JMenuItem("NWN Tutorials");
+		unityTutorialsItem = new JMenuItem("Unity Tutorials");
 
-		Collections.sort(translators);
-
-		for (Translator translator : translators) {
-			final JMenu translatorItem;
-			final Collection<File> tutorials;
-
-			translatorItem = new JMenu(translator.getName());
-			tutorials = translator.getTutorials();
-
-			MenuFactory.addTutorialMenus(tutorials, translatorItem);
-
-			translatorItems.add(translatorItem);
-		}
 
 		sendFeedbackItem.addActionListener(new ActionListener() {
 			@Override
@@ -400,15 +360,42 @@ public class MenuFactory {
 				WindowFactory.getInstance().showAboutScreen();
 			}
 		});
-
+		nwnTutorialsItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Desktop.getDesktop().browse(new URI(nwnTutorialsUri));
+				} catch (IOException ex) {
+					System.err.println("Could not launch default browser.");
+				} catch (URISyntaxException ex) {
+					System.err.println(nwnTutorialsUri
+							+ " URI did not have expected syntax.");
+				}
+			}
+		});
+		unityTutorialsItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Desktop.getDesktop().browse(new URI(unityTutorialsUri));
+				} catch (IOException ex) {
+					System.err.println("Could not launch default browser.");
+				} catch (URISyntaxException ex) {
+					System.err.println(unityTutorialsUri
+							+ " URI did not have expected syntax.");
+				}
+			}
+		});
+	
 		sendFeedbackItem.setMnemonic(KeyEvent.VK_F);
 		sendBugReportItem.setMnemonic(KeyEvent.VK_R);
 		helpMenuItem.setMnemonic(KeyEvent.VK_A);
-
-		for (JMenuItem translatorItem : translatorItems) {
-			menu.add(translatorItem);
-		}
-
+		nwnTutorialsItem.setMnemonic(KeyEvent.VK_T);
+		unityTutorialsItem.setMnemonic(KeyEvent.VK_U);
+		
+		menu.add(nwnTutorialsItem);
+		menu.add(unityTutorialsItem);
+		
 		menu.addSeparator();
 
 		menu.add(sendFeedbackItem);
