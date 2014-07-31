@@ -306,8 +306,7 @@ public final class ScriptEase implements Runnable {
 	}
 
 	private void checkDebugging() {
-		ScriptEase.DEBUG_MODE = Boolean.parseBoolean(this
-				.getPreference(ScriptEase.DEBUG_KEY));
+		ScriptEase.DEBUG_MODE = Boolean.parseBoolean(this.getPreference(ScriptEase.DEBUG_KEY));
 	}
 
 	private void loadConfigurations() {
