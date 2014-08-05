@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
+import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.GameType;
@@ -138,6 +140,25 @@ public class StoryPoint extends StoryNode {
 	@Override
 	public int hashCode() {
 		return super.hashCode() + this.getUniqueID();
+	}
+
+	@Override
+	public boolean addStoryChild(StoryComponent newChild) {
+		final boolean addChild = super.addStoryChild(newChild);
+
+		if (addChild && newChild instanceof CauseIt) {
+			for (StoryComponent child : ((CauseIt) newChild).getChildren()) {
+				if (child instanceof KnowIt
+						&& child.getDisplayText().equals("Is Active")) {
+					final KnowIt description = (KnowIt) child;
+
+					((ScriptIt) description.getBinding().getValue())
+							.getParameter("Story Point").setBinding(this);
+				}
+			}
+		}
+
+		return addChild;
 	}
 
 	/**
