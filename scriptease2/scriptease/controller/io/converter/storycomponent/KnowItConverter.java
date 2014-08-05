@@ -57,13 +57,8 @@ public class KnowItConverter extends StoryComponentConverter {
 		typeNames = XMLNode.TYPES.readStringCollection(reader);
 
 		if (reader.hasMoreChildren()) {
-			try {
-				binding = XMLNode.BINDING.readObject(reader, context,
-						KnowItBinding.class);
-			} catch (Exception e) {
-				System.err.println("Binding read error for " + knowIt);
-				binding = null;
-			}
+			binding = XMLNode.BINDING.readObject(reader, context,
+					KnowItBinding.class);
 
 			// Check if a DescribeIt exists for the binding. If so, map it
 			if (binding instanceof KnowItBindingFunction) {

@@ -123,7 +123,7 @@ public class StoryComponentPanel extends JPanel implements
 	}
 
 	/**
-	 * TODO Note that the editable property may not work for all components.
+	 * Sets whether the current component is allowed to be edited.
 	 * 
 	 * @param editable
 	 */

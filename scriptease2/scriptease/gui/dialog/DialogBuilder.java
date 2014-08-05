@@ -65,7 +65,7 @@ public class DialogBuilder {
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			if (value instanceof Translator)
-				value = ((Translator) value).getName();
+				value = ((Translator) value).getTitle();
 
 			return super.getListCellRendererComponent(list, value, index,
 					isSelected, cellHasFocus);

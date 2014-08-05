@@ -25,7 +25,6 @@ public class TaskContext extends ComplexStoryComponentContext {
 
 	@Override
 	public Collection<Task> getTaskChildren() {
-		// TODO SORT BY PROBABILITY!!!
 		final List<Task> children;
 
 		children = new ArrayList<Task>(this.getComponent().getSuccessors());

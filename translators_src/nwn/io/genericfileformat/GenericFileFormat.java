@@ -400,7 +400,8 @@ public class GenericFileFormat {
 			// Stupid special case. I think they added it in a patch or
 			// something, because some placeables don't have it, and it's not
 			// mentioned in the official docs. But it's definitely there.
-			if (field == null && this.getScriptEaseType().equalsIgnoreCase("placeable"))
+			if (field == null
+					&& this.getScriptEaseType().equalsIgnoreCase("placeable"))
 				continue;
 			else if (field == null) {
 				throw new NullPointerException("Null Field found for " + this
@@ -1178,7 +1179,9 @@ public class GenericFileFormat {
 			final Collection<Slot> slots;
 			final Collection<String> slotNames = new ArrayList<String>();
 
-			// TODO This only gets the slots of the default library.
+			// This only gets the slots of the default library. But this is fine
+			// since we are only using their names to remove stuff from NWN
+			// slots, which are all defined in there anyways.
 			slots = ErfFile.getTranslator().getLibrary().getSlots();
 
 			for (Slot slot : slots) {

@@ -169,7 +169,8 @@ public final class PanelFactory {
 			@Override
 			public void translatorLoaded(Translator newTranslator) {
 				if (newTranslator != null) {
-					currentTranslatorNameLabel.setText(newTranslator.getName());
+					currentTranslatorNameLabel
+							.setText(newTranslator.getTitle());
 					currentTranslatorNameLabel.setEnabled(true);
 					currentTranslatorNameLabel.setIcon(newTranslator.getIcon());
 				} else {

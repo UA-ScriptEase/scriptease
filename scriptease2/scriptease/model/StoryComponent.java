@@ -476,7 +476,6 @@ public abstract class StoryComponent implements Cloneable {
 		});
 	}
 
-	// TODO Refactor this ugliness once it works
 	public void setLibrary(LibraryModel library) {
 		this.library = library;
 	}

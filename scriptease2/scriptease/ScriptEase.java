@@ -144,7 +144,6 @@ public final class ScriptEase implements Runnable {
 		Thread.setDefaultUncaughtExceptionHandler(ScriptEaseExceptionHandler
 				.getInstance());
 
-		// TODO: actually use the user's locale
 		Il8nResources.init(Locale.getDefault());
 
 		this.configuration = new Properties();
@@ -306,7 +305,8 @@ public final class ScriptEase implements Runnable {
 	}
 
 	private void checkDebugging() {
-		ScriptEase.DEBUG_MODE = Boolean.parseBoolean(this.getPreference(ScriptEase.DEBUG_KEY));
+		ScriptEase.DEBUG_MODE = Boolean.parseBoolean(this
+				.getPreference(ScriptEase.DEBUG_KEY));
 	}
 
 	private void loadConfigurations() {

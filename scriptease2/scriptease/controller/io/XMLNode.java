@@ -216,8 +216,6 @@ public enum XMLNode {
 	}
 
 	private XMLNode(String name, XMLNode child) {
-		// TODO If we need multiple child types, make the parameter
-		// "XMLNode... children" and handle appropriately.
 		this.name = name;
 		this.child = child;
 	}

@@ -59,7 +59,7 @@ public class StoryModelConverter implements Converter {
 		XMLAttribute.AUTHOR.write(writer, model.getAuthor());
 		XMLAttribute.DESCRIPTION.write(writer, model.getDescription());
 		XMLNode.VERSION.writeString(writer, model.getCompatibleVersion());
-		XMLNode.TRANSLATOR.writeString(writer, model.getTranslator().getName());
+		XMLNode.TRANSLATOR.writeString(writer, model.getTranslator().getTitle());
 		XMLNode.OPTIONAL_LIBRARIES.writeChildren(writer, libraryNames);
 		XMLNode.GAME_MODULE.writeString(writer, modulePath);
 		XMLNode.DIALOGUES
@@ -137,13 +137,13 @@ public class StoryModelConverter implements Converter {
 
 			if (library == null) {
 				System.err.println("Could not find optional library "
-						+ libraryName + " for " + translator.getName());
+						+ libraryName + " for " + translator.getTitle());
 
 				WindowFactory.getInstance().showWarningDialog(
 						"Library Not Found",
 						"The library with the name " + libraryName
 								+ " was not found in the "
-								+ translator.getName()
+								+ translator.getTitle()
 								+ " translator's optional library directory. "
 								+ "\nPlease add the library and reload "
 								+ "the story, or save the story to "
