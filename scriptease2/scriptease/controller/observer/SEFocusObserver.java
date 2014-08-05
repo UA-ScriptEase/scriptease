@@ -16,7 +16,8 @@ import scriptease.gui.SEFocusManager;
 public interface SEFocusObserver {
 
 	/**
-	 * Fired when the current component gains focus.
+	 * Fired when the current component gains focus.  We pass in the old focus in case we need to 
+	 * use it, because the new focus can always be calculated via SEFocusManager.
 	 * 
 	 * @param oldFocus
 	 *            The previously focused on component
