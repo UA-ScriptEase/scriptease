@@ -330,7 +330,10 @@ class ResourceTree extends JPanel {
 		}
 
 		private void setVisibleDeep(Resource resource, boolean visible) {
-			this.resourcesToPanels.get(resource).setVisible(visible);
+			final JPanel panel = this.resourcesToPanels.get(resource);
+
+			if (panel != null)
+				panel.setVisible(visible);
 
 			for (Resource child : resource.getChildren()) {
 				this.setVisibleDeep(child, visible);
@@ -706,8 +709,6 @@ class ResourceTree extends JPanel {
 					}
 				}
 			});
-			
-
 
 			childPanel.setVisible(false);
 
