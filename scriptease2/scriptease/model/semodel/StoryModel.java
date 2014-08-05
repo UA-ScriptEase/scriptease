@@ -225,6 +225,23 @@ public final class StoryModel extends SEModel {
 				}
 			}
 
+			// This adds the "is active" description if we don't have a 
+			// current active description
+			if (isActiveDescription == null) {
+				outer: for (LibraryModel existingLibrary : this.getLibraries()) {
+					for (StoryComponent description : existingLibrary
+							.getDescriptionsCategory().getChildren()) {
+
+						if (description instanceof KnowIt
+								&& description.getDisplayText().contains(
+										"Is Active")) {
+							isActiveDescription = (KnowIt) description;
+							break outer;
+						}
+					}
+				}
+			}
+
 			// Add the active description and question to optional library
 			// causes. We have to do this here instead of the apidictionary
 			// because optional libraries do not have the is active description.
