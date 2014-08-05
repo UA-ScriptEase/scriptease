@@ -501,7 +501,7 @@ public class MenuFactory {
 					translator.getOptionalLibraries());
 			libraries = new ArrayList<LibraryModel>();
 
-			translatorMenu = new JMenu(translator.getName());
+			translatorMenu = new JMenu(translator.getTitle());
 			newLibrary = new JMenuItem("New Library...");
 			mergeLibraries = new JMenuItem("Edit Translator");
 			newLibrary.addActionListener(new ActionListener() {

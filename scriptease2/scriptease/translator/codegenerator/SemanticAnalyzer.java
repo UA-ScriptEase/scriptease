@@ -19,6 +19,7 @@ import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryPoint;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
 
@@ -124,12 +125,19 @@ public class SemanticAnalyzer extends StoryAdapter {
 		 * codegen time
 		 */
 		if (!binding.explicitlyCompatibleWith(knowIt)) {
+			ScriptIt scriptIt = null;
+
+			for (LibraryModel library : TranslatorManager.getInstance()
+					.getActiveTranslator().getLibraries()) {
+				final TypeConverter converter = library.getTypeConverter();
+				scriptIt = converter.convert(knowIt);
+
+				if (scriptIt != null)
+					break;
+			}
 			// TODO we aren't checking optional libraries that may be loaded.
-			final TypeConverter converter = TranslatorManager.getInstance()
-					.getActiveTranslator().getLibrary().getTypeConverter();
-			final ScriptIt doIt = converter.convert(knowIt);
-			if (doIt != null)
-				doIt.process(SemanticAnalyzer.this);
+			if (scriptIt != null)
+				scriptIt.process(SemanticAnalyzer.this);
 		}
 	}
 

@@ -86,6 +86,6 @@ public class TranslatorFilter extends StoryComponentFilter {
 		if (this.translator == null)
 			return "TranslatorFilter for null Translator";
 		else
-			return "TranslatorFilter [" + this.translator.getName() + "]";
+			return "TranslatorFilter [" + this.translator.getTitle() + "]";
 	}
 }

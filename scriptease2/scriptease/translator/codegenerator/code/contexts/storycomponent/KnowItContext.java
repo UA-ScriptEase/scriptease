@@ -8,6 +8,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingStoryPoint;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.codegenerator.CodeGenerationException;
@@ -76,13 +77,19 @@ public class KnowItContext extends StoryComponentContext {
 		} else {
 			// the binding type isn't a listed type for this KnowIt, so try to
 			// convert it
-			final TypeConverter converter;
-			final ScriptIt scriptIt;
+
+			ScriptIt scriptIt = null;
 
 			// TODO We aren't checking optional libraries that may be loaded...
-			converter = TranslatorManager.getInstance().getActiveTranslator()
-					.getLibrary().getTypeConverter();
-			scriptIt = converter.convert(knowIt);
+			for (LibraryModel library : TranslatorManager.getInstance()
+					.getActiveTranslator().getLibraries()) {
+				final TypeConverter converter = library.getTypeConverter();
+				
+				scriptIt = converter.convert(knowIt);
+
+				if (scriptIt != null)
+					break;
+			}
 
 			if (scriptIt != null) {
 				final Context scriptItContext;

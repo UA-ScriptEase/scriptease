@@ -578,7 +578,7 @@ public final class FileManager {
 					.showWarningDialog(
 							"Compiler not found",
 							"I couldn't find the compiler for "
-									+ translator.getName()
+									+ translator.getTitle()
 									+ ".\n\nCheck that the compiler path in the \"translator.ini\" file"
 									+ " in the translator directory is correct."
 									+ "\nRestart ScriptEase after saving."

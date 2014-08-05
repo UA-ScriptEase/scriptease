@@ -526,10 +526,6 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 */
 	public void add(StoryComponent component) {
 		component.process(this.categoryAdder);
-
-		// TODO Could just make "categoryadder" a method or something in
-		// here..."
-
 		this.notifyChange(component, LibraryEvent.Type.ADDITION);
 	}
 

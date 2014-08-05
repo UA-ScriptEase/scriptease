@@ -227,10 +227,6 @@ public class NWNResource implements Comparable<NWNResource> {
 		final short type = this.key.getResType();
 		final boolean rightType;
 
-		// TODO: Determine this based on a saved resref list in the the module's
-		// associated story file. That way we're not guessing: we know exactly
-		// which are generated.
-
 		rightType = type == ErfKey.SCRIPT_COMPILED_TYPE
 				|| type == ErfKey.SCRIPT_SOURCE_TYPE;
 

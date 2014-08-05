@@ -199,10 +199,6 @@ public class LibraryModelConverter implements Converter {
 	 */
 	private void addDefaultCauseChildren(LibraryModel library,
 			Collection<CauseIt> causes) {
-
-		if (library.getTitle().contains("Path")) {
-			System.out.println(library.getTitle());
-		}
 		final Collection<CauseIt> automatics = library
 				.getAutomatics(GameModule.AUTOMATIC);
 
@@ -221,10 +217,10 @@ public class LibraryModelConverter implements Converter {
 					break;
 				}
 			}
-			
-			if(activeDescription == null)  {
-				for (StoryComponent description : library.getDescriptionsCategory()
-						.getChildren()) {
+
+			if (activeDescription == null) {
+				for (StoryComponent description : library
+						.getDescriptionsCategory().getChildren()) {
 					if (description instanceof KnowIt
 							&& description.getDisplayText().contains(
 									"Is Active")) {
@@ -233,10 +229,10 @@ public class LibraryModelConverter implements Converter {
 					}
 				}
 			}
-			
-			if(activeDescription != null) {
+
+			if (activeDescription != null) {
 				final AskIt askIt = LibraryModel.createAskIt();
-				
+
 				cause.addStoryChild(activeDescription);
 				cause.addStoryChild(askIt);
 				askIt.getCondition().setBinding(activeDescription);

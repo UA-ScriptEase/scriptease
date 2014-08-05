@@ -189,7 +189,7 @@ public class TranslatorManager {
 					.showProblemDialog(
 							"Invalid translator",
 							"There's a validation problem with the "
-									+ newTranslator.getName()
+									+ newTranslator.getTitle()
 									+ " translator, so I can't use it. \n\nProblem:\n"
 									+ validationMessage
 									+ "\n\n"
@@ -221,7 +221,7 @@ public class TranslatorManager {
 	 */
 	public Translator getTranslator(String name) {
 		for (Translator translator : this.translatorPool) {
-			if (translator.getName().equalsIgnoreCase(name))
+			if (translator.getTitle().equalsIgnoreCase(name))
 				return translator;
 		}
 
