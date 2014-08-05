@@ -11,7 +11,7 @@ package io.constants;
  * that is specific to Unity generated types.
  */
 public enum UnityType {
-	GAMEOBJECT(1, "Game Object"),
+	GAMEOBJECT(1, "GameObject"),
 
 	COMPONENT(2, "Component"),
 
