@@ -61,6 +61,8 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 				PasteAction.this.updateEnabledState();
 			}
 		});
+		
+		PasteAction.this.updateEnabledState();
 	}
 
 	/**
@@ -91,9 +93,7 @@ public final class PasteAction extends ActiveModelSensitiveAction {
 					.getValue(graph.getLastSelectedNode());
 
 			isLegal = selectedComponent.getTransferHandler().canImport(
-					new TransferSupport(selectedComponent, Toolkit
-							.getDefaultToolkit().getSystemClipboard()
-							.getContents(this)));
+					new TransferSupport(selectedComponent, Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this)));
 		} else {
 			isLegal = false;
 		}
