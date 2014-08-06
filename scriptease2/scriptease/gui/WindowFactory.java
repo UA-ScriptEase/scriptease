@@ -65,6 +65,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
+import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.Translator;
 import scriptease.util.ListOp;
 import scriptease.util.StringOp;
@@ -739,7 +740,15 @@ public final class WindowFactory {
 			chooser.setCurrentDirectory(directoryPath);
 		else
 			chooser.setCurrentDirectory(lastChoicePath);
-
+		
+		if(SEModelManager.getInstance().getActiveModel() instanceof LibraryModel){
+			if (((LibraryModel) SEModelManager.getInstance().getActiveModel()).getTranslator().getTitle().equals("Neverwinter Nights")){
+				chooser.setCurrentDirectory(new File("." + File.separator + "translators" + File.separator + "nwn" + File.separator + "resources" + File.separator + "libraries"));
+			} else if (((LibraryModel) SEModelManager.getInstance().getActiveModel()).getTranslator().getTitle().equals("Unity")){
+				chooser.setCurrentDirectory(new File("." + File.separator + "translators" + File.separator + "unity" + File.separator + "libraries"));
+			}
+		}
+		
 		// clear the selected file (since it shows up by default and isn't
 		// usually the correct extension)
 		chooser.setSelectedFile(new File(defaultFileName));
