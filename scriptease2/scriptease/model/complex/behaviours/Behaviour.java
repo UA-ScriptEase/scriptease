@@ -28,7 +28,6 @@ public class Behaviour extends ScriptIt {
 	public static final String INDEPENDENT_DISPLAY_TEXT = "<Initiator> does action with priority <Priority>";
 	public static final String PRIORITY_TEXT = "Priority";
 
-	private Task startTask;
 	private Type type;
 
 	public enum Type {
@@ -59,8 +58,6 @@ public class Behaviour extends ScriptIt {
 		this.registerChildType(CollaborativeTask.class, MAX_NUM_OF_ONE_TYPE);
 	}
 
-	// ******************* GETTERS AND SETTERS **********************//
-
 	/**
 	 * @return the priority
 	 */
@@ -89,7 +86,7 @@ public class Behaviour extends ScriptIt {
 	 * @return the startTask
 	 */
 	public Task getStartTask() {
-		return startTask;
+		return (Task) this.getChildAt(0);
 	}
 
 	/**
@@ -97,22 +94,24 @@ public class Behaviour extends ScriptIt {
 	 *            the startTask to set
 	 */
 	public void setStartTask(Task startTask) {
-		if (startTask == this.startTask)
+		if (startTask == this.getStartTask())
 			return;
 
 		// remove old start task child
 		this.clearStoryChildren();
 
+		final Task newTask;
+
 		if (startTask == null) {
 			if (type == Type.INDEPENDENT) {
-				this.startTask = new IndependentTask(this.getLibrary());
+				newTask = new IndependentTask(this.getLibrary());
 			} else {
-				this.startTask = new CollaborativeTask(this.getLibrary());
+				newTask = new CollaborativeTask(this.getLibrary());
 			}
 		} else
-			this.startTask = startTask;
+			newTask = startTask;
 
-		this.addStoryChild(this.startTask);
+		this.addStoryChild(newTask);
 	}
 
 	/**
