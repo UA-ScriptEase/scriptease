@@ -163,8 +163,8 @@ public class CodeBlockPanel extends JPanel {
 
 		// Set up the layout
 		this.setLayout(codeBlockEditorLayout);
-		this.setBorder(new TitledBorder("Code Block #"
-				+ scriptIt.getCodeBlocks().indexOf(codeBlock)));
+		this.setBorder(new TitledBorder("Code Block "
+				+ (scriptIt.getCodeBlocks().indexOf(codeBlock) + 1)));
 		this.setBackground(Color.WHITE);
 
 		codeBlockEditorLayout.setAutoCreateGaps(true);
