@@ -12,11 +12,17 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
 import scriptease.controller.observer.storycomponent.StoryComponentObserver;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.Note;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
+import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
+import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.util.StringOp;
 
 /**
  * Abstract Class that defines all pattern-related model components in
@@ -51,6 +57,63 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * @author jyuen
  */
 public abstract class StoryComponent implements Cloneable {
+	/**
+	 * This is the user-facing type for story components.
+	 * 
+	 * @author kschenk
+	 * 
+	 */
+	public enum Type {
+		CAUSE("Cause"), EFFECT("Effect"), DESCRIPTION("Description"), BLOCK(
+				"Block"), ACTIVITY("Activity", "Activities"), CONTROL("Control"), BEHAVIOUR(
+				"Behaviour"), NOTE("Note");
+
+		private final String readableName;
+		private final String pluralName;
+
+		private Type(String readableName) {
+			this(readableName, "");
+		}
+
+		private Type(String readableName, String pluralName) {
+			this.readableName = readableName;
+			this.pluralName = pluralName;
+		}
+
+		public String getReadableName() {
+			return this.readableName;
+		}
+
+		public String getReadableNamePlural() {
+			if (StringOp.exists(pluralName))
+				return this.pluralName;
+			else
+				return this.readableName + "s";
+		}
+
+		public static Type getType(StoryComponent component) {
+			if (component instanceof CauseIt)
+				return CAUSE;
+			else if (component instanceof ActivityIt)
+				return ACTIVITY;
+			else if (component instanceof Note)
+				return NOTE;
+			else if (component instanceof Behaviour)
+				return BEHAVIOUR;
+			else if (component instanceof ControlIt)
+				if (((ControlIt) component).getFormat() == ControlIt.ControlItFormat.BLOCK)
+					return BLOCK;
+				else
+					return CONTROL;
+			else if (component instanceof KnowIt)
+				return DESCRIPTION;
+			else if (component instanceof ScriptIt)
+				return EFFECT;
+			else
+				return null;
+		}
+	}
+
 	private String description;
 	private String displayText;
 	private Set<String> labels;

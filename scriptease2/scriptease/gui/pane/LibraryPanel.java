@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -36,7 +39,6 @@ import scriptease.controller.observer.library.LibraryObserver;
 import scriptease.gui.action.typemenus.TypeAction;
 import scriptease.gui.component.ComponentFactory;
 import scriptease.gui.filters.CategoryFilter;
-import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.filters.StoryComponentFilter;
 import scriptease.gui.filters.StoryComponentSearchFilter;
 import scriptease.gui.filters.TranslatorFilter;
@@ -68,10 +70,11 @@ import scriptease.util.ListOp;
  */
 @SuppressWarnings("serial")
 public class LibraryPanel extends JTabbedPane {
+
 	private static final Comparator<StoryComponent> STORY_COMPONENT_COMPARATOR = LibraryPanel
 			.storyComponentSorter();
 
-	private final List<StoryComponentPanelJList> storyComponentPanelJLists;
+	private final Map<StoryComponent.Type, StoryComponentPanelJList> categoryLists;
 	private final Collection<LibraryModel> libraries;
 
 	private static final LibraryPanel mainLibraryPanel;
@@ -171,7 +174,7 @@ public class LibraryPanel extends JTabbedPane {
 	 * 
 	 */
 	public LibraryPanel() {
-		this.storyComponentPanelJLists = new ArrayList<StoryComponentPanelJList>();
+		this.categoryLists = new LinkedHashMap<StoryComponent.Type, StoryComponentPanelJList>();
 		this.libraries = new ArrayList<LibraryModel>();
 
 		final StoryComponentPanelJList causesList;
@@ -185,36 +188,34 @@ public class LibraryPanel extends JTabbedPane {
 
 		// Create the Tree with the root and the default filter
 		causesList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.CAUSES));
+				StoryComponent.Type.CAUSE));
 		effectsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.EFFECTS));
+				StoryComponent.Type.EFFECT));
 		descriptionsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.DESCRIPTIONS));
-		behavioursList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.BEHAVIOURS));
+				StoryComponent.Type.DESCRIPTION));
 		controlsList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.CONTROLS));
+				StoryComponent.Type.CONTROL));
 		activitiesList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.ACTIVITIES));
+				StoryComponent.Type.ACTIVITY));
 		blocksList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.BLOCKS));
+				StoryComponent.Type.BLOCK));
+		behavioursList = new StoryComponentPanelJList(new CategoryFilter(
+				StoryComponent.Type.BEHAVIOUR));
 
-		this.storyComponentPanelJLists.add(causesList);
-		this.storyComponentPanelJLists.add(effectsList);
-		this.storyComponentPanelJLists.add(descriptionsList);
-		this.storyComponentPanelJLists.add(behavioursList);
-		this.storyComponentPanelJLists.add(controlsList);
-		this.storyComponentPanelJLists.add(activitiesList);
-		this.storyComponentPanelJLists.add(blocksList);
-
-		this.add("Causes", this.createTab(causesList));
-		this.add("Effects", this.createTab(effectsList));
-		this.add("Descriptions", this.createTab(descriptionsList));
+		this.categoryLists.put(StoryComponent.Type.CAUSE, causesList);
+		this.categoryLists.put(StoryComponent.Type.EFFECT, effectsList);
+		this.categoryLists.put(StoryComponent.Type.DESCRIPTION,
+				descriptionsList);
+		this.categoryLists.put(StoryComponent.Type.ACTIVITY, activitiesList);
 		if (!ScriptEase.is250Release())
-			this.add("Behaviours", this.createTab(behavioursList));
-		this.add("Controls", this.createTab(controlsList));
-		this.add("Activities", this.createTab(activitiesList));
-		this.add("Blocks", this.createTab(blocksList));
+			this.categoryLists.put(StoryComponent.Type.BEHAVIOUR,
+					behavioursList);
+		this.categoryLists.put(StoryComponent.Type.CONTROL, controlsList);
+		this.categoryLists.put(StoryComponent.Type.BLOCK, blocksList);
+
+		for (StoryComponent.Type type : this.categoryLists.keySet()) {
+			this.add(type.getReadableNamePlural(), this.createTab(type));
+		}
 
 		// Set up Hotkeys
 		this.setMnemonicAt(0, KeyEvent.VK_1);
@@ -290,9 +291,10 @@ public class LibraryPanel extends JTabbedPane {
 	 * @param list
 	 * @return
 	 */
-	private JPanel createTab(final StoryComponentPanelJList list) {
+	private JPanel createTab(final StoryComponent.Type type) {
 		final JPanel tabPanel;
 		final JScrollPane listScroll;
+		final StoryComponentPanelJList list;
 
 		final Timer searchFieldTimer;
 
@@ -302,6 +304,7 @@ public class LibraryPanel extends JTabbedPane {
 
 		final TypeAction typeAction;
 
+		list = this.categoryLists.get(type);
 		tabPanel = new JPanel();
 		listScroll = new JScrollPane(list);
 		filterPane = new JPanel();
@@ -319,7 +322,7 @@ public class LibraryPanel extends JTabbedPane {
 
 				list.removeAllStoryComponents();
 
-				updateList(list, (Timer) arg0.getSource());
+				updateList(type, (Timer) arg0.getSource());
 			};
 		});
 
@@ -348,7 +351,7 @@ public class LibraryPanel extends JTabbedPane {
 
 				list.removeAllStoryComponents();
 
-				updateList(list, searchFieldTimer);
+				updateList(type, searchFieldTimer);
 			}
 		});
 
@@ -376,7 +379,7 @@ public class LibraryPanel extends JTabbedPane {
 
 				list.removeAllStoryComponents();
 
-				updateList(list);
+				updateList(type);
 			}
 		});
 
@@ -402,32 +405,32 @@ public class LibraryPanel extends JTabbedPane {
 				.createLineBorder(ScriptEaseUI.SE_BLACK));
 
 		// Configure the displaying of the pane
-		this.updateList(list);
+		this.updateList(type);
 
 		return tabPanel;
 	}
 
 	public void addStoryComponentPanelJListObserver(
 			StoryComponentPanelJListObserver observer) {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+		for (StoryComponentPanelJList list : this.categoryLists.values()) {
 			list.addObserver(observer);
 		}
 	}
 
 	public void addStoryComponentPanelJListObserver(Object object,
 			StoryComponentPanelJListObserver observer) {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+		for (StoryComponentPanelJList list : this.categoryLists.values()) {
 			list.addObserver(object, observer);
 		}
 	}
 
 	public void updateFilter(StoryComponentFilter filter) {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.updateFilter(filter);
+		for (Entry<StoryComponent.Type, StoryComponentPanelJList> entry : this.categoryLists
+				.entrySet()) {
+			entry.getValue().updateFilter(filter);
+			entry.getValue().removeAllStoryComponents();
 
-			list.removeAllStoryComponents();
-
-			updateList(list);
+			updateList(entry.getKey());
 		}
 	}
 
@@ -438,9 +441,7 @@ public class LibraryPanel extends JTabbedPane {
 	 * @param changed
 	 */
 	private void updateElement(StoryComponent changed) {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.updateStoryComponentPanel(changed);
-		}
+		this.getList(changed).updateStoryComponentPanel(changed);
 	}
 
 	/**
@@ -450,17 +451,24 @@ public class LibraryPanel extends JTabbedPane {
 	 * @param component
 	 */
 	private void navigateToComponent(StoryComponent component) {
-		for (final StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			final int listIndex = list.getIndexOfStoryComponent(component);
-			if (listIndex != -1) {
-				final int tabIndex = this.storyComponentPanelJLists
-						.indexOf(list);
-				this.setSelectedIndex(tabIndex);
-				list.setSelectedIndex(listIndex);
-				list.ensureIndexIsVisible(listIndex);
+		final StoryComponentPanelJList list = this.getList(component);
+
+		int index = 0;
+		for (StoryComponentPanelJList list2 : this.categoryLists.values()) {
+			if (list2 == list)
 				break;
-			}
+			index++;
 		}
+
+		final int listIndex = list.getIndexOfStoryComponent(component);
+
+		this.setSelectedIndex(index);
+		list.setSelectedIndex(listIndex);
+		list.ensureIndexIsVisible(listIndex);
+	}
+
+	private StoryComponentPanelJList getList(StoryComponent component) {
+		return this.categoryLists.get(StoryComponent.Type.getType(component));
 	}
 
 	/**
@@ -468,11 +476,9 @@ public class LibraryPanel extends JTabbedPane {
 	 * 
 	 * @param storyComponent
 	 */
-	private void addElement(StoryComponent storyComponent) {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.addStoryComponent(storyComponent);
-			this.navigateToComponent(storyComponent);
-		}
+	private void addElement(StoryComponent component) {
+		this.getList(component).addStoryComponent(component);
+		this.navigateToComponent(component);
 	}
 
 	/**
@@ -480,10 +486,10 @@ public class LibraryPanel extends JTabbedPane {
 	 * 
 	 * @param storyComponent
 	 */
-	private void removeElement(StoryComponent storyComponent) {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.removeStoryComponent(storyComponent);
-		}
+	private void removeElement(StoryComponent component) {
+		final StoryComponentPanelJList list = this.getList(component);
+		if (list != null)
+			list.removeStoryComponent(component);
 	}
 
 	/**
@@ -544,9 +550,9 @@ public class LibraryPanel extends JTabbedPane {
 	 * @param list
 	 * @param timer
 	 */
-	private void updateList(StoryComponentPanelJList list, Timer timer) {
+	private void updateList(StoryComponent.Type type, Timer timer) {
 		timer.stop();
-		updateList(list);
+		updateList(type);
 	}
 
 	/**
@@ -554,8 +560,9 @@ public class LibraryPanel extends JTabbedPane {
 	 * 
 	 * @param list
 	 */
-	private void updateList(StoryComponentPanelJList list) {
+	private void updateList(StoryComponent.Type type) {
 		final SEModel model = SEModelManager.getInstance().getActiveModel();
+		final StoryComponentPanelJList list = this.categoryLists.get(type);
 
 		final boolean hideInvisible;
 		final Translator translator;
@@ -577,26 +584,24 @@ public class LibraryPanel extends JTabbedPane {
 		list.updateFilter(new TranslatorFilter(translator));
 		list.updateFilter(new VisibilityFilter(hideInvisible));
 
-		final int index = this.storyComponentPanelJLists.indexOf(list);
-
 		for (LibraryModel libraryModel : this.libraries) {
 			final List<StoryComponent> components;
 
-			if (index == 0) {
+			if (type == StoryComponent.Type.CAUSE) {
 				components = libraryModel.getCausesCategory().getChildren();
-			} else if (index == 1) {
+			} else if (type == StoryComponent.Type.EFFECT) {
 				components = libraryModel.getEffectsCategory().getChildren();
-			} else if (index == 2) {
+			} else if (type == StoryComponent.Type.DESCRIPTION) {
 				components = libraryModel.getDescriptionsCategory()
 						.getChildren();
-			} else if (index == 3) {
+			} else if (type == StoryComponent.Type.BEHAVIOUR) {
 				components = libraryModel.getBehavioursCategory().getChildren();
-			} else if (index == 4) {
+			} else if (type == StoryComponent.Type.CONTROL) {
 				components = libraryModel.getControllersCategory()
 						.getChildren();
-			} else if (index == 5) {
+			} else if (type == StoryComponent.Type.ACTIVITY) {
 				components = libraryModel.getActivitysCategory().getChildren();
-			} else if (index == 6) {
+			} else if (type == StoryComponent.Type.BLOCK) {
 				components = libraryModel.getControllersCategory()
 						.getChildren();
 			} else {
@@ -616,9 +621,10 @@ public class LibraryPanel extends JTabbedPane {
 	 * back all components in the list panes.
 	 */
 	private void updateLists() {
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
-			list.removeAllStoryComponents();
-			this.updateList(list);
+		for (Entry<StoryComponent.Type, StoryComponentPanelJList> entry : this.categoryLists
+				.entrySet()) {
+			entry.getValue().removeAllStoryComponents();
+			this.updateList(entry.getKey());
 		}
 	}
 
@@ -629,7 +635,7 @@ public class LibraryPanel extends JTabbedPane {
 	 */
 	public Collection<StoryComponentPanel> getSelected() {
 		final Collection<StoryComponentPanel> panels = new ArrayList<StoryComponentPanel>();
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+		for (StoryComponentPanelJList list : this.categoryLists.values()) {
 			Object[] objects = list.getSelectedValues();
 			for (int i = 0; i < objects.length; i++) {
 				final Object obj = objects[i];
@@ -648,7 +654,7 @@ public class LibraryPanel extends JTabbedPane {
 	 */
 	public Collection<StoryComponentPanel> getSelectedInActiveTab() {
 		final Collection<StoryComponentPanel> panels = new ArrayList<StoryComponentPanel>();
-		for (StoryComponentPanelJList list : this.storyComponentPanelJLists) {
+		for (StoryComponentPanelJList list : this.categoryLists.values()) {
 			for (Component comp : GUIOp.getContainerComponents((Container) this
 					.getSelectedComponent())) {
 				if (comp == list) {
