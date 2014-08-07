@@ -141,15 +141,6 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 				if (library == LibraryModel.getCommonLibrary())
 					continue;
 
-				if (selectedComponent instanceof KnowIt) {
-					final DescribeIt describeIt;
-
-					describeIt = library.getDescribeIt(selectedComponent);
-
-					if (describeIt != null)
-						library.removeDescribeIt(describeIt);
-				}
-
 				library.remove(selectedComponent);
 			}
 
