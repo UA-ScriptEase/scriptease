@@ -385,10 +385,19 @@ class TypeDialogBuilder {
 
 		int objectCount = 0;
 		int size = cbPanels.size();
+
+		int firstLimit = size / 3;
+		int secondLimit = 2 * size / 3;
+		
+		if(size % 3 == 0)  {
+			firstLimit--;
+			secondLimit--;
+		}
+
 		for (CheckBoxPanel gameObjectCBPanel : cbPanels) {
-			if (objectCount <= size / 3)
+			if (objectCount <= firstLimit)
 				subPanel1.add(gameObjectCBPanel);
-			else if (objectCount <= 2 * size / 3)
+			else if (objectCount <= secondLimit)
 				subPanel2.add(gameObjectCBPanel);
 			else
 				subPanel3.add(gameObjectCBPanel);
