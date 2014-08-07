@@ -441,7 +441,10 @@ public class LibraryPanel extends JTabbedPane {
 	 * @param changed
 	 */
 	private void updateElement(StoryComponent changed) {
-		this.getList(changed).updateStoryComponentPanel(changed);
+		final StoryComponentPanelJList list = this.getList(changed);
+
+		if (list != null)
+			list.updateStoryComponentPanel(changed);
 	}
 
 	/**
