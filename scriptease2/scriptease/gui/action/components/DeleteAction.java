@@ -138,6 +138,9 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 
 				library = selectedComponent.getLibrary();
 
+				if (library == LibraryModel.getCommonLibrary())
+					continue;
+
 				if (selectedComponent instanceof KnowIt) {
 					final DescribeIt describeIt;
 
