@@ -359,7 +359,8 @@ public class TranslatorEditorFactory {
 					return;
 
 				final JPanel interiorPanel = new JPanel();
-
+				
+				final Dimension minSize = new Dimension(300, 15);
 				final int FIELD_SIZE = 30;
 				final String BROWSE_TEXT = "Browse";
 
@@ -454,6 +455,9 @@ public class TranslatorEditorFactory {
 						compilerPathTextField, commitCompilePath, false);
 				WidgetDecorator.decorateJTextFieldForFocusEvents(
 						gameDirectoryTextField, commitGameDirectory, false);
+				
+				compilerPathTextField.setMinimumSize(minSize);
+				gameDirectoryTextField.setMinimumSize(minSize);
 
 				compilerCheckBox.addActionListener(new ActionListener() {
 
