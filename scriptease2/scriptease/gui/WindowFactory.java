@@ -252,7 +252,7 @@ public final class WindowFactory {
 	 * @param title
 	 * @return
 	 */
-	public boolean showYesNoConfirmDialog(String message, String title) {
+	public boolean showYesNoConfirmDialog(Object message, String title) {
 		final int option;
 
 		option = JOptionPane.showConfirmDialog(this.mainFrame, message, title,
