@@ -22,9 +22,11 @@ static var storyInitialized:boolean = false;
  */
 static function RegisterRoot(uniqueName:String, fanIn:int) {
 	root = new StoryPoint(uniqueName, fanIn);
-	root.Enable();
-	
+
 	storyInitialized = true;
+
+	root.Enable();
+	root.Succeed();
 }
 
 /**
