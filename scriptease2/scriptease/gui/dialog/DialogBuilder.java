@@ -7,17 +7,20 @@ import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.GroupLayout;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -38,8 +41,12 @@ import scriptease.controller.undo.UndoManager;
 import scriptease.gui.ExceptionDialog;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WindowFactory;
+import scriptease.gui.storycomponentpanel.StoryComponentPanelFactory;
+import scriptease.gui.ui.ScriptEaseUI;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.semodel.SEModelManager;
@@ -49,6 +56,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.Translator.DescriptionKeys;
 import scriptease.translator.TranslatorManager;
 import scriptease.translator.io.model.GameModule;
+import scriptease.util.GUIOp;
 
 /**
  * @author Previous ScriptEase devs
@@ -582,8 +590,10 @@ public class DialogBuilder {
 			StoryModel story) {
 		final String REMOVE_LIBRARY = "Are you sure you want to remove "
 				+ library.getTitle() + "?";
-		final String message;
-
+		final String message1;
+		final String message2;
+		final JPanel messagePanel;
+		
 		final Collection<StoryComponent> inLibrary = new ArrayList<StoryComponent>();
 
 		for (StoryNode node : story.getRoot().getDescendants()) {
@@ -598,18 +608,38 @@ public class DialogBuilder {
 					"Removing " + library + " from " + story);
 
 		if (!inLibrary.isEmpty()) {
-			String componentList = "";
+			Collection<BufferedImage> screenshots = new ArrayList<BufferedImage>();
 
 			for (StoryComponent component : inLibrary) {
-				componentList += component.getDisplayText() + "<br>";
+				if (component.isVisible()){
+					if (component instanceof KnowIt && !(((KnowIt)component).getBinding() instanceof KnowItBindingFunction)){
+						continue;
+					}
+					screenshots.add(GUIOp.getScreenshot(StoryComponentPanelFactory.getInstance().buildStoryComponentPanel(component)));
+				}
 			}
-
-			message = "<html>You are about to remove the library: <b>"
+			
+			message1 = "<html>You are about to remove the library: <b>"
 					+ library.getTitle()
-					+ "</b>.<br><br><b>WARNING:</b><br>Removing this library will remove the following story components and their contents from the story:<br><br>"
-					+ componentList + "<br>Are you sure you want to proceed?";
+					+ "</b>.<br><br><b>WARNING:</b><br>Removing this library will remove the following story components and their contents from the story:<br><br>";
+			
+			message2 = "<html><br>Are you sure you want to proceed?";
+			
+			messagePanel = new JPanel();
+			messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
+			
+			messagePanel.add(new JLabel(message1));
+			for (BufferedImage screenshot: screenshots){
+				JPanel imagePanel = new JPanel();
+				imagePanel.add(new JLabel(new ImageIcon(screenshot)));
+				imagePanel.setAlignmentX(0);
+				imagePanel.setBorder(BorderFactory.createLineBorder(ScriptEaseUI.SE_BLACK));
+				messagePanel.add(imagePanel);
+			}
+			messagePanel.add(new JLabel(message2));
+			
 
-			if (WindowFactory.getInstance().showYesNoConfirmDialog(message,
+			if (WindowFactory.getInstance().showYesNoConfirmDialog(messagePanel,
 					REMOVE_LIBRARY)) {
 				story.removeLibrary(library);
 				for (StoryComponent component : inLibrary) {
