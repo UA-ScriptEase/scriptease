@@ -2451,7 +2451,64 @@
       <Name>Script</Name>
       <Keyword>Script</Keyword>
       <Parameters/>
-      <Implicits/>
+      <Implicits>
+	      <KnowIt>
+	          <Name>Speaker</Name>
+	          <Labels/>
+	          <Types>
+	            <Type>Creature</Type>
+	          </Types>
+	          <Binding flavour="function">
+	            <ScriptIt>
+	              <Name>Speaker</Name>
+	              <Labels/>
+	              <Children/>
+	              <CodeBlocks>
+	                <CodeBlockSource>
+	                  <Name>Speaker</Name>
+	                  <Labels/>
+	                  <Types>
+	                    <Type>Creature</Type>
+	                  </Types>
+	                  <Code>
+	                    <Line>
+	                      <Literal>return OBJECT_SELF;</Literal>
+	                    </Line>
+	                  </Code>
+	                </CodeBlockSource>
+	              </CodeBlocks>
+	            </ScriptIt>
+	          </Binding>
+	        </KnowIt>
+       <KnowIt>
+          <Name>Responder</Name>
+          <Labels/>
+          <Types>
+            <Type>Creature</Type>
+          </Types>
+          <Binding flavour="function">
+            <ScriptIt>
+              <Name>Responder</Name>
+              <Labels/>
+              <Children/>
+              <CodeBlocks>
+                <CodeBlockSource>
+                  <Name>Responder</Name>
+                  <Labels/>
+                  <Types>
+                    <Type>Creature</Type>
+                  </Types>
+                  <Code>
+                    <Line>
+                      <Literal>return GetPCSpeaker();</Literal>
+                    </Line>
+                  </Code>
+                </CodeBlockSource>
+              </CodeBlocks>
+            </ScriptIt>
+          </Binding>
+        </KnowIt>
+      </Implicits>
     </Slot>
     <Slot>
       <Name>OnUsed</Name>
@@ -4866,12 +4923,12 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; is reached</Name>
+      <Name>When &lt;subject&gt; is reached between &lt;Speaker&gt; and &lt;Responder&gt;</Name>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>When &lt;subject&gt; is reached</Name>
+          <Name>When &lt;subject&gt; is reached between &lt;Speaker&gt; and &lt;Responder&gt;</Name>
           <Labels/>
           <Subject>subject</Subject>
           <Slot>Script</Slot>

@@ -360,6 +360,8 @@ public class CodeBlockSource extends CodeBlock {
 			hashCode += include.hashCode();
 		}
 
+		hashCode += this.getCode().hashCode();
+		
 		return hashCode;
 	}
 
