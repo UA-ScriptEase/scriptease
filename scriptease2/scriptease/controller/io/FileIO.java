@@ -242,12 +242,7 @@ public class FileIO {
 	 */
 	public void writeLibraryModel(final LibraryModel library,
 			final File location) {
-		WindowFactory.showProgressBar("Saving Library...", new Runnable() {
-			@Override
-			public void run() {
-				FileIO.this.writeData(library, location, IoMode.LIBRARY, true);
-			}
-		});
+		FileIO.this.writeData(library, location, IoMode.LIBRARY, true);
 	}
 
 	/**
