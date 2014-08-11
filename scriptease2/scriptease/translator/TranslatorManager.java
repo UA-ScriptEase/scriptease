@@ -177,26 +177,27 @@ public class TranslatorManager {
 			return false;
 		}
 
-		final String validationMessage = newTranslator.isValid();
-		if (!validationMessage.equals("")) {
-			System.err
-					.println("Translator failed validation ("
-							+ newTranslatorLocation.getAbsolutePath()
-							+ "). Moving on.");
+		if (newTranslator != null) {
+			final String validationMessage = newTranslator.isValid();
+			if (!validationMessage.equals("")) {
+				System.err.println("Translator failed validation ("
+						+ newTranslatorLocation.getAbsolutePath()
+						+ "). Moving on.");
 
-			WindowFactory
-					.getInstance()
-					.showProblemDialog(
-							"Invalid translator",
-							"There's a validation problem with the "
-									+ newTranslator.getTitle()
-									+ " translator, so I can't use it. \n\nProblem:\n"
-									+ validationMessage
-									+ "\n\n"
-									+ "You will not be able to open Story files or perform any "
-									+ "other game-specific operations related to this translator.");
+				WindowFactory
+						.getInstance()
+						.showProblemDialog(
+								"Invalid translator",
+								"There's a validation problem with the "
+										+ newTranslator.getTitle()
+										+ " translator, so I can't use it. \n\nProblem:\n"
+										+ validationMessage
+										+ "\n\n"
+										+ "You will not be able to open Story files or perform any "
+										+ "other game-specific operations related to this translator.");
 
-			newTranslator = null;
+				newTranslator = null;
+			}
 		}
 
 		return newTranslator != null && this.translatorPool.add(newTranslator);

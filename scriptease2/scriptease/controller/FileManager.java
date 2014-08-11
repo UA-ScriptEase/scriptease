@@ -707,10 +707,8 @@ public final class FileManager {
 		StoryModel story;
 
 		if (location == null || !location.exists()) {
-			WindowFactory.getInstance().showProblemDialog(
-					"File Not Found",
-					"I could not locate the file \""
-							+ location.getAbsolutePath() + "\".");
+			WindowFactory.getInstance().showProblemDialog("File Not Found",
+					"I could not locate the file \"" + location + "\".");
 
 			// remove the file from our recent file list.
 			this.updateRecentFiles(location, false);

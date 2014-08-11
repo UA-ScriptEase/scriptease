@@ -2,6 +2,7 @@ package scriptease.translator.codegenerator.code.contexts;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -182,7 +183,7 @@ public class CodeBlockContext extends Context {
 
 	@Override
 	public Set<String> getIncludeFiles() {
-		return this.getIncludeFiles();
+		return new HashSet<String>(this.codeBlock.getIncludes());
 	}
 
 	@Override

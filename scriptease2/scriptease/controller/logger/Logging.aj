@@ -18,6 +18,7 @@ import javax.swing.Action;
 import scriptease.controller.exceptionhandler.ScriptEaseExceptionHandler;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.ContextFactory;
+import scriptease.util.StringOp;
 
 /**
  * The aspect Logging handles all Logging in ScriptEase. It does this in two
@@ -57,6 +58,7 @@ public aspect Logging {
 		} catch (IOException e) {
 			// how to handle?
 			System.out.println("Handler Error");
+			throw new IllegalStateException(e);
 		}
 
 		// set handlers level
@@ -187,12 +189,15 @@ public aspect Logging {
 	// ====================================
 	// helper method which returns the simple name of the given object
 	private String GetSimpleName(Object object) {
+		if (object == null)
+			return "";
+
 		String className = object.getClass().getSimpleName();
 
-		if (className == null || className.equals(""))
+		if (!StringOp.exists(className))
 			className = object.getClass().getName();
 
-		return object == null ? null : className;
+		return className;
 	}
 
 	/**
