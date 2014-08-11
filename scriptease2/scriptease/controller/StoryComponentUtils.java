@@ -189,8 +189,11 @@ public class StoryComponentUtils {
 			public void processScriptIt(ScriptIt scriptIt) {
 				super.processScriptIt(scriptIt);
 
-				if (!codeBlocks.contains(codeBlocks))
-					codeBlocks.addAll(scriptIt.getCodeBlocks());
+				for (CodeBlock block : scriptIt.getCodeBlocks())
+					if (!codeBlocks.contains(block)) {
+						codeBlocks.add(block);
+					}
+
 			}
 		};
 

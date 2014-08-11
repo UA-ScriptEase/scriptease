@@ -244,10 +244,10 @@ public class GUIOp {
 	 * @return
 	 */
 	public static Point getMidRight(JComponent component) {
-		final Dimension componentSize = component.getPreferredSize();
-
 		Point point = new Point();
 		if (component != null) {
+
+			final Dimension componentSize = component.getPreferredSize();
 			point.setLocation(
 					(int) (component.getX() + componentSize.getWidth()),
 					(int) (component.getY() + componentSize.getHeight() / 2));
@@ -566,12 +566,14 @@ public class GUIOp {
 	 * @return
 	 */
 	public static int getComponentIndex(Component component) {
-		final Container parent = component.getParent();
-		if (component != null && parent != null) {
-			for (int i = 0; i < parent.getComponentCount(); i++) {
-				if (parent.getComponent(i) == component)
-					return i;
-			}
+		if (component != null) {
+			final Container parent = component.getParent();
+
+			if (parent != null)
+				for (int i = 0; i < parent.getComponentCount(); i++) {
+					if (parent.getComponent(i) == component)
+						return i;
+				}
 		}
 
 		return -1;

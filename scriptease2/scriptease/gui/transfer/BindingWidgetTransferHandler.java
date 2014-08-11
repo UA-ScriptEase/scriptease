@@ -186,8 +186,8 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// Special case - to handle where effects, descriptions, and controls
 		// can be dragged over binding widgets in order to get re-directed to
 		// their parent block.
-		return canImport |= StoryComponentTransferUtils
-				.canImportToParent(support);
+		return canImport
+				|| StoryComponentTransferUtils.canImportToParent(support);
 	}
 
 	protected KnowIt getKnowIt(TransferSupport support) {

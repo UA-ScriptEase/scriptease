@@ -33,8 +33,8 @@ public class BehaviourContext extends ScriptItContext {
 	
 	@Override
 	public String getProbabilityCount() {
-		// TODO Auto-generated method stub
-		return this.getProbabilityCount();
+		// TODO implement behaviour prob count
+		return super.getProbabilityCount();
 	}
 
 	@Override

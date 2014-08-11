@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import scriptease.model.atomic.KnowIt;
+import scriptease.util.StringOp;
 
 /**
  * A node for DescribeIts.
@@ -33,7 +34,7 @@ public class DescribeItNode {
 		super();
 		this.successors = new HashSet<DescribeItNode>();
 
-		if (name.equals("") || name == null) {
+		if (!StringOp.exists(name)) {
 			name = NEW_DESCRIBEIT_NODE + " " + describeItNodeCounter++;
 		}
 
