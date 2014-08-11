@@ -276,17 +276,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 
 			@Override
 			public void processKnowIt(KnowIt knowIt) {
-				if (this.addToCategory(knowIt, this.model.descriptionsCategory)) {
-					final KnowItBinding binding = knowIt.getBinding();
-					binding.process(new BindingAdapter() {
-						@Override
-						public void processFunction(
-								KnowItBindingFunction function) {
-							final ScriptIt doIt = function.getValue();
-							LibraryModel.this.add(doIt);
-						}
-					});
-				}
+				this.addToCategory(knowIt, this.model.descriptionsCategory);
 			}
 
 			@Override
@@ -525,6 +515,7 @@ public class LibraryModel extends SEModel implements StoryComponentObserver {
 	 * @param component
 	 */
 	public void add(StoryComponent component) {
+
 		component.process(this.categoryAdder);
 		this.notifyChange(component, LibraryEvent.Type.ADDITION);
 	}
