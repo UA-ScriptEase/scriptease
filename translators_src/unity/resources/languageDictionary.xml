@@ -894,6 +894,11 @@
 								</Line>
 							</Series>
 						</Series>
+						<Line>
+							<Literal>SEStory.SucceedStoryPoint(</Literal>
+							<Fragment data="formattedValue" />
+							<Literal>);</Literal>
+						</Line>
 					</Indent>
 					<Line>
 						<Literal>}</Literal>
