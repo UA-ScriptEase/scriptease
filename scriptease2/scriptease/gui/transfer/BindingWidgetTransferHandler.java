@@ -17,7 +17,6 @@ import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.groupvisitor.SameBindingGroupVisitor;
 import scriptease.controller.undo.UndoManager;
 import scriptease.gui.component.BindingWidget;
-import scriptease.gui.component.ScriptWidgetFactory;
 import scriptease.gui.component.SlotPanel;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
@@ -104,8 +103,12 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		// action)
 		if (action == TransferHandler.NONE) {
 			// Get the KnowIt for the Widget.
-			final KnowIt toRemove = (KnowIt) ScriptWidgetFactory
-					.getEditedStoryComponent(component.getParent());
+			final Container parent = component.getParent();
+
+			if (!(parent instanceof SlotPanel))
+				return;
+
+			final KnowIt toRemove = ((SlotPanel) parent).getKnowIt();
 
 			if (toRemove == null)
 				return;
@@ -194,8 +197,9 @@ public class BindingWidgetTransferHandler extends TransferHandler {
 		final Component destinationComponent = support.getComponent();
 
 		if (destinationComponent instanceof BindingWidget) {
-			return (KnowIt) ScriptWidgetFactory
-					.getEditedStoryComponent(destinationComponent.getParent());
+			final Container container = destinationComponent.getParent();
+			if (container instanceof SlotPanel)
+				return ((SlotPanel) container).getKnowIt();
 		} else if (destinationComponent instanceof SlotPanel) {
 			return ((SlotPanel) destinationComponent).getKnowIt();
 		}
