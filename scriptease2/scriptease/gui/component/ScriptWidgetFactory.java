@@ -1,7 +1,6 @@
 package scriptease.gui.component;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -12,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.WeakHashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -79,26 +77,6 @@ public class ScriptWidgetFactory {
 	 * rectangles can be drawn.
 	 */
 	public static final int TOTAL_ROW_BORDER_SIZE = 4;
-
-	/**
-	 * Map for storing which JComponent edits which StoryComponent. Whenever a
-	 * widget for editing a specific StoryComponent is created, this map should
-	 * be updated.
-	 */
-	private static Map<Component, StoryComponent> widgetsToStoryComponents = new WeakHashMap<Component, StoryComponent>();
-
-	/**
-	 * Retrieves the StoryComponent that the given JComponent edits. This can
-	 * return <code>null</code> if the given JComponent does not edit a
-	 * StoryComponent.
-	 * 
-	 * @param editor
-	 *            the JComponent whose edited StoryComponent is to be retrieved.
-	 * @return the edited StoryComponent.
-	 */
-	public static StoryComponent getEditedStoryComponent(Component editor) {
-		return widgetsToStoryComponents.get(editor);
-	}
 
 	/**
 	 * Builds a button for displaying a particular game type. The created button
@@ -310,8 +288,6 @@ public class ScriptWidgetFactory {
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE));
 
-			widgetsToStoryComponents.put(widget, storyComponent);
-
 			return widget;
 		}
 
@@ -391,11 +367,7 @@ public class ScriptWidgetFactory {
 	 */
 	public static JComponent buildSlotPanel(final KnowIt knowIt,
 			boolean isNameEditable) {
-		final SlotPanel slotPanel = new SlotPanel(knowIt, isNameEditable);
-
-		widgetsToStoryComponents.put(slotPanel, knowIt);
-
-		return slotPanel;
+		return new SlotPanel(knowIt, isNameEditable);
 	}
 
 	/**
@@ -584,8 +556,6 @@ public class ScriptWidgetFactory {
 
 		knowIt.addStoryComponentObserver(observer);
 
-		widgetsToStoryComponents.put(spinner, knowIt);
-
 		return spinner;
 	}
 
@@ -676,8 +646,6 @@ public class ScriptWidgetFactory {
 
 		knowIt.addStoryComponentObserver(observer);
 
-		widgetsToStoryComponents.put(combo, knowIt);
-
 		return combo;
 	}
 
@@ -745,7 +713,6 @@ public class ScriptWidgetFactory {
 
 		component.addStoryComponentObserver(observer);
 
-		widgetsToStoryComponents.put(nameEditor, component);
 		return nameEditor;
 	}
 
@@ -815,8 +782,6 @@ public class ScriptWidgetFactory {
 				commitText, true, ScriptEaseUI.COLOUR_SIMPLE_TEXT);
 
 		knowIt.addStoryComponentObserver(observer);
-
-		widgetsToStoryComponents.put(valueEditor, knowIt);
 		return valueEditor;
 	}
 
