@@ -26,7 +26,6 @@ static function RegisterRoot(uniqueName:String, fanIn:int) {
 	storyInitialized = true;
 
 	root.Enable();
-	root.Succeed();
 }
 
 /**
