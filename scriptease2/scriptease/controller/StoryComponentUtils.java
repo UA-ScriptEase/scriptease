@@ -37,7 +37,15 @@ import scriptease.translator.io.model.Resource;
  */
 public class StoryComponentUtils {
 	public static void bindUninitialized(final ScriptIt scriptIt) {
-		final List<StoryComponent> children = scriptIt.getChildren();
+		final Collection<StoryComponent> children = scriptIt
+				.getDescendentStoryComponents();
+
+		if (scriptIt instanceof Behaviour) {
+			for (Task task : ((Behaviour) scriptIt).getStartTask()
+					.getDescendants()) {
+				children.addAll(task.getDescendentStoryComponents());
+			}
+		}
 
 		for (StoryComponent child : children) {
 
