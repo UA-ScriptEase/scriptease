@@ -88,13 +88,7 @@ public class ControlIt extends ScriptIt {
 	 * 
 	 */
 	public Collection<KnowIt> getRequiredParameters() {
-		/*
-		 * TODO Only pass in required variables instead of all of the preceding
-		 * ones.
-		 */
-		final Collection<KnowIt> parameters;
-
-		parameters = new ArrayList<KnowIt>();
+		final Collection<KnowIt> parameters = new ArrayList<KnowIt>();
 
 		final StoryComponent owner = this.getOwner();
 
@@ -146,7 +140,6 @@ public class ControlIt extends ScriptIt {
 				final StoryComponent owner = complex.getOwner();
 
 				if (owner != null && owner instanceof ComplexStoryComponent
-				// && !(owner instanceof CauseIt)
 						&& !(owner instanceof StoryPoint)) {
 					owner.process(this);
 				}

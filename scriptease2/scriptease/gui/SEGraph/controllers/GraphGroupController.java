@@ -224,9 +224,8 @@ public class GraphGroupController<E> {
 		// remove the child from the exit node.
 		final Collection<StoryNode> children = new ArrayList<StoryNode>();
 
-		children.addAll(exitNode.getSuccessors());
-
 		if (exitNode != null) {
+			children.addAll(exitNode.getSuccessors());
 			for (StoryNode child : children) {
 				if (!this.group.contains(child)) {
 					newGroup.addSuccessor(child);

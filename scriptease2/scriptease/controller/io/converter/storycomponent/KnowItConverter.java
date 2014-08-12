@@ -50,7 +50,8 @@ public class KnowItConverter extends StoryComponentConverter {
 			UnmarshallingContext context) {
 		final KnowIt knowIt;
 		final Collection<String> typeNames;
-		final KnowItBinding binding;
+
+		KnowItBinding binding;
 
 		knowIt = (KnowIt) super.unmarshal(reader, context);
 		typeNames = XMLNode.TYPES.readStringCollection(reader);

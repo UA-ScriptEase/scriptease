@@ -106,7 +106,6 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 							.getInstance()
 							.buildCodeBlockSelectionDialog(
 									"Component Not Found",
-									// TODO Better text here
 									"<html>The component <b>\""
 											+ StringOp.makeXMLSafe(ref
 													.getDisplayText())
@@ -117,12 +116,11 @@ public class CodeBlockReferenceConverter extends StoryComponentConverter
 											+ "Please select a library to replace the component with. The library will be "
 											+ "<br>added to your story if it is not already attached."
 											+ "<br><br>If no library is selected, the component and everything it contains will"
-											+ "<br>be removed. This will not be saved until you press save."
+											+ "<br>be removed. These changes will not be saved until you save the story."
 											+ "<br><br><b>Library:</b></html>",
 									similar);
 				}
-			} // TODO May have to do something here if we have missing
-				// references in a different mode.
+			}
 
 			if (newTarget == null) {
 				WindowFactory.getInstance().showProblemDialog(

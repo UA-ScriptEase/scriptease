@@ -92,7 +92,7 @@ public class SimpleDataFragment extends AbstractFragment {
 				try {
 					return context.getType();
 				} catch (CodeGenerationException e) {
-					if (!this.defaultText.isEmpty())
+					if (StringOp.exists(this.defaultText))
 						return this.defaultText;
 					else
 						throw e;
@@ -148,7 +148,7 @@ public class SimpleDataFragment extends AbstractFragment {
 			case TASKPROBABILITYUPPERBOUND:
 				return context.getTaskProbabilityUpperBound();
 			default:
-				new CodeGenerationException(
+				throw new CodeGenerationException(
 						"Simple Data Fragment was unable to be resolved for data: "
 								+ directiveText + ">");
 			}
@@ -156,8 +156,6 @@ public class SimpleDataFragment extends AbstractFragment {
 			return "Error when inserting new simple fragment: " + directiveText
 					+ " with message: " + e.getMessage();
 		}
-		return "Simple Data Fragment was unable to be resolved for data: "
-				+ directiveText + ">";
 	}
 
 	public final String getLegalRange() {

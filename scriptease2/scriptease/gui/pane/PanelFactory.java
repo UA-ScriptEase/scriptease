@@ -17,9 +17,9 @@ import scriptease.controller.observer.TranslatorObserver;
 import scriptease.gui.StatusManager;
 import scriptease.gui.WidgetDecorator;
 import scriptease.gui.filters.CategoryFilter;
-import scriptease.gui.filters.CategoryFilter.Category;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.ui.ScriptEaseUI;
+import scriptease.model.StoryComponent;
 import scriptease.model.atomic.Note;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.StoryModel;
@@ -101,7 +101,7 @@ public final class PanelFactory {
 		final JPanel notePane;
 
 		noteList = new StoryComponentPanelJList(new CategoryFilter(
-				Category.NOTE), false);
+				StoryComponent.Type.NOTE), false);
 		notePane = new JPanel();
 
 		notePane.setLayout(new BorderLayout());
@@ -160,7 +160,7 @@ public final class PanelFactory {
 		timedLabel = new JLabel();
 		currentTranslatorLabel = new JLabel(transPrefix);
 		currentTranslatorNameLabel = new JLabel(NO_TRANSLATOR);
-		
+
 		timedLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
 		currentTranslatorLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
 		currentTranslatorNameLabel.setForeground(ScriptEaseUI.PRIMARY_UI);
@@ -169,7 +169,8 @@ public final class PanelFactory {
 			@Override
 			public void translatorLoaded(Translator newTranslator) {
 				if (newTranslator != null) {
-					currentTranslatorNameLabel.setText(newTranslator.getName());
+					currentTranslatorNameLabel
+							.setText(newTranslator.getTitle());
 					currentTranslatorNameLabel.setEnabled(true);
 					currentTranslatorNameLabel.setIcon(newTranslator.getIcon());
 				} else {

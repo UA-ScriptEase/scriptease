@@ -371,6 +371,12 @@ public aspect Undo {
 	public pointcut removingDialogueRoot():
 		within(StoryModel+) && execution(* removeDialogueRoot(DialogueLine+));
 
+	public pointcut addingLibrary():
+		within(StoryModel+) && execution(* addLibrary(LibraryModel+));
+
+	public pointcut removingLibrary():
+		within(StoryModel+) && execution(* removeLibrary(LibraryModel+));
+
 	/*
 	 * ====================== ADVICE ======================
 	 */
@@ -1149,6 +1155,48 @@ public aspect Undo {
 			@Override
 			public String toString() {
 				return "removing" + line + " from " + model;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final StoryModel model, final LibraryModel library): addingLibrary() && args(library) && this(model) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				model.addLibrary(library);
+			}
+
+			@Override
+			public void undo() {
+				model.removeLibrary(library);
+			}
+
+			@Override
+			public String toString() {
+				return "adding " + library + " to " + model;
+			}
+		};
+		this.addModification(mod);
+	}
+
+	before(final StoryModel model, final LibraryModel library): removingLibrary() && args(library) && this(model) {
+		Modification mod = new Modification() {
+
+			@Override
+			public void redo() {
+				model.removeLibrary(library);
+			}
+
+			@Override
+			public void undo() {
+				model.addLibrary(library);
+			}
+
+			@Override
+			public String toString() {
+				return "removing " + library + " from " + model;
 			}
 		};
 		this.addModification(mod);

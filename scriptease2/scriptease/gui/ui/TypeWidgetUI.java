@@ -86,6 +86,9 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements ScriptEaseUI {
 
 	@Override
 	public void paint(Graphics g, JComponent comp) {
+		if (g == null)
+			return;
+
 		final AbstractButton button = (AbstractButton) comp;
 		final boolean isUp = this.isUp(button);
 		final Graphics2D tempGraphics;
@@ -99,7 +102,7 @@ public class TypeWidgetUI extends BasicToggleButtonUI implements ScriptEaseUI {
 		border.setOutline(constructTypeShape(button));
 
 		// clone the other graphics so that we don't disturb its settings.
-		tempGraphics = (g == null) ? null : (Graphics2D) g.create();
+		tempGraphics = (Graphics2D) g.create();
 
 		// Type widgets are elliptical.
 		typeShape = this.constructTypeShape(button);

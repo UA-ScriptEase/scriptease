@@ -47,6 +47,16 @@ public final class Note extends StoryComponent {
 	}
 
 	@Override
+	public String getDescription() {
+		return this.getDisplayText();
+	}
+
+	@Override
+	public void setDescription(String description) {
+		// Do nothing. 
+	}
+
+	@Override
 	public void revalidateKnowItBindings() {
 		// Do nothing. Notes don't have any bindings.
 	}

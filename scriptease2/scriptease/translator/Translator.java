@@ -26,10 +26,12 @@ import scriptease.controller.ModelVisitor;
 import scriptease.gui.WindowFactory;
 import scriptease.model.CodeBlockSource;
 import scriptease.model.StoryComponent;
+import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.model.semodel.librarymodel.TypeConverter;
 import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Slot;
@@ -96,7 +98,7 @@ public class Translator extends SEModel {
 		// Mandatory keys
 		NAME, API_DICTIONARY_PATH, LANGUAGE_DICTIONARY_PATH, GAME_MODULE_PATH, VERSION,
 		// Suggested keys
-		SUPPORTED_FILE_EXTENSIONS, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH, TUTORIALS_PATH;
+		SUPPORTED_FILE_EXTENSIONS, ICON_PATH, COMPILER_PATH, SUPPORTS_TESTING, GAME_DIRECTORY, OPTIONAL_LIBRARIES_PATH;
 
 		public static final String FALSE = "false";
 		private static final String DIRECTORY = "directory";
@@ -117,8 +119,6 @@ public class Translator extends SEModel {
 
 	// either the location of the jar, or the location of the description file.
 	private final File location;
-
-	private final Collection<File> tutorials;
 
 	/**
 	 * Builds a new Translator from the given translator Jar or description
@@ -193,7 +193,6 @@ public class Translator extends SEModel {
 					+ " is not an instance of GameModule");
 		}
 
-		this.tutorials = FileManager.getInstance().loadTutorials(this);
 		this.languageDictionary = FileManager.getInstance()
 				.openLanguageDictionary(this);
 
@@ -282,15 +281,6 @@ public class Translator extends SEModel {
 		}
 
 		return new URLClassLoader(urlSourceLocations.toArray(new URL[0]));
-	}
-
-	/**
-	 * Returns the tutorials for this translator.
-	 * 
-	 * @return
-	 */
-	public Collection<File> getTutorials() {
-		return this.tutorials;
 	}
 
 	/**
@@ -505,11 +495,11 @@ public class Translator extends SEModel {
 		final String INCOMPATIBLE_VERSION = "The translator at "
 				+ this.getLocation()
 				+ " does not have a compatible ScriptEase version number.";
-		final String UNLOADABLE_GAME_MODULE = "The " + this.getName()
+		final String UNLOADABLE_GAME_MODULE = "The " + this.getTitle()
 				+ " translator's game module is unloadable.";
-		final String LIBRARY_VALIDATION_ERR = "The " + this.getName()
+		final String LIBRARY_VALIDATION_ERR = "The " + this.getTitle()
 				+ " translator's Library does not pass validation.";
-		final String LANGUAGE_DICT_VALIDATION_ERR = "The " + this.getName()
+		final String LANGUAGE_DICT_VALIDATION_ERR = "The " + this.getTitle()
 				+ " translator's language dictionary does not pass validation.";
 
 		final File libraryPath;
@@ -539,7 +529,7 @@ public class Translator extends SEModel {
 		 * other references are optional and will not be checked. See javadoc
 		 * and/or wiki for details.
 		 */
-		if (this.getName() == null) {
+		if (this.getTitle() == null) {
 			System.err.println(NAME_NOT_FOUND);
 			return NAME_NOT_FOUND;
 
@@ -579,7 +569,7 @@ public class Translator extends SEModel {
 		// extract the referenced file(s) into the temp directory that it stores
 		// all of these things. - remiller
 		System.out.println("Extracting XML Schema dependencies for "
-				+ this.getName() + " translator...");
+				+ this.getTitle() + " translator...");
 		FileOp.getFileResource(Translator.CODE_ELEMENT_SCHEMA_LOCATION);
 
 		try {
@@ -598,16 +588,6 @@ public class Translator extends SEModel {
 		}
 
 		return "";
-	}
-
-	/**
-	 * Gets the name of this translator. The name is defined as the name of the
-	 * folder containing the translator.
-	 * 
-	 * @return the translator's name
-	 */
-	public String getName() {
-		return this.getProperty(DescriptionKeys.NAME);
 	}
 
 	/**
@@ -706,8 +686,8 @@ public class Translator extends SEModel {
 			throw new IllegalArgumentException("Cannot filter files for this"
 					+ " translator because it accepts directories.");
 		} else if (this.legalExtensions.size() > 0)
-			filter = new FileNameExtensionFilter(
-					this.getName() + " Game Files",
+			filter = new FileNameExtensionFilter(this.getTitle()
+					+ " Game Files",
 					this.legalExtensions
 							.toArray(new String[this.legalExtensions.size()]));
 		else
@@ -834,7 +814,7 @@ public class Translator extends SEModel {
 
 	@Override
 	public String toString() {
-		return "Translator [" + this.getName() + "]";
+		return "Translator [" + this.getTitle() + "]";
 	}
 
 	/**
@@ -917,13 +897,19 @@ public class Translator extends SEModel {
 
 	@Override
 	public void setTitle(String title) {
-		// TODO doesn't do anything yet
+		this.setPreference(DescriptionKeys.NAME, title);
+		this.saveTranslatorPreferences();
 	}
 
+	/**
+	 * Gets the name of this translator. The name is defined as the name of the
+	 * folder containing the translator.
+	 * 
+	 * @return the translator's name
+	 */
 	@Override
 	public String getTitle() {
-		// TODO should probably do this in a different way.
-		return this.getName();
+		return this.getProperty(DescriptionKeys.NAME);
 	}
 
 	public Collection<CodeBlockSource> findSimilarTargets(ScriptIt owner, int id) {
@@ -934,6 +920,27 @@ public class Translator extends SEModel {
 				srcs.add(src);
 		}
 		return srcs;
+	}
+
+	/**
+	 * Goes through the libraries to find an appropriate type converter. Returns
+	 * null if none exist.
+	 * 
+	 * @param knowIt
+	 * @return
+	 */
+	public ScriptIt getTypeConverter(KnowIt knowIt) {
+		ScriptIt scriptIt = null;
+
+		for (LibraryModel library : this.getLibraries()) {
+			final TypeConverter converter = library.getTypeConverter();
+			scriptIt = converter.convert(knowIt);
+
+			if (scriptIt != null)
+				break;
+		}
+
+		return scriptIt;
 	}
 
 	@Override

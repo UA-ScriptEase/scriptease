@@ -1,7 +1,6 @@
 package scriptease.gui.component;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -12,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.WeakHashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -41,6 +39,8 @@ import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.Note;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
+import scriptease.model.atomic.knowitbindings.KnowItBindingAutomatic;
+import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingNull;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
@@ -77,26 +77,6 @@ public class ScriptWidgetFactory {
 	 * rectangles can be drawn.
 	 */
 	public static final int TOTAL_ROW_BORDER_SIZE = 4;
-
-	/**
-	 * Map for storing which JComponent edits which StoryComponent. Whenever a
-	 * widget for editing a specific StoryComponent is created, this map should
-	 * be updated.
-	 */
-	private static Map<Component, StoryComponent> widgetsToStoryComponents = new WeakHashMap<Component, StoryComponent>();
-
-	/**
-	 * Retrieves the StoryComponent that the given JComponent edits. This can
-	 * return <code>null</code> if the given JComponent does not edit a
-	 * StoryComponent.
-	 * 
-	 * @param editor
-	 *            the JComponent whose edited StoryComponent is to be retrieved.
-	 * @return the edited StoryComponent.
-	 */
-	public static StoryComponent getEditedStoryComponent(Component editor) {
-		return widgetsToStoryComponents.get(editor);
-	}
 
 	/**
 	 * Builds a button for displaying a particular game type. The created button
@@ -152,7 +132,7 @@ public class ScriptWidgetFactory {
 	 * @return
 	 */
 	public static JComponent buildObservedNameLabel(
-			StoryComponent storyComponent) {
+			final StoryComponent storyComponent) {
 		final JLabel nameLabel;
 
 		nameLabel = ScriptWidgetFactory.buildLabel(storyComponent
@@ -168,6 +148,93 @@ public class ScriptWidgetFactory {
 				}
 			}
 		});
+
+		if (storyComponent instanceof KnowIt) {
+			final KnowIt knowIt = (KnowIt) storyComponent;
+			final KnowItBinding binding = knowIt.getBinding();
+
+			if (binding instanceof KnowItBindingUninitialized) {
+				final KnowItBindingUninitialized uninit;
+				final KnowIt refKnowIt;
+				final Runnable changeText;
+
+				uninit = (KnowItBindingUninitialized) binding;
+				refKnowIt = uninit.getValue();
+				changeText = new Runnable() {
+					@Override
+					public void run() {
+						final KnowItBinding srcBinding = refKnowIt.getBinding();
+
+						srcBinding.process(new BindingAdapter() {
+							@Override
+							public void processNull(
+									KnowItBindingNull nullBinding) {
+								nameLabel.setText(refKnowIt.getDisplayText());
+							}
+
+							@Override
+							public void processReference(
+									KnowItBindingReference reference) {
+								nameLabel.setText(reference.getValue()
+										.getDisplayText());
+							}
+
+							@Override
+							public void processResource(
+									KnowItBindingResource constant) {
+								nameLabel
+										.setText(constant.getValue().getName());
+							}
+
+							@Override
+							public void processAutomatic(
+									KnowItBindingAutomatic automatic) {
+								System.err.println("IDK HOW TO DO THIS dba31");
+							}
+
+							@Override
+							public void processFunction(
+									KnowItBindingFunction function) {
+								System.err.println("IDK HOW TO DO THIS dfa62");
+							}
+
+							public void processStoryGroup(
+									KnowItBindingStoryGroup storyGroup) {
+								nameLabel.setText(storyGroup.getValue()
+										.getDisplayText());
+							};
+
+							@Override
+							public void processStoryPoint(
+									KnowItBindingStoryPoint storyPoint) {
+								nameLabel.setText(storyPoint.getValue()
+										.getDisplayText());
+							}
+
+							public void processUninitialized(
+									KnowItBindingUninitialized uninitialized) {
+								nameLabel.setText(uninitialized.getValue()
+										.getDisplayText());
+							};
+						});
+
+					}
+				};
+
+				changeText.run();
+
+				refKnowIt
+						.addStoryComponentObserver(new StoryComponentObserver() {
+							@Override
+							public void componentChanged(
+									StoryComponentEvent event) {
+								if (event.getType() == StoryComponentChangeEnum.CHANGE_KNOW_IT_BOUND) {
+									changeText.run();
+								}
+							}
+						});
+			}
+		}
 
 		return nameLabel;
 	}
@@ -220,8 +287,6 @@ public class ScriptWidgetFactory {
 			widget.setBorder(BorderFactory.createEmptyBorder(
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE,
 					TOTAL_ROW_BORDER_SIZE, TOTAL_ROW_BORDER_SIZE));
-
-			widgetsToStoryComponents.put(widget, storyComponent);
 
 			return widget;
 		}
@@ -302,11 +367,7 @@ public class ScriptWidgetFactory {
 	 */
 	public static JComponent buildSlotPanel(final KnowIt knowIt,
 			boolean isNameEditable) {
-		final SlotPanel slotPanel = new SlotPanel(knowIt, isNameEditable);
-
-		widgetsToStoryComponents.put(slotPanel, knowIt);
-
-		return slotPanel;
+		return new SlotPanel(knowIt, isNameEditable);
 	}
 
 	/**
@@ -495,8 +556,6 @@ public class ScriptWidgetFactory {
 
 		knowIt.addStoryComponentObserver(observer);
 
-		widgetsToStoryComponents.put(spinner, knowIt);
-
 		return spinner;
 	}
 
@@ -587,8 +646,6 @@ public class ScriptWidgetFactory {
 
 		knowIt.addStoryComponentObserver(observer);
 
-		widgetsToStoryComponents.put(combo, knowIt);
-
 		return combo;
 	}
 
@@ -656,7 +713,6 @@ public class ScriptWidgetFactory {
 
 		component.addStoryComponentObserver(observer);
 
-		widgetsToStoryComponents.put(nameEditor, component);
 		return nameEditor;
 	}
 
@@ -726,8 +782,6 @@ public class ScriptWidgetFactory {
 				commitText, true, ScriptEaseUI.COLOUR_SIMPLE_TEXT);
 
 		knowIt.addStoryComponentObserver(observer);
-
-		widgetsToStoryComponents.put(valueEditor, knowIt);
 		return valueEditor;
 	}
 

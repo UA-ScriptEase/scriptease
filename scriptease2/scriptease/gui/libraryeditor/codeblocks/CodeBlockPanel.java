@@ -93,7 +93,7 @@ public class CodeBlockPanel extends JPanel {
 		final JLabel slotLabel = new JLabel("Slot: ");
 		final JLabel implicitsLabelLabel = new JLabel("Implicits: ");
 		final JLabel includesLabel = new JLabel("Includes: ");
-		final JLabel typesLabel = new JLabel("Types: ");
+		final JLabel typesLabel = new JLabel("Return Types: ");
 		final JLabel parametersLabel = new JLabel("Parameters: ");
 		final JLabel codeLabel = new JLabel("Code: ");
 
@@ -163,8 +163,8 @@ public class CodeBlockPanel extends JPanel {
 
 		// Set up the layout
 		this.setLayout(codeBlockEditorLayout);
-		this.setBorder(new TitledBorder("Code Block #"
-				+ scriptIt.getCodeBlocks().indexOf(codeBlock)));
+		this.setBorder(new TitledBorder("Code Block "
+				+ (scriptIt.getCodeBlocks().indexOf(codeBlock) + 1)));
 		this.setBackground(Color.WHITE);
 
 		codeBlockEditorLayout.setAutoCreateGaps(true);
@@ -320,13 +320,14 @@ public class CodeBlockPanel extends JPanel {
 					.getInstance().buildParameterPanel(scriptIt, codeBlock,
 							parameter);
 
-			paramPane.addListener(new ParameterPanelObserver() {
+				paramPane.addListener(new ParameterPanelObserver() {
 
-				@Override
-				public void parameterPanelChanged() {
-					notifyChange();
-				}
-			});
+					@Override
+					public void parameterPanelChanged() {
+						notifyChange();
+					}
+				});
+			
 
 			parameterPanel.add(paramPane);
 		}
@@ -771,7 +772,7 @@ public class CodeBlockPanel extends JPanel {
 		final JComboBox slotBox = new JComboBox();
 		final Runnable buildItems;
 		final ActionListener listener;
-
+		
 		listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -820,6 +821,23 @@ public class CodeBlockPanel extends JPanel {
 		};
 
 		buildItems.run();
+		
+
+		final StoryComponentObserver observer = new StoryComponentObserver(){
+			@Override
+			public void componentChanged(StoryComponentEvent event){
+				switch(event.getType()){
+				case CHANGE_KNOW_IT_TYPE:
+					buildItems.run();
+					slotBox.revalidate();
+					break;
+				default:
+					break;
+				}
+			}
+		};
+				
+		codeBlock.getSubject().addStoryComponentObserver(slotBox, observer);
 
 		codeBlock.addStoryComponentObserver(slotBox,
 				new StoryComponentObserver() {
@@ -830,6 +848,7 @@ public class CodeBlockPanel extends JPanel {
 						case CODE_BLOCK_SUBJECT_SET:
 							buildItems.run();
 							slotBox.revalidate();
+							codeBlock.getSubject().addStoryComponentObserver(slotBox,observer);
 						default:
 							break;
 						}

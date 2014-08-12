@@ -19,8 +19,6 @@ import scriptease.gui.storycomponentpanel.StoryComponentPanelJList;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelManager;
 import scriptease.model.CodeBlock;
 import scriptease.model.StoryComponent;
-import scriptease.model.atomic.KnowIt;
-import scriptease.model.atomic.describeits.DescribeIt;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
@@ -138,14 +136,8 @@ public final class DeleteAction extends ActiveModelSensitiveAction {
 
 				library = selectedComponent.getLibrary();
 
-				if (selectedComponent instanceof KnowIt) {
-					final DescribeIt describeIt;
-
-					describeIt = library.getDescribeIt(selectedComponent);
-
-					if (describeIt != null)
-						library.removeDescribeIt(describeIt);
-				}
+				if (library == LibraryModel.getCommonLibrary())
+					continue;
 
 				library.remove(selectedComponent);
 			}

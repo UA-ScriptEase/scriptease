@@ -130,9 +130,10 @@ public abstract class ComplexStoryComponent extends StoryComponent {
 		// We're clear now to actually add the new child.
 		siblingIndex = this.childComponents.indexOf(sibling);
 
-		if ((siblingIndex < 0) || (sibling == null))
+		
+		if ((siblingIndex < 0) || (sibling == null)) {
 			this.childComponents.add(newChild);
-		else
+		} else
 			this.childComponents.add(siblingIndex, newChild);
 
 		newChild.setOwner(this);

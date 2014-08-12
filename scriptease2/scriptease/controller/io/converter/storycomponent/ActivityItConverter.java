@@ -18,16 +18,10 @@ public class ActivityItConverter extends ScriptItConverter {
 	public boolean canConvert(Class type) {
 		return type.equals(ActivityIt.class);
 	}
-
+	
 	@Override
 	protected ActivityIt buildComponent(HierarchicalStreamReader reader,
 			UnmarshallingContext context, LibraryModel library) {
 		return new ActivityIt(library, "");
-	}
-
-	@Override
-	public ActivityIt unmarshal(HierarchicalStreamReader reader,
-			UnmarshallingContext context) {
-		return (ActivityIt) super.unmarshal(reader, context);
 	}
 }

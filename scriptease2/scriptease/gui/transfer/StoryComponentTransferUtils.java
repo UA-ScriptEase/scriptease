@@ -58,9 +58,6 @@ public class StoryComponentTransferUtils {
 	public static boolean canImportToParent(
 			TransferHandler.TransferSupport support) {
 
-		// TODO: We don't want to be dealing with anything other than drag and
-		// drop for now. In the future we should extend this functionality to
-		// paste, cut, etc.
 		if (!support.isDrop())
 			return false;
 

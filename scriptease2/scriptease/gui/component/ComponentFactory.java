@@ -2,14 +2,12 @@ package scriptease.gui.component;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
@@ -256,7 +254,8 @@ public final class ComponentFactory {
 					break;
 				}
 				case EDIT:
-					g2d.drawString("edit", centerX - 8, centerY + 4);
+					g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
+					g2d.drawString("edit", centerX - 7, centerY + 4);
 					break;
 				case ADD:
 					// Draw a vertical line, which when combined with the line
@@ -756,14 +755,10 @@ public final class ComponentFactory {
 	 *         navigate to the specified link.
 	 */
 	public static JButton buildLinkButton(final String link, String buttonText) {
-		final JButton button = new JButton();
-		button.setText(buttonText);
-		button.setForeground(Color.BLUE);
-		button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		button.setBorderPainted(false);
-		button.setBorder(null);
-		button.setOpaque(false);
-		button.setMargin(new Insets(0, 0, 0, 0));
+		final JButton button;
+
+		button = ComponentFactory.buildFlatButton(ScriptEaseUI.SE_BLUE,
+				buttonText);
 		button.setToolTipText(link);
 		button.addActionListener(new ActionListener() {
 

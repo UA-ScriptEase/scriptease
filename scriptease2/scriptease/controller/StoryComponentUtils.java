@@ -15,6 +15,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
+import scriptease.model.complex.ActivityIt;
 import scriptease.model.complex.AskIt;
 import scriptease.model.complex.CauseIt;
 import scriptease.model.complex.ComplexStoryComponent;
@@ -159,6 +160,22 @@ public class StoryComponentUtils {
 	}
 
 	/**
+	 * Returns the activity that contains the component if one exists.
+	 * 
+	 * @param component
+	 * @return
+	 */
+	public static ActivityIt getActivityIt(StoryComponent component) {
+		StoryComponent parent = component.getOwner();
+
+		while (parent != null && !(parent instanceof ActivityIt)) {
+			parent = parent.getOwner();
+		}
+
+		return (ActivityIt) parent;
+	}
+
+	/**
 	 * Gets all code blocks from descendants of and from the root component.
 	 * 
 	 * @param component
@@ -172,8 +189,11 @@ public class StoryComponentUtils {
 			public void processScriptIt(ScriptIt scriptIt) {
 				super.processScriptIt(scriptIt);
 
-				if (!codeBlocks.contains(codeBlocks))
-					codeBlocks.addAll(scriptIt.getCodeBlocks());
+				for (CodeBlock block : scriptIt.getCodeBlocks())
+					if (!codeBlocks.contains(block)) {
+						codeBlocks.add(block);
+					}
+
 			}
 		};
 

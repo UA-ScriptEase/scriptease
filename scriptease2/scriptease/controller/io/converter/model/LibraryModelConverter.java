@@ -172,7 +172,7 @@ public class LibraryModelConverter implements Converter {
 
 		activities = XMLNode.ACTIVITYITS.readCollection(reader, context,
 				ActivityIt.class);
-		
+
 		library.addAll(activities);
 
 		behaviours = XMLNode.BEHAVIOURS.readCollection(reader, context,
@@ -199,29 +199,43 @@ public class LibraryModelConverter implements Converter {
 	 */
 	private void addDefaultCauseChildren(LibraryModel library,
 			Collection<CauseIt> causes) {
-
-		if (library.getTitle().contains("Path")) {
-			System.out.println(library.getTitle());
-		}
 		final Collection<CauseIt> automatics = library
 				.getAutomatics(GameModule.AUTOMATIC);
 
 		for (CauseIt cause : causes) {
 			if (automatics.contains(cause))
 				continue;
+
+			KnowIt activeDescription = null;
+
 			for (StoryComponent description : library.getDescriptionsCategory()
 					.getChildren()) {
 				if (description instanceof KnowIt
-						&& description.getDisplayText().contains("Current Active")) {
-					final KnowIt knowIt = ((KnowIt) description).clone();
-					final AskIt askIt = LibraryModel.createAskIt();
-
-					cause.addStoryChild(knowIt);
-					cause.addStoryChild(askIt);
-					askIt.getCondition().setBinding(knowIt);
-
+						&& description.getDisplayText().contains(
+								"Current Active")) {
+					activeDescription = ((KnowIt) description).clone();
 					break;
 				}
+			}
+
+			if (activeDescription == null) {
+				for (StoryComponent description : library
+						.getDescriptionsCategory().getChildren()) {
+					if (description instanceof KnowIt
+							&& description.getDisplayText().contains(
+									"Is Active")) {
+						activeDescription = ((KnowIt) description).clone();
+						break;
+					}
+				}
+			}
+
+			if (activeDescription != null) {
+				final AskIt askIt = LibraryModel.createAskIt();
+
+				cause.addStoryChild(activeDescription);
+				cause.addStoryChild(askIt);
+				askIt.getCondition().setBinding(activeDescription);
 			}
 		}
 	}
