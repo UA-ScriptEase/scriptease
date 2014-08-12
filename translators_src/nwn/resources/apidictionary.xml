@@ -5168,7 +5168,7 @@
     </CauseIt>
     <CauseIt>
       <Name>When &lt;subject&gt; is idle</Name>
-      <Visible>false</Visible>
+      <Visible>true</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
