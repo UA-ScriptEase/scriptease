@@ -1,5 +1,7 @@
 package scriptease.model.complex.behaviours;
 
+import java.util.List;
+
 import scriptease.controller.StoryVisitor;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
 import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryComponentChangeEnum;
@@ -87,6 +89,17 @@ public class Behaviour extends ScriptIt {
 	 */
 	public Task getStartTask() {
 		return (Task) this.getChildAt(0);
+	}
+
+	@Override
+	public List<StoryComponent> getDescendentStoryComponents() {
+		final List<StoryComponent> components = super
+				.getDescendentStoryComponents();
+
+		for (Task task : this.getStartTask().getDescendants())
+			components.addAll(task.getDescendentStoryComponents());
+
+		return components;
 	}
 
 	/**

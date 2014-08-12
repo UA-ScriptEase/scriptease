@@ -3,7 +3,6 @@ package scriptease.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 import scriptease.model.CodeBlock;
 import scriptease.model.CodeBlockReference;
@@ -39,13 +38,6 @@ public class StoryComponentUtils {
 	public static void bindUninitialized(final ScriptIt scriptIt) {
 		final Collection<StoryComponent> children = scriptIt
 				.getDescendentStoryComponents();
-
-		if (scriptIt instanceof Behaviour) {
-			for (Task task : ((Behaviour) scriptIt).getStartTask()
-					.getDescendants()) {
-				children.addAll(task.getDescendentStoryComponents());
-			}
-		}
 
 		for (StoryComponent child : children) {
 

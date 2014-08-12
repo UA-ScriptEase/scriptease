@@ -3,6 +3,7 @@ package scriptease.model.complex.behaviours;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
