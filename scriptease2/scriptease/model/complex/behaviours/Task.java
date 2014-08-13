@@ -198,13 +198,6 @@ public abstract class Task extends ComplexStoryComponent implements
 	}
 
 	@Override
-	public StoryComponent getOwner() {
-		if (!this.parents.isEmpty())
-			return ListOp.head(this.parents);
-		return super.getOwner();
-	}
-
-	@Override
 	public String toString() {
 		return "Task [ Children: [" + this.getChildren() + "] Successors: ["
 				+ this.getSuccessors() + "]]";
