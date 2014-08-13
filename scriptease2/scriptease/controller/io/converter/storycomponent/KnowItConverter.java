@@ -54,6 +54,7 @@ public class KnowItConverter extends StoryComponentConverter {
 		KnowItBinding binding;
 
 		knowIt = (KnowIt) super.unmarshal(reader, context);
+
 		typeNames = XMLNode.TYPES.readStringCollection(reader);
 
 		if (reader.hasMoreChildren()) {

@@ -82,7 +82,7 @@ public class TaskNodeRenderer extends SEGraphNodeRenderer<Task> {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				task.setChance((Integer) spinner.getValue());
+				task.setChance(((Double) spinner.getValue()).intValue());
 			}
 		});
 
