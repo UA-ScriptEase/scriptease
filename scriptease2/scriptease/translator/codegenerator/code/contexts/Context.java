@@ -64,6 +64,7 @@ public abstract class Context {
 	 */
 	private Collection<CodeBlock> codeBlocks = null;
 	private Collection<Behaviour> behaviours = null;
+	private Collection<Behaviour> latentQueues = null;
 
 	protected LocationInformation locationInfo;
 
@@ -211,6 +212,32 @@ public abstract class Context {
 		}
 
 		return this.behaviours;
+	}
+
+	/**
+	 * Gets all behaviours that are latents, that is, all behaviours that aren't
+	 * in the When Subject is Idle Cause.
+	 * 
+	 * @return
+	 */
+	public Collection<Behaviour> getLatentQueues() {
+		if (this.latentQueues == null) {
+			this.latentQueues = new ArrayList<Behaviour>();
+
+			// for each story point
+			for (StoryNode point : this.storyPoints) {
+				for (Behaviour behaviour : StoryComponentUtils
+						.getDescendantBehaviours(point)) {
+					if (!behaviour.getCodeBlocksForLocation(locationInfo)
+							.isEmpty()
+							&& !behaviour.getOwner().getDisplayText()
+									.equalsIgnoreCase(Behaviour.WHEN_IDLE_TEXT))
+						this.behaviours.add(behaviour);
+				}
+			}
+		}
+
+		return this.latentQueues;
 	}
 
 	public CodeBlock getMainCodeBlock() {
@@ -694,7 +721,7 @@ public abstract class Context {
 		unimplemented("getChoiceProbabilityUpperBound");
 		return null;
 	}
-	
+
 	public String getTaskProbabilityLowerBound() {
 		unimplemented("getTaskProbabilityLowerBound");
 		return null;

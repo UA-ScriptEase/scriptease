@@ -456,12 +456,6 @@
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDeclaration" />
 			</Series>
-			<Line>
-				<Literal>// Behaviour Declarations</Literal>
-			</Line>
-<!--	TODO		<Series data="behaviours" unique="true">-->
-<!--				<FormatRef ref="functionDeclaration" />-->
-<!--			</Series>-->
 			<Line />
 			<Line>
 				<Literal>// Main</Literal>
@@ -475,12 +469,6 @@
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDefinition" />
 			</Series>
-			<Line>
-				<Literal>// Behaviour Definitions</Literal>
-			</Line>
-<!--	TODO		<Series data="behaviours" unique="true">-->
-<!--				<FormatRef ref="functionDefinition" />-->
-<!--			</Series>-->
 			<Line />
 			<!-- NWN likes a blank line all by itself. I think it's a C-ism that they 
 				seem to want to keep? -->
