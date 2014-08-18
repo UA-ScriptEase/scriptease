@@ -63,8 +63,8 @@ public abstract class Context {
 	 * method.
 	 */
 	private Collection<CodeBlock> codeBlocks = null;
-	private Collection<Behaviour> behaviours = null;
-	private Collection<Behaviour> latentQueues = null;
+	private Collection<Behaviour> independentProactiveBehaviours = null;
+	private Collection<Behaviour> latentBehaviours = null;
 
 	protected LocationInformation locationInfo;
 
@@ -177,6 +177,30 @@ public abstract class Context {
 					this.codeBlocks.addAll(codeBlocksForSlot);
 				}
 			}
+
+			for (Behaviour behaviour : this.getLatentBehaviours()) {
+				final Collection<ScriptIt> scriptIts;
+
+				scriptIts = StoryComponentUtils
+						.getDescendantScriptIts(behaviour);
+
+				for (ScriptIt scriptIt : scriptIts) {
+					// TODO This will need to be reworked so that we don't add
+					// this for every creature, only the ones that have the behaviour
+					// called on them.
+
+					// TODO We also need a way to only declare these in the Idle
+					// cause, not everywhere.
+
+					final Collection<CodeBlock> codeBlocksForSlot;
+
+					codeBlocksForSlot = scriptIt.getCodeBlocks();
+					// .getCodeBlocksForLocation(this.locationInfo);
+
+					System.out.println("!!!" + codeBlocksForSlot);
+					this.codeBlocks.addAll(codeBlocksForSlot);
+				}
+			}
 		}
 
 		return this.codeBlocks;
@@ -188,30 +212,24 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	public Collection<Behaviour> getBehaviours() {
-		if (this.behaviours == null) {
+	public Collection<Behaviour> getIndependentProactiveBehaviours() {
+		if (this.independentProactiveBehaviours == null) {
 
-			this.behaviours = new ArrayList<Behaviour>();
+			this.independentProactiveBehaviours = new ArrayList<Behaviour>();
 
-			// for each story point
 			for (StoryNode point : this.storyPoints) {
 				for (Behaviour behaviour : StoryComponentUtils
 						.getDescendantBehaviours(point)) {
-					// final Collection<CodeBlock> codeBlocksForSlot;
-
-					// codeBlocksForSlot = scriptIt
-					// .getCodeBlocksForLocation(this.locationInfo);
-
-					// TODO Does this actually work?
 					if (!behaviour.getCodeBlocksForLocation(locationInfo)
-							.isEmpty())
-						this.behaviours.add(behaviour);
-					// this.behaviours.addAll(codeBlocksForSlot);
+							.isEmpty()
+							&& behaviour.getOwner().getDisplayText()
+									.equalsIgnoreCase(Behaviour.WHEN_IDLE_TEXT))
+						this.independentProactiveBehaviours.add(behaviour);
 				}
 			}
 		}
 
-		return this.behaviours;
+		return this.independentProactiveBehaviours;
 	}
 
 	/**
@@ -220,24 +238,21 @@ public abstract class Context {
 	 * 
 	 * @return
 	 */
-	public Collection<Behaviour> getLatentQueues() {
-		if (this.latentQueues == null) {
-			this.latentQueues = new ArrayList<Behaviour>();
+	public Collection<Behaviour> getLatentBehaviours() {
+		if (this.latentBehaviours == null) {
+			this.latentBehaviours = new ArrayList<Behaviour>();
 
-			// for each story point
 			for (StoryNode point : this.storyPoints) {
 				for (Behaviour behaviour : StoryComponentUtils
 						.getDescendantBehaviours(point)) {
-					if (!behaviour.getCodeBlocksForLocation(locationInfo)
-							.isEmpty()
-							&& !behaviour.getOwner().getDisplayText()
-									.equalsIgnoreCase(Behaviour.WHEN_IDLE_TEXT))
-						this.behaviours.add(behaviour);
+					if (!behaviour.getOwner().getDisplayText()
+							.equalsIgnoreCase(Behaviour.WHEN_IDLE_TEXT))
+						this.latentBehaviours.add(behaviour);
 				}
 			}
 		}
 
-		return this.latentQueues;
+		return this.latentBehaviours;
 	}
 
 	public CodeBlock getMainCodeBlock() {
@@ -729,6 +744,11 @@ public abstract class Context {
 
 	public String getTaskProbabilityUpperBound() {
 		unimplemented("getTaskProbabilityUpperBound");
+		return null;
+	}
+
+	public String getPriority() {
+		unimplemented("getPriority");
 		return null;
 	}
 

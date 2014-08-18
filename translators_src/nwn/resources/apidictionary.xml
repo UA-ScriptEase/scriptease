@@ -5202,16 +5202,19 @@
               <FormatRef data="NONE" ref="variablesDeclaration"/>
               <FormatRef data="NONE" ref="variablesDefinition"/>
               <Line>
-                <Literal>if (SCEZ_Behav_GetLatentQueueListSize(OBJECT_SELF) &gt; 0) {</Literal>
+                <Literal>if (SCEZ_Behav_GetLatentBehaviourListSize(OBJECT_SELF) &gt; 0) {</Literal>
               </Line>
               <Indent>
                 <Line/>
                 <Line>
-                  <Series data="latentQueues" unique="true" separator="        else ">
+                  <Series data="latentBehaviours" unique="true" separator="        else ">
                     <Indent>
-                      <Literal>if(SCEZ_Behav_IsCurrentLatentQueue(OBJECT_SELF, &quot;</Literal>
-                      <Fragment data="uniqueID"/>
-                      <Literal>&quot;)) {</Literal>
+                      <Line>
+                      	<Literal>string SE_LatentID = &quot;</Literal>
+                        <Fragment data="uniqueID"/>
+                      	<Literal>&quot;;</Literal>
+                      </Line>
+                      <Literal>if(SCEZ_Behav_IsCurrentLatentBehaviour(OBJECT_SELF, SE_LatentID)) {</Literal>
                       <Indent>
                         <FormatRef data="NONE" ref="variablesDeclaration"/>
                         <FormatRef data="NONE" ref="variablesDefinition"/>
@@ -5219,7 +5222,7 @@
                         <Line>
                           <Series data="tasks" unique="true" separator="            else ">
                             <Indent>
-                              <Literal>if(SCEZ_Behav_IsCurrentLatent(OBJECT_SELF, &quot;</Literal>
+                              <Literal>if(SCEZ_Behav_IsCurrentLatentBehaviourTask(OBJECT_SELF, SE_LatentID, &quot;</Literal>
                               <Fragment data="uniqueID"/>
                               <Literal>&quot;)) {</Literal>
                               <Indent>
@@ -5235,7 +5238,7 @@
                           </Series>
                         </Line>
                         <Line>
-                          <Literal>SCEZ_Behav_PopLatent(OBJECT_SELF, &quot;</Literal>
+                          <Literal>SCEZ_Behav_PopLatentBehaviourQueue(OBJECT_SELF, &quot;</Literal>
                           <Fragment data="uniqueID"/>
                           <Literal>&quot;);</Literal>
                         </Line>
@@ -25551,7 +25554,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef data="NONE" ref="queueLatentBehaviour"/>
+            <FormatRef data="NONE" ref="behaviour"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -25861,7 +25864,7 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef data="NONE" ref="queueLatentBehaviour"/>
+            <FormatRef data="NONE" ref="behaviour"/>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>

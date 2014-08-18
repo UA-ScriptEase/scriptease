@@ -12,6 +12,7 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
+import scriptease.translator.LanguageDictionary;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.storycomponent.StoryComponentContext;
 
@@ -71,10 +72,24 @@ public class FormatReferenceFragment extends AbstractFragment {
 		final TypeChecker typeChecker = new TypeChecker(context);
 
 		if (typeChecker.getResult()) {
+			final LanguageDictionary dictionary = context.getTranslator()
+					.getLanguageDictionary();
 			final List<AbstractFragment> format;
 
-			format = context.getTranslator().getLanguageDictionary()
-					.getFormat(formatID);
+			if (formatID.equalsIgnoreCase(Type.BEHAVIOUR.name())) {
+				if (context.getCause().getDisplayText()
+						.equalsIgnoreCase(Behaviour.WHEN_IDLE_TEXT)) {
+					format = dictionary
+							.getFormat(Behaviour.INDEPENDENT_PROACTIVE_FORMAT);
+				} else
+					format = dictionary.getFormat(Behaviour.LATENT_FORMAT);
+
+				// TODO Need functionality for collaborative behaviours as well
+
+			} else {
+				format = context.getTranslator().getLanguageDictionary()
+						.getFormat(formatID);
+			}
 
 			return AbstractFragment.resolveFormat(format, context);
 		} else

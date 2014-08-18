@@ -10,7 +10,6 @@ import scriptease.controller.observer.storycomponent.StoryComponentEvent.StoryCo
 import scriptease.model.StoryComponent;
 import scriptease.model.complex.ComplexStoryComponent;
 import scriptease.model.semodel.librarymodel.LibraryModel;
-import scriptease.util.ListOp;
 
 /**
  * A task is a series of effects. Each task has a probability of execution

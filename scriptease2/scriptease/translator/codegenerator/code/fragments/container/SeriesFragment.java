@@ -38,7 +38,7 @@ import scriptease.translator.codegenerator.code.fragments.AbstractFragment;
  */
 public class SeriesFragment extends AbstractContainerFragment {
 	public static enum Type {
-		ARGUMENTS, CAUSES, CHILDLINES, CHILDREN, CHILDRENNODES, CODEBLOCKS, DIALOGUEROOTS, IDENTICALCAUSES, IMPLICITS, INCLUDES, PARAMETERS, PARENTNODES, SLOTPARAMETERS, VARIABLES, PARAMETERSWITHSLOT, ORDEREDDIALOGUELINES, ORDEREDSTORYPOINTS, STORYNODES, STORYPOINTS, ORDEREDSTORYNODES, CHOICES, BEHAVIOURS, TASKS, CHILDRENTASKS, LATENTQUEUES
+		ARGUMENTS, CAUSES, CHILDLINES, CHILDREN, CHILDRENNODES, CODEBLOCKS, DIALOGUEROOTS, IDENTICALCAUSES, IMPLICITS, INCLUDES, PARAMETERS, PARENTNODES, SLOTPARAMETERS, VARIABLES, PARAMETERSWITHSLOT, ORDEREDDIALOGUELINES, ORDEREDSTORYPOINTS, STORYNODES, STORYPOINTS, ORDEREDSTORYNODES, CHOICES, INDEPENDENTPROACTIVEBEHAVIOURS, TASKS, CHILDRENTASKS, LATENTBEHAVIOURS
 	}
 
 	public static enum FilterType {
@@ -257,10 +257,10 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getChoices();
 		case TASKS:
 			return context.getTasks();
-		case BEHAVIOURS:
-			return context.getBehaviours();
-		case LATENTQUEUES:
-			return context.getLatentQueues();
+		case INDEPENDENTPROACTIVEBEHAVIOURS:
+			return context.getIndependentProactiveBehaviours();
+		case LATENTBEHAVIOURS:
+			return context.getLatentBehaviours();
 		default:
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "
