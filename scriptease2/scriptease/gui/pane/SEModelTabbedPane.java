@@ -314,8 +314,9 @@ class SEModelTabbedPane extends JTabbedPane {
 		final JToolBar graphToolBar;
 
 		final DialogueEditorPanel dialogueEditor;
-		final BehaviourEditorPanel behaviourEditor;
-
+		//final BehaviourEditorPanel behaviourEditor;
+		final JPanel behaviourEditor;
+		
 		final JButton backFromDialogue;
 		final JButton backFromBehaviour;
 
@@ -343,8 +344,9 @@ class SEModelTabbedPane extends JTabbedPane {
 				ScriptEaseUI.SE_BLACK, backText);
 
 		dialogueEditor = new DialogueEditorPanel(model, backFromDialogue);
-		behaviourEditor = new BehaviourEditorPanel(backFromBehaviour);
-
+		behaviourEditor = new JPanel(new BorderLayout());
+		
+		
 		graphRedrawer = new StoryComponentObserver() {
 			@Override
 			public void componentChanged(StoryComponentEvent event) {
@@ -507,8 +509,9 @@ class SEModelTabbedPane extends JTabbedPane {
 			@Override
 			public void behaviourEditPressed(Behaviour behaviour) {
 				if (behaviour != null) {
+					behaviourEditor.removeAll();
+					behaviourEditor.add(LibraryEditorPanelFactory.getInstance().buildBehaviourEditingPanel(behaviour, backFromBehaviour), BorderLayout.CENTER);
 					layout.show(topLevelPane, BEHAVIOUR_EDITOR);
-					behaviourEditor.setBehaviour(behaviour);
 				}
 			}
 		});
