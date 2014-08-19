@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 import scriptease.ScriptEase;
 import scriptease.controller.observer.CodeBlockPanelObserver;
@@ -266,16 +267,18 @@ public class LibraryEditorPanelFactory {
 	}
 
 	/**
-	 * Builds a panel used to edit a behaviour.
+	 * Builds a panel used to edit a behaviour.  Pass in a button if using in a story context.
 	 * 
 	 * @param behaviour
+	 * @param backToStory
 	 * @return
 	 */
 	@SuppressWarnings("serial")
-	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour) {
+	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour, JButton backToStory) {
 		final JPanel behaviourPanel;
 		final JPanel buttonsPanel;
-
+		final JPanel superPanel;
+		
 		final JButton independentButton;
 		final JButton collaborativeButton;
 
@@ -380,7 +383,17 @@ public class LibraryEditorPanelFactory {
 		LibraryEditorPanelFactory.this.addChangeableBehaviourPanel(behaviour,
 				behaviourPanel);
 
-		return behaviourPanel;
+		if (backToStory == null){
+			return behaviourPanel;
+
+		} else {
+			superPanel = new JPanel();
+			superPanel.setLayout(new BorderLayout());
+			superPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+			superPanel.add(backToStory, BorderLayout.EAST);
+			superPanel.add(behaviourPanel);
+			return superPanel;
+		}
 	}
 
 	private JPanel buildBehaviourGraphPanel(SEGraph<Task> graph,
@@ -393,12 +406,13 @@ public class LibraryEditorPanelFactory {
 		scrollPane = new JScrollPane(graph);
 		scrollPane.setPreferredSize(new Dimension(245,245));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
-
+		
+		graphPanel.setMaximumSize(new Dimension(10000,100));
 		if (isEditable) {
 			graphPanel.add(graph.getToolBar());
 		}
-		graphPanel.add(scrollPane, BorderLayout.CENTER);
-
+		graphPanel.add(scrollPane, BorderLayout.WEST);
+				
 		return graphPanel;
 	}
 

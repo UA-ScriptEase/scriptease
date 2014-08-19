@@ -203,7 +203,7 @@ public class LibraryEditorPanel extends JPanel {
 			public void processBehaviour(Behaviour behaviour) {
 				final JPanel panel;
 				panel = LibraryEditorPanelFactory.getInstance()
-						.buildBehaviourEditingPanel(behaviour);
+						.buildBehaviourEditingPanel(behaviour, null);
 				
 				this.pane.removeAll();
 				this.pane.add(panel);
