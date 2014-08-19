@@ -201,7 +201,7 @@ public abstract class Context {
 						.getBinding();
 
 				for (CauseIt idle : idleCauses) {
-					// TODO Check if subject == initiator. Otherwise we exit.
+					// TODO Check if subject.equals(initiator). Otherwise we exit.
 				}
 
 				final Collection<ScriptIt> scriptIts;

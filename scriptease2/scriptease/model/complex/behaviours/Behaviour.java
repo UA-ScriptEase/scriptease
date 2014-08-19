@@ -12,7 +12,6 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
-import scriptease.util.ListOp;
 
 /**
  * A Behaviour represents a series of Tasks {@link Task}. A Behaviour can be
@@ -207,7 +206,6 @@ public class Behaviour extends ScriptIt {
 		final Behaviour component = (Behaviour) super.clone();
 
 		component.type = this.type;
-		component.setStartTask((Task) ListOp.head(component.getChildren()));
 
 		return component;
 	}
