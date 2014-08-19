@@ -178,27 +178,39 @@ public abstract class Context {
 				}
 			}
 
+			final Collection<CauseIt> idleCauses = new ArrayList<CauseIt>();
+
+			for (CodeBlock codeBlock : this.codeBlocks) {
+				final CauseIt cause = codeBlock.getCause();
+				if (cause.getDisplayText().equalsIgnoreCase(
+						Behaviour.WHEN_IDLE_TEXT)) {
+					idleCauses.add(cause);
+					break;
+				}
+			}
+
+	//		if (idleCauses.isEmpty())
+				// TODO This won't work for things that don't have an idle
+				// cause. Not sure if we want it to.
+		//		return this.codeBlocks;
+
 			for (Behaviour behaviour : this.getLatentBehaviours()) {
+				final KnowItBinding initiator;
+
+				initiator = behaviour.getParameter(Behaviour.INITIATOR)
+						.getBinding();
+
+				for (CauseIt idle : idleCauses) {
+					// TODO Check if subject == initiator. Otherwise we exit.
+				}
+
 				final Collection<ScriptIt> scriptIts;
 
 				scriptIts = StoryComponentUtils
 						.getDescendantScriptIts(behaviour);
 
 				for (ScriptIt scriptIt : scriptIts) {
-					// TODO This will need to be reworked so that we don't add
-					// this for every creature, only the ones that have the behaviour
-					// called on them.
-
-					// TODO We also need a way to only declare these in the Idle
-					// cause, not everywhere.
-
-					final Collection<CodeBlock> codeBlocksForSlot;
-
-					codeBlocksForSlot = scriptIt.getCodeBlocks();
-					// .getCodeBlocksForLocation(this.locationInfo);
-
-					System.out.println("!!!" + codeBlocksForSlot);
-					this.codeBlocks.addAll(codeBlocksForSlot);
+					this.codeBlocks.addAll(scriptIt.getCodeBlocks());
 				}
 			}
 		}

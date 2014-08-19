@@ -33,6 +33,8 @@ public class Behaviour extends ScriptIt {
 	public static final String LATENT_FORMAT = "queueLatentBehaviour";
 	public static final String INDEPENDENT_PROACTIVE_FORMAT = "queueIndependentProactiveBehaviour";
 
+	public static final String INITIATOR = "Initiator";
+
 	private Type type;
 
 	private static int uniqueIDCounter = 0;
@@ -174,8 +176,8 @@ public class Behaviour extends ScriptIt {
 		final CodeBlock main = this.getMainCodeBlock();
 		final LibraryModel lib = this.getLibrary();
 		// TODO TRANSLATOR DEPENDENCY ALERT FOR TYPES!
-		final KnowIt initiator = new KnowIt(lib, "Initiator", "Creature");
-		final KnowIt priority = new KnowIt(lib, "Priority", "Number");
+		final KnowIt initiator = new KnowIt(lib, INITIATOR, "Creature");
+		final KnowIt priority = new KnowIt(lib, PRIORITY_TEXT, "Number");
 
 		main.clearParameters();
 

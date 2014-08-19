@@ -10,6 +10,7 @@ import scriptease.model.atomic.KnowIt;
 import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.complex.ScriptIt;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.translator.LanguageDictionary;
 import scriptease.util.StringOp;
 
@@ -94,8 +95,8 @@ public class CodeGenerationNamifier {
 	private String buildLegalName(StoryComponent component, Pattern legalFormat) {
 		final String displayText = component.getDisplayText();
 		String name;
-		
-		if(StringOp.exists(displayText)) {
+
+		if (StringOp.exists(displayText)) {
 			name = displayText;
 		} else
 			name = "noname";
@@ -143,9 +144,13 @@ public class CodeGenerationNamifier {
 		if (component instanceof KnowIt) {
 			final KnowItBinding binding = ((KnowIt) component).getBinding();
 
-			if (binding instanceof KnowItBindingFunction
-					&& ((ScriptIt) binding.getValue()).getCause()
-							.getImplicits().contains(component)) {
+			if ((binding instanceof KnowItBindingFunction && ((ScriptIt) binding
+					.getValue()).getCause().getImplicits().contains(component))
+					|| // TODO This may or may not work. 
+					
+					(component.getDisplayText().equalsIgnoreCase(
+							Behaviour.INITIATOR) && component.getOwner()
+							.getOwner() instanceof Behaviour)) {
 
 				for (Entry<StoryComponent, String> entry : this.componentsToNames
 						.entrySet()) {
@@ -156,7 +161,11 @@ public class CodeGenerationNamifier {
 			}
 		}
 
-		return this.componentsToNames.get(component);
+		final String name = this.componentsToNames.get(component);
+
+		if (StringOp.exists(name) && name.equalsIgnoreCase("Initiator_0"))
+			System.out.println("blarg");
+		return name;
 	}
 
 	@Override
