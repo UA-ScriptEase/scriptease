@@ -14,6 +14,7 @@ import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.util.ListOp;
 
 /**
  * A independent task is a subclass of Task with only one subject.
@@ -22,8 +23,6 @@ import scriptease.model.semodel.librarymodel.LibraryModel;
  * 
  */
 public class IndependentTask extends Task {
-
-	private StoryComponentContainer initiatorContainer;
 
 	public IndependentTask(LibraryModel library) {
 		this(library, "");
@@ -38,6 +37,7 @@ public class IndependentTask extends Task {
 		super(library, name);
 
 		final List<Class<? extends StoryComponent>> taskContainerTypes;
+		final StoryComponentContainer initiatorContainer;
 
 		// Register the initiator and responder task containers.
 		this.registerChildType(StoryComponentContainer.class, 1);
@@ -53,9 +53,8 @@ public class IndependentTask extends Task {
 		taskContainerTypes.add(AskIt.class);
 		taskContainerTypes.add(ActivityIt.class);
 
-		initiatorContainer = new StoryComponentContainer(taskContainerTypes);
-
-		initiatorContainer.setDisplayText("Initiator:");
+		initiatorContainer = new StoryComponentContainer("Initiator:",
+				taskContainerTypes);
 
 		this.addStoryChild(initiatorContainer);
 	}
@@ -64,39 +63,11 @@ public class IndependentTask extends Task {
 	 * @return the initiatorContainer
 	 */
 	public StoryComponentContainer getInitiatorContainer() {
-		return initiatorContainer;
-	}
-
-	/**
-	 * @param initiatorContainer
-	 *            the initiatorContainer to set
-	 */
-	public void setInitiatorContainer(StoryComponentContainer initiatorContainer) {
-		this.initiatorContainer = initiatorContainer;
-	}
-
-	@Override
-	public boolean addStoryChildBefore(StoryComponent newChild,
-			StoryComponent sibling) {
-		boolean success = super.addStoryChildBefore(newChild, sibling);
-
-		if (success) {
-			if (this.getChildren().iterator().next() == newChild)
-				this.setInitiatorContainer((StoryComponentContainer) newChild);
-		}
-
-		return success;
+		return (StoryComponentContainer) ListOp.head(this.childComponents);
 	}
 
 	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processIndependentTask(this);
-	}
-
-	@Override
-	public void revalidateKnowItBindings() {
-		for (StoryComponent child : this.getChildren()) {
-			child.revalidateKnowItBindings();
-		}
 	}
 }

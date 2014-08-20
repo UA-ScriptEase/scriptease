@@ -570,6 +570,7 @@ public abstract class StoryComponent implements Cloneable {
 
 	/**
 	 * Checks all bindings that may exist and removes them if they are invalid.
+	 * We need to do this, or else.
 	 */
 	public abstract void revalidateKnowItBindings();
 

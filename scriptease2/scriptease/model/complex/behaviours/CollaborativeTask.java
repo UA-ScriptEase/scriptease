@@ -14,6 +14,7 @@ import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.StoryComponentContainer;
 import scriptease.model.semodel.librarymodel.LibraryModel;
+import scriptease.util.ListOp;
 
 /**
  * A collaborative task is a subclass of Task with a initiator subject and a
@@ -25,9 +26,6 @@ public class CollaborativeTask extends Task {
 
 	private String initiatorName;
 	private String responderName;
-
-	private StoryComponentContainer initiatorContainer;
-	private StoryComponentContainer responderContainer;
 
 	public CollaborativeTask(LibraryModel library) {
 		this(library, "", "");
@@ -44,6 +42,8 @@ public class CollaborativeTask extends Task {
 		super(library, initiatorName + ":" + responderName);
 
 		final List<Class<? extends StoryComponent>> taskContainerTypes;
+		final StoryComponentContainer initiatorContainer;
+		final StoryComponentContainer responderContainer;
 
 		this.initiatorName = initiatorName;
 		this.responderName = responderName;
@@ -75,30 +75,14 @@ public class CollaborativeTask extends Task {
 	 * @return the initiatorContainer
 	 */
 	public StoryComponentContainer getInitiatorContainer() {
-		return initiatorContainer;
-	}
-
-	/**
-	 * @param initiatorContainer
-	 *            the initiatorContainer to set
-	 */
-	public void setInitiatorContainer(StoryComponentContainer initiatorContainer) {
-		this.initiatorContainer = initiatorContainer;
+		return (StoryComponentContainer) ListOp.head(this.getChildren());
 	}
 
 	/**
 	 * @return the responderContainer
 	 */
 	public StoryComponentContainer getResponderContainer() {
-		return responderContainer;
-	}
-
-	/**
-	 * @param responderContainer
-	 *            the responderContainer to set
-	 */
-	public void setResponderContainer(StoryComponentContainer responderContainer) {
-		this.responderContainer = responderContainer;
+		return (StoryComponentContainer) ListOp.last(this.getChildren());
 	}
 
 	/**
@@ -148,27 +132,7 @@ public class CollaborativeTask extends Task {
 	}
 
 	@Override
-	public boolean addStoryChildBefore(StoryComponent newChild,
-			StoryComponent sibling) {
-		boolean success = super.addStoryChildBefore(newChild, sibling);
-		if (success) {
-			if (this.getChildren().iterator().next() == newChild)
-				this.setInitiatorContainer((StoryComponentContainer) newChild);
-			else
-				this.setResponderContainer((StoryComponentContainer) newChild);
-		}
-		return success;
-	}
-
-	@Override
 	public void process(StoryVisitor visitor) {
 		visitor.processCollaborativeTask(this);
-	}
-
-	@Override
-	public void revalidateKnowItBindings() {
-		for (StoryComponent child : this.getChildren()) {
-			child.revalidateKnowItBindings();
-		}
 	}
 }

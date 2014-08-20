@@ -216,9 +216,7 @@ public class Behaviour extends ScriptIt {
 	}
 
 	@Override
-	public void revalidateKnowItBindings() {
-		for (StoryComponent child : this.getChildren()) {
-			child.revalidateKnowItBindings();
-		}
+	public String toString() {
+		return "Behaviour[ Tasks: [" + this.getStartTask() + "]]";
 	}
 }

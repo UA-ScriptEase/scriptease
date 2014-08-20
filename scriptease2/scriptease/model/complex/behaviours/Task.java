@@ -36,8 +36,7 @@ public abstract class Task extends ComplexStoryComponent implements
 	protected Task(LibraryModel library, String name) {
 		super(library, name);
 
-		this.successors = new HashSet<Task>();
-		this.parents = new HashSet<Task>();
+		this.init();
 		this.chance = 100;
 
 		this.uniqueID = uniqueIDCounter++;
@@ -45,6 +44,13 @@ public abstract class Task extends ComplexStoryComponent implements
 		// Tasks don't need to have childrens - yet.
 		this.registerChildTypes(
 				new ArrayList<Class<? extends StoryComponent>>(), 0);
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		this.successors = new HashSet<Task>();
+		this.parents = new HashSet<Task>();
 	}
 
 	/**
@@ -206,6 +212,16 @@ public abstract class Task extends ComplexStoryComponent implements
 	public int compareTo(Task o) {
 		return Integer.valueOf(this.getChance()).compareTo(
 				Integer.valueOf(o.getChance()));
+	}
+
+	@Override
+	public void revalidateKnowItBindings() {
+		for (Task successor : this.successors)
+			successor.revalidateKnowItBindings();
+
+		for (StoryComponent child : this.getChildren()) {
+			child.revalidateKnowItBindings();
+		}
 	}
 
 	public int getUniqueID() {
