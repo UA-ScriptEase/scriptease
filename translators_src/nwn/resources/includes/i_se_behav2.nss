@@ -5,12 +5,7 @@
 /*
  * Constants
  */
-
-const string INDEPENDENT_PROACTIVE_PREFIX = "SCEZ_Behav_IndependentProactiveQueue_";
-const string LATENT_PREFIX = "SCEZ_Behav_LatentQueue_";
-const string COLLABORATIVE_PREFIX = "SCEZ_Behav_CollaborativeQueue_";
-const string LATENT_LIST_PREFIX = "SCEZ_Behav_LatentQueueList_";
-const string COLLABORATIVE_LIST_PREFIX = "SCEZ_Behav_CollaborativeQueueList_";
+const string BEHAVIOUR_LIST_PREFIX = "SCEZ_BehaviourList_";
 const string PRIORITY_PREFIX = "SCEZ_Behav_Priority_";
 const string TASK_PREFIX = "SCEZ_TASK_";
 
@@ -21,33 +16,23 @@ const string TASK_PREFIX = "SCEZ_TASK_";
 int SCEZ_Behav_IsIdle(object actor);
 
 // Name Getters
-string SCEZ_Behav_GetTaskName(string name);
-string SCEZ_Behav_GetIndependentProactiveQueueName(object actor);
-string SCEZ_Behav_GetLatentBehaviourName(string name);
-string SCEZ_Behav_GetLatentBehaviourListName(object actor);
-string SCEZ_Behav_GetCollaborativeQueueListName(object actor);
+string SCEZ_Behav_GetBehaviourListName(object actor);
+string SCEZ_Behav_GetPriorityName(string name);
 
-// Proactive Queue
-string SCEZ_Behav_PeekIndependentProactiveQueue(object actor);
-void SCEZ_Behav_AddToIndependentProactiveQueue(object actor, string name);
-string SCEZ_Behav_PopIndependentProactiveQueue(object actor);
-int SCEZ_Behav_IndependentProactiveQueueIsEmpty(object actor);
+// Behaviour List
+int SCEZ_Behav_GetBehaviourListSize(object actor);
+int  SCEZ_Behav_IsCurrentBehaviour(object actor, string name);
 
-// Latent Queues
-int SCEZ_Behav_GetLatentBehaviourListSize(object actor);
+void SCEZ_Behav_AddBehaviour(object actor, string name, float priority);
 
-void SCEZ_Behav_AddLatentBehaviour(object actor, string name, float priority);
+// Behaviour Queues
+void SCEZ_Behav_AddToBehaviourQueue(object actor, string behaviourName, string taskName);
 
-void SCEZ_Behav_AddToLatentBehaviourQueue(object actor, string name, string proactiveName);
-string SCEZ_Behav_PeekLatentBehaviourQueue(object actor, string name);
-string SCEZ_Behav_PopLatentBehaviourQueue(object actor, string name);
+string SCEZ_Behav_PeekBehaviourQueue(object actor, string name);
+string SCEZ_Behav_PopBehaviourQueue(object actor, string name);
 
-int  SCEZ_Behav_IsCurrentLatentBehaviour(object actor, string name);
-int SCEZ_Behav_LatentBehaviourQueueIsEmpty(object actor, string name);
-
-
-// Collaborative Queues
-int SCEZ_Behav_GetCollaborativeQueueListSize(object actor);
+int SCEZ_Behav_BehaviourQueueIsEmpty(object actor, string name);
+int SCEZ_Behav_IsCurrentBehaviourTask(object actor, string behaviourName, string taskName);
 
 /*
  * Function Definitions
@@ -55,89 +40,46 @@ int SCEZ_Behav_GetCollaborativeQueueListSize(object actor);
 
 // An actor is idle if it has no latent or collaborative queues.
 int SCEZ_Behav_IsIdle(object actor) {
-  return SCEZ_Behav_GetLatentBehaviourListSize(actor) == 0
-            && SCEZ_Behav_GetCollaborativeQueueListSize(actor) == 0
-            && SCEZ_Behav_IndependentProactiveQueueIsEmpty(actor) == 1;
+  return SCEZ_Behav_GetBehaviourListSize(actor) == 0;
 }
 
 
 /**
  * Name Getters
  */
-string SCEZ_Behav_GetIndependentProactiveQueueName(object actor) {
-    return INDEPENDENT_PROACTIVE_PREFIX + GetTag(actor);
-}
-
-string SCEZ_Behav_GetLatentBehaviourName(string name) {
-    return LATENT_PREFIX + name;
-}
-
-string SCEZ_Behav_GetLatentBehaviourListName(object actor) {
-    return LATENT_LIST_PREFIX + GetTag(actor);
-}
-string SCEZ_Behav_GetCollaborativeQueueListName(object actor) {
-   return COLLABORATIVE_LIST_PREFIX + GetTag(actor);
-}
-
-string SCEZ_Behav_GetTaskName(string name) {
-   return TASK_PREFIX + name;
+string SCEZ_Behav_GetBehaviourListName(object actor) {
+    return BEHAVIOUR_LIST_PREFIX + GetTag(actor);
 }
 
 string SCEZ_Behav_GetPriorityName(string name) {
   return PRIORITY_PREFIX + name;
 }
 
-
-
 /**
- * Proactive Queue
+ * Behaviour List
  */
-string SCEZ_Behav_PeekIndependentProactiveQueue(object actor) {
-    return SCEZ_Struct_QueuePeek(actor, SCEZ_Behav_GetIndependentProactiveQueueName(actor));
+int SCEZ_Behav_GetBehaviourListSize(object actor){
+   return SCEZ_Struct_ArrayGetSize(actor, SCEZ_Behav_GetBehaviourListName(actor));
 }
 
-int SCEZ_Behav_IndependentProactiveQueueIsEmpty(object actor) {
-   return SCEZ_Struct_QueueIsEmpty(actor, SCEZ_Behav_GetIndependentProactiveQueueName(actor));
-}
-
-int SCEZ_Behav_IsCurrentIndependentProactive(object actor, string proactiveName) {
-    return SCEZ_Behav_PeekIndependentProactiveQueue(actor) == SCEZ_Behav_GetTaskName(proactiveName);
-}
-
-void SCEZ_Behav_AddToIndependentProactiveQueue(object actor, string proactiveName){
-   SCEZ_Struct_QueueAdd(actor, SCEZ_Behav_GetIndependentProactiveQueueName(actor), SCEZ_Behav_GetTaskName(proactiveName));
-}
-
-string SCEZ_Behav_PopIndependentProactiveQueue(object actor){
-   return SCEZ_Struct_QueuePop(actor, SCEZ_Behav_GetIndependentProactiveQueueName(actor));
-}
-
-/**
- * Latent Queues
- */
-int SCEZ_Behav_GetLatentBehaviourListSize(object actor){
-   return SCEZ_Struct_ArrayGetSize(actor, SCEZ_Behav_GetLatentBehaviourListName(actor));
-}
-
-int  SCEZ_Behav_IsCurrentLatentBehaviour(object actor, string name) {
-   string SE_BEHAVIOUR_LIST_NAME = SCEZ_Behav_GetLatentBehaviourListName(actor);
-   string SE_ThisName = SCEZ_Behav_GetLatentBehaviourName(name);
-   return SCEZ_Struct_ArrayFindElement(actor, SE_BEHAVIOUR_LIST_NAME, SE_ThisName) > -1;
+int  SCEZ_Behav_IsCurrentBehaviour(object actor, string name) {
+   return SCEZ_Struct_ArrayFindElement(actor, SCEZ_Behav_GetBehaviourListName(actor), name) == 0;
 }
 
 // This adds the behaviour to a list of latent behaviours ordered by priority
-void SCEZ_Behav_AddLatentBehaviour(object actor, string name, float priority) {
-   string SE_BehavName = SCEZ_Behav_GetLatentBehaviourName(name);
-   string SE_BehavListName =  SCEZ_Behav_GetLatentBehaviourListName(actor);
+void SCEZ_Behav_AddBehaviour(object actor, string name, float priority) {
+   string SE_BehavListName =  SCEZ_Behav_GetBehaviourListName(actor);
 
    int index = 0;
    int SE_SIZE = SCEZ_Struct_ArrayGetSize(actor, SE_BehavListName);
 
    // Save the priority so we can access it when we add another behaviour.
-   SetLocalFloat(actor, SCEZ_Behav_GetPriorityName(SE_BehavName), priority);
+
+   SetLocalFloat(actor, SCEZ_Behav_GetPriorityName(name), priority);
 
    if(SE_SIZE == 0) {
-      SCEZ_Struct_ArrayAppendElement(actor, SE_BehavListName, SE_BehavName);
+
+      SCEZ_Struct_ArrayAppendElement(actor, SE_BehavListName, name);
    } else {
        for(index; index < SE_SIZE ; index++) {
           // This is the latent name...
@@ -146,48 +88,69 @@ void SCEZ_Behav_AddLatentBehaviour(object actor, string name, float priority) {
 
           if(priority <= priorityAtIndex) {
               // This should insert the behaviour before the current element.
-              SCEZ_Struct_ArrayInsertElement(actor, SE_BehavListName, SE_BehavName, index);
+
+
+              // TODO We may not want to insert behaviours with low priority!!
+
+
+              SCEZ_Struct_ArrayInsertElement(actor, SE_BehavListName, name, index);
               break;
           }
 
           if(index == SE_SIZE - 1) {
-              // We add the behaviour to the end if it has the highest priority
-              SCEZ_Struct_ArrayAppendElement(actor, SE_BehavListName, SE_BehavName);
+              // We insert the behaviour to the start if it has the highest priority
+              // which we can tell if we reach the end of the list.
+              SCEZ_Struct_ArrayInsertElement(actor, SE_BehavListName, name, 0);
           }
        }
    }
 }
 
-string SCEZ_Behav_PeekLatentBehaviourQueue(object actor, string name) {
-    return SCEZ_Struct_QueuePeek(actor, SCEZ_Behav_GetLatentBehaviourName(name));
+/**
+ * Behaviour queues
+ */
+
+string SCEZ_Behav_PeekBehaviourQueue(object actor, string name) {
+    return SCEZ_Struct_QueuePeek(actor, name);
 }
 
-string SCEZ_Behav_PopLatentBehaviourQueue(object actor, string name) {
-    string SE_BehavName = SCEZ_Behav_GetLatentBehaviourName(name);
-    string SE_BehavTaskName = SCEZ_Struct_QueuePop(actor, SE_BehavName);
+string SCEZ_Behav_PopBehaviourQueue(object actor, string name) {
 
-    if(SCEZ_Behav_LatentBehaviourQueueIsEmpty(actor, SE_BehavName)) {
-        SCEZ_Struct_ArrayRemoveElement(actor, SCEZ_Behav_GetLatentBehaviourListName(actor), SE_BehavName);
+    string SE_BehavTaskName = SCEZ_Struct_QueuePop(actor, name);
+
+    if(SCEZ_Behav_BehaviourQueueIsEmpty(actor, name)) {
+        SCEZ_Struct_ArrayRemoveElement(actor, SCEZ_Behav_GetBehaviourListName(actor), name);
     }
 
     return SE_BehavTaskName;
 }
 
-int SCEZ_Behav_LatentBehaviourQueueIsEmpty(object actor, string name){
-    return SCEZ_Struct_QueueIsEmpty(actor, SCEZ_Behav_GetLatentBehaviourName(name));
+int SCEZ_Behav_BehaviourQueueIsEmpty(object actor, string name){
+    return SCEZ_Struct_QueueIsEmpty(actor, name);
 }
 
-void SCEZ_Behav_AddToLatentBehaviourQueue(object actor, string name, string proactiveName) {
-    SCEZ_Struct_QueueAdd(actor, SCEZ_Behav_GetLatentBehaviourName(name), SCEZ_Behav_GetTaskName(proactiveName));
+void SCEZ_Behav_AddToBehaviourQueue(object actor, string behaviourName, string taskName) {
+    SCEZ_Struct_QueueAdd(actor, behaviourName, taskName);
 }
 
-int SCEZ_Behav_IsCurrentLatentBehaviourTask(object actor, string name, string proactiveName) {
-    return SCEZ_Behav_PeekLatentBehaviourQueue(actor, name) == SCEZ_Behav_GetTaskName(proactiveName);
+int SCEZ_Behav_IsCurrentBehaviourTask(object actor, string behaviourName, string taskName) {
+    return SCEZ_Behav_PeekBehaviourQueue(actor, behaviourName) == taskName;
 }
 
-/**
- * Collaborative queues. TODO Eventually
- */
-int SCEZ_Behav_GetCollaborativeQueueListSize(object actor) {
-   return SCEZ_Struct_ArrayGetSize(actor, SCEZ_Behav_GetCollaborativeQueueListName(actor));
+string SCEZ_Behav_BehaviourListToString(object actor) {
+    string SE_BehavListName =  SCEZ_Behav_GetBehaviourListName(actor);
+    int index = 0;
+    int SE_SIZE = SCEZ_Struct_ArrayGetSize(actor, SE_BehavListName);
+
+    if(SE_SIZE == 0)
+        return "Behaviour List is Empty";
+
+    string SE_BehavString = "Behaviour [ ";
+    for(index; index < SE_SIZE ; index++) {
+          // This is the latent name...
+          SE_BehavString += "[" + SCEZ_Struct_ArrayGetElementAtIndex(actor, SE_BehavListName, index)+ "]" ;
+    }
+
+    SE_BehavString += " ]";
+    return SE_BehavString;
 }

@@ -35,6 +35,6 @@ public class BehaviourContext extends ScriptItContext {
 
 	@Override
 	public String getUniqueID() {
-		return String.valueOf(this.getComponent().getUniqueID());
+		return "behaviour" + this.getComponent().getUniqueID();
 	}
 }

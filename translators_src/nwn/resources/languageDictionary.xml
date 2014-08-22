@@ -330,43 +330,7 @@
 			</Line>	
 		</Format>
 	
-		
-		<Format id="queueIndependentProactiveTask">
-			<Line>
-				<Literal>SCEZ_Behav_AddToIndependentProactiveQueue(OBJECT_SELF, &quot;</Literal>
-							<Fragment data = "uniqueID"/>
-				<Literal>&quot;);</Literal>		
-			</Line>
-			
-			<Line>
-				<Literal>int SE2_RANDOM_NUMBER = Random(</Literal>
-					<Fragment data="probabilitycount"/>
-				<Literal>);</Literal>
-			</Line>
-					
-			<Series data="childrenTasks" unique="true" separator=" else ">
-				<Line>
-					<!-- If UpperBound > RandomNumber >= LowerBound -->
-					<Literal>if(SE2_RANDOM_NUMBER &lt; </Literal>
-					<Fragment data="taskProbabilityUpperBound"/>
-					<Literal>) { </Literal>
-				</Line>
-				<Indent>
-					<FormatRef ref="queueIndependentProactiveTask"/>
-				</Indent>
-				<Line>
-					<Literal>}</Literal>
-				</Line>
-			</Series>
-		</Format>
-		
-		<Format id="queueIndependentProactiveBehaviour">
-			<Scope data="startTask">
-				<FormatRef ref="queueIndependentProactiveTask"/>
-			</Scope>
-		</Format>
-		
-		<Format id="queueLatentBehaviour">
+		<Format id="behaviour">
 			<Line>
 				<Literal>AssignCommand(</Literal>
 				<Scope data="behaviour">
@@ -377,10 +341,10 @@
 				<Literal>, ClearAllActions(TRUE));</Literal>
 			</Line>
 			<Scope data="startTask">
-				<FormatRef ref="queueLatentTask"/>
+				<FormatRef ref="queueTask"/>
 			</Scope>
 			<Line>
-				<Literal>SCEZ_Behav_AddLatentBehaviour(</Literal>
+				<Literal>SCEZ_Behav_AddBehaviour(</Literal>
 				<Scope data="behaviour">
 					<Scope data="argument" ref="Initiator">
                 			<Fragment data="name"/>
@@ -394,9 +358,9 @@
 			</Line>
 		</Format>
 		
-		<Format id="queueLatentTask">
+		<Format id="queueTask">
 			<Line>
-				<Literal>SCEZ_Behav_AddToLatentBehaviourQueue(</Literal>
+				<Literal>SCEZ_Behav_AddToBehaviourQueue(</Literal>
 					<Scope data="behaviour">
 						<Scope data="argument" ref="Initiator">
                 			<Fragment data="name"/>
@@ -414,7 +378,7 @@
 					<Fragment data="probabilitycount"/>
 				<Literal>);</Literal>
 			</Line>
-					
+
 			<Series data="childrenTasks" unique="true" separator=" else ">
 				<Line>
 					<!-- If UpperBound > RandomNumber >= LowerBound -->
@@ -423,7 +387,7 @@
 					<Literal>) { </Literal>
 				</Line>
 				<Indent>
-					<FormatRef ref="queueLatentTask"/>
+					<FormatRef ref="queueTask"/>
 				</Indent>
 				<Line>
 					<Literal>}</Literal>

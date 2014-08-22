@@ -36,31 +36,21 @@ public class TaskContext extends ComplexStoryComponentContext {
 
 	@Override
 	public String getProbabilityCount() {
-		int probabilityCount = 0;
+		int totalProbability = 0;
 
 		for (Task child : this.getTaskChildren()) {
-			final int chance = child.getChance();
-
-			if (chance > probabilityCount)
-				probabilityCount = chance;
+			totalProbability += child.getChance();
 		}
 
-		return "" + probabilityCount;
+		return "" + totalProbability;
 	}
 
 	@Override
 	public String getUniqueID() {
-		return "" + this.getComponent().getUniqueID();
+		return "task" + this.getComponent().getUniqueID();
 	}
 
 	public String getTaskProbabilityUpperBound() {
-		// / final Collection<Task> children = this.getTaskChildren();
-		// final int probabilityCount = children.size();
-		//
-		// if (probabilityCount == 1) {
-		// return "1";
-		// }
-
 		return "" + this.getComponent().getChance();
 	};
 

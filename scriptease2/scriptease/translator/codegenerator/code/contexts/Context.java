@@ -65,6 +65,7 @@ public abstract class Context {
 	private Collection<CodeBlock> codeBlocks = null;
 	private Collection<Behaviour> independentProactiveBehaviours = null;
 	private Collection<Behaviour> latentBehaviours = null;
+	private Collection<Behaviour> behaviours = null;
 
 	protected LocationInformation locationInfo;
 
@@ -189,10 +190,10 @@ public abstract class Context {
 				}
 			}
 
-	//		if (idleCauses.isEmpty())
-				// TODO This won't work for things that don't have an idle
-				// cause. Not sure if we want it to.
-		//		return this.codeBlocks;
+			// if (idleCauses.isEmpty())
+			// TODO This won't work for things that don't have an idle
+			// cause. Not sure if we want it to.
+			// return this.codeBlocks;
 
 			for (Behaviour behaviour : this.getLatentBehaviours()) {
 				final KnowItBinding initiator;
@@ -201,7 +202,8 @@ public abstract class Context {
 						.getBinding();
 
 				for (CauseIt idle : idleCauses) {
-					// TODO Check if subject.equals(initiator). Otherwise we exit.
+					// TODO Check if subject.equals(initiator). Otherwise we
+					// exit.
 				}
 
 				final Collection<ScriptIt> scriptIts;
@@ -265,6 +267,26 @@ public abstract class Context {
 		}
 
 		return this.latentBehaviours;
+	}
+
+	/**
+	 * Gets all behaviours
+	 * 
+	 * @return
+	 */
+	public Collection<Behaviour> getBehaviours() {
+		if (this.behaviours == null) {
+			this.behaviours = new ArrayList<Behaviour>();
+
+			for (StoryNode point : this.storyPoints) {
+				for (Behaviour behaviour : StoryComponentUtils
+						.getDescendantBehaviours(point)) {
+					this.behaviours.add(behaviour);
+				}
+			}
+		}
+
+		return this.behaviours;
 	}
 
 	public CodeBlock getMainCodeBlock() {

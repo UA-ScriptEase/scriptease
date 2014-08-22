@@ -76,20 +76,8 @@ public class FormatReferenceFragment extends AbstractFragment {
 					.getLanguageDictionary();
 			final List<AbstractFragment> format;
 
-			if (formatID.equalsIgnoreCase(Type.BEHAVIOUR.name())) {
-				if (context.getCause().getDisplayText()
-						.equalsIgnoreCase(Behaviour.WHEN_IDLE_TEXT)) {
-					format = dictionary
-							.getFormat(Behaviour.INDEPENDENT_PROACTIVE_FORMAT);
-				} else
-					format = dictionary.getFormat(Behaviour.LATENT_FORMAT);
-
-				// TODO Need functionality for collaborative behaviours as well
-
-			} else {
-				format = context.getTranslator().getLanguageDictionary()
-						.getFormat(formatID);
-			}
+			format = context.getTranslator().getLanguageDictionary()
+					.getFormat(formatID);
 
 			return AbstractFragment.resolveFormat(format, context);
 		} else

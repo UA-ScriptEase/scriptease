@@ -56,13 +56,19 @@ string SCEZ_Struct_ArrayGetElementAtIndex (object owner, string arrayName, int i
 }
 
 string SCEZ_Struct_ArrayRemoveElementAtIndex (object owner, string arrayName, int index) {
-  if(index == SCEZ_Struct_ArrayGetSize(owner, arrayName) - 1 ){
-    //debug("Decreasing array size on "+arrayName+" from "+IntToString(GetLocalInt(owner, arrayName+SIZE_STRING))+" to one less");
-    SetLocalInt(owner, arrayName+SIZE_STRING, GetLocalInt(owner, arrayName+SIZE_STRING)-1 );
-  }
-
   string removedString = GetLocalString( owner, arrayName+IntToString(index) );
   DeleteLocalString( owner, arrayName+IntToString(index) );
+
+  if(index != SCEZ_Struct_ArrayGetSize(owner, arrayName) - 1 ){
+    int i = index;
+    for(i; i < SCEZ_Struct_ArrayGetSize(owner, arrayName); i++) {
+         SCEZ_Struct_ArraySetElementAtIndex(owner, arrayName, i - 1, SCEZ_Struct_ArrayGetElementAtIndex(owner, arrayName, i));
+     }
+  }
+
+  SetLocalInt(owner, arrayName+SIZE_STRING, GetLocalInt(owner, arrayName+SIZE_STRING)-1 );
+
+
   return removedString;
 }
 
