@@ -23,6 +23,7 @@
 			<xsd:element name="Scope" type="Scope_Type" />
 			<xsd:element name="Format" type="Format_Type" />
 			<xsd:element name="FormatRef" type="FormatRef_Type" />
+			<xsd:element name="Conditional" type="Conditional_Type" />		
 		</xsd:choice>
 	</xsd:group>
 
@@ -38,8 +39,18 @@
 		</xsd:sequence>
 		<xsd:attribute name="reference" type="xsd:string" />
 	</xsd:complexType>
+	
 
-	<xsd:complexType name="Indent_Type">
+	
+	<xsd:complexType name="Conditional_Type">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+			<xsd:group ref="AllCodeDirectives" />
+		</xsd:sequence>
+		<xsd:attribute name="reference" type="xsd:string" />
+		<xsd:attribute name="data" type="xsd:string" />
+	</xsd:complexType>
+	
+		<xsd:complexType name="Indent_Type">
 		<xsd:sequence maxOccurs="unbounded" minOccurs="0">
 			<xsd:group ref="AllCodeDirectives" />
 		</xsd:sequence>

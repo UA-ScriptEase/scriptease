@@ -800,4 +800,9 @@ public abstract class Context {
 		unimplemented("getTaskChildren");
 		return null;
 	}
+
+	public boolean isLastTask() {
+		unimplemented("isLastTask");
+		return false;
+	}
 }

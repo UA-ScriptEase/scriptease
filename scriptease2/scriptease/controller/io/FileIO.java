@@ -17,6 +17,7 @@ import javax.swing.UIManager;
 import scriptease.controller.FileManager;
 import scriptease.controller.StoryAdapter;
 import scriptease.controller.io.converter.IdentityArrayListConverter;
+import scriptease.controller.io.converter.fragment.ConditonalFragmentConverter;
 import scriptease.controller.io.converter.fragment.FormatDefinitionFragmentConverter;
 import scriptease.controller.io.converter.fragment.FormatReferenceFragmentConverter;
 import scriptease.controller.io.converter.fragment.IndentedFragmentConverter;
@@ -83,6 +84,7 @@ import scriptease.translator.Translator;
 import scriptease.translator.codegenerator.code.fragments.FormatReferenceFragment;
 import scriptease.translator.codegenerator.code.fragments.LiteralFragment;
 import scriptease.translator.codegenerator.code.fragments.SimpleDataFragment;
+import scriptease.translator.codegenerator.code.fragments.container.ConditionalFragment;
 import scriptease.translator.codegenerator.code.fragments.container.FormatDefinitionFragment;
 import scriptease.translator.codegenerator.code.fragments.container.IndentFragment;
 import scriptease.translator.codegenerator.code.fragments.container.LineFragment;
@@ -558,6 +560,7 @@ public class FileIO {
 		stream.alias("Scope", ScopeFragment.class);
 		stream.alias("Series", SeriesFragment.class);
 		stream.alias("Fragment", SimpleDataFragment.class);
+		stream.alias("Conditional", ConditionalFragment.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -597,6 +600,7 @@ public class FileIO {
 		stream.registerConverter(new IndependentTaskConverter());
 		stream.registerConverter(new CollaborativeTaskConverter());
 		stream.registerConverter(new ActivityItConverter());
+		stream.registerConverter(new ConditonalFragmentConverter());
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

@@ -12,6 +12,7 @@ import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.ComplexStoryComponentContext;
 
 public class TaskContext extends ComplexStoryComponentContext {
+	private static List<Task> currentChildren = null;
 
 	public TaskContext(Context other, Task source) {
 		super(other, source);
@@ -31,6 +32,8 @@ public class TaskContext extends ComplexStoryComponentContext {
 
 		Collections.sort(children);
 
+		currentChildren = children;
+
 		return children;
 	}
 
@@ -46,13 +49,45 @@ public class TaskContext extends ComplexStoryComponentContext {
 	}
 
 	@Override
+	public boolean isLastTask() {
+		return super.isLastTask();
+	}
+
+	@Override
 	public String getUniqueID() {
 		return "task" + this.getComponent().getUniqueID();
 	}
 
+	@Override
+	public String getTaskProbabilityLowerBound() {
+		if (currentChildren == null)
+			return null;
+
+		int lowerBound = 0;
+		final Task thisTask = this.getComponent();
+
+		// Loop through every child before this one and add up their
+		// probabilities.
+		for (Task child : currentChildren) {
+			if (child == thisTask)
+				break;
+
+			lowerBound += child.getChance();
+		}
+
+		return Integer.toString(lowerBound);
+	}
+
+	@Override
 	public String getTaskProbabilityUpperBound() {
-		return "" + this.getComponent().getChance();
-	};
+		if (currentChildren == null)
+			return null;
+
+		final int lowerBound = Integer.parseInt(this
+				.getTaskProbabilityLowerBound());
+
+		return Integer.toString(this.getComponent().getChance() + lowerBound);
+	}
 
 	@Override
 	public Behaviour getBehaviour() {

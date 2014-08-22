@@ -381,10 +381,11 @@
 
 			<Series data="childrenTasks" unique="true" separator=" else ">
 				<Line>
-					<!-- If UpperBound > RandomNumber >= LowerBound -->
-					<Literal>if(SE2_RANDOM_NUMBER &lt; </Literal>
-					<Fragment data="taskProbabilityUpperBound"/>
-					<Literal>) { </Literal>
+					<Literal>if (SE2_RANDOM_NUMBER &gt;= </Literal>
+					<Fragment data="taskProbabilityLowerBound" />
+					<Literal> &amp;&amp; SE2_RANDOM_NUMBER &lt; </Literal>
+					<Fragment data="taskProbabilityUpperBound" />
+					<Literal>) {</Literal>
 				</Line>
 				<Indent>
 					<FormatRef ref="queueTask"/>
