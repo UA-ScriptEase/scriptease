@@ -23,7 +23,7 @@
 			<xsd:element name="Scope" type="Scope_Type" />
 			<xsd:element name="Format" type="Format_Type" />
 			<xsd:element name="FormatRef" type="FormatRef_Type" />
-			<xsd:element name="Conditional" type="Conditional_Type" />		
+			<xsd:element name="Condition" type="Conditional_Type" />		
 		</xsd:choice>
 	</xsd:group>
 

@@ -560,7 +560,7 @@ public class FileIO {
 		stream.alias("Scope", ScopeFragment.class);
 		stream.alias("Series", SeriesFragment.class);
 		stream.alias("Fragment", SimpleDataFragment.class);
-		stream.alias("Conditional", ConditionalFragment.class);
+		stream.alias("Condition", ConditionalFragment.class);
 
 		// the below are aliased for backwards compatibility
 
@@ -578,6 +578,7 @@ public class FileIO {
 		stream.registerConverter(new SlotConverter());
 		stream.registerConverter(new FormatDefinitionFragmentConverter());
 		stream.registerConverter(new IndentedFragmentConverter());
+		stream.registerConverter(new ConditonalFragmentConverter());
 		stream.registerConverter(new LineFragmentConverter());
 		stream.registerConverter(new LiteralFragmentConverter());
 		stream.registerConverter(new FormatReferenceFragmentConverter());
@@ -600,7 +601,7 @@ public class FileIO {
 		stream.registerConverter(new IndependentTaskConverter());
 		stream.registerConverter(new CollaborativeTaskConverter());
 		stream.registerConverter(new ActivityItConverter());
-		stream.registerConverter(new ConditonalFragmentConverter());
+		
 
 		stream.registerConverter(new IdentityArrayListConverter(stream
 				.getMapper()));

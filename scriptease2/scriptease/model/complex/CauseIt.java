@@ -45,6 +45,17 @@ public class CauseIt extends ScriptIt {
 		return (CauseIt) super.clone();
 	}
 
+	public KnowIt getSubject() {
+		final KnowIt subject = this.getParameter("subject");
+
+		if (subject == null) {
+			System.out.println("Subject not named subject in " + this
+					+ " so it could not be found.");
+		}
+
+		return subject;
+	}
+
 	@Override
 	public void process(StoryVisitor processController) {
 		processController.processCauseIt(this);

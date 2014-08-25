@@ -332,6 +332,12 @@
 	
 		<Format id="behaviour">
 			<Line>
+				<Literal>// </Literal>
+				<Scope data="behaviour">
+					<Fragment data="DISPLAYTEXT"/>
+				</Scope>
+			</Line>
+			<Line>
 				<Literal>AssignCommand(</Literal>
 				<Scope data="behaviour">
 					<Scope data="argument" ref="Initiator">
@@ -340,6 +346,7 @@
               	</Scope>
 				<Literal>, ClearAllActions(TRUE));</Literal>
 			</Line>
+			
 			<Scope data="startTask">
 				<FormatRef ref="queueTask"/>
 			</Scope>
@@ -360,6 +367,10 @@
 		
 		<Format id="queueTask">
 			<Line>
+				<Literal>// </Literal>
+				<Fragment data = "DISPLAYTEXT"/>
+			</Line>
+			<Line>
 				<Literal>SCEZ_Behav_AddToBehaviourQueue(</Literal>
 					<Scope data="behaviour">
 						<Scope data="argument" ref="Initiator">
@@ -373,27 +384,41 @@
 				<Literal>&quot;);</Literal>	
 			</Line>
 			
-			<Line>
-				<Literal>int SE2_RANDOM_NUMBER = Random(</Literal>
-					<Fragment data="probabilitycount"/>
-				<Literal>);</Literal>
-			</Line>
-
-			<Series data="childrenTasks" unique="true" separator=" else ">
+			<Condition data="hasMultipleChildren">
 				<Line>
-					<Literal>if (SE2_RANDOM_NUMBER &gt;= </Literal>
-					<Fragment data="taskProbabilityLowerBound" />
-					<Literal> &amp;&amp; SE2_RANDOM_NUMBER &lt; </Literal>
-					<Fragment data="taskProbabilityUpperBound" />
-					<Literal>) {</Literal>
+					<Literal>int SE2_RANDOM_NUMBER = Random(</Literal>
+						<Fragment data="probabilitycount"/>
+					<Literal>);</Literal>
 				</Line>
-				<Indent>
+				
+				<!--TODO @77572926 This doesn't work well with multiple levels of children choices! -->
+				<Line>
+					<Literal>int SE2_LOWER = 0;</Literal>
+				</Line>
+				<Line>
+					<Literal>int SE2_UPPER = 0;</Literal>
+				</Line>
+			
+				<Series data="childrenTasks" unique="true" separator=" else ">
+					<Line>
+						<Literal>if (SE2_RANDOM_NUMBER &gt;= (SE2_LOWER = SE2_UPPER) &amp;&amp; SE2_RANDOM_NUMBER &lt; (SE2_UPPER += </Literal>
+						<Fragment data="taskProbabilityUpperBound" />
+						<Literal>)) {</Literal>
+					</Line>
+					<Indent>
+						<FormatRef ref="queueTask"/>
+					</Indent>
+					<Line>
+						<Literal>}</Literal>
+					</Line>
+				</Series>
+			</Condition>
+			<Condition data="!hasMultipleChildren">
+				<!-- We only have one child, so this goes to it immediately instead of making the variables and things. -->
+				<Series data="childrenTasks" unique="true">
 					<FormatRef ref="queueTask"/>
-				</Indent>
-				<Line>
-					<Literal>}</Literal>
-				</Line>
-			</Series>
+				</Series>
+			</Condition>
 		</Format>
 		
 		<!-- Format for askIts -->

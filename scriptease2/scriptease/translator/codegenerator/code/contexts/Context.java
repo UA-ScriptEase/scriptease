@@ -190,11 +190,6 @@ public abstract class Context {
 				}
 			}
 
-			// if (idleCauses.isEmpty())
-			// TODO This won't work for things that don't have an idle
-			// cause. Not sure if we want it to.
-			// return this.codeBlocks;
-
 			for (Behaviour behaviour : this.getLatentBehaviours()) {
 				final KnowItBinding initiator;
 
@@ -202,18 +197,25 @@ public abstract class Context {
 						.getBinding();
 
 				for (CauseIt idle : idleCauses) {
-					// TODO Check if subject.equals(initiator). Otherwise we
-					// exit.
+					if (!idle.getCodeBlocksForLocation(this.locationInfo)
+							.isEmpty()) {
+						if (idle.getSubject().getBinding() == initiator) {
+
+							final Collection<ScriptIt> scriptIts;
+
+							scriptIts = StoryComponentUtils
+									.getDescendantScriptIts(behaviour);
+
+							for (ScriptIt scriptIt : scriptIts) {
+								this.codeBlocks
+										.addAll(scriptIt.getCodeBlocks());
+							}
+
+							break;
+						}
+					}
 				}
 
-				final Collection<ScriptIt> scriptIts;
-
-				scriptIts = StoryComponentUtils
-						.getDescendantScriptIts(behaviour);
-
-				for (ScriptIt scriptIt : scriptIts) {
-					this.codeBlocks.addAll(scriptIt.getCodeBlocks());
-				}
 			}
 		}
 
@@ -781,6 +783,11 @@ public abstract class Context {
 		return null;
 	}
 
+	public String getFirstTaskProbabilityUpperBound() {
+		unimplemented("getFirstTaskProbabilityUpperBound");
+		return null;
+	}
+
 	public String getPriority() {
 		unimplemented("getPriority");
 		return null;
@@ -803,6 +810,11 @@ public abstract class Context {
 
 	public boolean isLastTask() {
 		unimplemented("isLastTask");
+		return false;
+	}
+
+	public boolean hasMultipleChildren() {
+		unimplemented("hasMultipleChildren");
 		return false;
 	}
 }

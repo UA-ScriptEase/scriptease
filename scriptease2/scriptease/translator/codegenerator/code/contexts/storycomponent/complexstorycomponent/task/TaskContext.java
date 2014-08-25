@@ -10,10 +10,9 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.storycomponent.complexstorycomponent.ComplexStoryComponentContext;
+import scriptease.util.ListOp;
 
 public class TaskContext extends ComplexStoryComponentContext {
-	private static List<Task> currentChildren = null;
-
 	public TaskContext(Context other, Task source) {
 		super(other, source);
 	}
@@ -31,8 +30,6 @@ public class TaskContext extends ComplexStoryComponentContext {
 		children = new ArrayList<Task>(this.getComponent().getSuccessors());
 
 		Collections.sort(children);
-
-		currentChildren = children;
 
 		return children;
 	}
@@ -59,34 +56,23 @@ public class TaskContext extends ComplexStoryComponentContext {
 	}
 
 	@Override
-	public String getTaskProbabilityLowerBound() {
-		if (currentChildren == null)
-			return null;
-
-		int lowerBound = 0;
-		final Task thisTask = this.getComponent();
-
-		// Loop through every child before this one and add up their
-		// probabilities.
-		for (Task child : currentChildren) {
-			if (child == thisTask)
-				break;
-
-			lowerBound += child.getChance();
-		}
-
-		return Integer.toString(lowerBound);
+	public String getTaskProbabilityUpperBound() {
+		return Integer.toString(this.getComponent().getChance());
 	}
 
 	@Override
-	public String getTaskProbabilityUpperBound() {
-		if (currentChildren == null)
-			return null;
+	public String getFirstTaskProbabilityUpperBound() {
+		final Task firstChild = ListOp.head(this.getTaskChildren());
 
-		final int lowerBound = Integer.parseInt(this
-				.getTaskProbabilityLowerBound());
+		if (firstChild != null)
+			return Integer.toString(firstChild.getChance());
 
-		return Integer.toString(this.getComponent().getChance() + lowerBound);
+		return "-1";
+	}
+
+	@Override
+	public boolean hasMultipleChildren() {
+		return this.getComponent().getSuccessors().size() > 1;
 	}
 
 	@Override
