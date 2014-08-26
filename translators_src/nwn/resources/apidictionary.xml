@@ -26226,7 +26226,7 @@
               </Types>
               <Binding flavour="constant">
                 <Type>Number</Type>
-                <Value>1</Value>
+                <Value>1.0</Value>
               </Binding>
             </KnowIt>
           </Parameters>
