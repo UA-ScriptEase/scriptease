@@ -209,6 +209,8 @@ public class Behaviour extends ScriptIt {
 
 		component.setStartTask(this.getStartTask().cloneWithDescendants());
 
+		component.revalidateKnowItBindings();
+		
 		return component;
 	}
 

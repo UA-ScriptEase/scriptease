@@ -559,61 +559,75 @@ public final class KnowIt extends StoryComponent implements TypedComponent,
 
 		binding = this.getBinding();
 
-		if (!binding.compatibleWith(this)) {
-			final KnowItBinding newBinding;
+		binding.process(new BindingAdapter() {
+			@Override
+			public void processReference(KnowItBindingReference reference) {
+				if (binding.compatibleWith(KnowIt.this))
+					return;
 
-			if (binding instanceof KnowItBindingReference) {
-				// Try to fix reference bindings
-				final KnowIt referred;
-				// This is the previous knowIt we had a reference to.
-				// We need to find out if the same KnowIt exists where we added
-				// it to.
-				referred = ((KnowItBindingReference) binding).getValue();
+				final KnowItBinding newBinding;
 
-				final KnowIt replacement;
-				final KnowItBinding replacementBinding;
+				if (binding instanceof KnowItBindingReference) {
+					// Try to fix reference bindings
+					final KnowIt referred;
+					// This is the previous knowIt we had a reference to.
+					// We need to find out if the same KnowIt exists where
+					// we added
+					// it to.
+					referred = ((KnowItBindingReference) binding).getValue();
 
-				replacement = this.getReplacementForReference(referred);
-				replacementBinding = new KnowItBindingReference(replacement);
+					final KnowIt replacement;
+					final KnowItBinding replacementBinding;
 
-				if (replacement != null
-						&& replacementBinding.compatibleWith(this)) {
-					newBinding = replacementBinding;
+					replacement = getReplacementForReference(referred);
+					replacementBinding = new KnowItBindingReference(replacement);
+
+					if (replacement != null
+							&& replacementBinding.compatibleWith(KnowIt.this)) {
+						newBinding = replacementBinding;
+					} else
+						newBinding = new KnowItBindingNull();
 				} else
 					newBinding = new KnowItBindingNull();
-			} else
-				newBinding = new KnowItBindingNull();
 
-			this.setBinding(newBinding);
-		} else
-			binding.process(new BindingAdapter() {
-				@Override
-				public void processFunction(KnowItBindingFunction function) {
-					function.getValue().revalidateKnowItBindings();
-				}
+				setBinding(newBinding);
+			}
 
-				@Override
-				public void processUninitialized(
-						KnowItBindingUninitialized uninitialized) {
-					final KnowIt value = uninitialized.getValue();
+			@Override
+			public void processFunction(KnowItBindingFunction function) {
+				function.getValue().revalidateKnowItBindings();
+			}
 
-					StoryComponent owner = getOwner();
-					while (owner != null) {
-						if (owner instanceof ScriptIt) {
-							final ScriptIt scriptIt = (ScriptIt) owner;
+			@Override
+			public void processUninitialized(
+					KnowItBindingUninitialized uninitialized) {
+				final KnowIt value = uninitialized.getValue();
 
-							if (scriptIt.getParameters().contains(value)) {
-								break;
+				StoryComponent owner = getOwner();
+				OwnerLoop: while (owner != null) {
+
+					if (owner instanceof ScriptIt) {
+						final ScriptIt scriptIt = (ScriptIt) owner;
+
+						for (KnowIt parameter : scriptIt.getParameters()) {
+							if (parameter.equals(value)) {
+								KnowIt.this
+										.setBinding(new KnowItBindingUninitialized(
+												new KnowItBindingReference(
+														parameter)));
+								break OwnerLoop;
 							}
 						}
 
-						owner = owner.getOwner();
 					}
 
-					if (owner == null)
-						setBinding(new KnowItBindingNull());
+					owner = owner.getOwner();
 				}
-			});
+
+				if (owner == null)
+					setBinding(new KnowItBindingNull());
+			}
+		});
 	}
 
 	/**
