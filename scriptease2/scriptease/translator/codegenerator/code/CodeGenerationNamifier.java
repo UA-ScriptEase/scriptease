@@ -143,14 +143,15 @@ public class CodeGenerationNamifier {
 		 */
 		if (component instanceof KnowIt) {
 			final KnowItBinding binding = ((KnowIt) component).getBinding();
+			final String name = component.getDisplayText();
 
 			if ((binding instanceof KnowItBindingFunction && ((ScriptIt) binding
 					.getValue()).getCause().getImplicits().contains(component))
-					|| // TODO This may or may not work. 
-					
-					(component.getDisplayText().equalsIgnoreCase(
-							Behaviour.INITIATOR) && component.getOwner()
-							.getOwner() instanceof Behaviour)) {
+					||
+
+					((name.equalsIgnoreCase(Behaviour.INITIATOR) || name
+							.equalsIgnoreCase(Behaviour.RESPONDER)) && component
+							.getOwner().getOwner() instanceof Behaviour)) {
 
 				for (Entry<StoryComponent, String> entry : this.componentsToNames
 						.entrySet()) {

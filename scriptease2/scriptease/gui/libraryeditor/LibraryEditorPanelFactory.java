@@ -267,18 +267,20 @@ public class LibraryEditorPanelFactory {
 	}
 
 	/**
-	 * Builds a panel used to edit a behaviour.  Pass in a button if using in a story context.
+	 * Builds a panel used to edit a behaviour. Pass in a button if using in a
+	 * story context.
 	 * 
 	 * @param behaviour
 	 * @param backToStory
 	 * @return
 	 */
 	@SuppressWarnings("serial")
-	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour, JButton backToStory) {
+	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour,
+			JButton backToStory) {
 		final JPanel behaviourPanel;
 		final JPanel buttonsPanel;
 		final JPanel superPanel;
-		
+
 		final JButton independentButton;
 		final JButton collaborativeButton;
 
@@ -383,13 +385,14 @@ public class LibraryEditorPanelFactory {
 		LibraryEditorPanelFactory.this.addChangeableBehaviourPanel(behaviour,
 				behaviourPanel);
 
-		if (backToStory == null){
+		if (backToStory == null) {
 			return behaviourPanel;
 
 		} else {
 			superPanel = new JPanel();
 			superPanel.setLayout(new BorderLayout());
-			superPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+			superPanel.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
 			superPanel.add(backToStory, BorderLayout.EAST);
 			superPanel.add(behaviourPanel);
 			return superPanel;
@@ -399,20 +402,20 @@ public class LibraryEditorPanelFactory {
 	private JPanel buildBehaviourGraphPanel(SEGraph<Task> graph,
 			boolean isEditable) {
 		final JPanel graphPanel;
-		final JScrollPane scrollPane; 
+		final JScrollPane scrollPane;
 
 		// Create the graph panel.
 		graphPanel = new JPanel();
 		scrollPane = new JScrollPane(graph);
-		scrollPane.setPreferredSize(new Dimension(245,245));
+		scrollPane.setPreferredSize(new Dimension(245, 245));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
-		
-		graphPanel.setMaximumSize(new Dimension(10000,100));
+
+		graphPanel.setMaximumSize(new Dimension(10000, 100));
 		if (isEditable) {
 			graphPanel.add(graph.getToolBar());
 		}
 		graphPanel.add(scrollPane, BorderLayout.WEST);
-				
+
 		return graphPanel;
 	}
 

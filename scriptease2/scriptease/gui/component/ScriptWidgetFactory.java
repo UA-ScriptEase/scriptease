@@ -50,6 +50,7 @@ import scriptease.model.atomic.knowitbindings.KnowItBindingUninitialized;
 import scriptease.model.complex.StoryGroup;
 import scriptease.model.complex.StoryNode;
 import scriptease.model.complex.StoryPoint;
+import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.semodel.SEModel;
 import scriptease.model.semodel.SEModelManager;
 import scriptease.translator.io.model.GameType;
@@ -293,7 +294,11 @@ public class ScriptWidgetFactory {
 
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
-			if (knowIt.getBinding() instanceof KnowItBindingNull)
+			final String name = knowIt.getDisplayText();
+			if ((knowIt.getOwner().getOwner() instanceof Behaviour && (name
+					.equalsIgnoreCase(Behaviour.INITIATOR) || name
+					.equalsIgnoreCase(Behaviour.RESPONDER)))
+					|| (knowIt.getBinding() instanceof KnowItBindingNull))
 				this.bindingWidget = new BindingWidget(
 						new KnowItBindingUninitialized(
 								new KnowItBindingReference(knowIt)));

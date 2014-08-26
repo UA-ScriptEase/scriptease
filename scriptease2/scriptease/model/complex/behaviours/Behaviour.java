@@ -32,6 +32,7 @@ public class Behaviour extends ScriptIt {
 	public static final String LATENT_FORMAT = "queueLatentBehaviour";
 	public static final String INDEPENDENT_PROACTIVE_FORMAT = "queueIndependentProactiveBehaviour";
 
+	public static final String RESPONDER = "Responder";
 	public static final String INITIATOR = "Initiator";
 
 	private Type type;
@@ -190,7 +191,7 @@ public class Behaviour extends ScriptIt {
 			this.setDisplayText("<Initiator> interacts with <Responder> with priority <Priority>");
 
 			// TODO CREATURE TYPE ISTRANSLATOR DEPENDENT!!!!
-			main.addParameter(new KnowIt(lib, "Responder", "Creature"));
+			main.addParameter(new KnowIt(lib, Behaviour.RESPONDER, "Creature"));
 		} else if (this.type == Type.INDEPENDENT) {
 			this.setDisplayText(INDEPENDENT_DISPLAY_TEXT);
 
@@ -210,7 +211,7 @@ public class Behaviour extends ScriptIt {
 		component.setStartTask(this.getStartTask().cloneWithDescendants());
 
 		component.revalidateKnowItBindings();
-		
+
 		return component;
 	}
 
