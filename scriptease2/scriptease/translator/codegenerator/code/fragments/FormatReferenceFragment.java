@@ -12,7 +12,6 @@ import scriptease.model.complex.ControlIt;
 import scriptease.model.complex.PickIt;
 import scriptease.model.complex.ScriptIt;
 import scriptease.model.complex.behaviours.Behaviour;
-import scriptease.translator.LanguageDictionary;
 import scriptease.translator.codegenerator.code.contexts.Context;
 import scriptease.translator.codegenerator.code.contexts.storycomponent.StoryComponentContext;
 
@@ -72,8 +71,6 @@ public class FormatReferenceFragment extends AbstractFragment {
 		final TypeChecker typeChecker = new TypeChecker(context);
 
 		if (typeChecker.getResult()) {
-			final LanguageDictionary dictionary = context.getTranslator()
-					.getLanguageDictionary();
 			final List<AbstractFragment> format;
 
 			format = context.getTranslator().getLanguageDictionary()
