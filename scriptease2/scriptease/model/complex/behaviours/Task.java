@@ -2,7 +2,9 @@ package scriptease.model.complex.behaviours;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import scriptease.controller.observer.storycomponent.StoryComponentEvent;
@@ -184,20 +186,54 @@ public abstract class Task extends ComplexStoryComponent implements
 		return this.parents;
 	}
 
+	/**
+	 * Clones this task, its successors, each of its successors' successors, and
+	 * so on. It's automatically done in {@link Behaviour#clone()} for the start
+	 * task, which is likely the only place we want to be doing it anyways.
+	 * 
+	 * @return
+	 */
+	public Task cloneWithDescendants() {
+		return cloneWithDescendants(this, new HashMap<Task, Task>());
+	}
+
+	/**
+	 * Use {@link #cloneWithDescendants()} instead, as this is just a recursive
+	 * helper method for that.
+	 * 
+	 * @param root
+	 * @param map
+	 * @return
+	 */
+	private Task cloneWithDescendants(Task root, Map<Task, Task> map) {
+		if (root == null)
+			return null;
+
+		if (map.containsKey(root))
+			return map.get(root);
+
+		Task newNode = root.clone();
+
+		map.put(root, newNode);
+
+		for (Task t : root.getSuccessors()) {
+			newNode.addSuccessor(cloneWithDescendants(t, map));
+		}
+		return newNode;
+	}
+
+	/**
+	 * Note that this does not clone the successors. Use
+	 * {@link #cloneWithDescendants()} to also clone all descendants and
+	 * properly apply graph connections to them. It's automatically done in
+	 * {@link Behaviour#clone()} for the start task, which is likely the only
+	 * place we want to be doing it anyways.
+	 */
 	@Override
 	public Task clone() {
 		final Task clone = (Task) super.clone();
 
 		clone.chance = this.chance;
-
-		// clone the successors
-		final Collection<Task> successors = new ArrayList<Task>();
-
-		for (Task task : this.successors) {
-			successors.add(task.clone());
-		}
-
-		clone.setSuccessors(successors);
 
 		return clone;
 	}

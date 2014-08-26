@@ -207,6 +207,8 @@ public class Behaviour extends ScriptIt {
 
 		component.type = this.type;
 
+		component.setStartTask(this.getStartTask().cloneWithDescendants());
+
 		return component;
 	}
 
