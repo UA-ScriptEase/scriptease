@@ -346,6 +346,8 @@ class SEModelTabbedPane extends JTabbedPane {
 		dialogueEditor = new DialogueEditorPanel(model, backFromDialogue);
 		behaviourEditor = new JPanel(new BorderLayout());
 		
+		behaviourEditor.setBackground(ScriptEaseUI.PRIMARY_UI);
+		
 		
 		graphRedrawer = new StoryComponentObserver() {
 			@Override

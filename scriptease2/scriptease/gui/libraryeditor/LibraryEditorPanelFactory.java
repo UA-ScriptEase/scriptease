@@ -58,6 +58,7 @@ import scriptease.model.complex.behaviours.Behaviour;
 import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
+import scriptease.model.semodel.SEModelManager;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
@@ -278,7 +279,7 @@ public class LibraryEditorPanelFactory {
 	public JPanel buildBehaviourEditingPanel(final Behaviour behaviour,
 			JButton backToStory) {
 		final JPanel behaviourPanel;
-		final JPanel buttonsPanel;
+		final JPanel changeBehaviourTypePanel;
 		final JPanel superPanel;
 
 		final JButton independentButton;
@@ -295,7 +296,7 @@ public class LibraryEditorPanelFactory {
 				.setLayout(new BoxLayout(behaviourPanel, BoxLayout.Y_AXIS));
 
 		// Create buttons panel
-		buttonsPanel = new JPanel() {
+		changeBehaviourTypePanel = new JPanel() {
 			@Override
 			public Dimension getPreferredSize() {
 				final Dimension dimension = super.getPreferredSize();
@@ -318,12 +319,16 @@ public class LibraryEditorPanelFactory {
 			}
 		};
 
-		buttonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		buttonsPanel.setBorder(BorderFactory
+		changeBehaviourTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		changeBehaviourTypePanel.setBorder(BorderFactory
 				.createTitledBorder("Behaviour Type"));
 
-		independentButton = new JButton("Independent");
-		collaborativeButton = new JButton("Collaborative");
+		independentButton = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BLUE,
+				StringOp.toProperCase(Behaviour.Type.INDEPENDENT.name()));
+		collaborativeButton = ComponentFactory.buildFlatButton(
+				ScriptEaseUI.SE_BLUE,
+				StringOp.toProperCase(Behaviour.Type.COLLABORATIVE.name()));
 
 		independentButton.setEnabled(isEditable);
 		collaborativeButton.setEnabled(isEditable);
@@ -345,7 +350,7 @@ public class LibraryEditorPanelFactory {
 
 				if (type == StoryComponentChangeEnum.CHANGE_BEHAVIOUR_TYPE) {
 					for (Component component : behaviourPanel.getComponents()) {
-						if (component != buttonsPanel)
+						if (component != changeBehaviourTypePanel)
 							behaviourPanel.remove(component);
 					}
 
@@ -376,14 +381,18 @@ public class LibraryEditorPanelFactory {
 			readOnlyPanel.add(readOnlyLabel);
 			behaviourPanel.add(readOnlyPanel);
 		}
-		buttonsPanel.add(independentButton);
-		buttonsPanel.add(collaborativeButton);
-		buttonsPanel.add(warningLabel);
+		changeBehaviourTypePanel.add(independentButton);
+		changeBehaviourTypePanel.add(collaborativeButton);
+		changeBehaviourTypePanel.add(warningLabel);
 
-		behaviourPanel.add(buttonsPanel);
+		if (SEModelManager.getInstance().getActiveModel() instanceof LibraryModel)
+			behaviourPanel.add(changeBehaviourTypePanel);
 
 		LibraryEditorPanelFactory.this.addChangeableBehaviourPanel(behaviour,
 				behaviourPanel);
+
+		changeBehaviourTypePanel.setOpaque(false);
+		behaviourPanel.setOpaque(false);
 
 		if (backToStory == null) {
 			return behaviourPanel;
@@ -394,6 +403,7 @@ public class LibraryEditorPanelFactory {
 			superPanel.setBorder(BorderFactory
 					.createEtchedBorder(EtchedBorder.LOWERED));
 			superPanel.add(backToStory, BorderLayout.EAST);
+			superPanel.setOpaque(false);
 			superPanel.add(behaviourPanel);
 			return superPanel;
 		}
@@ -415,6 +425,7 @@ public class LibraryEditorPanelFactory {
 			graphPanel.add(graph.getToolBar());
 		}
 		graphPanel.add(scrollPane, BorderLayout.WEST);
+		graphPanel.setOpaque(false);
 
 		return graphPanel;
 	}
@@ -443,7 +454,7 @@ public class LibraryEditorPanelFactory {
 		graph = SEGraphFactory.buildTaskGraph(startTask, false);
 
 		graph.setAlignmentY(JPanel.LEFT_ALIGNMENT);
-
+		graph.setOpaque(false);
 		graph.addSEGraphObserver(new SEGraphAdapter<Task>() {
 
 			@Override
@@ -532,6 +543,7 @@ public class LibraryEditorPanelFactory {
 							JSplitPane.VERTICAL_SPLIT, initiatorPanelTree,
 							responderPanelTree);
 					splitPane.setResizeWeight(0.5);
+					splitPane.setOpaque(false);
 					taskPanel.setLayout(new BoxLayout(taskPanel,
 							BoxLayout.X_AXIS));
 
@@ -561,10 +573,11 @@ public class LibraryEditorPanelFactory {
 					taskPanel.add(startLabel);
 				}
 
+				taskPanel.setOpaque(false);
+
 				behaviourPanel.add(taskPanel);
 				behaviourPanel.repaint();
 				behaviourPanel.revalidate();
-
 			}
 
 			@Override
@@ -589,17 +602,19 @@ public class LibraryEditorPanelFactory {
 		paramPanel = new JPanel();
 		paramPanel.setBorder(BorderFactory.createTitledBorder("Parameters"));
 		paramPanel.setLayout(new BoxLayout(paramPanel, BoxLayout.Y_AXIS));
+		paramPanel.setOpaque(false);
 
 		for (final KnowIt parameter : parameters) {
 			final BindingWidget bindingWidget = ScriptWidgetFactory
 					.buildBindingWidget(parameter, false);
 			final JPanel subPanel = new JPanel();
-			final ParameterPanel parameterPanel;
 
 			subPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			subPanel.add(bindingWidget);
 
 			if (!parameter.getDisplayText().equals(Behaviour.PRIORITY_TEXT)) {
+				final ParameterPanel parameterPanel;
+
 				parameterPanel = buildParameterPanel(parameter, isEditable);
 
 				parameterPanel.addListener(new ParameterPanelObserver() {
@@ -612,10 +627,12 @@ public class LibraryEditorPanelFactory {
 					}
 				});
 
+				parameterPanel.setOpaque(false);
 				parameterPanel.setEnabled(isEditable);
 				subPanel.add(parameterPanel, false);
 			}
 
+			subPanel.setOpaque(false);
 			paramPanel.add(subPanel, false);
 		}
 
@@ -697,6 +714,7 @@ public class LibraryEditorPanelFactory {
 		};
 		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
+		namePanel.setOpaque(false);
 
 		initiatorLabel = new JLabel("Initiator ");
 		initiatorLabel.setFont(LibraryEditorPanelFactory.labelFont);
@@ -809,6 +827,7 @@ public class LibraryEditorPanelFactory {
 
 		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		namePanel.setBorder(BorderFactory.createTitledBorder("Behaviour Name"));
+		namePanel.setOpaque(false);
 
 		initiatorLabel = new JLabel("Initiator ");
 		initiatorLabel.setFont(LibraryEditorPanelFactory.labelFont);

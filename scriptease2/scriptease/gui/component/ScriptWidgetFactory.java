@@ -295,7 +295,9 @@ public class ScriptWidgetFactory {
 		@Override
 		public void processKnowIt(KnowIt knowIt) {
 			final String name = knowIt.getDisplayText();
-			if ((knowIt.getOwner().getOwner() instanceof Behaviour && (name
+			final StoryComponent owner = knowIt.getOwner();
+
+			if ((owner != null && owner.getOwner() instanceof Behaviour && (name
 					.equalsIgnoreCase(Behaviour.INITIATOR) || name
 					.equalsIgnoreCase(Behaviour.RESPONDER)))
 					|| (knowIt.getBinding() instanceof KnowItBindingNull))
