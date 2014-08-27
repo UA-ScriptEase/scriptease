@@ -7041,7 +7041,7 @@
               <Scope data="argument" ref="Speaker">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
-              <Literal>, SpeakString(</Literal>
+              <Literal>, ActionSpeakString(</Literal>
               <Scope data="argument" ref="Text">
                 <Fragment data="name" legalValues="^[a-zA-Z]+[0-9a-zA-Z_]*"/>
               </Scope>
