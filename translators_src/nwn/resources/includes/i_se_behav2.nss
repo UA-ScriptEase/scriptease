@@ -8,6 +8,7 @@
 const string BEHAVIOUR_LIST_PREFIX = "SCEZ_BehaviourList_";
 const string PRIORITY_PREFIX = "SCEZ_Behav_Priority_";
 const string TASK_PREFIX = "SCEZ_TASK_";
+const int SIGNAL_IDLE_LOOP = 1954;
 
 /*
  * Function Declarations

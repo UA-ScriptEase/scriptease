@@ -5171,6 +5171,8 @@
       <Labels/>
       <Children/>
       <CodeBlocks>
+      
+         
         <CodeBlockSource>
           <Name>When &lt;subject&gt; is idle</Name>
           <Labels/>
@@ -5189,73 +5191,105 @@
             </KnowIt>
           </Parameters>
           <Code>
-            <Line>
-              <Literal>if(SCEZ_Behav_IsIdle(OBJECT_SELF)) {</Literal>
-            </Line>
-            <Indent>
-              <FormatRef data="NONE" ref="children"/>
-            </Indent>
-            <Line>
-              <Literal>} else { </Literal>
-            </Line>
-            <Indent>
-              <FormatRef data="NONE" ref="variablesDeclaration"/>
-              <FormatRef data="NONE" ref="variablesDefinition"/>
-              <Series data="behaviours" unique="true" separator="else ">
-              	<Indent>
-                  <Literal>if(SCEZ_Behav_IsCurrentBehaviour(OBJECT_SELF, &quot;</Literal>
-                  <Fragment data="uniqueID"/>
-                  <Literal>&quot;)) {</Literal>
-                  <Indent>
-                    <FormatRef data="NONE" ref="variablesDeclaration"/>
-                    <FormatRef data="NONE" ref="variablesDefinition"/>
-                    <Line/>
-                    <Line>
-                      <Series data="tasks" unique="true" separator="    else ">
-                        <Indent>
-                          <Literal>if(SCEZ_Behav_IsCurrentBehaviourTask(OBJECT_SELF, &quot;</Literal>
-                          <Scope data="behaviour">
-                  		  	<Fragment data="uniqueID"/>
-                  		  </Scope>
-                 		  <Literal>&quot;, &quot;</Literal>
-                          <Fragment data="uniqueID"/>
-                          <Literal>&quot;)) {</Literal>
-                          <Indent>
-                            <Line/>
-                            <Series data="children" unique="true">
-                              <FormatRef data="NONE" ref="childrenWithoutImplicits"/>
-                            </Series>
-                          </Indent>
-                          <Line>
-                            <Literal>}</Literal>
-                          </Line>
-                        </Indent>
-                      </Series>
-                    </Line>
-                    <Line>
-                      <Literal>SCEZ_Behav_PopBehaviourQueue(OBJECT_SELF, &quot;</Literal>
-                      <Fragment data="uniqueID"/>
-                      <Literal>&quot;);</Literal>
-                    </Line>
-                  </Indent>
-                  <Line>
-                    <Literal>}</Literal>
-                  </Line>
-              	</Indent>
-              </Series>     
-            </Indent>
-            <Line>
-              <Literal>}</Literal>
-            </Line>
-            <Line>
-              <Literal>DelayCommand(0.5, </Literal>
-              <FormatRef data="NONE" ref="functionHeader"/>
-              <Literal>);</Literal>
-            </Line>
+			<Line>
+				<Literal>SignalEvent(OBJECT_SELF, EventUserDefined(SIGNAL_IDLE_LOOP));</Literal>
+			</Line>
           </Code>
         </CodeBlockSource>
+      
+      
+       <CodeBlockSource>
+          <Name>When user-defined event occurs</Name>
+          <Labels/>
+          <Subject>subject</Subject>
+          <Slot>ScriptUserDefine</Slot>
+          <Types>
+            <Type>Void</Type>
+          </Types>
+          <Parameters/>
+          <Code>
+	         <Line>
+	          	<Literal>switch(GetUserDefinedEventNumber()) {</Literal>
+	         </Line>
+	         <Indent>
+	          	<Line>
+	          			<Literal>case SIGNAL_IDLE_LOOP:</Literal>
+	          		</Line>
+	          	<Indent>
+				<Line>
+	             	<Literal>if(SCEZ_Behav_IsIdle(OBJECT_SELF)) {</Literal>
+	            </Line>
+	            <Indent>
+	              <FormatRef data="NONE" ref="children"/>
+	            </Indent>
+	            <Line>
+	              <Literal>} else { </Literal>
+	            </Line>
+	            <Indent>
+	              <FormatRef data="NONE" ref="variablesDeclaration"/>
+	              <FormatRef data="NONE" ref="variablesDefinition"/>
+	              <Series data="behaviours" unique="true" separator="else ">
+	              	<Indent>
+	                  <Literal>if(SCEZ_Behav_IsCurrentBehaviour(OBJECT_SELF, &quot;</Literal>
+	                  <Fragment data="uniqueID"/>
+	                  <Literal>&quot;)) {</Literal>
+	                  <Indent>
+	                    <FormatRef data="NONE" ref="variablesDeclaration"/>
+	                    <FormatRef data="NONE" ref="variablesDefinition"/>
+	                    <Line/>
+	                    <Line>
+	                      <Series data="tasks" unique="true" separator="    else ">
+	                        <Indent>
+	                          <Literal>if(SCEZ_Behav_IsCurrentBehaviourTask(OBJECT_SELF, &quot;</Literal>
+	                          <Scope data="behaviour">
+	                  		  	<Fragment data="uniqueID"/>
+	                  		  </Scope>
+	                 		  <Literal>&quot;, &quot;</Literal>
+	                          <Fragment data="uniqueID"/>
+	                          <Literal>&quot;)) {</Literal>
+	                          <Indent>
+	                            <Line/>
+	                            <Series data="children" unique="true">
+	                              <FormatRef data="NONE" ref="childrenWithoutImplicits"/>
+	                            </Series>
+	                          </Indent>
+	                          <Line>
+	                            <Literal>}</Literal>
+	                          </Line>
+	                        </Indent>
+	                      </Series>
+	                    </Line>
+	                    <Line>
+	                      <Literal>SCEZ_Behav_PopBehaviourQueue(OBJECT_SELF, &quot;</Literal>
+	                      <Fragment data="uniqueID"/>
+	                      <Literal>&quot;);</Literal>
+	                    </Line>
+	                    <Line>
+	                    	<Literal>SignalEvent(OBJECT_SELF, EventUserDefined(SIGNAL_IDLE_LOOP));</Literal>
+	                    </Line>
+	                  </Indent>
+	                  <Line>
+	                    <Literal>}</Literal>
+	                  </Line>
+	              	</Indent>
+	              </Series>     
+	            </Indent>
+	            <Line>
+	              <Literal>}</Literal>
+	            </Line>
+	            <Line>
+	            </Line>
+          			<Line>
+          				<Literal>break;</Literal>
+          			</Line>	
+          		</Indent>
+          	</Indent>
+          </Code>
+        </CodeBlockSource>
+        
       </CodeBlocks>
     </CauseIt>
+ 
     <CauseIt>
       <Name>When &lt;subject&gt; approaches within &lt;distance&gt; distance of &lt;object&gt;</Name>
       <Labels/>
