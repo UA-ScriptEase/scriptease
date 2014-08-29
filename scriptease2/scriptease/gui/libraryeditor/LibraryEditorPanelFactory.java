@@ -59,6 +59,7 @@ import scriptease.model.complex.behaviours.CollaborativeTask;
 import scriptease.model.complex.behaviours.IndependentTask;
 import scriptease.model.complex.behaviours.Task;
 import scriptease.model.semodel.SEModelManager;
+import scriptease.model.semodel.StoryModel;
 import scriptease.model.semodel.librarymodel.LibraryModel;
 import scriptease.translator.io.model.SimpleResource;
 import scriptease.util.GUIOp;
@@ -289,8 +290,9 @@ public class LibraryEditorPanelFactory {
 		final JLabel readOnlyLabel;
 
 		final boolean isEditable = ScriptEase.DEBUG_MODE
-				|| !behaviour.getLibrary().isReadOnly();
-
+				|| !behaviour.getLibrary().isReadOnly()
+				|| SEModelManager.getInstance().getActiveModel() instanceof StoryModel;
+		
 		behaviourPanel = new JPanel();
 		behaviourPanel
 				.setLayout(new BoxLayout(behaviourPanel, BoxLayout.Y_AXIS));
