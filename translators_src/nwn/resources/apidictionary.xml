@@ -5167,17 +5167,16 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>When &lt;subject&gt; is idle</Name>
+      <Name>When behaviour is signalled</Name>
+      <Visible>false</Visible>
       <Labels/>
       <Children/>
       <CodeBlocks>
-      
-         
-        <CodeBlockSource>
-          <Name>When &lt;subject&gt; is idle</Name>
+       <CodeBlockSource>
+          <Name>When behaviour is signalled</Name>
           <Labels/>
           <Subject>subject</Subject>
-          <Slot>ScriptSpawn</Slot>
+          <Slot>ScriptUserDefine</Slot>
           <Types>
             <Type>Void</Type>
           </Types>
@@ -5191,30 +5190,13 @@
             </KnowIt>
           </Parameters>
           <Code>
-			<Line>
-				<Literal>SignalEvent(OBJECT_SELF, EventUserDefined(SIGNAL_IDLE_LOOP));</Literal>
-			</Line>
-          </Code>
-        </CodeBlockSource>
-      
-      
-       <CodeBlockSource>
-          <Name>When user-defined event occurs</Name>
-          <Labels/>
-          <Subject>subject</Subject>
-          <Slot>ScriptUserDefine</Slot>
-          <Types>
-            <Type>Void</Type>
-          </Types>
-          <Parameters/>
-          <Code>
 	         <Line>
 	          	<Literal>switch(GetUserDefinedEventNumber()) {</Literal>
 	         </Line>
 	         <Indent>
 	          	<Line>
-	          			<Literal>case SIGNAL_IDLE_LOOP:</Literal>
-	          		</Line>
+	          		<Literal>case SIGNAL_IDLE_LOOP:</Literal>
+	          	</Line>
 	          	<Indent>
 				<Line>
 	             	<Literal>if(SCEZ_Behav_IsIdle(OBJECT_SELF)) {</Literal>
@@ -5285,11 +5267,40 @@
           		</Indent>
           	</Indent>
           </Code>
-        </CodeBlockSource>
-        
+        </CodeBlockSource>      
       </CodeBlocks>
     </CauseIt>
  
+  <CauseIt>
+      <Name>When &lt;subject&gt; is idle</Name>
+      <Labels/>
+      <Children/>
+      <CodeBlocks>
+        <CodeBlockSource>
+          <Name>When &lt;subject&gt; is idle</Name>
+          <Labels/>
+          <Subject>subject</Subject>
+          <Slot>ScriptSpawn</Slot>
+          <Types>
+            <Type>Void</Type>
+          </Types>
+          <Parameters>
+            <KnowIt>
+              <Name>subject</Name>
+              <Labels/>
+              <Types>
+                <Type>Creature</Type>
+              </Types>
+            </KnowIt>
+          </Parameters>
+          <Code>
+			<Line>
+				<Literal>SignalEvent(OBJECT_SELF, EventUserDefined(SIGNAL_IDLE_LOOP));</Literal>
+			</Line>
+          </Code>
+        </CodeBlockSource>
+      </CodeBlocks>
+    </CauseIt>
     <CauseIt>
       <Name>When &lt;subject&gt; approaches within &lt;distance&gt; distance of &lt;object&gt;</Name>
       <Labels/>

@@ -9,12 +9,14 @@ import java.util.Map;
 import scriptease.controller.BindingAdapter;
 import scriptease.controller.ModelVisitor;
 import scriptease.controller.StoryAdapter;
+import scriptease.controller.StoryComponentUtils;
 import scriptease.controller.observer.ObserverManager;
 import scriptease.controller.observer.SEModelEvent;
 import scriptease.controller.observer.StoryModelObserver;
 import scriptease.gui.storycomponentpanel.StoryComponentPanelTree;
 import scriptease.model.StoryComponent;
 import scriptease.model.atomic.KnowIt;
+import scriptease.model.atomic.knowitbindings.KnowItBinding;
 import scriptease.model.atomic.knowitbindings.KnowItBindingFunction;
 import scriptease.model.atomic.knowitbindings.KnowItBindingReference;
 import scriptease.model.atomic.knowitbindings.KnowItBindingResource;
@@ -34,6 +36,7 @@ import scriptease.translator.io.model.GameModule;
 import scriptease.translator.io.model.GameType;
 import scriptease.translator.io.model.Resource;
 import scriptease.translator.io.model.Slot;
+import scriptease.util.ListOp;
 import scriptease.util.StringOp;
 
 /**
@@ -225,7 +228,7 @@ public final class StoryModel extends SEModel {
 				}
 			}
 
-			// This adds the "is active" description if we don't have a 
+			// This adds the "is active" description if we don't have a
 			// current active description
 			if (isActiveDescription == null) {
 				outer: for (LibraryModel existingLibrary : this.getLibraries()) {
@@ -422,6 +425,70 @@ public final class StoryModel extends SEModel {
 
 						automatics.add(copy);
 					}
+				}
+			}
+		}
+
+		CauseIt signalCauseIt = null;
+		for (LibraryModel library : this.getLibraries()) {
+			for (StoryComponent cause : library.getCausesCategory()
+					.getChildren()) {
+				if (cause.getDisplayText().equalsIgnoreCase(
+						Behaviour.WHEN_SIGNALLED_TEXT)) {
+					signalCauseIt = (CauseIt) cause;
+					break;
+				}
+			}
+		}
+		/* hey look its a cat.
+		
+        ;,_            ,
+       _uP~"b          d"u,
+      dP'   "b       ,d"  "o
+     d"    , `b     d"'    "b
+    l] [    " `l,  d"       lb
+    Ol ?     "  "b`"=uoqo,_  "l
+  ,dBb "b        "b,    `"~~TObup,_
+,d" (db.`"         ""     "tbc,_ `~"Yuu,_
+.d" l`T'  '=                      ~     `""Yu,
+,dO` gP,                           `u,   b,_  "b7
+d?' ,d" l,                           `"b,_ `~b  "1
+,8i' dl   `l                 ,ggQOV",dbgq,._"  `l  lb
+.df' (O,    "             ,ggQY"~  , @@@@@d"bd~  `b "1
+.df'   `"           -=@QgpOY""     (b  @@@@P db    `Lp"b,
+.d(                  _               "ko "=d_,Q`  ,_  "  "b,
+Ql         .         `"qo,._          "tQo,_`""bo ;tb,    `"b,
+(qQ         |L           ~"QQQgggc,_.,dObc,opooO  `"~~";.   __,7,
+`qp         t\io,_           `~"TOOggQV""""        _,dg,_ =PIQHib.
+`qp        `Q["tQQQo,_                          ,pl{QOP"'   7AFR`
+`         `tb  '""tQQQg,_             p" "b   `       .;-.`Vl'
+   "Yb      `"tQOOo,__    _,edb    ` .__   /`/'|  |b;=;.__
+                 `"tQQQOOOOP""        `"\QV;qQObob"`-._`\_~~-._
+                      """"    ._        /   | |oP"\_   ~\ ~\_  ~\
+                              `~"\ic,qggddOOP"|  |  ~\   `\  ~-._
+                                ,qP`"""|"   | `\ `;   `\   `\
+                     _        _,p"     |    |   `\`;    |    |
+                      "boo,._dP"       `\_  `\    `\|   `\   ;
+                       `"7tY~'            `\  `\    `|_   |
+                                                `~\  |
+
+                                                */
+		if (signalCauseIt == null)
+			return automatics;
+
+		for (StoryNode node : this.startPoint.getDescendants()) {
+			for (CauseIt causeIt : StoryComponentUtils
+					.getDescendantCauseIts(node)) {
+				if (causeIt.getDisplayText().equalsIgnoreCase(
+						Behaviour.WHEN_IDLE_TEXT)) {
+					final CauseIt signal = signalCauseIt.clone();
+
+					final KnowItBinding binding = causeIt.getParameter("subject").getBinding();
+					
+					// TODO May have to get a different binding or clone it or something
+					signal.getParameter("subject").setBinding(binding);
+					
+					automatics.add(signal);
 				}
 			}
 		}

@@ -27,7 +27,10 @@ import scriptease.translator.io.model.SimpleResource;
  */
 public class Behaviour extends ScriptIt {
 	public static final String WHEN_IDLE_TEXT = "When <subject> is idle";
+	public static final String WHEN_SIGNALLED_TEXT = "When behaviour is signalled";
+
 	public static final String INDEPENDENT_DISPLAY_TEXT = "<Initiator> does action with priority <Priority>";
+
 	public static final String PRIORITY_TEXT = "Priority";
 	public static final String LATENT_FORMAT = "queueLatentBehaviour";
 	public static final String INDEPENDENT_PROACTIVE_FORMAT = "queueIndependentProactiveBehaviour";

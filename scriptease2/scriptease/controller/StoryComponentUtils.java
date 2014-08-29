@@ -253,6 +253,29 @@ public class StoryComponentUtils {
 	}
 
 	/**
+	 * Returns all causeits descended from the ComplexStoryComponent passed in.
+	 * 
+	 * @param complex
+	 * @return
+	 */
+	public static Collection<CauseIt> getDescendantCauseIts(
+			ComplexStoryComponent complex) {
+		final Collection<CauseIt> causeIts = new HashSet<CauseIt>();
+		final DescendantCollector collector = new DescendantCollector() {
+			@Override
+			public void processCauseIt(CauseIt causeIt) {
+				super.processScriptIt(causeIt);
+				if (!causeIts.contains(causeIt))
+					causeIts.add(causeIt);
+			}
+		};
+
+		complex.process(collector);
+
+		return causeIts;
+	}
+
+	/**
 	 * Returns all scriptIts descended from the ComplexStoryComponent passed in.
 	 * 
 	 * @param complex
