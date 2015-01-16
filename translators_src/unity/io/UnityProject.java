@@ -213,6 +213,7 @@ public final class UnityProject extends GameModule {
 		}
 	}
 
+	/*EEdit*/
 	@Override
 	public Resource getInstanceForObjectIdentifier(String id) {
 		for (UnityFile scene : this.scenes) {

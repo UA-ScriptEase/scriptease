@@ -250,6 +250,7 @@ public abstract class CodeBlock extends StoryComponent implements
 				clonedImplicits = new ArrayList<KnowIt>();
 
 				// clone these because they're CodeBlock instance-specific
+				
 				for (KnowIt implicit : this.getLibrary()
 						.getSlot(this.getSlot()).getImplicits()) {
 					final KnowIt clone = implicit.clone();

@@ -215,7 +215,7 @@ public final class FileManager {
 		});
 
 		final long timeTaken = System.currentTimeMillis() - initialTime;
-
+		System.out.println("can we add stuff?");
 		System.out.println("It took " + timeTaken
 				+ " milliseconds to save the story.");
 	}
@@ -494,7 +494,7 @@ public final class FileManager {
 			if (!cancel)
 				return;
 		}
-
+		System.out.println("Are we really saving?");
 		WindowFactory.showProgressBar("Saving Story...", new Runnable() {
 			@Override
 			public void run() {
@@ -557,11 +557,31 @@ public final class FileManager {
 
 		module = model.getModule();
 		translator = model.getTranslator();
+		System.out.println("model");
+		System.out.println(model);
+		System.out.println("separator");
+		System.out.println("translator");
+		System.out.println(translator);
 		problems = new ArrayList<StoryProblem>();
 		scriptInfos = CodeGenerator.getInstance().generateCode(model, problems);
 		compiler = translator.getCompiler();
 
+		
+		System.out.println("right before addscripts");
+		System.out.flush();	
+		System.out.print("scriptInfos ");
+		System.out.flush();	
+		System.out.println(scriptInfos);
+		System.out.flush();		
+		System.out.println("separator");
+		System.out.flush();		
+		System.out.println(module);
+		System.out.flush();		
+		System.out.println(module.getClass());
+		System.out.flush();
+
 		module.addScripts(scriptInfos);
+		System.out.println("after addscripts");
 		module.addIncludeFiles(model.getIncludes());
 
 		this.saveScriptInOutput(scriptInfos, model, false);
@@ -589,6 +609,9 @@ public final class FileManager {
 				StatusManager.getInstance()
 						.set("Saving and Compiling Story...");
 
+			// Saves based on the translator implementation of Game Module
+			// For example Unity implements save by emptying the scripts folder
+			// before recreating scenes and prefabs, while NWN writes to one file.
 			module.save(compile);
 			StatusManager.getInstance().setTemp("Story Saved Successfully.");
 		} catch (IOException e) {
@@ -897,6 +920,8 @@ public final class FileManager {
 			if (choice == JOptionPane.CANCEL_OPTION)
 				return false;
 			else if (choice == JOptionPane.YES_OPTION) {
+				// This saves using the FileManager save(model) function not 
+				// the Translator GameModule implementation 
 				this.save(model);
 				return this.hasUnsavedChanges(model);
 			}

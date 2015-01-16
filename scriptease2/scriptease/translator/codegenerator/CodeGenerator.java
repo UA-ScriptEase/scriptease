@@ -124,7 +124,8 @@ public class CodeGenerator {
 
 		// Find problems with code gen, such as slots missing bindings, etc.
 		problems.addAll(analyzer.getProblems());
-
+		System.out.println("prooooblems");
+		System.out.println(problems);
 		// If no problems were detected, generate the scripts
 		if (problems.isEmpty()) {
 			final Collection<StoryComponent> automaticCauses;

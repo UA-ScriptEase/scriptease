@@ -4,6 +4,7 @@ cd translators_src/nwn
 ant install -Ddebug.mode=true
 cd ../unity
 ant install -Ddebug.mode=true
-cd ../..
-echo "Both translators installed"
+cd ../hackebot
+ant install -Ddebug.mode=true
+echo "All translators installed"
 

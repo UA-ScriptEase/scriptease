@@ -212,7 +212,7 @@ public final class ScriptEase implements Runnable {
 				.getCodeSource();
 		final URL jarUrl;
 		BufferedOutputStream dest;
-		final int bufferSize = 2048;
+		final int bufferSize = 2048; 
 		final String libLocation = "scriptease/resources/lib";
 		File requiredLib = null;
 		final ZipInputStream zipInput;
