@@ -64,6 +64,7 @@ public abstract class Context {
 	 */
 	private Collection<CodeBlock> codeBlocks = null;
 	private Collection<Behaviour> behaviours = null;
+	//private Collection<Robot>??
 
 	protected LocationInformation locationInfo;
 

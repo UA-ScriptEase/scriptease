@@ -210,7 +210,7 @@ public final class StoryModel extends SEModel {
 		if (!this.optionalLibraries.contains(library)) {
 			this.optionalLibraries.add(library);
 
-			// Get the Is Active Description from the default library.
+			// Get the Current Active Description from the default library.
 			KnowIt isActiveDescription = null;
 			outer: for (LibraryModel existingLibrary : this.getLibraries()) {
 				for (StoryComponent description : existingLibrary

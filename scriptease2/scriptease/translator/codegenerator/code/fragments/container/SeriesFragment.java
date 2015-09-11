@@ -259,6 +259,8 @@ public class SeriesFragment extends AbstractContainerFragment {
 			return context.getTasks();
 		case BEHAVIOURS:
 			return context.getBehaviours();
+//		case ROBOTCHILDREN:						Might use this for Hackebot
+//			return context.getRobotchildren();
 		default:
 			// Default return 'cuz they didn't tell us a real label!
 			System.err.println("Series was unable to be resolved for data: "

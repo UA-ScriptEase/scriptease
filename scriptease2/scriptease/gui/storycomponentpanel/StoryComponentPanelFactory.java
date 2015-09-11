@@ -313,12 +313,14 @@ public class StoryComponentPanelFactory {
 			}
 
 			if (childPanel != null) {
+				System.out.println("this is the child panel " + child);
 				panel.remove(childPanel);
 				StoryComponentPanelManager selectionManager = panel
 						.getSelectionManager();
 				if (selectionManager != null)
 					selectionManager.cleanUpPanel(childPanel);
 			} else
+				System.out.println("this is the child panel error " + child);
 				System.err.println("Attempted to remove " + child
 						+ "'s StoryComponentPanel when it is not a child of "
 						+ parent);

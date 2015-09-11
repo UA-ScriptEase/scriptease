@@ -25,7 +25,7 @@ import scriptease.util.StringOp;
  * ways, the consoleLog and the outputLog. The consoleLog displays feedback via
  * the console and by default will only show INFO and higher logs. The outputLog
  * keeps track of what the user has done and in the event of an exception will
- * push the past 1000 actions to a file and to the bugreport server (upon
+ * push the past 1000 actions to a file and to the bug report server (upon
  * confirmation by the user).
  * 
  * @author mfchurch

@@ -101,6 +101,9 @@ public class Slot {
 	 * @return
 	 */
 	public Collection<KnowIt> getImplicits() {
+		if(this.implicits == null){
+			System.out.println("can't return null don't do that");
+		}
 		return new ArrayList<KnowIt>(this.implicits);
 	}
 

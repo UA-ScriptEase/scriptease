@@ -257,7 +257,7 @@ private class StoryPoint {
 		if(this.HasFailed())
 			funxion();
 		
-		this.enableFunctions.Add(funxion);
+		this.failFunctions.Add(funxion);
 	}
 	
 	function AddSucceedFunction(funxion : Function) {
