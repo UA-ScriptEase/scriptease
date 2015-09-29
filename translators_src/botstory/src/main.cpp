@@ -13,10 +13,11 @@
 
 using namespace std;
 
-
+static void PrintStoryTree();
+static void PrintList(list<StoryPoint> stlist);
 int main(){
 
-	list<StoryPoint>::iterator it;
+/*
 
 	StoryPoint gen1("gen1", 1);
     StoryPoint gen2("gen2",1);
@@ -25,54 +26,63 @@ int main(){
     StoryPoint BB("BB", 2);
     StoryPoint CC("CC",2);
 
-
-	StoryPoint::RegisterRoot("start",1);
-
-	for(it=allPoints.begin(); it!=allPoints.end(); it++){
-		cout << "1 The list of points includes " << it->uniqueName << endl;
-	}
-
-    allPoints.push_back(gen1);
-	StoryPoint::RegisterChild("start", "gen1", 1);
-	for(it=allPoints.begin(); it!=allPoints.end(); it++){
-			cout << "2 The list of points includes " << it->uniqueName << endl;
-	}
-
-	//StoryPoint::RegisterChild("start", "gen2", 1);
-	//StoryPoint::RegisterChild("start", "gen3", 1);
-	StoryPoint::RegisterChild("gen1", "AA", 1);
-	for(it=allPoints.begin(); it!=allPoints.end(); it++){
-		cout << "3 The list of points includes " << it->uniqueName << endl;
-	}
-	StoryPoint::RegisterChild("gen2", "BB", 2);
-	StoryPoint::RegisterChild("gen3", "BB", 2);
-	StoryPoint::RegisterChild("gen1", "CC", 3);
-	StoryPoint::RegisterChild("gen2", "CC", 2);
-	StoryPoint::RegisterChild("gen3", "CC", 2);
-
-	for(it=allPoints.begin(); it!=allPoints.end(); it++){
-			cout << "4 The list of points includes " << it->uniqueName << endl;
-	}
-
-/*
-	for(it=root.children.begin(); it!=root.children.end(); it++){
-		cout << "Root's children " << it->uniqueName << endl;
-	}
-	for(it=gen1.children.begin(); it!=gen1.children.end(); it++){
-			cout << "gen1's children " << it->uniqueName << endl;
-		}
-	for(it=gen2.children.begin(); it!=gen2.children.end(); it++){
-				cout << "gen2's children " << it->uniqueName << endl;
-			}
-	for(it=gen3.children.begin(); it!=gen3.children.end(); it++){
-				cout << "gen3's children " << it->uniqueName << endl;
-			}
-
 */
 
 
+	StoryPoint::RegisterRoot("start",1);
+	//PrintStoryTree();
+
+	StoryPoint::RegisterChild("start", "gen1", 1);
+	StoryPoint::RegisterChild("start", "gen2", 1);
+	StoryPoint::RegisterChild("start", "gen3", 1);
+	//PrintStoryTree();
+
+	StoryPoint::RegisterChild("gen1", "AA", 1);
+	StoryPoint::RegisterChild("gen2", "BB", 2);
+	StoryPoint::RegisterChild("gen3", "BB", 2);
+	//PrintStoryTree();
+
+	StoryPoint::RegisterChild("gen1", "CC", 3);
+	StoryPoint::RegisterChild("gen2", "CC", 2);
+	StoryPoint::RegisterChild("gen3", "CC", 2);
+	//PrintStoryTree();
+
+
+	list<StoryPoint> stlist = StoryPoint::GetParents("start");
+	//PrintList(stlist);
+
+
+	//StoryPoint::CheckAllDetails(storyTree);
 
 	return 0;
 
 
 }
+void PrintList(list<StoryPoint> stlist){
+	list<StoryPoint>::iterator it;
+	cout << "Checking the parents: " << endl;
+	for(it = stlist.begin(); it != stlist.end(); it++){
+		cout << it->uniqueName << endl;
+	}
+}
+/*
+void PrintStoryTree(){
+	list<StoryPoint>::iterator it, on;
+
+	cout << "The current list of story points is: " << endl;
+	for(it = storyTree.begin(); it != storyTree.end(); it++){
+		cout << it->uniqueName << endl;
+		cout << "trying to print children of " << it->uniqueName << endl;
+		for(on = it->children.begin(); on != it->children.end(); on++){
+			cout << on->uniqueName << endl;
+		}
+		cout << "trying to print parent of " << it->uniqueName << endl;
+		for(on = it->parent.begin(); on != it->parent.end(); on++){
+			cout << on->uniqueName << endl;
+			cout << endl;
+		}
+	}
+	cout << endl;
+}
+*/
+

@@ -12,13 +12,12 @@
 #include <list>
 
 using namespace std;
-static bool storyInitialized = false;
 
 class StoryPoint {
 
 public:
 
-	enum State {PRESUCCEEDED, SUCCEEDED, FAILED, ENABLED, DISABLED, EXISTS, NONEXIST};
+	enum State {PRESUCCEEDED, SUCCEEDED, FAILED, ENABLED, DISABLED};
 
 
 	list<StoryPoint> children;
@@ -30,17 +29,10 @@ public:
 	StoryPoint();									// Default constructor
 	StoryPoint(string uniqueName, int fanIn);   	// Constructor
 
-	bool CheckEnabled();
-	static bool IsEnabled(string uniqueName);
-	void Enabled();
-
 	bool CheckSucceeded();
-	static bool HasSucceeded(string uniqueName);
-	void Succeed();
-
+	bool CheckEnabled();
 	bool CheckFailed();
-	static bool HasFailed(string uniqueName);
-	void Fail();
+	void EnableStoryPoint();
 
 	void AddChild(StoryPoint child);
 	void DisableDescendants();
@@ -59,11 +51,13 @@ public:
 	static void RegisterChild(string parentName, string uniqueName, int fanIn);
 
 	static void CheckDetails(StoryPoint currentPoint);
+	static void CheckAllDetails(list<StoryPoint> st);
+	static list<StoryPoint> GetParents(string uniqueName);
 
 };
 
 extern StoryPoint root;
-extern StoryPoint nullPoint;
-extern list<StoryPoint> allPoints;
+extern list<StoryPoint> storyTree;
+extern bool storyInitialized;
 
 #endif /* HEBSTORY_H_ */
