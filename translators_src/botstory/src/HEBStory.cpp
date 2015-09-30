@@ -15,7 +15,6 @@ using namespace std;
  */
 
 StoryPoint root;
-StoryPoint nullPoint;
 list<StoryPoint> storyTree;
 bool storyInitialized = false;
 
@@ -24,7 +23,7 @@ bool storyInitialized = false;
  */
 StoryPoint::StoryPoint(){
 
-	//Default constructor is for the root and nullpoint only since it is the only StoryPoint
+	//Default constructor is for the root only since it is the only StoryPoint
 	//we initialize automatically. Has no Parents.
 	list<StoryPoint> children;
 	this->fanIn = 0;
@@ -76,21 +75,20 @@ void StoryPoint::EnableStoryPoint(){
  * Sets the state to PRESUCCEEDED if the story point is not yet enabled.
  */
 void StoryPoint::SucceedStoryPoint(string uniqueName){
-	StoryPoint storyPoint = FindStoryPoint(uniqueName);
-	StoryPoint *storyPntr = &storyPoint;
+	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
 
 	list<StoryPoint>::iterator it, on;
 
-	if(storyPntr->uniqueName != nullPoint.uniqueName){
+	if(storyPoint == NULL){
 		//If the State of the StoryPoint is PRE/SUCCEEDED then do nothing
-		if(storyPntr->state == PRESUCCEEDED || storyPntr->state == SUCCEEDED) return;
+		if(storyPoint->state == PRESUCCEEDED || storyPoint->state == SUCCEEDED) return;
 
 		//If the StoryPoint's state is enabled we need to Succeed it and then all the children
-		if(storyPntr->state == ENABLED){
-			storyPntr->state = SUCCEEDED;
+		if(storyPoint->state == ENABLED){
+			storyPoint->state = SUCCEEDED;
 
 			//For the children of the StoryPoint
-			for(it = storyPntr->children.begin(); it != storyPntr->children.end(); it++){
+			for(it = storyPoint->children.begin(); it != storyPoint->children.end(); it++){
 
 				if(it->state == ENABLED || it->state == SUCCEEDED) continue;
 
@@ -101,13 +99,13 @@ void StoryPoint::SucceedStoryPoint(string uniqueName){
 					if(on->CheckSucceeded()) succeededParents++;
 				}
 
-				if(succeededParents >= storyPntr->fanIn){
-					storyPntr->EnableStoryPoint();
+				if(succeededParents >= storyPoint->fanIn){
+					storyPoint->EnableStoryPoint();
 					break;
 				}
 			}
-		} else if (storyPntr->state == DISABLED){
-			storyPntr->state = PRESUCCEEDED;
+		} else if (storyPoint->state == DISABLED){
+			storyPoint->state = PRESUCCEEDED;
 		}
 	} else {
 		//cout << "Attempted to Succeed nonexistant StoryPoint " << uniqueName << endl;
@@ -120,14 +118,13 @@ void StoryPoint::SucceedStoryPoint(string uniqueName){
  */
 void StoryPoint::FailStoryPoint(string uniqueName){
 	list<StoryPoint>::iterator it;
-	StoryPoint storyPoint = FindStoryPoint(uniqueName);
-	StoryPoint *storyPntr = &storyPoint;
+	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
 
-	if(storyPntr->uniqueName != nullPoint.uniqueName){
-		for(it = storyPntr->children.begin(); it != storyPntr->children.end(); it++){
+	if(storyPoint != NULL){
+		for(it = storyPoint->children.begin(); it != storyPoint->children.end(); it++){
 			it->state = FAILED;
 		}
-		storyPntr->state = FAILED;
+		storyPoint->state = FAILED;
 	} else {
 		//cout << "Attempted to fail nonexistant StoryPoint " << uniqueName << endl;
 	}
@@ -139,11 +136,10 @@ void StoryPoint::FailStoryPoint(string uniqueName){
  * that might be active, and then enable it.
  */
 void StoryPoint::ContinueAtStoryPoint(string uniqueName){
-	StoryPoint storyPoint = FindStoryPoint(uniqueName);
-	StoryPoint *storyPntr = &storyPoint;
-	if(storyPntr->uniqueName != nullPoint.uniqueName){
-		storyPntr->DisableDescendants();
-		storyPntr->EnableStoryPoint();
+	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
+	if(storyPoint != NULL){
+		storyPoint->DisableDescendants();
+		storyPoint->EnableStoryPoint();
 	}
 }
 
@@ -151,22 +147,24 @@ void StoryPoint::ContinueAtStoryPoint(string uniqueName){
 /*
  * Finds the given StoryPoint in the StoryTree.
  */
-StoryPoint StoryPoint::FindStoryPoint(string uniqueName){
+StoryPoint * StoryPoint::FindStoryPoint(string uniqueName){
+	StoryPoint * ptr = 0;
 
 	//cout << "Inside find story point looking for: " << uniqueName << endl;
 
 	list<StoryPoint>::iterator it;
 	for(it = storyTree.begin(); it != storyTree.end(); it++){
 		if(it->uniqueName == uniqueName){
-			return *it;
+			ptr = &(*it);
+			return ptr;
 		}
 		else {
-			//cout << "could not find the storypoint in the tree " << uniqueName << endl;
+			//cout << "could not find the storypoint in the tree: " << uniqueName << endl;
 		}
 	}
 
 	cout << endl;
-	return nullPoint;
+	return NULL;
 }
 
 /*
@@ -249,21 +247,21 @@ void StoryPoint::RegisterRoot(string uniqueName, int fanIn){
  */
 void StoryPoint::RegisterChild(string parentName, string uniqueName, int fanIn){
 	list<StoryPoint>::iterator it;
-	StoryPoint parent = FindStoryPoint(parentName);
-	StoryPoint *parentPntr = parent;
+	StoryPoint * parent = FindStoryPoint(parentName);
 
-	if(parent.uniqueName != nullPoint.uniqueName){
-		StoryPoint child = FindStoryPoint(uniqueName);
-		StoryPoint *childPntr = child;
+	if(parent != NULL){
+		StoryPoint * child = FindStoryPoint(uniqueName);
 
-		if(child.uniqueName == nullPoint.uniqueName){
+		if(child == NULL){
 			StoryPoint newChild = StoryPoint(uniqueName, fanIn);
 			storyTree.push_back(newChild);
-			parent.AddChild(newChild);
+
+			StoryPoint * newPoint = FindStoryPoint(uniqueName);
+			parent->AddChild(newPoint);
 		}
 
-		if(child.uniqueName != nullPoint.uniqueName){
-			parent.AddChild(child);
+		if(child != NULL){
+			parent->AddChild(child);
 		}
 	}
 	else {
@@ -275,48 +273,31 @@ void StoryPoint::RegisterChild(string parentName, string uniqueName, int fanIn){
  * Add a StoryPoint to the list. "This" being references is the parent we are
  * attaching the child to.
  */
-void StoryPoint::AddChild(StoryPoint child){
-	this->children.push_back(child);
-	child.parent.push_back(*this);
+void StoryPoint::AddChild(StoryPoint * child){
+	this->children.push_back(*child);
+	child->parent.push_back(*this);
 }
 
 /*
  * We want to know the details of a story point. Checks parents and children
  */
-void StoryPoint::CheckDetails(StoryPoint point){
-	list<StoryPoint>::iterator it;
-
-	for(it = point.parent.begin(); it != point.parent.end(); it++){
-		cout << point.uniqueName << "'s parent(s): " << it->uniqueName << endl;
-	}
-
-
-	for(it = point.children.begin(); it != point.children.end(); it++){
-			cout << point.uniqueName << "'s child(ren): " << it->uniqueName << endl;
-	}
-}
 
 void StoryPoint::CheckAllDetails(list<StoryPoint> pointlist){
-	list<StoryPoint>::iterator it;
+	list<StoryPoint>::iterator it, on;
 
 	for(it = pointlist.begin(); it != pointlist.end(); it++){
-		CheckDetails(*it);
+
+		for(on = it->parent.begin(); on != it->parent.end(); it++){
+			cout << on->uniqueName << "'s parent(s): " << it->uniqueName << endl;
+		}
+
+
+		for(on = it->children.begin(); on != it->children.end(); it++){
+				cout << on->uniqueName << "'s child(ren): " << it->uniqueName << endl;
+		}
 	}
 
 }
-
-list<StoryPoint> StoryPoint::GetParents(string uniqueName){
-	StoryPoint point = FindStoryPoint(uniqueName);
-	list<StoryPoint> parents;
-	list<StoryPoint>::iterator it;
-
-	for(it = point.parent.begin();it != point.parent.end(); it++){
-		parents.push_back(*it);
-	}
-	return parents;
-}
-
-
 
 
 

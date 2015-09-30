@@ -48,11 +48,14 @@ int main(){
 	//PrintStoryTree();
 
 
-	list<StoryPoint> stlist = StoryPoint::GetParents("start");
+	StoryPoint * start = StoryPoint::FindStoryPoint("start");
+	list<StoryPoint> stlist = start->StoryPoint::GetDescendants();
 	//PrintList(stlist);
 
+	cout << endl;
+	cout << "checking all details at end " << endl;
+	StoryPoint::CheckAllDetails(storyTree);
 
-	//StoryPoint::CheckAllDetails(storyTree);
 
 	return 0;
 

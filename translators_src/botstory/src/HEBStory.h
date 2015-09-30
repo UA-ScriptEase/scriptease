@@ -34,14 +34,14 @@ public:
 	bool CheckFailed();
 	void EnableStoryPoint();
 
-	void AddChild(StoryPoint child);
+	void AddChild(StoryPoint * child);
 	void DisableDescendants();
 	void ContinueAt();
 	bool Exists();
 
 	list<StoryPoint> GetDescendants();
 	static list<string> GetAllActive();
-	static StoryPoint FindStoryPoint(string uniqueName);
+	static StoryPoint * FindStoryPoint(string uniqueName);
 
 	static void SucceedStoryPoint(string uniqueName);
 	static void FailStoryPoint(string uniqueName);
@@ -50,9 +50,7 @@ public:
 	static void RegisterRoot(string uniqueName, int fanIn);
 	static void RegisterChild(string parentName, string uniqueName, int fanIn);
 
-	static void CheckDetails(StoryPoint currentPoint);
 	static void CheckAllDetails(list<StoryPoint> st);
-	static list<StoryPoint> GetParents(string uniqueName);
 
 };
 
