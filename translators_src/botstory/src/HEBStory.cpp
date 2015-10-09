@@ -43,16 +43,29 @@ StoryPoint::StoryPoint(string uniqueName, int fanIn){
 /*
  * Returns the current state of the given StoryPoint.
  */
-bool StoryPoint::CheckEnabled(){
-	return this->state == ENABLED;
+bool StoryPoint::CheckEnabled(StoryPoint storyPoint){
+	return storyPoint.state == ENABLED;
 }
 
-bool StoryPoint::CheckSucceeded(){
-	return this->state == SUCCEEDED;
+bool StoryPoint::CheckSucceeded(StoryPoint storyPoint){
+	return storyPoint.state == SUCCEEDED;
 }
 
-bool StoryPoint::CheckFailed(){
-	return this->state == FAILED;
+bool StoryPoint::CheckFailed(StoryPoint storyPoint){
+	return storyPoint.state == FAILED;
+}
+int StoryPoint::CheckState(string uniqueName){
+	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
+	cout << "Inside checkstate" << endl;
+	cout << "state of " << storyPoint->uniqueName << " is " << storyPoint->state << endl;
+	if(storyPoint->state == ENABLED)
+		return ENABLED;
+	else if(storyPoint->state == SUCCEEDED)
+		return SUCCEEDED;
+	else if(storyPoint->state == FAILED)
+		return FAILED;
+
+	return 0;
 }
 
 /*
@@ -77,26 +90,36 @@ void StoryPoint::EnableStoryPoint(){
 void StoryPoint::SucceedStoryPoint(string uniqueName){
 	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
 
+	cout << "inside succeedstorypoint with " << storyPoint->uniqueName << " with state " << storyPoint->state << endl;
 	list<StoryPoint>::iterator it, on;
 
-	if(storyPoint == NULL){
+	if(storyPoint != NULL){
 		//If the State of the StoryPoint is PRE/SUCCEEDED then do nothing
 		if(storyPoint->state == PRESUCCEEDED || storyPoint->state == SUCCEEDED) return;
 
-		//If the StoryPoint's state is enabled we need to Succeed it and then all the children
+		//If the StoryPoint's state is enabled we need to Succeed it and then enable all its children
 		if(storyPoint->state == ENABLED){
 			storyPoint->state = SUCCEEDED;
+
+			for(it = storyPoint->children.begin(); it != storyPoint->children.end(); it++){
+				cout << "inside succeed succeedstorypoint " << storyPoint->uniqueName << " children: " << it->uniqueName << endl;
+			}
 
 			//For the children of the StoryPoint
 			for(it = storyPoint->children.begin(); it != storyPoint->children.end(); it++){
 
+				cout << "what is the state of 'it' " << it->state << endl;
 				if(it->state == ENABLED || it->state == SUCCEEDED) continue;
+
+				cout << "what is 'it' pointing at ? " << it->uniqueName << endl;
 
 				//Need to keep track of how many parents have been succeeded. We
 				//can't enable a child if not all of it's parent's have been succeeded
 				int succeededParents = 0;
 				for(on = it->parent.begin(); on != it->parent.end(); on++){
-					if(on->CheckSucceeded()) succeededParents++;
+					cout << "Did i get into parents list " << endl;
+					cout << it->uniqueName << "'s parents are : " << on->uniqueName << endl;
+					if(CheckSucceeded(*on)) succeededParents++;
 				}
 
 				if(succeededParents >= storyPoint->fanIn){
@@ -110,7 +133,7 @@ void StoryPoint::SucceedStoryPoint(string uniqueName){
 	} else {
 		//cout << "Attempted to Succeed nonexistant StoryPoint " << uniqueName << endl;
 	}
-
+	cout << "end of succeed storyPoint " << storyPoint->uniqueName << " with state " << storyPoint->state << endl;
 }
 
 /*
@@ -219,11 +242,11 @@ list<string> GetAllActive(){
 	list<StoryPoint> descendants = root.GetDescendants();
 
 	for(it = storyTree.begin();it != storyTree.end(); it++){
-		if(it->CheckEnabled()){
+		//if(CheckEnabled(*it)){
 			active.push_back(it->uniqueName);
-		}
+		//}
 	}
-
+	return active;
 }
 
 /*
@@ -282,18 +305,36 @@ void StoryPoint::AddChild(StoryPoint * child){
  * We want to know the details of a story point. Checks parents and children
  */
 
+void StoryPoint::CheckDetails(StoryPoint sp){
+	list<StoryPoint>::iterator it, on;
+
+	cout << "Inside checkdetails with " << sp.uniqueName << endl;
+	for(on = sp.parent.begin(); on != sp.parent.end(); it++){
+		cout << on->uniqueName << "'s parent(s): " << it->uniqueName << endl;
+	}
+
+
+	for(on = sp.children.begin(); on != sp.children.end(); it++){
+			cout << on->uniqueName << "'s child(ren): " << it->uniqueName << endl;
+	}
+
+}
+
 void StoryPoint::CheckAllDetails(list<StoryPoint> pointlist){
 	list<StoryPoint>::iterator it, on;
 
+	cout << endl;
+	cout << "Inside check all details " << endl;
 	for(it = pointlist.begin(); it != pointlist.end(); it++){
 
+		cout << "Print out storyPoint name " << it->uniqueName << endl;
 		for(on = it->parent.begin(); on != it->parent.end(); it++){
-			cout << on->uniqueName << "'s parent(s): " << it->uniqueName << endl;
+			cout << it->uniqueName << "'s parent(s): " << on->uniqueName << endl;
 		}
 
 
 		for(on = it->children.begin(); on != it->children.end(); it++){
-				cout << on->uniqueName << "'s child(ren): " << it->uniqueName << endl;
+				cout << it->uniqueName << "'s child(ren): " << on->uniqueName << endl;
 		}
 	}
 

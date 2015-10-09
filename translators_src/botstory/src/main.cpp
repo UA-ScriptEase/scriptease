@@ -17,46 +17,36 @@ static void PrintStoryTree();
 static void PrintList(list<StoryPoint> stlist);
 int main(){
 
+	enum State {PRESUCCEEDED, SUCCEEDED, FAILED, ENABLED, DISABLED};
+
+	StoryPoint::RegisterRoot("start1", 1);
+	string parentName;
+	parentName = "start1";
+	StoryPoint::RegisterChild(parentName, "a2", 1);
+	parentName = "a2";
 /*
-
-	StoryPoint gen1("gen1", 1);
-    StoryPoint gen2("gen2",1);
-    StoryPoint gen3("gen3",1);
-    StoryPoint AA("AA", 1);
-    StoryPoint BB("BB", 2);
-    StoryPoint CC("CC",2);
-
-*/
-
-
-	StoryPoint::RegisterRoot("start",1);
-	//PrintStoryTree();
-
-	StoryPoint::RegisterChild("start", "gen1", 1);
-	StoryPoint::RegisterChild("start", "gen2", 1);
-	StoryPoint::RegisterChild("start", "gen3", 1);
-	//PrintStoryTree();
-
-	StoryPoint::RegisterChild("gen1", "AA", 1);
-	StoryPoint::RegisterChild("gen2", "BB", 2);
-	StoryPoint::RegisterChild("gen3", "BB", 2);
-	//PrintStoryTree();
-
-	StoryPoint::RegisterChild("gen1", "CC", 3);
-	StoryPoint::RegisterChild("gen2", "CC", 2);
-	StoryPoint::RegisterChild("gen3", "CC", 2);
-	//PrintStoryTree();
-
-
-	StoryPoint * start = StoryPoint::FindStoryPoint("start");
-	list<StoryPoint> stlist = start->StoryPoint::GetDescendants();
-	//PrintList(stlist);
+	StoryPoint::RegisterChild(parentName, "b3", 1);
+	parentName = "b3";
+	//StoryPoint::SucceedStoryPoint("start1");
 
 	cout << endl;
-	cout << "checking all details at end " << endl;
-	StoryPoint::CheckAllDetails(storyTree);
+	StoryPoint * sp = StoryPoint::FindStoryPoint("a2");
 
+	list<StoryPoint>::iterator it;
+	cout << "Checking the parents of : " << sp->uniqueName << endl;
+	for(it = sp->parent.begin(); it != sp->parent.end(); it++){
+		cout << it->uniqueName << endl;
+	}
+	cout << endl;
 
+	if(StoryPoint::CheckState("a2") == ENABLED){
+		cout << "a2 is enabled" << endl;
+	}
+*/
+
+	//StoryPoint::CheckAllDetails(storyTree);
+
+	PrintStoryTree();
 	return 0;
 
 
@@ -68,7 +58,7 @@ void PrintList(list<StoryPoint> stlist){
 		cout << it->uniqueName << endl;
 	}
 }
-/*
+
 void PrintStoryTree(){
 	list<StoryPoint>::iterator it, on;
 
@@ -87,5 +77,5 @@ void PrintStoryTree(){
 	}
 	cout << endl;
 }
-*/
+
 

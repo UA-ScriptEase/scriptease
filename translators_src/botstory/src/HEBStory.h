@@ -24,15 +24,15 @@ public:
 	list<StoryPoint> parent;
 	int fanIn;
 	string uniqueName;
-	State state, state2;
+	State state;
 
 	StoryPoint();									// Default constructor
 	StoryPoint(string uniqueName, int fanIn);   	// Constructor
 
-	bool CheckSucceeded();
-	bool CheckEnabled();
-	bool CheckFailed();
-	void EnableStoryPoint();
+	static bool CheckSucceeded(StoryPoint storyPoint);
+	static bool CheckEnabled(StoryPoint storyPoint);
+	static bool CheckFailed(StoryPoint storyPoint);
+	static int CheckState(string uniqueName);
 
 	void AddChild(StoryPoint * child);
 	void DisableDescendants();
@@ -43,13 +43,14 @@ public:
 	static list<string> GetAllActive();
 	static StoryPoint * FindStoryPoint(string uniqueName);
 
+	void EnableStoryPoint();
 	static void SucceedStoryPoint(string uniqueName);
 	static void FailStoryPoint(string uniqueName);
 	static void ContinueAtStoryPoint(string uniqueName);
-
 	static void RegisterRoot(string uniqueName, int fanIn);
 	static void RegisterChild(string parentName, string uniqueName, int fanIn);
 
+	static void CheckDetails(StoryPoint sp);
 	static void CheckAllDetails(list<StoryPoint> st);
 
 };

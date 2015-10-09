@@ -117,4 +117,5 @@
 			<resource resourceType="PROJECT" workspacePath="/botstory"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>
