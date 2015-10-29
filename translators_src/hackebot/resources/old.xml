@@ -1,0 +1,743 @@
+<!-- LanguageDictionary name (attribute) author (attribute) IndentString 
+	ReservedWords Maps Formats -->
+<LanguageDictionary name="DefaultHackEBotLanguageDictionary"
+	author="ScriptEase2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation='../../../scriptease2/scriptease/resources/schema/LanguageDictionarySchema.xsd'>
+	<!-- Four space characters. Space = ASCII 32 -->
+<IndentString>&#32;&#32;&#32;&#32;</IndentString>
+	<LineBreak>
+	</LineBreak>
+	<ReservedWords>
+		<Word>if</Word>
+		<Word>else</Word>
+		<Word>return</Word>
+		<Word>for</Word>
+		<Word>while</Word>
+		<Word>do</Word>
+		<Word>struct</Word>
+		<Word>const</Word>
+		<Word>switch</Word>
+		<Word>case</Word>
+		<Word>break</Word>
+		<Word>action</Word>
+		<Word>command</Word>
+		<Word>const</Word>
+		<Word>effect</Word>
+		<Word>event</Word>
+		<Word>float</Word>
+		<Word>int</Word>
+		<Word>itemproperty</Word>
+		<Word>location</Word>
+		<Word>Location</Word>
+		<Word>object</Word>
+		<Word>string</Word>
+		<Word>struct</Word>
+		<Word>talent</Word>
+		<Word>vector</Word>
+		<Word>void</Word>
+		<Word caseSensitive="false">true</Word>
+		<Word caseSensitive="false">false</Word>
+	</ReservedWords>
+	<FunctionCallFormat>functionHeader</FunctionCallFormat>
+	<Formats>
+		<!-- Variables -->
+		<!-- Adds the type of the variable in front of it -->
+		<Format id="variableWithType">
+			<Fragment data="type" default="void" />
+			<Literal> </Literal>
+			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+		</Format>
+		<!-- Declares a variable with type -->
+		<Format id="variableDeclaration">
+			<Line>
+				<FormatRef ref="variableWithType" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		<!-- Declares all variables in the series -->
+		<Format id="variablesDeclaration">
+			<Series data="variables">
+				<FormatRef ref="variableDeclaration" />
+			</Series>
+		</Format>
+		<!-- Defines the variable with its value -->
+		<Format id="variableDefinition">
+			<Line>
+				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+				<Literal> = </Literal>
+				<Fragment data="formattedValue" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		<!-- Defines all variables in the series -->
+		<Format id="variablesDefinition">
+			<Series data="variables">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+		</Format>
+		<Format id="childVariablesDeclaration">
+			<Line>
+				<Literal>// Variable Declarations</Literal>
+			</Line>
+			<Series data="children">
+				<FormatRef ref="variablesDeclaration" />
+			</Series>
+			<Line />
+		</Format>
+		<Format id="childVariablesDefinition">
+			<Line>
+				<Literal>// Variable Definitions</Literal>
+			</Line>
+			<Series data="children">
+				<FormatRef ref="variablesDefinition" />
+			</Series>
+			<Line />
+		</Format>
+
+
+		<!-- Implicits -->
+		<!-- Declares all implicits -->
+		<Format id="implicitsDeclaration">
+			<Line>
+				<Literal>// Implicits Declaration</Literal>
+			</Line>
+			<Series data="implicits">
+				<FormatRef ref="variableDeclaration" />
+			</Series>
+		</Format>
+		<!-- Defines all implicits -->
+		<Format id="implicitsDefinition">
+			<Line>
+				<Literal>// Implicits Definition</Literal>
+			</Line>
+			<Series data="implicits">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+		</Format>
+
+		<!-- Functions -->
+		<!-- Function signature with type in front -->
+		<Format id="functionSignature">
+			<FormatRef ref="variableWithType" />
+			<Literal>(</Literal>
+			<Series data="parameters" unique="true" separator=", ">
+				<!-- Parameters are just the type and the name -->
+				<FormatRef ref="variableWithType" />
+			</Series>
+			<Literal>)</Literal>
+		</Format>
+		<!-- Declares the function, for the top of the file -->
+		<Format id="functionDeclaration">
+			<Line>
+				<FormatRef ref="functionSignature" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+		<!-- Same as functionSignature, but without types. Used to call it -->
+		<Format id="functionHeader">
+			<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+			<Literal>(</Literal>
+			<Series data="parametersWithSlot" unique="true" separator=", ">
+				<Fragment data="name" legalValues="[a-zA-Z_0-9]+" />
+			</Series>
+			<Literal>)</Literal>
+		</Format>
+		<!-- Defines the variables in codeblock and then calls the function -->
+		<Format id="functionCall">
+			<!-- Code block context -->
+			<Scope data="mainCodeBlock">
+				<Line>
+					<FormatRef ref="functionHeader" />
+					<Literal>;</Literal>
+				</Line>
+			</Scope>
+		</Format>
+		<!-- Writes the entire function with code inside it -->
+		<Format id="functionDefinition">
+			<Line>
+				<FormatRef ref="functionSignature" />
+				<Literal> {</Literal>
+			</Line>
+			<Indent>
+				<Fragment data="code" />
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		<!-- Format to return a function header -->
+		<Format id="returnFunction">
+			<Series data="parameters">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+			<Line>
+				<Literal>return </Literal>
+				<FormatRef ref="functionHeader" />
+				<Literal>;</Literal>
+			</Line>
+		</Format>
+
+		<!-- Children -->
+		<Format id="children">
+			<FormatRef ref="implicitsDeclaration" />
+			<FormatRef ref="implicitsDefinition" />
+			<Series data="identicalCauses">
+				<FormatRef ref="childVariablesDeclaration" />
+				<FormatRef ref="childVariablesDefinition" />
+				<FormatRef ref="storyComponentChildren" />
+				<Line />
+			</Series>
+		</Format>
+
+		<!-- Gets the children of the story component -->
+		<Format id="storyComponentChildren">
+			<Line>
+				<Literal>// Children</Literal>
+			</Line>
+			<Series data="children">
+				<FormatRef data="scriptIt" ref="functionCall" />
+				<FormatRef data="askIt" ref="askItConditional" />
+				<FormatRef data="pickIt" ref="pickItConditional" />
+				<FormatRef data="note" ref="noteFormat" />
+				<FormatRef data="controlIt" ref="controlItCall" />
+				<FormatRef data="activityIt" ref="activityItCall" />
+				<FormatRef data="behaviour" ref="functionCall" />				
+			</Series>
+		</Format>
+		<!-- Gets the appropriate format for the type -->
+		<Format id="childrenWithoutImplicits">
+			<FormatRef ref="variablesDeclaration" />
+			<FormatRef ref="variablesDefinition" />
+			<FormatRef ref="storyComponentChildren" />
+		</Format>
+
+		<!-- Format for control it children -->
+		<Format id="controlItChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+			<FormatRef ref="childrenWithoutImplicits" />
+		</Format>
+
+		<!-- Finds the format for the ControlIt and uses it -->
+		<Format id="controlItCall">
+			<Fragment data="controlItFormat" />
+		</Format>
+
+		<!-- Format for activity it children -->
+		<Format id="activityItChildren">
+			<Scope data="Cause">
+				<FormatRef ref="implicitsDeclaration" />
+				<FormatRef ref="implicitsDefinition" />
+			</Scope>
+			<FormatRef ref="childrenWithoutImplicits" />
+		</Format>
+
+		<!-- Finds the format for the ActivityIt and uses it -->
+		<Format id="activityItCall">
+			<FormatRef ref="functionCall" />
+		</Format>
+
+		<!-- Defines all variables in the KnowIt -->
+		<Format id="knowItDefinition">
+			<Series data="variables">
+				<FormatRef ref="variableDefinition" />
+			</Series>
+		</Format>
+
+		<!-- Turns a Note into a comment -->
+		<Format id="noteFormat">
+			<Line>
+				<Literal>// </Literal>
+				<Fragment data="note" />
+			</Line>
+		</Format>
+
+		<!-- Includes -->
+		<!-- HackEBot format for include files -->
+		<Format id="include">
+			<Line>
+				<Literal>#include </Literal>
+				<Fragment data="include" />
+			</Line>
+		</Format>
+		<!-- Series of all includes. -->
+		<Format id="includes">
+			<Line>
+				<Literal>// Includes</Literal>
+			</Line>
+			<Line>
+				<Literal>#ifdef __AVR_ATtiny85__</Literal>
+			</Line>
+			<Line>
+				<Literal>#include &lt;avr/power.h&gt;</Literal>
+			</Line>
+			<Line>
+				<Literal>#endif</Literal>
+			</Line>
+			<Line>
+				<Literal>#include &lt;Servo.h&gt;</Literal>
+			</Line>
+			<Line>
+				<Literal>#include &lt;HEBStory.h&gt;</Literal>
+			</Line>
+			<Line>
+				<Literal>#include &lt;HackEBot_Move.h&gt;</Literal>
+			</Line>
+			<Line>
+				<Literal>#include &lt;HackEBot_Sonar.h&gt;</Literal>
+			</Line>
+			<Series data="includes" unique="true">
+				<FormatRef ref="include" />
+			</Series>
+		</Format>
+
+		<!-- Format for the delay controller -->
+		<Format id="delay">
+			<Line>
+				<Literal>DelayCommand(</Literal>
+				<Scope data="argument" ref="Number">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>, </Literal>
+				<FormatRef ref="functionHeader" />
+				<Literal>);</Literal>
+			</Line>
+		</Format>
+
+		<!-- Format for the repeat controller -->
+		<Format id="repeat">
+			<Line>
+				<Literal>int i = 0;</Literal>
+			</Line>
+			<Line>
+				<Literal>for(i; i &lt; FloatToInt(</Literal>
+				<Scope data="argument" ref="Number">
+					<Fragment data="name" />
+				</Scope>
+				<Literal>); i++) {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<FormatRef ref="functionHeader" />
+					<Literal>;</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+				
+		<!-- Format for askIts -->
+		<Format id="askItConditional">
+			<Line>
+				<Literal>if(</Literal>
+				<Fragment data="condition" />
+				<Literal>){</Literal>
+			</Line>
+			<Indent>
+				<Scope data="ifChild">
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Scope>
+			</Indent>
+			<Line>
+				<Literal>} else {</Literal>
+			</Line>
+			<Indent>
+				<Scope data="elseChild">
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Scope>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+
+		<!-- Format for pickIts -->
+		<Format id="pickItConditional">
+			<Line>
+				<Literal>// PickIt Choices</Literal>
+			</Line>
+			<Line>
+				<Literal>int random = Random(</Literal>
+				<Fragment data="totalChoiceProbability" />
+				<Literal>);</Literal>
+			</Line>
+			<Series data="choices" unique="true">
+				<Line>
+					<Literal>if (random &gt;= </Literal>
+					<Fragment data="choiceProbabilityLowerBound" />
+					<Literal> &amp;&amp; random &lt; </Literal>
+					<Fragment data="choiceProbabilityUpperBound" />
+					<Literal>) {</Literal>
+				</Line>
+				<Indent>
+					<FormatRef ref="childrenWithoutImplicits" />
+				</Indent>
+				<Line>
+					<Literal>}</Literal>
+				</Line>
+			</Series>
+		</Format>
+
+		<!-- Format for the robot Setup -->
+		<Format id="setup">
+			<Line>
+				<Literal>void setup() { </Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>int step = 10;</Literal>
+				</Line>
+				<Line>
+					<Literal>RightS.attach(5);</Literal>
+				</Line>
+				<Line>
+					<Literal>LeftS.attach(6);</Literal>
+				</Line>
+				<Line>
+					<Literal>pinMode(sonarTrig, OUTPUT);</Literal>
+				</Line>
+				<Line>
+					<Literal>pinMode(sonarEcho, INPUT);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		
+		<!-- Format for the robot Sonar -->
+		<Format id="sonar">
+			<Line>
+				<Literal>void SonarPing(){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>digitalWrite(sonarTrig, LOW)</Literal>
+				</Line>
+				<Line>
+					<Literal>delayMicroseconds(2);</Literal>
+				</Line>
+				<Line>
+					<Literal>digitalWrite(sonarTrig, HIGH)</Literal>
+				</Line>
+				<Line>
+					<Literal>delayMicroseconds(5);</Literal>
+				</Line>
+				<Line>
+					<Literal>digitalWrite(sonarTrig, LOW)</Literal>
+				</Line>
+				<Line />
+				<Line>
+					<Literal>long duration = pulseIn(sonarEcho, HIGH);</Literal>
+				</Line>
+				<Line />
+				
+				<Line>
+					<Literal>long inches = microsecondsToInches(duration);</Literal>
+				</Line>
+				<Line>
+					<Literal>long cm = microsecondsToCentimeters(duration);</Literal>
+				</Line>
+				<Line />
+				
+				<Line>
+					<Literal>if(cm &lt; obstacle){</Literal>
+				</Line>
+				<Indent>
+					<Line>
+						<Literal>MoveF(22, 300);</Literal>
+					</Line>
+					<Line>
+						<Literal>int randNumber = random(200)</Literal>
+					</Line>
+					<Line>
+						<Literal>if(randNumber &lt; 99){</Literal>
+					</Line>
+					<Indent>
+						<Line>
+							<Literal>TurnL(22, 150);</Literal>
+						</Line>
+					</Indent>
+					<Line>
+						<Literal>} else { </Literal>
+					</Line>
+					<Indent>
+						<Line>
+							<Literal>TurnR(22, 150);</Literal>
+						</Line>
+					</Indent>
+					<Line>
+						<Literal> } </Literal>
+					</Line>
+				</Indent>
+				<Line>
+					<Literal> } </Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal> } </Literal>
+			</Line>
+		</Format>
+		
+		<!-- Format for the time to distance converters -->
+		<Format id="microtoinch">
+			<Line>
+				<Literal>long microsecondsToInches(long microseconds){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return (microseconds/74/2);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal> } </Literal>
+			</Line>
+		</Format>
+		
+		<Format id="microtocenti">
+			<Line>
+				<Literal>long microsecondsToCentimeters(long microseconds){</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>return (microseconds/29/2);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal> } </Literal>
+			</Line>
+		</Format>
+			
+
+		<!-- Format for the Move and Turn Functions Eedit -->
+		<Format id="moveStop">
+			<Line>
+				<Literal>void MoveStop(int T){ </Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>RightS.write(90);</Literal>
+				</Line>
+				<Line>
+					<Literal>LeftS.write(90);</Literal>
+				</Line>
+				<Line>
+					<Literal>delay(T);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		
+		<Format id="moveForward">
+			<Line>
+				<Literal>void MoveF(int S, int T){ </Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>RightS.write(90 - S);</Literal>
+				</Line>
+				<Line>
+					<Literal>LeftS.write(S + 96);</Literal>
+				</Line>
+				<Line>
+					<Literal>delay(T);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+
+		<Format id="moveBack">
+			<Line>
+				<Literal>void MoveB(int S, int T){ </Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>RightS.write(S + 90);</Literal>
+				</Line>
+				<Line>
+					<Literal>LeftS.write(90 - S);</Literal>
+				</Line>
+				<Line>
+					<Literal>delay(T);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		
+		<Format id="turnLeft">
+			<Line>
+				<Literal>void TurnL(int S, int T){ </Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>RightS.write(90 - S);</Literal>
+				</Line>
+				<Line>
+					<Literal>LeftS.write(90 - S);</Literal>
+				</Line>
+				<Line>
+					<Literal>delay(T);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+		
+		<Format id="turnRight">
+			<Line>
+				<Literal>void TurnR(int S, int T){ </Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>RightS.write(S + 90);</Literal>
+				</Line>
+				<Line>
+					<Literal>LeftS.write(S + 90);</Literal>
+				</Line>
+				<Line>
+					<Literal>delay(T);</Literal>
+				</Line>
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+
+		<!-- Format for the main method in normal script files -->
+		<Format id="loop">
+			<Line>
+				<Literal>void loop() {</Literal>
+			</Line>
+			<Indent>
+				<Line>
+					<Literal>//Variable Declarations</Literal>
+				</Line>
+				<Series data="causes" unique="true">
+					<FormatRef ref="variablesDeclaration" />
+					<FormatRef ref="variablesDefinition" />
+				</Series>
+				<Line />
+				<Line>
+					<Literal>//Function Calls</Literal>
+				</Line>
+				<Series data="causes" unique="true">
+					<FormatRef ref="functionCall" />
+				</Series>
+				<Line />
+			</Indent>
+			<Line>
+				<Literal>}</Literal>
+			</Line>
+		</Format>
+
+		<!-- File formats -->
+		<!-- Default format for most files -->
+		<Format id="file">
+			<!-- include files first -->
+			<FormatRef ref="includes" />
+			<Line />
+			<Line>
+				<Literal>Servo RightS;</Literal>
+			</Line>
+			<Line>
+				<Literal>Servo LeftS;</Literal>
+			</Line>
+			<Line>
+				<Literal>const int sonarTrig = 3;</Literal>
+			</Line>
+			<Line>
+				<Literal>const int sonarEcho = 4;</Literal>
+			</Line>
+			<Line>
+				<Literal>const int obstacle = 8;</Literal>
+			</Line>
+			<Line />
+			
+			<Line>
+				<Literal>// Function Declarations</Literal>
+			</Line>
+			<Line>
+				<Literal>void MoveB(int stopTime);</Literal>
+			</Line>
+			<Line>
+				<Literal>void MoveF(int movespeed, int moveTime);</Literal>
+			</Line>
+			<Line>
+				<Literal>void MoveB(int movespeed, int moveTime);</Literal>
+			</Line>
+			<Line>
+				<Literal>void TurnR(int movespeed, int moveTime);</Literal>
+			</Line>
+			<Line>
+				<Literal>void TurnL(int movespeed, int moveTime);</Literal>
+			</Line>
+			<Line>
+				<Literal>void SonarPing();</Literal>
+			</Line>
+			<Line>
+				<Literal>long microsecondsToInches(long microseconds);</Literal>
+			</Line>
+			<Line>
+				<Literal>long microsecondsToCentimeters(long microseconds);</Literal>
+			</Line>
+			<Line />
+			
+			<!-- Function declarations next -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDeclaration" />
+			</Series>
+			<Line />
+			
+			<!-- Robot setup -->
+			<Line>
+				<Literal>// Setup</Literal>
+			</Line>
+				<FormatRef ref="setup" />
+			<Line />
+			
+			<!-- Main Robot Loop -->
+			<Line>
+				<Literal>// Loop</Literal>
+			</Line>
+			<FormatRef ref="loop" />
+			<Line />
+			<Line>
+				<Literal>// Function Definitions</Literal>
+			</Line>
+			
+			<!-- Function definitions last -->
+			<Series data="codeBlocks" unique="true">
+				<FormatRef ref="functionDefinition" />
+			</Series>
+			
+<!--		Robot basic functions -->
+			<Line />
+			<FormatRef ref="moveStop" />
+			<Line />
+			<FormatRef ref="moveForward" />
+			<Line />
+			<FormatRef ref="moveBack" />
+			<Line />
+			<FormatRef ref="turnLeft" />
+			<Line />
+			<FormatRef ref="turnRight" />
+			<Line />
+			<FormatRef ref="sonar" />
+			<Line />
+			<FormatRef ref="microtoinch" />
+			<Line />
+			<FormatRef ref="microtocenti" />
+			<Line /> 
+		</Format>
+	</Formats>
+</LanguageDictionary>

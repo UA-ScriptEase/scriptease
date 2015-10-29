@@ -32,7 +32,6 @@ public:
 	static bool CheckSucceeded(string storyPoint);
 	static bool CheckEnabled(string storyPoint);
 	static bool CheckFailed(string storyPoint);
-	static void CheckState(string uniqueName);
 
 	void AddChild(StoryPoint * child);
 	void DisableDescendants();

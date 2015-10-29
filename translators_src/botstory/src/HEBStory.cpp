@@ -43,29 +43,33 @@ StoryPoint::StoryPoint(string uniqueName, int fanIn){
 /*
  * Returns the current state of the given StoryPoint.
  */
-bool StoryPoint::CheckEnabled(StoryPoint storyPoint){
-	return storyPoint.state == ENABLED;
+bool StoryPoint::CheckEnabled(string storyPoint){
+	StoryPoint * sp = FindStoryPoint(storyPoint);
+	return sp->state == ENABLED;
 }
 
-bool StoryPoint::CheckSucceeded(StoryPoint storyPoint){
-	return storyPoint.state == SUCCEEDED;
+bool StoryPoint::CheckSucceeded(string storyPoint){
+	StoryPoint * sp = FindStoryPoint(storyPoint);
+	return sp->state == SUCCEEDED;
 }
 
-bool StoryPoint::CheckFailed(StoryPoint storyPoint){
-	return storyPoint.state == FAILED;
+bool StoryPoint::CheckFailed(string storyPoint){
+	StoryPoint * sp = FindStoryPoint(storyPoint);
+	return sp->state == FAILED;
 }
-int StoryPoint::CheckState(string uniqueName){
+void StoryPoint::CheckState(string uniqueName){
 	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
 	cout << "Inside checkstate" << endl;
 	cout << "state of " << storyPoint->uniqueName << " is " << storyPoint->state << endl;
 	if(storyPoint->state == ENABLED)
-		return ENABLED;
+		cout << storyPoint->uniqueName << " Enabled " << endl;
 	else if(storyPoint->state == SUCCEEDED)
-		return SUCCEEDED;
+		cout << storyPoint->uniqueName << " Succeeded " << endl;
 	else if(storyPoint->state == FAILED)
-		return FAILED;
+		cout << storyPoint->uniqueName << " Failed " << endl;
+	else if(storyPoint->state == DISABLED)
+		cout << storyPoint->uniqueName << " Disabled " << endl;
 
-	return 0;
 }
 
 /*
@@ -90,7 +94,7 @@ void StoryPoint::EnableStoryPoint(){
 void StoryPoint::SucceedStoryPoint(string uniqueName){
 	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
 
-	cout << "inside succeedstorypoint with " << storyPoint->uniqueName << " with state " << storyPoint->state << endl;
+	cout << "inside succeedstorypoint with " << storyPoint->uniqueName << " in state " << storyPoint->state << endl;
 	list<StoryPoint>::iterator it, on;
 
 	if(storyPoint != NULL){
@@ -101,30 +105,27 @@ void StoryPoint::SucceedStoryPoint(string uniqueName){
 		if(storyPoint->state == ENABLED){
 			storyPoint->state = SUCCEEDED;
 
-			for(it = storyPoint->children.begin(); it != storyPoint->children.end(); it++){
-				cout << "inside succeed succeedstorypoint " << storyPoint->uniqueName << " children: " << it->uniqueName << endl;
-			}
-
 			//For the children of the StoryPoint
 			for(it = storyPoint->children.begin(); it != storyPoint->children.end(); it++){
+				StoryPoint * sp = FindStoryPoint(it->uniqueName);
 
-				cout << "what is the state of 'it' " << it->state << endl;
-				if(it->state == ENABLED || it->state == SUCCEEDED) continue;
-
-				cout << "what is 'it' pointing at ? " << it->uniqueName << endl;
+				cout << "The state of " << sp->uniqueName << " is: " << sp->state << endl;
+				if(sp->state == ENABLED || sp->state == SUCCEEDED) continue;
 
 				//Need to keep track of how many parents have been succeeded. We
 				//can't enable a child if not all of it's parent's have been succeeded
 				int succeededParents = 0;
-				for(on = it->parent.begin(); on != it->parent.end(); on++){
-					cout << "Did i get into parents list " << endl;
-					cout << it->uniqueName << "'s parents are : " << on->uniqueName << endl;
-					if(CheckSucceeded(*on)) succeededParents++;
+				for(on = sp->parent.begin(); on != sp->parent.end(); on++){
+					cout << "FanIn of " << sp->uniqueName << " : " << sp->fanIn << endl;
+					cout << "I'm checking the succeed state of parent " << on->uniqueName << endl;
+					cout << "succeededParents " << succeededParents << endl;
+					if(CheckSucceeded(on->uniqueName)) succeededParents++;
+					cout << "succeededParents " << succeededParents << endl;
 				}
 
-				if(succeededParents >= storyPoint->fanIn){
-					storyPoint->EnableStoryPoint();
-					break;
+				if(succeededParents >= sp->fanIn){
+					sp->EnableStoryPoint();
+					cout << "The state of " << sp->uniqueName << " is: " << sp->state << endl;
 				}
 			}
 		} else if (storyPoint->state == DISABLED){
@@ -228,8 +229,9 @@ list<StoryPoint> StoryPoint::GetDescendants(){
 void StoryPoint::DisableDescendants(){
 	list<StoryPoint>::iterator it;
 	for(it = this->children.begin(); it != this->children.end(); it++){
-		it->state = DISABLED;
-		it->DisableDescendants();
+		StoryPoint * sp = FindStoryPoint(it->uniqueName);
+		sp->state = DISABLED;
+		sp->DisableDescendants();
 	}
 }
 
@@ -284,6 +286,7 @@ void StoryPoint::RegisterChild(string parentName, string uniqueName, int fanIn){
 		}
 
 		if(child != NULL){
+			child->fanIn++;
 			parent->AddChild(child);
 		}
 	}
