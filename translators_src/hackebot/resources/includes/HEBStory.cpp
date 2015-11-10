@@ -163,7 +163,6 @@ StoryPoint * StoryPoint::FindStoryPoint(string uniqueName){
 		}
 	}
 
-	cout << endl;
 	return NULL;
 }
 
@@ -266,7 +265,7 @@ void StoryPoint::RegisterChild(string parentName, string uniqueName, int fanIn){
 		}
 	}
 	else {
-		cout << "Could not find parent with unique name " << parentName << endl;
+		//cout << "Could not find parent with unique name " << parentName << endl;
 	}
 }
 

@@ -76,18 +76,12 @@
 			</Series>
 		</Format>
 		<Format id="childVariablesDeclaration">
-			<Line>
-				<Literal>// Variable Declarations</Literal>
-			</Line>
 			<Series data="children">
 				<FormatRef ref="variablesDeclaration" />
 			</Series>
 			<Line />
 		</Format>
 		<Format id="childVariablesDefinition">
-			<Line>
-				<Literal>// Variable Definitions</Literal>
-			</Line>
 			<Series data="children">
 				<FormatRef ref="variablesDefinition" />
 			</Series>
@@ -98,18 +92,12 @@
 		<!-- Implicits -->
 		<!-- Declares all implicits -->
 		<Format id="implicitsDeclaration">
-			<Line>
-				<Literal>// Implicits Declaration</Literal>
-			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDeclaration" />
 			</Series>
 		</Format>
 		<!-- Defines all implicits -->
 		<Format id="implicitsDefinition">
-			<Line>
-				<Literal>// Implicits Definition</Literal>
-			</Line>
 			<Series data="implicits">
 				<FormatRef ref="variableDefinition" />
 			</Series>
@@ -191,9 +179,6 @@
 
 		<!-- Gets the children of the story component -->
 		<Format id="storyComponentChildren">
-			<Line>
-				<Literal>// Children</Literal>
-			</Line>
 			<Series data="children">
 				<FormatRef data="scriptIt" ref="functionCall" />
 				<FormatRef data="askIt" ref="askItConditional" />
@@ -248,10 +233,7 @@
 
 		<!-- Turns a Note into a comment -->
 		<Format id="noteFormat">
-			<Line>
-				<Literal>// </Literal>
 				<Fragment data="note" />
-			</Line>
 		</Format>
 
 		<!-- Includes -->
@@ -264,9 +246,6 @@
 		</Format>
 		<!-- Series of all includes. -->
 		<Format id="includes">
-			<Line>
-				<Literal>// Includes</Literal>
-			</Line>
 			<Line>
 				<Literal>#ifdef __AVR_ATtiny85__</Literal>
 			</Line>
@@ -303,9 +282,6 @@
 				<Literal>#include &lt;HackEBot_Sonar.h&gt;</Literal>
 			</Line>
 			<Line />
-			<Line>
-				<Literal>//Global Variables for Time and Children</Literal>
-			</Line>
 			<Line>
 				<Literal>int SE_GlobalTime;</Literal>
 			</Line>
@@ -380,9 +356,6 @@
 
 		<!-- Format for pickIts -->
 		<Format id="pickItConditional">
-			<Line>
-				<Literal>// PickIt Choices</Literal>
-			</Line>
 			<Line>
 				<Literal>int random = Random(</Literal>
 				<Fragment data="totalChoiceProbability" />
@@ -518,17 +491,11 @@
 				<Literal>void loop() {</Literal>
 			</Line>
 			<Indent>
-				<Line>
-					<Literal>//Variable Declarations</Literal>
-				</Line>
 				<Series data="causes" unique="true">
 					<FormatRef ref="variablesDeclaration" />
 					<FormatRef ref="variablesDefinition" />
 				</Series>
 				<Line />
-				<Line>
-					<Literal>//Function Calls</Literal>
-				</Line>
 				<Series data="causes" unique="true">
 					<FormatRef ref="functionCall" />
 				</Series>
@@ -562,11 +529,6 @@
 			</Line>
 			<Line />
 			
-			<Line>
-				<Literal>// Function Declarations</Literal>
-			</Line>
-			<Line />
-			
 			<!-- Function declarations next -->
 			<Series data="codeBlocks" unique="true">
 				<FormatRef ref="functionDeclaration" />
@@ -574,28 +536,16 @@
 			<Line />
 			
 			<!-- StoryPoint setup -->
-			<Line>
-				<Literal>// Story Point Initialization</Literal>
-			</Line>
 				<FormatRef ref="StoryPointStart" />
 			<Line />
 			
 			<!-- Robot setup -->
-			<Line>
-				<Literal>// Setup</Literal>
-			</Line>
 				<FormatRef ref="setup" />
 			<Line />
 			
 			<!-- Main Robot Loop -->
-			<Line>
-				<Literal>// Loop</Literal>
-			</Line>
 			<FormatRef ref="loop" />
 			<Line />
-			<Line>
-				<Literal>// Function Definitions</Literal>
-			</Line>
 			
 			<!-- Function definitions last -->
 			<Series data="codeBlocks" unique="true">
