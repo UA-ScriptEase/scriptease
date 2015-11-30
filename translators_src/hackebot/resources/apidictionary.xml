@@ -170,9 +170,29 @@
               </Types>
               <Binding flavour="automatic"/>
             </KnowIt>
+            <KnowIt>
+              <Name>Story Point</Name>
+              <Labels/>
+              <Types>
+                <Type>Story Point</Type>
+              </Types>
+              <Binding flavour="automatic"/>
+            </KnowIt>
           </Parameters>
           <Code>
-            <FormatRef data="NONE" ref="children"/>
+            <Line>
+              <Literal>if(StoryPoint::CheckEnabled(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
+                <Fragment data="NAME"/>
+              </Scope>
+              <Literal>)){</Literal>
+            </Line>
+            <Indent>
+              <FormatRef data="NONE" ref="children"/>
+            </Indent>
+            <Line>
+              <Literal>}</Literal>
+            </Line>
           </Code>
         </CodeBlockSource>
       </CodeBlocks>
@@ -222,21 +242,18 @@
           <Code>
             <Line>
               <Literal>if(StoryPoint::CheckEnabled(</Literal>
-              <Scope data="ARGUMENT" ref="StoryPoint">
+              <Scope data="ARGUMENT" ref="Story Point">
                 <Fragment data="NAME"/>
               </Scope>
               <Literal>)){</Literal>
             </Line>
             <Indent>
               <Line>
-                <Literal>const static int SE_CauseTime = SE_GlobalTime + ((int)</Literal>
+                <Literal>if(SE_GlobalTime &lt;= ((int) </Literal>
                 <Scope data="ARGUMENT" ref="Seconds">
                   <Fragment data="NAME"/>
                 </Scope>
-                <Literal>* 1000);</Literal>
-              </Line>
-              <Line>
-                <Literal>if(SE_GlobalTime &lt;= SE_CauseTime){</Literal>
+                <Literal>* 1000)){</Literal>
               </Line>
               <Indent>
                 <FormatRef data="NONE" ref="children"/>
@@ -252,6 +269,9 @@
                   </Scope>
                   <Literal>);</Literal>
                 </Line>
+                <Line>
+                	<Literal>SE_GlobalTime = 0;</Literal>
+                </Line>
               </Indent>
               <Line>
                 <Literal>}</Literal>
@@ -265,12 +285,12 @@
       </CodeBlocks>
     </CauseIt>
     <CauseIt>
-      <Name>Continue at &lt;Story Point&gt; </Name>
+      <Name>Continue at &lt;StoryPoint&gt; </Name>
       <Labels/>
       <Children/>
       <CodeBlocks>
         <CodeBlockSource>
-          <Name>Continue at &lt;Story Point&gt; </Name>
+          <Name>Continue at &lt;StoryPoint&gt; </Name>
           <Labels/>
           <Subject>subject</Subject>
           <Slot>Default</Slot>
@@ -292,15 +312,35 @@
               <Types>
                 <Type>Story Point</Type>
               </Types>
+              <Binding flavour="automatic"/>
+            </KnowIt>
+            <KnowIt>
+              <Name>StoryPoint</Name>
+              <Labels/>
+              <Types>
+                <Type>Story Point</Type>
+              </Types>
             </KnowIt>
           </Parameters>
           <Code>
             <Line>
-              <Literal>StoryPoint::ContinueAtStoryPoint(</Literal>
-              <Scope data="ARGUMENT" ref="StoryPoint">
+              <Literal>if(StoryPoint::CheckEnabled(</Literal>
+              <Scope data="ARGUMENT" ref="Story Point">
                 <Fragment data="NAME"/>
               </Scope>
-              <Literal>);</Literal>
+              <Literal>)){</Literal>
+            </Line>
+            <Indent>
+              <Line>
+                <Literal>StoryPoint::ContinueAtStoryPoint(</Literal>
+                <Scope data="ARGUMENT" ref="StoryPoint">
+                  <Fragment data="NAME"/>
+                </Scope>
+                <Literal>);</Literal>
+              </Line>
+            </Indent>
+            <Line>
+              <Literal>}</Literal>
             </Line>
           </Code>
         </CodeBlockSource>
@@ -512,6 +552,9 @@
             </KnowIt>
           </Parameters>
           <Code>
+          	<Line>
+          		<Literal>SE_GlobalTime = 0;</Literal>
+          	</Line>
             <Line>
               <Literal>StoryPoint::ContinueAtStoryPoint(</Literal>
               <Scope data="ARGUMENT" ref="Story Point">
@@ -882,7 +925,7 @@
   </Effects>
   <DescribeIts>
     <DescribeIt>
-      <Name>SP Active</Name>
+      <Name>Distance To Object</Name>
       <Types>
         <Type>Question</Type>
       </Types>
@@ -895,12 +938,12 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
         </Entry>
       </PathMap>
     </DescribeIt>
     <DescribeIt>
-      <Name>Distance To Object</Name>
+      <Name>SP Active</Name>
       <Types>
         <Type>Question</Type>
       </Types>
@@ -913,7 +956,7 @@
           <Path>
             <DescribeItNode reference="/LibraryModel/DescribeIts/DescribeIt[2]/DescribeItNode"/>
           </Path>
-          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[12]"/>
+          <ScriptIt reference="/LibraryModel/Effects/ScriptIt[7]"/>
         </Entry>
       </PathMap>
     </DescribeIt>

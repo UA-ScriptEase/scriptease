@@ -167,6 +167,13 @@ void StoryPoint::ContinueAtStoryPoint(string uniqueName){
 	}
 }
 
+void StoryPoint::DisableStoryPoint(string uniqueName){
+	StoryPoint * storyPoint = FindStoryPoint(uniqueName);
+	if(storyPoint != NULL){
+		storyPoint->state = DISABLED;
+	}
+}
+
 
 /*
  * Finds the given StoryPoint in the StoryTree.

@@ -14,11 +14,47 @@ using namespace std;
 
 static void PrintStoryTree();
 void CheckStates();
+
+void PrintTime(int time);
+
+int SE_GlobalTime;
+
+void DoForSecondsSecondsAndThenSucceed(float Seconds, string StoryPoint_0) {
+  if (StoryPoint::CheckEnabled(StoryPoint_0)) {
+    if (SE_GlobalTime <= ((int) Seconds * 1000)) {
+      SE_GlobalTime += 250;
+    } else {
+      cout << "Move Forward Before: " << SE_GlobalTime << endl;
+      SE_GlobalTime = 0;
+      StoryPoint::SucceedStoryPoint(StoryPoint_0);
+      cout << "Move Forward After: " << SE_GlobalTime << endl;
+    }
+  }
+}
+
+void DoForSecondsSecondsAndThenSucceed_0(float Seconds_0, string StoryPoint_2) {
+  if (StoryPoint::CheckEnabled(StoryPoint_2)) {
+    if (SE_GlobalTime <= ((int) Seconds_0 * 1000)) {
+      SE_GlobalTime += 250;
+    } else {
+      cout << "Move Back Before: " << SE_GlobalTime << endl;
+      SE_GlobalTime = 0;
+      StoryPoint::ContinueAtStoryPoint("a3");
+      cout << "Move Back After: " << SE_GlobalTime << endl;
+    }
+  }
+}
+
+
 int main() {
+
+	SE_GlobalTime =0;
+	int i = 0;
 
 	enum State {
 		PRESUCCEEDED, SUCCEEDED, FAILED, ENABLED, DISABLED
 	};
+
 
 	StoryPoint::RegisterRoot("start2", 1);
 	string parentName;
@@ -26,38 +62,31 @@ int main() {
 	StoryPoint::RegisterChild(parentName, "a3", 1);
 	parentName = "a3";
 	StoryPoint::RegisterChild(parentName, "b4", 1);
-	StoryPoint::RegisterChild(parentName, "c5", 1);
 	parentName = "b4";
-	StoryPoint::RegisterChild(parentName, "d6", 1);
-	parentName = "d6";
-	parentName = "c5";
-	StoryPoint::RegisterChild(parentName, "d6", 1);
+	StoryPoint::RegisterChild(parentName, "c5", 1);
 	StoryPoint::SucceedStoryPoint("start2");
-	cout << " " << endl;
+
+	while(i != 8){
+		DoForSecondsSecondsAndThenSucceed_0(2.0, "a3");
+		DoForSecondsSecondsAndThenSucceed_0(2.0, "b4");
+		cout << "Global Time in main loop: " << SE_GlobalTime << endl;
+		i++;
+	}
+
+	CheckStates();
+	cout << "Succeed A at B" << endl;
 	StoryPoint::SucceedStoryPoint("a3");
-	cout << " " << endl;
-	StoryPoint::SucceedStoryPoint("b4");
-	cout << " " << endl;
-	StoryPoint::SucceedStoryPoint("c5");
-	cout << " " << endl;
-	StoryPoint::SucceedStoryPoint("d6");
-	cout << " " << endl;
-
-	cout << "continue check " << endl;
-	StoryPoint::ContinueAtStoryPoint("b4");
-	StoryPoint::CheckState("a3");
-	StoryPoint::CheckState("b4");
-	StoryPoint::CheckState("c5");
-	StoryPoint::CheckState("d6");
-
-
-
+	CheckStates();
+	cout << "Continue at A disable B" << endl;
+	StoryPoint::ContinueAtStoryPoint("a3");
+	CheckStates();
 
 	cout << endl;
 
 	return 0;
 
 }
+
 
 void CheckStates() {
 	list<StoryPoint>::iterator it, on;

@@ -285,9 +285,6 @@
 			<Line>
 				<Literal>int SE_GlobalTime;</Literal>
 			</Line>
-			<Line>
-				<Literal>int SE_ChildCount;</Literal>
-			</Line>
 			<Series data="includes" unique="true">
 				<FormatRef ref="include" />
 			</Series>
@@ -462,11 +459,7 @@
 				</Line>
 				<Line>
 					<Literal>SE_GlobalTime = 0;</Literal>
-				</Line>
-				<Line>
-					<Literal>SE_ChildCount = 0;</Literal>
-				</Line>
-				
+				</Line>				
 				<Line />
 				<Line>
 					<Literal>StoryPointSetup();</Literal>
@@ -500,9 +493,6 @@
 					<FormatRef ref="functionCall" />
 				</Series>
 				<Line />
-				<Line>
-					<Literal>SE_GlobalTime = SE_GlobalTime + 1;</Literal>
-				</Line>
 			</Indent>
 			<Line>
 				<Literal>}</Literal>
