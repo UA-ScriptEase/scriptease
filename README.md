@@ -3,6 +3,7 @@ ScriptEase II is a program that allows video game designers to add events to the
 
 ScriptEase II was the product of University of Alberta research before becoming an open source project in 2015. 
 
+##Documentation
 Installation, Running and develper documentation can be found on [the wiki](https://github.com/UA-ScriptEase/scriptease/wiki). 
 
 ##ScriptEase I Links
