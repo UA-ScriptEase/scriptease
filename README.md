@@ -13,5 +13,5 @@ Quest pack: http://www.cs.ualberta.ca/~script/files/QuestPak.spz NOTE You should
 Special Conversation Templates: http://www.cs.ualberta.ca/~script/files/conversations.erf NOTE Save as above.
 The last ScriptEase 1 JAR file is located at: http://webdocs.cs.ualberta.ca/~script/ScriptEase.jar
 
-###Translator Specific Library
+##Translator Specific Library
 The Hack-E-Bot translator utilizes github user Maniacbug's [StandardCplusplu](https://github.com/maniacbug/StandardCplusplus) Arduino library. A zipped copy of the library can be found in this repository, but please feel free to download a fresh copy from the given link. 
