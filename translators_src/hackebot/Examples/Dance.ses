@@ -1,0 +1,646 @@
+<Story name="Dance" author="Elyse" description="The robot moves forward and back and spins around">
+  <Version>(No version information available)</Version>
+  <Translator>Hack-E-Bot</Translator>
+  <OptionalLibraries/>
+  <GameModule>C:\Users\scriptease\Desktop\HackEBot</GameModule>
+  <Dialogues/>
+  <StartStoryPoint library="NO LIBRARY">
+    <Name>Start</Name>
+    <Labels/>
+    <Children>
+      <Note library="ScriptEase">
+        <Name>You can&apos;t put story components in here. Add a new story point instead!</Name>
+        <Description>You can&apos;t put story components in here. Add a new story point instead!</Description>
+        <Labels/>
+      </Note>
+    </Children>
+    <Successors>
+      <StoryPoint library="NO LIBRARY">
+        <Name>Adjust Wheels</Name>
+        <Labels/>
+        <Children>
+          <CauseIt>
+            <Name>Do</Name>
+            <Labels/>
+            <Children>
+              <KnowIt>
+                <Name>Is Active</Name>
+                <Labels/>
+                <Types>
+                  <Type>Question</Type>
+                </Types>
+                <Binding flavour="function">
+                  <ScriptIt>
+                    <Name>if &lt;Story Point&gt; is active</Name>
+                    <Visible>false</Visible>
+                    <Labels/>
+                    <Children/>
+                    <CodeBlocks>
+                      <CodeBlockReference>
+                        <Name>if &lt;Story Point&gt; is active</Name>
+                        <Labels/>
+                        <Parameters>
+                          <KnowIt>
+                            <Name>Story Point</Name>
+                            <Labels/>
+                            <Types>
+                              <Type>Story Point</Type>
+                            </Types>
+                            <Binding flavour="storyPoint">
+                              <StoryPoint reference="/Story/StartStoryPoint/Successors/StoryPoint"/>
+                            </Binding>
+                          </KnowIt>
+                        </Parameters>
+                      </CodeBlockReference>
+                    </CodeBlocks>
+                  </ScriptIt>
+                </Binding>
+              </KnowIt>
+              <AskIt library="ScriptEase">
+                <Name>&lt;Question&gt;</Name>
+                <Labels/>
+                <Children>
+                  <StoryComponentContainer library="NO LIBRARY">
+                    <Name>Yes:</Name>
+                    <Labels/>
+                    <Children>
+                      <ScriptIt>
+                        <Name>Adjust &lt;Wheel&gt; wheel by &lt;Number&gt;</Name>
+                        <Labels/>
+                        <Children/>
+                        <CodeBlocks>
+                          <CodeBlockReference>
+                            <Name>Adjust &lt;Wheel&gt; wheel by &lt;Number&gt;</Name>
+                            <Labels/>
+                            <Parameters>
+                              <KnowIt>
+                                <Name>Wheel</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Right Left</Type>
+                                </Types>
+                                <Binding flavour="constant">
+                                  <Type>Right Left</Type>
+                                  <Value>1</Value>
+                                </Binding>
+                              </KnowIt>
+                              <KnowIt>
+                                <Name>Number</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Number</Type>
+                                </Types>
+                                <Binding flavour="constant">
+                                  <Type>Number</Type>
+                                  <Value>-2.0</Value>
+                                </Binding>
+                              </KnowIt>
+                            </Parameters>
+                          </CodeBlockReference>
+                        </CodeBlocks>
+                      </ScriptIt>
+                      <ScriptIt>
+                        <Name>Succeed &lt;StoryPoint&gt; Immediately </Name>
+                        <Labels/>
+                        <Children/>
+                        <CodeBlocks>
+                          <CodeBlockReference>
+                            <Name>Succeed &lt;StoryPoint&gt; Immediately </Name>
+                            <Labels/>
+                            <Parameters>
+                              <KnowIt>
+                                <Name>StoryPoint</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Story Point</Type>
+                                </Types>
+                                <Binding reference="/Story/StartStoryPoint/Successors/StoryPoint/Children/CauseIt/Children/KnowIt/Binding/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                              </KnowIt>
+                            </Parameters>
+                          </CodeBlockReference>
+                        </CodeBlocks>
+                      </ScriptIt>
+                    </Children>
+                  </StoryComponentContainer>
+                  <StoryComponentContainer library="NO LIBRARY">
+                    <Name>No:</Name>
+                    <Labels/>
+                    <Children/>
+                  </StoryComponentContainer>
+                </Children>
+                <Condition>
+                  <KnowIt library="ScriptEase">
+                    <Name>Question</Name>
+                    <Labels/>
+                    <Types>
+                      <Type>Question</Type>
+                    </Types>
+                    <Binding flavour="reference">
+                      <KnowIt reference="/Story/StartStoryPoint/Successors/StoryPoint/Children/CauseIt/Children/KnowIt"/>
+                    </Binding>
+                  </KnowIt>
+                </Condition>
+              </AskIt>
+            </Children>
+            <CodeBlocks>
+              <CodeBlockReference>
+                <Name>Do</Name>
+                <Labels/>
+                <Parameters>
+                  <KnowIt>
+                    <Name>subject</Name>
+                    <Labels/>
+                    <Types>
+                      <Type>Robot</Type>
+                    </Types>
+                    <Binding flavour="automatic"/>
+                  </KnowIt>
+                </Parameters>
+              </CodeBlockReference>
+            </CodeBlocks>
+          </CauseIt>
+        </Children>
+        <Successors/>
+        <FanIn>1</FanIn>
+      </StoryPoint>
+      <StoryPoint library="NO LIBRARY">
+        <Name>Forward</Name>
+        <Labels/>
+        <Children>
+          <CauseIt>
+            <Name>Do</Name>
+            <Labels/>
+            <Children>
+              <KnowIt>
+                <Name>Is Active</Name>
+                <Labels/>
+                <Types>
+                  <Type>Question</Type>
+                </Types>
+                <Binding flavour="function">
+                  <ScriptIt>
+                    <Name>if &lt;Story Point&gt; is active</Name>
+                    <Visible>false</Visible>
+                    <Labels/>
+                    <Children/>
+                    <CodeBlocks>
+                      <CodeBlockReference>
+                        <Name>if &lt;Story Point&gt; is active</Name>
+                        <Labels/>
+                        <Parameters>
+                          <KnowIt>
+                            <Name>Story Point</Name>
+                            <Labels/>
+                            <Types>
+                              <Type>Story Point</Type>
+                            </Types>
+                            <Binding flavour="storyPoint">
+                              <StoryPoint reference="/Story/StartStoryPoint/Successors/StoryPoint[2]"/>
+                            </Binding>
+                          </KnowIt>
+                        </Parameters>
+                      </CodeBlockReference>
+                    </CodeBlocks>
+                  </ScriptIt>
+                </Binding>
+              </KnowIt>
+              <AskIt library="ScriptEase">
+                <Name>&lt;Question&gt;</Name>
+                <Labels/>
+                <Children>
+                  <StoryComponentContainer library="NO LIBRARY">
+                    <Name>Yes:</Name>
+                    <Labels/>
+                    <Children>
+                      <ScriptIt>
+                        <Name>Move &lt;Direction&gt; at speed &lt;Speed&gt; </Name>
+                        <Labels/>
+                        <Children/>
+                        <CodeBlocks>
+                          <CodeBlockReference>
+                            <Name>Move &lt;Direction&gt; at speed &lt;Speed&gt; </Name>
+                            <Labels/>
+                            <Parameters>
+                              <KnowIt>
+                                <Name>Speed</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Number</Type>
+                                </Types>
+                                <Binding flavour="constant">
+                                  <Type>Number</Type>
+                                  <Value>1.0</Value>
+                                </Binding>
+                              </KnowIt>
+                              <KnowIt>
+                                <Name>Direction</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Forward Back</Type>
+                                </Types>
+                                <Binding flavour="constant">
+                                  <Type>Forward Back</Type>
+                                  <Value>0</Value>
+                                </Binding>
+                              </KnowIt>
+                            </Parameters>
+                          </CodeBlockReference>
+                        </CodeBlocks>
+                      </ScriptIt>
+                      <ScriptIt>
+                        <Name>Succeed &lt;StoryPoint&gt; after &lt;Seconds&gt; seconds</Name>
+                        <Labels/>
+                        <Children/>
+                        <CodeBlocks>
+                          <CodeBlockReference>
+                            <Name>Succeed &lt;StoryPoint&gt; after &lt;Seconds&gt; seconds</Name>
+                            <Labels/>
+                            <Parameters>
+                              <KnowIt>
+                                <Name>StoryPoint</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Story Point</Type>
+                                </Types>
+                                <Binding reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Children/CauseIt/Children/KnowIt/Binding/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                              </KnowIt>
+                              <KnowIt>
+                                <Name>Seconds</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Number</Type>
+                                </Types>
+                                <Binding flavour="constant">
+                                  <Type>Number</Type>
+                                  <Value>2.0</Value>
+                                </Binding>
+                              </KnowIt>
+                            </Parameters>
+                          </CodeBlockReference>
+                        </CodeBlocks>
+                      </ScriptIt>
+                    </Children>
+                  </StoryComponentContainer>
+                  <StoryComponentContainer library="NO LIBRARY">
+                    <Name>No:</Name>
+                    <Labels/>
+                    <Children/>
+                  </StoryComponentContainer>
+                </Children>
+                <Condition>
+                  <KnowIt library="ScriptEase">
+                    <Name>Question</Name>
+                    <Labels/>
+                    <Types>
+                      <Type>Question</Type>
+                    </Types>
+                    <Binding flavour="reference">
+                      <KnowIt reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Children/CauseIt/Children/KnowIt"/>
+                    </Binding>
+                  </KnowIt>
+                </Condition>
+              </AskIt>
+            </Children>
+            <CodeBlocks>
+              <CodeBlockReference>
+                <Name>Do</Name>
+                <Labels/>
+                <Parameters>
+                  <KnowIt>
+                    <Name>subject</Name>
+                    <Labels/>
+                    <Types>
+                      <Type>Robot</Type>
+                    </Types>
+                    <Binding flavour="automatic"/>
+                  </KnowIt>
+                </Parameters>
+              </CodeBlockReference>
+            </CodeBlocks>
+          </CauseIt>
+        </Children>
+        <Successors>
+          <StoryPoint library="NO LIBRARY">
+            <Name>Back</Name>
+            <Labels/>
+            <Children>
+              <CauseIt>
+                <Name>Do</Name>
+                <Labels/>
+                <Children>
+                  <KnowIt>
+                    <Name>Is Active</Name>
+                    <Labels/>
+                    <Types>
+                      <Type>Question</Type>
+                    </Types>
+                    <Binding flavour="function">
+                      <ScriptIt>
+                        <Name>if &lt;Story Point&gt; is active</Name>
+                        <Visible>false</Visible>
+                        <Labels/>
+                        <Children/>
+                        <CodeBlocks>
+                          <CodeBlockReference>
+                            <Name>if &lt;Story Point&gt; is active</Name>
+                            <Labels/>
+                            <Parameters>
+                              <KnowIt>
+                                <Name>Story Point</Name>
+                                <Labels/>
+                                <Types>
+                                  <Type>Story Point</Type>
+                                </Types>
+                                <Binding flavour="storyPoint">
+                                  <StoryPoint reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Successors/StoryPoint"/>
+                                </Binding>
+                              </KnowIt>
+                            </Parameters>
+                          </CodeBlockReference>
+                        </CodeBlocks>
+                      </ScriptIt>
+                    </Binding>
+                  </KnowIt>
+                  <AskIt library="ScriptEase">
+                    <Name>&lt;Question&gt;</Name>
+                    <Labels/>
+                    <Children>
+                      <StoryComponentContainer library="NO LIBRARY">
+                        <Name>Yes:</Name>
+                        <Labels/>
+                        <Children>
+                          <ScriptIt>
+                            <Name>Move &lt;Direction&gt; at speed &lt;Speed&gt; </Name>
+                            <Labels/>
+                            <Children/>
+                            <CodeBlocks>
+                              <CodeBlockReference>
+                                <Name>Move &lt;Direction&gt; at speed &lt;Speed&gt; </Name>
+                                <Labels/>
+                                <Parameters>
+                                  <KnowIt>
+                                    <Name>Speed</Name>
+                                    <Labels/>
+                                    <Types>
+                                      <Type>Number</Type>
+                                    </Types>
+                                    <Binding reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Children/CauseIt/Children/AskIt/Children/StoryComponentContainer/Children/ScriptIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                                  </KnowIt>
+                                  <KnowIt>
+                                    <Name>Direction</Name>
+                                    <Labels/>
+                                    <Types>
+                                      <Type>Forward Back</Type>
+                                    </Types>
+                                    <Binding flavour="constant">
+                                      <Type>Forward Back</Type>
+                                      <Value>1</Value>
+                                    </Binding>
+                                  </KnowIt>
+                                </Parameters>
+                              </CodeBlockReference>
+                            </CodeBlocks>
+                          </ScriptIt>
+                          <ScriptIt>
+                            <Name>Succeed &lt;StoryPoint&gt; after &lt;Seconds&gt; seconds</Name>
+                            <Labels/>
+                            <Children/>
+                            <CodeBlocks>
+                              <CodeBlockReference>
+                                <Name>Succeed &lt;StoryPoint&gt; after &lt;Seconds&gt; seconds</Name>
+                                <Labels/>
+                                <Parameters>
+                                  <KnowIt>
+                                    <Name>StoryPoint</Name>
+                                    <Labels/>
+                                    <Types>
+                                      <Type>Story Point</Type>
+                                    </Types>
+                                    <Binding flavour="storyPoint">
+                                      <StoryPoint reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Successors/StoryPoint"/>
+                                    </Binding>
+                                  </KnowIt>
+                                  <KnowIt>
+                                    <Name>Seconds</Name>
+                                    <Labels/>
+                                    <Types>
+                                      <Type>Number</Type>
+                                    </Types>
+                                    <Binding flavour="constant">
+                                      <Type>Number</Type>
+                                      <Value>2.0</Value>
+                                    </Binding>
+                                  </KnowIt>
+                                </Parameters>
+                              </CodeBlockReference>
+                            </CodeBlocks>
+                          </ScriptIt>
+                        </Children>
+                      </StoryComponentContainer>
+                      <StoryComponentContainer library="NO LIBRARY">
+                        <Name>No:</Name>
+                        <Labels/>
+                        <Children/>
+                      </StoryComponentContainer>
+                    </Children>
+                    <Condition>
+                      <KnowIt library="ScriptEase">
+                        <Name>Question</Name>
+                        <Labels/>
+                        <Types>
+                          <Type>Question</Type>
+                        </Types>
+                        <Binding flavour="reference">
+                          <KnowIt reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Successors/StoryPoint/Children/CauseIt/Children/KnowIt"/>
+                        </Binding>
+                      </KnowIt>
+                    </Condition>
+                  </AskIt>
+                </Children>
+                <CodeBlocks>
+                  <CodeBlockReference>
+                    <Name>Do</Name>
+                    <Labels/>
+                    <Parameters>
+                      <KnowIt>
+                        <Name>subject</Name>
+                        <Labels/>
+                        <Types>
+                          <Type>Robot</Type>
+                        </Types>
+                        <Binding reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Children/CauseIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                      </KnowIt>
+                    </Parameters>
+                  </CodeBlockReference>
+                </CodeBlocks>
+              </CauseIt>
+            </Children>
+            <Successors>
+              <StoryPoint library="NO LIBRARY">
+                <Name>Spin</Name>
+                <Labels/>
+                <Children>
+                  <CauseIt>
+                    <Name>Do</Name>
+                    <Labels/>
+                    <Children>
+                      <KnowIt>
+                        <Name>Is Active</Name>
+                        <Labels/>
+                        <Types>
+                          <Type>Question</Type>
+                        </Types>
+                        <Binding flavour="function">
+                          <ScriptIt>
+                            <Name>if &lt;Story Point&gt; is active</Name>
+                            <Visible>false</Visible>
+                            <Labels/>
+                            <Children/>
+                            <CodeBlocks>
+                              <CodeBlockReference>
+                                <Name>if &lt;Story Point&gt; is active</Name>
+                                <Labels/>
+                                <Parameters>
+                                  <KnowIt>
+                                    <Name>Story Point</Name>
+                                    <Labels/>
+                                    <Types>
+                                      <Type>Story Point</Type>
+                                    </Types>
+                                    <Binding flavour="storyPoint">
+                                      <StoryPoint reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Successors/StoryPoint/Successors/StoryPoint"/>
+                                    </Binding>
+                                  </KnowIt>
+                                </Parameters>
+                              </CodeBlockReference>
+                            </CodeBlocks>
+                          </ScriptIt>
+                        </Binding>
+                      </KnowIt>
+                      <AskIt library="ScriptEase">
+                        <Name>&lt;Question&gt;</Name>
+                        <Labels/>
+                        <Children>
+                          <StoryComponentContainer library="NO LIBRARY">
+                            <Name>Yes:</Name>
+                            <Labels/>
+                            <Children>
+                              <ScriptIt>
+                                <Name>Turn &lt;Degrees&gt; Degrees &lt;Direction&gt;</Name>
+                                <Labels/>
+                                <Children/>
+                                <CodeBlocks>
+                                  <CodeBlockReference>
+                                    <Name>Turn &lt;Degrees&gt; Degrees &lt;Direction&gt;</Name>
+                                    <Labels/>
+                                    <Parameters>
+                                      <KnowIt>
+                                        <Name>Degrees</Name>
+                                        <Labels/>
+                                        <Types>
+                                          <Type>Number</Type>
+                                        </Types>
+                                        <Binding flavour="constant">
+                                          <Type>Number</Type>
+                                          <Value>450.0</Value>
+                                        </Binding>
+                                      </KnowIt>
+                                      <KnowIt>
+                                        <Name>Direction</Name>
+                                        <Labels/>
+                                        <Types>
+                                          <Type>Right Left</Type>
+                                        </Types>
+                                        <Binding flavour="constant">
+                                          <Type>Right Left</Type>
+                                          <Value>0</Value>
+                                        </Binding>
+                                      </KnowIt>
+                                    </Parameters>
+                                  </CodeBlockReference>
+                                </CodeBlocks>
+                              </ScriptIt>
+                              <ScriptIt>
+                                <Name>Continue at &lt;Story Point&gt; Immediately</Name>
+                                <Labels/>
+                                <Children/>
+                                <CodeBlocks>
+                                  <CodeBlockReference>
+                                    <Name>Continue at &lt;Story Point&gt; Immediately</Name>
+                                    <Labels/>
+                                    <Parameters>
+                                      <KnowIt>
+                                        <Name>Story Point</Name>
+                                        <Labels/>
+                                        <Types>
+                                          <Type>Story Point</Type>
+                                        </Types>
+                                        <Binding flavour="storyPoint">
+                                          <StoryPoint reference="/Story/StartStoryPoint/Successors/StoryPoint[2]"/>
+                                        </Binding>
+                                      </KnowIt>
+                                      <KnowIt>
+                                        <Name>autoStoryPoint</Name>
+                                        <Labels/>
+                                        <Types>
+                                          <Type>Story Point</Type>
+                                        </Types>
+                                        <Binding flavour="automatic"/>
+                                      </KnowIt>
+                                    </Parameters>
+                                  </CodeBlockReference>
+                                </CodeBlocks>
+                              </ScriptIt>
+                            </Children>
+                          </StoryComponentContainer>
+                          <StoryComponentContainer library="NO LIBRARY">
+                            <Name>No:</Name>
+                            <Labels/>
+                            <Children/>
+                          </StoryComponentContainer>
+                        </Children>
+                        <Condition>
+                          <KnowIt library="ScriptEase">
+                            <Name>Question</Name>
+                            <Labels/>
+                            <Types>
+                              <Type>Question</Type>
+                            </Types>
+                            <Binding flavour="reference">
+                              <KnowIt reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Successors/StoryPoint/Successors/StoryPoint/Children/CauseIt/Children/KnowIt"/>
+                            </Binding>
+                          </KnowIt>
+                        </Condition>
+                      </AskIt>
+                    </Children>
+                    <CodeBlocks>
+                      <CodeBlockReference>
+                        <Name>Do</Name>
+                        <Labels/>
+                        <Parameters>
+                          <KnowIt>
+                            <Name>subject</Name>
+                            <Labels/>
+                            <Types>
+                              <Type>Robot</Type>
+                            </Types>
+                            <Binding reference="/Story/StartStoryPoint/Successors/StoryPoint[2]/Children/CauseIt/CodeBlocks/CodeBlockReference/Parameters/KnowIt/Binding"/>
+                          </KnowIt>
+                        </Parameters>
+                      </CodeBlockReference>
+                    </CodeBlocks>
+                  </CauseIt>
+                </Children>
+                <Successors/>
+                <FanIn>1</FanIn>
+              </StoryPoint>
+            </Successors>
+            <FanIn>1</FanIn>
+          </StoryPoint>
+        </Successors>
+        <FanIn>1</FanIn>
+      </StoryPoint>
+    </Successors>
+    <FanIn>1</FanIn>
+  </StartStoryPoint>
+</Story>
